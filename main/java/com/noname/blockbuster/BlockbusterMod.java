@@ -1,18 +1,16 @@
 package com.noname.blockbuster;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Blockbuster's main entry
@@ -42,6 +40,8 @@ public class BlockbusterMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+    	int ID = 0;
+    	
     	// Register camera, actors and props eggs
     	camera = new CameraItem().setUnlocalizedName("cameraItem")
     							 .setRegistryName("cameraItem")
@@ -49,5 +49,19 @@ public class BlockbusterMod
     	
     	GameRegistry.register(camera);
     	ModelLoader.setCustomModelResourceLocation(camera, 0, new ModelResourceLocation("blockbuster:cameraItem", "inventory"));
+    	
+    	registerEntity(CameraEntity.class, "Camera", ID++);
+    	RenderingRegistry.registerEntityRenderingHandler(CameraEntity.class, new CameraRender.CameraFactory());
+    }
+    
+    /**
+     * Thanks to animal bikes mod for this wonderful example!
+     * Kids, wanna learn how to mod minecraft? That's simple. Find mods for specific minecraft version
+     * and decompile the .jar files with JD-GUI. Isn't that simple?
+     */
+    private void registerEntity(Class entity, String name, int id)
+    {
+    	EntityList.classToStringMapping.put(entity, name);
+    	EntityRegistry.registerModEntity(entity, name, id, this, 40, 1, false);
     }
 }
