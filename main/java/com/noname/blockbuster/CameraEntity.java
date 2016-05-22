@@ -76,33 +76,15 @@ public class CameraEntity extends EntityCreature
             rotationYawHead = renderYawOffset = rotationYaw;
             setRotation(rotationYaw, rotationPitch);
             
-            motionY = flyingMotion * (forward != 0 ? forward / Math.abs(forward) : 1.0F);
+            motionY = flyingMotion * Math.copySign(1.0F, forward);
             
             /* Hacks */
             onGround = true;
             setAIMoveSpeed(speed);
             super.moveEntityWithHeading(strafe, forward);
             onGround = oldOnGround;
+            
+            System.out.println(forward);
         }
-	}
-	
-	/** 
-	 * Fuck the gravity 
-	 */
-	@Override
-	public void onUpdate() 
-	{
-		super.onUpdate();
-		
-		if (!isBeingRidden()) {
-			motionY = 0.0f;
-		}
-	}
-	
-	public void jump()
-	{
-		this.motionY = 0.75D;
-		this.isAirBorne = true;
-		ForgeHooks.onLivingJump(this);
 	}
 }
