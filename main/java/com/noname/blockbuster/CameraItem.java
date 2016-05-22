@@ -20,6 +20,8 @@ public class CameraItem extends Item
 	public CameraItem()
 	{
 		setMaxStackSize(1);
+		setUnlocalizedName("cameraItem");
+		setRegistryName("cameraItem");
 	}
 	
 	/**
@@ -27,21 +29,19 @@ public class CameraItem extends Item
 	 */
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (worldIn.isRemote)
+		if (!worldIn.isRemote)
         {
-            return EnumActionResult.SUCCESS;
+			EntityLiving camera = new CameraEntity(worldIn);
+	        
+	        pos = pos.offset(facing);
+	        
+	        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, playerIn.rotationYaw, playerIn.rotationYaw);
+	        camera.rotationYawHead = camera.rotationYaw;
+	        camera.renderYawOffset = camera.rotationYaw;
+	            	
+	        worldIn.spawnEntityInWorld(camera);
         }
 		
-        EntityLiving camera = new CameraEntity(worldIn);
-        
-        pos = pos.offset(facing);
-        
-        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, 0.0F, 0.0F);
-        camera.rotationYawHead = camera.rotationYaw;
-        camera.renderYawOffset = camera.rotationYaw;
-            	
-        worldIn.spawnEntityInWorld(camera);
-		
-		return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		return EnumActionResult.SUCCESS;
 	}
 }

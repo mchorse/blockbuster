@@ -1,5 +1,6 @@
 package com.noname.blockbuster;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
@@ -22,12 +23,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod(modid = BlockbusterMod.MODID, name=BlockbusterMod.MODNAME, version = BlockbusterMod.VERSION)
 public class BlockbusterMod
 {
+	/* Mod name and version info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "1.0";
     
+    /* Items and blocks */
     public static Item camera;
+    public static Item directorItem;
+    public static Block directorBlock;
     
+    /* Creative tabs */
     public static final CreativeTabs busterTab = new CreativeTabs("blockbusterTab") 
 	{
 		@Override
@@ -37,15 +43,14 @@ public class BlockbusterMod
 		} 
 	};
     
+	/* Event handling */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
     	int ID = 0;
     	
     	// Register camera, actors and props eggs
-    	camera = new CameraItem().setUnlocalizedName("cameraItem")
-    							 .setRegistryName("cameraItem")
-    							 .setCreativeTab(busterTab);
+    	camera = new CameraItem().setCreativeTab(busterTab);
     	
     	GameRegistry.register(camera);
     	ModelLoader.setCustomModelResourceLocation(camera, 0, new ModelResourceLocation("blockbuster:cameraItem", "inventory"));

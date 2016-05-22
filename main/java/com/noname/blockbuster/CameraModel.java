@@ -16,8 +16,8 @@ public class CameraModel extends ModelBase
 	 * and super-puper awesome magnifying lens
 	 */
 	ModelRenderer body;
-	ModelRenderer part1;
-	ModelRenderer part2;
+	ModelRenderer backTape;
+	ModelRenderer frontTape;
 	ModelRenderer lens;
 	
 	/**
@@ -28,10 +28,10 @@ public class CameraModel extends ModelBase
 		body = new ModelRenderer(this, 0, 0);
 		body.addBox(-2.0F, 8.0F, -4.0F, 4, 4, 8);
 		
-		part1 = new ModelRenderer(this, 24, 0);
-		part1.addBox(-1.0F, 5.0F, 0.5F, 2, 3, 3);
-		part2 = new ModelRenderer(this, 24, 0);
-		part2.addBox(-1.0F, 5.0F, -3.5F, 2, 3, 3);
+		backTape = new ModelRenderer(this, 24, 0);
+		backTape.addBox(-1.0F, 5.0F, 0.5F, 2, 3, 3);
+		frontTape = new ModelRenderer(this, 24, 0);
+		frontTape.addBox(-1.0F, 5.0F, -3.5F, 2, 3, 3);
 		
 		lens = new ModelRenderer(this, 0, 12);
 		lens.addBox(-1.0F, 9.0F, -5.0F, 2, 2, 1);
@@ -45,8 +45,8 @@ public class CameraModel extends ModelBase
 	@Override
 	public void render(Entity entityIn, float p_78088_2_, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale) 
 	{
-		part1.render(scale);
-		part2.render(scale);
+		backTape.render(scale);
+		frontTape.render(scale);
 		lens.render(scale);
 		body.render(scale);
 	}

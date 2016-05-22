@@ -3,20 +3,19 @@ package com.noname.blockbuster;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 public class CameraEntity extends EntityCreature 
 {
+	/** Speed of camera */
+	public float speed = 0.4F;
+	
 	public CameraEntity(World worldIn) 
 	{
 		super(worldIn);
@@ -29,7 +28,7 @@ public class CameraEntity extends EntityCreature
 		return true;
 	}
 	
-	/** Riding logic */
+	/* Riding logic */
 	
 	public Entity getControllingPassenger()
     {
@@ -60,27 +59,50 @@ public class CameraEntity extends EntityCreature
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) 
 	{
-		if (isBeingRidden() && canBeSteered())
+		if (isBeingRidden())
         {
             EntityLivingBase player = (EntityLivingBase)this.getControllingPassenger();
             
-            this.prevRotationYaw = this.rotationYaw = player.rotationYaw;
-            this.rotationPitch = player.rotationPitch * 0.5F;
-            this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-            this.setRotation(this.rotationYaw, this.rotationPitch);
-            
-            strafe = player.moveStrafing * 0.85F;
             forward = player.moveForward;
-
-            if (this.canPassengerSteer())
-            {
-                this.setAIMoveSpeed(0.22F + (player.isSprinting() ? 0.1F : 0.0F));
-                super.moveEntityWithHeading(strafe, forward);
-            }
-        }
-        else
-        {
+            strafe = player.moveStrafing;
+            
+            boolean oldOnGround = this.onGround;
+            float flyingMotion = forward != 0 ? -player.rotationPitch / 90.0F : 0.0F;
+            
+            forward = flyingMotion == 0 ? forward : forward * (1 - Math.abs(flyingMotion));
+            
+            prevRotationYaw = rotationYaw = player.rotationYaw;
+            rotationPitch = player.rotationPitch * 0.5F;
+            rotationYawHead = renderYawOffset = rotationYaw;
+            setRotation(rotationYaw, rotationPitch);
+            
+            motionY = flyingMotion * (forward != 0 ? forward / Math.abs(forward) : 1.0F);
+            
+            /* Hacks */
+            onGround = true;
+            setAIMoveSpeed(speed);
             super.moveEntityWithHeading(strafe, forward);
+            onGround = oldOnGround;
         }
+	}
+	
+	/** 
+	 * Fuck the gravity 
+	 */
+	@Override
+	public void onUpdate() 
+	{
+		super.onUpdate();
+		
+		if (!isBeingRidden()) {
+			motionY = 0.0f;
+		}
+	}
+	
+	public void jump()
+	{
+		this.motionY = 0.75D;
+		this.isAirBorne = true;
+		ForgeHooks.onLivingJump(this);
 	}
 }
