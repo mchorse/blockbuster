@@ -17,6 +17,7 @@ import noname.blockbuster.client.render.CameraRender;
 import noname.blockbuster.common.CommonProxy;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraItem;
+import noname.blockbuster.item.CameraConfigItem;
 
 /**
  * Blockbuster's main entry
@@ -36,7 +37,8 @@ public class Main
     public static int ID = 0;
     
     /* Items and blocks */
-    public static Item camera;
+    public static Item cameraItem;
+    public static Item cameraConfigItem;
     public static Item directorItem;
     public static Block directorBlock;
     
@@ -46,22 +48,30 @@ public class Main
 		@Override
 		public Item getTabIconItem() 
 		{
-			return Main.camera;
+			return Main.cameraItem;
 		} 
 	};
     
 	@SidedProxy(clientSide="noname.blockbuster.client.ClientProxy", serverSide="noname.blockbuster.common.CommonProxy")
 	public static CommonProxy proxy;
 	
-	/* Event handling */
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
-    	// Register camera, actors and props eggs
-    	GameRegistry.register(camera = new CameraItem());
+    	registerItem(cameraItem = new CameraItem());
+    	registerItem(cameraConfigItem = new CameraConfigItem());
+    	
     	registerEntity(CameraEntity.class, "Camera");
     	
     	proxy.preLoad();
+    }
+    
+    /**
+     * Register an item
+     */
+    private void registerItem(Item item)
+    {
+    	GameRegistry.register(item);
     }
     
     /**

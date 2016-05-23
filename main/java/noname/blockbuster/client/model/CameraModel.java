@@ -3,12 +3,15 @@ package noname.blockbuster.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Hardcoded camera model
  * 
  * Those comments are for me, by the way
  */
+@SideOnly(Side.CLIENT)
 public class CameraModel extends ModelBase 
 {
 	/**
