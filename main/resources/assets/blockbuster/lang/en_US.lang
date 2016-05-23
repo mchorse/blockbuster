@@ -1,0 +1,9 @@
+# Creative tbas
+itemGroup.blockbusterTab=Blockbuster
+
+# Item names
+item.cameraItem.name=Camera
+item.cameraConfigItem.name=Camera configuration device
+
+# Entities names
+entity.Camera.name=Camera

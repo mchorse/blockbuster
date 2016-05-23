@@ -30,6 +30,7 @@ public class CameraRender extends RenderLiving
 		return resource;
 	}
 	
+	@Override
 	public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks) 
 	{
 		CameraEntity camera = (CameraEntity)entity;

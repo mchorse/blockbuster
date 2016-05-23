@@ -76,7 +76,7 @@ public class Main
     
     /**
      * Thanks to animal bikes mod for this wonderful example!
-     * Kids, wanna learn how to mod minecraft? That's simple. Find mods for specific minecraft version
+     * Kids, wanna learn how to mod minecraft with forge? That's simple. Find mods for specific minecraft version
      * and decompile the .jar files with JD-GUI. Isn't that simple?
      */
     private void registerEntity(Class entity, String name)
