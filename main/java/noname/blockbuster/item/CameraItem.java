@@ -1,4 +1,4 @@
-package com.noname.blockbuster;
+package noname.blockbuster.item;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +9,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import noname.blockbuster.Main;
+import noname.blockbuster.entity.CameraEntity;
 
 /**
  * Camera item
@@ -22,6 +24,7 @@ public class CameraItem extends Item
 		setMaxStackSize(1);
 		setUnlocalizedName("cameraItem");
 		setRegistryName("cameraItem");
+		setCreativeTab(Main.busterTab);
 	}
 	
 	/**
@@ -35,9 +38,11 @@ public class CameraItem extends Item
 	        
 	        pos = pos.offset(facing);
 	        
-	        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, playerIn.rotationYaw, playerIn.rotationYaw);
+	        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, 0.0F, 0.0F);
 	        camera.rotationYawHead = camera.rotationYaw;
 	        camera.renderYawOffset = camera.rotationYaw;
+	        camera.rotationPitch = playerIn.rotationPitch;
+	        camera.rotationYaw = playerIn.rotationYaw;
 	            	
 	        worldIn.spawnEntityInWorld(camera);
         }

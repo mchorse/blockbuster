@@ -1,4 +1,4 @@
-package com.noname.blockbuster;
+package noname.blockbuster;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -9,9 +9,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import noname.blockbuster.client.render.CameraRender;
+import noname.blockbuster.common.CommonProxy;
+import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.item.CameraItem;
 
 /**
  * Blockbuster's main entry
@@ -20,13 +25,15 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  * with the most needed tools to create machinimas alone (with bunch of complaining
  * actors).
  */
-@Mod(modid = BlockbusterMod.MODID, name=BlockbusterMod.MODNAME, version = BlockbusterMod.VERSION)
-public class BlockbusterMod
+@Mod(modid = Main.MODID, name=Main.MODNAME, version = Main.VERSION)
+public class Main
 {
 	/* Mod name and version info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "1.0";
+    
+    public static int ID = 0;
     
     /* Items and blocks */
     public static Item camera;
@@ -39,24 +46,22 @@ public class BlockbusterMod
 		@Override
 		public Item getTabIconItem() 
 		{
-			return BlockbusterMod.camera;
+			return Main.camera;
 		} 
 	};
     
+	@SidedProxy(clientSide="noname.blockbuster.client.ClientProxy", serverSide="noname.blockbuster.common.CommonProxy")
+	public static CommonProxy proxy;
+	
 	/* Event handling */
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+    public void preLoad(FMLPreInitializationEvent event)
     {
-    	int ID = 0;
-    	
     	// Register camera, actors and props eggs
-    	camera = new CameraItem().setCreativeTab(busterTab);
+    	GameRegistry.register(camera = new CameraItem());
+    	registerEntity(CameraEntity.class, "Camera");
     	
-    	GameRegistry.register(camera);
-    	ModelLoader.setCustomModelResourceLocation(camera, 0, new ModelResourceLocation("blockbuster:cameraItem", "inventory"));
-    	
-    	registerEntity(CameraEntity.class, "Camera", ID++);
-    	RenderingRegistry.registerEntityRenderingHandler(CameraEntity.class, new CameraRender.CameraFactory());
+    	proxy.preLoad();
     }
     
     /**
@@ -64,9 +69,8 @@ public class BlockbusterMod
      * Kids, wanna learn how to mod minecraft? That's simple. Find mods for specific minecraft version
      * and decompile the .jar files with JD-GUI. Isn't that simple?
      */
-    private void registerEntity(Class entity, String name, int id)
+    private void registerEntity(Class entity, String name)
     {
-    	EntityList.classToStringMapping.put(entity, name);
-    	EntityRegistry.registerModEntity(entity, name, id, this, 40, 1, false);
+    	EntityRegistry.registerModEntity(entity, name, ID++, this, 40, 1, false);
     }
 }

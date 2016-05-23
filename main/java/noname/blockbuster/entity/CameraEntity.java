@@ -1,4 +1,4 @@
-package com.noname.blockbuster;
+package noname.blockbuster.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -7,9 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 public class CameraEntity extends EntityCreature 
 {
@@ -83,8 +81,6 @@ public class CameraEntity extends EntityCreature
             setAIMoveSpeed(speed);
             super.moveEntityWithHeading(strafe, forward);
             onGround = oldOnGround;
-            
-            System.out.println(forward);
         }
 	}
 }

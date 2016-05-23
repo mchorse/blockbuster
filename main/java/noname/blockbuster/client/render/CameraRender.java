@@ -1,4 +1,4 @@
-package com.noname.blockbuster;
+package noname.blockbuster.client.render;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
@@ -7,10 +7,13 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import noname.blockbuster.Main;
+import noname.blockbuster.client.model.CameraModel;
+import noname.blockbuster.entity.CameraEntity;
 
 public class CameraRender extends RenderLiving 
 {
-	private static final ResourceLocation resource = new ResourceLocation(BlockbusterMod.MODID, "textures/entity/camera.png");
+	private static final ResourceLocation resource = new ResourceLocation(Main.MODID, "textures/entity/camera.png");
 	
 	public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn) 
 	{
