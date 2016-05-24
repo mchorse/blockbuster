@@ -53,7 +53,7 @@ public class Main
 		} 
 	};
 	
-	@SidedProxy(clientSide="noname.blockbuster.client.ClientProxy", serverSide="noname.blockbuster.common.CommonProxy")
+	@SidedProxy(clientSide="noname.blockbuster.ClientProxy", serverSide="noname.blockbuster.CommonProxy")
 	public static CommonProxy proxy;
 	
 	/**
