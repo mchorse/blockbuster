@@ -38,11 +38,9 @@ public class CameraItem extends Item
 	        
 	        pos = pos.offset(facing);
 	        
-	        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, 0.0F, 0.0F);
+	        camera.setLocationAndAngles(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F, playerIn.rotationYaw, playerIn.rotationPitch);
 	        camera.rotationYawHead = camera.rotationYaw;
 	        camera.renderYawOffset = camera.rotationYaw;
-	        camera.rotationPitch = playerIn.rotationPitch;
-	        camera.rotationYaw = playerIn.rotationYaw;
 	            	
 	        worldIn.spawnEntityInWorld(camera);
         }

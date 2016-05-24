@@ -44,10 +44,10 @@ public class CameraRender extends RenderLiving
 	/**
 	 * Renderer's factory
 	 */
-	public static class CameraFactory implements IRenderFactory<CameraEntity>
+	public static class CameraFactory implements IRenderFactory
 	{
 		@Override
-		public Render<? super CameraEntity> createRenderFor(RenderManager manager) 
+		public Render createRenderFor(RenderManager manager) 
 		{
 			return new CameraRender(manager, new CameraModel(), 1);
 		}

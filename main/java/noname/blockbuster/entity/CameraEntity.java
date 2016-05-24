@@ -1,17 +1,17 @@
 package noname.blockbuster.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import noname.blockbuster.item.CameraConfigItem;
 
-public class CameraEntity extends EntityCreature 
+public class CameraEntity extends EntityLiving
 {
 	public float speed = 0.4F;
 	public float acceleration = 0.0F;
@@ -37,6 +37,22 @@ public class CameraEntity extends EntityCreature
 		return this.height * 0.2;
 	}
 	
+	@Override
+	protected void applyEntityAttributes() 
+	{
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+	}
+	
+	/**
+	 * Camera is invincible against fall damage
+	 */
+	@Override
+	public boolean isEntityInvulnerable(DamageSource source) 
+	{
+		return source == DamageSource.fall;
+	}
+	
 	/* Riding logic */
 	
 	/**
@@ -57,7 +73,8 @@ public class CameraEntity extends EntityCreature
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
-		if (!worldObj.isRemote && !isBeingRidden()) {
+		if (!worldObj.isRemote && !isBeingRidden()) 
+		{
 			player.startRiding(this);
 			
 			return true;

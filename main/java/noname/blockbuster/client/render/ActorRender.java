@@ -1,0 +1,35 @@
+package noname.blockbuster.client.render;
+
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import noname.blockbuster.Main;
+import noname.blockbuster.entity.ActorEntity;
+
+public class ActorRender extends RenderBiped<ActorEntity>
+{
+	private static final ResourceLocation resource = new ResourceLocation(Main.MODID, "textures/entity/actor.png");
+	
+	public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize) 
+	{
+		super(renderManagerIn, modelBipedIn, shadowSize);
+	}
+
+	@Override
+	protected ResourceLocation getEntityTexture(ActorEntity entity) 
+	{
+		return resource;
+	}
+	
+	public static class ActorFactory implements IRenderFactory
+	{
+		@Override
+		public Render createRenderFor(RenderManager manager) 
+		{
+			return new ActorRender(manager, new ModelBiped(), 1.0F);
+		}
+	}
+}

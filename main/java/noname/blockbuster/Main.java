@@ -1,6 +1,7 @@
 package noname.blockbuster;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
@@ -14,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.client.render.CameraRender;
-import noname.blockbuster.common.CommonProxy;
+import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraItem;
 import noname.blockbuster.item.CameraConfigItem;
@@ -26,7 +27,7 @@ import noname.blockbuster.item.CameraConfigItem;
  * with the most needed tools to create machinimas alone (with bunch of complaining
  * actors).
  */
-@Mod(modid = Main.MODID, name=Main.MODNAME, version = Main.VERSION)
+@Mod(modid = Main.MODID, name=Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions="[1.9]")
 public class Main
 {
 	/* Mod name and version info */
@@ -51,9 +52,17 @@ public class Main
 			return Main.cameraItem;
 		} 
 	};
-    
+	
 	@SidedProxy(clientSide="noname.blockbuster.client.ClientProxy", serverSide="noname.blockbuster.common.CommonProxy")
 	public static CommonProxy proxy;
+	
+	/**
+	 * "Macro" for getting id for Blockbuster mod items/entities/blocks/etc. 
+	 */
+	public static String resource(String path)
+	{
+		return MODID + ":" + path;
+	}
 	
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
@@ -62,6 +71,7 @@ public class Main
     	registerItem(cameraConfigItem = new CameraConfigItem());
     	
     	registerEntity(CameraEntity.class, "Camera");
+    	registerEntity(ActorEntity.class, "Actor");
     	
     	proxy.preLoad();
     }
