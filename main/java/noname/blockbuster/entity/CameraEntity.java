@@ -10,6 +10,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import noname.blockbuster.item.CameraConfigItem;
 
 public class CameraEntity extends EntityLiving
 {
@@ -73,6 +74,13 @@ public class CameraEntity extends EntityLiving
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
+		System.out.println(player);
+		
+		if (!worldObj.isRemote && player.getHeldItemMainhand().getItem() instanceof CameraConfigItem)
+		{
+			return true;
+		}
+		
 		if (!worldObj.isRemote && !isBeingRidden()) 
 		{
 			player.startRiding(this);

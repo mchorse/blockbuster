@@ -28,21 +28,23 @@ public class CameraModel extends ModelBase
 	 */
 	public CameraModel()
 	{
+		float yOffset = 5.0F;
+		
 		body = new ModelRenderer(this, 0, 0);
-		body.addBox(-2.0F, 8.0F, -4.0F, 4, 4, 8);
+		body.addBox(-2.0F, 8.0F + yOffset, -4.0F, 4, 4, 8);
 		
 		backTape = new ModelRenderer(this, 24, 0);
-		backTape.addBox(-1.0F, 5.0F, 0.5F, 2, 3, 3);
+		backTape.addBox(-1.0F, 5.0F + yOffset, 0.5F, 2, 3, 3);
 		frontTape = new ModelRenderer(this, 24, 0);
-		frontTape.addBox(-1.0F, 5.0F, -3.5F, 2, 3, 3);
+		frontTape.addBox(-1.0F, 5.0F + yOffset, -3.5F, 2, 3, 3);
 		
 		lens = new ModelRenderer(this, 0, 12);
-		lens.addBox(-1.0F, 9.0F, -5.0F, 2, 2, 1);
-		lens.setTextureOffset(0, 15).addBox(-2.0F, 8.0F, -7.0F, 4, 4, 2);
+		lens.addBox(-1.0F, 9.0F + yOffset, -5.0F, 2, 2, 1);
+		lens.setTextureOffset(0, 15).addBox(-2.0F, 8.0F + yOffset, -7.0F, 4, 4, 2);
 	}
 	
 	/**
-	 * At least I can use GL commands down here, probably.
+	 * At least I can use GL commands down here, probably (yes I can!).
 	 * Maybe it's pretty neat, maybe...
 	 */
 	@Override
