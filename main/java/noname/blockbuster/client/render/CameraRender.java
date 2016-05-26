@@ -10,14 +10,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.Main;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.client.model.CameraModel;
 import noname.blockbuster.entity.CameraEntity;
 
 @SideOnly(Side.CLIENT)
 public class CameraRender extends RenderLiving 
 {
-	private static final ResourceLocation resource = new ResourceLocation(Main.MODID, "textures/entity/camera.png");
+	private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
 	
 	public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn) 
 	{

@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import noname.blockbuster.Main;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.entity.ActorEntity;
 
 public class ActorRender extends RenderBiped<ActorEntity>
 {
-	private static final ResourceLocation resource = new ResourceLocation(Main.MODID, "textures/entity/actor.png");
+	private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 	
 	public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize) 
 	{
@@ -21,7 +21,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
 	@Override
 	public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks) 
 	{
-		if (!entity.isRecording()) 
+		if (!entity.isRecording) 
 		{
 			super.doRender(entity, x, y, z, entityYaw, partialTicks);
 		}

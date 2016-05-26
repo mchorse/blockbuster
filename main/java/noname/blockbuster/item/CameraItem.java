@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import noname.blockbuster.Main;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.entity.CameraEntity;
 
 /**
@@ -24,14 +24,12 @@ public class CameraItem extends Item
 		setMaxStackSize(1);
 		setUnlocalizedName("cameraItem");
 		setRegistryName("cameraItem");
-		setCreativeTab(Main.busterTab);
+		setCreativeTab(Blockbuster.busterTab);
 	}
 	
-	/**
-	 * Spawns a camera 
-	 */
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) 
+	{
 		if (!worldIn.isRemote)
         {
 			EntityLiving camera = new CameraEntity(worldIn);

@@ -27,8 +27,8 @@ import noname.blockbuster.item.CameraConfigItem;
  * with the most needed tools to create machinimas alone (with bunch of complaining
  * actors).
  */
-@Mod(modid = Main.MODID, name=Main.MODNAME, version = Main.VERSION, acceptedMinecraftVersions="[1.9]")
-public class Main
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
+public class Blockbuster
 {
 	/* Mod name and version info */
     public static final String MODID = "blockbuster";
@@ -49,10 +49,11 @@ public class Main
 		@Override
 		public Item getTabIconItem() 
 		{
-			return Main.cameraItem;
+			return Blockbuster.cameraItem;
 		} 
 	};
 	
+	public static Blockbuster instance;
 	@SidedProxy(clientSide="noname.blockbuster.ClientProxy", serverSide="noname.blockbuster.CommonProxy")
 	public static CommonProxy proxy;
 	
@@ -77,7 +78,7 @@ public class Main
     }
     
     /**
-     * Register an item
+     * Register an item with Forge's game registry
      */
     private void registerItem(Item item)
     {

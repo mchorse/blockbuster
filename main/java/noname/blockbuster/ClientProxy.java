@@ -19,8 +19,8 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preLoad()
 	{
-		registerItemModel(Main.cameraItem, Main.resource("cameraItem"));
-		registerItemModel(Main.cameraConfigItem, Main.resource("cameraConfigItem"));
+		registerItemModel(Blockbuster.cameraItem, Blockbuster.resource("cameraItem"));
+		registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.resource("cameraConfigItem"));
 		
 		registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
 		registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());
