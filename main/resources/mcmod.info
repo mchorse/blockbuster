@@ -2,13 +2,13 @@
     {
         "modid": "blockbuster",
         "name": "Blockbuster",
-        "description": "Blockbuster lets you create awesome machinimas solo.",
+        "description": "Blockbuster lets you create awesome machinimas in singleplayer without need to hire/invinting an organized crowd of minecraft actors.",
         "version": "1.0",
         "mcversion": "1.9",
         "url": "",
         "updateUrl": "",
         "authorList": ["noname"],
-        "credits": "The Forge and FML guys, for making this example",
+        "credits": "Not really sure what should I put here. Any ideas?",
         "logoFile": "",
         "screenshots": [],
         "dependencies": []

@@ -3,6 +3,7 @@ package noname.blockbuster;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import noname.blockbuster.block.DirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraConfigItem;
@@ -32,14 +34,18 @@ import noname.blockbuster.test.MocapEventHandler;
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
+@Mod(
+	modid = Blockbuster.MODID, 
+	name = Blockbuster.MODNAME, 
+	version = Blockbuster.VERSION, 
+	acceptedMinecraftVersions = "[1.9]"
+)
 public class Blockbuster
 {
 	/* Mod name and version info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "1.0";
-
     
     /* Items and blocks */
     public static int ID = 0;
@@ -76,6 +82,7 @@ public class Blockbuster
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
+    	registerBlock(directorBlock = new DirectorBlock());
     	registerItem(cameraItem = new CameraItem());
     	registerItem(cameraConfigItem = new CameraConfigItem());
     	
@@ -110,6 +117,12 @@ public class Blockbuster
     private void registerItem(Item item)
     {
     	GameRegistry.register(item);
+    }
+    
+    private void registerBlock(Block block)
+    {
+    	GameRegistry.register(block);
+    	GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
     }
     
     /**

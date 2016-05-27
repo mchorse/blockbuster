@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.render.ActorRender;
@@ -21,6 +22,7 @@ public class ClientProxy extends CommonProxy
 	{
 		registerItemModel(Blockbuster.cameraItem, Blockbuster.path("cameraItem"));
 		registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("cameraConfigItem"));
+		registerItemModel(Item.getItemFromBlock(Blockbuster.directorBlock), Blockbuster.path("directorBlock"));
 		
 		registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
 		registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());

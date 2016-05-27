@@ -1,9 +1,12 @@
 # Creative tabs
 itemGroup.blockbusterTab=Blockbuster
 
-# Item names
+# Item and block names
+tile.directorBlock.name=Director block
+
 item.cameraItem.name=Camera
 item.cameraConfigItem.name=Camera configuration device
 
 # Entities names
 entity.Camera.name=Camera
+entity.Actor.name=Actor
