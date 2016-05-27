@@ -13,7 +13,7 @@ import noname.blockbuster.entity.ActorEntity;
 
 class PlayThread implements Runnable
 {
-	public Thread t;
+	public Thread thread;
 	private ActorEntity replayEntity;
 	private DataInputStream in;
 
@@ -31,8 +31,8 @@ class PlayThread implements Runnable
 
 		replayEntity = actor;
 		
-		t = new Thread(this, "Mocap Playback Thread");
-		t.start();
+		thread = new Thread(this, "Playback Thread");
+		thread.start();
 	}
 
 	public void run()
@@ -80,9 +80,9 @@ class PlayThread implements Runnable
 				replayEntity.setSprinting(isp);
 				replayEntity.onGround = iog;
 				replayEntity.setPositionAndRotation(x, y, z, yaw, pitch);
-
+				
 				processAction();
-
+				
 				Thread.sleep(100L);
 			}
 		}
@@ -111,64 +111,47 @@ class PlayThread implements Runnable
 
 	public void processAction() throws Exception
 	{
-		boolean hasAction = in.readBoolean();
-
-		if (hasAction)
+		if (!in.readBoolean())
 		{
-			byte type = in.readByte();
-			Action ma = null;
-
-			switch (type)
-			{
-				case 1:
-					ma = new Action((byte) 1);
-					ma.message = in.readUTF();
-					break;
-
-				case 4:
-					ma = new Action((byte) 4);
-					
-					int aSlot = in.readInt();
-					int aId = in.readInt();
-					int aDmg = in.readInt();
-					
-					if (aId != -1)
-					{
-						ma.itemData = CompressedStreamTools.read(in);
-					}
-					ma.armorSlot = aSlot;
-					ma.armorId = aId;
-					ma.armorDmg = aDmg;
-					break;
-
-				case 2:
-					ma = new Action((byte) 2);
-					break;
-
-				case 3:
-					ma = new Action((byte) 3);
-					ma.itemData = CompressedStreamTools.read(in);
-
-					break;
-
-				case 5:
-					ma = new Action((byte) 5);
-					ma.arrowCharge = in.readInt();
-					break;
-
-				case 7:
-					ma = new Action((byte) 7);
-					ma.xCoord = in.readInt();
-					ma.yCoord = in.readInt();
-					ma.zCoord = in.readInt();
-					ma.itemData = CompressedStreamTools.read(in);
-					break;
-			}
-
-			if (ma != null)
-			{
-				replayEntity.eventsList.add(ma);
-			}
+			return;
 		}
+		
+		Action action = new Action(in.readByte());
+
+		switch (action.type)
+		{
+			case Action.CHAT:
+				action.message = in.readUTF();
+			break;
+			
+			case Action.DROP:
+				action.itemData = CompressedStreamTools.read(in);
+			break;
+			
+			case Action.EQUIP:
+				int aSlot = in.readInt();
+				int aId = in.readInt();
+				int aDmg = in.readInt();
+				
+				if (aId != -1) action.itemData = CompressedStreamTools.read(in);
+				
+				action.armorSlot = aSlot;
+				action.armorId = aId;
+				action.armorDmg = aDmg;
+			break;
+
+			case Action.SHOOTARROW:
+				action.arrowCharge = in.readInt();
+			break;
+
+			case Action.PLACEBLOCK:
+				action.xCoord = in.readInt();
+				action.yCoord = in.readInt();
+				action.zCoord = in.readInt();
+				action.itemData = CompressedStreamTools.read(in);
+			break;
+		}
+
+		replayEntity.eventsList.add(action);
 	}
 }

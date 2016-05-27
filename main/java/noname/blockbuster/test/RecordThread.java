@@ -8,20 +8,21 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraftforge.common.DimensionManager;
 
 class RecordThread implements Runnable
 {
-	public Thread t;
+	public Thread thread;
 	public boolean capture = false;
-	
+
 	private EntityPlayer player;
 	private RandomAccessFile in;
 	private Boolean lastTickSwipe = Boolean.valueOf(false);
 	private int[] itemsEquipped = new int[5];
 	private List<Action> eventList;
-	
+
 	RecordThread(EntityPlayer _player, String filename)
 	{
 		try
@@ -49,8 +50,8 @@ class RecordThread implements Runnable
 		capture = true;
 		eventList = Mocap.getActionListForPlayer(player);
 
-		t = new Thread(this, "Mocap Record Thread");
-		t.start();
+		thread = new Thread(this, "Record Thread");
+		thread.start();
 	}
 
 	public void run()
@@ -115,69 +116,84 @@ class RecordThread implements Runnable
 	 */
 	private void trackArmor()
 	{
-		for (int ci = 1; ci < 5; ci++)
+		for (int i = 1; i < 5; i++)
 		{
-			if (player.inventory.armorInventory[(ci - 1)] != null)
-			{
-				if (Item.getIdFromItem(player.inventory.armorInventory[(ci - 1)].getItem()) != itemsEquipped[ci])
-				{
-					itemsEquipped[ci] = Item.getIdFromItem(player.inventory.armorInventory[(ci - 1)].getItem());
-					Action ma = new Action((byte) 4);
-					ma.armorSlot = ci;
-					ma.armorId = itemsEquipped[ci];
+			int slotIndex = i - 1;
 
-					ma.armorDmg = player.inventory.armorInventory[(ci - 1)].getMetadata();
-					player.inventory.armorInventory[(ci - 1)].writeToNBT(ma.itemData);
+			if (player.inventory.armorInventory[slotIndex] != null)
+			{
+				if (Item.getIdFromItem(player.inventory.armorInventory[slotIndex].getItem()) != itemsEquipped[i])
+				{
+					itemsEquipped[i] = Item.getIdFromItem(player.inventory.armorInventory[slotIndex].getItem());
+					Action ma = new Action(Action.EQUIP);
+					ma.armorSlot = i;
+					ma.armorId = itemsEquipped[i];
+					ma.armorDmg = player.inventory.armorInventory[slotIndex].getMetadata();
+
+					player.inventory.armorInventory[slotIndex].writeToNBT(ma.itemData);
 					eventList.add(ma);
 				}
 			}
-			else if (itemsEquipped[ci] != -1)
+			else if (itemsEquipped[i] != -1)
 			{
-				itemsEquipped[ci] = -1;
-				Action ma = new Action((byte) 4);
-				ma.armorSlot = ci;
-				ma.armorId = itemsEquipped[ci];
+				itemsEquipped[i] = -1;
+				Action ma = new Action(Action.EQUIP);
+				ma.armorSlot = i;
+				ma.armorId = itemsEquipped[i];
 				ma.armorDmg = 0;
 				eventList.add(ma);
 			}
 		}
 	}
 
+	/**
+	 * Track held item
+	 * 
+	 * @todo add ability to track also offhand item
+	 */
 	private void trackHeldItem()
 	{
-		if (player.getHeldItemMainhand() != null)
+		ItemStack item = player.getHeldItemMainhand();
+		
+		if (item != null)
 		{
-			if (Item.getIdFromItem(player.getHeldItemMainhand().getItem()) != itemsEquipped[0])
+			int id = Item.getIdFromItem(item.getItem());
+			
+			if (id != itemsEquipped[0])
 			{
-				itemsEquipped[0] = Item.getIdFromItem(player.getHeldItemMainhand().getItem());
-				Action ma = new Action((byte) 4);
+				itemsEquipped[0] = id;
+				
+				Action ma = new Action(Action.EQUIP);
 				ma.armorSlot = 0;
 				ma.armorId = itemsEquipped[0];
-				ma.armorDmg = player.getHeldItemMainhand().getMetadata();
-				player.getHeldItemMainhand().writeToNBT(ma.itemData);
+				ma.armorDmg = item.getMetadata();
+				
+				item.writeToNBT(ma.itemData);
 				eventList.add(ma);
 			}
 		}
 		else if (itemsEquipped[0] != -1)
 		{
 			itemsEquipped[0] = -1;
-			Action ma = new Action((byte) 4);
+			
+			Action ma = new Action(Action.EQUIP);
 			ma.armorSlot = 0;
 			ma.armorId = itemsEquipped[0];
 			ma.armorDmg = 0;
+			
 			eventList.add(ma);
 		}
 	}
 
 	/**
-	 * The hell is that?
+	 * Track the hand swing (like when you do the tap-tap with left-click)
 	 */
 	private void trackSwing()
 	{
 		if (player.isSwingInProgress && !lastTickSwipe)
 		{
 			lastTickSwipe = true;
-			eventList.add(new Action((byte) 2));
+			eventList.add(new Action(Action.SWIPE));
 		}
 		else
 		{
@@ -187,59 +203,61 @@ class RecordThread implements Runnable
 
 	/**
 	 * Write current injected action either via client event handler or action
-	 * that was recorded by RecordThread
+	 * that was recorded by RecordThread.
+	 * 
+	 * With enums it looks much much better!
 	 */
 	private void writeActions() throws IOException
 	{
-		if (eventList.size() > 0)
-		{
-			Action ma = eventList.get(0);
-
-			in.writeBoolean(true);
-			in.writeByte(ma.type);
-
-			switch (ma.type)
-			{
-				case 1:
-					in.writeUTF(ma.message);
-					break;
-
-				case 3:
-					CompressedStreamTools.write(ma.itemData, in);
-					break;
-
-				case 4:
-					in.writeInt(ma.armorSlot);
-					in.writeInt(ma.armorId);
-					in.writeInt(ma.armorDmg);
-					if (ma.armorId != -1)
-					{
-						CompressedStreamTools.write(ma.itemData, in);
-					}
-					break;
-
-				case 5:
-					in.writeInt(ma.arrowCharge);
-					break;
-
-				case 6:
-					Mocap.recordThreads.remove(player);
-					Mocap.broadcastMessage("Stopped recording " + player.getDisplayName() + ". Bye!");
-					capture = false;
-					break;
-
-				case 7:
-					in.writeInt(ma.xCoord);
-					in.writeInt(ma.yCoord);
-					in.writeInt(ma.zCoord);
-					CompressedStreamTools.write(ma.itemData, in);
-					break;
-			}
-			eventList.remove(0);
-		}
-		else
+		if (eventList.size() <= 0)
 		{
 			in.writeBoolean(false);
+			return;
 		}
+
+		Action ma = eventList.get(0);
+
+		in.writeBoolean(true);
+		in.writeByte(ma.type);
+
+		switch (ma.type)
+		{
+			case Action.CHAT:
+				in.writeUTF(ma.message);
+				break;
+
+			case Action.DROP:
+				CompressedStreamTools.write(ma.itemData, in);
+				break;
+
+			case Action.EQUIP:
+				in.writeInt(ma.armorSlot);
+				in.writeInt(ma.armorId);
+				in.writeInt(ma.armorDmg);
+
+				if (ma.armorId != -1)
+					CompressedStreamTools.write(ma.itemData, in);
+				break;
+
+			case Action.SHOOTARROW:
+				in.writeInt(ma.arrowCharge);
+				break;
+
+			case Action.LOGOUT:
+				Mocap.recordThreads.remove(player);
+				Mocap.broadcastMessage("Stopped recording " + player.getDisplayName().getFormattedText() + ". Bye!");
+
+				capture = false;
+				break;
+
+			case Action.PLACEBLOCK:
+				in.writeInt(ma.xCoord);
+				in.writeInt(ma.yCoord);
+				in.writeInt(ma.zCoord);
+				CompressedStreamTools.write(ma.itemData, in);
+				break;
+		}
+
+		eventList.remove(0);
 	}
 }

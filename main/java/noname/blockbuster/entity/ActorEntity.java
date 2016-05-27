@@ -40,14 +40,8 @@ public class ActorEntity extends EntityCreature
 		float f = ma.arrowCharge / 20.0F;
 		f = (f * f + f * 2.0F) / 3.0F;
 
-		if (f < 0.1D)
-		{
-			return;
-		}
-		if (f > 1.0F)
-		{
-			f = 1.0F;
-		}
+		if (f < 0.1D) return;
+		if (f > 1.0F) f = 1.0F;
 
 		EntityArrow entityarrow = new EntityArrow(worldObj)
 		{
@@ -62,17 +56,20 @@ public class ActorEntity extends EntityCreature
 		worldObj.spawnEntityInWorld(entityarrow);
 	}
 
+	/**
+	 * Process the actions
+	 */
 	private void processActions(Action action)
 	{
 		ItemStack foo = null;
 
 		switch (action.type)
 		{
-			case 2:
+			case Action.SWIPE:
 				swingArm(EnumHand.MAIN_HAND);
-				break;
+			break;
 
-			case 4:
+			case Action.EQUIP:
 				EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
 
 				if (action.armorId == -1)
@@ -83,9 +80,9 @@ public class ActorEntity extends EntityCreature
 				{
 					setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
 				}
-				break;
+			break;
 
-			case 3:
+			case Action.DROP:
 				foo = ItemStack.loadItemStackFromNBT(action.itemData);
 
 				EntityItem ea = new EntityItem(worldObj, posX, posY - 0.30000001192092896D + getEyeHeight(), posZ, foo);
@@ -106,13 +103,17 @@ public class ActorEntity extends EntityCreature
 				ea.motionZ += Math.sin(f1) * f;
 				
 				worldObj.spawnEntityInWorld(ea);
-				break;
-			case 5:
+			break;
+			
+			case Action.SHOOTARROW:
 				replayShootArrow(action);
-				break;
+			break;
 		}
 	}
-
+	
+	/**
+	 * Adjust the movement and limb swinging action stuff
+	 */
 	public void onLivingUpdate()
 	{
 		if (eventsList.size() > 0)
@@ -122,7 +123,7 @@ public class ActorEntity extends EntityCreature
 
 		updateArmSwingProgress();
 
-		/* Taken from the EntityDragon */
+		/* Taken from the EntityDragon, IDK what it does */
 		if (newPosRotationIncrements > 0)
 		{
 			double d5 = posX + (interpTargetX - posX) / (double) newPosRotationIncrements;
@@ -131,8 +132,7 @@ public class ActorEntity extends EntityCreature
 			double d2 = MathHelper.wrapAngleTo180_double(interpTargetYaw - (double) rotationYaw);
 
 			rotationYaw = (float) ((double) rotationYaw + d2 / (double) newPosRotationIncrements);
-			rotationPitch = (float) ((double) rotationPitch
-					+ (newPosX - (double) rotationPitch) / (double) newPosRotationIncrements);
+			rotationPitch = (float) ((double) rotationPitch + (newPosX - (double) rotationPitch) / (double) newPosRotationIncrements);
 			newPosRotationIncrements -= 1;
 
 			setPosition(d5, d0, d1);
@@ -144,22 +144,11 @@ public class ActorEntity extends EntityCreature
 			motionY *= 0.98D;
 			motionZ *= 0.98D;
 		}
-
-		if (Math.abs(motionX) < 0.005D)
-		{
-			motionX = 0.0D;
-		}
-
-		if (Math.abs(motionY) < 0.005D)
-		{
-			motionY = 0.0D;
-		}
-
-		if (Math.abs(motionZ) < 0.005D)
-		{
-			motionZ = 0.0D;
-		}
-
+		
+		if (Math.abs(motionX) < 0.005D) motionX = 0.0D;
+		if (Math.abs(motionY) < 0.005D) motionY = 0.0D;
+		if (Math.abs(motionZ) < 0.005D) motionZ = 0.0D;
+		
 		if (!isServerWorld())
 		{
 			rotationYawHead = rotationYaw;
@@ -171,11 +160,8 @@ public class ActorEntity extends EntityCreature
 		double d0 = posX - prevPosX;
 		double d1 = posZ - prevPosZ;
 		float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
-
-		if (f > 1.0F)
-		{
-			f = 1.0F;
-		}
+		
+		if (f > 1.0F) f = 1.0F;
 
 		limbSwingAmount += (f - limbSwingAmount) * 0.4F;
 		limbSwing += limbSwingAmount;

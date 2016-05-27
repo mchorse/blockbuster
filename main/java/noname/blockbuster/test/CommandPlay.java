@@ -29,6 +29,12 @@ public class CommandPlay extends CommandBase
 	{
 		return "/record-play <replay> <skinname> <entityname>";
 	}
+	
+	@Override
+	public int getRequiredPermissionLevel()
+	{
+		return 0;
+	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
@@ -90,7 +96,7 @@ public class CommandPlay extends CommandBase
 		{
 			PlayThread item = (PlayThread) iterator.next();
 			
-			if (!item.t.isAlive())
+			if (!item.thread.isAlive())
 			{
 				iterator.remove();
 			}
