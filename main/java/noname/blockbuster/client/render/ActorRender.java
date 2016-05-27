@@ -17,15 +17,6 @@ public class ActorRender extends RenderBiped<ActorEntity>
 	{
 		super(renderManagerIn, modelBipedIn, shadowSize);
 	}
-	
-	@Override
-	public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks) 
-	{
-		if (!entity.isRecording) 
-		{
-			super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		}
-	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(ActorEntity entity) 
