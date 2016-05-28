@@ -11,6 +11,8 @@ import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraConfigItem;
 import noname.blockbuster.item.CameraItem;
+import noname.blockbuster.item.RecordItem;
+import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.MocapEventHandler;
 
 public class CommonProxy 
@@ -21,6 +23,8 @@ public class CommonProxy
 	{
     	registerItem(Blockbuster.cameraItem = new CameraItem());
     	registerItem(Blockbuster.cameraConfigItem = new CameraConfigItem());
+    	registerItem(Blockbuster.registerItem = new RegisterItem());
+    	registerItem(Blockbuster.recordItem = new RecordItem());
     	
     	registerBlock(Blockbuster.directorBlock = new DirectorBlock());
     	

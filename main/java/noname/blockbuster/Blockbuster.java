@@ -40,7 +40,8 @@ public class Blockbuster
     /* Items */
     public static Item cameraItem;
     public static Item cameraConfigItem;
-    public static Item directorItem;
+    public static Item recordItem;
+    public static Item registerItem;
     
     /* Blocks */
     public static Block directorBlock;
@@ -51,13 +52,12 @@ public class Blockbuster
 		@Override
 		public Item getTabIconItem() 
 		{
-			return Blockbuster.cameraItem;
+			return Item.getItemFromBlock(Blockbuster.directorBlock);
 		} 
 	};
 	
 	@Mod.Instance
 	public static Blockbuster instance;
-	
 	@SidedProxy(clientSide="noname.blockbuster.ClientProxy", serverSide="noname.blockbuster.CommonProxy")
 	public static CommonProxy proxy;
 	

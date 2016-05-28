@@ -1,9 +1,13 @@
 package noname.blockbuster.client.render;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelZombie;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
@@ -16,8 +20,16 @@ public class ActorRender extends RenderBiped<ActorEntity>
 	public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize) 
 	{
 		super(renderManagerIn, modelBipedIn, shadowSize);
+		
+		addLayer(new LayerBipedArmor(this));
 	}
 
+	protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
+    {
+        float f = 0.920F;
+        GlStateManager.scale(f, f, f);
+    }
+	
 	@Override
 	protected ResourceLocation getEntityTexture(ActorEntity entity) 
 	{
