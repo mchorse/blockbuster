@@ -15,8 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import noname.blockbuster.test.Action;
-import noname.blockbuster.test.Mocap;
+import noname.blockbuster.recording.Action;
+import noname.blockbuster.recording.Mocap;
 
 /**
  * Actor entity class
@@ -154,7 +154,7 @@ public class ActorEntity extends EntityCreature
 			rotationYawHead = rotationYaw;
 		}
 
-		/* Taken from the EntityOtherPlayerMP, I guess */
+		/* Taken from the EntityOtherPlayerMP, I think */
 		prevLimbSwingAmount = limbSwingAmount;
 
 		double d0 = posX - prevPosX;

@@ -3,24 +3,14 @@ package noname.blockbuster;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import noname.blockbuster.block.DirectorBlock;
-import noname.blockbuster.entity.ActorEntity;
-import noname.blockbuster.entity.CameraEntity;
-import noname.blockbuster.item.CameraConfigItem;
-import noname.blockbuster.item.CameraItem;
-import noname.blockbuster.test.CommandPlay;
-import noname.blockbuster.test.CommandRecord;
-import noname.blockbuster.test.MocapEventHandler;
+import noname.blockbuster.recording.CommandPlay;
+import noname.blockbuster.recording.CommandRecord;
 
 /**
  * Blockbuster's main entry
@@ -47,16 +37,16 @@ public class Blockbuster
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "1.0";
     
-    /* Items and blocks */
-    public static int ID = 0;
-    
+    /* Items */
     public static Item cameraItem;
     public static Item cameraConfigItem;
     public static Item directorItem;
+    
+    /* Blocks */
     public static Block directorBlock;
     
     /* Creative tabs */
-    public static final CreativeTabs busterTab = new CreativeTabs("blockbusterTab") 
+    public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbusterTab") 
 	{
 		@Override
 		public Item getTabIconItem() 
@@ -64,6 +54,9 @@ public class Blockbuster
 			return Blockbuster.cameraItem;
 		} 
 	};
+	
+	@Mod.Instance
+	public static Blockbuster instance;
 	
 	@SidedProxy(clientSide="noname.blockbuster.ClientProxy", serverSide="noname.blockbuster.CommonProxy")
 	public static CommonProxy proxy;
@@ -82,13 +75,6 @@ public class Blockbuster
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
-    	registerBlock(directorBlock = new DirectorBlock());
-    	registerItem(cameraItem = new CameraItem());
-    	registerItem(cameraConfigItem = new CameraConfigItem());
-    	
-    	registerEntity(CameraEntity.class, "Camera");
-    	registerEntity(ActorEntity.class, "Actor");
-    	
     	proxy.preLoad();
     }
     
@@ -98,7 +84,7 @@ public class Blockbuster
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
+    	proxy.load();
     }
     
     /**
@@ -109,29 +95,5 @@ public class Blockbuster
     {
     	event.registerServerCommand(new CommandRecord());
     	event.registerServerCommand(new CommandPlay());
-    }
-    
-    /**
-     * Register an item with Forge's game registry
-     */
-    private void registerItem(Item item)
-    {
-    	GameRegistry.register(item);
-    }
-    
-    private void registerBlock(Block block)
-    {
-    	GameRegistry.register(block);
-    	GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-    }
-    
-    /**
-     * Thanks to animal bikes mod for this wonderful example!
-     * Kids, wanna learn how to mod minecraft with forge? That's simple. Find mods for specific minecraft version
-     * and decompile the .jar files with JD-GUI. Isn't that simple?
-     */
-    private void registerEntity(Class entity, String name)
-    {
-    	EntityRegistry.registerModEntity(entity, name, ID++, this, 40, 1, false);
     }
 }

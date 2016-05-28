@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

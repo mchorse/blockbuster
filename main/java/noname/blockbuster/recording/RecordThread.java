@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -224,38 +224,37 @@ class RecordThread implements Runnable
 		{
 			case Action.CHAT:
 				in.writeUTF(ma.message);
-				break;
+			break;
 
 			case Action.DROP:
 				CompressedStreamTools.write(ma.itemData, in);
-				break;
+			break;
 
 			case Action.EQUIP:
 				in.writeInt(ma.armorSlot);
 				in.writeInt(ma.armorId);
 				in.writeInt(ma.armorDmg);
 
-				if (ma.armorId != -1)
-					CompressedStreamTools.write(ma.itemData, in);
-				break;
+				if (ma.armorId != -1) CompressedStreamTools.write(ma.itemData, in);
+			break;
 
 			case Action.SHOOTARROW:
 				in.writeInt(ma.arrowCharge);
-				break;
+			break;
 
 			case Action.LOGOUT:
 				Mocap.recordThreads.remove(player);
 				Mocap.broadcastMessage("Stopped recording " + player.getDisplayName().getFormattedText() + ". Bye!");
 
 				capture = false;
-				break;
+			break;
 
 			case Action.PLACEBLOCK:
 				in.writeInt(ma.xCoord);
 				in.writeInt(ma.yCoord);
 				in.writeInt(ma.zCoord);
 				CompressedStreamTools.write(ma.itemData, in);
-				break;
+			break;
 		}
 
 		eventList.remove(0);

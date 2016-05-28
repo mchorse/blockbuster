@@ -24,7 +24,7 @@ public class CameraItem extends Item
 		setMaxStackSize(1);
 		setUnlocalizedName("cameraItem");
 		setRegistryName("cameraItem");
-		setCreativeTab(Blockbuster.busterTab);
+		setCreativeTab(Blockbuster.blockbusterTab);
 	}
 	
 	@Override

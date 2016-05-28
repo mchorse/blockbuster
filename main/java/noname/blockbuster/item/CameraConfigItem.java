@@ -13,6 +13,6 @@ public class CameraConfigItem extends Item
 		setMaxStackSize(1);
 		setUnlocalizedName("cameraConfigItem");
 		setRegistryName("cameraConfigItem");
-		setCreativeTab(Blockbuster.busterTab);
+		setCreativeTab(Blockbuster.blockbusterTab);
 	}
 }

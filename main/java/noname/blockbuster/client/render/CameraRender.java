@@ -35,7 +35,7 @@ public class CameraRender extends RenderLiving
 	{
 		CameraEntity camera = (CameraEntity)entity;
 		
-		if (camera.isVisible && !camera.isBeingRidden()) 
+		if (!camera.isBeingRidden()) 
 		{
 			super.doRender(entity, x, y, z, entityYaw, partialTicks);
 		}

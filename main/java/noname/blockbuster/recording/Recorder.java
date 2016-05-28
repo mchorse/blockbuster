@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

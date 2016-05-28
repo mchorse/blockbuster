@@ -18,8 +18,6 @@ public class CameraEntity extends EntityLiving
 	public float acceleration = 0.0F;
 	public float accelerationRate = 0.02F;
 	public float maxAcceleration = 1.5f;
-	
-	public boolean isVisible = true;
 	public boolean canFly = true;
 	
 	public CameraEntity(World worldIn) 
@@ -28,14 +26,16 @@ public class CameraEntity extends EntityLiving
 		setSize(0.9F, 0.9F);
 	}
 	
-	/** No knockback */
+	/** 
+	 * No knockback is allowed 
+	 */
 	@Override
 	public void knockBack(Entity entityIn, float magnitued, double a, double b) {}
 	
 	@Override
 	public double getMountedYOffset() 
 	{
-		return this.height * 0.2;
+		return this.height * 0.3;
 	}
 	
 	@Override
@@ -57,15 +57,6 @@ public class CameraEntity extends EntityLiving
 	/* Riding logic */
 	
 	/**
-	 * Totally not taken from EntityPig class
-	 */
-	@Override
-	public Entity getControllingPassenger()
-    {
-        return this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
-    }
-	
-	/**
 	 * Processes player's right clicking on the entity
 	 * 
 	 * If the player holds camera configuration item, then GUI with camera configuration properties 
@@ -74,21 +65,29 @@ public class CameraEntity extends EntityLiving
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
-		System.out.println(player);
-		
-		if (!worldObj.isRemote && player.getHeldItemMainhand().getItem() instanceof CameraConfigItem)
+		if (!worldObj.isRemote)
 		{
-			return true;
-		}
-		
-		if (!worldObj.isRemote && !isBeingRidden()) 
-		{
-			player.startRiding(this);
+			if (stack != null && stack.getItem() instanceof CameraConfigItem)
+			{
+				return true;
+			}
 			
-			return true;
+			if (!isBeingRidden())
+			{
+				return player.startRiding(this);
+			}
 		}
 		
         return false;
+    }
+	
+	/**
+	 * Totally not taken from EntityPig class
+	 */
+	@Override
+	public Entity getControllingPassenger()
+    {
+        return this.getPassengers().isEmpty() ? null : (Entity)this.getPassengers().get(0);
     }
 	
 	@Override

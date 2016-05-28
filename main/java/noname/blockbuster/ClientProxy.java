@@ -20,6 +20,8 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preLoad()
 	{
+		super.preLoad();
+		
 		registerItemModel(Blockbuster.cameraItem, Blockbuster.path("cameraItem"));
 		registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("cameraConfigItem"));
 		registerItemModel(Item.getItemFromBlock(Blockbuster.directorBlock), Blockbuster.path("directorBlock"));

@@ -39,7 +39,7 @@ public class DirectorBlock extends Block
 	public DirectorBlock()
 	{
 		super(Material.rock);
-		setCreativeTab(Blockbuster.busterTab);
+		setCreativeTab(Blockbuster.blockbusterTab);
 		setRegistryName("directorBlock");
 		setUnlocalizedName("directorBlock");
 	}

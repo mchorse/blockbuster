@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import java.util.Collections;
 import java.util.HashMap;

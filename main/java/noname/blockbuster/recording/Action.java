@@ -1,4 +1,4 @@
-package noname.blockbuster.test;
+package noname.blockbuster.recording;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -24,8 +24,8 @@ public class Action
 	/**
 	 * Total rip-off from Mocap mod
 	 * 
-	 * I probably need to ask author's permission to use these values for my
-	 * mod... Nah, it's fine.
+	 * I probably need to ask author's permission to use these values (and code) 
+	 * for my mod... Nah, I think it's fine.
 	 */
 	public static final byte CHAT = 1;
 	public static final byte SWIPE = 2;
