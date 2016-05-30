@@ -1,9 +1,13 @@
 package noname.blockbuster;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.block.DirectorBlock;
@@ -15,7 +19,7 @@ import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.MocapEventHandler;
 
-public class CommonProxy 
+public class CommonProxy implements IGuiHandler
 {
 	protected static int ID = 0;
 	
@@ -63,4 +67,16 @@ public class CommonProxy
     {
     	EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 40, 1, false);
     }
+
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		return null;
+	}
+
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		return null;
+	}
 }

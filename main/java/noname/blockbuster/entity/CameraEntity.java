@@ -10,15 +10,17 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.CameraConfigItem;
 
 public class CameraEntity extends EntityLiving
 {
 	public float speed = 0.4F;
-	public float acceleration = 0.0F;
 	public float accelerationRate = 0.02F;
-	public float maxAcceleration = 1.5f;
+	public float accelerationMax = 1.5f;
 	public boolean canFly = true;
+	
+	protected float acceleration = 0.0F;
 	
 	public CameraEntity(World worldIn) 
 	{
@@ -67,8 +69,12 @@ public class CameraEntity extends EntityLiving
     {
 		if (!worldObj.isRemote)
 		{
-			if (stack != null && stack.getItem() instanceof CameraConfigItem)
+			ItemStack item = player.getHeldItemMainhand();
+			
+			if (item != null && item.getItem() instanceof CameraConfigItem)
 			{
+				player.openGui(Blockbuster.instance, 0, worldObj, (int)posX, (int)posY, (int)posZ);
+				
 				return true;
 			}
 			
@@ -120,7 +126,7 @@ public class CameraEntity extends EntityLiving
             /* Acceleration logic */
             if (strafe != 0 || forward != 0) 
             {
-            	acceleration = MathHelper.clamp_float(acceleration + accelerationRate, 0.0F, maxAcceleration);
+            	acceleration = MathHelper.clamp_float(acceleration + accelerationRate, 0.0F, accelerationMax);
             	
             	flyingMotion *= acceleration;
             	forward *= acceleration;

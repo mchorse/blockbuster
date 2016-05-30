@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import noname.blockbuster.recording.CommandPlay;
 import noname.blockbuster.recording.CommandRecord;
 
@@ -75,6 +76,8 @@ public class Blockbuster
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
+    	NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+    	
     	proxy.preLoad();
     }
     
