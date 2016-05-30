@@ -10,6 +10,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+import noname.blockbuster.networking.CameraAttributesUpdate;
 import noname.blockbuster.recording.CommandPlay;
 import noname.blockbuster.recording.CommandRecord;
 
@@ -62,6 +65,8 @@ public class Blockbuster
 	@SidedProxy(clientSide="noname.blockbuster.ClientProxy", serverSide="noname.blockbuster.CommonProxy")
 	public static CommonProxy proxy;
 	
+	public static SimpleNetworkWrapper channel;
+	
 	/**
 	 * "Macro" for getting id for Blockbuster mod items/entities/blocks/etc. 
 	 */
@@ -77,6 +82,8 @@ public class Blockbuster
     public void preLoad(FMLPreInitializationEvent event)
     {
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+    	channel = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    	channel.registerMessage(CameraAttributesUpdate.Handler.class, CameraAttributesUpdate.class, 0, Side.SERVER);
     	
     	proxy.preLoad();
     }

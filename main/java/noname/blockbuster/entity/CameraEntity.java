@@ -4,6 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -44,7 +46,8 @@ public class CameraEntity extends EntityLiving
 	protected void applyEntityAttributes() 
 	{
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+		
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
 	}
 	
 	/**
@@ -67,17 +70,20 @@ public class CameraEntity extends EntityLiving
 	@Override
 	public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
-		if (!worldObj.isRemote)
+		ItemStack item = player.getHeldItemMainhand();
+		
+		if (item != null && item.getItem() instanceof CameraConfigItem)
 		{
-			ItemStack item = player.getHeldItemMainhand();
-			
-			if (item != null && item.getItem() instanceof CameraConfigItem)
+			if (worldObj.isRemote) 
 			{
-				player.openGui(Blockbuster.instance, 0, worldObj, (int)posX, (int)posY, (int)posZ);
-				
-				return true;
+				player.openGui(Blockbuster.instance, 0, worldObj, getEntityId(), 0, 0);
 			}
 			
+			return true;
+		}
+		
+		if (!worldObj.isRemote)
+		{
 			if (!isBeingRidden())
 			{
 				return player.startRiding(this);
@@ -113,13 +119,13 @@ public class CameraEntity extends EntityLiving
             EntityLivingBase player = (EntityLivingBase)this.getControllingPassenger();
             
             forward = player.moveForward;
-            strafe = player.moveStrafing * 0.9F;
+            strafe = player.moveStrafing * 0.65F;
             
             boolean oldOnGround = this.onGround;
             float flyingMotion = forward != 0 ? -player.rotationPitch / 90.0F : 0.0F;
             
             prevRotationYaw = rotationYaw = player.rotationYaw;
-            rotationPitch = player.rotationPitch * 0.5F;
+            prevRotationPitch = rotationPitch = player.rotationPitch;
             rotationYawHead = renderYawOffset = rotationYaw;
             setRotation(rotationYaw, rotationPitch);
             
@@ -128,7 +134,6 @@ public class CameraEntity extends EntityLiving
             {
             	acceleration = MathHelper.clamp_float(acceleration + accelerationRate, 0.0F, accelerationMax);
             	
-            	flyingMotion *= acceleration;
             	forward *= acceleration;
             	strafe *= acceleration;
             }
@@ -137,11 +142,13 @@ public class CameraEntity extends EntityLiving
             	acceleration = 0.0F;
             }
             
+            System.out.println(forward + " " + flyingMotion);
+            
             /* Flying logic */
             if (canFly)
             {
             	forward = flyingMotion == 0 ? forward : forward * (1 - Math.abs(flyingMotion));
-            	motionY = flyingMotion * Math.copySign(1.0F, forward);
+            	motionY = flyingMotion * acceleration * Math.copySign(1.0F, forward);
             }
             
             /* Hacks */

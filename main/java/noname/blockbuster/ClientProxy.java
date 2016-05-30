@@ -4,8 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -66,7 +64,7 @@ public class ClientProxy extends CommonProxy
 	{
 		if (ID == 0)
 		{
-			return new GuiCamera();
+			return new GuiCamera((CameraEntity)world.getEntityByID(x));
 		}
 		
 		return null;

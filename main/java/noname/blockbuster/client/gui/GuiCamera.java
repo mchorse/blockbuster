@@ -6,57 +6,51 @@ import com.google.common.base.Predicate;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.networking.CameraAttributesUpdate;
 
 public class GuiCamera extends GuiScreen
 {
-	private static final Predicate<String> validator = new Predicate<String>()
-    {
-        public boolean apply(String value)
-        {
-        	try 
-        	{
-        		Double.parseDouble(value); 
-        	}
-        	catch (Exception e) 
-        	{
-        		return false;
-        	}
-        	
-        	return true;
-        }
-    };
-	
-	protected GuiTextField speed;
-	protected GuiTextField accelerationRate;
-	protected GuiTextField accelerationMax;
+	protected GuiSlider speed;
+	protected GuiSlider accelerationRate;
+	protected GuiSlider accelerationMax;
 	protected GuiButton canFly;
 	protected GuiButton done;
 	
+	private CameraEntity camera;
+	
+	public GuiCamera(CameraEntity entity)
+	{
+		camera = entity;
+	}
+
 	@Override
 	public void initGui()
 	{
 		int x = width/2 - 150;
 		
-		speed = new GuiTextField(0, fontRendererObj, x, 50, 300, 20);
-		// speed.setText(Double.toString(camera.speed));
-		speed.setValidator(validator);
+		speed = new GuiSlider(0, x, 50, 140, 20, "Speed: ", "", 0, 1, 0, true, true);
+		accelerationRate = new GuiSlider(1, x, 80, 140, 20, "Acceleration rate: ", "", 0, 0.5, 0, true, true);
+		accelerationMax = new GuiSlider(2, x + 160, 50, 140, 20, "Acceleration max: ", "", 0, 2, 0, true, true);
 		
-		accelerationRate = new GuiTextField(1, fontRendererObj, x, 90, 300, 20);
-		// accelerationRate.setText(Double.toString(camera.accelerationRate));
-		accelerationRate.setValidator(validator);
+		speed.precision = accelerationMax.precision = 1;
+		accelerationRate.precision = 3;
 		
-		accelerationMax = new GuiTextField(2, fontRendererObj, x, 130, 300, 20);
-		// accelerationMax.setText(Double.toString(camera.accelerationMax));
-		accelerationMax.setValidator(validator);
+		speed.setValue(camera.speed);
+		accelerationRate.setValue(camera.accelerationRate);
+		accelerationMax.setValue(camera.accelerationMax);
+		
+		speed.updateSlider();
+		accelerationRate.updateSlider();
+		accelerationMax.updateSlider();
 		
 		buttonList.clear();
-		buttonList.add(canFly = new GuiButton(3, x, 180, 160, 20, "Can fly"));
-		buttonList.add(done = new GuiButton(4, x + 180, 160, 140, 20, "Done"));
+		buttonList.add(canFly = new GuiButton(3, x + 160, 80, 140, 20, "Can fly"));
+		buttonList.add(done = new GuiButton(4, x, 150, 300, 20, "Done"));
 		
-		// canFly.displayString = camera.canFly ? "Can fly" : "Can't fly";
+		canFly.displayString = camera.canFly ? "Can fly" : "Can't fly";
 	}
 	
 	@Override
@@ -64,14 +58,26 @@ public class GuiCamera extends GuiScreen
 	{
 		switch (button.id)
 		{
-			case 3:
-				updateFlyButton();
-			break;
-			
-			case 4:
-				mc.displayGuiScreen(null);
-			break;
+			case 3: updateFlyButton(); break;
+			case 4: saveAndExit(); break;
 		}
+	}
+	
+	private void saveAndExit()
+	{
+		float cSpeed = (float)speed.getValue();
+		float cRate = (float)accelerationRate.getValue();
+		float cMax = (float)accelerationMax.getValue();
+		boolean cCanFly = canFly.displayString == "Can fly";
+		
+		Blockbuster.channel.sendToServer(new CameraAttributesUpdate(camera.getEntityId(), cSpeed, cRate, cMax, cCanFly));
+		
+		camera.speed = cSpeed;
+		camera.accelerationRate = cRate;
+		camera.accelerationMax = cMax;
+		camera.canFly = cCanFly;
+		
+		mc.displayGuiScreen(null);
 	}
 	
 	private void updateFlyButton()
@@ -90,37 +96,31 @@ public class GuiCamera extends GuiScreen
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		speed.mouseClicked(mouseX, mouseY, mouseButton);
-		accelerationRate.mouseClicked(mouseX, mouseY, mouseButton);
-		accelerationMax.mouseClicked(mouseX, mouseY, mouseButton);
+		
+		speed.mousePressed(mc, mouseX, mouseY);
+		accelerationRate.mousePressed(mc, mouseX, mouseY);
+		accelerationMax.mousePressed(mc, mouseX, mouseY);
 	}
 	
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException
+	protected void mouseReleased(int mouseX, int mouseY, int state)
 	{
-		speed.textboxKeyTyped(typedChar, keyCode);
-		accelerationRate.textboxKeyTyped(typedChar, keyCode);
-		accelerationMax.textboxKeyTyped(typedChar, keyCode);
+		super.mouseReleased(mouseX, mouseY, state);
+		
+		speed.mouseReleased(mouseX, mouseY);
+		accelerationRate.mouseReleased(mouseX, mouseY);
+		accelerationMax.mouseReleased(mouseX, mouseY);
 	}
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		drawDefaultBackground();
-		
-		int font = fontRendererObj.FONT_HEIGHT;
-		int x = width/2 - 150;
-		
 		drawCenteredString(fontRendererObj, "Camera's configuration", width/2, 25, 0xffffffff);
 		
-		drawString(fontRendererObj, "Camera speed", x, 50 - 4 - font, 0xffffffff);
-		speed.drawTextBox();
-		
-		drawString(fontRendererObj, "Camera acceleration rate", x, 90 - 4 - font, 0xffffffff);
-		accelerationRate.drawTextBox();
-		
-		drawString(fontRendererObj, "Camera max acceleration", x, 130 - 4 - font, 0xffffffff);
-		accelerationMax.drawTextBox();
+		speed.drawButton(mc, mouseX, mouseY);
+		accelerationRate.drawButton(mc, mouseX, mouseY);
+		accelerationMax.drawButton(mc, mouseX, mouseY);
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

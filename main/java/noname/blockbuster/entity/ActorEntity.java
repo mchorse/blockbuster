@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,13 +32,23 @@ import noname.blockbuster.recording.Mocap;
  */
 public class ActorEntity extends EntityCreature
 {
+	private static final DataParameter<String> RECORDING_ID = EntityDataManager.<String>createKey(ActorEntity.class, DataSerializers.STRING); 
+	
 	public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
 
 	public ActorEntity(World worldIn)
 	{
 		super(worldIn);
 	}
-
+	
+	@Override
+	protected void entityInit()
+	{
+		super.entityInit();
+		
+		dataWatcher.register(RECORDING_ID, "");
+	}
+	
 	private void replayShootArrow(Action ma)
 	{
 		float f = ma.arrowCharge / 20.0F;
@@ -114,13 +128,14 @@ public class ActorEntity extends EntityCreature
 	/**
 	 * Adjust the movement and limb swinging action stuff
 	 */
+	@Override
 	public void onLivingUpdate()
 	{
 		if (eventsList.size() > 0)
 		{
 			processActions(eventsList.remove(0));
 		}
-
+		
 		updateArmSwingProgress();
 
 		/* Taken from the EntityDragon, IDK what it does */

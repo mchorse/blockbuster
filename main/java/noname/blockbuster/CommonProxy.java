@@ -67,7 +67,9 @@ public class CommonProxy implements IGuiHandler
     {
     	EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 40, 1, false);
     }
-
+    
+    /* IGuiHandler implementation */
+    
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
