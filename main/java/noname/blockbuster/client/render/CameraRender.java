@@ -15,41 +15,41 @@ import noname.blockbuster.client.model.CameraModel;
 import noname.blockbuster.entity.CameraEntity;
 
 @SideOnly(Side.CLIENT)
-public class CameraRender extends RenderLiving 
+public class CameraRender extends RenderLiving
 {
-	private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
-	
-	public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn) 
-	{
-		super(rendermanagerIn, modelbaseIn, shadowsizeIn);
-	}
+    private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
 
-	@Override
-	protected ResourceLocation getEntityTexture(Entity entity) 
-	{
-		return resource;
-	}
-	
-	@Override
-	public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks) 
-	{
-		CameraEntity camera = (CameraEntity)entity;
-		
-		if (!camera.isBeingRidden()) 
-		{
-			super.doRender(entity, x, y, z, entityYaw, partialTicks);
-		}
-	}
-	
-	/**
-	 * Renderer's factory
-	 */
-	public static class CameraFactory implements IRenderFactory
-	{
-		@Override
-		public Render createRenderFor(RenderManager manager) 
-		{
-			return new CameraRender(manager, new CameraModel(), 1);
-		}
-	}
+    public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn)
+    {
+        super(rendermanagerIn, modelbaseIn, shadowsizeIn);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity entity)
+    {
+        return resource;
+    }
+
+    @Override
+    public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
+        CameraEntity camera = (CameraEntity) entity;
+
+        if (!camera.isBeingRidden())
+        {
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        }
+    }
+
+    /**
+     * Renderer's factory
+     */
+    public static class CameraFactory implements IRenderFactory
+    {
+        @Override
+        public Render createRenderFor(RenderManager manager)
+        {
+            return new CameraRender(manager, new CameraModel(), 1);
+        }
+    }
 }

@@ -30,7 +30,7 @@ class PlayThread implements Runnable
 		}
 
 		replayEntity = actor;
-		
+
 		thread = new Thread(this, "Playback Thread");
 		thread.start();
 	}
@@ -45,7 +45,7 @@ class PlayThread implements Runnable
 		{
 			e1.printStackTrace();
 		}
-		
+
 		try
 		{
 			short magic = in.readShort();
@@ -80,9 +80,9 @@ class PlayThread implements Runnable
 				replayEntity.setSprinting(isp);
 				replayEntity.onGround = iog;
 				replayEntity.setPositionAndRotation(x, y, z, yaw, pitch);
-				
+
 				processAction();
-				
+
 				Thread.sleep(100L);
 			}
 		}
@@ -115,41 +115,42 @@ class PlayThread implements Runnable
 		{
 			return;
 		}
-		
+
 		Action action = new Action(in.readByte());
 
 		switch (action.type)
 		{
 			case Action.CHAT:
 				action.message = in.readUTF();
-			break;
-			
+				break;
+
 			case Action.DROP:
 				action.itemData = CompressedStreamTools.read(in);
-			break;
-			
+				break;
+
 			case Action.EQUIP:
 				int aSlot = in.readInt();
 				int aId = in.readInt();
 				int aDmg = in.readInt();
-				
-				if (aId != -1) action.itemData = CompressedStreamTools.read(in);
-				
+
+				if (aId != -1)
+					action.itemData = CompressedStreamTools.read(in);
+
 				action.armorSlot = aSlot;
 				action.armorId = aId;
 				action.armorDmg = aDmg;
-			break;
+				break;
 
 			case Action.SHOOTARROW:
 				action.arrowCharge = in.readInt();
-			break;
+				break;
 
 			case Action.PLACEBLOCK:
 				action.xCoord = in.readInt();
 				action.yCoord = in.readInt();
 				action.zCoord = in.readInt();
 				action.itemData = CompressedStreamTools.read(in);
-			break;
+				break;
 		}
 
 		replayEntity.eventsList.add(action);

@@ -27,7 +27,7 @@ public class CommandPlay extends CommandBase
 	{
 		return "/record-play <replay> <skinname> <entityname>";
 	}
-	
+
 	@Override
 	public int getRequiredPermissionLevel()
 	{
@@ -42,44 +42,44 @@ public class CommandPlay extends CommandBase
 			sender.addChatMessage(new TextComponentString(getCommandUsage(null)));
 			return;
 		}
-		
+
 		File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/mocaps/" + args[0] + ".mocap");
-		
+
 		if (!file.exists())
 		{
 			Mocap.broadcastMessage("Can't find " + args[0] + ".mocap replay file!");
 			return;
 		}
-		
+
 		double x = 0.0D;
 		double y = 0.0D;
 		double z = 0.0D;
-		
+
 		try
 		{
 			RandomAccessFile in = new RandomAccessFile(file, "r");
 			short magic = in.readShort();
-			
+
 			if (magic != Mocap.signature)
 			{
 				Mocap.broadcastMessage(args[0] + " isn't a .mocap file (or is an old version?)");
 				in.close();
 				return;
 			}
-			
+
 			float yaw = in.readFloat();
 			float pitch = in.readFloat();
 			x = in.readDouble();
 			y = in.readDouble();
 			z = in.readDouble();
-			
+
 			in.close();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		
+
 		World world = sender.getEntityWorld();
 
 		ActorEntity entity = new ActorEntity(world);
@@ -89,17 +89,17 @@ public class CommandPlay extends CommandBase
 		world.spawnEntityInWorld(entity);
 
 		Iterator<PlayThread> iterator = playThreads.iterator();
-		
+
 		while (iterator.hasNext())
 		{
 			PlayThread item = (PlayThread) iterator.next();
-			
+
 			if (!item.thread.isAlive())
 			{
 				iterator.remove();
 			}
 		}
-		
+
 		playThreads.add(new PlayThread(entity, args[0]));
 	}
 }

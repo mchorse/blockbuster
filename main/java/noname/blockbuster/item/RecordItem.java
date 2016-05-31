@@ -5,11 +5,11 @@ import noname.blockbuster.Blockbuster;
 
 public class RecordItem extends Item
 {
-	public RecordItem()
-	{
-		setMaxStackSize(1);
-		setUnlocalizedName("recordItem");
-		setRegistryName("recordItem");
-		setCreativeTab(Blockbuster.blockbusterTab);
-	}
+    public RecordItem()
+    {
+        this.setMaxStackSize(1);
+        this.setUnlocalizedName("recordItem");
+        this.setRegistryName("recordItem");
+        this.setCreativeTab(Blockbuster.blockbusterTab);
+    }
 }

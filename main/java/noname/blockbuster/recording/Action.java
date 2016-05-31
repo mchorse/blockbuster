@@ -24,7 +24,7 @@ public class Action
 	/**
 	 * Total rip-off from Mocap mod
 	 * 
-	 * I probably need to ask author's permission to use these values (and code) 
+	 * I probably need to ask author's permission to use these values (and code)
 	 * for my mod... Nah, I think it's fine.
 	 */
 	public static final byte CHAT = 1;

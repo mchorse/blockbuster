@@ -5,11 +5,11 @@ import noname.blockbuster.Blockbuster;
 
 public class RegisterItem extends Item
 {
-	public RegisterItem()
-	{
-		setMaxStackSize(1);
-		setUnlocalizedName("registerItem");
-		setRegistryName("registerItem");
-		setCreativeTab(Blockbuster.blockbusterTab);
-	}
+    public RegisterItem()
+    {
+        this.setMaxStackSize(1);
+        this.setUnlocalizedName("registerItem");
+        this.setRegistryName("registerItem");
+        this.setCreativeTab(Blockbuster.blockbusterTab);
+    }
 }

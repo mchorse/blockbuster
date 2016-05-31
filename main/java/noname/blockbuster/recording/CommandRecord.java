@@ -18,7 +18,7 @@ public class CommandRecord extends CommandBase
 	{
 		return "Usage: /record <savefile>, eg: /mocap-rec forestrun";
 	}
-	
+
 	@Override
 	public int getRequiredPermissionLevel()
 	{
@@ -29,7 +29,7 @@ public class CommandRecord extends CommandBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		EntityPlayer player = getCommandSenderAsPlayer(sender);
-		
+
 		if (args.length < 1)
 		{
 			sender.addChatMessage(new TextComponentString(getCommandUsage(null)));
@@ -38,7 +38,7 @@ public class CommandRecord extends CommandBase
 
 		Recorder recorder = Mocap.recordThreads.get(player);
 		String username = player.getDisplayName().getFormattedText();
-		
+
 		if (recorder != null)
 		{
 			recorder.recordThread.capture = false;
@@ -62,7 +62,7 @@ public class CommandRecord extends CommandBase
 		Mocap.broadcastMessage("Started recording " + username + " to file " + args[0] + ".mocap");
 		Recorder newRecorder = new Recorder();
 		Mocap.recordThreads.put(player, newRecorder);
-			
+
 		newRecorder.fileName = args[0].toLowerCase();
 		newRecorder.recordThread = new RecordThread(player, args[0]);
 	}

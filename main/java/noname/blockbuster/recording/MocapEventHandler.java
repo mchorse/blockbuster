@@ -28,27 +28,17 @@ public class MocapEventHandler
 		}
 	}
 
-	/* @SubscribeEvent
-	public void onLivingPlaceBlockEvent(LivingPlaceBlockEvent event)
-	{
-		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		if ((side == Side.SERVER) && ((event.entityLiving instanceof EntityPlayerMP)))
-		{
-			EntityPlayerMP thePlayer = (EntityPlayerMP) event.entityLiving;
-
-			List<Action> aList = Mocap.getActionListForPlayer(thePlayer);
-			if (aList != null)
-			{
-				Action ma = new Action((byte) 7);
-
-				event.theItem.writeToNBT(ma.itemData);
-				ma.xCoord = event.xCoord;
-				ma.yCoord = event.yCoord;
-				ma.zCoord = event.zCoord;
-				aList.add(ma);
-			}
-		}
-	} */
+	/*
+	 * @SubscribeEvent public void onLivingPlaceBlockEvent(LivingPlaceBlockEvent
+	 * event) { Side side = FMLCommonHandler.instance().getEffectiveSide(); if
+	 * ((side == Side.SERVER) && ((event.entityLiving instanceof
+	 * EntityPlayerMP))) { EntityPlayerMP thePlayer = (EntityPlayerMP)
+	 * event.entityLiving; List<Action> aList =
+	 * Mocap.getActionListForPlayer(thePlayer); if (aList != null) { Action ma =
+	 * new Action((byte) 7); event.theItem.writeToNBT(ma.itemData); ma.xCoord =
+	 * event.xCoord; ma.yCoord = event.yCoord; ma.zCoord = event.zCoord;
+	 * aList.add(ma); } } }
+	 */
 
 	@SubscribeEvent
 	public void onArrowLooseEvent(ArrowLooseEvent ev) throws IOException
@@ -57,7 +47,7 @@ public class MocapEventHandler
 		if (side == Side.SERVER)
 		{
 			List<Action> aList = Mocap.getActionListForPlayer(ev.getEntityPlayer());
-			
+
 			if (aList != null)
 			{
 				Action ma = new Action((byte) 5);

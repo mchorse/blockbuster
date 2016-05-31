@@ -154,20 +154,20 @@ class RecordThread implements Runnable
 	private void trackHeldItem()
 	{
 		ItemStack item = player.getHeldItemMainhand();
-		
+
 		if (item != null)
 		{
 			int id = Item.getIdFromItem(item.getItem());
-			
+
 			if (id != itemsEquipped[0])
 			{
 				itemsEquipped[0] = id;
-				
+
 				Action ma = new Action(Action.EQUIP);
 				ma.armorSlot = 0;
 				ma.armorId = itemsEquipped[0];
 				ma.armorDmg = item.getMetadata();
-				
+
 				item.writeToNBT(ma.itemData);
 				eventList.add(ma);
 			}
@@ -175,12 +175,12 @@ class RecordThread implements Runnable
 		else if (itemsEquipped[0] != -1)
 		{
 			itemsEquipped[0] = -1;
-			
+
 			Action ma = new Action(Action.EQUIP);
 			ma.armorSlot = 0;
 			ma.armorId = itemsEquipped[0];
 			ma.armorDmg = 0;
-			
+
 			eventList.add(ma);
 		}
 	}
@@ -224,37 +224,38 @@ class RecordThread implements Runnable
 		{
 			case Action.CHAT:
 				in.writeUTF(ma.message);
-			break;
+				break;
 
 			case Action.DROP:
 				CompressedStreamTools.write(ma.itemData, in);
-			break;
+				break;
 
 			case Action.EQUIP:
 				in.writeInt(ma.armorSlot);
 				in.writeInt(ma.armorId);
 				in.writeInt(ma.armorDmg);
 
-				if (ma.armorId != -1) CompressedStreamTools.write(ma.itemData, in);
-			break;
+				if (ma.armorId != -1)
+					CompressedStreamTools.write(ma.itemData, in);
+				break;
 
 			case Action.SHOOTARROW:
 				in.writeInt(ma.arrowCharge);
-			break;
+				break;
 
 			case Action.LOGOUT:
 				Mocap.recordThreads.remove(player);
 				Mocap.broadcastMessage("Stopped recording " + player.getDisplayName().getFormattedText() + ". Bye!");
 
 				capture = false;
-			break;
+				break;
 
 			case Action.PLACEBLOCK:
 				in.writeInt(ma.xCoord);
 				in.writeInt(ma.yCoord);
 				in.writeInt(ma.zCoord);
 				CompressedStreamTools.write(ma.itemData, in);
-			break;
+				break;
 		}
 
 		eventList.remove(0);

@@ -17,7 +17,7 @@ public class Mocap
 {
 	public static Map<EntityPlayer, Recorder> recordThreads = Collections.synchronizedMap(new HashMap());
 	public static final short signature = 3208;
-	
+
 	public static List<Action> getActionListForPlayer(EntityPlayer ep)
 	{
 		Recorder aRecorder = recordThreads.get(ep);
@@ -45,14 +45,15 @@ public class Mocap
 			}
 		}
 	}
-	
+
 	public static EntityEquipmentSlot getSlotByIndex(int index)
 	{
 		for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
 		{
-			if (slot.func_188452_c() == index) return slot;
+			if (slot.func_188452_c() == index)
+				return slot;
 		}
-		
+
 		return null;
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
@@ -24,7 +23,7 @@ import noname.blockbuster.recording.Mocap;
 
 /**
  * Actor entity class
- * 
+ *
  * Actor entity class is responsible for recording player's actions and execute
  * them. I'm also thinking about giving them controllable AI settings so they
  * could be used without recording (like during the battles between two or more
@@ -32,153 +31,159 @@ import noname.blockbuster.recording.Mocap;
  */
 public class ActorEntity extends EntityCreature
 {
-	private static final DataParameter<String> RECORDING_ID = EntityDataManager.<String>createKey(ActorEntity.class, DataSerializers.STRING); 
-	
-	public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
+    private static final DataParameter<String> RECORDING_ID = EntityDataManager.<String> createKey(ActorEntity.class, DataSerializers.STRING);
 
-	public ActorEntity(World worldIn)
-	{
-		super(worldIn);
-	}
-	
-	@Override
-	protected void entityInit()
-	{
-		super.entityInit();
-		
-		dataWatcher.register(RECORDING_ID, "");
-	}
-	
-	private void replayShootArrow(Action ma)
-	{
-		float f = ma.arrowCharge / 20.0F;
-		f = (f * f + f * 2.0F) / 3.0F;
+    public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
 
-		if (f < 0.1D) return;
-		if (f > 1.0F) f = 1.0F;
+    public ActorEntity(World worldIn)
+    {
+        super(worldIn);
+    }
 
-		EntityArrow entityarrow = new EntityArrow(worldObj)
-		{
-			@Override
-			protected ItemStack getArrowStack()
-			{
-				return new ItemStack(Items.arrow);
-			}
-		};
+    @Override
+    protected void entityInit()
+    {
+        super.entityInit();
 
-		entityarrow.canBePickedUp = PickupStatus.ALLOWED;
-		worldObj.spawnEntityInWorld(entityarrow);
-	}
+        this.dataWatcher.register(RECORDING_ID, "");
+    }
 
-	/**
-	 * Process the actions
-	 */
-	private void processActions(Action action)
-	{
-		ItemStack foo = null;
+    private void replayShootArrow(Action ma)
+    {
+        float f = ma.arrowCharge / 20.0F;
+        f = (f * f + f * 2.0F) / 3.0F;
 
-		switch (action.type)
-		{
-			case Action.SWIPE:
-				swingArm(EnumHand.MAIN_HAND);
-			break;
+        if (f < 0.1D)
+            return;
+        if (f > 1.0F)
+            f = 1.0F;
 
-			case Action.EQUIP:
-				EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
+        EntityArrow entityarrow = new EntityArrow(this.worldObj)
+        {
+            @Override
+            protected ItemStack getArrowStack()
+            {
+                return new ItemStack(Items.arrow);
+            }
+        };
 
-				if (action.armorId == -1)
-				{
-					setItemStackToSlot(slot, null);
-				}
-				else
-				{
-					setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
-				}
-			break;
+        entityarrow.canBePickedUp = PickupStatus.ALLOWED;
+        this.worldObj.spawnEntityInWorld(entityarrow);
+    }
 
-			case Action.DROP:
-				foo = ItemStack.loadItemStackFromNBT(action.itemData);
+    /**
+     * Process the actions
+     */
+    private void processActions(Action action)
+    {
+        ItemStack foo = null;
 
-				EntityItem ea = new EntityItem(worldObj, posX, posY - 0.30000001192092896D + getEyeHeight(), posZ, foo);
-				Random rand = new Random();
+        switch (action.type)
+        {
+            case Action.SWIPE:
+                this.swingArm(EnumHand.MAIN_HAND);
+                break;
 
-				float f = 0.3F;
+            case Action.EQUIP:
+                EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
 
-				ea.motionX = (-MathHelper.sin(rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(rotationPitch / 180.0F * 3.1415927F) * f);
-				ea.motionZ = (MathHelper.cos(rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(rotationPitch / 180.0F * 3.1415927F) * f);
-				ea.motionY = (-MathHelper.sin(rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
+                if (action.armorId == -1)
+                {
+                    this.setItemStackToSlot(slot, null);
+                }
+                else
+                {
+                    this.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
+                }
+                break;
 
-				f = 0.02F;
-				float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
-				f *= rand.nextFloat();
-				
-				ea.motionX += Math.cos(f1) * f;
-				ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-				ea.motionZ += Math.sin(f1) * f;
-				
-				worldObj.spawnEntityInWorld(ea);
-			break;
-			
-			case Action.SHOOTARROW:
-				replayShootArrow(action);
-			break;
-		}
-	}
-	
-	/**
-	 * Adjust the movement and limb swinging action stuff
-	 */
-	@Override
-	public void onLivingUpdate()
-	{
-		if (eventsList.size() > 0)
-		{
-			processActions(eventsList.remove(0));
-		}
-		
-		updateArmSwingProgress();
+            case Action.DROP:
+                foo = ItemStack.loadItemStackFromNBT(action.itemData);
 
-		/* Taken from the EntityDragon, IDK what it does */
-		if (newPosRotationIncrements > 0)
-		{
-			double d5 = posX + (interpTargetX - posX) / (double) newPosRotationIncrements;
-			double d0 = posY + (interpTargetY - posY) / (double) newPosRotationIncrements;
-			double d1 = posZ + (interpTargetZ - posZ) / (double) newPosRotationIncrements;
-			double d2 = MathHelper.wrapAngleTo180_double(interpTargetYaw - (double) rotationYaw);
+                EntityItem ea = new EntityItem(this.worldObj, this.posX, this.posY - 0.30000001192092896D + this.getEyeHeight(), this.posZ, foo);
+                Random rand = new Random();
 
-			rotationYaw = (float) ((double) rotationYaw + d2 / (double) newPosRotationIncrements);
-			rotationPitch = (float) ((double) rotationPitch + (newPosX - (double) rotationPitch) / (double) newPosRotationIncrements);
-			newPosRotationIncrements -= 1;
+                float f = 0.3F;
 
-			setPosition(d5, d0, d1);
-			setRotation(rotationYaw, rotationPitch);
-		}
-		else if (!isServerWorld())
-		{
-			motionX *= 0.98D;
-			motionY *= 0.98D;
-			motionZ *= 0.98D;
-		}
-		
-		if (Math.abs(motionX) < 0.005D) motionX = 0.0D;
-		if (Math.abs(motionY) < 0.005D) motionY = 0.0D;
-		if (Math.abs(motionZ) < 0.005D) motionZ = 0.0D;
-		
-		if (!isServerWorld())
-		{
-			rotationYawHead = rotationYaw;
-		}
+                ea.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
+                ea.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
+                ea.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
 
-		/* Taken from the EntityOtherPlayerMP, I think */
-		prevLimbSwingAmount = limbSwingAmount;
+                f = 0.02F;
+                float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
+                f *= rand.nextFloat();
 
-		double d0 = posX - prevPosX;
-		double d1 = posZ - prevPosZ;
-		float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
-		
-		if (f > 1.0F) f = 1.0F;
+                ea.motionX += Math.cos(f1) * f;
+                ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+                ea.motionZ += Math.sin(f1) * f;
 
-		limbSwingAmount += (f - limbSwingAmount) * 0.4F;
-		limbSwing += limbSwingAmount;
-	}
+                this.worldObj.spawnEntityInWorld(ea);
+                break;
+
+            case Action.SHOOTARROW:
+                this.replayShootArrow(action);
+                break;
+        }
+    }
+
+    /**
+     * Adjust the movement and limb swinging action stuff
+     */
+    @Override
+    public void onLivingUpdate()
+    {
+        if (this.eventsList.size() > 0)
+        {
+            this.processActions(this.eventsList.remove(0));
+        }
+
+        this.updateArmSwingProgress();
+
+        /* Taken from the EntityDragon, IDK what it does */
+        if (this.newPosRotationIncrements > 0)
+        {
+            double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
+            double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
+            double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+            double d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
+
+            this.rotationYaw = (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
+            this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
+            this.newPosRotationIncrements -= 1;
+
+            this.setPosition(d5, d0, d1);
+            this.setRotation(this.rotationYaw, this.rotationPitch);
+        }
+        else if (!this.isServerWorld())
+        {
+            this.motionX *= 0.98D;
+            this.motionY *= 0.98D;
+            this.motionZ *= 0.98D;
+        }
+
+        if (Math.abs(this.motionX) < 0.005D)
+            this.motionX = 0.0D;
+        if (Math.abs(this.motionY) < 0.005D)
+            this.motionY = 0.0D;
+        if (Math.abs(this.motionZ) < 0.005D)
+            this.motionZ = 0.0D;
+
+        if (!this.isServerWorld())
+        {
+            this.rotationYawHead = this.rotationYaw;
+        }
+
+        /* Taken from the EntityOtherPlayerMP, I think */
+        this.prevLimbSwingAmount = this.limbSwingAmount;
+
+        double d0 = this.posX - this.prevPosX;
+        double d1 = this.posZ - this.prevPosZ;
+        float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
+
+        if (f > 1.0F)
+            f = 1.0F;
+
+        this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
+        this.limbSwing += this.limbSwingAmount;
+    }
 }
