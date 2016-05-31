@@ -8,6 +8,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.entity.CameraEntity;
 
 public class CameraAttributesUpdate implements IMessage
@@ -61,13 +63,13 @@ public class CameraAttributesUpdate implements IMessage
 				@Override
 				public void run()
 				{
-					Entity entity = ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.id);
+					WorldServer world = (WorldServer)ctx.getServerHandler().playerEntity.worldObj;
+					Entity entity = world.getEntityByID(message.id);
 					CameraEntity camera = (CameraEntity)entity;
 					
-					camera.speed = message.speed;
-					camera.accelerationRate = message.accelerationRate;
-					camera.accelerationMax = message.accelerationMax;
-					camera.canFly = message.canFly;
+					camera.setConfiguration(message.speed, message.accelerationRate, message.accelerationMax, message.canFly);
+					
+					world.getEntityTracker().func_151248_b(camera, Blockbuster.channel.getPacketFrom(message));
 				}
 			});
 			

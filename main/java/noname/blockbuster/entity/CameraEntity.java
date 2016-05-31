@@ -1,5 +1,6 @@
 package noname.blockbuster.entity;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -8,14 +9,17 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.CameraConfigItem;
+import noname.blockbuster.networking.CameraAttributesUpdate;
 
-public class CameraEntity extends EntityLiving
+public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawnData
 {
 	public float speed = 0.4F;
 	public float accelerationRate = 0.02F;
@@ -82,12 +86,9 @@ public class CameraEntity extends EntityLiving
 			return true;
 		}
 		
-		if (!worldObj.isRemote)
+		if (!worldObj.isRemote && !isBeingRidden())
 		{
-			if (!isBeingRidden())
-			{
-				return player.startRiding(this);
-			}
+			return player.startRiding(this);
 		}
 		
         return false;
@@ -142,8 +143,6 @@ public class CameraEntity extends EntityLiving
             	acceleration = 0.0F;
             }
             
-            System.out.println(forward + " " + flyingMotion);
-            
             /* Flying logic */
             if (canFly)
             {
@@ -157,5 +156,59 @@ public class CameraEntity extends EntityLiving
             super.moveEntityWithHeading(strafe, forward);
             onGround = oldOnGround;
         }
+	}
+	
+	/* Saving to disk */
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tagCompound)
+	{
+		speed = tagCompound.getFloat("CameraSpeed");
+		accelerationRate = tagCompound.getFloat("CameraRate");
+		accelerationMax = tagCompound.getFloat("CameraMax");
+		canFly = tagCompound.getBoolean("CanFly");
+		
+		System.out.println(speed);
+		
+		super.readEntityFromNBT(tagCompound);
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tagCompound)
+	{
+		tagCompound.setFloat("CameraSpeed", speed);
+		tagCompound.setFloat("CameraRate", accelerationRate);
+		tagCompound.setFloat("CameraMax", accelerationMax);
+		tagCompound.setBoolean("CanFly", canFly);
+		
+		System.out.println(speed);
+		
+		super.writeEntityToNBT(tagCompound);
+	}
+
+	public void setConfiguration(float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2)
+	{
+		speed = speed2;
+		accelerationRate = accelerationRate2;
+		accelerationMax = accelerationMax2;
+		canFly = canFly2;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		buffer.writeFloat(speed);
+		buffer.writeFloat(accelerationRate);
+		buffer.writeFloat(accelerationMax);
+		buffer.writeBoolean(canFly);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer)
+	{
+		speed = buffer.readFloat();
+		accelerationRate = buffer.readFloat();
+		accelerationMax = buffer.readFloat();
+		canFly = buffer.readBoolean();
 	}
 }

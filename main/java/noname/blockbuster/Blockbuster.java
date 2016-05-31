@@ -2,7 +2,10 @@ package noname.blockbuster;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.item.Item;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -10,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.networking.CameraAttributesUpdate;
@@ -82,7 +86,8 @@ public class Blockbuster
     public void preLoad(FMLPreInitializationEvent event)
     {
     	NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
-    	channel = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    	
+    	channel = new SimpleNetworkWrapper(MODID);
     	channel.registerMessage(CameraAttributesUpdate.Handler.class, CameraAttributesUpdate.class, 0, Side.SERVER);
     	
     	proxy.preLoad();

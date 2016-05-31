@@ -72,11 +72,6 @@ public class GuiCamera extends GuiScreen
 		
 		Blockbuster.channel.sendToServer(new CameraAttributesUpdate(camera.getEntityId(), cSpeed, cRate, cMax, cCanFly));
 		
-		camera.speed = cSpeed;
-		camera.accelerationRate = cRate;
-		camera.accelerationMax = cMax;
-		camera.canFly = cCanFly;
-		
 		mc.displayGuiScreen(null);
 	}
 	
