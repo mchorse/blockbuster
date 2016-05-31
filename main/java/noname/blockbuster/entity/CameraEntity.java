@@ -74,14 +74,16 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     @Override
     public boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
-        if (this.worldObj.isRemote)
-        {
-            ItemStack item = player.getHeldItemMainhand();
+        ItemStack item = player.getHeldItemMainhand();
 
-            if (item != null && item.getItem() instanceof CameraConfigItem)
+        if (item != null && item.getItem() instanceof CameraConfigItem)
+        {
+            if (this.worldObj.isRemote)
             {
                 player.openGui(Blockbuster.instance, 0, this.worldObj, this.getEntityId(), 0, 0);
             }
+
+            return true;
         }
         else if (!this.isBeingRidden())
         {
@@ -146,12 +148,33 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
                 forward = flyingMotion == 0 ? forward : forward * (1 - Math.abs(flyingMotion));
                 this.motionY = flyingMotion * this.acceleration * Math.copySign(1.0F, forward);
             }
+            else
+            {
+                this.motionY = 0.0D;
+            }
 
             /* Hacks */
             this.onGround = true;
             this.setAIMoveSpeed(this.speed);
             super.moveEntityWithHeading(strafe, forward);
             this.onGround = oldOnGround;
+        }
+    }
+
+    /**
+     * Update camera's custom attributes and send notification to tracking players
+     * (if it's needed)
+     */
+    public void setConfiguration(float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
+    {
+        this.speed = speed2;
+        this.accelerationRate = accelerationRate2;
+        this.accelerationMax = accelerationMax2;
+        this.canFly = canFly2;
+
+        if (!this.worldObj.isRemote && notify)
+        {
+            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
         }
     }
 
@@ -183,18 +206,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         super.writeEntityToNBT(tagCompound);
     }
 
-    public void setConfiguration(float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
-    {
-        this.speed = speed2;
-        this.accelerationRate = accelerationRate2;
-        this.accelerationMax = accelerationMax2;
-        this.canFly = canFly2;
-
-        if (!this.worldObj.isRemote && notify)
-        {
-            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
-        }
-    }
+    /* IEntityAdditionalSpawnData implementation */
 
     @Override
     public void writeSpawnData(ByteBuf buffer)

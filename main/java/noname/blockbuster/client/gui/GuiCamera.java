@@ -67,12 +67,13 @@ public class GuiCamera extends GuiScreen
 
     private void saveAndExit()
     {
+        int id = this.camera.getEntityId();
         float cSpeed = (float) this.speed.getValue();
         float cRate = (float) this.accelerationRate.getValue();
         float cMax = (float) this.accelerationMax.getValue();
         boolean cCanFly = this.canFly.displayString.equals("Can fly");
 
-        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(this.camera.getEntityId(), cSpeed, cRate, cMax, cCanFly));
+        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, cSpeed, cRate, cMax, cCanFly));
 
         this.mc.displayGuiScreen(null);
     }
