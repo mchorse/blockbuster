@@ -188,8 +188,6 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         this.accelerationMax = tagCompound.getFloat("CameraMax");
         this.canFly = tagCompound.getBoolean("CanFly");
 
-        System.out.println(this.speed);
-
         super.readEntityFromNBT(tagCompound);
     }
 
@@ -200,8 +198,6 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         tagCompound.setFloat("CameraRate", this.accelerationRate);
         tagCompound.setFloat("CameraMax", this.accelerationMax);
         tagCompound.setBoolean("CanFly", this.canFly);
-
-        System.out.println(this.speed);
 
         super.writeEntityToNBT(tagCompound);
     }

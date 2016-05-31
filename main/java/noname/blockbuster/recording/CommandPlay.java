@@ -16,90 +16,94 @@ import noname.blockbuster.entity.ActorEntity;
 
 public class CommandPlay extends CommandBase
 {
-	ArrayList<PlayThread> playThreads = new ArrayList();
+    ArrayList<PlayThread> playThreads = new ArrayList();
 
-	public String getCommandName()
-	{
-		return "record-play";
-	}
+    @Override
+    public String getCommandName()
+    {
+        return "play";
+    }
 
-	public String getCommandUsage(ICommandSender icommandsender)
-	{
-		return "/record-play <replay> <skinname> <entityname>";
-	}
+    @Override
+    public String getCommandUsage(ICommandSender icommandsender)
+    {
+        return "/play <replay> <entityname>";
+    }
 
-	@Override
-	public int getRequiredPermissionLevel()
-	{
-		return 0;
-	}
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
+    }
 
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-	{
-		if (args.length < 3)
-		{
-			sender.addChatMessage(new TextComponentString(getCommandUsage(null)));
-			return;
-		}
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 2)
+        {
+            sender.addChatMessage(new TextComponentString(this.getCommandUsage(null)));
+            return;
+        }
 
-		File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/mocaps/" + args[0] + ".mocap");
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records/" + args[0]);
 
-		if (!file.exists())
-		{
-			Mocap.broadcastMessage("Can't find " + args[0] + ".mocap replay file!");
-			return;
-		}
+        if (!file.exists())
+        {
+            Mocap.broadcastMessage("Can't find " + args[0] + " replay file!");
+            return;
+        }
 
-		double x = 0.0D;
-		double y = 0.0D;
-		double z = 0.0D;
+        double x = 0.0D;
+        double y = 0.0D;
+        double z = 0.0D;
 
-		try
-		{
-			RandomAccessFile in = new RandomAccessFile(file, "r");
-			short magic = in.readShort();
+        try
+        {
+            RandomAccessFile in = new RandomAccessFile(file, "r");
+            short magic = in.readShort();
 
-			if (magic != Mocap.signature)
-			{
-				Mocap.broadcastMessage(args[0] + " isn't a .mocap file (or is an old version?)");
-				in.close();
-				return;
-			}
+            if (magic != Mocap.signature)
+            {
+                Mocap.broadcastMessage(args[0] + " isn't a record file (or is an old version?)");
+                in.close();
+                return;
+            }
 
-			float yaw = in.readFloat();
-			float pitch = in.readFloat();
-			x = in.readDouble();
-			y = in.readDouble();
-			z = in.readDouble();
+            in.readLong();
 
-			in.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+            float yaw = in.readFloat();
+            float pitch = in.readFloat();
+            x = in.readDouble();
+            y = in.readDouble();
+            z = in.readDouble();
 
-		World world = sender.getEntityWorld();
+            in.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-		ActorEntity entity = new ActorEntity(world);
-		entity.setPosition(x, y, z);
-		entity.setCustomNameTag(args[2]);
-		entity.setNoAI(true);
-		world.spawnEntityInWorld(entity);
+        World world = sender.getEntityWorld();
 
-		Iterator<PlayThread> iterator = playThreads.iterator();
+        ActorEntity entity = new ActorEntity(world);
+        entity.setPosition(x, y, z);
+        entity.setCustomNameTag(args[1]);
+        entity.setNoAI(true);
+        world.spawnEntityInWorld(entity);
 
-		while (iterator.hasNext())
-		{
-			PlayThread item = (PlayThread) iterator.next();
+        Iterator<PlayThread> iterator = this.playThreads.iterator();
 
-			if (!item.thread.isAlive())
-			{
-				iterator.remove();
-			}
-		}
+        while (iterator.hasNext())
+        {
+            PlayThread item = iterator.next();
 
-		playThreads.add(new PlayThread(entity, args[0]));
-	}
+            if (!item.thread.isAlive())
+            {
+                iterator.remove();
+            }
+        }
+
+        this.playThreads.add(new PlayThread(entity, args[0]));
+    }
 }

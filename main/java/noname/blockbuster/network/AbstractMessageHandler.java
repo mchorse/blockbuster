@@ -35,12 +35,8 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
     public IMessage onMessage(T message, MessageContext ctx)
     {
         if (ctx.side.isClient())
-        {
             return this.handleClientMessage(message);
-        }
         else
-        {
             return this.handleServerMessage(ctx.getServerHandler().playerEntity, message);
-        }
     }
 }
