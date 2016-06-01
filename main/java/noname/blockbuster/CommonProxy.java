@@ -37,7 +37,7 @@ public class CommonProxy implements IGuiHandler
         this.registerBlock(Blockbuster.directorBlock = new DirectorBlock());
 
         this.registerEntity(CameraEntity.class, "Camera");
-        this.registerEntity(ActorEntity.class, "Actor");
+        this.registerEntityWithEgg(ActorEntity.class, "Actor", 0xffffffff, 0xffaaaaaa);
     }
 
     public void load()
@@ -71,6 +71,11 @@ public class CommonProxy implements IGuiHandler
     protected void registerEntity(Class entity, String name)
     {
         EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false);
+    }
+
+    protected void registerEntityWithEgg(Class entity, String name, int primary, int secondary)
+    {
+        EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 32, 3, false, primary, secondary);
     }
 
     /* IGuiHandler implementation */
