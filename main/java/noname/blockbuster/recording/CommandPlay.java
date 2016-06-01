@@ -104,6 +104,6 @@ public class CommandPlay extends CommandBase
             }
         }
 
-        this.playThreads.add(new PlayThread(entity, args[0]));
+        this.playThreads.add(new PlayThread(entity, args[0], true));
     }
 }

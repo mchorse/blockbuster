@@ -12,3 +12,5 @@ item.registerItem.name=Registering device
 # Entities names
 entity.Camera.name=Camera
 entity.Actor.name=Actor
+
+entity.blockbuster.Actor.name=Actor

@@ -19,6 +19,7 @@ import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.recording.MocapEventHandler;
+import noname.blockbuster.tileentity.DirectorTileEntity;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -38,6 +39,8 @@ public class CommonProxy implements IGuiHandler
 
         this.registerEntity(CameraEntity.class, "Camera");
         this.registerEntityWithEgg(ActorEntity.class, "Actor", 0xffffffff, 0xffaaaaaa);
+
+        GameRegistry.registerTileEntity(DirectorTileEntity.class, "blockbuster_director_tile_entity");
     }
 
     public void load()

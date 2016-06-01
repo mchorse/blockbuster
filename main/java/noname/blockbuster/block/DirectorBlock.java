@@ -1,17 +1,23 @@
 package noname.blockbuster.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
  * <p>
@@ -45,7 +51,7 @@ import noname.blockbuster.item.RegisterItem;
  * complement stop hook.
  * </p>
  */
-public class DirectorBlock extends Block
+public class DirectorBlock extends Block implements ITileEntityProvider
 {
     public DirectorBlock()
     {
@@ -68,9 +74,9 @@ public class DirectorBlock extends Block
     }
 
     @Override
-    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
     {
-        return 0;
+        return true;
     }
 
     @Override
@@ -78,15 +84,70 @@ public class DirectorBlock extends Block
     {
         ItemStack item = playerIn.getHeldItemMainhand();
 
-        if (item != null && item.getItem() instanceof RegisterItem)
+        if (!worldIn.isRemote && item != null)
         {
-            /* Register a camera or an actor */
-
-            return true;
+            return this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn);
         }
 
-        /* Open the GUI with scene configuration and panel with utility items */
-
         return true;
+    }
+
+    /**
+     * Attach actor to director block
+     */
+    private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
+    {
+        if (!(item.getItem() instanceof RegisterItem))
+        {
+            return false;
+        }
+
+        if (item.getTagCompound() == null)
+        {
+            return false;
+        }
+
+        String id = item.getTagCompound().getString("ActorID");
+        DirectorTileEntity tile = (DirectorTileEntity) world.getTileEntity(pos);
+
+        if (!tile.addActor(id))
+        {
+            player.addChatMessage(new TextComponentString("This actor is already registered by director block!"));
+            return false;
+        }
+
+        player.addChatMessage(new TextComponentString("This actor was succesfully attached to director block!"));
+        return true;
+    }
+
+    /**
+     * Attach recording item to current director block
+     */
+    private boolean handleRecordItem(ItemStack item, BlockPos pos, EntityPlayer player)
+    {
+        if (!(item.getItem() instanceof RecordItem))
+        {
+            return false;
+        }
+
+        NBTTagCompound tag = item.getTagCompound();
+
+        if (tag == null)
+        {
+            item.setTagCompound(tag = new NBTTagCompound());
+        }
+
+        tag.setInteger("DirX", pos.getX());
+        tag.setInteger("DirY", pos.getY());
+        tag.setInteger("DirZ", pos.getZ());
+
+        player.addChatMessage(new TextComponentString("This recording device was succesfully attached to director block!"));
+        return true;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
+        return new DirectorTileEntity();
     }
 }

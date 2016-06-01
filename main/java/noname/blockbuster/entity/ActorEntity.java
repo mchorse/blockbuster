@@ -7,17 +7,20 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.Action;
 import noname.blockbuster.recording.Mocap;
 
@@ -185,5 +188,33 @@ public class ActorEntity extends EntityCreature
 
         this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
         this.limbSwing += this.limbSwingAmount;
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
+    {
+        if (!this.worldObj.isRemote)
+        {
+            ItemStack item = player.getHeldItemMainhand();
+
+            if (!(item.getItem() instanceof RegisterItem))
+            {
+                return false;
+            }
+
+            if (item.getTagCompound() == null)
+            {
+                item.setTagCompound(new NBTTagCompound());
+            }
+
+            NBTTagCompound tag = item.getTagCompound();
+
+            if (!tag.hasKey("ActorID") || tag.getString("ActorID") != this.getUniqueID().toString())
+            {
+                tag.setString("ActorID", this.getUniqueID().toString());
+            }
+        }
+
+        return false;
     }
 }

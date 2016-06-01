@@ -123,6 +123,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
 
             boolean oldOnGround = this.onGround;
             float flyingMotion = forward != 0 ? -player.rotationPitch / 90.0F : 0.0F;
+            float xcel = 0.0F;
 
             this.prevRotationYaw = this.rotationYaw = player.rotationYaw;
             this.prevRotationPitch = this.rotationPitch = player.rotationPitch;
@@ -133,9 +134,10 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             if (strafe != 0 || forward != 0)
             {
                 this.acceleration = MathHelper.clamp_float(this.acceleration + this.accelerationRate, 0.0F, this.accelerationMax);
+                xcel = (float) (this.acceleration * this.acceleration * 0.1);
 
-                forward *= this.acceleration;
-                strafe *= this.acceleration;
+                forward *= xcel;
+                strafe *= xcel;
             }
             else
             {
@@ -146,7 +148,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             if (this.canFly)
             {
                 forward = flyingMotion == 0 ? forward : forward * (1 - Math.abs(flyingMotion));
-                this.motionY = flyingMotion * this.acceleration * Math.copySign(1.0F, forward);
+                this.motionY = flyingMotion * xcel * Math.copySign(1.0F, forward);
             }
             else
             {

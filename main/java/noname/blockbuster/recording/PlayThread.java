@@ -14,8 +14,9 @@ class PlayThread implements Runnable
     public Thread thread;
     private ActorEntity replayEntity;
     private DataInputStream in;
+    private boolean deadAfterPlay;
 
-    public PlayThread(ActorEntity actor, String filename)
+    public PlayThread(ActorEntity actor, String filename, boolean deadAfterPlay)
     {
         try
         {
@@ -27,6 +28,7 @@ class PlayThread implements Runnable
         }
 
         this.replayEntity = actor;
+        this.deadAfterPlay = deadAfterPlay;
 
         this.thread = new Thread(this, "Playback Thread");
         this.thread.start();
@@ -39,9 +41,9 @@ class PlayThread implements Runnable
         {
             Thread.sleep(500L);
         }
-        catch (InterruptedException e1)
+        catch (InterruptedException e)
         {
-            e1.printStackTrace();
+            e.printStackTrace();
         }
 
         try
@@ -96,7 +98,10 @@ class PlayThread implements Runnable
             e.printStackTrace();
         }
 
-        this.replayEntity.setDead();
+        if (this.deadAfterPlay)
+        {
+            this.replayEntity.setDead();
+        }
 
         try
         {
