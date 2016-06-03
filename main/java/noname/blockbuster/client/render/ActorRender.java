@@ -14,7 +14,7 @@ import noname.blockbuster.entity.ActorEntity;
 
 public class ActorRender extends RenderBiped<ActorEntity>
 {
-    private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
+    private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
     public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize)
     {
@@ -32,7 +32,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
     @Override
     protected ResourceLocation getEntityTexture(ActorEntity entity)
     {
-        return resource;
+        return defaultTexture;
     }
 
     public static class ActorFactory implements IRenderFactory

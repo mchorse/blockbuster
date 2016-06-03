@@ -6,6 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -25,7 +27,7 @@ public class CommonProxy implements IGuiHandler
 {
     protected static int ID = 0;
 
-    public void preLoad()
+    public void preLoad(FMLPreInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, this);
         Dispatcher.init();
@@ -43,7 +45,7 @@ public class CommonProxy implements IGuiHandler
         GameRegistry.registerTileEntity(DirectorTileEntity.class, "blockbuster_director_tile_entity");
     }
 
-    public void load()
+    public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
     }

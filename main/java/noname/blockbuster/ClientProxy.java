@@ -1,15 +1,22 @@
 package noname.blockbuster;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.render.ActorRender;
 import noname.blockbuster.client.render.CameraRender;
@@ -19,10 +26,16 @@ import noname.blockbuster.entity.CameraEntity;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
+    public static ActorsPack actorPack;
+
+    /**
+     * Register mod items, blocks, tile entites and entities, and load
+     * item, block models and register entity renderer.
+     */
     @Override
-    public void preLoad()
+    public void preLoad(FMLPreInitializationEvent event)
     {
-        super.preLoad();
+        super.preLoad(event);
 
         this.registerItemModel(Blockbuster.cameraItem, Blockbuster.path("cameraItem"));
         this.registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("cameraConfigItem"));
@@ -33,6 +46,30 @@ public class ClientProxy extends CommonProxy
 
         this.registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
         this.registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());
+
+        String path = event.getSuggestedConfigurationFile().getAbsolutePath();
+
+        this.injectResourcePack(path.substring(0, path.length() - 4));
+    }
+
+    /**
+     * Inject actors resource pack
+     */
+    private void injectResourcePack(String configFolder)
+    {
+        try
+        {
+            Field field = Minecraft.class.getDeclaredField("defaultResourcePacks");
+            field.setAccessible(true);
+
+            List<IResourcePack> packs = (List<IResourcePack>) field.get(Minecraft.getMinecraft());
+
+            packs.add(actorPack = new ActorsPack(configFolder + "/skins"));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**

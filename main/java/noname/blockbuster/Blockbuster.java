@@ -23,6 +23,9 @@ import noname.blockbuster.recording.CommandRecord;
  * - Jabelar's forge tutorials
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
+ * - Ernio for helping with camera attributes sync + giving his own network
+ *   abstract layer
+ * - diesieben07 for pointing out how to inject resource pack for actors
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster
@@ -70,16 +73,16 @@ public class Blockbuster
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
-        proxy.preLoad();
+        proxy.preLoad(event);
     }
 
     /**
-     * Register event handler
+     * Register event handler and inject actors pack
      */
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-        proxy.load();
+        proxy.load(event);
     }
 
     /**
