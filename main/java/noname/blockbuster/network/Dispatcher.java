@@ -12,8 +12,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
+import noname.blockbuster.network.client.ClientHandlerChangeSkin;
+import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
+import noname.blockbuster.network.server.ServerHandlerChangeSkin;
 
 /**
  * Network dispatcher
@@ -44,6 +47,8 @@ public class Dispatcher
     {
         register(PacketCameraAttributes.class, ClientHandlerCameraAttributes.class, Side.CLIENT);
         register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
+        register(ChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
+        register(ChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

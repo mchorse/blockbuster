@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -18,7 +19,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.recording.Action;
 import noname.blockbuster.recording.Mocap;
 
@@ -30,9 +36,10 @@ import noname.blockbuster.recording.Mocap;
  * could be used without recording (like during the battles between two or more
  * actors).
  */
-public class ActorEntity extends EntityCreature
+public class ActorEntity extends EntityCreature implements IEntityAdditionalSpawnData
 {
     public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
+    public String skin = "";
 
     public ActorEntity(World worldIn)
     {
@@ -222,6 +229,54 @@ public class ActorEntity extends EntityCreature
             }
         }
 
+        if (this.worldObj.isRemote)
+        {
+            player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
+        }
+
         return false;
+    }
+
+    public void setSkin(String skin, boolean notify)
+    {
+        this.skin = skin;
+
+        if (!this.worldObj.isRemote && notify)
+        {
+            Dispatcher.updateTrackers(this, new ChangeSkin(this.getEntityId(), this.skin));
+        }
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound tagCompound)
+    {
+        this.skin = tagCompound.getString("Skin");
+
+        super.readEntityFromNBT(tagCompound);
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    {
+        if (this.skin != "")
+        {
+            tagCompound.setString("Skin", this.skin);
+        }
+
+        super.writeEntityToNBT(tagCompound);
+    }
+
+    /* IEntityAdditionalSpawnData implementation */
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer)
+    {
+        ByteBufUtils.writeUTF8String(buffer, this.skin);
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf buffer)
+    {
+        this.skin = ByteBufUtils.readUTF8String(buffer);
     }
 }

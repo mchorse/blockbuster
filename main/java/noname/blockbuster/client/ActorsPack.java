@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,6 +53,14 @@ public class ActorsPack implements IResourcePack
                 this.skins.put(name.substring(0, suffix), file);
             }
         }
+    }
+
+    /**
+     * Get available skins
+     */
+    public List<String> getSkins()
+    {
+        return new ArrayList<String>(this.skins.keySet());
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.ActorsPack;
+import noname.blockbuster.client.gui.GuiActorSkin;
 import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.render.ActorRender;
 import noname.blockbuster.client.render.CameraRender;
@@ -99,9 +101,15 @@ public class ClientProxy extends CommonProxy
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
+        Entity entity = world.getEntityByID(x);
+
         if (ID == 0)
         {
-            return new GuiCamera((CameraEntity) world.getEntityByID(x));
+            return new GuiCamera((CameraEntity) entity);
+        }
+        else if (ID == 1)
+        {
+            return new GuiActorSkin((ActorEntity) entity);
         }
 
         return null;

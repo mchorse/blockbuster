@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.ActorEntity;
 
 public class ActorRender extends RenderBiped<ActorEntity>
@@ -32,6 +33,13 @@ public class ActorRender extends RenderBiped<ActorEntity>
     @Override
     protected ResourceLocation getEntityTexture(ActorEntity entity)
     {
+        ResourceLocation location = new ResourceLocation("blockbuster.actors", entity.skin);
+
+        if (ClientProxy.actorPack.resourceExists(location))
+        {
+            return location;
+        }
+
         return defaultTexture;
     }
 
