@@ -25,8 +25,6 @@ public class DirectorTileEntity extends TileEntity
         {
             this.actors.add(list.getStringTagAt(i));
         }
-
-        System.out.println(this.actors);
     }
 
     @Override
@@ -45,8 +43,6 @@ public class DirectorTileEntity extends TileEntity
         }
 
         compound.setTag("Actors", list);
-
-        System.out.println(this.actors);
     }
 
     public boolean addActor(String id)

@@ -5,6 +5,7 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import noname.blockbuster.entity.ActorEntity;
@@ -154,6 +155,11 @@ class PlayThread implements Runnable
                 action.yCoord = this.in.readInt();
                 action.zCoord = this.in.readInt();
                 action.itemData = CompressedStreamTools.read(this.in);
+                break;
+
+            case Action.MOUNTING:
+                action.target = new UUID(this.in.readLong(), this.in.readLong());
+                action.armorSlot = this.in.readInt();
                 break;
         }
 

@@ -6,13 +6,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -71,5 +74,18 @@ public class Mocap
         }
 
         return file.getAbsolutePath() + "/" + filename;
+    }
+
+    public static Entity entityByUUID(World world, UUID target)
+    {
+        for (Entity entity : world.getLoadedEntityList())
+        {
+            if (entity.getUniqueID().equals(target))
+            {
+                return entity;
+            }
+        }
+
+        return null;
     }
 }

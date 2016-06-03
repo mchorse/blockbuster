@@ -258,6 +258,12 @@ class RecordThread implements Runnable
                 this.in.writeInt(ma.zCoord);
                 CompressedStreamTools.write(ma.itemData, this.in);
                 break;
+
+            case Action.MOUNTING:
+                this.in.writeLong(ma.target.getMostSignificantBits());
+                this.in.writeLong(ma.target.getLeastSignificantBits());
+                this.in.writeInt(ma.armorSlot);
+                break;
         }
 
         this.eventList.remove(0);

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -125,6 +126,25 @@ public class ActorEntity extends EntityCreature
 
             case Action.SHOOTARROW:
                 this.replayShootArrow(action);
+                break;
+
+            case Action.MOUNTING:
+                Entity mount = Mocap.entityByUUID(this.worldObj, action.target);
+
+                if (mount == null)
+                {
+                    return;
+                }
+
+                if (action.armorSlot == 1)
+                {
+                    this.startRiding(mount);
+                }
+                else
+                {
+                    this.dismountRidingEntity();
+                }
+
                 break;
         }
     }
