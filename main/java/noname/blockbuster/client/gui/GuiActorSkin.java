@@ -6,13 +6,12 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.ActorEntity;
@@ -21,21 +20,19 @@ import noname.blockbuster.network.common.ChangeSkin;
 
 public class GuiActorSkin extends GuiScreen
 {
-    private static ModelBiped MODEL_ACTOR = new ModelBiped();
-    private static ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("blockbuster", "textures/entity/actor.png");
-
     private ActorEntity actor;
     private GuiButton done;
     private GuiButton next;
     private GuiButton prev;
     private GuiButton restore;
     private List<String> skins;
-    private int skinIndex = -1;
+    private int skinIndex;
 
     public GuiActorSkin(ActorEntity actor)
     {
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getSkins();
+        this.skinIndex = this.skins.indexOf(actor.skin);
     }
 
     @Override
@@ -44,10 +41,10 @@ public class GuiActorSkin extends GuiScreen
         int centerX = this.width / 2;
 
         this.buttonList.clear();
-        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 235, 200, 20, "Done"));
-        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 185, 95, 20, "Next"));
-        this.buttonList.add(this.prev = new GuiButton(2, centerX + 5, 185, 95, 20, "Previous"));
-        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 210, 200, 20, "Restore default"));
+        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 235, 200, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
+        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 185, 95, 20, I18n.format("blockbuster.gui.next", new Object[] {})));
+        this.buttonList.add(this.prev = new GuiButton(2, centerX + 5, 185, 95, 20, I18n.format("blockbuster.gui.previous", new Object[] {})));
+        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.restore", new Object[] {})));
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
     }
@@ -111,20 +108,20 @@ public class GuiActorSkin extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         int centerX = this.width / 2;
-
-        this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, "Pick an actor skin", centerX, 25, 0xffffffff);
-
-        drawEntityOnScreen(this.width / 2, 150, 50, centerX - mouseX, 120 - mouseY, this.actor);
-
-        String skin = "Default";
+        String title = I18n.format("blockbuster.gui.skin.title", new Object[] {});
+        String skin = I18n.format("blockbuster.gui.skin.default", new Object[] {});
 
         if (this.skinIndex != -1)
         {
             skin = this.skins.get(this.skinIndex);
         }
 
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, title, centerX, 25, 0xffffffff);
         this.drawCenteredString(this.fontRendererObj, skin, centerX, 170, 0xffffffff);
+
+        drawEntityOnScreen(this.width / 2, 150, 50, centerX - mouseX, 120 - mouseY, this.actor);
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

@@ -46,6 +46,35 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         super(worldIn);
     }
 
+    /**
+     * Process the action
+     */
+    private void processActions(Action action)
+    {
+        switch (action.type)
+        {
+            case Action.SWIPE:
+                this.swingArm(EnumHand.MAIN_HAND);
+                break;
+
+            case Action.EQUIP:
+                this.equipAction(action);
+                break;
+
+            case Action.DROP:
+                this.dropAction(action);
+                break;
+
+            case Action.SHOOTARROW:
+                this.replayShootArrow(action);
+                break;
+
+            case Action.MOUNTING:
+                this.mountAction(action);
+                break;
+        }
+    }
+
     private void replayShootArrow(Action ma)
     {
         float f = ma.arrowCharge / 20.0F;
@@ -69,77 +98,63 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         this.worldObj.spawnEntityInWorld(entityarrow);
     }
 
-    /**
-     * Process the actions
-     */
-    private void processActions(Action action)
+    private void equipAction(Action action)
     {
-        ItemStack foo = null;
+        EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
 
-        switch (action.type)
+        if (action.armorId == -1)
         {
-            case Action.SWIPE:
-                this.swingArm(EnumHand.MAIN_HAND);
-                break;
+            this.setItemStackToSlot(slot, null);
+        }
+        else
+        {
+            this.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
+        }
+    }
 
-            case Action.EQUIP:
-                EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
+    private void dropAction(Action action)
+    {
+        ItemStack items = ItemStack.loadItemStackFromNBT(action.itemData);
 
-                if (action.armorId == -1)
-                {
-                    this.setItemStackToSlot(slot, null);
-                }
-                else
-                {
-                    this.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
-                }
-                break;
+        EntityItem ea = new EntityItem(this.worldObj, this.posX, this.posY - 0.30000001192092896D + this.getEyeHeight(), this.posZ, items);
+        Random rand = new Random();
 
-            case Action.DROP:
-                foo = ItemStack.loadItemStackFromNBT(action.itemData);
+        float f = 0.3F;
 
-                EntityItem ea = new EntityItem(this.worldObj, this.posX, this.posY - 0.30000001192092896D + this.getEyeHeight(), this.posZ, foo);
-                Random rand = new Random();
+        ea.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
+        ea.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
+        ea.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
 
-                float f = 0.3F;
+        f = 0.02F;
+        float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
+        f *= rand.nextFloat();
 
-                ea.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
-                ea.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
-                ea.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
+        ea.motionX += Math.cos(f1) * f;
+        ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+        ea.motionZ += Math.sin(f1) * f;
 
-                f = 0.02F;
-                float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
-                f *= rand.nextFloat();
+        this.worldObj.spawnEntityInWorld(ea);
+    }
 
-                ea.motionX += Math.cos(f1) * f;
-                ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-                ea.motionZ += Math.sin(f1) * f;
+    /**
+     * Mount or dismount action
+     */
+    private void mountAction(Action action)
+    {
+        Entity mount = Mocap.entityByUUID(this.worldObj, action.target);
 
-                this.worldObj.spawnEntityInWorld(ea);
-                break;
+        if (mount == null)
+        {
+            return;
+        }
 
-            case Action.SHOOTARROW:
-                this.replayShootArrow(action);
-                break;
-
-            case Action.MOUNTING:
-                Entity mount = Mocap.entityByUUID(this.worldObj, action.target);
-
-                if (mount == null)
-                {
-                    return;
-                }
-
-                if (action.armorSlot == 1)
-                {
-                    this.startRiding(mount);
-                }
-                else
-                {
-                    this.dismountRidingEntity();
-                }
-
-                break;
+        if (action.armorSlot == 1)
+        {
+            this.startRiding(mount);
+        }
+        else
+        {
+            this.dismountRidingEntity();
         }
     }
 
@@ -204,6 +219,12 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         this.limbSwing += this.limbSwingAmount;
     }
 
+    /**
+     * Process interact
+     *
+     * Inject UUID of actor to registering device or open GUI for changing
+     * actor's skin
+     */
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
@@ -246,6 +267,8 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             Dispatcher.updateTrackers(this, new ChangeSkin(this.getEntityId(), this.skin));
         }
     }
+
+    /* Reading/writing to disk */
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound)

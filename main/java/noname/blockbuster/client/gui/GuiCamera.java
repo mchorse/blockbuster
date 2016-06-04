@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.network.Dispatcher;
@@ -11,6 +12,10 @@ import noname.blockbuster.network.common.PacketCameraAttributes;
 
 public class GuiCamera extends GuiScreen
 {
+    private String title = I18n.format("blockbuster.gui.camera.title", new Object[] {});
+    private String stringCanFly = I18n.format("blockbuster.gui.camera.canFly", new Object[] {});
+    private String stringCantFly = I18n.format("blockbuster.gui.camera.cantFly", new Object[] {});
+
     protected GuiSlider speed;
     protected GuiSlider accelerationRate;
     protected GuiSlider accelerationMax;
@@ -29,9 +34,9 @@ public class GuiCamera extends GuiScreen
     {
         int x = this.width / 2 - 150;
 
-        this.speed = new GuiSlider(0, x, 50, 140, 20, "Speed: ", "", 0, 1, 0, true, true);
-        this.accelerationRate = new GuiSlider(1, x, 80, 140, 20, "Acceleration rate: ", "", 0, 0.5, 0, true, true);
-        this.accelerationMax = new GuiSlider(2, x + 160, 50, 140, 20, "Acceleration max: ", "", 0, 2, 0, true, true);
+        this.speed = new GuiSlider(0, x, 50, 140, 20, I18n.format("blockbuster.gui.camera.speed", new Object[] {}), "", 0, 1, 0, true, true);
+        this.accelerationRate = new GuiSlider(1, x, 80, 140, 20, I18n.format("blockbuster.gui.camera.rate", new Object[] {}), "", 0, 0.5, 0, true, true);
+        this.accelerationMax = new GuiSlider(2, x + 160, 50, 140, 20, I18n.format("blockbuster.gui.camera.max", new Object[] {}), "", 0, 2, 0, true, true);
 
         this.speed.precision = this.accelerationMax.precision = 1;
         this.accelerationRate.precision = 3;
@@ -45,10 +50,10 @@ public class GuiCamera extends GuiScreen
         this.accelerationMax.updateSlider();
 
         this.buttonList.clear();
-        this.buttonList.add(this.canFly = new GuiButton(3, x + 160, 80, 140, 20, "Can fly"));
-        this.buttonList.add(this.done = new GuiButton(4, x, 150, 300, 20, "Done"));
+        this.buttonList.add(this.canFly = new GuiButton(3, x + 160, 80, 140, 20, ""));
+        this.buttonList.add(this.done = new GuiButton(4, x, 150, 300, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
 
-        this.canFly.displayString = this.camera.canFly ? "Can fly" : "Can't fly";
+        this.canFly.displayString = this.camera.canFly ? this.stringCanFly : this.stringCantFly;
     }
 
     @Override
@@ -80,13 +85,13 @@ public class GuiCamera extends GuiScreen
 
     private void updateFlyButton()
     {
-        if (this.canFly.displayString == "Can fly")
+        if (this.canFly.displayString == this.stringCanFly)
         {
-            this.canFly.displayString = "Can't fly";
+            this.canFly.displayString = this.stringCantFly;
         }
         else
         {
-            this.canFly.displayString = "Can fly";
+            this.canFly.displayString = this.stringCanFly;
         }
     }
 
@@ -114,7 +119,7 @@ public class GuiCamera extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, "Camera's configuration", this.width / 2, 25, 0xffffffff);
+        this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, 25, 0xffffffff);
 
         this.speed.drawButton(this.mc, mouseX, mouseY);
         this.accelerationRate.drawButton(this.mc, mouseX, mouseY);

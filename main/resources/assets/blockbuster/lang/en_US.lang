@@ -14,3 +14,19 @@ entity.Camera.name=Camera
 entity.Actor.name=Actor
 
 entity.blockbuster.Actor.name=Actor
+
+# GUI
+blockbuster.gui.done=Done
+blockbuster.gui.next=Next
+blockbuster.gui.previous=Previous
+blockbuster.gui.restore=Restore Default
+
+blockbuster.gui.camera.title=Camera's configuration
+blockbuster.gui.camera.speed=Speed: 
+blockbuster.gui.camera.rate=Acceleration rate: 
+blockbuster.gui.camera.max=Max acceleration: 
+blockbuster.gui.camera.canFly=Can fly
+blockbuster.gui.camera.cantFly=Cant fly
+
+blockbuster.gui.skin.title=Change Actor's Skin
+blockbuster.gui.skin.default=Default
