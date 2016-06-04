@@ -30,6 +30,10 @@ public class ActorRender extends RenderBiped<ActorEntity>
         GlStateManager.scale(f, f, f);
     }
 
+    /**
+     * Use skin from resource pack or default one (if skin is empty or just
+     * wasn't found by actor pack)
+     */
     @Override
     protected ResourceLocation getEntityTexture(ActorEntity entity)
     {

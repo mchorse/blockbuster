@@ -106,17 +106,17 @@ public class Mocap
 
         if (recorder != null)
         {
-            recorder.recordThread.capture = false;
+            recorder.thread.capture = false;
             broadcastMessage("Stopped recording " + username + " to file " + recorder.fileName);
             records.remove(player);
             return;
         }
 
-        for (Recorder ar : records.values())
+        for (Recorder registeredRecorder : records.values())
         {
-            if (ar.fileName.equals(filename))
+            if (registeredRecorder.fileName.equals(filename))
             {
-                broadcastMessage(ar.fileName + " is already being recorded to?");
+                broadcastMessage(filename + " is already being recorded to?");
                 return;
             }
         }
@@ -126,11 +126,11 @@ public class Mocap
         records.put(player, newRecorder);
 
         newRecorder.fileName = filename;
-        newRecorder.recordThread = new RecordThread(player, filename);
+        newRecorder.thread = new RecordThread(player, filename);
     }
 
     /**
-     * Start playback
+     * Start playback with new actor entity (used by command)
      */
     public static void startPlayback(String filename, World world, boolean killOnDead)
     {

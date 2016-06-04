@@ -17,6 +17,7 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+import noname.blockbuster.api.Comment;
 
 /**
  * Actors pack
@@ -25,6 +26,7 @@ import net.minecraft.util.ResourceLocation;
  * that is responsible for loading skins from config/blockbuster/skins with
  * resource domain of blockbuster.actors)
  */
+@Comment(comment = "Used to inject actor skins from config/blockbuster/skins folder. See ClientProxy for more info.")
 public class ActorsPack implements IResourcePack
 {
     public static final Set<String> defaultResourceDomains = ImmutableSet.<String> of("blockbuster.actors");

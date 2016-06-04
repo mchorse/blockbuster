@@ -41,6 +41,10 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 {
     public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
 
+    /**
+     * Skin used by the actor. If empty – means default skin provided with
+     * this mod.
+     */
     public String skin = "";
 
     public ActorEntity(World worldIn)
@@ -48,9 +52,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         super(worldIn);
     }
 
-    /**
-     * Process the action
-     */
     private void processActions(Action action)
     {
         switch (action.type)
@@ -162,7 +163,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
-     * Adjust the movement and limb swinging action stuff
+     * Adjust the movement and limb swinging and action stuff.
+     *
+     * See process actions for more information.
      */
     @Override
     public void onLivingUpdate()
@@ -244,6 +247,8 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             }
         }
     }
+
+    /* Processing interaction with player */
 
     private int tick = 0;
 
@@ -327,6 +332,8 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
     }
 
+    /* Public API */
+
     public void setSkin(String skin, boolean notify)
     {
         this.skin = skin;
@@ -334,6 +341,19 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         if (!this.worldObj.isRemote && notify)
         {
             Dispatcher.updateTrackers(this, new ChangeSkin(this.getEntityId(), this.skin));
+        }
+    }
+
+    public void startPlaying()
+    {
+        if (!this.hasCustomName())
+        {
+            if (!this.worldObj.isRemote)
+                Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+        }
+        else
+        {
+            Mocap.startPlayback(this.getCustomNameTag(), this, false);
         }
     }
 

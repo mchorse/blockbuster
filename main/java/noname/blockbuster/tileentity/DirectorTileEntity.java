@@ -2,11 +2,14 @@ package noname.blockbuster.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.recording.Mocap;
 
 public class DirectorTileEntity extends TileEntity
 {
@@ -58,8 +61,26 @@ public class DirectorTileEntity extends TileEntity
         return false;
     }
 
+    /**
+     * Start recording (actually a playback :D)
+     */
     public void startRecording()
     {
-        System.out.println("Start recording, bitches!");
+        if (this.worldObj.isRemote)
+        {
+            return;
+        }
+
+        for (String id : this.actors)
+        {
+            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+
+            if (actor == null)
+            {
+                continue;
+            }
+
+            actor.startPlaying();
+        }
     }
 }
