@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.item.SkinManagerItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.recording.Action;
@@ -44,6 +45,12 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     public ActorEntity(World worldIn)
     {
         super(worldIn);
+    }
+
+    @Override
+    public boolean canPickUpLoot()
+    {
+        return true;
     }
 
     /**
@@ -124,6 +131,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         ea.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
         ea.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
         ea.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
+        ea.setDefaultPickupDelay();
 
         f = 0.02F;
         float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
@@ -164,6 +172,8 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void onLivingUpdate()
     {
+        this.pickUpNearByItems();
+
         if (this.eventsList.size() > 0)
         {
             this.processActions(this.eventsList.remove(0));
@@ -220,6 +230,27 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Destroy near by items
+     *
+     * Taken from super implementation of onLivingUpdate. You can't use
+     * super.onLivingUpdate() in onLivingUpdate() because it will distort
+     * actor's movement (make it more laggy)
+     */
+    private void pickUpNearByItems()
+    {
+        if (!this.worldObj.isRemote && this.canPickUpLoot() && !this.dead && this.worldObj.getGameRules().getBoolean("mobGriefing"))
+        {
+            for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
+            {
+                if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
+                {
+                    entityitem.setDead();
+                }
+            }
+        }
+    }
+
+    /**
      * Process interact
      *
      * Inject UUID of actor to registering device or open GUI for changing
@@ -228,34 +259,45 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
     {
-        if (!this.worldObj.isRemote)
+        ItemStack item = player.getHeldItemMainhand();
+
+        if (item != null)
         {
-            ItemStack item = player.getHeldItemMainhand();
-
-            if (!(item.getItem() instanceof RegisterItem))
-            {
-                return false;
-            }
-
-            if (item.getTagCompound() == null)
-            {
-                item.setTagCompound(new NBTTagCompound());
-            }
-
-            NBTTagCompound tag = item.getTagCompound();
-
-            if (!tag.hasKey("ActorID") || tag.getString("ActorID") != this.getUniqueID().toString())
-            {
-                tag.setString("ActorID", this.getUniqueID().toString());
-            }
-        }
-
-        if (this.worldObj.isRemote)
-        {
-            player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
+            this.handleRegisterItem(item);
+            this.handleSkinItem(item, player);
         }
 
         return false;
+    }
+
+    private void handleRegisterItem(ItemStack stack)
+    {
+        if (this.worldObj.isRemote || !(stack.getItem() instanceof RegisterItem))
+        {
+            return;
+        }
+
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        NBTTagCompound tag = stack.getTagCompound();
+
+        if (!tag.hasKey("ActorID") || tag.getString("ActorID") != this.getUniqueID().toString())
+        {
+            tag.setString("ActorID", this.getUniqueID().toString());
+        }
+    }
+
+    private void handleSkinItem(ItemStack stack, EntityPlayer player)
+    {
+        if (!this.worldObj.isRemote || !(stack.getItem() instanceof SkinManagerItem))
+        {
+            return;
+        }
+
+        player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
     }
 
     public void setSkin(String skin, boolean notify)

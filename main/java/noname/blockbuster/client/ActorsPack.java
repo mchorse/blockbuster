@@ -56,7 +56,7 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * Get available skins
+     * Get available skins, used by GuiActorSkin
      */
     public List<String> getSkins()
     {

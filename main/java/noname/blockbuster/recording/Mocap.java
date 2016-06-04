@@ -1,7 +1,6 @@
 package noname.blockbuster.recording;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +63,9 @@ public class Mocap
         return null;
     }
 
-    public static String replayFile(String filename) throws FileNotFoundException
+    public static String replayFile(String filename)
     {
+        /* You spin me round round, baby round round */
         File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records");
 
         if (!file.exists())

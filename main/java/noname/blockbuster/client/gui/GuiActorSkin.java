@@ -127,6 +127,8 @@ public class GuiActorSkin extends GuiScreen
 
     /**
      * Draw an entity on the screen
+     *
+     * Taken from minecraft's class GuiInventory
      */
     public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
     {

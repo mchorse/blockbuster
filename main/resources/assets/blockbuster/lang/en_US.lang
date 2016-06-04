@@ -8,6 +8,7 @@ item.cameraItem.name=Camera
 item.cameraConfigItem.name=Camera configuration device
 item.recordItem.name=Record button
 item.registerItem.name=Registering device
+item.skinManagerItem.name=Skin manager device
 
 # Entities names
 entity.Camera.name=Camera
