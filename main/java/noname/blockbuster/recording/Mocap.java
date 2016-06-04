@@ -134,6 +134,17 @@ public class Mocap
      */
     public static void startPlayback(String filename, World world, boolean killOnDead)
     {
+        ActorEntity actor = new ActorEntity(world);
+
+        startPlayback(filename, actor, killOnDead);
+        world.spawnEntityInWorld(actor);
+    }
+
+    /**
+     * Start playback with given entity
+     */
+    public static void startPlayback(String filename, ActorEntity entity, boolean killOnDead)
+    {
         File file = new File(replayFile(filename));
 
         if (!file.exists())
@@ -169,10 +180,8 @@ public class Mocap
             e.printStackTrace();
         }
 
-        ActorEntity entity = new ActorEntity(world);
         entity.setPosition(x, y, z);
         entity.setNoAI(true);
-        world.spawnEntityInWorld(entity);
 
         new PlayThread(entity, filename, killOnDead);
     }

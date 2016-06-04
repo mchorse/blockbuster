@@ -3,7 +3,6 @@ package noname.blockbuster.recording;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -13,26 +12,33 @@ import noname.blockbuster.entity.ActorEntity;
 class PlayThread implements Runnable
 {
     public Thread thread;
+    private String filename;
     private ActorEntity replayEntity;
     private DataInputStream in;
     private boolean deadAfterPlay;
 
     public PlayThread(ActorEntity actor, String filename, boolean deadAfterPlay)
     {
-        try
-        {
-            this.in = new DataInputStream(new FileInputStream(Mocap.replayFile(filename)));
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+        this.filename = filename;
+        this.initIn();
 
         this.replayEntity = actor;
         this.deadAfterPlay = deadAfterPlay;
 
         this.thread = new Thread(this, "Playback Thread");
         this.thread.start();
+    }
+
+    private void initIn()
+    {
+        try
+        {
+            this.in = new DataInputStream(new FileInputStream(Mocap.replayFile(this.filename)));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -71,12 +77,31 @@ class PlayThread implements Runnable
         {
             this.replayEntity.setDead();
         }
+        else
+        {
+            this.resetEntity();
+        }
 
         try
         {
             this.in.close();
         }
         catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void resetEntity()
+    {
+        try
+        {
+            this.in.close();
+            this.initIn();
+            this.in.skip(10);
+            this.injectMovement();
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
