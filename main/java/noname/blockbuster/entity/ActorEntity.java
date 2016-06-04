@@ -40,17 +40,12 @@ import noname.blockbuster.recording.Mocap;
 public class ActorEntity extends EntityCreature implements IEntityAdditionalSpawnData
 {
     public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
+
     public String skin = "";
 
     public ActorEntity(World worldIn)
     {
         super(worldIn);
-    }
-
-    @Override
-    public boolean canPickUpLoot()
-    {
-        return true;
     }
 
     /**
@@ -238,7 +233,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private void pickUpNearByItems()
     {
-        if (!this.worldObj.isRemote && this.canPickUpLoot() && !this.dead && this.worldObj.getGameRules().getBoolean("mobGriefing"))
+        if (!this.worldObj.isRemote && !this.dead)
         {
             for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
             {
@@ -250,11 +245,13 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
     }
 
+    private int tick = 0;
+
     /**
      * Process interact
      *
-     * Inject UUID of actor to registering device or open GUI for changing
-     * actor's skin
+     * Inject UUID of actor to registering device, open GUI for changing
+     * actor's skin, or start recording him
      */
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
@@ -266,10 +263,37 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             this.handleRegisterItem(item);
             this.handleSkinItem(item, player);
         }
+        else
+        {
+            if (this.tick > 0)
+            {
+                this.tick--;
+                return false;
+            }
+
+            if (!this.hasCustomName())
+            {
+                if (!this.worldObj.isRemote)
+                    Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+            }
+            else
+            {
+                if (!this.worldObj.isRemote)
+                    Mocap.startRecording(this.getCustomNameTag(), player);
+
+                player.copyLocationAndAnglesFrom(this);
+            }
+
+            this.tick = 1;
+        }
 
         return false;
     }
 
+    /**
+     * Set actor's id on register item (while using register item on this
+     * actor)
+     */
     private void handleRegisterItem(ItemStack stack)
     {
         if (this.worldObj.isRemote || !(stack.getItem() instanceof RegisterItem))
@@ -290,6 +314,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
     }
 
+    /**
+     * Open skin choosing GUI by using skin managing item
+     */
     private void handleSkinItem(ItemStack stack, EntityPlayer player)
     {
         if (!this.worldObj.isRemote || !(stack.getItem() instanceof SkinManagerItem))

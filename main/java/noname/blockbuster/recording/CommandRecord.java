@@ -38,34 +38,6 @@ public class CommandRecord extends CommandBase
             return;
         }
 
-        Recorder recorder = Mocap.records.get(player);
-        String username = player.getDisplayName().getFormattedText();
-
-        if (recorder != null)
-        {
-            recorder.recordThread.capture = false;
-            Mocap.broadcastMessage("Stopped recording " + username + " to file " + recorder.fileName);
-            Mocap.records.remove(player);
-            return;
-        }
-
-        synchronized (Mocap.records)
-        {
-            for (Recorder ar : Mocap.records.values())
-            {
-                if (ar.fileName.equals(args[0].toLowerCase()))
-                {
-                    Mocap.broadcastMessage(ar.fileName + " is already being recorded to?");
-                    return;
-                }
-            }
-        }
-
-        Mocap.broadcastMessage("Started recording " + username + " to file " + args[0]);
-        Recorder newRecorder = new Recorder();
-        Mocap.records.put(player, newRecorder);
-
-        newRecorder.fileName = args[0].toLowerCase();
-        newRecorder.recordThread = new RecordThread(player, args[0]);
+        Mocap.startRecording(args[0], player);
     }
 }

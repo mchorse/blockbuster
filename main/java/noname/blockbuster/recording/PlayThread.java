@@ -40,15 +40,6 @@ class PlayThread implements Runnable
     {
         try
         {
-            Thread.sleep(500L);
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
             short magic = this.in.readShort();
             long delay = this.in.readLong();
 
@@ -59,31 +50,8 @@ class PlayThread implements Runnable
 
             while (true)
             {
-                float yaw = this.in.readFloat();
-                float pitch = this.in.readFloat();
-                double x = this.in.readDouble();
-                double y = this.in.readDouble();
-                double z = this.in.readDouble();
-                double mx = this.in.readDouble();
-                double my = this.in.readDouble();
-                double mz = this.in.readDouble();
-                float fd = this.in.readFloat();
-                boolean iab = this.in.readBoolean();
-                boolean isn = this.in.readBoolean();
-                boolean isp = this.in.readBoolean();
-                boolean iog = this.in.readBoolean();
-
-                this.replayEntity.isAirBorne = iab;
-                this.replayEntity.motionX = mx;
-                this.replayEntity.motionY = my;
-                this.replayEntity.motionZ = mz;
-                this.replayEntity.fallDistance = fd;
-                this.replayEntity.setSneaking(isn);
-                this.replayEntity.setSprinting(isp);
-                this.replayEntity.onGround = iog;
-                this.replayEntity.setPositionAndRotation(x, y, z, yaw, pitch);
-
-                this.processAction();
+                this.injectMovement();
+                this.injectAction();
 
                 Thread.sleep(delay);
             }
@@ -114,7 +82,34 @@ class PlayThread implements Runnable
         }
     }
 
-    public void processAction() throws Exception
+    public void injectMovement() throws Exception
+    {
+        float yaw = this.in.readFloat();
+        float pitch = this.in.readFloat();
+        double x = this.in.readDouble();
+        double y = this.in.readDouble();
+        double z = this.in.readDouble();
+        double mx = this.in.readDouble();
+        double my = this.in.readDouble();
+        double mz = this.in.readDouble();
+        float fd = this.in.readFloat();
+        boolean iab = this.in.readBoolean();
+        boolean isn = this.in.readBoolean();
+        boolean isp = this.in.readBoolean();
+        boolean iog = this.in.readBoolean();
+
+        this.replayEntity.isAirBorne = iab;
+        this.replayEntity.motionX = mx;
+        this.replayEntity.motionY = my;
+        this.replayEntity.motionZ = mz;
+        this.replayEntity.fallDistance = fd;
+        this.replayEntity.setSneaking(isn);
+        this.replayEntity.setSprinting(isp);
+        this.replayEntity.onGround = iog;
+        this.replayEntity.setPositionAndRotation(x, y, z, yaw, pitch);
+    }
+
+    public void injectAction() throws Exception
     {
         if (!this.in.readBoolean())
         {

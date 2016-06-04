@@ -1,22 +1,13 @@
 package noname.blockbuster.recording;
 
-import java.io.File;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
-import noname.blockbuster.entity.ActorEntity;
 
 public class CommandPlay extends CommandBase
 {
-    ArrayList<PlayThread> playThreads = new ArrayList();
-
     @Override
     public String getCommandName()
     {
@@ -26,13 +17,7 @@ public class CommandPlay extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/play <replay> <entityname>";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        return "/play <replay> <entityname> <skin_name>";
     }
 
     @Override
@@ -44,61 +29,6 @@ public class CommandPlay extends CommandBase
             return;
         }
 
-        File file = new File(Mocap.replayFile(args[0]));
-
-        if (!file.exists())
-        {
-            Mocap.broadcastMessage("Can't find " + args[0] + " replay file!");
-            return;
-        }
-
-        double x = 0.0D;
-        double y = 0.0D;
-        double z = 0.0D;
-
-        try
-        {
-            RandomAccessFile in = new RandomAccessFile(file, "r");
-
-            if (in.readShort() != Mocap.signature)
-            {
-                Mocap.broadcastMessage(args[0] + " isn't a record file (or is an old version?)");
-                in.close();
-                return;
-            }
-
-            in.skipBytes(16);
-            x = in.readDouble();
-            y = in.readDouble();
-            z = in.readDouble();
-
-            in.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        World world = sender.getEntityWorld();
-
-        ActorEntity entity = new ActorEntity(world);
-        entity.setPosition(x, y, z);
-        entity.setCustomNameTag(args[1]);
-        entity.setNoAI(true);
-        world.spawnEntityInWorld(entity);
-
-        Iterator<PlayThread> iterator = this.playThreads.iterator();
-
-        while (iterator.hasNext())
-        {
-            PlayThread item = iterator.next();
-
-            if (!item.thread.isAlive())
-            {
-                iterator.remove();
-            }
-        }
-
-        this.playThreads.add(new PlayThread(entity, args[0], true));
+        Mocap.startPlayback(args[0], sender.getEntityWorld(), true);
     }
 }

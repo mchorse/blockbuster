@@ -1,6 +1,8 @@
 package noname.blockbuster.recording;
 
 import java.io.File;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +19,13 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import noname.blockbuster.entity.ActorEntity;
 
 public class Mocap
 {
     public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
+    public static ArrayList<PlayThread> playThreads = new ArrayList();
+
     public static final short signature = 3208;
     public static final long delay = 100L;
 
@@ -91,4 +96,84 @@ public class Mocap
 
     /* Record/play methods */
 
+    /**
+     * Start recording player's actions
+     */
+    public static void startRecording(String filename, EntityPlayer player)
+    {
+        Recorder recorder = records.get(player);
+        String username = player.getDisplayName().getFormattedText();
+
+        if (recorder != null)
+        {
+            recorder.recordThread.capture = false;
+            broadcastMessage("Stopped recording " + username + " to file " + recorder.fileName);
+            records.remove(player);
+            return;
+        }
+
+        for (Recorder ar : records.values())
+        {
+            if (ar.fileName.equals(filename))
+            {
+                broadcastMessage(ar.fileName + " is already being recorded to?");
+                return;
+            }
+        }
+
+        broadcastMessage("Started recording " + username + " to file " + filename);
+        Recorder newRecorder = new Recorder();
+        records.put(player, newRecorder);
+
+        newRecorder.fileName = filename;
+        newRecorder.recordThread = new RecordThread(player, filename);
+    }
+
+    /**
+     * Start playback
+     */
+    public static void startPlayback(String filename, World world, boolean killOnDead)
+    {
+        File file = new File(replayFile(filename));
+
+        if (!file.exists())
+        {
+            broadcastMessage("Can't find " + filename + " replay file!");
+            return;
+        }
+
+        double x = 0.0D;
+        double y = 0.0D;
+        double z = 0.0D;
+
+        try
+        {
+            RandomAccessFile in = new RandomAccessFile(file, "r");
+
+            if (in.readShort() != signature)
+            {
+                broadcastMessage(filename + " isn't a record file (or is an old version?)");
+                in.close();
+                return;
+            }
+
+            in.skipBytes(16);
+            x = in.readDouble();
+            y = in.readDouble();
+            z = in.readDouble();
+
+            in.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ActorEntity entity = new ActorEntity(world);
+        entity.setPosition(x, y, z);
+        entity.setNoAI(true);
+        world.spawnEntityInWorld(entity);
+
+        new PlayThread(entity, filename, killOnDead);
+    }
 }

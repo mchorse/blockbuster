@@ -96,6 +96,6 @@ public class ActorsPack implements IResourcePack
     @Override
     public String getPackName()
     {
-        return "Actors pack";
+        return "Blockbuster's Actor Skin Pack";
     }
 }

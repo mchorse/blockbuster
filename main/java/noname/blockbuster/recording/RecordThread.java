@@ -16,11 +16,11 @@ class RecordThread implements Runnable
 
     private EntityPlayer player;
     private RandomAccessFile in;
-    private Boolean lastTickSwipe = Boolean.valueOf(false);
+    private boolean lastTickSwipe = false;
     private int[] itemsEquipped = new int[6];
     private List<Action> eventList;
 
-    RecordThread(EntityPlayer _player, String filename)
+    RecordThread(EntityPlayer player, String filename)
     {
         try
         {
@@ -32,7 +32,7 @@ class RecordThread implements Runnable
             e.printStackTrace();
         }
 
-        this.player = _player;
+        this.player = player;
         this.capture = true;
         this.eventList = Mocap.getActionListForPlayer(this.player);
 
@@ -211,7 +211,7 @@ class RecordThread implements Runnable
      */
     private void writeActions() throws IOException
     {
-        if (this.eventList.size() <= 0)
+        if (this.eventList.size() == 0)
         {
             this.in.writeBoolean(false);
             return;
