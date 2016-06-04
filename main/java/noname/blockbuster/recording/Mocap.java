@@ -20,13 +20,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class Mocap
 {
-    public static Map<EntityPlayer, Recorder> recordThreads = Collections.synchronizedMap(new HashMap());
+    public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
     public static final short signature = 3208;
     public static final long delay = 100L;
 
     public static List<Action> getActionListForPlayer(EntityPlayer ep)
     {
-        Recorder aRecorder = recordThreads.get(ep);
+        Recorder aRecorder = records.get(ep);
 
         if (aRecorder == null)
         {
@@ -88,4 +88,7 @@ public class Mocap
 
         return null;
     }
+
+    /* Record/play methods */
+
 }

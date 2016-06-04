@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.Entity;
@@ -12,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -62,11 +62,10 @@ public class ClientProxy extends CommonProxy
     {
         try
         {
-            Field field = Minecraft.class.getDeclaredField("defaultResourcePacks");
+            Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
             field.setAccessible(true);
 
-            List<IResourcePack> packs = (List<IResourcePack>) field.get(Minecraft.getMinecraft());
-
+            List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(actorPack = new ActorsPack(configFolder + "/skins"));
         }
         catch (Exception e)

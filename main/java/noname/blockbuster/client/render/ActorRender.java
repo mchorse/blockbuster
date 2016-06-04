@@ -48,7 +48,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
         @Override
         public Render createRenderFor(RenderManager manager)
         {
-            return new ActorRender(manager, new ModelBiped(), 1.0F);
+            return new ActorRender(manager, new ModelBiped(), 0.5F);
         }
     }
 }

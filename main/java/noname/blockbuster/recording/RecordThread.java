@@ -62,7 +62,7 @@ class RecordThread implements Runnable
                 {
                     this.capture = false;
 
-                    Mocap.recordThreads.remove(this.player);
+                    Mocap.records.remove(this.player);
                     Mocap.broadcastMessage("Stopped recording " + this.player.getDisplayName().getFormattedText() + ". RIP.");
                 }
             }
@@ -246,7 +246,7 @@ class RecordThread implements Runnable
                 break;
 
             case Action.LOGOUT:
-                Mocap.recordThreads.remove(this.player);
+                Mocap.records.remove(this.player);
                 Mocap.broadcastMessage("Stopped recording " + this.player.getDisplayName().getFormattedText() + ". Bye!");
 
                 this.capture = false;

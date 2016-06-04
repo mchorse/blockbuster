@@ -49,7 +49,7 @@ public class CameraRender extends RenderLiving
         @Override
         public Render createRenderFor(RenderManager manager)
         {
-            return new CameraRender(manager, new CameraModel(), 1);
+            return new CameraRender(manager, new CameraModel(), 0.4F);
         }
     }
 }

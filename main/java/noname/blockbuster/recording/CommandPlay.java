@@ -11,7 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import noname.blockbuster.entity.ActorEntity;
 
 public class CommandPlay extends CommandBase
@@ -45,7 +44,7 @@ public class CommandPlay extends CommandBase
             return;
         }
 
-        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records/" + args[0]);
+        File file = new File(Mocap.replayFile(args[0]));
 
         if (!file.exists())
         {
@@ -60,19 +59,15 @@ public class CommandPlay extends CommandBase
         try
         {
             RandomAccessFile in = new RandomAccessFile(file, "r");
-            short magic = in.readShort();
 
-            if (magic != Mocap.signature)
+            if (in.readShort() != Mocap.signature)
             {
                 Mocap.broadcastMessage(args[0] + " isn't a record file (or is an old version?)");
                 in.close();
                 return;
             }
 
-            in.readLong();
-
-            float yaw = in.readFloat();
-            float pitch = in.readFloat();
+            in.skipBytes(16);
             x = in.readDouble();
             y = in.readDouble();
             z = in.readDouble();

@@ -38,20 +38,20 @@ public class CommandRecord extends CommandBase
             return;
         }
 
-        Recorder recorder = Mocap.recordThreads.get(player);
+        Recorder recorder = Mocap.records.get(player);
         String username = player.getDisplayName().getFormattedText();
 
         if (recorder != null)
         {
             recorder.recordThread.capture = false;
             Mocap.broadcastMessage("Stopped recording " + username + " to file " + recorder.fileName);
-            Mocap.recordThreads.remove(player);
+            Mocap.records.remove(player);
             return;
         }
 
-        synchronized (Mocap.recordThreads)
+        synchronized (Mocap.records)
         {
-            for (Recorder ar : Mocap.recordThreads.values())
+            for (Recorder ar : Mocap.records.values())
             {
                 if (ar.fileName.equals(args[0].toLowerCase()))
                 {
@@ -63,7 +63,7 @@ public class CommandRecord extends CommandBase
 
         Mocap.broadcastMessage("Started recording " + username + " to file " + args[0]);
         Recorder newRecorder = new Recorder();
-        Mocap.recordThreads.put(player, newRecorder);
+        Mocap.records.put(player, newRecorder);
 
         newRecorder.fileName = args[0].toLowerCase();
         newRecorder.recordThread = new RecordThread(player, args[0]);
