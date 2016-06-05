@@ -2,7 +2,6 @@ package noname.blockbuster.recording;
 
 import java.io.File;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,7 @@ import noname.blockbuster.entity.ActorEntity;
 public class Mocap
 {
     public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
-    public static ArrayList<PlayThread> playThreads = new ArrayList();
+    public static Map<ActorEntity, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
 
     public static final short signature = 3208;
     public static final long delay = 100L;
@@ -183,6 +182,6 @@ public class Mocap
         entity.setPosition(x, y, z);
         entity.setNoAI(true);
 
-        new PlayThread(entity, filename, killOnDead);
+        playbacks.put(entity, new PlayThread(entity, filename, killOnDead));
     }
 }

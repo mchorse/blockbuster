@@ -8,10 +8,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import noname.blockbuster.block.DirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
 
-public class DirectorTileEntity extends TileEntity
+/**
+ * Director tile entity
+ *
+ * Used to store actors and manipulate block isPlaying state. Not really sure
+ * if it's the best way to implement activation of the redstone (See update
+ * method for more information).
+ */
+public class DirectorTileEntity extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
 
@@ -62,7 +71,7 @@ public class DirectorTileEntity extends TileEntity
     }
 
     /**
-     * Start recording (actually a playback :D)
+     * Start recording (actually start a playback :D)
      */
     public void startRecording()
     {
@@ -80,7 +89,66 @@ public class DirectorTileEntity extends TileEntity
                 continue;
             }
 
+            if (Mocap.playbacks.containsKey(actor))
+            {
+                Mocap.broadcastMessage("Actor is already playing!");
+                return;
+            }
+
             actor.startPlaying();
         }
+
+        this.playBlock(true);
+    }
+
+    private int tick = 0;
+
+    @Override
+    public void update()
+    {
+        DirectorBlock block = (DirectorBlock) this.getBlockType();
+
+        if (!block.isPlaying || this.worldObj.isRemote)
+        {
+            return;
+        }
+
+        if (this.tick > 0)
+        {
+            this.tick--;
+            return;
+        }
+
+        this.areActorsStillPlaying();
+
+        this.tick = 3;
+    }
+
+    private void areActorsStillPlaying()
+    {
+        int count = 0;
+
+        for (String id : this.actors)
+        {
+            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+
+            if (!Mocap.playbacks.containsKey(actor))
+            {
+                count++;
+            }
+        }
+
+        System.out.println(count + " " + ((DirectorBlock) this.getBlockType()).isPlaying);
+
+        if (count == this.actors.size())
+        {
+            this.playBlock(false);
+        }
+    }
+
+    private void playBlock(boolean isPlaying)
+    {
+        ((DirectorBlock) this.getBlockType()).isPlaying = isPlaying;
+        this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
     }
 }

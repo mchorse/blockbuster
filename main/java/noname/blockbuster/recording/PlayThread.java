@@ -13,23 +13,23 @@ class PlayThread implements Runnable
 {
     public Thread thread;
     private String filename;
-    private ActorEntity replayEntity;
+    private ActorEntity actor;
     private DataInputStream in;
     private boolean deadAfterPlay;
 
     public PlayThread(ActorEntity actor, String filename, boolean deadAfterPlay)
     {
         this.filename = filename;
-        this.initIn();
+        this.initStream();
 
-        this.replayEntity = actor;
+        this.actor = actor;
         this.deadAfterPlay = deadAfterPlay;
 
         this.thread = new Thread(this, "Playback Thread");
         this.thread.start();
     }
 
-    private void initIn()
+    private void initStream()
     {
         try
         {
@@ -75,12 +75,14 @@ class PlayThread implements Runnable
 
         if (this.deadAfterPlay)
         {
-            this.replayEntity.setDead();
+            this.actor.setDead();
         }
         else
         {
             this.resetEntity();
         }
+
+        Mocap.playbacks.remove(this.actor);
 
         try
         {
@@ -97,7 +99,7 @@ class PlayThread implements Runnable
         try
         {
             this.in.close();
-            this.initIn();
+            this.initStream();
             this.in.skip(10);
             this.injectMovement();
         }
@@ -107,6 +109,10 @@ class PlayThread implements Runnable
         }
     }
 
+    /**
+     * Inject movement (position, motion) and rotation into current replay
+     * entity (i.e. actor)
+     */
     public void injectMovement() throws Exception
     {
         float yaw = this.in.readFloat();
@@ -123,17 +129,20 @@ class PlayThread implements Runnable
         boolean isp = this.in.readBoolean();
         boolean iog = this.in.readBoolean();
 
-        this.replayEntity.isAirBorne = iab;
-        this.replayEntity.motionX = mx;
-        this.replayEntity.motionY = my;
-        this.replayEntity.motionZ = mz;
-        this.replayEntity.fallDistance = fd;
-        this.replayEntity.setSneaking(isn);
-        this.replayEntity.setSprinting(isp);
-        this.replayEntity.onGround = iog;
-        this.replayEntity.setPositionAndRotation(x, y, z, yaw, pitch);
+        this.actor.isAirBorne = iab;
+        this.actor.motionX = mx;
+        this.actor.motionY = my;
+        this.actor.motionZ = mz;
+        this.actor.fallDistance = fd;
+        this.actor.setSneaking(isn);
+        this.actor.setSprinting(isp);
+        this.actor.onGround = iog;
+        this.actor.setPositionAndRotation(x, y, z, yaw, pitch);
     }
 
+    /**
+     * Inject action into current replay entity
+     */
     public void injectAction() throws Exception
     {
         if (!this.in.readBoolean())
@@ -154,16 +163,12 @@ class PlayThread implements Runnable
                 break;
 
             case Action.EQUIP:
-                int aSlot = this.in.readInt();
-                int aId = this.in.readInt();
-                int aDmg = this.in.readInt();
+                action.armorSlot = this.in.readInt();
+                action.armorId = this.in.readInt();
+                action.armorDmg = this.in.readInt();
 
-                if (aId != -1)
+                if (action.armorId != -1)
                     action.itemData = CompressedStreamTools.read(this.in);
-
-                action.armorSlot = aSlot;
-                action.armorId = aId;
-                action.armorDmg = aDmg;
                 break;
 
             case Action.SHOOTARROW:
@@ -183,6 +188,6 @@ class PlayThread implements Runnable
                 break;
         }
 
-        this.replayEntity.eventsList.add(action);
+        this.actor.eventsList.add(action);
     }
 }

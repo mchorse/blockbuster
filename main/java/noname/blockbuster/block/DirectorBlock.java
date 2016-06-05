@@ -26,7 +26,7 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * </p>
  *
  * <p>
- * It also has three hooks:
+ * It also has two hooks:
  * </p>
  *
  * <ul>
@@ -34,8 +34,6 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * scene starts playing</li>
  * <li>Stop hook – director block sends redstone signal on west side when the
  * scene stops playing</li>
- * <li>Force stop hook – if you'll send redstone signal on the south side of the
- * director block, it will force stop the scene</li>
  * </ul>
  *
  * <p>
@@ -48,17 +46,27 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * <p>
  * I don't really know a good use for the start hook, maybe start playing one of
  * these sick minecraft crafted tunes or do something else. I added just to
- * complement stop hook.
+ * complement the stop hook.
  * </p>
  */
 public class DirectorBlock extends Block implements ITileEntityProvider
 {
+    public boolean isPlaying = false;
+
     public DirectorBlock()
     {
         super(Material.rock);
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setRegistryName("directorBlock");
         this.setUnlocalizedName("directorBlock");
+    }
+
+    /* Redstone */
+
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    {
+        return true;
     }
 
     @Override
@@ -70,14 +78,10 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     @Override
     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.WEST || side == EnumFacing.EAST ? 15 : 0;
+        return (this.isPlaying && side == EnumFacing.WEST) || (!this.isPlaying && side == EnumFacing.EAST) ? 15 : 0;
     }
 
-    @Override
-    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
-    {
-        return true;
-    }
+    /* Player interaction */
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
@@ -145,6 +149,9 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         return true;
     }
 
+    /**
+     * Create tile entity
+     */
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
