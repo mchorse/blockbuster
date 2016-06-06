@@ -50,23 +50,23 @@ public class ClientProxy extends CommonProxy
         this.registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
         this.registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());
 
-        String path = event.getSuggestedConfigurationFile().getAbsolutePath();
-
-        this.injectResourcePack(path.substring(0, path.length() - 4));
+        this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
 
     /**
      * Inject actors resource pack
      */
-    private void injectResourcePack(String configFolder)
+    private void injectResourcePack(String path)
     {
+        path = path.substring(0, path.length() - 4);
+
         try
         {
             Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
             field.setAccessible(true);
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(actorPack = new ActorsPack(configFolder + "/skins"));
+            packs.add(actorPack = new ActorsPack(path + "/skins"));
         }
         catch (Exception e)
         {
@@ -98,6 +98,9 @@ public class ClientProxy extends CommonProxy
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
     }
 
+    /**
+     * Client GUI factory
+     */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {

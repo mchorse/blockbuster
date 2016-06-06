@@ -31,21 +31,51 @@ public class ActorsPack implements IResourcePack
 {
     public static final Set<String> defaultResourceDomains = ImmutableSet.<String> of("blockbuster.actors");
 
-    /**
-     * Hash map of actors
-     */
     protected Map<String, File> skins = new HashMap<String, File>();
+    protected File skinsFolder;
 
     public ActorsPack(String path)
     {
-        File skins = new File(path);
+        this.skinsFolder = new File(path);
 
-        if (!skins.exists())
+        if (!this.skinsFolder.exists())
         {
-            skins.mkdirs();
+            this.skinsFolder.mkdirs();
         }
 
-        for (File file : skins.listFiles())
+        this.reloadSkins();
+    }
+
+    /**
+     * Get available skins
+     */
+    public List<String> getSkins()
+    {
+        return new ArrayList<String>(this.skins.keySet());
+    }
+
+    /**
+     * Get available skins, used by GuiActorSkin
+     */
+    public List<String> getReloadedSkins()
+    {
+        this.reloadSkins();
+
+        return this.getSkins();
+    }
+
+    /**
+     * Reload skins
+     *
+     * Damn, that won't be fun to reload the game every time you want to put
+     * another skin in the skins folder, so why not just reload it every time
+     * the GUI is showed? It's easy to implement and requires no extra code.
+     */
+    private void reloadSkins()
+    {
+        this.skins.clear();
+
+        for (File file : this.skinsFolder.listFiles())
         {
             String name = file.getName();
             int suffix = name.length() - 4;
@@ -55,14 +85,6 @@ public class ActorsPack implements IResourcePack
                 this.skins.put(name.substring(0, suffix), file);
             }
         }
-    }
-
-    /**
-     * Get available skins, used by GuiActorSkin
-     */
-    public List<String> getSkins()
-    {
-        return new ArrayList<String>(this.skins.keySet());
     }
 
     @Override

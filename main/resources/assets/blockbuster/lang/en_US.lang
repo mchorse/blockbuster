@@ -31,3 +31,5 @@ blockbuster.gui.camera.cantFly=Cant fly
 
 blockbuster.gui.skin.title=Change Actor's Skin
 blockbuster.gui.skin.default=Default
+
+blockbuster.gui.director.title=Director Block

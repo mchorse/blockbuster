@@ -20,6 +20,12 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import noname.blockbuster.entity.ActorEntity;
 
+/**
+ * Mocap utility class
+ *
+ * Some of this (or most of it) code was borrowed from the Minecraft mod (for
+ * 1.7.10) and rewritten for 1.9.
+ */
 public class Mocap
 {
     public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
@@ -56,6 +62,8 @@ public class Mocap
         }
     }
 
+    /* Action utilities */
+
     public static EntityEquipmentSlot getSlotByIndex(int index)
     {
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
@@ -65,19 +73,6 @@ public class Mocap
         }
 
         return null;
-    }
-
-    public static String replayFile(String filename)
-    {
-        /* You spin me round round, baby round round */
-        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records");
-
-        if (!file.exists())
-        {
-            file.mkdirs();
-        }
-
-        return file.getAbsolutePath() + "/" + filename;
     }
 
     public static Entity entityByUUID(World world, UUID target)
@@ -129,11 +124,13 @@ public class Mocap
     }
 
     /**
-     * Start playback with new actor entity (used by command)
+     * Start playback with new actor entity (used by CommandPlay class)
      */
-    public static void startPlayback(String filename, World world, boolean killOnDead)
+    public static void startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
         ActorEntity actor = new ActorEntity(world);
+        actor.setCustomNameTag(name);
+        actor.setSkin(skin, true);
 
         startPlayback(filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);
@@ -183,5 +180,21 @@ public class Mocap
         entity.setNoAI(true);
 
         playbacks.put(entity, new PlayThread(entity, filename, killOnDead));
+    }
+
+    /**
+     * Get path to replay file (located in current world save's folder)
+     */
+    public static String replayFile(String filename)
+    {
+        /* You spin me round round, baby round round */
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records");
+
+        if (!file.exists())
+        {
+            file.mkdirs();
+        }
+
+        return file.getAbsolutePath() + "/" + filename;
     }
 }

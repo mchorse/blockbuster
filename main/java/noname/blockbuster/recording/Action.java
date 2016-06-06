@@ -18,14 +18,14 @@ public class Action
     public int zCoord;
     public UUID target;
 
-    public Action(byte chat)
+    public Action(byte type)
     {
-        this.type = chat;
+        this.type = type;
         this.itemData = new NBTTagCompound();
     }
 
     /**
-     * Total rip-off from Mocap mod
+     * Total rip-off from Mocap mod (except 8)
      *
      * I probably need to ask author's permission to use these values (and code)
      * for my mod... Nah, I think it's fine.

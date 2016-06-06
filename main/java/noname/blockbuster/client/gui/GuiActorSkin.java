@@ -31,7 +31,7 @@ public class GuiActorSkin extends GuiScreen
     public GuiActorSkin(ActorEntity actor)
     {
         this.actor = actor;
-        this.skins = ClientProxy.actorPack.getSkins();
+        this.skins = ClientProxy.actorPack.getReloadedSkins();
         this.skinIndex = this.skins.indexOf(actor.skin);
     }
 

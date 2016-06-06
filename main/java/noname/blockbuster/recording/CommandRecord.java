@@ -7,6 +7,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
+/**
+ * Record command
+ *
+ * This command can be used to record yourself and then play the character with
+ * `play` command. This is in case if you don't want to overcomplicate your
+ * life with director block, redstone and crowd of actor entities.
+ *
+ * By the way, you can use this command with command block (you can make your
+ * director block with command blocks, just like SethBling).
+ */
 public class CommandRecord extends CommandBase
 {
     @Override
@@ -18,13 +28,13 @@ public class CommandRecord extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "Usage: /record <savefile>, eg: /record forestrun";
+        return "Usage: /record <savefile>, e.g.: /record forrestrun";
     }
 
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 0;
+        return 2;
     }
 
     @Override

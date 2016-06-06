@@ -16,15 +16,15 @@ import noname.blockbuster.recording.CommandRecord;
  * Blockbuster's main entry
  *
  * This mod allows you to create machinimas in minecraft. Blockbuster provides
- * you with the most needed tools to create machinimas alone (with bunch of
+ * you with the most needed tools to create machinimas alone (without bunch of
  * complaining actors).
  *
- * This mod is possible thanks to following code/examples/resources:
- * - Jabelar's forge tutorials
+ * This mod is possible thanks to the following code/examples/resources:
+ * - Jabelar's minecraft modding tutorials
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
- * - Ernio for helping with camera attributes sync + giving his own network
- *   abstract layer
+ * - Ernio for helping with camera attributes sync + sharing with his own
+ *   network abstract layer
  * - diesieben07 for pointing out how to inject resource pack for actors
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
@@ -55,8 +55,10 @@ public class Blockbuster
         }
     };
 
+    /* Forge stuff */
     @Mod.Instance
     public static Blockbuster instance;
+
     @SidedProxy(clientSide = "noname.blockbuster.ClientProxy", serverSide = "noname.blockbuster.CommonProxy")
     public static CommonProxy proxy;
 

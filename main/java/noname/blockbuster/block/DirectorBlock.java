@@ -1,5 +1,7 @@
 package noname.blockbuster.block;
 
+import java.util.UUID;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -17,6 +19,7 @@ import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
@@ -86,11 +89,26 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        ItemStack item = playerIn.getHeldItemMainhand();
-
-        if (!worldIn.isRemote && item != null)
+        if (!worldIn.isRemote)
         {
-            return this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn);
+            ItemStack item = playerIn.getHeldItemMainhand();
+
+            if (item != null)
+            {
+                return this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn);
+            }
+            else
+            {
+                DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
+                String actors = "Registered actors: \n";
+
+                for (String id : tile.actors)
+                {
+                    actors += Mocap.entityByUUID(worldIn, UUID.fromString(id)).getName() + "\n";
+                }
+
+                playerIn.addChatComponentMessage(new TextComponentString(actors.trim()));
+            }
         }
 
         return true;
