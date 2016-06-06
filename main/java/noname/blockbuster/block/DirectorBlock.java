@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,20 +96,30 @@ public class DirectorBlock extends Block implements ITileEntityProvider
 
             if (item != null)
             {
-                return this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn);
-            }
-            else
-            {
-                DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-                String actors = "Registered actors: \n";
-
-                for (String id : tile.actors)
+                if (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn))
                 {
-                    actors += Mocap.entityByUUID(worldIn, UUID.fromString(id)).getName() + "\n";
+                    return true;
                 }
-
-                playerIn.addChatComponentMessage(new TextComponentString(actors.trim()));
             }
+
+            DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
+            String actors = "Registered actors: \n";
+
+            for (String id : tile.actors)
+            {
+                Entity entity = Mocap.entityByUUID(worldIn, UUID.fromString(id));
+
+                if (entity != null)
+                {
+                    actors += entity.getName() + "\n";
+                }
+                else
+                {
+                    actors += "Missing actor with UUID: " + id + "\n";
+                }
+            }
+
+            playerIn.addChatComponentMessage(new TextComponentString(actors.trim()));
         }
 
         return true;
