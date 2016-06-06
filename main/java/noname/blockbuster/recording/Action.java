@@ -38,4 +38,5 @@ public class Action
     public static final byte LOGOUT = 6;
     public static final byte PLACEBLOCK = 7;
     public static final byte MOUNTING = 8;
+    public static final byte INTERACT_BLOCK = 9;
 }

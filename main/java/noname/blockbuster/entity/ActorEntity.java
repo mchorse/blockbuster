@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -16,7 +17,9 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -74,6 +77,10 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
             case Action.MOUNTING:
                 this.mountAction(action);
+                break;
+
+            case Action.INTERACT_BLOCK:
+                this.interactBlockAction(action);
                 break;
         }
     }
@@ -160,6 +167,17 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         {
             this.dismountRidingEntity();
         }
+    }
+
+    /**
+     * Interact with block
+     */
+    private void interactBlockAction(Action action)
+    {
+        BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
+        IBlockState state = this.worldObj.getBlockState(pos);
+
+        state.getBlock().onBlockActivated(this.worldObj, pos, state, null, EnumHand.MAIN_HAND, null, EnumFacing.UP, pos.getX(), pos.getY(), pos.getZ());
     }
 
     /**

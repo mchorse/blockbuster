@@ -186,6 +186,12 @@ class PlayThread implements Runnable
                 action.target = new UUID(this.in.readLong(), this.in.readLong());
                 action.armorSlot = this.in.readInt();
                 break;
+
+            case Action.INTERACT_BLOCK:
+                action.xCoord = this.in.readInt();
+                action.yCoord = this.in.readInt();
+                action.zCoord = this.in.readInt();
+                break;
         }
 
         this.actor.eventsList.add(action);

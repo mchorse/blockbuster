@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -15,12 +17,46 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class MocapEventHandler
 {
+    /**
+     * Event listener for Action.INTERACT_BLOCK (when player right clicks on
+     * block)
+     */
+    @SubscribeEvent
+    public void onPlayerRightClickBlock(RightClickBlock event)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        {
+            return;
+        }
+
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> aList = Mocap.getActionListForPlayer(player);
+
+        if (aList != null)
+        {
+            Action ma = new Action(Action.INTERACT_BLOCK);
+            BlockPos pos = event.getPos();
+
+            ma.xCoord = pos.getX();
+            ma.yCoord = pos.getY();
+            ma.zCoord = pos.getZ();
+
+            aList.add(ma);
+        }
+    }
+
+    /**
+     * Event listener for Action.MOUNTING (when player mounts other entity)
+     */
     @SubscribeEvent
     public void onPlayerMountsSomething(EntityMountEvent event)
     {
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        {
+            return;
+        }
 
-        if (side == Side.SERVER && event.getEntityMounting() instanceof EntityPlayer)
+        if (event.getEntityMounting() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntityMounting();
             List<Action> aList = Mocap.getActionListForPlayer(player);
@@ -35,6 +71,9 @@ public class MocapEventHandler
         }
     }
 
+    /**
+     * Event listener for Action.LOGOUT (that's obvious)
+     */
     @SubscribeEvent
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
     {
@@ -52,6 +91,9 @@ public class MocapEventHandler
         }
     }
 
+    /**
+     * Doesn't work for some reason
+     */
     @SubscribeEvent
     public void onArrowLooseEvent(ArrowLooseEvent ev) throws IOException
     {
@@ -70,6 +112,9 @@ public class MocapEventHandler
         }
     }
 
+    /**
+     * Event listener for Action.DROP (when player drops the item from his
+     * inventory)*/
     @SubscribeEvent
     public void onItemTossEvent(ItemTossEvent ev) throws IOException
     {
@@ -88,6 +133,10 @@ public class MocapEventHandler
         }
     }
 
+    /**
+     * Event listener for Action.CHAT (basically when the player enters
+     * something in the chat)
+     */
     @SubscribeEvent
     public void onServerChatEvent(ServerChatEvent ev)
     {

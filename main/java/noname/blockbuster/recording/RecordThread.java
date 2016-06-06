@@ -264,6 +264,12 @@ class RecordThread implements Runnable
                 this.in.writeLong(ma.target.getLeastSignificantBits());
                 this.in.writeInt(ma.armorSlot);
                 break;
+
+            case Action.INTERACT_BLOCK:
+                this.in.writeInt(ma.xCoord);
+                this.in.writeInt(ma.yCoord);
+                this.in.writeInt(ma.zCoord);
+                break;
         }
 
         this.eventList.remove(0);
