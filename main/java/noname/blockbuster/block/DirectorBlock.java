@@ -103,7 +103,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
             }
 
             DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-            String actors = "Registered actors: \n";
+            String actors = "Registered actors:\n\n";
 
             for (String id : tile.actors)
             {
@@ -111,11 +111,11 @@ public class DirectorBlock extends Block implements ITileEntityProvider
 
                 if (entity != null)
                 {
-                    actors += entity.getName() + "\n";
+                    actors += "* " + entity.getName() + "\n";
                 }
                 else
                 {
-                    actors += "Missing actor with UUID: " + id + "\n";
+                    actors += "* Missing actor with UUID: " + id + "\n";
                 }
             }
 
@@ -177,6 +177,8 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         player.addChatMessage(new TextComponentString("This recording device was succesfully attached to director block!"));
         return true;
     }
+
+    /* ITileEntityProvider implementation */
 
     /**
      * Create tile entity

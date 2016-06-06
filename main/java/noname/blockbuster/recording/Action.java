@@ -24,8 +24,8 @@ public class Action
         this.itemData = new NBTTagCompound();
     }
 
-    /**
-     * Total rip-off from Mocap mod (except 8)
+    /*
+     * Total rip-off from Mocap mod
      *
      * I probably need to ask author's permission to use these values (and code)
      * for my mod... Nah, I think it's fine.
@@ -36,7 +36,9 @@ public class Action
     public static final byte EQUIP = 4;
     public static final byte SHOOTARROW = 5;
     public static final byte LOGOUT = 6;
-    public static final byte PLACEBLOCK = 7;
+    public static final byte PLACE_BLOCK = 7;
+
+    /* These types of handling are added by me */
     public static final byte MOUNTING = 8;
     public static final byte INTERACT_BLOCK = 9;
 }

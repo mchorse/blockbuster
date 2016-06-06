@@ -19,7 +19,7 @@ public class MocapEventHandler
 {
     /**
      * Event listener for Action.INTERACT_BLOCK (when player right clicks on
-     * block)
+     * a block)
      */
     @SubscribeEvent
     public void onPlayerRightClickBlock(RightClickBlock event)
@@ -114,7 +114,8 @@ public class MocapEventHandler
 
     /**
      * Event listener for Action.DROP (when player drops the item from his
-     * inventory)*/
+     * inventory)
+     */
     @SubscribeEvent
     public void onItemTossEvent(ItemTossEvent ev) throws IOException
     {

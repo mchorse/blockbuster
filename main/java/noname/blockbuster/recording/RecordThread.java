@@ -252,7 +252,7 @@ class RecordThread implements Runnable
                 this.capture = false;
                 break;
 
-            case Action.PLACEBLOCK:
+            case Action.PLACE_BLOCK:
                 this.in.writeInt(ma.xCoord);
                 this.in.writeInt(ma.yCoord);
                 this.in.writeInt(ma.zCoord);

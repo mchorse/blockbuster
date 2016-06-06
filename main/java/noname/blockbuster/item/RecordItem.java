@@ -56,7 +56,7 @@ public class RecordItem extends Item
 
             DirectorTileEntity director = (DirectorTileEntity) tile;
 
-            director.startRecording();
+            director.startPlayback();
         }
 
         return EnumActionResult.SUCCESS;

@@ -53,9 +53,6 @@ public class ClientProxy extends CommonProxy
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
 
-    /**
-     * Inject actors resource pack
-     */
     private void injectResourcePack(String path)
     {
         path = path.substring(0, path.length() - 4);
@@ -74,33 +71,21 @@ public class ClientProxy extends CommonProxy
         }
     }
 
-    /**
-     * Register block model
-     */
     protected void registerItemModel(Block block, String path)
     {
         this.registerItemModel(Item.getItemFromBlock(block), path);
     }
 
-    /**
-     * Register item model
-     */
     protected void registerItemModel(Item item, String path)
     {
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(path, "inventory"));
     }
 
-    /**
-     * Register entity renderer
-     */
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
     }
 
-    /**
-     * Client GUI factory
-     */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {

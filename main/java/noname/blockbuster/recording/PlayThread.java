@@ -175,7 +175,7 @@ class PlayThread implements Runnable
                 action.arrowCharge = this.in.readInt();
                 break;
 
-            case Action.PLACEBLOCK:
+            case Action.PLACE_BLOCK:
                 action.xCoord = this.in.readInt();
                 action.yCoord = this.in.readInt();
                 action.zCoord = this.in.readInt();

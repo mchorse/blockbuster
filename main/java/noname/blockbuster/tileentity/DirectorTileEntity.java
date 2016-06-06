@@ -24,6 +24,8 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
 
+    /* Read/write this TE to disk */
+
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {
@@ -57,6 +59,12 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         compound.setTag("Actors", list);
     }
 
+    /* Public API */
+
+    /**
+     * Add an actor to this director block (dah, TE is part of the director
+     * block)
+     */
     public boolean addActor(String id)
     {
         if (!this.actors.contains(id))
@@ -71,9 +79,9 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     }
 
     /**
-     * Start recording (actually start a playback :D)
+     * Start a playback
      */
-    public void startRecording()
+    public void startPlayback()
     {
         if (this.worldObj.isRemote)
         {
@@ -101,8 +109,14 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         this.playBlock(true);
     }
 
+    /* Tick-tock */
+
     private int tick = 0;
 
+    /**
+     * Checks every 4 ticks if the actors (that registered by this TE) are
+     * still playing their roles.
+     */
     @Override
     public void update()
     {
@@ -121,9 +135,13 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 
         this.areActorsStillPlaying();
 
-        this.tick = 3;
+        this.tick = 4;
     }
 
+    /**
+     * Does what it says to do – checking if the actors still playing their
+     * roles (not finished playback).
+     */
     private void areActorsStillPlaying()
     {
         int count = 0;
@@ -138,14 +156,16 @@ public class DirectorTileEntity extends TileEntity implements ITickable
             }
         }
 
-        System.out.println(count + " " + ((DirectorBlock) this.getBlockType()).isPlaying);
-
+        /* Shutdown, muthafucka! */
         if (count == this.actors.size())
         {
             this.playBlock(false);
         }
     }
 
+    /**
+     * Set the state of the block playing (needed to update redstone thingy-stuff)
+     */
     private void playBlock(boolean isPlaying)
     {
         ((DirectorBlock) this.getBlockType()).isPlaying = isPlaying;

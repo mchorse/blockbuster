@@ -25,7 +25,7 @@ import noname.blockbuster.recording.CommandRecord;
  * - MinecraftByExample
  * - Ernio for helping with camera attributes sync + sharing with his own
  *   network abstract layer
- * - diesieben07 for pointing out how to inject resource pack for actors
+ * - diesieben07 for giving idea for actor skins
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster
@@ -70,29 +70,20 @@ public class Blockbuster
         return MODID + ":" + path;
     }
 
-    /**
-     * Register all items, blocks and entities
-     */
     @EventHandler
-    public void preLoad(FMLPreInitializationEvent event)
+    public void registerAllItemsBlocksAndEntities(FMLPreInitializationEvent event)
     {
         proxy.preLoad(event);
     }
 
-    /**
-     * Register event handler and inject actors pack
-     */
     @EventHandler
-    public void load(FMLInitializationEvent event)
+    public void registerEventHandlerAndInjectActorPack(FMLInitializationEvent event)
     {
         proxy.load(event);
     }
 
-    /**
-     * Register server commands
-     */
     @EventHandler
-    public void serverStartup(FMLServerStartingEvent event)
+    public void registerServerCommands(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandPlay());

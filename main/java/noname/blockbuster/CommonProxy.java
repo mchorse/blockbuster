@@ -42,7 +42,7 @@ public class CommonProxy implements IGuiHandler
         this.registerBlock(Blockbuster.directorBlock = new DirectorBlock());
 
         this.registerEntity(CameraEntity.class, "Camera");
-        this.registerEntityWithEgg(ActorEntity.class, "Actor", 0xffffffff, 0xffaaaaaa);
+        this.registerEntityWithEgg(ActorEntity.class, "Actor", 0xffffffff, 0xfff8f8f8);
 
         GameRegistry.registerTileEntity(DirectorTileEntity.class, "blockbuster_director_tile_entity");
     }
