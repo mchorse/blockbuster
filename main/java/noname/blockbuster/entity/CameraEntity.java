@@ -43,7 +43,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     @Override
     public double getMountedYOffset()
     {
-        return this.height * 0.3;
+        return this.height * 0.4;
     }
 
     @Override
@@ -139,9 +139,14 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
                 forward *= xcel;
                 strafe *= xcel;
             }
-            else
+            else if (this.acceleration != 0)
             {
-                this.acceleration = 0.0F;
+                this.acceleration *= 0.9F;
+
+                if (this.acceleration < 0.0005F)
+                {
+                    this.acceleration = 0;
+                }
             }
 
             /* Flying logic */
@@ -180,7 +185,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         }
     }
 
-    /* Saving to disk */
+    /* Read/save to disk */
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound)
