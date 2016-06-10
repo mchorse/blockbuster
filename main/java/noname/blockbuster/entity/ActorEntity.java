@@ -31,6 +31,7 @@ import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.recording.Action;
 import noname.blockbuster.recording.Mocap;
+import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
  * Actor entity class
@@ -49,6 +50,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      * this mod.
      */
     public String skin = "";
+    public BlockPos directorBlock;
 
     public ActorEntity(World worldIn)
     {
@@ -294,20 +296,12 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
                 return false;
             }
 
-            if (!this.hasCustomName())
-            {
-                if (!this.worldObj.isRemote)
-                    Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
-            }
-            else
-            {
-                if (!this.worldObj.isRemote)
-                    Mocap.startRecording(this.getCustomNameTag(), player);
-
-                player.copyLocationAndAnglesFrom(this);
-            }
-
             this.tick = 1;
+
+            if (!this.worldObj.isRemote)
+                this.startRecording(player);
+
+            player.copyLocationAndAnglesFrom(this);
         }
 
         return false;
@@ -375,12 +369,35 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
     }
 
+    private void startRecording(EntityPlayer player)
+    {
+        if (!this.hasCustomName())
+        {
+            Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+            return;
+        }
+
+        if (this.directorBlock != null && !Mocap.records.containsKey(player))
+        {
+            DirectorTileEntity director = (DirectorTileEntity) player.worldObj.getTileEntity(this.directorBlock);
+
+            director.startPlayback(this);
+        }
+
+        Mocap.startRecording(this.getCustomNameTag(), player);
+    }
+
     /* Reading/writing to disk */
 
     @Override
     public void readEntityFromNBT(NBTTagCompound tagCompound)
     {
         this.skin = tagCompound.getString("Skin");
+
+        if (tagCompound.hasKey("DirX") && tagCompound.hasKey("DirY") && tagCompound.hasKey("DirZ"))
+        {
+            this.directorBlock = new BlockPos(tagCompound.getInteger("DirX"), tagCompound.getInteger("DirY"), tagCompound.getInteger("DirZ"));
+        }
 
         super.readEntityFromNBT(tagCompound);
     }
@@ -391,6 +408,13 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         if (this.skin != "")
         {
             tagCompound.setString("Skin", this.skin);
+        }
+
+        if (this.directorBlock != null)
+        {
+            tagCompound.setInteger("DirX", this.directorBlock.getX());
+            tagCompound.setInteger("DirY", this.directorBlock.getY());
+            tagCompound.setInteger("DirZ", this.directorBlock.getZ());
         }
 
         super.writeEntityToNBT(tagCompound);

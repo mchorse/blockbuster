@@ -18,6 +18,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.Mocap;
@@ -141,9 +142,17 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         }
 
         String id = item.getTagCompound().getString("ActorID");
-        DirectorTileEntity tile = (DirectorTileEntity) world.getTileEntity(pos);
 
-        if (!tile.addActor(id))
+        DirectorTileEntity tile = (DirectorTileEntity) world.getTileEntity(pos);
+        ActorEntity actor = (ActorEntity) Mocap.entityByUUID(world, UUID.fromString(id));
+
+        if (actor == null)
+        {
+            player.addChatMessage(new TextComponentString("The actor which is attached to this registering device doesn't exist!"));
+            return false;
+        }
+
+        if (!tile.addActor(actor))
         {
             player.addChatMessage(new TextComponentString("This actor is already registered by director block!"));
             return false;

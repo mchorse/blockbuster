@@ -65,10 +65,14 @@ public class DirectorTileEntity extends TileEntity implements ITickable
      * Add an actor to this director block (dah, TE is part of the director
      * block)
      */
-    public boolean addActor(String id)
+    public boolean addActor(ActorEntity actor)
     {
+        String id = actor.getUniqueID().toString();
+
         if (!this.actors.contains(id))
         {
+            actor.directorBlock = this.getPos();
+
             this.actors.add(id);
             this.markDirty();
 
@@ -79,9 +83,18 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     }
 
     /**
-     * Start a playback
+     * Start a playback (make actors play their roles from the files)
      */
     public void startPlayback()
+    {
+        this.startPlayback(null);
+    }
+
+    /**
+     * The same thing as startPlayback, but don't play the actor that is
+     * passed in the arguments (because he might be recorded by the player)
+     */
+    public void startPlayback(ActorEntity exception)
     {
         if (this.worldObj.isRemote)
         {
@@ -92,7 +105,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         {
             ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
 
-            if (actor == null)
+            if (actor == null || actor == exception)
             {
                 continue;
             }
