@@ -180,6 +180,7 @@ class PlayThread implements Runnable
                 action.yCoord = this.in.readInt();
                 action.zCoord = this.in.readInt();
                 action.itemData = CompressedStreamTools.read(this.in);
+                System.out.println("Cool, mate, the block is " + action.itemData);
                 break;
 
             case Action.MOUNTING:

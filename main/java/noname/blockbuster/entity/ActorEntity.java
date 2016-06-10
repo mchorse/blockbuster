@@ -15,6 +15,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -77,6 +78,10 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
                 this.replayShootArrow(action);
                 break;
 
+            case Action.PLACE_BLOCK:
+                this.placeBlock(action);
+                break;
+
             case Action.MOUNTING:
                 this.mountAction(action);
                 break;
@@ -84,6 +89,19 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             case Action.INTERACT_BLOCK:
                 this.interactBlockAction(action);
                 break;
+        }
+    }
+
+    private void placeBlock(Action action)
+    {
+        ItemStack item = ItemStack.loadItemStackFromNBT(action.itemData);
+
+        if (item.getItem() instanceof ItemBlock)
+        {
+            ItemBlock block = (ItemBlock) item.getItem();
+            BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
+
+            block.placeBlockAt(item, null, this.worldObj, pos, EnumFacing.NORTH, 0, 0, 0, block.block.getDefaultState());
         }
     }
 
@@ -358,10 +376,15 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
     public void startPlaying()
     {
+        if (Mocap.playbacks.containsKey(this))
+        {
+            Mocap.broadcastMessage("Current actor is already playing!");
+            return;
+        }
+
         if (!this.hasCustomName())
         {
-            if (!this.worldObj.isRemote)
-                Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+            Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
         }
         else
         {

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
@@ -34,12 +36,29 @@ public class MocapEventHandler
 
         if (aList != null)
         {
-            Action ma = new Action(Action.INTERACT_BLOCK);
-            BlockPos pos = event.getPos();
+            ItemStack item = event.getItemStack();
+            Action ma;
 
-            ma.xCoord = pos.getX();
-            ma.yCoord = pos.getY();
-            ma.zCoord = pos.getZ();
+            if (item != null && item.getItem() instanceof ItemBlock)
+            {
+                BlockPos pos = event.getPos().offset(event.getFace());
+
+                ma = new Action(Action.PLACE_BLOCK);
+                ma.xCoord = pos.getX();
+                ma.yCoord = pos.getY();
+                ma.zCoord = pos.getZ();
+
+                item.writeToNBT(ma.itemData);
+            }
+            else
+            {
+                BlockPos pos = event.getPos();
+
+                ma = new Action(Action.INTERACT_BLOCK);
+                ma.xCoord = pos.getX();
+                ma.yCoord = pos.getY();
+                ma.zCoord = pos.getZ();
+            }
 
             aList.add(ma);
         }

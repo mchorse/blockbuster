@@ -23,6 +23,7 @@ import noname.blockbuster.recording.Mocap;
 public class DirectorTileEntity extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
+    private int tick = 0;
 
     /* Read/write this TE to disk */
 
@@ -110,12 +111,6 @@ public class DirectorTileEntity extends TileEntity implements ITickable
                 continue;
             }
 
-            if (Mocap.playbacks.containsKey(actor))
-            {
-                Mocap.broadcastMessage("Actor is already playing!");
-                return;
-            }
-
             actor.startPlaying();
         }
 
@@ -123,8 +118,6 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     }
 
     /* Tick-tock */
-
-    private int tick = 0;
 
     /**
      * Checks every 4 ticks if the actors (that registered by this TE) are
