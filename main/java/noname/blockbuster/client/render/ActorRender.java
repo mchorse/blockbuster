@@ -24,6 +24,14 @@ public class ActorRender extends RenderBiped<ActorEntity>
         this.addLayer(new LayerBipedArmor(this));
     }
 
+    @Override
+    public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
+        this.modelBipedMain.isSneak = entity.isSneaking();
+
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
+
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
     {
         float f = 0.920F;

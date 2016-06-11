@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -30,13 +31,13 @@ public class RecordItem extends Item
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, net.minecraft.util.math.BlockPos pos, EnumHand hand, net.minecraft.util.EnumFacing facing, float hitX, float hitY, float hitZ)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
         if (!worldIn.isRemote)
         {
             if (stack.getTagCompound() == null)
             {
-                return EnumActionResult.PASS;
+                return new ActionResult(EnumActionResult.PASS, stack);
             }
 
             NBTTagCompound tag = stack.getTagCompound();
@@ -51,7 +52,7 @@ public class RecordItem extends Item
             {
                 playerIn.addChatMessage(new TextComponentString("The director block, that was attached to this device, was destroyed. Attach this device to another director block!"));
 
-                return EnumActionResult.PASS;
+                return new ActionResult(EnumActionResult.PASS, stack);
             }
 
             DirectorTileEntity director = (DirectorTileEntity) tile;
@@ -59,6 +60,6 @@ public class RecordItem extends Item
             director.startPlayback();
         }
 
-        return EnumActionResult.SUCCESS;
+        return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 }
