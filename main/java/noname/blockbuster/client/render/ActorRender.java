@@ -32,6 +32,12 @@ public class ActorRender extends RenderBiped<ActorEntity>
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
+    @Override
+    protected boolean canRenderName(ActorEntity entity)
+    {
+        return entity.renderName;
+    }
+
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
     {
         float f = 0.920F;

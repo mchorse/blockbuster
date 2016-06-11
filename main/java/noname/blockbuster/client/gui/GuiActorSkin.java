@@ -41,10 +41,10 @@ public class GuiActorSkin extends GuiScreen
         int centerX = this.width / 2;
 
         this.buttonList.clear();
-        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 235, 200, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
-        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 185, 95, 20, I18n.format("blockbuster.gui.next", new Object[] {})));
-        this.buttonList.add(this.prev = new GuiButton(2, centerX + 5, 185, 95, 20, I18n.format("blockbuster.gui.previous", new Object[] {})));
-        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.restore", new Object[] {})));
+        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
+        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 18, 20, 20, I18n.format("blockbuster.gui.next", new Object[] {})));
+        this.buttonList.add(this.prev = new GuiButton(2, centerX + 80, 18, 20, 20, I18n.format("blockbuster.gui.previous", new Object[] {})));
+        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 185, 200, 20, I18n.format("blockbuster.gui.restore", new Object[] {})));
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
     }
@@ -120,7 +120,9 @@ public class GuiActorSkin extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, title, centerX, 25, 0xffffffff);
         this.drawCenteredString(this.fontRendererObj, skin, centerX, 170, 0xffffffff);
 
-        drawEntityOnScreen(this.width / 2, 150, 50, centerX - mouseX, 120 - mouseY, this.actor);
+        this.actor.renderName = false;
+        drawEntityOnScreen(this.width / 2, 155, 50, centerX - mouseX, 120 - mouseY, this.actor);
+        this.actor.renderName = true;
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

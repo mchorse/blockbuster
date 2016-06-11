@@ -15,9 +15,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.CameraConfigItem;
+import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 
+/**
+ * Camera entity
+ *
+ * Freaking flying camera that lets you to whooshes the skies for a clearer
+ * shot (movie). With director block you can instantly jump from one camera
+ * to another (really useful during film making).
+ */
 public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawnData
 {
     public float speed = 0.4F;
@@ -34,7 +42,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     }
 
     /**
-     * No knockback is allowed
+     * No knockback is allowed to camera
      */
     @Override
     public void knockBack(Entity entityIn, float magnitued, double a, double b)
@@ -76,14 +84,21 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && item.getItem() instanceof CameraConfigItem)
+        if (item != null)
         {
-            if (this.worldObj.isRemote)
+            if (item.getItem() instanceof CameraConfigItem)
             {
-                player.openGui(Blockbuster.instance, 0, this.worldObj, this.getEntityId(), 0, 0);
-            }
+                if (this.worldObj.isRemote)
+                {
+                    player.openGui(Blockbuster.instance, 0, this.worldObj, this.getEntityId(), 0, 0);
+                }
 
-            return true;
+                return true;
+            }
+            else if (item.getItem() instanceof RegisterItem)
+            {
+                return true;
+            }
         }
         else if (!this.isBeingRidden())
         {
@@ -102,6 +117,9 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         return this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
     }
 
+    /**
+     * Yes, it can be steered!
+     */
     @Override
     public boolean canBeSteered()
     {
@@ -109,7 +127,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     }
 
     /**
-     * Totally not copy-pasted from EntityHorse/AnimalBikes classes
+     * Totally not partially copy-pasted from EntityHorse/AnimalBikes classes
      */
     @Override
     public void moveEntityWithHeading(float strafe, float forward)
@@ -160,7 +178,6 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
                 this.motionY = 0.0D;
             }
 
-            /* Hacks */
             this.onGround = true;
             this.setAIMoveSpeed(this.speed);
             super.moveEntityWithHeading(strafe, forward);
