@@ -3,6 +3,7 @@ package noname.blockbuster.recording;
 import java.io.IOException;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -41,12 +42,15 @@ public class MocapEventHandler
 
             if (item != null && item.getItem() instanceof ItemBlock)
             {
+                Block block = ((ItemBlock) item.getItem()).getBlock();
                 BlockPos pos = event.getPos().offset(event.getFace());
 
                 ma = new Action(Action.PLACE_BLOCK);
                 ma.xCoord = pos.getX();
                 ma.yCoord = pos.getY();
                 ma.zCoord = pos.getZ();
+                ma.armorId = event.getFace().getIndex();
+                ma.armorSlot = item.getMetadata();
 
                 item.writeToNBT(ma.itemData);
             }

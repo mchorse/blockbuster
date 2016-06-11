@@ -100,8 +100,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         {
             ItemBlock block = (ItemBlock) item.getItem();
             BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
+            EnumFacing face = EnumFacing.VALUES[action.armorId];
 
-            block.placeBlockAt(item, null, this.worldObj, pos, EnumFacing.NORTH, 0, 0, 0, block.block.getDefaultState());
+            block.placeBlockAt(item, null, this.worldObj, pos, face, 0, 0, 0, block.block.getStateFromMeta(action.armorSlot));
         }
     }
 

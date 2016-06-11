@@ -256,6 +256,8 @@ class RecordThread implements Runnable
                 this.in.writeInt(ma.xCoord);
                 this.in.writeInt(ma.yCoord);
                 this.in.writeInt(ma.zCoord);
+                this.in.writeInt(ma.armorId);
+                this.in.writeInt(ma.armorSlot);
                 CompressedStreamTools.write(ma.itemData, this.in);
                 break;
 
