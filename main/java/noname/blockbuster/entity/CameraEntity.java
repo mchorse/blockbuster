@@ -19,6 +19,7 @@ import noname.blockbuster.item.CameraConfigItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
+import noname.blockbuster.network.common.Recording;
 import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
@@ -35,6 +36,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     public float accelerationMax = 1.5f;
     public boolean canFly = true;
     public float savedPitch = 0.0F;
+    public boolean isRecording = false;
 
     public BlockPos directorBlock;
 
@@ -234,8 +236,20 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         }
     }
 
+    public void setRecording(boolean recording, boolean notify)
+    {
+        this.isRecording = recording;
+
+        System.out.println(this.worldObj.isRemote + " " + recording);
+
+        if (!this.worldObj.isRemote && notify)
+        {
+            Dispatcher.updateTrackers(this, new Recording(this.getEntityId(), recording));
+        }
+    }
+
     /**
-     * Switch to another camera
+     * Switch player to another camera (in director's block)
      */
     public void switchTo(int direction)
     {

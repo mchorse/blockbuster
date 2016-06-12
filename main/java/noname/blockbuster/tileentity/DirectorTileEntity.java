@@ -243,5 +243,12 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     {
         ((DirectorBlock) this.getBlockType()).isPlaying = isPlaying;
         this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
+
+        for (String id : this.cameras)
+        {
+            CameraEntity camera = (CameraEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+
+            camera.setRecording(isPlaying, true);
+        }
     }
 }

@@ -14,8 +14,10 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerChangeSkin;
+import noname.blockbuster.network.client.ClientHandlerRecording;
 import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.network.common.PacketCameraAttributes;
+import noname.blockbuster.network.common.Recording;
 import noname.blockbuster.network.common.SwitchCamera;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerChangeSkin;
@@ -59,6 +61,9 @@ public class Dispatcher
 
         /** Teleport player to another camera */
         register(SwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
+
+        /** Make cameras invinsible while playback */
+        register(Recording.class, ClientHandlerRecording.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
