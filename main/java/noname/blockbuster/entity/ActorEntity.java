@@ -52,6 +52,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     public String skin = "";
     public BlockPos directorBlock;
+    public boolean renderName = true;
     private int tick = 0;
 
     public ActorEntity(World worldIn)

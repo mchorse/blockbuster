@@ -63,7 +63,8 @@ public class Blockbuster
     public static CommonProxy proxy;
 
     /**
-     * "Macro" for getting id for Blockbuster mod items/entities/blocks/etc.
+     * "Macro" for getting resource location for Blockbuster mod items,
+     * entities, blocks, or etc.
      */
     public static String path(String path)
     {

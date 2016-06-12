@@ -41,10 +41,10 @@ public class GuiActorSkin extends GuiScreen
         int centerX = this.width / 2;
 
         this.buttonList.clear();
-        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
-        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 18, 20, 20, I18n.format("blockbuster.gui.next", new Object[] {})));
-        this.buttonList.add(this.prev = new GuiButton(2, centerX + 80, 18, 20, 20, I18n.format("blockbuster.gui.previous", new Object[] {})));
-        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 185, 200, 20, I18n.format("blockbuster.gui.restore", new Object[] {})));
+        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.done")));
+        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 18, 20, 20, I18n.format("blockbuster.gui.next")));
+        this.buttonList.add(this.prev = new GuiButton(2, centerX + 80, 18, 20, 20, I18n.format("blockbuster.gui.previous")));
+        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 185, 200, 20, I18n.format("blockbuster.gui.restore")));
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
     }
@@ -108,8 +108,8 @@ public class GuiActorSkin extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         int centerX = this.width / 2;
-        String title = I18n.format("blockbuster.gui.skin.title", new Object[] {});
-        String skin = I18n.format("blockbuster.gui.skin.default", new Object[] {});
+        String title = I18n.format("blockbuster.gui.skin.title");
+        String skin = I18n.format("blockbuster.gui.skin.default");
 
         if (this.skinIndex != -1)
         {
@@ -120,7 +120,9 @@ public class GuiActorSkin extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, title, centerX, 25, 0xffffffff);
         this.drawCenteredString(this.fontRendererObj, skin, centerX, 170, 0xffffffff);
 
-        drawEntityOnScreen(this.width / 2, 155, 50, centerX - mouseX, 120 - mouseY, this.actor);
+        this.actor.renderName = false;
+        drawEntityOnScreen(centerX, 155, 50, centerX - mouseX, 120 - mouseY, this.actor);
+        this.actor.renderName = true;
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

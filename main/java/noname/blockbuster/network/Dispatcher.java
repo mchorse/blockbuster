@@ -16,8 +16,10 @@ import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerChangeSkin;
 import noname.blockbuster.network.common.ChangeSkin;
 import noname.blockbuster.network.common.PacketCameraAttributes;
+import noname.blockbuster.network.common.SwitchCamera;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerChangeSkin;
+import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
 
 /**
  * Network dispatcher
@@ -47,10 +49,16 @@ public class Dispatcher
 
     public static void init()
     {
+        /** Update camera attributes (speed, acceleration, flying */
         register(PacketCameraAttributes.class, ClientHandlerCameraAttributes.class, Side.CLIENT);
         register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
+
+        /** Update actor's skin */
         register(ChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
         register(ChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
+
+        /** Teleport player to another camera */
+        register(SwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

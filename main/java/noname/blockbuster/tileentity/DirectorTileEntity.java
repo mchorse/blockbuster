@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -121,6 +122,8 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 
         if (!this.cameras.contains(id))
         {
+            camera.directorBlock = this.getPos();
+
             this.cameras.add(id);
             this.markDirty();
 
@@ -164,7 +167,31 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         this.playBlock(true);
     }
 
-    /* Tick-tock */
+    /**
+     * Switch (teleport) to another camera
+     */
+    public void switchTo(CameraEntity camera, int direction)
+    {
+        int index = this.cameras.indexOf(camera.getUniqueID().toString()) + direction;
+
+        if (index >= this.cameras.size())
+        {
+            index = 0;
+        }
+        else if (index < 0)
+        {
+            index = this.cameras.size() - 1;
+        }
+
+        CameraEntity newCamera = (CameraEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(this.cameras.get(index)));
+        EntityPlayer player = (EntityPlayer) camera.getControllingPassenger();
+
+        player.dismountRidingEntity();
+        player.setPositionAndUpdate(newCamera.posX, newCamera.posY, newCamera.posZ);
+        player.rotationYaw = newCamera.rotationYaw;
+        player.rotationPitch = newCamera.rotationPitch;
+        player.startRiding(newCamera);
+    }
 
     /**
      * Checks every 4 ticks if the actors (that registered by this TE) are

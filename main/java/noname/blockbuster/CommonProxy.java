@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.block.DirectorBlock;
+import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraConfigItem;
@@ -50,6 +51,7 @@ public class CommonProxy implements IGuiHandler
     public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
+        MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
     }
 
     /**

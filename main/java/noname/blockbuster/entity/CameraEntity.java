@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -18,6 +19,7 @@ import noname.blockbuster.item.CameraConfigItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
+import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
  * Camera entity
@@ -32,6 +34,9 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     public float accelerationRate = 0.02F;
     public float accelerationMax = 1.5f;
     public boolean canFly = true;
+    public float savedPitch = 0.0F;
+
+    public BlockPos directorBlock;
 
     protected float acceleration = 0.0F;
 
@@ -144,6 +149,14 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         return true;
     }
 
+    @Override
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+
+        this.rotationPitch = this.savedPitch;
+    }
+
     /**
      * Totally not partially copy-pasted from EntityHorse/AnimalBikes classes
      */
@@ -200,6 +213,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             this.setAIMoveSpeed(this.speed);
             super.moveEntityWithHeading(strafe, forward);
             this.onGround = oldOnGround;
+            this.savedPitch = this.rotationPitch;
         }
     }
 
@@ -220,6 +234,21 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         }
     }
 
+    /**
+     * Switch to another camera
+     */
+    public void switchTo(int direction)
+    {
+        if (this.directorBlock == null)
+        {
+            return;
+        }
+
+        DirectorTileEntity director = (DirectorTileEntity) this.worldObj.getTileEntity(this.directorBlock);
+
+        director.switchTo(this, direction);
+    }
+
     /* Read/save to disk */
 
     @Override
@@ -229,6 +258,11 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         this.accelerationRate = tagCompound.getFloat("CameraRate");
         this.accelerationMax = tagCompound.getFloat("CameraMax");
         this.canFly = tagCompound.getBoolean("CanFly");
+
+        if (tagCompound.hasKey("DirX") && tagCompound.hasKey("DirY") && tagCompound.hasKey("DirZ"))
+        {
+            this.directorBlock = new BlockPos(tagCompound.getInteger("DirX"), tagCompound.getInteger("DirY"), tagCompound.getInteger("DirZ"));
+        }
 
         super.readEntityFromNBT(tagCompound);
     }
@@ -240,6 +274,13 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         tagCompound.setFloat("CameraRate", this.accelerationRate);
         tagCompound.setFloat("CameraMax", this.accelerationMax);
         tagCompound.setBoolean("CanFly", this.canFly);
+
+        if (this.directorBlock != null)
+        {
+            tagCompound.setInteger("DirX", this.directorBlock.getX());
+            tagCompound.setInteger("DirY", this.directorBlock.getY());
+            tagCompound.setInteger("DirZ", this.directorBlock.getZ());
+        }
 
         super.writeEntityToNBT(tagCompound);
     }

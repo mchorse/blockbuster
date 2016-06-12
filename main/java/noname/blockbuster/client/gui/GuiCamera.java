@@ -12,9 +12,9 @@ import noname.blockbuster.network.common.PacketCameraAttributes;
 
 public class GuiCamera extends GuiScreen
 {
-    private String title = I18n.format("blockbuster.gui.camera.title", new Object[] {});
-    private String stringCanFly = I18n.format("blockbuster.gui.camera.canFly", new Object[] {});
-    private String stringCantFly = I18n.format("blockbuster.gui.camera.cantFly", new Object[] {});
+    private String title = I18n.format("blockbuster.gui.camera.title");
+    private String stringCanFly = I18n.format("blockbuster.gui.camera.canFly");
+    private String stringCantFly = I18n.format("blockbuster.gui.camera.cantFly");
 
     protected GuiSlider speed;
     protected GuiSlider accelerationRate;
@@ -35,9 +35,9 @@ public class GuiCamera extends GuiScreen
         int w = 200;
         int x = this.width / 2 - w / 2;
 
-        this.speed = new GuiSlider(0, x, 50, w, 20, I18n.format("blockbuster.gui.camera.speed", new Object[] {}), "", 0, 1, 0, true, true);
-        this.accelerationRate = new GuiSlider(1, x, 80, w, 20, I18n.format("blockbuster.gui.camera.rate", new Object[] {}), "", 0, 0.5, 0, true, true);
-        this.accelerationMax = new GuiSlider(2, x, 110, w, 20, I18n.format("blockbuster.gui.camera.max", new Object[] {}), "", 0, 2, 0, true, true);
+        this.speed = new GuiSlider(0, x, 50, w, 20, I18n.format("blockbuster.gui.camera.speed"), "", 0, 1, 0, true, true);
+        this.accelerationRate = new GuiSlider(1, x, 80, w, 20, I18n.format("blockbuster.gui.camera.rate"), "", 0, 0.5, 0, true, true);
+        this.accelerationMax = new GuiSlider(2, x, 110, w, 20, I18n.format("blockbuster.gui.camera.max"), "", 0, 2, 0, true, true);
 
         this.speed.precision = this.accelerationMax.precision = 1;
         this.accelerationRate.precision = 3;
@@ -52,7 +52,7 @@ public class GuiCamera extends GuiScreen
 
         this.buttonList.clear();
         this.buttonList.add(this.canFly = new GuiButton(3, x, 140, w, 20, ""));
-        this.buttonList.add(this.done = new GuiButton(4, x, 205, w, 20, I18n.format("blockbuster.gui.done", new Object[] {})));
+        this.buttonList.add(this.done = new GuiButton(4, x, 205, w, 20, I18n.format("blockbuster.gui.done")));
 
         this.canFly.displayString = this.camera.canFly ? this.stringCanFly : this.stringCantFly;
     }

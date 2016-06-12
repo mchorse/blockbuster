@@ -32,6 +32,5 @@ public class RegisterItem extends Item
         }
 
         stack.getTagCompound().setString("EntityID", entity.getUniqueID().toString());
-        System.out.println(entity);
     }
 }
