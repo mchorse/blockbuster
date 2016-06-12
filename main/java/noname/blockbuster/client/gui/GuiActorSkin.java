@@ -120,9 +120,7 @@ public class GuiActorSkin extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, title, centerX, 25, 0xffffffff);
         this.drawCenteredString(this.fontRendererObj, skin, centerX, 170, 0xffffffff);
 
-        this.actor.renderName = false;
         drawEntityOnScreen(this.width / 2, 155, 50, centerX - mouseX, 120 - mouseY, this.actor);
-        this.actor.renderName = true;
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

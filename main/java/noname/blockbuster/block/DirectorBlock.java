@@ -1,5 +1,7 @@
 package noname.blockbuster.block;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
@@ -15,10 +17,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.item.RecordItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.Mocap;
@@ -91,39 +93,41 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (!worldIn.isRemote)
+        if (worldIn.isRemote)
         {
-            ItemStack item = playerIn.getHeldItemMainhand();
-
-            if (item != null)
-            {
-                if (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn))
-                {
-                    return true;
-                }
-            }
-
-            DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-            String actors = "Registered actors:\n\n";
-
-            for (String id : tile.actors)
-            {
-                Entity entity = Mocap.entityByUUID(worldIn, UUID.fromString(id));
-
-                if (entity != null)
-                {
-                    actors += "* " + entity.getName() + "\n";
-                }
-                else
-                {
-                    actors += "* Missing actor with UUID: " + id + "\n";
-                }
-            }
-
-            playerIn.addChatComponentMessage(new TextComponentString(actors.trim()));
+            return true;
         }
 
+        ItemStack item = playerIn.getHeldItemMainhand();
+
+        if (item != null && (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn)))
+        {
+            return true;
+        }
+
+        this.outputActors(playerIn, worldIn, pos);
+
         return true;
+    }
+
+    private void outputActors(EntityPlayer playerIn, World worldIn, BlockPos pos)
+    {
+        DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
+        String output = "Registered cameras and actors:\n";
+
+        List<String> cast = new ArrayList<String>();
+        cast.addAll(tile.actors);
+        cast.addAll(tile.cameras);
+
+        for (String id : cast)
+        {
+            Entity entity = Mocap.entityByUUID(worldIn, UUID.fromString(id));
+            String name = entity != null ? entity.getName() : "Missing entity with UUID: " + id;
+
+            output += "* " + name + "\n";
+        }
+
+        playerIn.addChatComponentMessage(new TextComponentString(output.trim()));
     }
 
     /**
@@ -131,34 +135,35 @@ public class DirectorBlock extends Block implements ITileEntityProvider
      */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof RegisterItem))
+        if (!(item.getItem() instanceof RegisterItem) && item.getTagCompound() == null)
         {
             return false;
         }
-
-        if (item.getTagCompound() == null)
-        {
-            return false;
-        }
-
-        String id = item.getTagCompound().getString("ActorID");
 
         DirectorTileEntity tile = (DirectorTileEntity) world.getTileEntity(pos);
-        ActorEntity actor = (ActorEntity) Mocap.entityByUUID(world, UUID.fromString(id));
+        NBTTagCompound tag = item.getTagCompound();
 
-        if (actor == null)
+        if (!tag.hasKey("EntityID"))
         {
-            player.addChatMessage(new TextComponentString("The actor which is attached to this registering device doesn't exist!"));
             return false;
         }
 
-        if (!tile.addActor(actor))
+        String id = tag.getString("EntityID");
+        Entity entity = Mocap.entityByUUID(world, UUID.fromString(id));
+
+        if (entity == null)
         {
-            player.addChatMessage(new TextComponentString("This actor is already registered by director block!"));
-            return false;
+            player.addChatMessage(new TextComponentTranslation("blockbuster.director.not_exist"));
+            return true;
         }
 
-        player.addChatMessage(new TextComponentString("This actor was succesfully attached to director block!"));
+        if (!tile.add(entity))
+        {
+            player.addChatMessage(new TextComponentTranslation("blockbuster.director.already_registered"));
+            return true;
+        }
+
+        player.addChatMessage(new TextComponentTranslation("blockbuster.director.was_registered"));
         return true;
     }
 
@@ -183,7 +188,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         tag.setInteger("DirY", pos.getY());
         tag.setInteger("DirZ", pos.getZ());
 
-        player.addChatMessage(new TextComponentString("This recording device was succesfully attached to director block!"));
+        player.addChatMessage(new TextComponentTranslation("blockbuster.director.attached_device"));
         return true;
     }
 

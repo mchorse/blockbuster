@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -11,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import noname.blockbuster.block.DirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -23,6 +25,7 @@ import noname.blockbuster.recording.Mocap;
 public class DirectorTileEntity extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
+    public List<String> cameras = new ArrayList<String>();
     private int tick = 0;
 
     /* Read/write this TE to disk */
@@ -32,13 +35,20 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     {
         super.readFromNBT(compound);
 
-        NBTTagList list = compound.getTagList("Actors", 8);
+        NBTTagList actors = compound.getTagList("Actors", 8);
+        NBTTagList cameras = compound.getTagList("Cameras", 8);
 
         this.actors.clear();
+        this.cameras.clear();
 
-        for (int i = 0; i < list.tagCount(); i++)
+        for (int i = 0; i < actors.tagCount(); i++)
         {
-            this.actors.add(list.getStringTagAt(i));
+            this.actors.add(actors.getStringTagAt(i));
+        }
+
+        for (int i = 0; i < cameras.tagCount(); i++)
+        {
+            this.cameras.add(cameras.getStringTagAt(i));
         }
     }
 
@@ -47,26 +57,45 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     {
         super.writeToNBT(compound);
 
-        NBTTagList list = new NBTTagList();
+        this.saveListToNBT(compound, "Actors", this.actors);
+        this.saveListToNBT(compound, "Cameras", this.cameras);
+    }
 
-        if (!this.actors.isEmpty())
+    private void saveListToNBT(NBTTagCompound compound, String key, List<String> list)
+    {
+        NBTTagList tagList = new NBTTagList();
+
+        for (int i = 0; i < list.size(); i++)
         {
-            for (int i = 0; i < this.actors.size(); i++)
-            {
-                list.appendTag(new NBTTagString(this.actors.get(i)));
-            }
+            tagList.appendTag(new NBTTagString(list.get(i)));
         }
 
-        compound.setTag("Actors", list);
+        compound.setTag(key, tagList);
     }
 
     /* Public API */
 
     /**
+     * Something like factory method*/
+    public boolean add(Entity entity)
+    {
+        if (entity instanceof CameraEntity)
+        {
+            return this.add((CameraEntity) entity);
+        }
+        else if (entity instanceof ActorEntity)
+        {
+            return this.add((ActorEntity) entity);
+        }
+
+        return false;
+    }
+
+    /**
      * Add an actor to this director block (dah, TE is part of the director
      * block)
      */
-    public boolean addActor(ActorEntity actor)
+    public boolean add(ActorEntity actor)
     {
         String id = actor.getUniqueID().toString();
 
@@ -75,6 +104,24 @@ public class DirectorTileEntity extends TileEntity implements ITickable
             actor.directorBlock = this.getPos();
 
             this.actors.add(id);
+            this.markDirty();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add a camera to director block
+     */
+    public boolean add(CameraEntity camera)
+    {
+        String id = camera.getUniqueID().toString();
+
+        if (!this.cameras.contains(id))
+        {
+            this.cameras.add(id);
             this.markDirty();
 
             return true;
@@ -128,19 +175,12 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     {
         DirectorBlock block = (DirectorBlock) this.getBlockType();
 
-        if (!block.isPlaying || this.worldObj.isRemote)
+        if (!block.isPlaying || this.worldObj.isRemote || this.tick-- > 0)
         {
-            return;
-        }
-
-        if (this.tick > 0)
-        {
-            this.tick--;
             return;
         }
 
         this.areActorsStillPlaying();
-
         this.tick = 4;
     }
 

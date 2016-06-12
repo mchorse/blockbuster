@@ -1,5 +1,6 @@
 package noname.blockbuster.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
@@ -35,7 +36,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
     @Override
     protected boolean canRenderName(ActorEntity entity)
     {
-        return entity.renderName;
+        return super.canRenderName(entity) && Minecraft.getMinecraft().currentScreen == null;
     }
 
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)

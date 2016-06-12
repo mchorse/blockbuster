@@ -51,8 +51,8 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      * this mod.
      */
     public String skin = "";
-    public boolean renderName = true;
     public BlockPos directorBlock;
+    private int tick = 0;
 
     public ActorEntity(World worldIn)
     {
@@ -271,7 +271,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      * Destroy near by items
      *
      * Taken from super implementation of onLivingUpdate. You can't use
-     * super.onLivingUpdate() in onLivingUpdate() because it will distort
+     * super.onLivingUpdate() in onLivingUpdate(), because it will distort
      * actor's movement (make it more laggy)
      */
     private void pickUpNearByItems()
@@ -289,8 +289,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /* Processing interaction with player */
-
-    private int tick = 0;
 
     /**
      * Process interact
@@ -310,18 +308,16 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            if (this.tick > 0)
+            if (this.tick-- > 0)
             {
-                this.tick--;
                 return false;
             }
-
-            this.tick = 1;
 
             if (!this.worldObj.isRemote)
                 this.startRecording(player);
 
             player.copyLocationAndAnglesFrom(this);
+            this.tick = 1;
         }
 
         return false;
@@ -338,17 +334,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        if (stack.getTagCompound() == null)
-        {
-            stack.setTagCompound(new NBTTagCompound());
-        }
+        RegisterItem item = (RegisterItem) stack.getItem();
 
-        NBTTagCompound tag = stack.getTagCompound();
-
-        if (!tag.hasKey("ActorID") || tag.getString("ActorID") != this.getUniqueID().toString())
-        {
-            tag.setString("ActorID", this.getUniqueID().toString());
-        }
+        item.registerStack(stack, this);
     }
 
     /**

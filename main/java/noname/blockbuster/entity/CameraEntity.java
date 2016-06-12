@@ -97,6 +97,8 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             }
             else if (item.getItem() instanceof RegisterItem)
             {
+                this.handleRegisterItem(item);
+
                 return true;
             }
         }
@@ -106,6 +108,22 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         }
 
         return false;
+    }
+
+    /**
+     * Set actor's id on register item (while using register item on this
+     * actor)
+     */
+    private void handleRegisterItem(ItemStack stack)
+    {
+        if (this.worldObj.isRemote)
+        {
+            return;
+        }
+
+        RegisterItem item = (RegisterItem) stack.getItem();
+
+        item.registerStack(stack, this);
     }
 
     /**

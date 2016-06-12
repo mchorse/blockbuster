@@ -11,9 +11,7 @@ item.registerItem.name=Registering device
 item.skinManagerItem.name=Skin manager device
 
 # Entities names
-entity.Camera.name=Camera
-entity.Actor.name=Actor
-
+entity.blockbuster.Camera.name=Camera
 entity.blockbuster.Actor.name=Actor
 
 # GUI
@@ -31,3 +29,10 @@ blockbuster.gui.camera.cantFly=Can fly: only horizontally
 
 blockbuster.gui.skin.title=Change Actor's Skin
 blockbuster.gui.skin.default=Default
+
+# Chat messsages
+blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!
+blockbuster.director.already_registered=This entity is already registered by director block!
+blockbuster.director.was_registered=This entity was succesfully attached to director block!
+
+blockbuster.director.attached_device=This recording device was succesfully attached to director block!

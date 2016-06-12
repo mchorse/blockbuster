@@ -1,6 +1,9 @@
 package noname.blockbuster.item;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import noname.blockbuster.Blockbuster;
 
 /**
@@ -16,5 +19,19 @@ public class RegisterItem extends Item
         this.setUnlocalizedName("registerItem");
         this.setRegistryName("registerItem");
         this.setCreativeTab(Blockbuster.blockbusterTab);
+    }
+
+    /**
+     * Register an entity to a stack of register item
+     */
+    public void registerStack(ItemStack stack, Entity entity)
+    {
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setString("EntityID", entity.getUniqueID().toString());
+        System.out.println(entity);
     }
 }
