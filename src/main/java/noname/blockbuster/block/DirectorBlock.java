@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.item.RecordItem;
+import noname.blockbuster.item.PlaybackItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.DirectorTileEntity;
@@ -104,7 +104,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
 
         ItemStack item = playerIn.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handleRecordItem(item, pos, playerIn)))
+        if (item != null && (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handlePlaybackItem(item, pos, playerIn)))
         {
             return true;
         }
@@ -185,9 +185,9 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     /**
      * Attach recording item to current director block
      */
-    private boolean handleRecordItem(ItemStack item, BlockPos pos, EntityPlayer player)
+    private boolean handlePlaybackItem(ItemStack item, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof RecordItem))
+        if (!(item.getItem() instanceof PlaybackItem))
         {
             return false;
         }

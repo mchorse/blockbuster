@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import noname.blockbuster.api.Comment;
 import noname.blockbuster.recording.CommandPlay;
 import noname.blockbuster.recording.CommandRecord;
 
@@ -29,8 +30,10 @@ import noname.blockbuster.recording.CommandRecord;
  *
  * ToDo list:
  * - Add GUI for director tile entity
- * - Rename recording item to playback item
+ * - Make camera's model prettier
+ * - Fix mounting entities
  */
+@Comment(comment = "This mod uses portion ")
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster
 {
@@ -42,7 +45,7 @@ public class Blockbuster
     /* Items */
     public static Item cameraItem;
     public static Item cameraConfigItem;
-    public static Item recordItem;
+    public static Item playbackItem;
     public static Item registerItem;
     public static Item skinManagerItem;
 

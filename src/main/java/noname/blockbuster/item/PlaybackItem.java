@@ -20,13 +20,13 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * Push to start recording the scene (actually it just makes all actors do their
  * business, i.e. playing their role)
  */
-public class RecordItem extends Item
+public class PlaybackItem extends Item
 {
-    public RecordItem()
+    public PlaybackItem()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("recordItem");
-        this.setRegistryName("recordItem");
+        this.setUnlocalizedName("playbackItem");
+        this.setRegistryName("playbackItem");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 

@@ -6,7 +6,7 @@ tile.directorBlock.name=Director block
 
 item.cameraItem.name=Camera
 item.cameraConfigItem.name=Camera configuration device
-item.recordItem.name=Record button
+item.playbackItem.name=Playback button
 item.registerItem.name=Registering device
 item.skinManagerItem.name=Skin manager device
 
@@ -31,6 +31,9 @@ blockbuster.gui.camera.cantFly=Can fly: only horizontally
 
 blockbuster.gui.skin.title=Change Actor's Skin
 blockbuster.gui.skin.default=Default
+
+key.blockbuster.next=Switch to the next camera
+key.blockbuster.previous=Switch to the previous camera
 
 # Chat messsages
 blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!

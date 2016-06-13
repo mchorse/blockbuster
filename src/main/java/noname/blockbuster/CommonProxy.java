@@ -18,7 +18,7 @@ import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.item.CameraConfigItem;
 import noname.blockbuster.item.CameraItem;
-import noname.blockbuster.item.RecordItem;
+import noname.blockbuster.item.PlaybackItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.item.SkinManagerItem;
 import noname.blockbuster.network.Dispatcher;
@@ -37,7 +37,7 @@ public class CommonProxy implements IGuiHandler
         this.registerItem(Blockbuster.cameraItem = new CameraItem());
         this.registerItem(Blockbuster.cameraConfigItem = new CameraConfigItem());
         this.registerItem(Blockbuster.registerItem = new RegisterItem());
-        this.registerItem(Blockbuster.recordItem = new RecordItem());
+        this.registerItem(Blockbuster.playbackItem = new PlaybackItem());
         this.registerItem(Blockbuster.skinManagerItem = new SkinManagerItem());
 
         this.registerBlock(Blockbuster.directorBlock = new DirectorBlock());
