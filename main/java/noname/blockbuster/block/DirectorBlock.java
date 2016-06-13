@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -122,7 +123,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     private void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-        String output = "Registered cameras and actors:\n";
+        String output = I18n.format("blockbuster.director.cast");
 
         List<String> cast = new ArrayList<String>();
         cast.addAll(tile.actors);
@@ -131,14 +132,14 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         for (String id : cast)
         {
             Entity entity = Mocap.entityByUUID(worldIn, id);
-            String name = entity != null ? entity.getName() : "Missing entity with UUID: " + id;
+            String name = entity != null ? entity.getName() : I18n.format("blockbuster.director.missing_cast", id);
 
             output += "* " + name + "\n";
         }
 
         if (cast.isEmpty())
         {
-            output = "No registered cameras or actors!";
+            output = I18n.format("blockbuster.director.no_cast");
         }
 
         playerIn.addChatComponentMessage(new TextComponentString(output.trim()));

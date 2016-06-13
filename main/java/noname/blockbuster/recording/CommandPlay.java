@@ -26,7 +26,7 @@ public class CommandPlay extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/play <replay> <entity_name> <skin_name>, e.g.: /play forest_gump_bench_scene Forrest ForrestGump\nSide note: <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses strings";
+        return "blockbuster.commands.play";
     }
 
     @Override

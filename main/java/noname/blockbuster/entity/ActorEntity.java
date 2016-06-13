@@ -7,6 +7,7 @@ import java.util.Random;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -406,13 +407,13 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage("Current actor is already playing!");
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.playing"));
             return;
         }
 
         if (!this.hasCustomName())
         {
-            Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.no_name"));
         }
         else
         {
@@ -434,7 +435,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!this.hasCustomName())
         {
-            Mocap.broadcastMessage("Current actor doesn't have a custom name, please assign him a name (using name tag)!");
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.noname"));
             return;
         }
 
@@ -451,34 +452,34 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     /* Reading/writing to disk */
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound tagCompound)
+    public void readEntityFromNBT(NBTTagCompound tag)
     {
-        this.skin = tagCompound.getString("Skin");
+        this.skin = tag.getString("Skin");
 
-        if (tagCompound.hasKey("DirX") && tagCompound.hasKey("DirY") && tagCompound.hasKey("DirZ"))
+        if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
         {
-            this.directorBlock = new BlockPos(tagCompound.getInteger("DirX"), tagCompound.getInteger("DirY"), tagCompound.getInteger("DirZ"));
+            this.directorBlock = new BlockPos(tag.getInteger("DirX"), tag.getInteger("DirY"), tag.getInteger("DirZ"));
         }
 
-        super.readEntityFromNBT(tagCompound);
+        super.readEntityFromNBT(tag);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    public void writeEntityToNBT(NBTTagCompound tag)
     {
         if (this.skin != "")
         {
-            tagCompound.setString("Skin", this.skin);
+            tag.setString("Skin", this.skin);
         }
 
         if (this.directorBlock != null)
         {
-            tagCompound.setInteger("DirX", this.directorBlock.getX());
-            tagCompound.setInteger("DirY", this.directorBlock.getY());
-            tagCompound.setInteger("DirZ", this.directorBlock.getZ());
+            tag.setInteger("DirX", this.directorBlock.getX());
+            tag.setInteger("DirY", this.directorBlock.getY());
+            tag.setInteger("DirZ", this.directorBlock.getZ());
         }
 
-        super.writeEntityToNBT(tagCompound);
+        super.writeEntityToNBT(tag);
     }
 
     /* IEntityAdditionalSpawnData implementation */

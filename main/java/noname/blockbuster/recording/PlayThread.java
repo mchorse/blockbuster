@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.CompressedStreamTools;
 import noname.blockbuster.entity.ActorEntity;
 
@@ -78,7 +79,7 @@ class PlayThread implements Runnable
         catch (Exception e)
         {
             System.out.println("Replay thread interrupted.");
-            Mocap.broadcastMessage("Error loading record file, either not a record file or recorded by an older version.");
+            Mocap.broadcastMessage(I18n.format("blockbuster.mocap.error_file"));
             e.printStackTrace();
         }
 

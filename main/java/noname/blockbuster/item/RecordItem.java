@@ -9,7 +9,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.tileentity.DirectorTileEntity;
@@ -54,7 +54,7 @@ public class RecordItem extends Item
 
             if (tile == null || !(tile instanceof DirectorTileEntity))
             {
-                playerIn.addChatMessage(new TextComponentString("The director block, that was attached to this device, was destroyed. Attach this device to another director block!"));
+                playerIn.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
 
                 return new ActionResult(EnumActionResult.PASS, stack);
             }

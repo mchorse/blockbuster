@@ -249,8 +249,6 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     {
         this.isRecording = recording;
 
-        System.out.println(this.worldObj.isRemote + " " + recording);
-
         if (!this.worldObj.isRemote && notify)
         {
             Dispatcher.updateTrackers(this, new PacketRecording(this.getEntityId(), recording));
@@ -276,37 +274,37 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     /* Read/save to disk */
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound tagCompound)
+    public void readEntityFromNBT(NBTTagCompound tag)
     {
-        this.speed = tagCompound.getFloat("CameraSpeed");
-        this.accelerationRate = tagCompound.getFloat("CameraRate");
-        this.accelerationMax = tagCompound.getFloat("CameraMax");
-        this.canFly = tagCompound.getBoolean("CanFly");
+        this.speed = tag.getFloat("CameraSpeed");
+        this.accelerationRate = tag.getFloat("CameraRate");
+        this.accelerationMax = tag.getFloat("CameraMax");
+        this.canFly = tag.getBoolean("CanFly");
 
-        if (tagCompound.hasKey("DirX") && tagCompound.hasKey("DirY") && tagCompound.hasKey("DirZ"))
+        if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
         {
-            this.directorBlock = new BlockPos(tagCompound.getInteger("DirX"), tagCompound.getInteger("DirY"), tagCompound.getInteger("DirZ"));
+            this.directorBlock = new BlockPos(tag.getInteger("DirX"), tag.getInteger("DirY"), tag.getInteger("DirZ"));
         }
 
-        super.readEntityFromNBT(tagCompound);
+        super.readEntityFromNBT(tag);
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound tagCompound)
+    public void writeEntityToNBT(NBTTagCompound tag)
     {
-        tagCompound.setFloat("CameraSpeed", this.speed);
-        tagCompound.setFloat("CameraRate", this.accelerationRate);
-        tagCompound.setFloat("CameraMax", this.accelerationMax);
-        tagCompound.setBoolean("CanFly", this.canFly);
+        tag.setFloat("CameraSpeed", this.speed);
+        tag.setFloat("CameraRate", this.accelerationRate);
+        tag.setFloat("CameraMax", this.accelerationMax);
+        tag.setBoolean("CanFly", this.canFly);
 
         if (this.directorBlock != null)
         {
-            tagCompound.setInteger("DirX", this.directorBlock.getX());
-            tagCompound.setInteger("DirY", this.directorBlock.getY());
-            tagCompound.setInteger("DirZ", this.directorBlock.getZ());
+            tag.setInteger("DirX", this.directorBlock.getX());
+            tag.setInteger("DirY", this.directorBlock.getY());
+            tag.setInteger("DirZ", this.directorBlock.getZ());
         }
 
-        super.writeEntityToNBT(tagCompound);
+        super.writeEntityToNBT(tag);
     }
 
     /* IEntityAdditionalSpawnData implementation */

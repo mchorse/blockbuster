@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -70,7 +71,7 @@ class RecordThread implements Runnable
                     this.capture = false;
 
                     Mocap.records.remove(this.player);
-                    Mocap.broadcastMessage("Stopped recording " + this.player.getDisplayName().getFormattedText() + ". RIP.");
+                    Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_dead", this.player.getDisplayName().getFormattedText()));
                 }
             }
 
@@ -258,7 +259,7 @@ class RecordThread implements Runnable
 
             case Action.LOGOUT:
                 Mocap.records.remove(this.player);
-                Mocap.broadcastMessage("Stopped recording " + this.player.getDisplayName().getFormattedText() + ". Bye!");
+                Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_logout", this.player.getDisplayName().getFormattedText()));
 
                 this.capture = false;
                 break;

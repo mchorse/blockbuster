@@ -38,3 +38,25 @@ blockbuster.director.already_registered=This entity is already registered by dir
 blockbuster.director.was_registered=This entity was succesfully attached to director block!
 
 blockbuster.director.attached_device=This recording device was succesfully attached to director block!
+blockbuster.director.missing=The director block, that was attached to this device, was destroyed. Attach this device to another director block!
+
+blockbuster.director.cast=Registered cameras and actors:\n
+blockbuster.director.no_cast=No registered cameras or actors!
+blockbuster.director.missing_cast=Missing entity with UUID: %s
+
+blockbuster.actor.no_name=Current actor doesn't have a custom name, please assign him a name (using name tag)!
+blockbuster.actor.playing=Current actor is already playing!
+
+# Commands
+blockbuster.commands.play=Usage: /play <replay> <entity_name> <skin_name>, e.g.: /play forest_gump_bench_scene Forrest ForrestGump\n\nSide note: <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses strings
+blockbuster.commands.record=Usage: /record <savefile>, e.g.: /record forrestrun
+
+# Recording
+blockbuster.mocap.started=Started recording %s to file %s
+blockbuster.mocap.stopped=Stopped recording %s to file %s
+blockbuster.mocap.stopped_dead=Stopped recording %s, because player's dead.
+blockbuster.mocap.stopped_logout=Stopped recording %s. Bye!
+blockbuster.mocap.already_recording=%s is already being recorded to?
+blockbuster.mocap.wrong_signature=%s isn't a record file (or is an old version?)
+blockbuster.mocap.cant_find_file=Can't find %s replay file!
+blockbuster.mocap.error_file=Error loading record file, either not a record file or recorded by an older version.

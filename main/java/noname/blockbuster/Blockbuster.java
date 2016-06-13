@@ -30,7 +30,6 @@ import noname.blockbuster.recording.CommandRecord;
  * ToDo list:
  * - Add GUI for director tile entity
  * - Rename recording item to playback item
- * - Transfer remained hard-coded strings to language file
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster

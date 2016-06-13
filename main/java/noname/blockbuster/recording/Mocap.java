@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -129,7 +130,7 @@ public class Mocap
         if (recorder != null)
         {
             recorder.thread.capture = false;
-            broadcastMessage("Stopped recording " + username + " to file " + recorder.fileName);
+            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.fileName));
             records.remove(player);
             return;
         }
@@ -138,12 +139,12 @@ public class Mocap
         {
             if (registeredRecorder.fileName.equals(filename))
             {
-                broadcastMessage(filename + " is already being recorded to?");
+                broadcastMessage(I18n.format("blockbuster.mocap.already_recording", filename));
                 return;
             }
         }
 
-        broadcastMessage("Started recording " + username + " to file " + filename);
+        broadcastMessage(I18n.format("blockbuster.mocap.started", username, filename));
         Recorder newRecorder = new Recorder();
         records.put(player, newRecorder);
 
@@ -173,7 +174,7 @@ public class Mocap
 
         if (!file.exists())
         {
-            broadcastMessage("Can't find " + filename + " replay file!");
+            broadcastMessage(I18n.format("blockbuster.mocap.cant_find_file", filename));
             return;
         }
 
@@ -187,7 +188,7 @@ public class Mocap
 
             if (in.readShort() != signature)
             {
-                broadcastMessage(filename + " isn't a record file (or is an old version?)");
+                broadcastMessage(I18n.format("blockbuster.mocap.wrong_signature", filename));
                 in.close();
                 return;
             }

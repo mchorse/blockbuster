@@ -28,7 +28,7 @@ public class CommandRecord extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "Usage: /record <savefile>, e.g.: /record forrestrun";
+        return "blockbuster.commands.record";
     }
 
     @Override
