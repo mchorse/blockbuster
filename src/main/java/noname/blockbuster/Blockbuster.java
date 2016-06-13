@@ -31,7 +31,6 @@ import noname.blockbuster.recording.CommandRecord;
  * ToDo list:
  * - Add GUI for director tile entity
  * - Make camera's model prettier
- * - Fix mounting entities
  */
 @Comment(comment = "This mod uses portion ")
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
