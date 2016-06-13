@@ -4,7 +4,9 @@ import net.minecraft.item.Item;
 import noname.blockbuster.Blockbuster;
 
 /**
- * This item is needed to open camera's configuration GUI
+ * This item is needed to open camera's configuration GUI.
+ *
+ * See CameraEntity and GuiCamera for more information.
  */
 public class CameraConfigItem extends Item
 {

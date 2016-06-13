@@ -10,6 +10,14 @@ import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 
+/**
+ * Camera configuration GUI
+ *
+ * This GUI is invoked player.openGui and has an id of 0. The code below is
+ * pretty easy to understand, so no comments are needed.
+ *
+ * For more information, see vanilla GUI screens.
+ */
 public class GuiCamera extends GuiScreen
 {
     private String title = I18n.format("blockbuster.gui.camera.title");

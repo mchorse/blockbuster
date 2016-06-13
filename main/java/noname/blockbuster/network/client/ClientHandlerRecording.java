@@ -3,12 +3,12 @@ package noname.blockbuster.network.client;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import noname.blockbuster.entity.CameraEntity;
-import noname.blockbuster.network.common.Recording;
+import noname.blockbuster.network.common.PacketRecording;
 
-public class ClientHandlerRecording extends ClientMessageHandler<Recording>
+public class ClientHandlerRecording extends ClientMessageHandler<PacketRecording>
 {
     @Override
-    public void run(EntityPlayerSP player, Recording message)
+    public void run(EntityPlayerSP player, PacketRecording message)
     {
         Entity entity = player.worldObj.getEntityByID(message.id);
 

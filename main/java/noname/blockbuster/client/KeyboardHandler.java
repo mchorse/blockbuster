@@ -7,17 +7,23 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.SwitchCamera;
+import noname.blockbuster.network.common.PacketSwitchCamera;
 
+/**
+ * Separate event handler for keyboard events
+ */
 public class KeyboardHandler
 {
     private KeyBinding nextCamera;
     private KeyBinding previousCamera;
 
+    /**
+     * Create and register key bindings for mod
+     */
     public KeyboardHandler()
     {
-        this.nextCamera = new KeyBinding("Switch to the next camera", Keyboard.KEY_RBRACKET, "key.blockbuster.camera");
-        this.previousCamera = new KeyBinding("Switch to the previous camera", Keyboard.KEY_LBRACKET, "key.blockbuster.camera");
+        this.nextCamera = new KeyBinding("key.blockbuster.next", Keyboard.KEY_RBRACKET, "key.blockbuster.camera");
+        this.previousCamera = new KeyBinding("key.blockbuster.previous", Keyboard.KEY_LBRACKET, "key.blockbuster.camera");
 
         ClientRegistry.registerKeyBinding(this.nextCamera);
         ClientRegistry.registerKeyBinding(this.previousCamera);
@@ -28,12 +34,12 @@ public class KeyboardHandler
     {
         if (this.nextCamera.isPressed())
         {
-            Dispatcher.getInstance().sendToServer(new SwitchCamera(1));
+            Dispatcher.getInstance().sendToServer(new PacketSwitchCamera(1));
         }
 
         if (this.previousCamera.isPressed())
         {
-            Dispatcher.getInstance().sendToServer(new SwitchCamera(-1));
+            Dispatcher.getInstance().sendToServer(new PacketSwitchCamera(-1));
         }
     }
 }

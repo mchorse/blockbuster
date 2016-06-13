@@ -9,6 +9,12 @@ import java.util.UUID;
 import net.minecraft.nbt.CompressedStreamTools;
 import noname.blockbuster.entity.ActorEntity;
 
+/**
+ * Play thread
+ *
+ * This thread is responsible for injecting the movement, rotation, actions, and
+ * other stuff into playable actor entity.
+ */
 class PlayThread implements Runnable
 {
     public Thread thread;
@@ -29,6 +35,9 @@ class PlayThread implements Runnable
         this.thread.start();
     }
 
+    /**
+     * Initiate file stream for playback
+     */
     private void initStream()
     {
         try
@@ -68,8 +77,8 @@ class PlayThread implements Runnable
         }
         catch (Exception e)
         {
-            Mocap.broadcastMessage("Error loading record file, either not a record file or recorded by an older version.");
             System.out.println("Replay thread interrupted.");
+            Mocap.broadcastMessage("Error loading record file, either not a record file or recorded by an older version.");
             e.printStackTrace();
         }
 
@@ -94,6 +103,9 @@ class PlayThread implements Runnable
         }
     }
 
+    /**
+     * Reset the actor entity (put it back on the starting position)
+     */
     private void resetEntity()
     {
         try

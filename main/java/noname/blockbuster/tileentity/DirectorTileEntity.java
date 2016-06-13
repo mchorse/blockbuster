@@ -2,7 +2,6 @@ package noname.blockbuster.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,7 +76,8 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     /* Public API */
 
     /**
-     * Something like factory method*/
+     * Something like factory method
+     */
     public boolean add(Entity entity)
     {
         if (entity instanceof CameraEntity)
@@ -154,7 +154,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 
         for (String id : this.actors)
         {
-            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
 
             if (actor == null || actor == exception)
             {
@@ -183,7 +183,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
             index = this.cameras.size() - 1;
         }
 
-        CameraEntity newCamera = (CameraEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(this.cameras.get(index)));
+        CameraEntity newCamera = (CameraEntity) Mocap.entityByUUID(this.worldObj, this.cameras.get(index));
         EntityPlayer player = (EntityPlayer) camera.getControllingPassenger();
 
         player.dismountRidingEntity();
@@ -221,7 +221,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 
         for (String id : this.actors)
         {
-            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
 
             if (!Mocap.playbacks.containsKey(actor))
             {
@@ -229,7 +229,6 @@ public class DirectorTileEntity extends TileEntity implements ITickable
             }
         }
 
-        /* Shutdown, muthafucka! */
         if (count == this.actors.size())
         {
             this.playBlock(false);
@@ -246,7 +245,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
 
         for (String id : this.cameras)
         {
-            CameraEntity camera = (CameraEntity) Mocap.entityByUUID(this.worldObj, UUID.fromString(id));
+            CameraEntity camera = (CameraEntity) Mocap.entityByUUID(this.worldObj, id);
 
             camera.setRecording(isPlaying, true);
         }

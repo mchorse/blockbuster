@@ -31,7 +31,16 @@ public class Mocap
     public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
     public static Map<ActorEntity, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
 
+    /**
+     * Signature used for replay files, this is usually the first entry to
+     * read.
+     */
     public static final short signature = 3208;
+
+    /**
+     * Timing delay between two replay frames. Default is 100 milliseconds or
+     * 10 ticks per second.
+     */
     public static final long delay = 100L;
 
     public static List<Action> getActionListForPlayer(EntityPlayer ep)
@@ -46,6 +55,11 @@ public class Mocap
         return aRecorder.eventsList;
     }
 
+    /**
+     * Send given message to everyone on the server, to everyone.
+     *
+     * Invoke this method only on the server side.
+     */
     public static void broadcastMessage(String message)
     {
         ITextComponent chatMessage = new TextComponentString(message);
@@ -75,6 +89,20 @@ public class Mocap
         return null;
     }
 
+    /**
+     * Simple method that decreases the need for writing additional
+     * UUID.fromString line
+     */
+    public static Entity entityByUUID(World world, String id)
+    {
+        return entityByUUID(world, UUID.fromString(id));
+    }
+
+    /**
+     * Get entity by UUID in the server world.
+     *
+     * Looked up on minecraft forge forum, I don't remember where's exactly...
+     */
     public static Entity entityByUUID(World world, UUID target)
     {
         for (Entity entity : world.getLoadedEntityList())
@@ -164,6 +192,7 @@ public class Mocap
                 return;
             }
 
+            /* Skips entity's rotation */
             in.skipBytes(16);
             x = in.readDouble();
             y = in.readDouble();
@@ -187,7 +216,6 @@ public class Mocap
      */
     public static String replayFile(String filename)
     {
-        /* You spin me round round, baby round round */
         File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records");
 
         if (!file.exists())

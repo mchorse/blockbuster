@@ -16,8 +16,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.ChangeSkin;
+import noname.blockbuster.network.common.PacketChangeSkin;
 
+/**
+ * Actor skin picker
+ *
+ * This GUI is opened via player.openGui and has an id of 1. Most of the code
+ * below is easy to understand, so no comments are needed.
+ */
 public class GuiActorSkin extends GuiScreen
 {
     private ActorEntity actor;
@@ -99,7 +105,7 @@ public class GuiActorSkin extends GuiScreen
 
     private void updateSkin()
     {
-        IMessage message = new ChangeSkin(this.actor.getEntityId(), this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : "");
+        IMessage message = new PacketChangeSkin(this.actor.getEntityId(), this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : "");
 
         Dispatcher.getInstance().sendToServer(message);
     }

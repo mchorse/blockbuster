@@ -3,14 +3,14 @@ package noname.blockbuster.network.common;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class SwitchCamera implements IMessage
+public class PacketSwitchCamera implements IMessage
 {
     public int direction;
 
-    public SwitchCamera()
+    public PacketSwitchCamera()
     {}
 
-    public SwitchCamera(int direction)
+    public PacketSwitchCamera(int direction)
     {
         this.direction = direction;
     }

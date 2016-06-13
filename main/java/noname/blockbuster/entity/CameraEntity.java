@@ -19,7 +19,7 @@ import noname.blockbuster.item.CameraConfigItem;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.Recording;
+import noname.blockbuster.network.common.PacketRecording;
 import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
@@ -32,7 +32,7 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
 public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawnData
 {
     public float speed = 0.4F;
-    public float accelerationRate = 0.02F;
+    public float accelerationRate = 0.2F;
     public float accelerationMax = 1.5f;
     public boolean canFly = true;
     public float savedPitch = 0.0F;
@@ -151,6 +151,11 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         return true;
     }
 
+    /**
+     * Return the rotation pitch to last saved pitch by player. This is kind of
+     * workaround, because EntityLookHelper is for some reason resets the
+     * pitch.
+     */
     @Override
     public void onLivingUpdate()
     {
@@ -236,6 +241,10 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         }
     }
 
+    /**
+     * Set if the camera is recording, and notify other clients if it's
+     * needed.
+     */
     public void setRecording(boolean recording, boolean notify)
     {
         this.isRecording = recording;
@@ -244,12 +253,13 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new Recording(this.getEntityId(), recording));
+            Dispatcher.updateTrackers(this, new PacketRecording(this.getEntityId(), recording));
         }
     }
 
     /**
-     * Switch player to another camera (in director's block)
+     * Switch (teleport) player to another camera. Looks really sick when you
+     * switch the camera.
      */
     public void switchTo(int direction)
     {
@@ -308,6 +318,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         buffer.writeFloat(this.accelerationRate);
         buffer.writeFloat(this.accelerationMax);
         buffer.writeBoolean(this.canFly);
+        buffer.writeBoolean(this.isRecording);
     }
 
     @Override
@@ -317,5 +328,6 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
         this.accelerationRate = buffer.readFloat();
         this.accelerationMax = buffer.readFloat();
         this.canFly = buffer.readBoolean();
+        this.isRecording = buffer.readBoolean();
     }
 }

@@ -2,7 +2,6 @@ package noname.blockbuster.block;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -82,6 +81,10 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         return true;
     }
 
+    /**
+     * Power west side of the block while block is playing and power east side
+     * of the block while isn't playback actors.
+     */
     @Override
     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
@@ -105,12 +108,18 @@ public class DirectorBlock extends Block implements ITileEntityProvider
             return true;
         }
 
-        this.outputActors(playerIn, worldIn, pos);
+        this.outputCast(playerIn, worldIn, pos);
 
         return true;
     }
 
-    private void outputActors(EntityPlayer playerIn, World worldIn, BlockPos pos)
+    /**
+     * Output to chat actors and cameras
+     *
+     * Temporary solution for browsing registered entities by DirectorTileEntity.
+     * Creating GUI for this job is on ToDo list.
+     */
+    private void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
         String output = "Registered cameras and actors:\n";
@@ -121,17 +130,22 @@ public class DirectorBlock extends Block implements ITileEntityProvider
 
         for (String id : cast)
         {
-            Entity entity = Mocap.entityByUUID(worldIn, UUID.fromString(id));
+            Entity entity = Mocap.entityByUUID(worldIn, id);
             String name = entity != null ? entity.getName() : "Missing entity with UUID: " + id;
 
             output += "* " + name + "\n";
+        }
+
+        if (cast.isEmpty())
+        {
+            output = "No registered cameras or actors!";
         }
 
         playerIn.addChatComponentMessage(new TextComponentString(output.trim()));
     }
 
     /**
-     * Attach actor to director block
+     * Attach an entity (actor or camera) to director block
      */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
@@ -149,7 +163,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
         }
 
         String id = tag.getString("EntityID");
-        Entity entity = Mocap.entityByUUID(world, UUID.fromString(id));
+        Entity entity = Mocap.entityByUUID(world, id);
 
         if (entity == null)
         {

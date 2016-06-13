@@ -32,7 +32,7 @@ public class CommonProxy implements IGuiHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, this);
-        Dispatcher.init();
+        Dispatcher.register();
 
         this.registerItem(Blockbuster.cameraItem = new CameraItem());
         this.registerItem(Blockbuster.cameraConfigItem = new CameraConfigItem());
@@ -76,6 +76,8 @@ public class CommonProxy implements IGuiHandler
      * how to mod minecraft with forge? That's simple. Find mods for specific
      * minecraft version and decompile the .jar files with JD-GUI. Isn't that
      * simple?
+     *
+     * Or go to minecraft forge forum and ask people to help you #smartass
      */
     protected void registerEntity(Class entity, String name)
     {

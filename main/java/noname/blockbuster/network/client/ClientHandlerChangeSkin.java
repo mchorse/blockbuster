@@ -3,12 +3,12 @@ package noname.blockbuster.network.client;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import noname.blockbuster.entity.ActorEntity;
-import noname.blockbuster.network.common.ChangeSkin;
+import noname.blockbuster.network.common.PacketChangeSkin;
 
-public class ClientHandlerChangeSkin extends ClientMessageHandler<ChangeSkin>
+public class ClientHandlerChangeSkin extends ClientMessageHandler<PacketChangeSkin>
 {
     @Override
-    public void run(EntityPlayerSP player, ChangeSkin message)
+    public void run(EntityPlayerSP player, PacketChangeSkin message)
     {
         Entity entity = player.worldObj.getEntityByID(message.id);
 

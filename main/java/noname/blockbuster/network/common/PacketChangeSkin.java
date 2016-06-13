@@ -4,15 +4,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class ChangeSkin implements IMessage
+public class PacketChangeSkin implements IMessage
 {
     public int id;
     public String skin;
 
-    public ChangeSkin()
+    public PacketChangeSkin()
     {}
 
-    public ChangeSkin(int id, String skin)
+    public PacketChangeSkin(int id, String skin)
     {
         this.id = id;
         this.skin = skin;

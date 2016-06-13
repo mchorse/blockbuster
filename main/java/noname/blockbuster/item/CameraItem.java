@@ -27,6 +27,11 @@ public class CameraItem extends Item
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
+    /**
+     * Some of the code is lookup/copied from the ItemMonsterPlacer (which is a
+     * bad name, because it can spawn not only monsters, but also passive
+     * entities, so basically it's item spawn egg).
+     */
     @Override
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {

@@ -53,6 +53,14 @@ public class ClientProxy extends CommonProxy
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
 
+    /**
+     * Inject actors skin pack into FML's resource packs list
+     *
+     * It's done by accessing private FMLClientHandler list (via reflection) and
+     * appending actor pack.
+     *
+     * Thanks to diesieben07 for giving the idea.
+     */
     private void injectResourcePack(String path)
     {
         path = path.substring(0, path.length() - 4);
@@ -86,6 +94,13 @@ public class ClientProxy extends CommonProxy
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
     }
 
+    /**
+     * There's two types of GUI are available right now:
+     * - Camera configuration GUI
+     * - Actor skin picker GUI
+     *
+     * IGuiHandler is used to centralize GUI invocation
+     */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {

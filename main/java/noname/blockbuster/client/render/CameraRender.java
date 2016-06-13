@@ -8,17 +8,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.client.model.CameraModel;
 import noname.blockbuster.entity.CameraEntity;
 
-@SideOnly(Side.CLIENT)
 public class CameraRender extends RenderLiving
 {
     private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
 
+    /**
+     * This is stupid. Why I should define this constructor if it's already
+     * defined in RenderLiving?
+     */
     public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn)
     {
         super(rendermanagerIn, modelbaseIn, shadowsizeIn);
@@ -30,6 +31,10 @@ public class CameraRender extends RenderLiving
         return resource;
     }
 
+    /**
+     * Render the camera only if it's not recording, basically hide cameras
+     * when the director block is playbacks its actors
+     */
     @Override
     public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
@@ -42,7 +47,7 @@ public class CameraRender extends RenderLiving
     }
 
     /**
-     * Renderer's factory
+     * Renderer factory
      */
     public static class CameraFactory implements IRenderFactory
     {

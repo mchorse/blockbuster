@@ -29,7 +29,7 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.item.SkinManagerItem;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.ChangeSkin;
+import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.recording.Action;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.DirectorTileEntity;
@@ -41,9 +41,17 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * them. I'm also thinking about giving them controllable AI settings so they
  * could be used without recording (like during the battles between two or more
  * actors).
+ *
+ * Also, it would be cool to add something like simple crowd control for bigger
+ * scenes (like one from Van Helsing in beginning with big crowd with torches,
+ * fire and stuff).
  */
 public class ActorEntity extends EntityCreature implements IEntityAdditionalSpawnData
 {
+    /**
+     * Event list. Each tick there's might be added an event action which
+     * should be performed by this actor. The events are injected by PlayThread.
+     */
     public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
 
     /**
@@ -51,8 +59,21 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      * this mod.
      */
     public String skin = "";
+
+    /**
+     * Position of director's block (needed to start the playback of other
+     * actors while recording this actor).
+     */
     public BlockPos directorBlock;
+
+    /**
+     * Temporary solution for disallowing rendering of custom name tag in GUI.
+     */
     public boolean renderName = true;
+
+    /**
+     * Nasty workaround for processInteract double trigger.
+     */
     private int tick = 0;
 
     public ActorEntity(World worldIn)
@@ -60,6 +81,12 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         super(worldIn);
     }
 
+    /**
+     * Process actions
+     *
+     * Small method to route action execution based on type. Made for organizing
+     * the code. Otherwise, this method would be ridiculously long!
+     */
     private void processActions(Action action)
     {
         switch (action.type)
@@ -204,9 +231,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
-     * Adjust the movement and limb swinging and action stuff.
+     * Adjust the movement, limb swinging, and process action stuff.
      *
-     * See process actions for more information.
+     * See process actions method for more information.
      */
     @Override
     public void onLivingUpdate()
@@ -220,7 +247,11 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
         this.updateArmSwingProgress();
 
-        /* Taken from the EntityDragon, IDK what it does */
+        /* Taken from the EntityDragon, IDK what it does, but the same code
+         * was in Mocap's EntityMocap (which is serves like an actor in
+         * Mocap mod)
+         *
+         * It looks like position and rotation interpolation, though */
         if (this.newPosRotationIncrements > 0)
         {
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
@@ -317,7 +348,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             if (!this.worldObj.isRemote)
                 this.startRecording(player);
 
-            player.copyLocationAndAnglesFrom(this);
             this.tick = 1;
         }
 
@@ -355,16 +385,23 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
     /* Public API */
 
+    /**
+     * Set actor's skin, and possibly notify the clients about the change
+     */
     public void setSkin(String skin, boolean notify)
     {
         this.skin = skin;
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new ChangeSkin(this.getEntityId(), this.skin));
+            Dispatcher.updateTrackers(this, new PacketChangeSkin(this.getEntityId(), this.skin));
         }
     }
 
+    /**
+     * Start the playback, invoked by director block (more specifically by
+     * DirectorTileEntity).
+     */
     public void startPlaying()
     {
         if (Mocap.playbacks.containsKey(this))
@@ -383,6 +420,16 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
     }
 
+    /**
+     * Start recording the player's actions for this actor
+     *
+     * Few notes:
+     * - Actor performs a playback specified by his name tag, so if you'll kill
+     *   actor by accident, you can create new actor and name him as the old one.
+     *   He'll still be able to playback the same recording.
+     * - Don't use the same name for actors in different scenes. It will cause
+     *   total overwrite of your previous recording, be careful.
+     */
     private void startRecording(EntityPlayer player)
     {
         if (!this.hasCustomName())

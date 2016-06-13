@@ -9,6 +9,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 
+/**
+ * Record thread
+ *
+ * This class is responsible for recording all player's actions into a given file.
+ * That's includes: movement, rotation, and the actions that player is commiting
+ * during recording.
+ */
 class RecordThread implements Runnable
 {
     public Thread thread;
@@ -137,9 +144,7 @@ class RecordThread implements Runnable
     }
 
     /**
-     * Track held item
-     *
-     * @todo add ability to track also offhand item
+     * Track held items
      */
     private void trackHeldItem()
     {
@@ -149,6 +154,12 @@ class RecordThread implements Runnable
         boolean blank = this.trackItemToSlot(mainhand, 0) || this.trackItemToSlot(offhand, 5);
     }
 
+    /**
+     * Track item to slot.
+     *
+     * This is a simple utility method that reduces number of lines for both
+     * hands.
+     */
     private boolean trackItemToSlot(ItemStack item, int slot)
     {
         if (item != null)

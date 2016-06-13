@@ -4,6 +4,13 @@ import java.util.UUID;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Recording action.
+ *
+ * This class holds additional information about player's actions performed during
+ * recording. I should probably rewrite it so it would be able to apply actions
+ * and store custom properties inside. Abstraction and stuffz.
+ */
 public class Action
 {
     public byte type;
@@ -25,10 +32,7 @@ public class Action
     }
 
     /*
-     * Total rip-off from Mocap mod
-     *
-     * I probably need to ask author's permission to use these values (and code)
-     * for my mod... Nah, I think it's fine.
+     * "Enums" from Mocap mod.
      */
     public static final byte CHAT = 1;
     public static final byte SWIPE = 2;

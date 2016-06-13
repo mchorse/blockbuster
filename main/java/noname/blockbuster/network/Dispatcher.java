@@ -15,10 +15,10 @@ import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerChangeSkin;
 import noname.blockbuster.network.client.ClientHandlerRecording;
-import noname.blockbuster.network.common.ChangeSkin;
+import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.Recording;
-import noname.blockbuster.network.common.SwitchCamera;
+import noname.blockbuster.network.common.PacketRecording;
+import noname.blockbuster.network.common.PacketSwitchCamera;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerChangeSkin;
 import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
@@ -49,21 +49,24 @@ public class Dispatcher
         }
     }
 
-    public static void init()
+    /**
+     * Register all the networking messages and message handlers
+     */
+    public static void register()
     {
         /** Update camera attributes (speed, acceleration, flying */
         register(PacketCameraAttributes.class, ClientHandlerCameraAttributes.class, Side.CLIENT);
         register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
 
         /** Update actor's skin */
-        register(ChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
-        register(ChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
+        register(PacketChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
+        register(PacketChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
 
         /** Teleport player to another camera */
-        register(SwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
+        register(PacketSwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
 
         /** Make cameras invinsible while playback */
-        register(Recording.class, ClientHandlerRecording.class, Side.CLIENT);
+        register(PacketRecording.class, ClientHandlerRecording.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

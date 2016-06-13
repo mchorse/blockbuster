@@ -8,7 +8,7 @@ package noname.blockbuster.api;
  *
  * By the way, that's is the most nasty workaround.
  */
-@Comment(comment = "Haha, recursion was understood")
+@Comment(comment = "Haha, recursion was understood, maybe, because I don't know what it does")
 public @interface Comment
 {
     String comment() default "";

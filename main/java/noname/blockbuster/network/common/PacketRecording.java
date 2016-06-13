@@ -3,15 +3,15 @@ package noname.blockbuster.network.common;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class Recording implements IMessage
+public class PacketRecording implements IMessage
 {
     public int id;
     public boolean recording;
 
-    public Recording()
+    public PacketRecording()
     {}
 
-    public Recording(int id, boolean recording)
+    public PacketRecording(int id, boolean recording)
     {
         this.id = id;
         this.recording = recording;

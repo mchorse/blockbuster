@@ -30,6 +30,10 @@ public class RecordItem extends Item
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
+    /**
+     * This method starts playback of the director block's actors (if the
+     * director block is attached to this item stack).
+     */
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Container class for RecordThread, event list and information about
+ * player's recording.
+ */
 public class Recorder
 {
     public RecordThread thread;

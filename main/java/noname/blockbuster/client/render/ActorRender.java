@@ -13,10 +13,18 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.ActorEntity;
 
+/**
+ * Actor renderer
+ *
+ * Renders actor entities with
+ */
 public class ActorRender extends RenderBiped<ActorEntity>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
+    /**
+     * Add armor layer to my biped texture
+     */
     public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize)
     {
         super(renderManagerIn, modelBipedIn, shadowSize);
@@ -24,6 +32,10 @@ public class ActorRender extends RenderBiped<ActorEntity>
         this.addLayer(new LayerBipedArmor(this));
     }
 
+    /**
+     * Another important extension. Assign sneaking property, without it, actor
+     * would look like an idiot who's clipping through the ground for a minute.
+     */
     @Override
     public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
@@ -32,12 +44,23 @@ public class ActorRender extends RenderBiped<ActorEntity>
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
+    /**
+     * Most important extension! Don't render the name in GUI, that looks
+     * irritating. actor.renderName is switched for awhile to false during
+     * GUI rendering.
+     *
+     * See GuiActorSkin for a reference.
+     */
     @Override
     protected boolean canRenderName(ActorEntity entity)
     {
         return super.canRenderName(entity) && entity.renderName;
     }
 
+    /**
+     * Make actor a little bit smaller (so he looked like steve, and not like
+     * a giant weirdo).
+     */
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
     {
         float f = 0.920F;
@@ -61,6 +84,9 @@ public class ActorRender extends RenderBiped<ActorEntity>
         return defaultTexture;
     }
 
+    /**
+     * Renderer factory
+     */
     public static class ActorFactory implements IRenderFactory
     {
         @Override

@@ -17,6 +17,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * Event handler for recording purposes.
+ *
+ * This event handler listens to different events and then writes them to
+ * the recording event list (which in turn are being written to the disk
+ * by RecordThread).
+ *
+ * Taken from Mocap mod.
+ */
 public class MocapEventHandler
 {
     /**
