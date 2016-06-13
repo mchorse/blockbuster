@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompressedStreamTools;
 import noname.blockbuster.entity.ActorEntity;
 
@@ -136,21 +137,45 @@ class PlayThread implements Runnable
         double mx = this.in.readDouble();
         double my = this.in.readDouble();
         double mz = this.in.readDouble();
+        float movef = this.in.readFloat();
+        float moves = this.in.readFloat();
         float fd = this.in.readFloat();
         boolean iab = this.in.readBoolean();
         boolean isn = this.in.readBoolean();
         boolean isp = this.in.readBoolean();
         boolean iog = this.in.readBoolean();
 
-        this.actor.isAirBorne = iab;
-        this.actor.motionX = mx;
-        this.actor.motionY = my;
-        this.actor.motionZ = mz;
-        this.actor.fallDistance = fd;
-        this.actor.setSneaking(isn);
-        this.actor.setSprinting(isp);
-        this.actor.onGround = iog;
-        this.actor.setPositionAndRotation(x, y, z, yaw, pitch);
+        if (this.actor.getRidingEntity() == null)
+        {
+            this.actor.isAirBorne = iab;
+            this.actor.motionX = mx;
+            this.actor.motionY = my;
+            this.actor.motionZ = mz;
+            this.actor.fallDistance = fd;
+            this.actor.setSneaking(isn);
+            this.actor.setSprinting(isp);
+            this.actor.onGround = iog;
+            this.actor.setPositionAndRotation(x, y, z, yaw, pitch);
+        }
+        else
+        {
+            Entity mount = this.actor.getRidingEntity();
+
+            this.actor.rotationYaw = yaw;
+            this.actor.rotationPitch = pitch;
+            this.actor.moveForward = movef;
+            this.actor.moveStrafing = moves;
+
+            mount.isAirBorne = iab;
+            mount.motionX = mx;
+            mount.motionY = my;
+            mount.motionZ = mz;
+            mount.fallDistance = fd;
+            mount.setSneaking(isn);
+            mount.setSprinting(isp);
+            mount.onGround = iog;
+            mount.setPositionAndRotation(x, y, z, yaw, pitch);
+        }
     }
 
     /**

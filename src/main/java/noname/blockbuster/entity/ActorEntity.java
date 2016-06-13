@@ -83,6 +83,17 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Returns the Y Offset of this entity.
+     *
+     * Taken from EntityPlayer.
+     */
+    @Override
+    public double getYOffset()
+    {
+        return -0.35D;
+    }
+
+    /**
      * Process actions
      *
      * Small method to route action execution based on type. Made for organizing

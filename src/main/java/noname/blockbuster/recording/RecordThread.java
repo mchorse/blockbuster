@@ -5,6 +5,7 @@ import java.io.RandomAccessFile;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -94,19 +95,23 @@ class RecordThread implements Runnable
      */
     private void trackAndWriteMovement() throws IOException
     {
+        Entity entity = this.player.isRiding() ? this.player.getRidingEntity() : this.player;
+
         this.in.writeFloat(this.player.rotationYaw);
         this.in.writeFloat(this.player.rotationPitch);
-        this.in.writeDouble(this.player.posX);
-        this.in.writeDouble(this.player.posY);
-        this.in.writeDouble(this.player.posZ);
-        this.in.writeDouble(this.player.motionX);
-        this.in.writeDouble(this.player.motionY);
-        this.in.writeDouble(this.player.motionZ);
-        this.in.writeFloat(this.player.fallDistance);
-        this.in.writeBoolean(this.player.isAirBorne);
-        this.in.writeBoolean(this.player.isSneaking());
-        this.in.writeBoolean(this.player.isSprinting());
-        this.in.writeBoolean(this.player.onGround);
+        this.in.writeDouble(entity.posX);
+        this.in.writeDouble(entity.posY);
+        this.in.writeDouble(entity.posZ);
+        this.in.writeFloat(this.player.moveForward);
+        this.in.writeFloat(this.player.moveStrafing);
+        this.in.writeDouble(entity.motionX);
+        this.in.writeDouble(entity.motionY);
+        this.in.writeDouble(entity.motionZ);
+        this.in.writeFloat(entity.fallDistance);
+        this.in.writeBoolean(entity.isAirBorne);
+        this.in.writeBoolean(entity.isSneaking());
+        this.in.writeBoolean(entity.isSprinting());
+        this.in.writeBoolean(entity.onGround);
     }
 
     /**

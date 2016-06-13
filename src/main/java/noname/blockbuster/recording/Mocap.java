@@ -24,8 +24,13 @@ import noname.blockbuster.entity.ActorEntity;
 /**
  * Mocap utility class
  *
- * Some of this (or most of it) code was borrowed from the Minecraft mod (for
- * 1.7.10) and rewritten for 1.9.
+ * Some of this (or most of it) code was borrowed from the Mocap mod (for
+ * 1.7.10) and rewritten for 1.9. That relates to all package
+ * noname.blockbuster.recording and ActorEntity.
+ *
+ * @author EchebKeso
+ * @author mchorse
+ * @link http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000
  */
 public class Mocap
 {

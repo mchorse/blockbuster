@@ -47,7 +47,7 @@ blockbuster.director.cast=Registered cameras and actors:\n
 blockbuster.director.no_cast=No registered cameras or actors!
 blockbuster.director.missing_cast=Missing entity with UUID: %s
 
-blockbuster.actor.no_name=Current actor doesn't have a custom name, please assign him a name (using name tag)!
+blockbuster.actor.noname=Current actor doesn't have a custom name, please assign him a name (using name tag)!
 blockbuster.actor.playing=Current actor is already playing!
 
 # Commands
