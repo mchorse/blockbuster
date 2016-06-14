@@ -167,19 +167,19 @@ public class MocapEventHandler
      * something in the chat)
      */
     @SubscribeEvent
-    public void onServerChatEvent(ServerChatEvent ev)
+    public void onServerChatEvent(ServerChatEvent event)
     {
         if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
         {
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(ev.getPlayer());
+        List<Action> aList = Mocap.getActionListForPlayer(event.getPlayer());
 
         if (aList != null)
         {
             Action ma = new Action(Action.CHAT);
-            ma.message = ev.getMessage();
+            ma.message = event.getMessage();
             aList.add(ma);
         }
     }

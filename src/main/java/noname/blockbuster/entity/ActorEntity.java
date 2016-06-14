@@ -98,6 +98,10 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         switch (action.type)
         {
+            case Action.CHAT:
+                this.sendChatMessage(action);
+                break;
+
             case Action.SWIPE:
                 this.swingArm(EnumHand.MAIN_HAND);
                 break;
@@ -126,6 +130,11 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
                 this.interactBlockAction(action);
                 break;
         }
+    }
+
+    private void sendChatMessage(Action action)
+    {
+        Mocap.broadcastMessage(action.message.replace('[', '§'));
     }
 
     private void placeBlock(Action action)
@@ -340,13 +349,14 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && this.handleRegisterItem(item) || this.handleSkinItem(item, player))
+        if (item != null && (this.handleRegisterItem(item) || this.handleSkinItem(item, player)))
         {
             return true;
         }
-        else if (item == null && !this.worldObj.isRemote)
+        else if (item == null)
         {
-            this.startRecording(player);
+            if (!this.worldObj.isRemote)
+                this.startRecording(player);
 
             return true;
         }
@@ -360,15 +370,15 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleRegisterItem(ItemStack stack)
     {
-        if (this.worldObj.isRemote || !(stack.getItem() instanceof RegisterItem))
+        boolean holdsRegisterItem = stack.getItem() instanceof RegisterItem;
+
+        if (!this.worldObj.isRemote && holdsRegisterItem)
         {
-            return false;
+            RegisterItem item = (RegisterItem) stack.getItem();
+            item.registerStack(stack, this);
         }
 
-        RegisterItem item = (RegisterItem) stack.getItem();
-        item.registerStack(stack, this);
-
-        return true;
+        return holdsRegisterItem;
     }
 
     /**
