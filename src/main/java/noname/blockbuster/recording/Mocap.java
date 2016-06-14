@@ -222,7 +222,7 @@ public class Mocap
      */
     public static String replayFile(String filename)
     {
-        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/records");
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
 
         if (!file.exists())
         {

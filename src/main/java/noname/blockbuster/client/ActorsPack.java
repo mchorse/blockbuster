@@ -107,7 +107,7 @@ public class ActorsPack implements IResourcePack
             return;
         }
 
-        File worldSkins = new File(DimensionManager.getCurrentSaveRootDirectory() + "/skins");
+        File worldSkins = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/skins");
 
         if (!worldSkins.exists())
         {
