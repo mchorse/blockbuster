@@ -187,9 +187,8 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         EntityPlayer player = (EntityPlayer) camera.getControllingPassenger();
 
         player.dismountRidingEntity();
-        player.setPositionAndUpdate(newCamera.posX, newCamera.posY, newCamera.posZ);
-        player.rotationYaw = newCamera.rotationYaw;
-        player.rotationPitch = newCamera.rotationPitch;
+        player.setLocationAndAngles(newCamera.posX, newCamera.posY, newCamera.posZ, newCamera.rotationYaw, newCamera.rotationPitch);
+        player.setRotationYawHead(newCamera.rotationYaw);
         player.startRiding(newCamera);
     }
 
