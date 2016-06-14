@@ -373,14 +373,14 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
-        if (!this.worldObj.isRemote || !(stack.getItem() instanceof SkinManagerItem))
+        boolean holdsSkinThingy = stack.getItem() instanceof SkinManagerItem;
+
+        if (this.worldObj.isRemote && holdsSkinThingy)
         {
-            return false;
+            player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
         }
 
-        player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
-
-        return true;
+        return holdsSkinThingy;
     }
 
     /* Public API */
