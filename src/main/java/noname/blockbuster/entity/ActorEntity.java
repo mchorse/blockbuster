@@ -340,14 +340,18 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item) || this.handleSkinItem(item, player)))
-        {}
-        else if (!this.worldObj.isRemote)
+        if (item != null && this.handleRegisterItem(item) || this.handleSkinItem(item, player))
+        {
+            return true;
+        }
+        else if (item == null && !this.worldObj.isRemote)
         {
             this.startRecording(player);
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -362,7 +366,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         RegisterItem item = (RegisterItem) stack.getItem();
-
         item.registerStack(stack, this);
 
         return true;
@@ -373,14 +376,14 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
-        boolean holdsSkinThingy = stack.getItem() instanceof SkinManagerItem;
+        boolean holdsSkinItem = stack.getItem() instanceof SkinManagerItem;
 
-        if (this.worldObj.isRemote && holdsSkinThingy)
+        if (this.worldObj.isRemote && holdsSkinItem)
         {
             player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
         }
 
-        return holdsSkinThingy;
+        return holdsSkinItem;
     }
 
     /* Public API */

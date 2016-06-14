@@ -27,6 +27,7 @@ import noname.blockbuster.recording.CommandRecord;
  * - Ernio for helping with camera attributes sync + sharing with his own
  *   network abstract layer
  * - diesieben07 for giving idea for actor skins
+ * - Choonster for pointing out that processInteract triggers for each hand
  *
  * ToDo list:
  * - Add GUI for director tile entity
