@@ -97,8 +97,8 @@ class RecordThread implements Runnable
     {
         Entity entity = this.player.isRiding() ? this.player.getRidingEntity() : this.player;
 
-        this.in.writeFloat(this.player.rotationYaw);
-        this.in.writeFloat(this.player.rotationPitch);
+        this.in.writeFloat(entity.rotationYaw);
+        this.in.writeFloat(entity.rotationPitch);
         this.in.writeDouble(entity.posX);
         this.in.writeDouble(entity.posY);
         this.in.writeDouble(entity.posZ);

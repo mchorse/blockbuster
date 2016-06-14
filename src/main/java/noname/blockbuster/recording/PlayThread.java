@@ -175,6 +175,7 @@ class PlayThread implements Runnable
             mount.setSprinting(isp);
             mount.onGround = iog;
             mount.setPositionAndRotation(x, y, z, yaw, pitch);
+            mount.setRotationYawHead(yaw);
         }
     }
 

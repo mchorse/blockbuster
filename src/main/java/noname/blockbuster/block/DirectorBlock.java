@@ -104,7 +104,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
 
         ItemStack item = playerIn.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handlePlaybackItem(item, pos, playerIn)))
+        if (this.handleRegisterItem(item, worldIn, pos, playerIn) || this.handlePlaybackItem(item, pos, playerIn))
         {
             return true;
         }
@@ -123,7 +123,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     private void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-        String output = I18n.format("blockbuster.director.cast");
+        String output = I18n.format("blockbuster.director.cast") + "\n";
 
         List<String> cast = new ArrayList<String>();
         cast.addAll(tile.actors);

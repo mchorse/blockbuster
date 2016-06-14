@@ -345,12 +345,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null)
-        {
-            this.handleRegisterItem(item);
-            this.handleSkinItem(item, player);
-        }
-        else
+        if (!this.handleRegisterItem(item) && !this.handleSkinItem(item, player))
         {
             if (this.tick-- > 0)
             {
@@ -370,29 +365,33 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      * Set actor's id on register item (while using register item on this
      * actor)
      */
-    private void handleRegisterItem(ItemStack stack)
+    private boolean handleRegisterItem(ItemStack stack)
     {
         if (this.worldObj.isRemote || !(stack.getItem() instanceof RegisterItem))
         {
-            return;
+            return false;
         }
 
         RegisterItem item = (RegisterItem) stack.getItem();
 
         item.registerStack(stack, this);
+
+        return true;
     }
 
     /**
      * Open skin choosing GUI by using skin managing item
      */
-    private void handleSkinItem(ItemStack stack, EntityPlayer player)
+    private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
         if (!this.worldObj.isRemote || !(stack.getItem() instanceof SkinManagerItem))
         {
-            return;
+            return false;
         }
 
         player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
+
+        return true;
     }
 
     /* Public API */
