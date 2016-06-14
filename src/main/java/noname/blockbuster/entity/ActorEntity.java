@@ -72,11 +72,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     public boolean renderName = true;
 
-    /**
-     * Nasty workaround for processInteract double trigger.
-     */
-    private int tick = 0;
-
     public ActorEntity(World worldIn)
     {
         super(worldIn);
@@ -345,20 +340,14 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (!this.handleRegisterItem(item) && !this.handleSkinItem(item, player))
+        if (item != null && (this.handleRegisterItem(item) || this.handleSkinItem(item, player)))
+        {}
+        else if (!this.worldObj.isRemote)
         {
-            if (this.tick-- > 0)
-            {
-                return false;
-            }
-
-            if (!this.worldObj.isRemote)
-                this.startRecording(player);
-
-            this.tick = 1;
+            this.startRecording(player);
         }
 
-        return false;
+        return true;
     }
 
     /**

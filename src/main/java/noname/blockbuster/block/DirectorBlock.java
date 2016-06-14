@@ -123,7 +123,7 @@ public class DirectorBlock extends Block implements ITileEntityProvider
     private void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
         DirectorTileEntity tile = (DirectorTileEntity) worldIn.getTileEntity(pos);
-        String output = I18n.format("blockbuster.director.cast") + "\n";
+        String output = I18n.format("blockbuster.director.cast");
 
         List<String> cast = new ArrayList<String>();
         cast.addAll(tile.actors);
