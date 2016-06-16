@@ -14,7 +14,7 @@ import noname.blockbuster.block.AbstractDirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
 
-public abstract class AbstractDirector extends TileEntity implements ITickable
+public abstract class AbstractDirectorTileEntity extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
     private int tick = 0;
@@ -91,6 +91,8 @@ public abstract class AbstractDirector extends TileEntity implements ITickable
 
     /**
      * Get the cast
+     *
+     * Basically, return all entities/entity ids for display
      */
     public List<String> getCast()
     {
@@ -172,6 +174,9 @@ public abstract class AbstractDirector extends TileEntity implements ITickable
         this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
     }
 
+    /**
+     * Checks if block's state isPlaying is true
+     */
     protected boolean isPlaying()
     {
         return ((AbstractDirectorBlock) this.getBlockType()).isPlaying;

@@ -10,9 +10,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import noname.blockbuster.tileentity.AbstractDirector;
+import noname.blockbuster.recording.Mocap;
+import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
 import noname.blockbuster.tileentity.DirectorMapTileEntity;
 
+/**
+ * Descendant of abstract director block
+ *
+ * This block is the one that responsible for adventure maps scenes.
+ */
 public class DirectorBlockMap extends AbstractDirectorBlock
 {
     public DirectorBlockMap()
@@ -22,6 +28,9 @@ public class DirectorBlockMap extends AbstractDirectorBlock
         this.setUnlocalizedName("directorBlockMap");
     }
 
+    /**
+     * Register a replay with information supplied from name tag item
+     */
     private boolean handleNameTag(ItemStack item, World world, BlockPos pos)
     {
         if (item.getItem() instanceof ItemNameTag && item.hasDisplayName())
@@ -29,6 +38,7 @@ public class DirectorBlockMap extends AbstractDirectorBlock
             DirectorMapTileEntity director = (DirectorMapTileEntity) world.getTileEntity(pos);
 
             director.add(item.getDisplayName());
+            Mocap.broadcastMessage(I18n.format("blockbuster.director_map.was_registered"));
 
             return true;
         }
@@ -45,7 +55,7 @@ public class DirectorBlockMap extends AbstractDirectorBlock
     @Override
     protected void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
-        AbstractDirector tile = (AbstractDirector) worldIn.getTileEntity(pos);
+        AbstractDirectorTileEntity tile = (AbstractDirectorTileEntity) worldIn.getTileEntity(pos);
         String output = I18n.format("blockbuster.director.cast");
         List<String> cast = tile.getCast();
 

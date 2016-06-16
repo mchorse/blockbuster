@@ -42,6 +42,7 @@ key.blockbuster.previous=Switch to the previous camera
 blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!
 blockbuster.director.already_registered=This entity is already registered by director block!
 blockbuster.director.was_registered=This entity was succesfully attached to director block!
+blockbuster.director_map.was_registered=This replay was succesfully attached to director block!
 
 blockbuster.director.attached_device=This recording device was succesfully attached to director block!
 blockbuster.director.missing=The director block, that was attached to this device, was destroyed. Attach this device to another director block!

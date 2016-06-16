@@ -6,13 +6,20 @@ import java.util.Map;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
 
-public class DirectorMapTileEntity extends AbstractDirector
+/**
+ * Director map tile entity
+ *
+ * This TE is responsible for main logic of  */
+public class DirectorMapTileEntity extends AbstractDirectorTileEntity
 {
+    /**
+     * Temporary map of actor entities during playback. This map is used
+     * to determine if the registered actors are still playing their roles.
+     */
     protected Map<String, ActorEntity> actorMap = new HashMap<String, ActorEntity>();
 
     /**
-     * Add an actor to this director block (dah, TE is part of the director
-     * block)
+     * Add a replay string to list of actors
      */
     public boolean add(String replay)
     {
@@ -27,6 +34,14 @@ public class DirectorMapTileEntity extends AbstractDirector
         return false;
     }
 
+    /**
+     * Starts a playback
+     *
+     * This method is different from the method in DirectorTileEntity, instead
+     * of finding all entities and making them play, this method is basically
+     * do the same thing as CommandPlay#execute, launching the playback
+     * and adding new created entity to actors map.
+     */
     @Override
     public void startPlayback()
     {

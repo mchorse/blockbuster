@@ -12,6 +12,11 @@ import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.DirectorTileEntity;
 
+/**
+ * Descendant of abstract director block
+ *
+ * This block is the one that responsible for machinimas creation.
+ */
 public class DirectorBlock extends AbstractDirectorBlock
 {
     public DirectorBlock()

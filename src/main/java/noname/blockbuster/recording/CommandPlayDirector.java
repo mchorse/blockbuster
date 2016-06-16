@@ -6,7 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import noname.blockbuster.tileentity.AbstractDirector;
+import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
 
 /**
  * Command play director
@@ -51,6 +51,6 @@ public class CommandPlayDirector extends CommandBase
 
         BlockPos pos = new BlockPos(x.func_179628_a(), y.func_179628_a(), z.func_179628_a());
 
-        ((AbstractDirector) server.getEntityWorld().getTileEntity(pos)).startPlayback();
+        ((AbstractDirectorTileEntity) server.getEntityWorld().getTileEntity(pos)).startPlayback();
     }
 }

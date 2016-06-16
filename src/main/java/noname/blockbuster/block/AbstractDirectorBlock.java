@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.PlaybackItem;
 import noname.blockbuster.recording.Mocap;
-import noname.blockbuster.tileentity.AbstractDirector;
+import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
 
 /**
  * <p>
@@ -150,7 +150,7 @@ public abstract class AbstractDirectorBlock extends Block implements ITileEntity
      */
     protected void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
-        AbstractDirector tile = (AbstractDirector) worldIn.getTileEntity(pos);
+        AbstractDirectorTileEntity tile = (AbstractDirectorTileEntity) worldIn.getTileEntity(pos);
         String output = I18n.format("blockbuster.director.cast");
         List<String> cast = tile.getCast();
 

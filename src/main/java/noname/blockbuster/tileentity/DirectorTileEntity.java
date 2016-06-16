@@ -17,7 +17,7 @@ import noname.blockbuster.recording.Mocap;
  * if it's the best way to implement activation of the redstone (See update
  * method for more information).
  */
-public class DirectorTileEntity extends AbstractDirector
+public class DirectorTileEntity extends AbstractDirectorTileEntity
 {
     public List<String> cameras = new ArrayList<String>();
 
@@ -126,7 +126,10 @@ public class DirectorTileEntity extends AbstractDirector
     }
 
     /**
-     * Switch (teleport) to another camera
+     * Switch (teleport/jump) to another camera
+     *
+     * Some of the code has been looked up from classes such as CommandTeleport
+     * and... that's it.
      */
     public void switchTo(CameraEntity camera, int direction)
     {
@@ -152,6 +155,9 @@ public class DirectorTileEntity extends AbstractDirector
 
     /**
      * Set the state of the block playing (needed to update redstone thingy-stuff)
+     *
+     * And make cameras invisible or visible (depending on passed boolean), so
+     * they aren't seen in the main shot.
      */
     @Override
     protected void playBlock(boolean isPlaying)

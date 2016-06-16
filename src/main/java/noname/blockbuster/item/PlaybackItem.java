@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.tileentity.AbstractDirector;
+import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
 
 /**
  * Record item
@@ -52,14 +52,14 @@ public class PlaybackItem extends Item
 
             TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
 
-            if (tile == null || !(tile instanceof AbstractDirector))
+            if (tile == null || !(tile instanceof AbstractDirectorTileEntity))
             {
                 playerIn.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
 
                 return new ActionResult(EnumActionResult.PASS, stack);
             }
 
-            AbstractDirector director = (AbstractDirector) tile;
+            AbstractDirectorTileEntity director = (AbstractDirectorTileEntity) tile;
 
             director.startPlayback();
         }
