@@ -102,7 +102,7 @@ public class DirectorTileEntity extends AbstractDirector
      */
     public void startPlayback(ActorEntity exception)
     {
-        if (this.worldObj.isRemote)
+        if (this.worldObj.isRemote || this.isPlaying())
         {
             return;
         }

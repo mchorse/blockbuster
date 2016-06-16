@@ -171,4 +171,9 @@ public abstract class AbstractDirector extends TileEntity implements ITickable
         ((AbstractDirectorBlock) this.getBlockType()).isPlaying = isPlaying;
         this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
     }
+
+    protected boolean isPlaying()
+    {
+        return ((AbstractDirectorBlock) this.getBlockType()).isPlaying;
+    }
 }

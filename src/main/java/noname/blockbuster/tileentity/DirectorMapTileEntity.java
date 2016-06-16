@@ -30,6 +30,11 @@ public class DirectorMapTileEntity extends AbstractDirector
     @Override
     public void startPlayback()
     {
+        if (this.isPlaying())
+        {
+            return;
+        }
+
         for (String replay : this.actors)
         {
             String[] splits = replay.split(":");
