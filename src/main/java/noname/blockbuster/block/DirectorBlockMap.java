@@ -37,8 +37,14 @@ public class DirectorBlockMap extends AbstractDirectorBlock
         {
             DirectorMapTileEntity director = (DirectorMapTileEntity) world.getTileEntity(pos);
 
-            director.add(item.getDisplayName());
-            Mocap.broadcastMessage(I18n.format("blockbuster.director_map.was_registered"));
+            if (director.add(item.getDisplayName()))
+            {
+                Mocap.broadcastMessage(I18n.format("blockbuster.director_map.was_registered"));
+            }
+            else
+            {
+                Mocap.broadcastMessage(I18n.format("blockbuster.director_map.already_registered"));
+            }
 
             return true;
         }

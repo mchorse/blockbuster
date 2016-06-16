@@ -18,8 +18,6 @@ entity.blockbuster.Camera.name=Camera
 entity.blockbuster.Actor.name=Actor
 
 # GUI
-key.blockbuster.camera=Blockbuster: Camera
-
 blockbuster.gui.done=Done
 blockbuster.gui.next=<
 blockbuster.gui.previous=>
@@ -35,6 +33,7 @@ blockbuster.gui.camera.cantFly=Can fly: only horizontally
 blockbuster.gui.skin.title=Change Actor's Skin
 blockbuster.gui.skin.default=Default
 
+key.blockbuster.camera=Blockbuster: Camera
 key.blockbuster.next=Switch to the next camera
 key.blockbuster.previous=Switch to the previous camera
 
@@ -42,6 +41,8 @@ key.blockbuster.previous=Switch to the previous camera
 blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!
 blockbuster.director.already_registered=This entity is already registered by director block!
 blockbuster.director.was_registered=This entity was succesfully attached to director block!
+
+blockbuster.director_map.already_registered=This replay is already registered by director block!
 blockbuster.director_map.was_registered=This replay was succesfully attached to director block!
 
 blockbuster.director.attached_device=This recording device was succesfully attached to director block!
