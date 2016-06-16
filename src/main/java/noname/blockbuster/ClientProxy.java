@@ -46,6 +46,7 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.skinManagerItem, Blockbuster.path("skinManagerItem"));
 
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("directorBlock"));
+        this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("directorBlockMap"));
 
         this.registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
         this.registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());

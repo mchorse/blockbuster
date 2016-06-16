@@ -1,12 +1,16 @@
 # Blockbuster
 
 Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in 
-single player without having to recruit/organize a crowd of actors and cameras.
+single player (without having to recruit/organize a crowd of actors and cameras) 
+and simple cinematics in adventure maps.
+
 Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and recording 
 code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
-(author of the mod gave me permission to use his code).
+(author of the mod gave me permission to use his code). 
 
 Original minecraft forum thread.
+
+Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
 ## Install
 
@@ -81,6 +85,31 @@ Simply right click *director block* while holding *playback button*, and use the
 
 By the way, all of these items are available in creative "Blockbuster" tab.
 
+#### Director map block
+
+*Director map block* is another variation of *director block* designed for 
+adventure maps (cinematics FTW). It's just like *director block*, but functions 
+more as `play` command.
+
+With *director map block*, you register actors with the *name tag* item. 
+Name of the name tag specifies the custon name tag for your actor and the file 
+name from which he's being played. You may specify custom skin by appending 
+colon (`:`) and the name of the skin. Hint: to give a custom name to a name tag, 
+use anvil.
+
+For example, if you want your actor to have file name of "JustDoIt", and actor's 
+skin "Shia LaBeouf", you should name your tag "JustDoIt:Shia LaBeouf" and  
+record a replay with this command:
+
+    /record JustDoIt
+
+When you'll register your actors, you can playback this block with playback 
+button (just as with regular *director block*). Redstone hooks are also supported 
+by *director map* block.
+
+Note: *director map block* doesn't support cameras, yet. That would be cool, 
+though. 
+
 #### Redstone Hooks
 
 When *director block* starts playing the scene, it emits redstone signal on the 
@@ -141,6 +170,8 @@ This mod provides two commands:
    in first argument, and stops the recording (run `record` again)
 2. `play` command which playbacks player's actions from a file specified with 
    actor's custom tag name and skin
+3. `play-director` command which triggers playback of director block located on 
+   specified position 
 
 Examples:
 
@@ -152,6 +183,9 @@ Examples:
     
     # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin"
     /play football DavidBeckham DavidBeckhamsSkin
+    
+    # Play a director block that is located on X: 19, Y: 4, Z:-100
+    /play-director 19 4 -100
 
 Note: all arguments (file name, actor's custom tag name, and actor's skin) can't 
 have spaces. That's due to the fact how minecraft's command handler parses arguments.

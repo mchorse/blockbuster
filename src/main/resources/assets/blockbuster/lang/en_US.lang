@@ -5,6 +5,7 @@ itemGroup.blockbusterTab=Blockbuster
 
 # Item and block names
 tile.directorBlock.name=Director block
+tile.directorBlockMap.name=Director map block
 
 item.cameraItem.name=Camera
 item.cameraConfigItem.name=Camera configuration device
@@ -55,6 +56,7 @@ blockbuster.actor.playing=Current actor is already playing!
 # Commands
 blockbuster.commands.play=Usage: /play <replay> <entity_name> <skin_name>, e.g.: /play forest_gump_bench_scene Forrest ForrestGump.\nSide note: <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses strings
 blockbuster.commands.record=Usage: /record <savefile>, e.g.: /record forrestrun
+blockbuster.commands.play_director=Usage: /play-director <x> <y> <z>, where <x>, <y>, and <z> are coordinates of director block's position
 
 # Recording
 blockbuster.mocap.started=Started recording %s to file %s

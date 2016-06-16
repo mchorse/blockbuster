@@ -3,9 +3,9 @@ package noname.blockbuster.recording;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * Record command
@@ -44,8 +44,7 @@ public class CommandRecord extends CommandBase
 
         if (args.length < 1)
         {
-            sender.addChatMessage(new TextComponentString(this.getCommandUsage(null)));
-            return;
+            throw new WrongUsageException(this.getCommandUsage(null));
         }
 
         Mocap.startRecording(args[0], player);

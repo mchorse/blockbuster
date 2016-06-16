@@ -5,28 +5,30 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import noname.blockbuster.tileentity.AbstractDirector;
 
 /**
- * Command play
+ * Command play director
  *
- * This command is complementary command of Command record. This command plays
- * acted scene with given file name of the record, new displayed name and of
- * course skin.
+ * This command is triggering playback in a director block which is located
+ * in passed coordinates. Makes a nice addition to adventure maps and command
+ * blocks.
  *
  * Side note: you can use this command in command block.
  */
-public class CommandPlay extends CommandBase
+public class CommandPlayDirector extends CommandBase
 {
     @Override
     public String getCommandName()
     {
-        return "play";
+        return "play-director";
     }
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "blockbuster.commands.play";
+        return "blockbuster.commands.play_director";
     }
 
     @Override
@@ -43,6 +45,12 @@ public class CommandPlay extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(null));
         }
 
-        Mocap.startPlayback(args[0], args[1], args[2], sender.getEntityWorld(), true);
+        CommandBase.CoordinateArg x = parseCoordinate(0, args[0], false);
+        CommandBase.CoordinateArg y = parseCoordinate(0, args[1], false);
+        CommandBase.CoordinateArg z = parseCoordinate(0, args[2], false);
+
+        BlockPos pos = new BlockPos(x.func_179628_a(), y.func_179628_a(), z.func_179628_a());
+
+        ((AbstractDirector) server.getEntityWorld().getTileEntity(pos)).startPlayback();
     }
 }

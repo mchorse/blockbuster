@@ -160,7 +160,7 @@ public class Mocap
     /**
      * Start playback with new actor entity (used by CommandPlay class)
      */
-    public static void startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
+    public static ActorEntity startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
         ActorEntity actor = new ActorEntity(world);
         actor.setCustomNameTag(name);
@@ -168,6 +168,8 @@ public class Mocap
 
         startPlayback(filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);
+
+        return actor;
     }
 
     /**

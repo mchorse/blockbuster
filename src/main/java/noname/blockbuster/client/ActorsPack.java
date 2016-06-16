@@ -116,7 +116,7 @@ public class ActorsPack implements IResourcePack
 
         for (File file : worldSkins.listFiles())
         {
-            this.addSkin(file, "Save: ");
+            this.addSkin(file, "(Save)");
         }
     }
 

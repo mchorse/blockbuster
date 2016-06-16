@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import noname.blockbuster.api.Comment;
 import noname.blockbuster.recording.CommandPlay;
+import noname.blockbuster.recording.CommandPlayDirector;
 import noname.blockbuster.recording.CommandRecord;
 
 /**
@@ -51,6 +52,7 @@ public class Blockbuster
 
     /* Blocks */
     public static Block directorBlock;
+    public static Block directorBlockMap;
 
     /* Creative tabs */
     public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbusterTab")
@@ -95,5 +97,6 @@ public class Blockbuster
     {
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandPlay());
+        event.registerServerCommand(new CommandPlayDirector());
     }
 }

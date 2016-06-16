@@ -6,11 +6,6 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
-import noname.blockbuster.block.DirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.entity.CameraEntity;
 import noname.blockbuster.recording.Mocap;
@@ -22,11 +17,9 @@ import noname.blockbuster.recording.Mocap;
  * if it's the best way to implement activation of the redstone (See update
  * method for more information).
  */
-public class DirectorTileEntity extends TileEntity implements ITickable
+public class DirectorTileEntity extends AbstractDirector
 {
-    public List<String> actors = new ArrayList<String>();
     public List<String> cameras = new ArrayList<String>();
-    private int tick = 0;
 
     /* Read/write this TE to disk */
 
@@ -34,46 +27,28 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-
-        NBTTagList actors = compound.getTagList("Actors", 8);
-        NBTTagList cameras = compound.getTagList("Cameras", 8);
-
-        this.actors.clear();
-        this.cameras.clear();
-
-        for (int i = 0; i < actors.tagCount(); i++)
-        {
-            this.actors.add(actors.getStringTagAt(i));
-        }
-
-        for (int i = 0; i < cameras.tagCount(); i++)
-        {
-            this.cameras.add(cameras.getStringTagAt(i));
-        }
+        this.readListFromNBT(compound, "Cameras", this.cameras);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-
-        this.saveListToNBT(compound, "Actors", this.actors);
         this.saveListToNBT(compound, "Cameras", this.cameras);
     }
 
-    private void saveListToNBT(NBTTagCompound compound, String key, List<String> list)
-    {
-        NBTTagList tagList = new NBTTagList();
-
-        for (int i = 0; i < list.size(); i++)
-        {
-            tagList.appendTag(new NBTTagString(list.get(i)));
-        }
-
-        compound.setTag(key, tagList);
-    }
-
     /* Public API */
+
+    @Override
+    public List<String> getCast()
+    {
+        List<String> cast = new ArrayList<String>();
+
+        cast.addAll(this.actors);
+        cast.addAll(this.cameras);
+
+        return cast;
+    }
 
     /**
      * Something like factory method
@@ -87,27 +62,6 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         else if (entity instanceof ActorEntity)
         {
             return this.add((ActorEntity) entity);
-        }
-
-        return false;
-    }
-
-    /**
-     * Add an actor to this director block (dah, TE is part of the director
-     * block)
-     */
-    public boolean add(ActorEntity actor)
-    {
-        String id = actor.getUniqueID().toString();
-
-        if (!this.actors.contains(id))
-        {
-            actor.directorBlock = this.getPos();
-
-            this.actors.add(id);
-            this.markDirty();
-
-            return true;
         }
 
         return false;
@@ -136,6 +90,7 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     /**
      * Start a playback (make actors play their roles from the files)
      */
+    @Override
     public void startPlayback()
     {
         this.startPlayback(null);
@@ -151,6 +106,9 @@ public class DirectorTileEntity extends TileEntity implements ITickable
         {
             return;
         }
+
+        this.removeUnusedEntities(this.actors);
+        this.removeUnusedEntities(this.cameras);
 
         for (String id : this.actors)
         {
@@ -193,54 +151,12 @@ public class DirectorTileEntity extends TileEntity implements ITickable
     }
 
     /**
-     * Checks every 4 ticks if the actors (that registered by this TE) are
-     * still playing their roles.
-     */
-    @Override
-    public void update()
-    {
-        DirectorBlock block = (DirectorBlock) this.getBlockType();
-
-        if (!block.isPlaying || this.worldObj.isRemote || this.tick-- > 0)
-        {
-            return;
-        }
-
-        this.areActorsStillPlaying();
-        this.tick = 4;
-    }
-
-    /**
-     * Does what it says to do – checking if the actors still playing their
-     * roles (not finished playback).
-     */
-    private void areActorsStillPlaying()
-    {
-        int count = 0;
-
-        for (String id : this.actors)
-        {
-            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
-
-            if (!Mocap.playbacks.containsKey(actor))
-            {
-                count++;
-            }
-        }
-
-        if (count == this.actors.size())
-        {
-            this.playBlock(false);
-        }
-    }
-
-    /**
      * Set the state of the block playing (needed to update redstone thingy-stuff)
      */
-    private void playBlock(boolean isPlaying)
+    @Override
+    protected void playBlock(boolean isPlaying)
     {
-        ((DirectorBlock) this.getBlockType()).isPlaying = isPlaying;
-        this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
+        super.playBlock(isPlaying);
 
         for (String id : this.cameras)
         {
