@@ -12,6 +12,8 @@ Original minecraft forum thread.
 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
+**Pun intended**.
+
 ## Install
 
 Install Minecraft Forge, then go to 
