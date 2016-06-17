@@ -3,6 +3,10 @@ package noname.blockbuster.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
 
@@ -17,6 +21,12 @@ public class DirectorMapTileEntity extends AbstractDirectorTileEntity
      * to determine if the registered actors are still playing their roles.
      */
     protected Map<String, ActorEntity> actorMap = new HashMap<String, ActorEntity>();
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return false;
+    }
 
     /**
      * Add a replay string to list of actors
@@ -53,15 +63,18 @@ public class DirectorMapTileEntity extends AbstractDirectorTileEntity
         for (String replay : this.actors)
         {
             String[] splits = replay.split(":");
+            Entity entity = null;
 
             if (splits.length == 2)
             {
-                this.actorMap.put(replay, Mocap.startPlayback(splits[0], splits[0], splits[1], this.worldObj, true));
+                entity = Mocap.startPlayback(splits[0], splits[0], splits[1], this.worldObj, true);
             }
             else if (splits.length == 1)
             {
-                this.actorMap.put(replay, Mocap.startPlayback(splits[0], splits[0], splits[0], this.worldObj, true));
+                entity = Mocap.startPlayback(splits[0], splits[0], splits[0], this.worldObj, true);
             }
+
+            this.actorMap.put(replay, (ActorEntity) entity);
         }
 
         this.playBlock(true);

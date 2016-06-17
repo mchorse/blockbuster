@@ -5,6 +5,9 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -55,13 +58,34 @@ import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
  */
 public abstract class AbstractDirectorBlock extends Block implements ITileEntityProvider
 {
-    public boolean isPlaying = false;
+    public static final PropertyBool PLAYING = PropertyBool.create("playing");
 
     public AbstractDirectorBlock()
     {
         super(Material.rock);
+        this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setHardness(8);
+    }
+
+    /* States */
+
+    @Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(PLAYING) ? 1 : 0;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(PLAYING, meta == 1 ? true : false);
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] { PLAYING });
     }
 
     /* Redstone */
@@ -85,7 +109,9 @@ public abstract class AbstractDirectorBlock extends Block implements ITileEntity
     @Override
     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
-        return (this.isPlaying && side == EnumFacing.WEST) || (!this.isPlaying && side == EnumFacing.EAST) ? 15 : 0;
+        boolean isPlaying = blockState.getValue(PLAYING);
+
+        return (isPlaying && side == EnumFacing.WEST) || (!isPlaying && side == EnumFacing.EAST) ? 15 : 0;
     }
 
     /* Player interaction */

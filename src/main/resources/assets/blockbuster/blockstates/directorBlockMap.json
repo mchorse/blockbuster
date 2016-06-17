@@ -1,5 +1,6 @@
 {
     "variants": {
-        "normal": { "model": "blockbuster:directorBlockMap" }
+        "playing=true": { "model": "blockbuster:directorBlockMap" },
+        "playing=false": { "model": "blockbuster:directorBlockMap" }
     }
 }

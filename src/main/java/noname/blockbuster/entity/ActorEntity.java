@@ -89,6 +89,15 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Can't despawn an actor
+     */
+    @Override
+    protected boolean canDespawn()
+    {
+        return false;
+    }
+
+    /**
      * Process actions
      *
      * Small method to route action execution based on type. Made for organizing

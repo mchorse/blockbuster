@@ -130,9 +130,7 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
     @Override
     public void update()
     {
-        AbstractDirectorBlock block = (AbstractDirectorBlock) this.getBlockType();
-
-        if (!block.isPlaying || this.worldObj.isRemote || this.tick-- > 0)
+        if (this.tick-- > 0 || this.worldObj.isRemote || !this.isPlaying())
         {
             return;
         }
@@ -170,8 +168,7 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
-        ((AbstractDirectorBlock) this.getBlockType()).isPlaying = isPlaying;
-        this.worldObj.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType());
+        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractDirectorBlock.PLAYING, isPlaying));
     }
 
     /**
@@ -179,6 +176,6 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
      */
     protected boolean isPlaying()
     {
-        return ((AbstractDirectorBlock) this.getBlockType()).isPlaying;
+        return this.worldObj.getBlockState(this.pos).getValue(AbstractDirectorBlock.PLAYING);
     }
 }
