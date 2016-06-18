@@ -277,14 +277,13 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
          * Mocap mod)
          *
          * It looks like position and rotation interpolation, though */
-        if (this.newPosRotationIncrements > 0)
+        if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
         {
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
-            double d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
 
-            this.rotationYaw = (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
+            this.rotationYaw = (float) (this.rotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
             this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 

@@ -90,7 +90,7 @@ public class CommonProxy implements IGuiHandler
 
     protected void registerEntityWithEgg(Class entity, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 32, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
     }
 
     /* IGuiHandler implementation */

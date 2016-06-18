@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import noname.blockbuster.block.AbstractDirectorBlock;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
@@ -36,6 +39,12 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
     }
 
     /* NBT list utils */
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return false;
+    }
 
     /**
      * Read string typed list from NBT

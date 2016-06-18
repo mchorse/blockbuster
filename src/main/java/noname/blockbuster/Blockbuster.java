@@ -34,7 +34,7 @@ import noname.blockbuster.recording.CommandRecord;
  * - Add GUI for director tile entity
  * - Make camera's model prettier
  */
-@Comment(comment = "This mod uses portion ")
+@Comment(comment = "This mod uses portion of Mocap mod's recording code")
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster
 {
