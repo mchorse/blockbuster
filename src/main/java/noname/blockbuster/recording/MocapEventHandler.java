@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -28,6 +29,29 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class MocapEventHandler
 {
+    @SubscribeEvent
+    public void onPlayerBreaksBlock(BreakEvent event)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        {
+            return;
+        }
+
+        List<Action> aList = Mocap.getActionListForPlayer(event.getPlayer());
+
+        if (aList != null)
+        {
+            Action ma = new Action(Action.BREAK_BLOCK);
+            BlockPos pos = event.getPos();
+
+            ma.xCoord = pos.getX();
+            ma.yCoord = pos.getY();
+            ma.zCoord = pos.getZ();
+
+            aList.add(ma);
+        }
+    }
+
     /**
      * Event listener for Action.INTERACT_BLOCK (when player right clicks on
      * a block)

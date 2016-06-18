@@ -45,4 +45,5 @@ public class Action
     /* These types of handling are added by me */
     public static final byte MOUNTING = 8;
     public static final byte INTERACT_BLOCK = 9;
+    public static final byte BREAK_BLOCK = 10;
 }

@@ -135,8 +135,8 @@ public class Mocap
         if (recorder != null)
         {
             recorder.thread.capture = false;
-            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.fileName));
             records.remove(player);
+            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.fileName));
             return;
         }
 

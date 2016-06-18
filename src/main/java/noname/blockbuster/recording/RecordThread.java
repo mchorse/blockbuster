@@ -285,6 +285,7 @@ class RecordThread implements Runnable
                 break;
 
             case Action.INTERACT_BLOCK:
+            case Action.BREAK_BLOCK:
                 this.in.writeInt(ma.xCoord);
                 this.in.writeInt(ma.yCoord);
                 this.in.writeInt(ma.zCoord);

@@ -10,9 +10,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import noname.blockbuster.api.Comment;
-import noname.blockbuster.recording.CommandPlay;
-import noname.blockbuster.recording.CommandPlayDirector;
-import noname.blockbuster.recording.CommandRecord;
+import noname.blockbuster.commands.CommandPlay;
+import noname.blockbuster.commands.CommandPlayDirector;
+import noname.blockbuster.commands.CommandRecord;
 
 /**
  * Blockbuster's main entry

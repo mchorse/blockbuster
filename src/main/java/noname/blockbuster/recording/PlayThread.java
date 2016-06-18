@@ -229,6 +229,7 @@ class PlayThread implements Runnable
                 break;
 
             case Action.INTERACT_BLOCK:
+            case Action.BREAK_BLOCK:
                 action.xCoord = this.in.readInt();
                 action.yCoord = this.in.readInt();
                 action.zCoord = this.in.readInt();

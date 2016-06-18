@@ -138,7 +138,18 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             case Action.INTERACT_BLOCK:
                 this.interactBlockAction(action);
                 break;
+
+            case Action.BREAK_BLOCK:
+                this.breakBlockAction(action);
+                break;
         }
+    }
+
+    private void breakBlockAction(Action action)
+    {
+        BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
+
+        this.worldObj.destroyBlock(pos, false);
     }
 
     private void sendChatMessage(Action action)
@@ -283,7 +294,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
 
-            this.rotationYaw = (float) (this.prevRotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
+            this.rotationYaw = (float) (this.rotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
             this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 
