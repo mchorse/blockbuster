@@ -93,7 +93,7 @@ public class ActorsPack implements IResourcePack
      * out something, if this feature going to be requested (primarily by
      * adventure map makers who want their map to be co-op).
      */
-    protected void reloadSkins()
+    public void reloadSkins()
     {
         this.skins.clear();
 

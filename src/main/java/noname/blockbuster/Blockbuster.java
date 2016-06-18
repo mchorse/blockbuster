@@ -95,6 +95,11 @@ public class Blockbuster
     @EventHandler
     public void registerServerCommands(FMLServerStartingEvent event)
     {
+        if (ClientProxy.actorPack != null)
+        {
+            ClientProxy.actorPack.reloadSkins();
+        }
+
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandPlay());
         event.registerServerCommand(new CommandPlayDirector());

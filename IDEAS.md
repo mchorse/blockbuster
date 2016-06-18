@@ -26,3 +26,4 @@ There's some ideas that I might implement in next Blockbuster mod:
 * Area redstone sensor (to avoid using pressure plates)
 * Make commands accept spaced strings (this one is simple)
 * Create GUI for managing actors in director blocks
+* Support of multi-player world skins
