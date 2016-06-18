@@ -46,6 +46,7 @@ Following actions are fully supported by this mod:
 * Holding items in both arms
 * Equipping armor
 * Send messages in chat
+* Mounting entities
 
 Recorded actions are stored in the `blockbuster/records` folder in world's save 
 folder.
