@@ -2,7 +2,7 @@
 
 # Blockbuster
 
-Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in 
+Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple Minecraft machinimas in 
 single player (without having to recruit/organize a crowd of actors and cameras) 
 and simple cinematics in adventure maps.
 
@@ -13,8 +13,6 @@ code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.ne
 Original minecraft forum thread.
 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
-
-**Pun intended**.
 
 ## Install
 
