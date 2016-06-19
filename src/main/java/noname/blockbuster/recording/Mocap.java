@@ -35,7 +35,7 @@ import noname.blockbuster.recording.actions.Action;
  */
 public class Mocap
 {
-    public static Map<EntityPlayer, Recorder> records = Collections.synchronizedMap(new HashMap());
+    public static Map<EntityPlayer, RecordThread> records = Collections.synchronizedMap(new HashMap());
     public static Map<ActorEntity, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
 
     /**
@@ -52,14 +52,14 @@ public class Mocap
 
     public static List<Action> getActionListForPlayer(EntityPlayer ep)
     {
-        Recorder aRecorder = records.get(ep);
+        RecordThread record = records.get(ep);
 
-        if (aRecorder == null)
+        if (record == null)
         {
             return null;
         }
 
-        return aRecorder.eventsList;
+        return record.eventList;
     }
 
     /**
@@ -130,32 +130,30 @@ public class Mocap
      */
     public static void startRecording(String filename, EntityPlayer player)
     {
-        Recorder recorder = records.get(player);
+        RecordThread recorder = records.get(player);
         String username = player.getDisplayName().getFormattedText();
 
         if (recorder != null)
         {
-            recorder.thread.capture = false;
+            recorder.capture = false;
             records.remove(player);
-            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.fileName));
+            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.filename));
             return;
         }
 
-        for (Recorder registeredRecorder : records.values())
+        for (RecordThread registeredRecorder : records.values())
         {
-            if (registeredRecorder.fileName.equals(filename))
+            if (registeredRecorder.filename.equals(filename))
             {
                 broadcastMessage(I18n.format("blockbuster.mocap.already_recording", filename));
                 return;
             }
         }
 
-        broadcastMessage(I18n.format("blockbuster.mocap.started", username, filename));
-        Recorder newRecorder = new Recorder();
-        records.put(player, newRecorder);
+        recorder = new RecordThread(player, filename);
+        records.put(player, recorder);
 
-        newRecorder.fileName = filename;
-        newRecorder.thread = new RecordThread(player, newRecorder.eventsList, filename);
+        broadcastMessage(I18n.format("blockbuster.mocap.started", username, filename));
     }
 
     /**

@@ -33,7 +33,7 @@ import noname.blockbuster.recording.actions.PlaceBlockAction;
  * the recording event list (which in turn are being written to the disk
  * by RecordThread).
  *
- * Taken from Mocap mod.
+ * Taken from Mocap mod and rewritten.
  */
 public class MocapEventHandler
 {

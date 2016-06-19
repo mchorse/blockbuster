@@ -2,6 +2,8 @@ package noname.blockbuster.recording;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
@@ -24,14 +26,15 @@ class RecordThread implements Runnable
 {
     public Thread thread;
     public boolean capture = false;
+    public List<Action> eventList = Collections.synchronizedList(new ArrayList<Action>());
+    public String filename;
 
     private EntityPlayer player;
     private RandomAccessFile in;
     private boolean lastTickSwipe = false;
     private int[] itemsEquipped = new int[6];
-    private List<Action> eventList;
 
-    RecordThread(EntityPlayer player, List<Action> events, String filename)
+    RecordThread(EntityPlayer player, String filename)
     {
         try
         {
@@ -43,9 +46,9 @@ class RecordThread implements Runnable
             e.printStackTrace();
         }
 
+        this.filename = filename;
         this.player = player;
         this.capture = true;
-        this.eventList = events;
 
         this.thread = new Thread(this, "Record Thread");
         this.thread.start();
