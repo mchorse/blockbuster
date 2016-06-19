@@ -55,6 +55,15 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
     public void knockBack(Entity entityIn, float magnitued, double a, double b)
     {}
 
+    /**
+     * Can't despawn a camera
+     */
+    @Override
+    protected boolean canDespawn()
+    {
+        return false;
+    }
+
     @Override
     public double getMountedYOffset()
     {
