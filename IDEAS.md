@@ -14,7 +14,6 @@ There's some ideas that I might implement in next Blockbuster mod:
     * Kick asses with diamond sword/axe
     * Use put stuff in chests
     * Use furnances
-    * Breaking/harvesting blocks
 * Scripted recording addition to player's recording
     * Explanation: Some of the stuff isn't possible when you use player's 
       recording, like killing other actor or player. Scripted recording will 
@@ -27,3 +26,4 @@ There's some ideas that I might implement in next Blockbuster mod:
 * Make commands accept spaced strings (this one is simple)
 * Create GUI for managing actors in director blocks
 * Support of multi-player world skins
+* Fix annoying horizontal head rotation jagginess

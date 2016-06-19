@@ -17,6 +17,14 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import noname.blockbuster.recording.actions.Action;
+import noname.blockbuster.recording.actions.BreakBlockAction;
+import noname.blockbuster.recording.actions.ChatAction;
+import noname.blockbuster.recording.actions.DropAction;
+import noname.blockbuster.recording.actions.InteractBlockAction;
+import noname.blockbuster.recording.actions.LogoutAction;
+import noname.blockbuster.recording.actions.MountingAction;
+import noname.blockbuster.recording.actions.PlaceBlockAction;
 
 /**
  * Event handler for recording purposes.
@@ -37,18 +45,11 @@ public class MocapEventHandler
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(event.getPlayer());
+        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
 
-        if (aList != null)
+        if (events != null)
         {
-            Action ma = new Action(Action.BREAK_BLOCK);
-            BlockPos pos = event.getPos();
-
-            ma.xCoord = pos.getX();
-            ma.yCoord = pos.getY();
-            ma.zCoord = pos.getZ();
-
-            aList.add(ma);
+            events.add(new BreakBlockAction(event.getPos()));
         }
     }
 
@@ -65,35 +66,27 @@ public class MocapEventHandler
         }
 
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> aList = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-        if (aList != null)
+        if (events != null)
         {
             ItemStack item = event.getItemStack();
-            BlockPos pos;
-            Action ma;
+            Action action;
 
             if (item != null && item.getItem() instanceof ItemBlock)
             {
-                pos = event.getPos().offset(event.getFace());
+                BlockPos pos = event.getPos().offset(event.getFace());
+                byte metadata = (byte) item.getMetadata();
+                byte facing = (byte) event.getFace().getIndex();
 
-                ma = new Action(Action.PLACE_BLOCK);
-                ma.armorId = event.getFace().getIndex();
-                ma.armorSlot = item.getMetadata();
-
-                item.writeToNBT(ma.itemData);
+                action = new PlaceBlockAction(pos, metadata, facing, item);
             }
             else
             {
-                pos = event.getPos();
-                ma = new Action(Action.INTERACT_BLOCK);
+                action = new InteractBlockAction(event.getPos());
             }
 
-            ma.xCoord = pos.getX();
-            ma.yCoord = pos.getY();
-            ma.zCoord = pos.getZ();
-
-            aList.add(ma);
+            events.add(action);
         }
     }
 
@@ -111,14 +104,11 @@ public class MocapEventHandler
         if (event.getEntityMounting() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntityMounting();
-            List<Action> aList = Mocap.getActionListForPlayer(player);
+            List<Action> events = Mocap.getActionListForPlayer(player);
 
-            if (aList != null)
+            if (events != null)
             {
-                Action ma = new Action(Action.MOUNTING);
-                ma.target = event.getEntityBeingMounted().getUniqueID();
-                ma.armorSlot = event.isMounting() ? 1 : 0;
-                aList.add(ma);
+                events.add(new MountingAction(event.getEntityBeingMounted().getUniqueID(), event.isMounting()));
             }
         }
     }
@@ -134,19 +124,19 @@ public class MocapEventHandler
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(event.player);
+        List<Action> events = Mocap.getActionListForPlayer(event.player);
 
-        if (aList != null)
+        if (events != null)
         {
-            Action ma = new Action(Action.LOGOUT);
-            aList.add(ma);
+            events.add(new LogoutAction());
         }
     }
 
     /**
      * Doesn't work for some reason
+     *
+     * I'll fix it later
      */
-    @SubscribeEvent
     public void onArrowLooseEvent(ArrowLooseEvent ev) throws IOException
     {
         if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
@@ -154,13 +144,13 @@ public class MocapEventHandler
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(ev.getEntityPlayer());
+        List<Action> evemts = Mocap.getActionListForPlayer(ev.getEntityPlayer());
 
-        if (aList != null)
+        if (evemts != null)
         {
-            Action ma = new Action(Action.SHOOTARROW);
-            ma.arrowCharge = ev.getCharge();
-            aList.add(ma);
+            Action action = new Action(Action.SHOOTARROW);
+
+            evemts.add(action);
         }
     }
 
@@ -169,20 +159,18 @@ public class MocapEventHandler
      * inventory)
      */
     @SubscribeEvent
-    public void onItemTossEvent(ItemTossEvent ev) throws IOException
+    public void onItemTossEvent(ItemTossEvent event) throws IOException
     {
         if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
         {
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(ev.getPlayer());
+        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
 
-        if (aList != null)
+        if (events != null)
         {
-            Action ma = new Action(Action.DROP);
-            ev.getEntityItem().getEntityItem().writeToNBT(ma.itemData);
-            aList.add(ma);
+            events.add(new DropAction(event.getEntityItem().getEntityItem()));
         }
     }
 
@@ -198,13 +186,11 @@ public class MocapEventHandler
             return;
         }
 
-        List<Action> aList = Mocap.getActionListForPlayer(event.getPlayer());
+        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
 
-        if (aList != null)
+        if (events != null)
         {
-            Action ma = new Action(Action.CHAT);
-            ma.message = event.getMessage();
-            aList.add(ma);
+            events.add(new ChatAction(event.getMessage()));
         }
     }
 }

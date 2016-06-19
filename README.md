@@ -42,7 +42,7 @@ Following actions are fully supported by this mod:
 
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and sneaking
 * Interacting with blocks (opening doors, pushing buttons, toggling levers)
-* Placing blocks
+* Placing/breaking blocks
 * Holding items in both arms
 * Equipping armor
 * Send messages in chat

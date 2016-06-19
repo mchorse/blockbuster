@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.recording.actions.Action;
 
 /**
  * Mocap utility class
@@ -41,7 +42,7 @@ public class Mocap
      * Signature used for replay files, this is usually the first entry to
      * read.
      */
-    public static final short signature = 3208;
+    public static final short signature = 3209;
 
     /**
      * Timing delay between two replay frames. Default is 100 milliseconds or
@@ -154,7 +155,7 @@ public class Mocap
         records.put(player, newRecorder);
 
         newRecorder.fileName = filename;
-        newRecorder.thread = new RecordThread(player, filename);
+        newRecorder.thread = new RecordThread(player, newRecorder.eventsList, filename);
     }
 
     /**

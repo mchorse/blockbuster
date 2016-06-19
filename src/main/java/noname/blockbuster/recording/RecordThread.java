@@ -9,7 +9,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
+import noname.blockbuster.recording.actions.Action;
+import noname.blockbuster.recording.actions.EquipAction;
+import noname.blockbuster.recording.actions.SwipeAction;
 
 /**
  * Record thread
@@ -29,7 +31,7 @@ class RecordThread implements Runnable
     private int[] itemsEquipped = new int[6];
     private List<Action> eventList;
 
-    RecordThread(EntityPlayer player, String filename)
+    RecordThread(EntityPlayer player, List<Action> events, String filename)
     {
         try
         {
@@ -43,7 +45,7 @@ class RecordThread implements Runnable
 
         this.player = player;
         this.capture = true;
-        this.eventList = Mocap.getActionListForPlayer(this.player);
+        this.eventList = events;
 
         this.thread = new Thread(this, "Record Thread");
         this.thread.start();
@@ -121,31 +123,7 @@ class RecordThread implements Runnable
     {
         for (int i = 1; i < 5; i++)
         {
-            int slotIndex = i - 1;
-
-            if (this.player.inventory.armorInventory[slotIndex] != null)
-            {
-                if (Item.getIdFromItem(this.player.inventory.armorInventory[slotIndex].getItem()) != this.itemsEquipped[i])
-                {
-                    this.itemsEquipped[i] = Item.getIdFromItem(this.player.inventory.armorInventory[slotIndex].getItem());
-                    Action ma = new Action(Action.EQUIP);
-                    ma.armorSlot = i;
-                    ma.armorId = this.itemsEquipped[i];
-                    ma.armorDmg = this.player.inventory.armorInventory[slotIndex].getMetadata();
-
-                    this.player.inventory.armorInventory[slotIndex].writeToNBT(ma.itemData);
-                    this.eventList.add(ma);
-                }
-            }
-            else if (this.itemsEquipped[i] != -1)
-            {
-                this.itemsEquipped[i] = -1;
-                Action ma = new Action(Action.EQUIP);
-                ma.armorSlot = i;
-                ma.armorId = this.itemsEquipped[i];
-                ma.armorDmg = 0;
-                this.eventList.add(ma);
-            }
+            this.trackItemToSlot(this.player.inventory.armorInventory[i - 1], i);
         }
     }
 
@@ -175,14 +153,7 @@ class RecordThread implements Runnable
             if (id != this.itemsEquipped[slot])
             {
                 this.itemsEquipped[slot] = id;
-
-                Action ma = new Action(Action.EQUIP);
-                ma.armorSlot = slot;
-                ma.armorId = this.itemsEquipped[slot];
-                ma.armorDmg = item.getMetadata();
-
-                item.writeToNBT(ma.itemData);
-                this.eventList.add(ma);
+                this.eventList.add(new EquipAction((byte) slot, (short) id, item));
 
                 return true;
             }
@@ -190,13 +161,7 @@ class RecordThread implements Runnable
         else if (this.itemsEquipped[slot] != -1)
         {
             this.itemsEquipped[slot] = -1;
-
-            Action ma = new Action(Action.EQUIP);
-            ma.armorSlot = slot;
-            ma.armorId = this.itemsEquipped[slot];
-            ma.armorDmg = 0;
-
-            this.eventList.add(ma);
+            this.eventList.add(new EquipAction((byte) slot, (short) -1, null));
 
             return true;
         }
@@ -212,7 +177,7 @@ class RecordThread implements Runnable
         if (this.player.isSwingInProgress && !this.lastTickSwipe)
         {
             this.lastTickSwipe = true;
-            this.eventList.add(new Action(Action.SWIPE));
+            this.eventList.add(new SwipeAction());
         }
         else
         {
@@ -234,64 +199,17 @@ class RecordThread implements Runnable
             return;
         }
 
-        Action ma = this.eventList.get(0);
+        Action action = this.eventList.remove(0);
 
         this.in.writeBoolean(true);
-        this.in.writeByte(ma.type);
+        this.in.writeByte(action.type);
+        action.toBytes(this.in);
 
-        switch (ma.type)
+        if (action.type == Action.LOGOUT)
         {
-            case Action.CHAT:
-                this.in.writeUTF(ma.message);
-                break;
-
-            case Action.DROP:
-                CompressedStreamTools.write(ma.itemData, this.in);
-                break;
-
-            case Action.EQUIP:
-                this.in.writeInt(ma.armorSlot);
-                this.in.writeInt(ma.armorId);
-                this.in.writeInt(ma.armorDmg);
-
-                if (ma.armorId != -1)
-                    CompressedStreamTools.write(ma.itemData, this.in);
-                break;
-
-            case Action.SHOOTARROW:
-                this.in.writeInt(ma.arrowCharge);
-                break;
-
-            case Action.LOGOUT:
-                Mocap.records.remove(this.player);
-                Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_logout", this.player.getDisplayName().getFormattedText()));
-
-                this.capture = false;
-                break;
-
-            case Action.PLACE_BLOCK:
-                this.in.writeInt(ma.xCoord);
-                this.in.writeInt(ma.yCoord);
-                this.in.writeInt(ma.zCoord);
-                this.in.writeInt(ma.armorId);
-                this.in.writeInt(ma.armorSlot);
-                CompressedStreamTools.write(ma.itemData, this.in);
-                break;
-
-            case Action.MOUNTING:
-                this.in.writeLong(ma.target.getMostSignificantBits());
-                this.in.writeLong(ma.target.getLeastSignificantBits());
-                this.in.writeInt(ma.armorSlot);
-                break;
-
-            case Action.INTERACT_BLOCK:
-            case Action.BREAK_BLOCK:
-                this.in.writeInt(ma.xCoord);
-                this.in.writeInt(ma.yCoord);
-                this.in.writeInt(ma.zCoord);
-                break;
+            this.capture = false;
+            Mocap.records.remove(this.player);
+            Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_logout", this.player.getDisplayName().getUnformattedText()));
         }
-
-        this.eventList.remove(0);
     }
 }

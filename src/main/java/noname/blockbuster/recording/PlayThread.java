@@ -4,12 +4,11 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompressedStreamTools;
 import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.recording.actions.Action;
 
 /**
  * Play thread
@@ -20,6 +19,7 @@ import noname.blockbuster.entity.ActorEntity;
 class PlayThread implements Runnable
 {
     public Thread thread;
+
     private String filename;
     private ActorEntity actor;
     private DataInputStream in;
@@ -80,8 +80,9 @@ class PlayThread implements Runnable
         catch (Exception e)
         {
             System.out.println("Replay thread interrupted.");
-            Mocap.broadcastMessage(I18n.format("blockbuster.mocap.error_file"));
             e.printStackTrace();
+
+            Mocap.broadcastMessage(I18n.format("blockbuster.mocap.error_file"));
         }
 
         if (this.deadAfterPlay)
@@ -189,53 +190,9 @@ class PlayThread implements Runnable
             return;
         }
 
-        Action action = new Action(this.in.readByte());
+        Action action = Action.fromType(this.in.readByte());
 
-        switch (action.type)
-        {
-            case Action.CHAT:
-                action.message = this.in.readUTF();
-                break;
-
-            case Action.DROP:
-                action.itemData = CompressedStreamTools.read(this.in);
-                break;
-
-            case Action.EQUIP:
-                action.armorSlot = this.in.readInt();
-                action.armorId = this.in.readInt();
-                action.armorDmg = this.in.readInt();
-
-                if (action.armorId != -1)
-                    action.itemData = CompressedStreamTools.read(this.in);
-                break;
-
-            case Action.SHOOTARROW:
-                action.arrowCharge = this.in.readInt();
-                break;
-
-            case Action.PLACE_BLOCK:
-                action.xCoord = this.in.readInt();
-                action.yCoord = this.in.readInt();
-                action.zCoord = this.in.readInt();
-                action.armorId = this.in.readInt();
-                action.armorSlot = this.in.readInt();
-                action.itemData = CompressedStreamTools.read(this.in);
-                break;
-
-            case Action.MOUNTING:
-                action.target = new UUID(this.in.readLong(), this.in.readLong());
-                action.armorSlot = this.in.readInt();
-                break;
-
-            case Action.INTERACT_BLOCK:
-            case Action.BREAK_BLOCK:
-                action.xCoord = this.in.readInt();
-                action.yCoord = this.in.readInt();
-                action.zCoord = this.in.readInt();
-                break;
-        }
-
+        action.fromBytes(this.in);
         this.actor.eventsList.add(action);
     }
 }

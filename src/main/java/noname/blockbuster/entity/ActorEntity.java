@@ -3,23 +3,14 @@ package noname.blockbuster.entity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -31,8 +22,8 @@ import noname.blockbuster.item.RegisterItem;
 import noname.blockbuster.item.SkinManagerItem;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
-import noname.blockbuster.recording.Action;
 import noname.blockbuster.recording.Mocap;
+import noname.blockbuster.recording.actions.Action;
 import noname.blockbuster.tileentity.DirectorTileEntity;
 
 /**
@@ -98,175 +89,6 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
-     * Process actions
-     *
-     * Small method to route action execution based on type. Made for organizing
-     * the code. Otherwise, this method would be ridiculously long!
-     */
-    private void processActions(Action action)
-    {
-        switch (action.type)
-        {
-            case Action.CHAT:
-                this.sendChatMessage(action);
-                break;
-
-            case Action.SWIPE:
-                this.swingArm(EnumHand.MAIN_HAND);
-                break;
-
-            case Action.EQUIP:
-                this.equipAction(action);
-                break;
-
-            case Action.DROP:
-                this.dropAction(action);
-                break;
-
-            case Action.SHOOTARROW:
-                this.replayShootArrow(action);
-                break;
-
-            case Action.PLACE_BLOCK:
-                this.placeBlock(action);
-                break;
-
-            case Action.MOUNTING:
-                this.mountAction(action);
-                break;
-
-            case Action.INTERACT_BLOCK:
-                this.interactBlockAction(action);
-                break;
-
-            case Action.BREAK_BLOCK:
-                this.breakBlockAction(action);
-                break;
-        }
-    }
-
-    private void breakBlockAction(Action action)
-    {
-        BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
-
-        this.worldObj.destroyBlock(pos, false);
-    }
-
-    private void sendChatMessage(Action action)
-    {
-        Mocap.broadcastMessage(action.message.replace('[', '§'));
-    }
-
-    private void placeBlock(Action action)
-    {
-        ItemStack item = ItemStack.loadItemStackFromNBT(action.itemData);
-
-        if (item.getItem() instanceof ItemBlock)
-        {
-            ItemBlock block = (ItemBlock) item.getItem();
-            BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
-            EnumFacing face = EnumFacing.VALUES[action.armorId];
-
-            block.placeBlockAt(item, null, this.worldObj, pos, face, 0, 0, 0, block.block.getStateFromMeta(action.armorSlot));
-        }
-    }
-
-    private void replayShootArrow(Action ma)
-    {
-        float f = ma.arrowCharge / 20.0F;
-        f = (f * f + f * 2.0F) / 3.0F;
-
-        if (f < 0.1D)
-            return;
-        if (f > 1.0F)
-            f = 1.0F;
-
-        EntityArrow entityarrow = new EntityArrow(this.worldObj)
-        {
-            @Override
-            protected ItemStack getArrowStack()
-            {
-                return new ItemStack(Items.arrow);
-            }
-        };
-
-        entityarrow.canBePickedUp = PickupStatus.ALLOWED;
-        this.worldObj.spawnEntityInWorld(entityarrow);
-    }
-
-    private void equipAction(Action action)
-    {
-        EntityEquipmentSlot slot = Mocap.getSlotByIndex(action.armorSlot);
-
-        if (action.armorId == -1)
-        {
-            this.setItemStackToSlot(slot, null);
-        }
-        else
-        {
-            this.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(action.itemData));
-        }
-    }
-
-    private void dropAction(Action action)
-    {
-        ItemStack items = ItemStack.loadItemStackFromNBT(action.itemData);
-
-        EntityItem ea = new EntityItem(this.worldObj, this.posX, this.posY - 0.30000001192092896D + this.getEyeHeight(), this.posZ, items);
-        Random rand = new Random();
-
-        float f = 0.3F;
-
-        ea.motionX = (-MathHelper.sin(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
-        ea.motionZ = (MathHelper.cos(this.rotationYaw / 180.0F * 3.1415927F) * MathHelper.cos(this.rotationPitch / 180.0F * 3.1415927F) * f);
-        ea.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * 3.1415927F) * f + 0.1F);
-        ea.setDefaultPickupDelay();
-
-        f = 0.02F;
-        float f1 = rand.nextFloat() * 3.1415927F * 2.0F;
-        f *= rand.nextFloat();
-
-        ea.motionX += Math.cos(f1) * f;
-        ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-        ea.motionZ += Math.sin(f1) * f;
-
-        this.worldObj.spawnEntityInWorld(ea);
-    }
-
-    /**
-     * Mount or dismount action
-     */
-    private void mountAction(Action action)
-    {
-        Entity mount = Mocap.entityByUUID(this.worldObj, action.target);
-
-        if (mount == null)
-        {
-            return;
-        }
-
-        if (action.armorSlot == 1)
-        {
-            this.startRiding(mount);
-        }
-        else
-        {
-            this.dismountRidingEntity();
-        }
-    }
-
-    /**
-     * Interact with block
-     */
-    private void interactBlockAction(Action action)
-    {
-        BlockPos pos = new BlockPos(action.xCoord, action.yCoord, action.zCoord);
-        IBlockState state = this.worldObj.getBlockState(pos);
-
-        state.getBlock().onBlockActivated(this.worldObj, pos, state, null, EnumHand.MAIN_HAND, null, EnumFacing.UP, pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    /**
      * Adjust the movement, limb swinging, and process action stuff.
      *
      * See process actions method for more information.
@@ -278,7 +100,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.eventsList.size() > 0)
         {
-            this.processActions(this.eventsList.remove(0));
+            this.eventsList.remove(0).apply(this);
         }
 
         this.updateArmSwingProgress();
@@ -293,8 +115,9 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+            double d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
 
-            this.rotationYaw = (float) (this.rotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
+            this.rotationYaw = (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
             this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 
