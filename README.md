@@ -1,5 +1,7 @@
 # Blockbuster
 
+![Blockbuster logo](./logo.png)
+
 Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in 
 single player (without having to recruit/organize a crowd of actors and cameras) 
 and simple cinematics in adventure maps.
