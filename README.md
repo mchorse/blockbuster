@@ -33,6 +33,15 @@ See the demo video, tutorial video and checkout
 
 P.S.: there will be links, soon.
 
+## License
+
+There's no license yet, but it doesn't mean that you can do anything you want 
+with this mod, in practice, because I based my code on Mocap's code, the license 
+is there with source code.
+
+<!-- Borderlands reference -->
+I don't state that source code has the same license, but I imply it, maybe. 
+
 ## Features / Manual
 
 This mod provides following features:
