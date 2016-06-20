@@ -36,7 +36,7 @@ public class InteractBlockAction extends Action
     {
         IBlockState state = actor.worldObj.getBlockState(this.pos);
 
-        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, null, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

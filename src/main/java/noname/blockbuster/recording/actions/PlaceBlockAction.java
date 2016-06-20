@@ -50,7 +50,7 @@ public class PlaceBlockAction extends InteractBlockAction
             ItemBlock block = (ItemBlock) item.getItem();
             EnumFacing face = EnumFacing.VALUES[this.facing];
 
-            block.placeBlockAt(item, null, actor.worldObj, this.pos, face, 0, 0, 0, block.block.getStateFromMeta(this.metadata));
+            block.placeBlockAt(item, actor.fakePlayer, actor.worldObj, this.pos, face, 0, 0, 0, block.block.getStateFromMeta(this.metadata));
         }
     }
 

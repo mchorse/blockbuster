@@ -15,6 +15,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
@@ -63,9 +65,20 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     public boolean renderName = true;
 
+    /**
+     * Fake player used in some of methods like onBlockActivated to solve
+     * NullPointerException
+     */
+    public EntityPlayer fakePlayer;
+
     public ActorEntity(World worldIn)
     {
         super(worldIn);
+
+        if (!worldIn.isRemote)
+        {
+            this.fakePlayer = FakePlayerFactory.getMinecraft((WorldServer) worldIn);
+        }
     }
 
     /**
@@ -101,6 +114,12 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         if (this.eventsList.size() > 0)
         {
             this.eventsList.remove(0).apply(this);
+        }
+
+        if (!this.worldObj.isRemote)
+        {
+            this.fakePlayer.rotationYaw = this.rotationYaw;
+            this.fakePlayer.rotationPitch = this.rotationPitch;
         }
 
         this.updateArmSwingProgress();
