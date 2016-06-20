@@ -136,7 +136,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
             double d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
 
-            this.rotationYaw = (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
+            this.rotationYaw = 360 + (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
             this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 

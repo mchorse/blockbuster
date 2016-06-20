@@ -26,4 +26,3 @@ There's some ideas that I might implement in next Blockbuster mod:
 * Make commands accept spaced strings (this one is simple)
 * Create GUI for managing actors in director blocks
 * Support of multi-player world skins
-* Fix annoying horizontal head rotation jagginess

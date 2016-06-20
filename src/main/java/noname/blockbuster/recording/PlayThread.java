@@ -55,6 +55,8 @@ class PlayThread implements Runnable
     @Override
     public void run()
     {
+        System.out.println("Replay started.");
+
         try
         {
             short magic = this.in.readShort();

@@ -22,6 +22,9 @@ public class ActorRender extends RenderBiped<ActorEntity>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
+    private float previousYaw;
+    private int ticks;
+
     /**
      * Add armor layer to my biped texture
      */
@@ -41,7 +44,22 @@ public class ActorRender extends RenderBiped<ActorEntity>
     {
         this.modelBipedMain.isSneak = entity.isSneaking();
 
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        float lastYaw = entity.rotationYawHead;
+        float lastPrevYaw = entity.prevRotationYawHead;
+
+        if (this.previousYaw != entityYaw)
+        {
+            this.previousYaw = entityYaw;
+        }
+
+        entity.prevRotationYawHead = entityYaw;
+        entityYaw = this.interpolateRotation(entityYaw, this.previousYaw, partialTicks);
+        entity.rotationYawHead = entityYaw;
+
+        super.doRender(entity, x, y, z, entityYaw, partialTicks * 0.5F);
+
+        entity.rotationYawHead = lastYaw;
+        entity.prevRotationYawHead = lastPrevYaw;
     }
 
     /**
