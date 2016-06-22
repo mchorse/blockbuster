@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
+import noname.blockbuster.recording.PlayThread;
 
 /**
  * Director map tile entity
@@ -78,6 +79,21 @@ public class DirectorMapTileEntity extends AbstractDirectorTileEntity
         }
 
         this.playBlock(true);
+    }
+
+    /**
+     * Stop playback
+     */
+    @Override
+    public void stopPlayback()
+    {
+        for (PlayThread thread : Mocap.playbacks.values())
+        {
+            if (this.actorMap.containsValue(thread.actor))
+            {
+                thread.playing = false;
+            }
+        }
     }
 
     /**

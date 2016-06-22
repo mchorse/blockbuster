@@ -22,7 +22,7 @@ import noname.blockbuster.recording.actions.SwipeAction;
  * That's includes: movement, rotation, and the actions that player is commiting
  * during recording.
  */
-class RecordThread implements Runnable
+public class RecordThread implements Runnable
 {
     public Thread thread;
     public boolean capture = false;
@@ -191,8 +191,6 @@ class RecordThread implements Runnable
     /**
      * Write current injected action either via client event handler or action
      * that was recorded by RecordThread.
-     *
-     * With enums it looks much much better!
      */
     private void writeActions() throws IOException
     {
@@ -205,10 +203,10 @@ class RecordThread implements Runnable
         Action action = this.eventList.remove(0);
 
         this.in.writeBoolean(true);
-        this.in.writeByte(action.type);
+        this.in.writeByte(action.getType());
         action.toBytes(this.in);
 
-        if (action.type == Action.LOGOUT)
+        if (action.getType() == Action.LOGOUT)
         {
             this.capture = false;
             Mocap.records.remove(this.player);

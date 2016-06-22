@@ -16,12 +16,13 @@ import noname.blockbuster.recording.actions.Action;
  * This thread is responsible for injecting the movement, rotation, actions, and
  * other stuff into playable actor entity.
  */
-class PlayThread implements Runnable
+public class PlayThread implements Runnable
 {
     public Thread thread;
+    public boolean playing;
+    public ActorEntity actor;
 
     private String filename;
-    private ActorEntity actor;
     private DataInputStream in;
     private boolean deadAfterPlay;
 
@@ -33,6 +34,7 @@ class PlayThread implements Runnable
         this.actor = actor;
         this.deadAfterPlay = deadAfterPlay;
 
+        this.playing = true;
         this.thread = new Thread(this, "Playback Thread");
         this.thread.start();
     }
@@ -67,7 +69,7 @@ class PlayThread implements Runnable
                 throw new Exception("Not a record file");
             }
 
-            while (true)
+            while (this.playing)
             {
                 this.injectMovement();
                 this.injectAction();
@@ -76,9 +78,7 @@ class PlayThread implements Runnable
             }
         }
         catch (EOFException e)
-        {
-            System.out.println("Replay thread completed.");
-        }
+        {}
         catch (Exception e)
         {
             System.out.println("Replay thread interrupted.");
@@ -86,6 +86,8 @@ class PlayThread implements Runnable
 
             Mocap.broadcastMessage(I18n.format("blockbuster.mocap.error_file"));
         }
+
+        System.out.println("Replay thread completed.");
 
         if (this.deadAfterPlay)
         {

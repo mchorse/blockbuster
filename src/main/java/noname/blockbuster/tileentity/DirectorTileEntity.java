@@ -110,6 +110,48 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
         this.removeUnusedEntities(this.actors);
         this.removeUnusedEntities(this.cameras);
 
+        for (ActorEntity actor : this.getActors(exception))
+        {
+            actor.startPlaying();
+        }
+
+        this.playBlock(true);
+    }
+
+    /**
+     * Force stop playback
+     */
+    @Override
+    public void stopPlayback()
+    {
+        this.stopPlayback(null);
+    }
+
+    /**
+     * Force stop playback (except one actor)
+     */
+    public void stopPlayback(ActorEntity exception)
+    {
+        if (this.worldObj.isRemote || !this.isPlaying())
+        {
+            return;
+        }
+
+        for (ActorEntity actor : this.getActors(exception))
+        {
+            actor.stopPlaying();
+        }
+
+        this.playBlock(false);
+    }
+
+    /**
+     * Get all actors
+     */
+    public List<ActorEntity> getActors(ActorEntity exception)
+    {
+        List<ActorEntity> actors = new ArrayList<ActorEntity>();
+
         for (String id : this.actors)
         {
             ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
@@ -119,10 +161,10 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
                 continue;
             }
 
-            actor.startPlaying();
+            actors.add(actor);
         }
 
-        this.playBlock(true);
+        return actors;
     }
 
     /**

@@ -114,6 +114,11 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
     public abstract void startPlayback();
 
     /**
+     * Stop scene's playback
+     */
+    public abstract void stopPlayback();
+
+    /**
      * Remove unused entitites
      */
     protected void removeUnusedEntities(List<String> list)

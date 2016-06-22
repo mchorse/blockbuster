@@ -296,6 +296,27 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Stop playing
+     */
+    public void stopPlaying()
+    {
+        if (!Mocap.playbacks.containsKey(this))
+        {
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.playing"));
+            return;
+        }
+
+        if (!this.hasCustomName())
+        {
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.no_name"));
+        }
+        else
+        {
+            Mocap.playbacks.get(this).playing = false;
+        }
+    }
+
+    /**
      * Start recording the player's actions for this actor
      *
      * Few notes:
@@ -313,11 +334,18 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        if (this.directorBlock != null && !Mocap.records.containsKey(player))
+        if (this.directorBlock != null)
         {
             DirectorTileEntity director = (DirectorTileEntity) player.worldObj.getTileEntity(this.directorBlock);
 
-            director.startPlayback(this);
+            if (!Mocap.records.containsKey(player))
+            {
+                director.startPlayback(this);
+            }
+            else
+            {
+                director.stopPlayback(this);
+            }
         }
 
         Mocap.startRecording(this.getCustomNameTag(), player);
