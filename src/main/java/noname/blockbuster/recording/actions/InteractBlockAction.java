@@ -21,14 +21,17 @@ public class InteractBlockAction extends Action
     public BlockPos pos;
 
     public InteractBlockAction()
-    {
-        super(Action.INTERACT_BLOCK);
-    }
+    {}
 
     public InteractBlockAction(BlockPos pos)
     {
-        this();
         this.pos = pos;
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.INTERACT_BLOCK;
     }
 
     @Override

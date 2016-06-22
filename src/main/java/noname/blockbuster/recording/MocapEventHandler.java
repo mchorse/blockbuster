@@ -25,6 +25,7 @@ import noname.blockbuster.recording.actions.InteractBlockAction;
 import noname.blockbuster.recording.actions.LogoutAction;
 import noname.blockbuster.recording.actions.MountingAction;
 import noname.blockbuster.recording.actions.PlaceBlockAction;
+import noname.blockbuster.recording.actions.ShootArrowAction;
 
 /**
  * Event handler for recording purposes.
@@ -137,20 +138,21 @@ public class MocapEventHandler
      *
      * I'll fix it later
      */
-    public void onArrowLooseEvent(ArrowLooseEvent ev) throws IOException
+    @SubscribeEvent
+    public void onArrowLooseEvent(ArrowLooseEvent event) throws IOException
     {
         if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
         {
             return;
         }
 
-        List<Action> evemts = Mocap.getActionListForPlayer(ev.getEntityPlayer());
+        List<Action> events = Mocap.getActionListForPlayer(event.getEntityPlayer());
 
-        if (evemts != null)
+        if (events != null)
         {
-            Action action = new Action(Action.SHOOTARROW);
+            Action action = new ShootArrowAction(event.getCharge());
 
-            evemts.add(action);
+            events.add(action);
         }
     }
 

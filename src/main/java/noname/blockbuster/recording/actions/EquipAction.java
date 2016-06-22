@@ -25,11 +25,11 @@ public class EquipAction extends Action
 {
     public byte armorSlot;
     public short armorId;
-    public NBTTagCompound itemData = new NBTTagCompound();
+    public NBTTagCompound itemData;
 
     public EquipAction()
     {
-        super(Action.EQUIP);
+        this.itemData = new NBTTagCompound();
     }
 
     public EquipAction(byte armorSlot, short armorId, ItemStack item)
@@ -42,6 +42,12 @@ public class EquipAction extends Action
         {
             item.writeToNBT(this.itemData);
         }
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.EQUIP;
     }
 
     @Override

@@ -11,8 +11,12 @@ import noname.blockbuster.entity.ActorEntity;
 public class SwipeAction extends Action
 {
     public SwipeAction()
+    {}
+
+    @Override
+    public byte getType()
     {
-        super(Action.SWIPE);
+        return Action.SWIPE;
     }
 
     @Override

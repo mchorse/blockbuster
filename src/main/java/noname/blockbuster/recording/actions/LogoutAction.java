@@ -9,7 +9,11 @@ package noname.blockbuster.recording.actions;
 public class LogoutAction extends Action
 {
     public LogoutAction()
+    {}
+
+    @Override
+    public byte getType()
     {
-        super(Action.LOGOUT);
+        return Action.LOGOUT;
     }
 }

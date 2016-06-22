@@ -59,6 +59,7 @@ Following actions are fully supported by this mod:
 * Equipping armor
 * Send messages in chat
 * Mounting entities
+* Shoot arrow
 
 Recorded actions are stored in the `blockbuster/records` folder in world's save 
 folder.

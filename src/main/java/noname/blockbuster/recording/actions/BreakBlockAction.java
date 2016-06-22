@@ -11,15 +11,17 @@ import noname.blockbuster.entity.ActorEntity;
 public class BreakBlockAction extends InteractBlockAction
 {
     public BreakBlockAction()
-    {
-        super();
-        this.type = Action.BREAK_BLOCK;
-    }
+    {}
 
     public BreakBlockAction(BlockPos pos)
     {
         super(pos);
-        this.type = Action.BREAK_BLOCK;
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.BREAK_BLOCK;
     }
 
     @Override

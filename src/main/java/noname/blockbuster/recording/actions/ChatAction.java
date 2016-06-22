@@ -18,14 +18,17 @@ public class ChatAction extends Action
     public String message;
 
     public ChatAction()
-    {
-        super(Action.CHAT);
-    }
+    {}
 
     public ChatAction(String message)
     {
-        this();
         this.message = message;
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.CHAT;
     }
 
     @Override

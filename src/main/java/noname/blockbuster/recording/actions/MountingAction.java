@@ -22,15 +22,18 @@ public class MountingAction extends Action
     public boolean isMounting;
 
     public MountingAction()
-    {
-        super(Action.MOUNTING);
-    }
+    {}
 
     public MountingAction(UUID target, boolean isMounting)
     {
-        this();
         this.target = target;
         this.isMounting = isMounting;
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.MOUNTING;
     }
 
     @Override

@@ -25,15 +25,11 @@ public class PlaceBlockAction extends InteractBlockAction
     public NBTTagCompound itemData = new NBTTagCompound();
 
     public PlaceBlockAction()
-    {
-        super();
-        this.type = Action.PLACE_BLOCK;
-    }
+    {}
 
     public PlaceBlockAction(BlockPos pos, byte metadata, byte facing, ItemStack item)
     {
         super(pos);
-        this.type = Action.PLACE_BLOCK;
         this.metadata = metadata;
         this.facing = facing;
 

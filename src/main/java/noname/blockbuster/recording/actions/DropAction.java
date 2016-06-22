@@ -24,7 +24,6 @@ public class DropAction extends Action
 
     public DropAction()
     {
-        super(Action.DROP);
         this.itemData = new NBTTagCompound();
     }
 
@@ -33,6 +32,12 @@ public class DropAction extends Action
         this();
 
         item.writeToNBT(this.itemData);
+    }
+
+    @Override
+    public byte getType()
+    {
+        return Action.DROP;
     }
 
     @Override
