@@ -23,7 +23,6 @@ public class ActorRender extends RenderBiped<ActorEntity>
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
     private float previousYaw;
-    private int ticks;
 
     /**
      * Add armor layer to my biped texture
@@ -38,6 +37,10 @@ public class ActorRender extends RenderBiped<ActorEntity>
     /**
      * Another important extension. Assign sneaking property, without it, actor
      * would look like an idiot who's clipping through the ground for a minute.
+     *
+     * Also, head rotation is interpolated inside of this method, another thing,
+     * yeah previousYaw thing is pretty stupid (the renderer is one for all), but
+     * it works...
      */
     @Override
     public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks)

@@ -56,7 +56,7 @@ blockbuster.actor.noname=Current actor doesn't have a custom name, please assign
 blockbuster.actor.playing=Current actor is already playing!
 
 # Commands
-blockbuster.commands.play=Usage: /play <replay> <entity_name> <skin_name>, e.g.: /play forest_gump_bench_scene Forrest ForrestGump.\nSide note: <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses strings
+blockbuster.commands.play=Usage: /play <replay> <entity_name> <skin_name> [is_invulnerable], e.g.: /play forest_gump_bench_scene Forrest ForrestGump 1, where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\nSide note: <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses strings
 blockbuster.commands.record=Usage: /record <savefile>, e.g.: /record forrestrun
 blockbuster.commands.play_director=Usage: /play-director <x> <y> <z>, where <x>, <y>, and <z> are coordinates of director block's position
 

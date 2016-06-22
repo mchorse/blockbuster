@@ -5,6 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import noname.blockbuster.entity.ActorEntity;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -44,6 +45,11 @@ public class CommandPlay extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(null));
         }
 
-        Mocap.startPlayback(args[0], args[1], args[2], sender.getEntityWorld(), true);
+        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
+        ActorEntity actor = Mocap.startPlayback(args[0], args[1], args[2], sender.getEntityWorld(), true);
+
+        actor.setEntityInvulnerable(isInvulnerable);
+
+        System.out.println(isInvulnerable);
     }
 }
