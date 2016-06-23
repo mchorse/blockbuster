@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -99,6 +100,39 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
     protected boolean canDespawn()
     {
         return false;
+    }
+
+    protected void updateSize()
+    {
+        float f = this.width;
+        float f1 = this.height;
+
+        if (this.isElytraFlying())
+        {
+            f = 0.6F;
+            f1 = 0.6F;
+        }
+        else if (this.isSneaking())
+        {
+            f = 0.6F;
+            f1 = 1.65F;
+        }
+        else
+        {
+            f = 0.6F;
+            f1 = 1.8F;
+        }
+
+        if (f != this.width || f1 != this.height)
+        {
+            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
+            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + f, axisalignedbb.minY + f1, axisalignedbb.minZ + f);
+
+            if (!this.worldObj.collidesWithAnyBlock(axisalignedbb))
+            {
+                this.setSize(f, f1);
+            }
+        }
     }
 
     /**
@@ -349,6 +383,11 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         Mocap.startRecording(this.getCustomNameTag(), player);
+    }
+
+    public void setElytraFlying(boolean isFlying)
+    {
+        this.setFlag(7, isFlying);
     }
 
     /* Reading/writing to disk */

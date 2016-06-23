@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import noname.blockbuster.recording.actions.Action;
+import noname.blockbuster.recording.actions.ElytraFlyingAction;
 import noname.blockbuster.recording.actions.EquipAction;
 import noname.blockbuster.recording.actions.SwipeAction;
 
@@ -32,6 +33,7 @@ public class RecordThread implements Runnable
     private EntityPlayer player;
     private RandomAccessFile in;
     private boolean lastTickSwipe = false;
+    private boolean elytraFlying = false;
     private int[] itemsEquipped = new int[6];
 
     RecordThread(EntityPlayer player, String filename)
@@ -68,6 +70,7 @@ public class RecordThread implements Runnable
                 this.trackSwing();
                 this.trackHeldItem();
                 this.trackArmor();
+                this.trackElytraFlying();
                 this.writeActions();
 
                 Thread.sleep(Mocap.delay);
@@ -93,6 +96,15 @@ public class RecordThread implements Runnable
         }
 
         System.out.println("Exiting record thread.");
+    }
+
+    private void trackElytraFlying()
+    {
+        if (this.elytraFlying != this.player.isElytraFlying())
+        {
+            this.elytraFlying = this.player.isElytraFlying();
+            this.eventList.add(new ElytraFlyingAction(this.player.isElytraFlying()));
+        }
     }
 
     /**

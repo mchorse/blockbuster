@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
@@ -32,6 +33,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
         super(renderManagerIn, modelBipedIn, shadowSize);
 
         this.addLayer(new LayerBipedArmor(this));
+        this.addLayer(new LayerElytra(this));
     }
 
     /**
@@ -103,6 +105,25 @@ public class ActorRender extends RenderBiped<ActorEntity>
         }
 
         return defaultTexture;
+    }
+
+    /**
+     * Taken from RenderPlayer
+     */
+    @Override
+    protected void rotateCorpse(ActorEntity actor, float p_77043_2_, float p_77043_3_, float partialTicks)
+    {
+        if (actor.isElytraFlying())
+        {
+            super.rotateCorpse(actor, p_77043_2_, p_77043_3_, partialTicks);
+            float f = actor.getTicksElytraFlying() + partialTicks;
+            float f1 = MathHelper.clamp_float(f * f / 100.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(f1 * (-90.0F - actor.rotationPitch), 1.0F, 0.0F, 0.0F);
+        }
+        else
+        {
+            super.rotateCorpse(actor, p_77043_2_, p_77043_3_, partialTicks);
+        }
     }
 
     /**

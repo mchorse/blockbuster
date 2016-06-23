@@ -25,6 +25,7 @@ public abstract class Action
     public static final byte MOUNTING = 8;
     public static final byte INTERACT_BLOCK = 9;
     public static final byte BREAK_BLOCK = 10;
+    public static final byte ELYTRA_FLYING = 11;
 
     /**
      * Factory method
@@ -53,6 +54,8 @@ public abstract class Action
             return new InteractBlockAction();
         if (type == BREAK_BLOCK)
             return new BreakBlockAction();
+        if (type == ELYTRA_FLYING)
+            return new ElytraFlyingAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }
