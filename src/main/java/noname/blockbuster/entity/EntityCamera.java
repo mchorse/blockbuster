@@ -120,6 +120,9 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
         }
         else if (!this.isBeingRidden())
         {
+            player.rotationYaw = this.rotationYaw;
+            player.rotationPitch = this.rotationPitch;
+
             return player.startRiding(this);
         }
 
