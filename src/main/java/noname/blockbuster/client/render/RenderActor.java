@@ -49,7 +49,7 @@ public class RenderActor extends RenderBiped<EntityActor>
     {
         this.modelBipedMain.isSneak = entity.isSneaking();
 
-        if (entity.renderName)
+        if (!entity.renderName)
         {
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }

@@ -47,9 +47,6 @@ public class CommandPlay extends CommandBase
 
         EntityActor actor = Mocap.startPlayback(args[0], args[1], args[2], sender.getEntityWorld(), true);
 
-        if (args.length >= 4)
-        {
-            actor.setEntityInvulnerable(args[3].equals("1"));
-        }
+        actor.setEntityInvulnerable(args.length >= 4 && args[3].equals("1"));
     }
 }

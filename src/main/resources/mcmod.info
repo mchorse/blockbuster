@@ -2,15 +2,11 @@
     {
         "modid": "blockbuster",
         "name": "Blockbuster",
-        "description": "Blockbuster lets you create simple machinimas in singleplayer without need to hire/invinting an organized crowd of minecraft actors and cameras.",
+        "description": "Create simple machinimas and adventure map cinematics",
         "version": "1.0",
         "mcversion": "1.9",
-        "url": "",
-        "updateUrl": "",
+        "url": "https://github.com/mchorse/blockbuster",
         "authorList": ["mchorse"],
         "credits": "This mod is available thanks to Minecraft Forge, Minecraft Forge forum, Ernio, Animal Bikes mod, and Mocap mod",
-        "logoFile": "",
-        "screenshots": [],
-        "dependencies": []
     }
 ]
