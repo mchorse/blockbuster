@@ -37,6 +37,12 @@ public class PlaceBlockAction extends InteractBlockAction
     }
 
     @Override
+    public byte getType()
+    {
+        return Action.PLACE_BLOCK;
+    }
+
+    @Override
     public void apply(EntityActor actor)
     {
         ItemStack item = ItemStack.loadItemStackFromNBT(this.itemData);
