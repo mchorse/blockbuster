@@ -49,22 +49,29 @@ public class RenderActor extends RenderBiped<EntityActor>
     {
         this.modelBipedMain.isSneak = entity.isSneaking();
 
-        float lastYaw = entity.rotationYawHead;
-        float lastPrevYaw = entity.prevRotationYawHead;
-
-        if (this.previousYaw != entityYaw)
+        if (entity.renderName)
         {
-            this.previousYaw = entityYaw;
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
+        else
+        {
+            float lastYaw = entity.rotationYawHead;
+            float lastPrevYaw = entity.prevRotationYawHead;
 
-        entity.prevRotationYawHead = entityYaw;
-        entityYaw = this.interpolateRotation(entityYaw, this.previousYaw, partialTicks);
-        entity.rotationYawHead = entityYaw;
+            if (this.previousYaw != entityYaw)
+            {
+                this.previousYaw = entityYaw;
+            }
 
-        super.doRender(entity, x, y, z, entityYaw, partialTicks * 0.5F);
+            entity.prevRotationYawHead = entityYaw;
+            entityYaw = this.interpolateRotation(entityYaw, this.previousYaw, partialTicks);
+            entity.rotationYawHead = entityYaw;
 
-        entity.rotationYawHead = lastYaw;
-        entity.prevRotationYawHead = lastPrevYaw;
+            super.doRender(entity, x, y, z, entityYaw, partialTicks * 0.5F);
+
+            entity.rotationYawHead = lastYaw;
+            entity.prevRotationYawHead = lastPrevYaw;
+        }
     }
 
     /**
