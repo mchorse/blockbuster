@@ -1,7 +1,7 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "blockbuster:items/registerItem"
+        "layer0": "blockbuster:items/register"
     },
     "display": {
         "thirdperson_righthand": {

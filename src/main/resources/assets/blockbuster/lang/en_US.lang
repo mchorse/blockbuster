@@ -1,17 +1,21 @@
 #PARSE_ESCAPES
 
+# Item tooltips
+blockbuster.info.director_block=Use it for machinimas
+blockbuster.info.director_map_block=Uset if for adventure maps
+
 # Creative tabs
-itemGroup.blockbusterTab=Blockbuster
+itemGroup.blockbuster=Blockbuster
 
 # Item and block names
-tile.directorBlock.name=Director block
-tile.directorBlockMap.name=Director map block
+tile.blockbuster.director.name=Director block
+tile.blockbuster.director_map.name=Director map block
 
-item.cameraItem.name=Camera
-item.cameraConfigItem.name=Camera configuration device
-item.playbackItem.name=Playback button
-item.registerItem.name=Registering device
-item.skinManagerItem.name=Skin manager device
+item.blockbuster.camera.name=Camera
+item.blockbuster.camera_config.name=Camera configuration device
+item.blockbuster.playback.name=Playback button
+item.blockbuster.register.name=Registering device
+item.blockbuster.skin_manager.name=Skin manager device
 
 # Entities names
 entity.blockbuster.Camera.name=Camera

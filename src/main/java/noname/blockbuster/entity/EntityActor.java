@@ -21,13 +21,13 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.item.RegisterItem;
-import noname.blockbuster.item.SkinManagerItem;
+import noname.blockbuster.item.ItemRegister;
+import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.actions.Action;
-import noname.blockbuster.tileentity.DirectorTileEntity;
+import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
  * Actor entity class
@@ -41,7 +41,7 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * scenes (like one from Van Helsing in beginning with big crowd with torches,
  * fire and stuff).
  */
-public class ActorEntity extends EntityCreature implements IEntityAdditionalSpawnData
+public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData
 {
     /**
      * Event list. Each tick there's might be added an event action which
@@ -72,7 +72,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     public EntityPlayer fakePlayer;
 
-    public ActorEntity(World worldIn)
+    public EntityActor(World worldIn)
     {
         super(worldIn);
 
@@ -266,11 +266,11 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleRegisterItem(ItemStack stack)
     {
-        boolean holdsRegisterItem = stack.getItem() instanceof RegisterItem;
+        boolean holdsRegisterItem = stack.getItem() instanceof ItemRegister;
 
         if (!this.worldObj.isRemote && holdsRegisterItem)
         {
-            RegisterItem item = (RegisterItem) stack.getItem();
+            ItemRegister item = (ItemRegister) stack.getItem();
             item.registerStack(stack, this);
         }
 
@@ -282,7 +282,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
-        boolean holdsSkinItem = stack.getItem() instanceof SkinManagerItem;
+        boolean holdsSkinItem = stack.getItem() instanceof ItemSkinManager;
 
         if (this.worldObj.isRemote && holdsSkinItem)
         {
@@ -370,7 +370,7 @@ public class ActorEntity extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.directorBlock != null)
         {
-            DirectorTileEntity director = (DirectorTileEntity) player.worldObj.getTileEntity(this.directorBlock);
+            TileEntityDirector director = (TileEntityDirector) player.worldObj.getTileEntity(this.directorBlock);
 
             if (!Mocap.records.containsKey(player))
             {

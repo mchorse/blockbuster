@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "playing=true": { "model": "blockbuster:director_map" },
+        "playing=false": { "model": "blockbuster:director_map" }
+    }
+}

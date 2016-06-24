@@ -12,20 +12,20 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import noname.blockbuster.block.DirectorBlock;
-import noname.blockbuster.block.DirectorBlockMap;
+import noname.blockbuster.block.BlockDirector;
+import noname.blockbuster.block.BlockDirectorMap;
 import noname.blockbuster.client.KeyboardHandler;
-import noname.blockbuster.entity.ActorEntity;
-import noname.blockbuster.entity.CameraEntity;
-import noname.blockbuster.item.CameraConfigItem;
-import noname.blockbuster.item.CameraItem;
-import noname.blockbuster.item.PlaybackItem;
-import noname.blockbuster.item.RegisterItem;
-import noname.blockbuster.item.SkinManagerItem;
+import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.entity.EntityCamera;
+import noname.blockbuster.item.ItemCameraConfig;
+import noname.blockbuster.item.ItemCamera;
+import noname.blockbuster.item.ItemPlayback;
+import noname.blockbuster.item.ItemRegister;
+import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.recording.MocapEventHandler;
-import noname.blockbuster.tileentity.DirectorMapTileEntity;
-import noname.blockbuster.tileentity.DirectorTileEntity;
+import noname.blockbuster.tileentity.TileEntityDirectorMap;
+import noname.blockbuster.tileentity.TileEntityDirector;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -36,20 +36,20 @@ public class CommonProxy implements IGuiHandler
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, this);
         Dispatcher.register();
 
-        this.registerItem(Blockbuster.cameraItem = new CameraItem());
-        this.registerItem(Blockbuster.cameraConfigItem = new CameraConfigItem());
-        this.registerItem(Blockbuster.registerItem = new RegisterItem());
-        this.registerItem(Blockbuster.playbackItem = new PlaybackItem());
-        this.registerItem(Blockbuster.skinManagerItem = new SkinManagerItem());
+        this.registerItem(Blockbuster.cameraItem = new ItemCamera());
+        this.registerItem(Blockbuster.cameraConfigItem = new ItemCameraConfig());
+        this.registerItem(Blockbuster.registerItem = new ItemRegister());
+        this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
+        this.registerItem(Blockbuster.skinManagerItem = new ItemSkinManager());
 
-        this.registerBlock(Blockbuster.directorBlock = new DirectorBlock());
-        this.registerBlock(Blockbuster.directorBlockMap = new DirectorBlockMap());
+        this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
+        this.registerBlock(Blockbuster.directorBlockMap = new BlockDirectorMap());
 
-        this.registerEntity(CameraEntity.class, "Camera");
-        this.registerEntityWithEgg(ActorEntity.class, "Actor", 0xffc1ab33, 0xffa08d2b);
+        this.registerEntity(EntityCamera.class, "Camera");
+        this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 
-        GameRegistry.registerTileEntity(DirectorTileEntity.class, "blockbuster_director_tile_entity");
-        GameRegistry.registerTileEntity(DirectorMapTileEntity.class, "blockbuster_director_map_tile_entity");
+        GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
+        GameRegistry.registerTileEntity(TileEntityDirectorMap.class, "blockbuster_director_map_tile_entity");
     }
 
     public void load(FMLInitializationEvent event)

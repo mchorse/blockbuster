@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Item drop action
@@ -41,7 +41,7 @@ public class DropAction extends Action
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         final float PI = 3.1415927F;
 

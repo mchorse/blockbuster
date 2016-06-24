@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "blockbuster:items/playbackItem"
+        "layer0": "blockbuster:items/playback"
     }
 }

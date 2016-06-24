@@ -20,10 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.gui.GuiActorSkin;
 import noname.blockbuster.client.gui.GuiCamera;
-import noname.blockbuster.client.render.ActorRender;
-import noname.blockbuster.client.render.CameraRender;
-import noname.blockbuster.entity.ActorEntity;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.client.render.RenderActor;
+import noname.blockbuster.client.render.RenderCamera;
+import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.entity.EntityCamera;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -39,17 +39,17 @@ public class ClientProxy extends CommonProxy
     {
         super.preLoad(event);
 
-        this.registerItemModel(Blockbuster.cameraItem, Blockbuster.path("cameraItem"));
-        this.registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("cameraConfigItem"));
-        this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playbackItem"));
-        this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("registerItem"));
-        this.registerItemModel(Blockbuster.skinManagerItem, Blockbuster.path("skinManagerItem"));
+        this.registerItemModel(Blockbuster.cameraItem, Blockbuster.path("camera"));
+        this.registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("camera_config"));
+        this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
+        this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
+        this.registerItemModel(Blockbuster.skinManagerItem, Blockbuster.path("skin_manager"));
 
-        this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("directorBlock"));
-        this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("directorBlockMap"));
+        this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
+        this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
-        this.registerEntityRender(CameraEntity.class, new CameraRender.CameraFactory());
-        this.registerEntityRender(ActorEntity.class, new ActorRender.ActorFactory());
+        this.registerEntityRender(EntityCamera.class, new RenderCamera.CameraFactory());
+        this.registerEntityRender(EntityActor.class, new RenderActor.ActorFactory());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
@@ -109,11 +109,11 @@ public class ClientProxy extends CommonProxy
 
         if (ID == 0)
         {
-            return new GuiCamera((CameraEntity) entity);
+            return new GuiCamera((EntityCamera) entity);
         }
         else if (ID == 1)
         {
-            return new GuiActorSkin((ActorEntity) entity);
+            return new GuiActorSkin((EntityActor) entity);
         }
 
         return null;

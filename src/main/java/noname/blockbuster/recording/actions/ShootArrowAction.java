@@ -7,7 +7,7 @@ import java.io.IOException;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.world.World;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 public class ShootArrowAction extends Action
 {
@@ -28,7 +28,7 @@ public class ShootArrowAction extends Action
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         World world = actor.worldObj;
 

@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Parent of all recording actions
@@ -71,7 +71,7 @@ public abstract class Action
      * Some action doesn't necessarily should have apply method (that's why this
      * method is empty)
      */
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {}
 
     /**

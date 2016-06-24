@@ -10,28 +10,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Fully copy-paste of LayerElytra from net.minecraft.client.render.layers
  */
 @SideOnly(Side.CLIENT)
-public class LayerElytra implements LayerRenderer<ActorEntity>
+public class LayerElytra implements LayerRenderer<EntityActor>
 {
     /** The basic Elytra texture. */
     private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
     /** Instance of the player renderer. */
-    private final ActorRender renderPlayer;
+    private final RenderActor renderPlayer;
     /** The model used by the Elytra. */
     private final ModelElytra modelElytra = new ModelElytra();
 
-    public LayerElytra(ActorRender renderPlayerIn)
+    public LayerElytra(RenderActor renderPlayerIn)
     {
         this.renderPlayer = renderPlayerIn;
     }
 
     @Override
-    public void doRenderLayer(ActorEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    public void doRenderLayer(EntityActor entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         ItemStack itemstack = entitylivingbaseIn.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 

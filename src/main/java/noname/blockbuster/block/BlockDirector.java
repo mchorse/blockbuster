@@ -1,5 +1,8 @@
 package noname.blockbuster.block;
 
+import java.util.List;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -8,22 +11,28 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.recording.Mocap;
-import noname.blockbuster.tileentity.DirectorTileEntity;
+import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
  * Descendant of abstract director block
  *
  * This block is the one that responsible for machinimas creation.
  */
-public class DirectorBlock extends AbstractDirectorBlock
+public class BlockDirector extends AbstractBlockDirector
 {
-    public DirectorBlock()
+    public BlockDirector()
     {
         super();
-        this.setRegistryName("directorBlock");
-        this.setUnlocalizedName("directorBlock");
+        this.setRegistryName("director");
+        this.setUnlocalizedName("blockbuster.director");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    {
+        tooltip.add(I18n.format("blockbuster.info.director_block"));
     }
 
     @Override
@@ -37,12 +46,12 @@ public class DirectorBlock extends AbstractDirectorBlock
      */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof RegisterItem) && item.getTagCompound() == null)
+        if (!(item.getItem() instanceof ItemRegister) && item.getTagCompound() == null)
         {
             return false;
         }
 
-        DirectorTileEntity tile = (DirectorTileEntity) world.getTileEntity(pos);
+        TileEntityDirector tile = (TileEntityDirector) world.getTileEntity(pos);
         NBTTagCompound tag = item.getTagCompound();
 
         if (!tag.hasKey("EntityID"))
@@ -75,6 +84,6 @@ public class DirectorBlock extends AbstractDirectorBlock
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new DirectorTileEntity();
+        return new TileEntityDirector();
     }
 }

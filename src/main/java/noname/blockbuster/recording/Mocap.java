@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.actions.Action;
 
 /**
@@ -36,7 +36,7 @@ import noname.blockbuster.recording.actions.Action;
 public class Mocap
 {
     public static Map<EntityPlayer, RecordThread> records = Collections.synchronizedMap(new HashMap());
-    public static Map<ActorEntity, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
+    public static Map<EntityActor, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
 
     /**
      * Signature used for replay files, this is usually the first entry to
@@ -159,9 +159,9 @@ public class Mocap
     /**
      * Start playback with new actor entity (used by CommandPlay class)
      */
-    public static ActorEntity startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
+    public static EntityActor startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
-        ActorEntity actor = new ActorEntity(world);
+        EntityActor actor = new EntityActor(world);
         actor.setCustomNameTag(name);
         actor.setSkin(skin, true);
 
@@ -174,7 +174,7 @@ public class Mocap
     /**
      * Start playback with given entity
      */
-    public static void startPlayback(String filename, ActorEntity entity, boolean killOnDead)
+    public static void startPlayback(String filename, EntityActor entity, boolean killOnDead)
     {
         File file = new File(replayFile(filename));
 

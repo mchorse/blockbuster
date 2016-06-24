@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import net.minecraft.entity.Entity;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -37,7 +37,7 @@ public class MountingAction extends Action
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         Entity mount = Mocap.entityByUUID(actor.worldObj, this.target);
 

@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Guess what this action does
@@ -37,7 +37,7 @@ public class PlaceBlockAction extends InteractBlockAction
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         ItemStack item = ItemStack.loadItemStackFromNBT(this.itemData);
 

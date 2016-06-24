@@ -6,8 +6,8 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noname.blockbuster.entity.ActorEntity;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -17,7 +17,7 @@ import noname.blockbuster.recording.Mocap;
  * if it's the best way to implement activation of the redstone (See update
  * method for more information).
  */
-public class DirectorTileEntity extends AbstractDirectorTileEntity
+public class TileEntityDirector extends AbstractTileEntityDirector
 {
     public List<String> cameras = new ArrayList<String>();
 
@@ -55,13 +55,13 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
      */
     public boolean add(Entity entity)
     {
-        if (entity instanceof CameraEntity)
+        if (entity instanceof EntityCamera)
         {
-            return this.add((CameraEntity) entity);
+            return this.add((EntityCamera) entity);
         }
-        else if (entity instanceof ActorEntity)
+        else if (entity instanceof EntityActor)
         {
-            return this.add((ActorEntity) entity);
+            return this.add((EntityActor) entity);
         }
 
         return false;
@@ -70,7 +70,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
     /**
      * Add a camera to director block
      */
-    public boolean add(CameraEntity camera)
+    public boolean add(EntityCamera camera)
     {
         String id = camera.getUniqueID().toString();
 
@@ -100,7 +100,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
      * The same thing as startPlayback, but don't play the actor that is
      * passed in the arguments (because he might be recorded by the player)
      */
-    public void startPlayback(ActorEntity exception)
+    public void startPlayback(EntityActor exception)
     {
         if (this.worldObj.isRemote || this.isPlaying())
         {
@@ -110,7 +110,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
         this.removeUnusedEntities(this.actors);
         this.removeUnusedEntities(this.cameras);
 
-        for (ActorEntity actor : this.getActors(exception))
+        for (EntityActor actor : this.getActors(exception))
         {
             actor.startPlaying();
         }
@@ -130,14 +130,14 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
     /**
      * Force stop playback (except one actor)
      */
-    public void stopPlayback(ActorEntity exception)
+    public void stopPlayback(EntityActor exception)
     {
         if (this.worldObj.isRemote || !this.isPlaying())
         {
             return;
         }
 
-        for (ActorEntity actor : this.getActors(exception))
+        for (EntityActor actor : this.getActors(exception))
         {
             actor.stopPlaying();
         }
@@ -148,13 +148,13 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
     /**
      * Get all actors
      */
-    public List<ActorEntity> getActors(ActorEntity exception)
+    public List<EntityActor> getActors(EntityActor exception)
     {
-        List<ActorEntity> actors = new ArrayList<ActorEntity>();
+        List<EntityActor> actors = new ArrayList<EntityActor>();
 
         for (String id : this.actors)
         {
-            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
+            EntityActor actor = (EntityActor) Mocap.entityByUUID(this.worldObj, id);
 
             if (actor == null || actor == exception)
             {
@@ -173,7 +173,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
      * Some of the code has been looked up from classes such as CommandTeleport
      * and... that's it.
      */
-    public void switchTo(CameraEntity camera, int direction)
+    public void switchTo(EntityCamera camera, int direction)
     {
         int index = this.cameras.indexOf(camera.getUniqueID().toString()) + direction;
 
@@ -186,7 +186,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
             index = this.cameras.size() - 1;
         }
 
-        CameraEntity newCamera = (CameraEntity) Mocap.entityByUUID(this.worldObj, this.cameras.get(index));
+        EntityCamera newCamera = (EntityCamera) Mocap.entityByUUID(this.worldObj, this.cameras.get(index));
         EntityPlayer player = (EntityPlayer) camera.getControllingPassenger();
 
         player.dismountRidingEntity();
@@ -208,7 +208,7 @@ public class DirectorTileEntity extends AbstractDirectorTileEntity
 
         for (String id : this.cameras)
         {
-            CameraEntity camera = (CameraEntity) Mocap.entityByUUID(this.worldObj, id);
+            EntityCamera camera = (EntityCamera) Mocap.entityByUUID(this.worldObj, id);
 
             camera.setRecording(isPlaying, true);
         }

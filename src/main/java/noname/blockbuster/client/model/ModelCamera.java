@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Those comments are for me, by the way
  */
 @SideOnly(Side.CLIENT)
-public class CameraModel extends ModelBase
+public class ModelCamera extends ModelBase
 {
     /**
      * Body parts of me camera: body with recording thingy, two storage thingies
@@ -26,7 +26,7 @@ public class CameraModel extends ModelBase
     /**
      * I hate hard-coded models ):[
      */
-    public CameraModel()
+    public ModelCamera()
     {
         float yOffset = 5.0F;
 

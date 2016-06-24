@@ -1,7 +1,7 @@
 package noname.blockbuster.recording.actions;
 
 import net.minecraft.util.EnumHand;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Swipe action
@@ -20,7 +20,7 @@ public class SwipeAction extends Action
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         actor.swingArm(EnumHand.MAIN_HAND);
     }

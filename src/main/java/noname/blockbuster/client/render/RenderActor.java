@@ -12,14 +12,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Actor renderer
  *
  * Renders actor entities with
  */
-public class ActorRender extends RenderBiped<ActorEntity>
+public class RenderActor extends RenderBiped<EntityActor>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
@@ -28,7 +28,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
     /**
      * Add armor layer to my biped texture
      */
-    public ActorRender(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize)
+    public RenderActor(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize)
     {
         super(renderManagerIn, modelBipedIn, shadowSize);
 
@@ -45,7 +45,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
      * it works...
      */
     @Override
-    public void doRender(ActorEntity entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         this.modelBipedMain.isSneak = entity.isSneaking();
 
@@ -75,7 +75,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
      * See GuiActorSkin for a reference.
      */
     @Override
-    protected boolean canRenderName(ActorEntity entity)
+    protected boolean canRenderName(EntityActor entity)
     {
         return super.canRenderName(entity) && entity.renderName;
     }
@@ -95,7 +95,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
      * wasn't found by actor pack)
      */
     @Override
-    protected ResourceLocation getEntityTexture(ActorEntity entity)
+    protected ResourceLocation getEntityTexture(EntityActor entity)
     {
         ResourceLocation location = new ResourceLocation("blockbuster.actors", entity.skin);
 
@@ -111,7 +111,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
      * Taken from RenderPlayer
      */
     @Override
-    protected void rotateCorpse(ActorEntity actor, float p_77043_2_, float p_77043_3_, float partialTicks)
+    protected void rotateCorpse(EntityActor actor, float p_77043_2_, float p_77043_3_, float partialTicks)
     {
         if (actor.isElytraFlying())
         {
@@ -134,7 +134,7 @@ public class ActorRender extends RenderBiped<ActorEntity>
         @Override
         public Render createRenderFor(RenderManager manager)
         {
-            return new ActorRender(manager, new ModelBiped(), 0.5F);
+            return new RenderActor(manager, new ModelBiped(), 0.5F);
         }
     }
 }

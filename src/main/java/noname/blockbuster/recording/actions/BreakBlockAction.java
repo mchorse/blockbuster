@@ -1,7 +1,7 @@
 package noname.blockbuster.recording.actions;
 
 import net.minecraft.util.math.BlockPos;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 /**
  * Breaking block action
@@ -25,7 +25,7 @@ public class BreakBlockAction extends InteractBlockAction
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         actor.worldObj.destroyBlock(this.pos, false);
     }

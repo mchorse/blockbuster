@@ -8,13 +8,13 @@ import noname.blockbuster.Blockbuster;
  *
  * I really like the icon, it looks badass!
  */
-public class SkinManagerItem extends Item
+public class ItemSkinManager extends Item
 {
-    public SkinManagerItem()
+    public ItemSkinManager()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("skinManagerItem");
-        this.setRegistryName("skinManagerItem");
+        this.setRegistryName("skin_manager");
+        this.setUnlocalizedName("blockbuster.skin_manager");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 }

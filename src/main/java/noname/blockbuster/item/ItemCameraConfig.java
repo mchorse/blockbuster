@@ -8,13 +8,13 @@ import noname.blockbuster.Blockbuster;
  *
  * See CameraEntity and GuiCamera for more information.
  */
-public class CameraConfigItem extends Item
+public class ItemCameraConfig extends Item
 {
-    public CameraConfigItem()
+    public ItemCameraConfig()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("cameraConfigItem");
-        this.setRegistryName("cameraConfigItem");
+        this.setRegistryName("camera_config");
+        this.setUnlocalizedName("blockbuster.camera_config");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 }

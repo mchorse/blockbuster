@@ -10,20 +10,20 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.entity.EntityCamera;
 
 /**
  * Camera item
  *
  * Spawns a rideable camera entity (for controlling the camera)
  */
-public class CameraItem extends Item
+public class ItemCamera extends Item
 {
-    public CameraItem()
+    public ItemCamera()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("cameraItem");
-        this.setRegistryName("cameraItem");
+        this.setRegistryName("camera");
+        this.setUnlocalizedName("blockbuster.camera");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
@@ -37,7 +37,7 @@ public class CameraItem extends Item
     {
         if (!worldIn.isRemote)
         {
-            EntityLiving camera = new CameraEntity(worldIn);
+            EntityLiving camera = new EntityCamera(worldIn);
 
             pos = pos.offset(facing);
 

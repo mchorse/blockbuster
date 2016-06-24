@@ -10,7 +10,7 @@ import noname.blockbuster.recording.Mocap;
  * Chat action
  *
  * Sends chat message with some formatting.
- * See {@link ChatAction#apply(noname.blockbuster.entity.ActorEntity)} for more
+ * See {@link ChatAction#apply(noname.blockbuster.entity.EntityActor)} for more
  * information.
  */
 public class ChatAction extends Action
@@ -32,7 +32,7 @@ public class ChatAction extends Action
     }
 
     @Override
-    public void apply(noname.blockbuster.entity.ActorEntity actor)
+    public void apply(noname.blockbuster.entity.EntityActor actor)
     {
         Mocap.broadcastMessage(this.message.replace('[', '§'));
     }

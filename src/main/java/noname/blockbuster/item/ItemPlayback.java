@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
+import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
  * Record item
@@ -20,13 +20,13 @@ import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
  * Push to start recording the scene (actually it just makes all actors do their
  * business, i.e. playing their role)
  */
-public class PlaybackItem extends Item
+public class ItemPlayback extends Item
 {
-    public PlaybackItem()
+    public ItemPlayback()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("playbackItem");
-        this.setRegistryName("playbackItem");
+        this.setRegistryName("playback");
+        this.setUnlocalizedName("blockbuster.playback");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
@@ -52,14 +52,14 @@ public class PlaybackItem extends Item
 
             TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
 
-            if (tile == null || !(tile instanceof AbstractDirectorTileEntity))
+            if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
                 playerIn.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
 
                 return new ActionResult(EnumActionResult.PASS, stack);
             }
 
-            AbstractDirectorTileEntity director = (AbstractDirectorTileEntity) tile;
+            AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
 
             director.startPlayback();
         }

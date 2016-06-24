@@ -55,7 +55,7 @@ public class Blockbuster
     public static Block directorBlockMap;
 
     /* Creative tabs */
-    public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbusterTab")
+    public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbuster")
     {
         @Override
         public Item getTabIconItem()

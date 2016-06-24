@@ -9,10 +9,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.client.model.CameraModel;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.client.model.ModelCamera;
+import noname.blockbuster.entity.EntityCamera;
 
-public class CameraRender extends RenderLiving
+public class RenderCamera extends RenderLiving
 {
     private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
 
@@ -20,7 +20,7 @@ public class CameraRender extends RenderLiving
      * This is stupid. Why I should define this constructor if it's already
      * defined in RenderLiving?
      */
-    public CameraRender(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn)
+    public RenderCamera(RenderManager rendermanagerIn, ModelBase modelbaseIn, float shadowsizeIn)
     {
         super(rendermanagerIn, modelbaseIn, shadowsizeIn);
     }
@@ -38,7 +38,7 @@ public class CameraRender extends RenderLiving
     @Override
     public void doRender(EntityLiving entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        CameraEntity camera = (CameraEntity) entity;
+        EntityCamera camera = (EntityCamera) entity;
 
         if (!camera.isRecording)
         {
@@ -54,7 +54,7 @@ public class CameraRender extends RenderLiving
         @Override
         public Render createRenderFor(RenderManager manager)
         {
-            return new CameraRender(manager, new CameraModel(), 0.4F);
+            return new RenderCamera(manager, new ModelCamera(), 0.4F);
         }
     }
 }

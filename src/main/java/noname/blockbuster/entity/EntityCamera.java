@@ -15,12 +15,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.item.CameraConfigItem;
-import noname.blockbuster.item.RegisterItem;
+import noname.blockbuster.item.ItemCameraConfig;
+import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 import noname.blockbuster.network.common.PacketRecording;
-import noname.blockbuster.tileentity.DirectorTileEntity;
+import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
  * Camera entity
@@ -29,7 +29,7 @@ import noname.blockbuster.tileentity.DirectorTileEntity;
  * shot (movie). With director block you can instantly jump from one camera
  * to another (really useful during film making).
  */
-public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawnData
+public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawnData
 {
     public float speed = 0.4F;
     public float accelerationRate = 0.2F;
@@ -42,7 +42,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
 
     protected float acceleration = 0.0F;
 
-    public CameraEntity(World worldIn)
+    public EntityCamera(World worldIn)
     {
         super(worldIn);
         this.setSize(0.9F, 0.9F);
@@ -102,7 +102,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
 
         if (item != null)
         {
-            if (item.getItem() instanceof CameraConfigItem)
+            if (item.getItem() instanceof ItemCameraConfig)
             {
                 if (this.worldObj.isRemote)
                 {
@@ -111,7 +111,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
 
                 return true;
             }
-            else if (item.getItem() instanceof RegisterItem)
+            else if (item.getItem() instanceof ItemRegister)
             {
                 this.handleRegisterItem(item);
 
@@ -137,7 +137,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             return;
         }
 
-        RegisterItem item = (RegisterItem) stack.getItem();
+        ItemRegister item = (ItemRegister) stack.getItem();
 
         item.registerStack(stack, this);
     }
@@ -275,7 +275,7 @@ public class CameraEntity extends EntityLiving implements IEntityAdditionalSpawn
             return;
         }
 
-        DirectorTileEntity director = (DirectorTileEntity) this.worldObj.getTileEntity(this.directorBlock);
+        TileEntityDirector director = (TileEntityDirector) this.worldObj.getTileEntity(this.directorBlock);
 
         director.switchTo(this, direction);
     }

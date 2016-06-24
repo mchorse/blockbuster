@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 
 public class ElytraFlyingAction extends Action
 {
@@ -25,7 +25,7 @@ public class ElytraFlyingAction extends Action
     }
 
     @Override
-    public void apply(ActorEntity actor)
+    public void apply(EntityActor actor)
     {
         actor.setElytraFlying(this.isFlying);
     }

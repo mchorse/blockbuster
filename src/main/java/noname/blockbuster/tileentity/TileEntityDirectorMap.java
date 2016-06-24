@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.PlayThread;
 
@@ -15,13 +15,13 @@ import noname.blockbuster.recording.PlayThread;
  * Director map tile entity
  *
  * This TE is responsible for main logic of  */
-public class DirectorMapTileEntity extends AbstractDirectorTileEntity
+public class TileEntityDirectorMap extends AbstractTileEntityDirector
 {
     /**
      * Temporary map of actor entities during playback. This map is used
      * to determine if the registered actors are still playing their roles.
      */
-    protected Map<String, ActorEntity> actorMap = new HashMap<String, ActorEntity>();
+    protected Map<String, EntityActor> actorMap = new HashMap<String, EntityActor>();
 
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
@@ -75,7 +75,7 @@ public class DirectorMapTileEntity extends AbstractDirectorTileEntity
                 entity = Mocap.startPlayback(splits[0], splits[0], splits[0], this.worldObj, true);
             }
 
-            this.actorMap.put(replay, (ActorEntity) entity);
+            this.actorMap.put(replay, (EntityActor) entity);
         }
 
         this.playBlock(true);

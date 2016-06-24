@@ -22,9 +22,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.item.PlaybackItem;
+import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.recording.Mocap;
-import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
+import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
  * <p>
@@ -56,11 +56,11 @@ import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
  * complement the stop hook.
  * </p>
  */
-public abstract class AbstractDirectorBlock extends Block implements ITileEntityProvider
+public abstract class AbstractBlockDirector extends Block implements ITileEntityProvider
 {
     public static final PropertyBool PLAYING = PropertyBool.create("playing");
 
-    public AbstractDirectorBlock()
+    public AbstractBlockDirector()
     {
         super(Material.rock);
         this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
@@ -148,7 +148,7 @@ public abstract class AbstractDirectorBlock extends Block implements ITileEntity
      */
     protected boolean handlePlaybackItem(ItemStack item, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof PlaybackItem))
+        if (!(item.getItem() instanceof ItemPlayback))
         {
             return false;
         }
@@ -176,7 +176,7 @@ public abstract class AbstractDirectorBlock extends Block implements ITileEntity
      */
     protected void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
-        AbstractDirectorTileEntity tile = (AbstractDirectorTileEntity) worldIn.getTileEntity(pos);
+        AbstractTileEntityDirector tile = (AbstractTileEntityDirector) worldIn.getTileEntity(pos);
         String output = I18n.format("blockbuster.director.cast");
         List<String> cast = tile.getCast();
 

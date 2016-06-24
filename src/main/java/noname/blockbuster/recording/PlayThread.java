@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.actions.Action;
 
 /**
@@ -20,13 +20,13 @@ public class PlayThread implements Runnable
 {
     public Thread thread;
     public boolean playing;
-    public ActorEntity actor;
+    public EntityActor actor;
 
     private String filename;
     private DataInputStream in;
     private boolean deadAfterPlay;
 
-    public PlayThread(ActorEntity actor, String filename, boolean deadAfterPlay)
+    public PlayThread(EntityActor actor, String filename, boolean deadAfterPlay)
     {
         this.filename = filename;
         this.initStream();

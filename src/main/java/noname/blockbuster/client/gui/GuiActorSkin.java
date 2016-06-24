@@ -14,7 +14,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import noname.blockbuster.ClientProxy;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
 
@@ -26,7 +26,7 @@ import noname.blockbuster.network.common.PacketChangeSkin;
  */
 public class GuiActorSkin extends GuiScreen
 {
-    private ActorEntity actor;
+    private EntityActor actor;
     private GuiButton done;
     private GuiButton next;
     private GuiButton prev;
@@ -34,7 +34,7 @@ public class GuiActorSkin extends GuiScreen
     private List<String> skins;
     private int skinIndex;
 
-    public GuiActorSkin(ActorEntity actor)
+    public GuiActorSkin(EntityActor actor)
     {
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getReloadedSkins();

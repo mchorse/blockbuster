@@ -6,7 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSlider;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 
@@ -30,9 +30,9 @@ public class GuiCamera extends GuiScreen
     protected GuiButton canFly;
     protected GuiButton done;
 
-    private CameraEntity camera;
+    private EntityCamera camera;
 
-    public GuiCamera(CameraEntity entity)
+    public GuiCamera(EntityCamera entity)
     {
         this.camera = entity;
     }

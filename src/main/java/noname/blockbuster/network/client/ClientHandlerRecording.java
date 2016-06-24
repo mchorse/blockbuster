@@ -2,7 +2,7 @@ package noname.blockbuster.network.client;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.common.PacketRecording;
 
 public class ClientHandlerRecording extends ClientMessageHandler<PacketRecording>
@@ -12,9 +12,9 @@ public class ClientHandlerRecording extends ClientMessageHandler<PacketRecording
     {
         Entity entity = player.worldObj.getEntityByID(message.id);
 
-        if (entity instanceof CameraEntity)
+        if (entity instanceof EntityCamera)
         {
-            CameraEntity camera = (CameraEntity) entity;
+            EntityCamera camera = (EntityCamera) entity;
 
             camera.setRecording(message.recording, false);
         }

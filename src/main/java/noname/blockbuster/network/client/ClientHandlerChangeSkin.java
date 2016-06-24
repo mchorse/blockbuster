@@ -2,7 +2,7 @@ package noname.blockbuster.network.client;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.common.PacketChangeSkin;
 
 public class ClientHandlerChangeSkin extends ClientMessageHandler<PacketChangeSkin>
@@ -12,9 +12,9 @@ public class ClientHandlerChangeSkin extends ClientMessageHandler<PacketChangeSk
     {
         Entity entity = player.worldObj.getEntityByID(message.id);
 
-        if (entity instanceof ActorEntity)
+        if (entity instanceof EntityActor)
         {
-            ActorEntity actor = (ActorEntity) entity;
+            EntityActor actor = (EntityActor) entity;
 
             actor.setSkin(message.skin, false);
         }

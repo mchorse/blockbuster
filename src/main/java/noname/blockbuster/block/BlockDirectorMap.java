@@ -11,21 +11,27 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import noname.blockbuster.recording.Mocap;
-import noname.blockbuster.tileentity.AbstractDirectorTileEntity;
-import noname.blockbuster.tileentity.DirectorMapTileEntity;
+import noname.blockbuster.tileentity.AbstractTileEntityDirector;
+import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
 /**
  * Descendant of abstract director block
  *
  * This block is the one that responsible for adventure maps scenes.
  */
-public class DirectorBlockMap extends AbstractDirectorBlock
+public class BlockDirectorMap extends AbstractBlockDirector
 {
-    public DirectorBlockMap()
+    public BlockDirectorMap()
     {
         super();
-        this.setRegistryName("directorBlockMap");
-        this.setUnlocalizedName("directorBlockMap");
+        this.setRegistryName("director_map");
+        this.setUnlocalizedName("blockbuster.director_map");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    {
+        tooltip.add(I18n.format("blockbuster.info.director_map_block"));
     }
 
     /**
@@ -35,7 +41,7 @@ public class DirectorBlockMap extends AbstractDirectorBlock
     {
         if (item.getItem() instanceof ItemNameTag && item.hasDisplayName())
         {
-            DirectorMapTileEntity director = (DirectorMapTileEntity) world.getTileEntity(pos);
+            TileEntityDirectorMap director = (TileEntityDirectorMap) world.getTileEntity(pos);
 
             if (director.add(item.getDisplayName()))
             {
@@ -61,7 +67,7 @@ public class DirectorBlockMap extends AbstractDirectorBlock
     @Override
     protected void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
     {
-        AbstractDirectorTileEntity tile = (AbstractDirectorTileEntity) worldIn.getTileEntity(pos);
+        AbstractTileEntityDirector tile = (AbstractTileEntityDirector) worldIn.getTileEntity(pos);
         String output = I18n.format("blockbuster.director.cast");
         List<String> cast = tile.getCast();
 
@@ -84,6 +90,6 @@ public class DirectorBlockMap extends AbstractDirectorBlock
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new DirectorMapTileEntity();
+        return new TileEntityDirectorMap();
     }
 }

@@ -1,7 +1,7 @@
 package noname.blockbuster.network.server;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import noname.blockbuster.entity.CameraEntity;
+import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 
 public class ServerHandlerSwitchCamera extends ServerMessageHandler<PacketSwitchCamera>
@@ -9,12 +9,12 @@ public class ServerHandlerSwitchCamera extends ServerMessageHandler<PacketSwitch
     @Override
     public void run(EntityPlayerMP player, PacketSwitchCamera message)
     {
-        if (!(player.getRidingEntity() instanceof CameraEntity))
+        if (!(player.getRidingEntity() instanceof EntityCamera))
         {
             return;
         }
 
-        CameraEntity camera = (CameraEntity) player.getRidingEntity();
+        EntityCamera camera = (EntityCamera) player.getRidingEntity();
 
         camera.switchTo(message.direction);
     }

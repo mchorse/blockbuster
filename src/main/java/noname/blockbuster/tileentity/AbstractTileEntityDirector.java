@@ -13,11 +13,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import noname.blockbuster.block.AbstractDirectorBlock;
-import noname.blockbuster.entity.ActorEntity;
+import noname.blockbuster.block.AbstractBlockDirector;
+import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 
-public abstract class AbstractDirectorTileEntity extends TileEntity implements ITickable
+public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
     private int tick = 0;
@@ -81,7 +81,7 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
      * Add an actor to this director block (dah, TE is part of the director
      * block)
      */
-    public boolean add(ActorEntity actor)
+    public boolean add(EntityActor actor)
     {
         String id = actor.getUniqueID().toString();
 
@@ -163,7 +163,7 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
 
         for (String id : this.actors)
         {
-            ActorEntity actor = (ActorEntity) Mocap.entityByUUID(this.worldObj, id);
+            EntityActor actor = (EntityActor) Mocap.entityByUUID(this.worldObj, id);
 
             if (!Mocap.playbacks.containsKey(actor))
             {
@@ -182,7 +182,7 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
-        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractDirectorBlock.PLAYING, isPlaying));
+        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractBlockDirector.PLAYING, isPlaying));
     }
 
     /**
@@ -190,6 +190,6 @@ public abstract class AbstractDirectorTileEntity extends TileEntity implements I
      */
     protected boolean isPlaying()
     {
-        return this.worldObj.getBlockState(this.pos).getValue(AbstractDirectorBlock.PLAYING);
+        return this.worldObj.getBlockState(this.pos).getValue(AbstractBlockDirector.PLAYING);
     }
 }

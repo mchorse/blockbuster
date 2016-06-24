@@ -11,13 +11,13 @@ import noname.blockbuster.Blockbuster;
  *
  * Used to register an actor or a camera to director block (a scene)
  */
-public class RegisterItem extends Item
+public class ItemRegister extends Item
 {
-    public RegisterItem()
+    public ItemRegister()
     {
         this.setMaxStackSize(1);
-        this.setUnlocalizedName("registerItem");
-        this.setRegistryName("registerItem");
+        this.setRegistryName("register");
+        this.setUnlocalizedName("blockbuster.register");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
