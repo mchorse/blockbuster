@@ -3,10 +3,7 @@ package noname.blockbuster.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.PlayThread;
@@ -22,12 +19,6 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
      * to determine if the registered actors are still playing their roles.
      */
     protected Map<String, EntityActor> actorMap = new HashMap<String, EntityActor>();
-
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
-        return false;
-    }
 
     /**
      * Add a replay string to list of actors
@@ -66,14 +57,13 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
             String[] splits = replay.split(":");
             Entity entity = null;
 
-            if (splits.length == 2)
-            {
-                entity = Mocap.startPlayback(splits[0], splits[0], splits[1], this.worldObj, true);
-            }
-            else if (splits.length == 1)
-            {
-                entity = Mocap.startPlayback(splits[0], splits[0], splits[0], this.worldObj, true);
-            }
+            String filename = splits.length >= 1 ? splits[0] : "";
+            String name = splits.length >= 2 ? splits[1] : "";
+            String skin = splits.length >= 3 ? splits[2] : "";
+            boolean isInvulnerable = splits.length >= 4 && splits[3].equals("1");
+
+            entity = Mocap.startPlayback(filename, name, skin, this.worldObj, true);
+            entity.setEntityInvulnerable(isInvulnerable);
 
             this.actorMap.put(replay, (EntityActor) entity);
         }
