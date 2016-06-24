@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
@@ -123,9 +124,22 @@ public class RenderActor extends RenderBiped<EntityActor>
         if (actor.isElytraFlying())
         {
             super.rotateCorpse(actor, p_77043_2_, p_77043_3_, partialTicks);
+
             float f = actor.getTicksElytraFlying() + partialTicks;
             float f1 = MathHelper.clamp_float(f * f / 100.0F, 0.0F, 1.0F);
+            Vec3d vec3d = actor.getLook(partialTicks);
+            double d0 = actor.motionX * actor.motionX + actor.motionZ * actor.motionZ;
+            double d1 = vec3d.xCoord * vec3d.xCoord + vec3d.zCoord * vec3d.zCoord;
+
             GlStateManager.rotate(f1 * (-90.0F - actor.rotationPitch), 1.0F, 0.0F, 0.0F);
+
+            if (d0 > 0.0D && d1 > 0.0D)
+            {
+                double d2 = (actor.motionX * vec3d.xCoord + actor.motionZ * vec3d.zCoord) / (Math.sqrt(d0) * Math.sqrt(d1));
+                double d3 = actor.motionX * vec3d.zCoord - actor.motionZ * vec3d.xCoord;
+
+                GlStateManager.rotate((float) (Math.signum(d3) * Math.acos(d2)) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
+            }
         }
         else
         {

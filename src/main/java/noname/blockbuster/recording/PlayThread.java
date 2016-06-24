@@ -139,11 +139,11 @@ public class PlayThread implements Runnable
         double x = this.in.readDouble();
         double y = this.in.readDouble();
         double z = this.in.readDouble();
+        float movef = this.in.readFloat();
+        float moves = this.in.readFloat();
         double mx = this.in.readDouble();
         double my = this.in.readDouble();
         double mz = this.in.readDouble();
-        float movef = this.in.readFloat();
-        float moves = this.in.readFloat();
         float fd = this.in.readFloat();
         boolean iab = this.in.readBoolean();
         boolean isn = this.in.readBoolean();
