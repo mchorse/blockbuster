@@ -3,7 +3,6 @@ package noname.blockbuster.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.entity.Entity;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.PlayThread;
@@ -54,18 +53,7 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
 
         for (String replay : this.actors)
         {
-            String[] splits = replay.split(":");
-            Entity entity = null;
-
-            String filename = splits.length >= 1 ? splits[0] : "";
-            String name = splits.length >= 2 ? splits[1] : "";
-            String skin = splits.length >= 3 ? splits[2] : "";
-            boolean isInvulnerable = splits.length >= 4 && splits[3].equals("1");
-
-            entity = Mocap.startPlayback(filename, name, skin, this.worldObj, true);
-            entity.setEntityInvulnerable(isInvulnerable);
-
-            this.actorMap.put(replay, (EntityActor) entity);
+            this.actorMap.put(replay, Mocap.startPlayback(replay.split(":"), this.worldObj, true));
         }
 
         this.playBlock(true);

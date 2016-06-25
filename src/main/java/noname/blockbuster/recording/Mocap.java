@@ -156,6 +156,21 @@ public class Mocap
         broadcastMessage(I18n.format("blockbuster.mocap.started", filename));
     }
 
+    public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)
+    {
+        EntityActor actor = null;
+
+        String filename = args.length >= 1 ? args[0] : "";
+        String name = args.length >= 2 ? args[1] : "";
+        String skin = args.length >= 3 ? args[2] : "";
+        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
+
+        actor = startPlayback(filename, name, skin, world, killOnDead);
+        actor.setEntityInvulnerable(isInvulnerable);
+
+        return actor;
+    }
+
     /**
      * Start playback with new actor entity (used by CommandPlay class)
      */

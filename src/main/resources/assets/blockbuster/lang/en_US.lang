@@ -60,16 +60,16 @@ blockbuster.actor.noname=Current actor doesn't have a custom name, please assign
 blockbuster.actor.playing=Current actor is already playing!
 
 # Commands
-blockbuster.commands.play=Usage: /play <replay_name> <entity_name> <skin_name> [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments
+blockbuster.commands.play=Usage: /play <replay_name> [entity_name] [skin_name] [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments
 blockbuster.commands.record=Usage: /record <replay_name>, e.g.: /record forrestrun
 blockbuster.commands.play_director=Usage: /play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinatess)
 
 # Recording
-blockbuster.mocap.started=Started recording file %s
-blockbuster.mocap.stopped=Stopped recording file %s
-blockbuster.mocap.stopped_dead=Stopped recording %s, because player's dead.
-blockbuster.mocap.stopped_logout=Stopped recording %s. Bye!
-blockbuster.mocap.already_recording=%s is already being recorded to?
-blockbuster.mocap.wrong_signature=%s isn't a record file (or is an old version?)
-blockbuster.mocap.cant_find_file=Can't find %s replay file!
-blockbuster.mocap.error_file=Error loading record file, either not a record file or recorded by an older version.
+blockbuster.mocap.started=§9Started recording to file %s
+blockbuster.mocap.stopped=§9Stopped recording to file %s
+blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
+blockbuster.mocap.stopped_logout=§9Stopped recording %s. Bye!
+blockbuster.mocap.already_recording=§c%s is already being recorded to?
+blockbuster.mocap.wrong_signature=§c%s isn't a record file (or is an old version?)
+blockbuster.mocap.cant_find_file=§cCan't find %s replay file!
+blockbuster.mocap.error_file=§cError loading record file, either not a record file or recorded by an older version.
