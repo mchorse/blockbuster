@@ -60,6 +60,7 @@ Following actions are fully supported by this mod:
 * Send messages in chat
 * Mounting entities
 * Shoot arrow
+* Flying elytra
 
 Recorded actions are stored in the `blockbuster/records` folder in world's save 
 folder.

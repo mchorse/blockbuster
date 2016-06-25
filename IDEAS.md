@@ -24,5 +24,7 @@ There's some ideas that I might implement in next Blockbuster mod:
       5, run like a pussy, and jump into lava. Something like that. 
 * Area redstone sensor (to avoid using pressure plates)
 * Make commands accept spaced strings (this one is simple)
-* Create GUI for managing actors in director blocks
+* Create GUI for managing actors in director blocks (more GUIs!)
 * Support of multi-player world skins
+* Rewrite recording code (pixel -> vector, I'll get what I mean)
+* Custom actor models (not only player-like, but also custom one)
