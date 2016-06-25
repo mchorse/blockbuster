@@ -137,7 +137,7 @@ public class Mocap
         {
             recorder.capture = false;
             records.remove(player);
-            broadcastMessage(I18n.format("blockbuster.mocap.stopped", username, recorder.filename));
+            broadcastMessage(I18n.format("blockbuster.mocap.stopped", recorder.filename));
             return;
         }
 
@@ -153,7 +153,7 @@ public class Mocap
         recorder = new RecordThread(player, filename);
         records.put(player, recorder);
 
-        broadcastMessage(I18n.format("blockbuster.mocap.started", username, filename));
+        broadcastMessage(I18n.format("blockbuster.mocap.started", filename));
     }
 
     /**
