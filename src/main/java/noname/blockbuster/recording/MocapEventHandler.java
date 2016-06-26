@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -71,23 +69,26 @@ public class MocapEventHandler
 
         if (events != null)
         {
-            ItemStack item = event.getItemStack();
-            Action action;
+            events.add(new InteractBlockAction(event.getPos()));
+        }
+    }
 
-            if (item != null && item.getItem() instanceof ItemBlock)
-            {
-                BlockPos pos = event.getPos().offset(event.getFace());
-                byte metadata = (byte) item.getMetadata();
-                byte facing = (byte) event.getFace().getIndex();
+    @SubscribeEvent
+    public void onPlayerPlacesBlock(PlaceEvent event)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        {
+            return;
+        }
 
-                action = new PlaceBlockAction(pos, metadata, facing, item);
-            }
-            else
-            {
-                action = new InteractBlockAction(event.getPos());
-            }
+        EntityPlayer player = event.getPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-            events.add(action);
+        if (events != null)
+        {
+            byte metadata = (byte) event.getPlacedBlock().getBlock().getMetaFromState(event.getPlacedBlock());
+
+            events.add(new PlaceBlockAction(event.getPos(), metadata, event.getItemInHand()));
         }
     }
 

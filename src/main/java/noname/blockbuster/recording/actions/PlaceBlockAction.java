@@ -21,17 +21,15 @@ import noname.blockbuster.entity.EntityActor;
 public class PlaceBlockAction extends InteractBlockAction
 {
     public byte metadata;
-    public byte facing;
     public NBTTagCompound itemData = new NBTTagCompound();
 
     public PlaceBlockAction()
     {}
 
-    public PlaceBlockAction(BlockPos pos, byte metadata, byte facing, ItemStack item)
+    public PlaceBlockAction(BlockPos pos, byte metadata, ItemStack item)
     {
         super(pos);
         this.metadata = metadata;
-        this.facing = facing;
 
         item.writeToNBT(this.itemData);
     }
@@ -50,9 +48,8 @@ public class PlaceBlockAction extends InteractBlockAction
         if (item.getItem() instanceof ItemBlock)
         {
             ItemBlock block = (ItemBlock) item.getItem();
-            EnumFacing face = EnumFacing.VALUES[this.facing];
 
-            block.placeBlockAt(item, actor.fakePlayer, actor.worldObj, this.pos, face, 0, 0, 0, block.block.getStateFromMeta(this.metadata));
+            block.placeBlockAt(item, actor.fakePlayer, actor.worldObj, this.pos, EnumFacing.UP, 0, 0, 0, block.block.getStateFromMeta(this.metadata));
         }
     }
 
@@ -62,7 +59,6 @@ public class PlaceBlockAction extends InteractBlockAction
         super.fromBytes(in);
 
         this.metadata = in.readByte();
-        this.facing = in.readByte();
         this.itemData = CompressedStreamTools.read((DataInputStream) in);
     }
 
@@ -72,7 +68,6 @@ public class PlaceBlockAction extends InteractBlockAction
         super.toBytes(out);
 
         out.writeByte(this.metadata);
-        out.writeByte(this.facing);
         CompressedStreamTools.write(this.itemData, out);
     }
 }
