@@ -10,7 +10,11 @@ Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and reco
 code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (author of the mod gave me permission to use his code). 
 
-Original minecraft forum thread.
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure).
+
+Tutorial video:
+
+[![Tutorial video](https://img.youtube.com/vi/LPJb49VUUqk/0.jpg)](https://www.youtube.com/watch?v=LPJb49VUUqk)
 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
