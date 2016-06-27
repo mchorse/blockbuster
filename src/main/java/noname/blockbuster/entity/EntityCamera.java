@@ -19,7 +19,7 @@ import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.PacketRecording;
+import noname.blockbuster.network.common.PacketCameraRecording;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
@@ -263,7 +263,7 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketRecording(this.getEntityId(), recording));
+            Dispatcher.updateTrackers(this, new PacketCameraRecording(this.getEntityId(), recording));
         }
     }
 

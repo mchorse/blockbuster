@@ -10,11 +10,9 @@ Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and reco
 code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (author of the mod gave me permission to use his code). 
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure).
-
-Tutorial video:
-
 [![Tutorial video](https://img.youtube.com/vi/LPJb49VUUqk/0.jpg)](https://www.youtube.com/watch?v=LPJb49VUUqk)
+
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure).
 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
@@ -190,7 +188,7 @@ This mod provides two commands:
 1. `record` command which records player's actions to file name provided specified 
    in first argument, and stops the recording (run `record` again)
 2. `play` command which playbacks player's actions from a file specified with 
-   actor's custom tag name and skin, 4th optional argument is for actor's 
+   actor's custom tag name and skin, 2nd through 4th are optional arguments 
    invulnerability, if it's 1, actor is invulnurable, if it's 0, actor is vulnurable 
 3. `play-director` command which triggers playback of director block located on 
    specified position 

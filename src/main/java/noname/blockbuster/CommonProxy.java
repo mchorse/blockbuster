@@ -14,18 +14,17 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.block.BlockDirector;
 import noname.blockbuster.block.BlockDirectorMap;
-import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.entity.EntityCamera;
-import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemCamera;
+import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.recording.MocapEventHandler;
-import noname.blockbuster.tileentity.TileEntityDirectorMap;
 import noname.blockbuster.tileentity.TileEntityDirector;
+import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -55,7 +54,6 @@ public class CommonProxy implements IGuiHandler
     public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
-        MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
     }
 
     /**

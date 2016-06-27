@@ -13,11 +13,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
+import noname.blockbuster.network.client.ClientHandlerCameraRecording;
 import noname.blockbuster.network.client.ClientHandlerChangeSkin;
-import noname.blockbuster.network.client.ClientHandlerRecording;
-import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
 import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.PacketRecording;
+import noname.blockbuster.network.common.PacketCameraRecording;
+import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerChangeSkin;
@@ -66,7 +68,10 @@ public class Dispatcher
         register(PacketSwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
 
         /** Make cameras invinsible while playback */
-        register(PacketRecording.class, ClientHandlerRecording.class, Side.CLIENT);
+        register(PacketCameraRecording.class, ClientHandlerCameraRecording.class, Side.CLIENT);
+
+        /** Show up recording label when player starts recording */
+        register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

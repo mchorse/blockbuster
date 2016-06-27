@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.recording.actions.Action;
 
 /**
@@ -137,7 +139,9 @@ public class Mocap
         {
             recorder.capture = false;
             records.remove(player);
-            broadcastMessage(I18n.format("blockbuster.mocap.stopped", recorder.filename));
+
+            Dispatcher.getInstance().sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
+
             return;
         }
 
@@ -153,7 +157,7 @@ public class Mocap
         recorder = new RecordThread(player, filename);
         records.put(player, recorder);
 
-        broadcastMessage(I18n.format("blockbuster.mocap.started", filename));
+        Dispatcher.getInstance().sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
     }
 
     public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.Entity;
@@ -11,15 +12,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.ActorsPack;
+import noname.blockbuster.client.KeyboardHandler;
+import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiActorSkin;
 import noname.blockbuster.client.gui.GuiCamera;
+import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
 import noname.blockbuster.client.render.RenderCamera;
 import noname.blockbuster.entity.EntityActor;
@@ -29,6 +35,7 @@ import noname.blockbuster.entity.EntityCamera;
 public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
+    public static GuiRecordingOverlay recordingOverlay;
 
     /**
      * Register mod items, blocks, tile entites and entities, and load
@@ -78,6 +85,20 @@ public class ClientProxy extends CommonProxy
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Subscribe keyboard handler and rendering event listener to EVENT_BUS
+     */
+    @Override
+    public void load(FMLInitializationEvent event)
+    {
+        super.load(event);
+
+        recordingOverlay = new GuiRecordingOverlay(Minecraft.getMinecraft());
+
+        MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
+        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
     }
 
     protected void registerItemModel(Block block, String path)

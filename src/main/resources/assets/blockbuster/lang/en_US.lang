@@ -1,5 +1,7 @@
 #PARSE_ESCAPES
 
+blockbuster.recording=Recording to %s
+
 # Item tooltips
 blockbuster.info.director_block=Use it for machinimas
 blockbuster.info.director_map_block=Use it for adventure maps
@@ -65,8 +67,6 @@ blockbuster.commands.record=Usage: /record <replay_name>, e.g.: /record forrestr
 blockbuster.commands.play_director=Usage: /play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinatess)
 
 # Recording
-blockbuster.mocap.started=§9Started recording to file %s
-blockbuster.mocap.stopped=§9Stopped recording to file %s
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
 blockbuster.mocap.stopped_logout=§9Stopped recording %s. Bye!
 blockbuster.mocap.already_recording=§c%s is already being recorded to?
