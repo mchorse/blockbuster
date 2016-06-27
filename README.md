@@ -7,13 +7,12 @@ single player (without having to recruit/organize a crowd of actors and cameras)
 and simple cinematics in adventure maps.
 
 Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and recording 
-code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
-(author of the mod gave me permission to use his code). 
+code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) (author of the mod gave me permission 
+to use his code). 
 
 [![Tutorial video](https://img.youtube.com/vi/LPJb49VUUqk/0.jpg)](https://www.youtube.com/watch?v=LPJb49VUUqk)
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure).
-
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
 ## Install
