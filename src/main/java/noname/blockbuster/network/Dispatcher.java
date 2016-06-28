@@ -16,10 +16,12 @@ import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerCameraRecording;
 import noname.blockbuster.network.client.ClientHandlerChangeSkin;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
+import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 import noname.blockbuster.network.common.PacketCameraRecording;
 import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
@@ -31,6 +33,7 @@ import noname.blockbuster.network.server.ServerHandlerChangeSkin;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
+import noname.blockbuster.network.server.ServerHandlerModifyActor;
 import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
 
 /**
@@ -68,9 +71,11 @@ public class Dispatcher
         register(PacketCameraAttributes.class, ClientHandlerCameraAttributes.class, Side.CLIENT);
         register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
 
-        /* Update actor's skin */
+        /* Update actor properties */
         register(PacketChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
         register(PacketChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
+        register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
+        register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
 
         /* Teleport player to another camera */
         register(PacketSwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);

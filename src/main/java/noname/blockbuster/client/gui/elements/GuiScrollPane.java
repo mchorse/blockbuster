@@ -8,6 +8,17 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Abstract class for scrolling elements.
+ *
+ * Supports custom drawing inside (see drawPane method), clipping, scroll bar
+ * drawing, and background drawing.
+ *
+ * You can freely borrow this class, but keep the author annotation below and
+ * this comment.
+ *
+ * @author mchorse
+ */
 public abstract class GuiScrollPane extends GuiScreen
 {
     protected int x;

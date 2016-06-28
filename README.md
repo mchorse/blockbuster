@@ -188,7 +188,7 @@ This mod provides two commands:
    in first argument, and stops the recording (run `record` again)
 2. `play` command which playbacks player's actions from a file specified with 
    actor's custom tag name and skin, 2nd through 4th are optional arguments 
-   invulnerability, if it's 1, actor is invulnurable, if it's 0, actor is vulnurable 
+   invulnerability, if it's 1, actor is invulnerable, if it's 0, actor is vulnurable 
 3. `play-director` command which triggers playback of director block located on 
    specified position 
 
@@ -203,7 +203,7 @@ Examples:
     # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin"
     /play football DavidBeckham DavidBeckhamsSkin
     
-    # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin" and make actor invulnurable
+    # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin" and make actor invulnerable
     /play football DavidBeckham DavidBeckhamsSkin 1
     
     # Play a director block that is located on X: 19, Y: 4, Z:-100

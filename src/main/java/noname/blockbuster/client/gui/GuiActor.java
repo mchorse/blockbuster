@@ -13,12 +13,14 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.common.PacketModifyActor;
 
 /**
  * Actor skin picker
@@ -58,12 +60,12 @@ public class GuiActor extends GuiScreen
         this.buttonList.add(this.next = new GuiButton(1, x, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.next")));
         this.buttonList.add(this.prev = new GuiButton(2, x + w / 2 + 4, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous")));
         this.buttonList.add(this.restore = new GuiButton(3, x, 105, w, 20, I18n.format("blockbuster.gui.restore")));
-        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 155, w, 20, "Invincible", "Vulnurable"));
+        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 155, w, 20, "No", "Yes"));
 
         this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
-        this.invincibility.setValue(this.actor.isEntityInvulnerable(null));
+        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
         this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
     }
 
@@ -74,6 +76,7 @@ public class GuiActor extends GuiScreen
     {
         if (button.id == 0)
         {
+            Dispatcher.getInstance().sendToServer(new PacketModifyActor(this.actor.getEntityId(), this.invincibility.getValue(), this.name.getText()));
             this.mc.displayGuiScreen(null);
         }
         else if (button.id == 1)

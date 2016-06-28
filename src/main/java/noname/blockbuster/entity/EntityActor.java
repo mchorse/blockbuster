@@ -25,6 +25,7 @@ import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.actions.Action;
 import noname.blockbuster.tileentity.TileEntityDirector;
@@ -435,5 +436,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public void readSpawnData(ByteBuf buffer)
     {
         this.skin = ByteBufUtils.readUTF8String(buffer);
+    }
+
+    public void modify(boolean invulnerable, String name, boolean notify)
+    {
+        this.setEntityInvulnerable(invulnerable);
+        this.setCustomNameTag(name);
+
+        if (!this.worldObj.isRemote && notify)
+        {
+            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), invulnerable, name));
+        }
     }
 }
