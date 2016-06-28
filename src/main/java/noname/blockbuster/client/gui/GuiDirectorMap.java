@@ -3,11 +3,9 @@ package noname.blockbuster.client.gui;
 import java.io.IOException;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.network.Dispatcher;
@@ -30,7 +28,6 @@ public class GuiDirectorMap extends GuiScreen
     protected GuiTextField input;
     protected GuiButton add;
 
-    protected int scale;
     protected BlockPos pos;
 
     public GuiDirectorMap(BlockPos pos)
@@ -46,7 +43,7 @@ public class GuiDirectorMap extends GuiScreen
             return;
         }
 
-        this.cast = new GuiCast(this.pos);
+        this.cast = new GuiCast(this.width / 2 - 125, 80, 250, 115, this.pos);
         this.cast.setCast(cast);
         this.cast.setWorldAndResolution(this.mc, this.width, this.height);
     }
@@ -63,8 +60,6 @@ public class GuiDirectorMap extends GuiScreen
         this.buttonList.add(this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done")));
         this.buttonList.add(this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset")));
         this.buttonList.add(this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add")));
-
-        this.scale = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
     }
 
     @Override

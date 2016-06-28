@@ -48,7 +48,6 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
         if (!this.actors.contains(replay))
         {
             this.actors.add(replay);
-            System.out.println(this.actors);
             this.markDirty();
 
             return true;
