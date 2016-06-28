@@ -73,13 +73,23 @@ public class GuiCast extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        super.mouseClicked(mouseX, mouseY + this.y, mouseButton);
+        mouseY += this.y;
+
+        if (mouseY < 80 && mouseY > 195)
+            return;
+
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        super.mouseReleased(mouseX, mouseY + this.y, state);
+        mouseY += this.y;
+
+        if (mouseY < 80 && mouseY > 195)
+            return;
+
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
