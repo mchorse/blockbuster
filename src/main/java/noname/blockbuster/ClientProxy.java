@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
-import noname.blockbuster.client.gui.GuiActorSkin;
+import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
@@ -136,7 +136,7 @@ public class ClientProxy extends CommonProxy
         }
         else if (ID == 1)
         {
-            return new GuiActorSkin((EntityActor) entity);
+            return new GuiActor((EntityActor) entity);
         }
         else if (ID == 3)
         {

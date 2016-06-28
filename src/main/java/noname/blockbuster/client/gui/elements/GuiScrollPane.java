@@ -1,4 +1,4 @@
-package noname.blockbuster.client.gui;
+package noname.blockbuster.client.gui.elements;
 
 import java.io.IOException;
 

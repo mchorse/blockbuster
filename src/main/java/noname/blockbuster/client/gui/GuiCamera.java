@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSlider;
+import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
@@ -21,13 +22,11 @@ import noname.blockbuster.network.common.PacketCameraAttributes;
 public class GuiCamera extends GuiScreen
 {
     private String title = I18n.format("blockbuster.gui.camera.title");
-    private String stringCanFly = I18n.format("blockbuster.gui.camera.canFly");
-    private String stringCantFly = I18n.format("blockbuster.gui.camera.cantFly");
 
     protected GuiSlider speed;
     protected GuiSlider accelerationRate;
     protected GuiSlider accelerationMax;
-    protected GuiButton canFly;
+    protected GuiToggle canFly;
     protected GuiButton done;
 
     private EntityCamera camera;
@@ -59,10 +58,10 @@ public class GuiCamera extends GuiScreen
         this.accelerationMax.updateSlider();
 
         this.buttonList.clear();
-        this.buttonList.add(this.canFly = new GuiButton(3, x, 140, w, 20, ""));
+        this.buttonList.add(this.canFly = new GuiToggle(3, x, 140, w, 20, I18n.format("blockbuster.gui.camera.canFly"), I18n.format("blockbuster.gui.camera.cantFly")));
         this.buttonList.add(this.done = new GuiButton(4, x, 205, w, 20, I18n.format("blockbuster.gui.done")));
 
-        this.canFly.displayString = this.camera.canFly ? this.stringCanFly : this.stringCantFly;
+        this.canFly.setValue(this.camera.canFly);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GuiCamera extends GuiScreen
         switch (button.id)
         {
             case 3:
-                this.updateFlyButton();
+                this.canFly.toggle();
                 break;
             case 4:
                 this.saveAndExit();
@@ -85,23 +84,11 @@ public class GuiCamera extends GuiScreen
         float cSpeed = (float) this.speed.getValue();
         float cRate = (float) this.accelerationRate.getValue();
         float cMax = (float) this.accelerationMax.getValue();
-        boolean cCanFly = this.canFly.displayString.equals(this.stringCanFly);
+        boolean cCanFly = this.canFly.getValue();
 
         Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, cSpeed, cRate, cMax, cCanFly));
 
         this.mc.displayGuiScreen(null);
-    }
-
-    private void updateFlyButton()
-    {
-        if (this.canFly.displayString == this.stringCanFly)
-        {
-            this.canFly.displayString = this.stringCantFly;
-        }
-        else
-        {
-            this.canFly.displayString = this.stringCanFly;
-        }
     }
 
     @Override

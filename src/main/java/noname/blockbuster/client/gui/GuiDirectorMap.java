@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+import noname.blockbuster.client.gui.elements.GuiCast;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;

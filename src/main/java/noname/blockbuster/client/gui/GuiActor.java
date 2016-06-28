@@ -6,14 +6,16 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.ClientProxy;
+import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketChangeSkin;
@@ -24,17 +26,22 @@ import noname.blockbuster.network.common.PacketChangeSkin;
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.
  */
-public class GuiActorSkin extends GuiScreen
+public class GuiActor extends GuiScreen
 {
     private EntityActor actor;
+
+    private GuiTextField name;
+
     private GuiButton done;
     private GuiButton next;
     private GuiButton prev;
     private GuiButton restore;
+    private GuiToggle invincibility;
+
     private List<String> skins;
     private int skinIndex;
 
-    public GuiActorSkin(EntityActor actor)
+    public GuiActor(EntityActor actor)
     {
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getReloadedSkins();
@@ -44,71 +51,79 @@ public class GuiActorSkin extends GuiScreen
     @Override
     public void initGui()
     {
-        int centerX = this.width / 2;
+        int x = 30;
+        int w = 120;
 
-        this.buttonList.clear();
-        this.buttonList.add(this.done = new GuiButton(0, centerX - 100, 210, 200, 20, I18n.format("blockbuster.gui.done")));
-        this.buttonList.add(this.next = new GuiButton(1, centerX - 100, 18, 20, 20, I18n.format("blockbuster.gui.next")));
-        this.buttonList.add(this.prev = new GuiButton(2, centerX + 80, 18, 20, 20, I18n.format("blockbuster.gui.previous")));
-        this.buttonList.add(this.restore = new GuiButton(3, centerX - 100, 185, 200, 20, I18n.format("blockbuster.gui.restore")));
+        this.buttonList.add(this.done = new GuiButton(0, x, 200, w, 20, I18n.format("blockbuster.gui.done")));
+        this.buttonList.add(this.next = new GuiButton(1, x, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.next")));
+        this.buttonList.add(this.prev = new GuiButton(2, x + w / 2 + 4, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous")));
+        this.buttonList.add(this.restore = new GuiButton(3, x, 105, w, 20, I18n.format("blockbuster.gui.restore")));
+        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 155, w, 20, "Invincible", "Vulnurable"));
+
+        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
+        this.invincibility.setValue(this.actor.isEntityInvulnerable(null));
+        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
     }
+
+    /* Actions */
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        switch (button.id)
+        if (button.id == 0)
         {
-            case 0:
-                this.mc.displayGuiScreen(null);
-                break;
-
-            case 1:
-                this.nextSkin();
-                break;
-
-            case 2:
-                this.prevSkin();
-                break;
-
-            case 3:
-                this.skinIndex = -1;
-                this.updateSkin();
-                break;
+            this.mc.displayGuiScreen(null);
+        }
+        else if (button.id == 1)
+        {
+            this.updateSkin(this.skinIndex + 1);
+        }
+        else if (button.id == 2)
+        {
+            this.updateSkin(this.skinIndex - 1);
+        }
+        else if (button.id == 3)
+        {
+            this.skinIndex = -1;
+            this.updateSkin();
+        }
+        else if (button.id == 4)
+        {
+            this.invincibility.toggle();
+            this.actor.setEntityInvulnerable(this.invincibility.getValue());
         }
     }
 
-    private void nextSkin()
+    private void updateSkin(int index)
     {
-        this.skinIndex++;
-
-        if (this.skinIndex >= this.skins.size())
-        {
-            this.skinIndex = 0;
-        }
-
-        this.updateSkin();
-    }
-
-    private void prevSkin()
-    {
-        this.skinIndex--;
-
-        if (this.skinIndex < 0)
-        {
-            this.skinIndex = this.skins.size() - 1;
-        }
-
+        this.skinIndex = MathHelper.clamp_int(index, 0, this.skins.size() - 1);
         this.updateSkin();
     }
 
     private void updateSkin()
     {
-        IMessage message = new PacketChangeSkin(this.actor.getEntityId(), this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : "");
-
-        Dispatcher.getInstance().sendToServer(message);
+        Dispatcher.getInstance().sendToServer(new PacketChangeSkin(this.actor.getEntityId(), this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : ""));
     }
+
+    /* Handling input */
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.name.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
+        super.keyTyped(typedChar, keyCode);
+        this.name.textboxKeyTyped(typedChar, keyCode);
+    }
+
+    /* Drawing */
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
@@ -123,13 +138,17 @@ public class GuiActorSkin extends GuiScreen
         }
 
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, title, centerX, 25, 0xffffffff);
-        this.drawCenteredString(this.fontRendererObj, skin, centerX, 170, 0xffffffff);
+        this.drawCenteredString(this.fontRendererObj, title, centerX, 15, 0xffffffff);
+        this.drawCenteredString(this.fontRendererObj, skin, centerX + 40, 208, 0xffffffff);
+        this.drawString(this.fontRendererObj, "Name", 30, 30, 0xffcccccc);
+        this.drawString(this.fontRendererObj, "Skin", 30, 70, 0xffcccccc);
+        this.drawString(this.fontRendererObj, "Can be killed?", 30, 145, 0xffcccccc);
 
         this.actor.renderName = false;
-        drawEntityOnScreen(centerX, 155, 50, centerX - mouseX, 120 - mouseY, this.actor);
+        drawEntityOnScreen(centerX + 40, 190, 75, centerX - mouseX, 70 - mouseY, this.actor);
         this.actor.renderName = true;
 
+        this.name.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
