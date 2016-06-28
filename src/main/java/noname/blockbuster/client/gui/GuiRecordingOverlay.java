@@ -12,7 +12,7 @@ import noname.blockbuster.Blockbuster;
  * Recording GUI overlay
  *
  * This class is responsible for rendering red circle (like the icon that
- * represents recording in progress) and name of the recording file
+ * represents recording in progress) and name of the recording file.
  */
 public class GuiRecordingOverlay extends Gui
 {
@@ -27,6 +27,8 @@ public class GuiRecordingOverlay extends Gui
         this.mc = mc;
     }
 
+    /* Public API */
+
     public void setCaption(String caption)
     {
         this.caption = I18n.format("blockbuster.recording", caption);
@@ -37,6 +39,15 @@ public class GuiRecordingOverlay extends Gui
         this.isVisible = isVisible;
     }
 
+    /* Rendering code */
+
+    /**
+     * Draw recording overlay if the recording in the process in top-left corner
+     * of the screen.
+     *
+     * Thanks to coolAlias and to his tutorial github repo for this rendering
+     * code.
+     */
     public void draw(int width, int height)
     {
         if (!this.isVisible)

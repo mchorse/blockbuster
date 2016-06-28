@@ -1,6 +1,9 @@
 package noname.blockbuster.tileentity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import noname.blockbuster.entity.EntityActor;
@@ -20,6 +23,24 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
     protected Map<String, EntityActor> actorMap = new HashMap<String, EntityActor>();
 
     /**
+     * Remove everything
+     */
+    public void reset()
+    {
+        this.actors = new ArrayList<String>();
+        this.markDirty();
+    }
+
+    /**
+     * Remove a replay
+     */
+    public void remove(String replay)
+    {
+        this.actors.remove(replay);
+        this.markDirty();
+    }
+
+    /**
      * Add a replay string to list of actors
      */
     public boolean add(String replay)
@@ -27,6 +48,7 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
         if (!this.actors.contains(replay))
         {
             this.actors.add(replay);
+            System.out.println(this.actors);
             this.markDirty();
 
             return true;
@@ -51,12 +73,37 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
             return;
         }
 
+        this.removeDuplicates();
+
         for (String replay : this.actors)
         {
             this.actorMap.put(replay, Mocap.startPlayback(replay.split(":"), this.worldObj, true));
         }
 
         this.playBlock(true);
+    }
+
+    /**
+     * Remove duplicates from actor list
+     */
+    private void removeDuplicates()
+    {
+        List<String> replays = new ArrayList<String>();
+        Iterator<String> iterator = this.actors.iterator();
+
+        while (iterator.hasNext())
+        {
+            String replay = iterator.next().split(":")[0];
+
+            if (replays.contains(replay))
+            {
+                iterator.remove();
+            }
+
+            replays.add(replay);
+        }
+
+        replays.clear();
     }
 
     /**

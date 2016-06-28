@@ -10,6 +10,7 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,6 +26,7 @@ import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiActorSkin;
 import noname.blockbuster.client.gui.GuiCamera;
+import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
 import noname.blockbuster.client.render.RenderCamera;
@@ -135,6 +137,10 @@ public class ClientProxy extends CommonProxy
         else if (ID == 1)
         {
             return new GuiActorSkin((EntityActor) entity);
+        }
+        else if (ID == 3)
+        {
+            return new GuiDirectorMap(new BlockPos(x, y, z));
         }
 
         return null;

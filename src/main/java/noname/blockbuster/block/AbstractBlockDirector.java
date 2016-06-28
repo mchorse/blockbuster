@@ -141,7 +141,10 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      *
      * Used by children classes.
      */
-    protected abstract boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player);
+    protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
+    {
+        return this.handlePlaybackItem(item, pos, player);
+    }
 
     /**
      * Attach recording item to current director block

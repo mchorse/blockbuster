@@ -28,6 +28,9 @@ blockbuster.gui.done=Done
 blockbuster.gui.next=<
 blockbuster.gui.previous=>
 blockbuster.gui.restore=Restore Default
+blockbuster.gui.reset=Reset
+blockbuster.gui.add=Add
+blockbuster.gui.remove=Remove
 
 blockbuster.gui.camera.title=Camera's configuration
 blockbuster.gui.camera.speed=Speed: 
@@ -60,6 +63,9 @@ blockbuster.director.missing_cast=Missing entity with UUID: %s
 
 blockbuster.actor.noname=Current actor doesn't have a custom name, please assign him a name (using name tag)!
 blockbuster.actor.playing=Current actor is already playing!
+
+# Director map block
+blockbuster.director_map.title=Director Map Block's Cast
 
 # Commands
 blockbuster.commands.play=Usage: /play <replay_name> [entity_name] [skin_name] [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments

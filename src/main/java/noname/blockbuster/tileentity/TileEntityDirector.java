@@ -1,6 +1,7 @@
 package noname.blockbuster.tileentity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -143,6 +144,25 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.playBlock(false);
+    }
+
+    /**
+     * Remove unused entitites
+     */
+    protected void removeUnusedEntities(List<String> list)
+    {
+        Iterator<String> iterator = list.iterator();
+
+        while (iterator.hasNext())
+        {
+            String id = iterator.next();
+            Entity entity = Mocap.entityByUUID(this.worldObj, id);
+
+            if (entity == null)
+            {
+                iterator.remove();
+            }
+        }
     }
 
     /**

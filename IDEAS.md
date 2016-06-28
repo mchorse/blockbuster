@@ -28,3 +28,6 @@ There's some ideas that I might implement in next Blockbuster mod:
 * Support of multi-player world skins
 * Rewrite recording code (pixel -> vector, I'll get what I mean)
 * Custom actor models (not only player-like, but also custom one)
+    * If you gonna do it, also supply minecraft vanilla mobs with skins and 
+      create a tool to create those models (that's to me)
+* Custom actor actions (like dancing, waving with hands like crazy person, or making a blow kiss) 
