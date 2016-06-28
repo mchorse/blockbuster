@@ -11,6 +11,6 @@ public class ServerHandlerModifyActor extends ServerMessageHandler<PacketModifyA
     {
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
 
-        actor.modify(message.invulnerable, message.name, true);
+        actor.modify(message.invulnerable, message.name, message.skin, true);
     }
 }

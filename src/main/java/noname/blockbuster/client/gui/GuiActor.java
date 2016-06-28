@@ -14,13 +14,15 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.network.common.PacketModifyActor;
+import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 
 /**
  * Actor skin picker
@@ -31,6 +33,8 @@ import noname.blockbuster.network.common.PacketModifyActor;
 public class GuiActor extends GuiScreen
 {
     private EntityActor actor;
+    private BlockPos pos;
+    private int id;
 
     private GuiTextField name;
 
@@ -42,6 +46,13 @@ public class GuiActor extends GuiScreen
 
     private List<String> skins;
     private int skinIndex;
+
+    public GuiActor(EntityActor actor, BlockPos pos, int id)
+    {
+        this(actor);
+        this.pos = pos;
+        this.id = id;
+    }
 
     public GuiActor(EntityActor actor)
     {
@@ -76,7 +87,19 @@ public class GuiActor extends GuiScreen
     {
         if (button.id == 0)
         {
-            Dispatcher.getInstance().sendToServer(new PacketModifyActor(this.actor.getEntityId(), this.invincibility.getValue(), this.name.getText()));
+            SimpleNetworkWrapper dispatcher = Dispatcher.getInstance();
+
+            if (this.pos == null)
+            {
+                dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), this.invincibility.getValue(), this.name.getText(), this.getSkin()));
+            }
+            else
+            {
+                this.actor.modify(this.invincibility.getValue(), this.name.getText(), this.getSkin(), false);
+
+                dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
+            }
+
             this.mc.displayGuiScreen(null);
         }
         else if (button.id == 1)
@@ -95,7 +118,6 @@ public class GuiActor extends GuiScreen
         else if (button.id == 4)
         {
             this.invincibility.toggle();
-            this.actor.setEntityInvulnerable(this.invincibility.getValue());
         }
     }
 
@@ -107,7 +129,12 @@ public class GuiActor extends GuiScreen
 
     private void updateSkin()
     {
-        Dispatcher.getInstance().sendToServer(new PacketChangeSkin(this.actor.getEntityId(), this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : ""));
+        this.actor.skin = this.getSkin();
+    }
+
+    private String getSkin()
+    {
+        return this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : "";
     }
 
     /* Handling input */

@@ -123,7 +123,9 @@ public abstract class GuiScrollPane extends GuiScreen
 
         GL11.glPushMatrix();
         GL11.glTranslatef(0, -this.scrollY, 0);
-        GL11.glScissor(this.x * rx, this.mc.displayHeight - (this.y + this.h) * ry, this.w * rx, this.h * ry);
+
+        /* Clipping area around scroll area */
+        GL11.glScissor((this.x + 1) * rx, this.mc.displayHeight - (this.y + this.h - 1) * ry, (this.w - 2) * rx, (this.h - 2) * ry);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
         this.drawPane();

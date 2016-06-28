@@ -30,6 +30,7 @@ blockbuster.gui.previous=>
 blockbuster.gui.restore=Restore Default
 blockbuster.gui.reset=Reset
 blockbuster.gui.add=Add
+blockbuster.gui.edit=Edit
 blockbuster.gui.remove=Remove
 
 blockbuster.gui.camera.title=Camera's configuration

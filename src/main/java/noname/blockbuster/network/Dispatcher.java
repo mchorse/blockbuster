@@ -14,23 +14,22 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerCameraRecording;
-import noname.blockbuster.network.client.ClientHandlerChangeSkin;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 import noname.blockbuster.network.common.PacketCameraRecording;
-import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
+import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
-import noname.blockbuster.network.server.ServerHandlerChangeSkin;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
+import noname.blockbuster.network.server.ServerHandlerDirectorMapEdit;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
@@ -72,8 +71,6 @@ public class Dispatcher
         register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
 
         /* Update actor properties */
-        register(PacketChangeSkin.class, ClientHandlerChangeSkin.class, Side.CLIENT);
-        register(PacketChangeSkin.class, ServerHandlerChangeSkin.class, Side.SERVER);
         register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
         register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
 
@@ -90,6 +87,7 @@ public class Dispatcher
         register(PacketDirectorMapCast.class, ClientHandlerDirectorMapCast.class, Side.CLIENT);
 
         register(PacketDirectorMapAdd.class, ServerHandlerDirectorMapAdd.class, Side.SERVER);
+        register(PacketDirectorMapEdit.class, ServerHandlerDirectorMapEdit.class, Side.SERVER);
         register(PacketDirectorMapReset.class, ServerHandlerDirectorMapReset.class, Side.SERVER);
         register(PacketDirectorMapRemove.class, ServerHandlerDirectorMapRemove.class, Side.SERVER);
     }

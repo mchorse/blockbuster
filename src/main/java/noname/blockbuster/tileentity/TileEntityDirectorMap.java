@@ -41,6 +41,15 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
     }
 
     /**
+     * Edit a replay
+     */
+    public void edit(int id, String replay)
+    {
+        this.actors.set(id, replay);
+        this.markDirty();
+    }
+
+    /**
      * Add a replay string to list of actors
      */
     public boolean add(String replay)

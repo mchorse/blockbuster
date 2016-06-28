@@ -11,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +25,6 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketChangeSkin;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.actions.Action;
@@ -101,6 +101,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     protected boolean canDespawn()
     {
         return false;
+    }
+
+    public void setElytraFlying(boolean isFlying)
+    {
+        this.setFlag(7, isFlying);
     }
 
     protected void updateSize()
@@ -296,19 +301,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /* Public API */
 
     /**
-     * Set actor's skin, and possibly notify the clients about the change
-     */
-    public void setSkin(String skin, boolean notify)
-    {
-        this.skin = skin;
-
-        if (!this.worldObj.isRemote && notify)
-        {
-            Dispatcher.updateTrackers(this, new PacketChangeSkin(this.getEntityId(), this.skin));
-        }
-    }
-
-    /**
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
@@ -386,11 +378,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         Mocap.startRecording(this.getCustomNameTag(), player);
     }
 
-    public void setElytraFlying(boolean isFlying)
-    {
-        this.setFlag(7, isFlying);
-    }
-
     /* Reading/writing to disk */
 
     @Override
@@ -438,14 +425,23 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.skin = ByteBufUtils.readUTF8String(buffer);
     }
 
-    public void modify(boolean invulnerable, String name, boolean notify)
+    public void modify(boolean invulnerable, String name, String skin, boolean notify)
     {
         this.setEntityInvulnerable(invulnerable);
         this.setCustomNameTag(name);
+        this.skin = skin;
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), invulnerable, name));
+            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), invulnerable, name, this.skin));
         }
+    }
+
+    public String toReplayString()
+    {
+        String name = this.hasCustomName() ? this.getCustomNameTag() : "";
+        String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : "";
+
+        return name + ":" + name + ":" + this.skin + invulnerable;
     }
 }

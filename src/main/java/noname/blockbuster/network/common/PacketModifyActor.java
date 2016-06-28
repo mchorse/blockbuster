@@ -9,15 +9,17 @@ public class PacketModifyActor implements IMessage
     public int id;
     public boolean invulnerable;
     public String name;
+    public String skin;
 
     public PacketModifyActor()
     {}
 
-    public PacketModifyActor(int id, boolean invulnerable, String name)
+    public PacketModifyActor(int id, boolean invulnerable, String name, String skin)
     {
         this.id = id;
         this.invulnerable = invulnerable;
         this.name = name;
+        this.skin = skin;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class PacketModifyActor implements IMessage
         this.id = buf.readInt();
         this.invulnerable = buf.readBoolean();
         this.name = ByteBufUtils.readUTF8String(buf);
+        this.skin = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -34,5 +37,6 @@ public class PacketModifyActor implements IMessage
         buf.writeInt(this.id);
         buf.writeBoolean(this.invulnerable);
         ByteBufUtils.writeUTF8String(buf, this.name);
+        ByteBufUtils.writeUTF8String(buf, this.skin);
     }
 }
