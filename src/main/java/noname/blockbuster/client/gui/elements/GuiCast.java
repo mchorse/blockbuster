@@ -65,12 +65,13 @@ public class GuiCast extends GuiScrollPane
             {
                 String[] args = member.split(":");
 
+                String filename = args.length >= 1 ? args[0] : "";
                 String name = args.length >= 2 ? args[1] : "";
                 String skin = args.length >= 3 ? args[2] : "";
                 boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
 
                 EntityActor actor = new EntityActor(this.mc.theWorld);
-                actor.modify(isInvulnerable, name, skin, false);
+                actor.modify(filename, name, skin, isInvulnerable, false);
 
                 this.mc.displayGuiScreen(new GuiActor(actor, this.pos, index));
             }

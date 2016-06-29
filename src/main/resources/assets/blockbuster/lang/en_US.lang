@@ -1,6 +1,8 @@
 #PARSE_ESCAPES
 
 blockbuster.recording=Recording to %s
+blockbuster.yes=Yes
+blockbuster.no=No
 
 # Item tooltips
 blockbuster.info.director_block=Use it for machinimas
@@ -40,8 +42,12 @@ blockbuster.gui.camera.max=Max acceleration:
 blockbuster.gui.camera.canFly=Can fly: any direction
 blockbuster.gui.camera.cantFly=Can fly: only horizontally
 
-blockbuster.gui.skin.title=Change Actor's Skin
-blockbuster.gui.skin.default=Default
+blockbuster.gui.actor.title=Actor Configuration
+blockbuster.gui.actor.default=Default
+blockbuster.gui.actor.name=Name
+blockbuster.gui.actor.filename=Recording ID
+blockbuster.gui.actor.skin=Skin
+blockbuster.gui.actor.invulnerability=Can be killed?
 
 key.blockbuster.camera=Blockbuster: Camera
 key.blockbuster.next=Switch to the next camera

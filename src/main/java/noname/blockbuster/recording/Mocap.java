@@ -181,7 +181,7 @@ public class Mocap
     public static EntityActor startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
         EntityActor actor = new EntityActor(world);
-        actor.modify(false, name, skin, true);
+        actor.modify(filename, name, skin, false, true);
 
         startPlayback(filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);

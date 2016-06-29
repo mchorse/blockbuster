@@ -7,36 +7,40 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class PacketModifyActor implements IMessage
 {
     public int id;
-    public boolean invulnerable;
+    public String filename;
     public String name;
     public String skin;
+    public boolean invulnerable;
 
     public PacketModifyActor()
     {}
 
-    public PacketModifyActor(int id, boolean invulnerable, String name, String skin)
+    public PacketModifyActor(int id, String filename, String name, String skin, boolean invulnerable)
     {
         this.id = id;
-        this.invulnerable = invulnerable;
+        this.filename = filename;
         this.name = name;
         this.skin = skin;
+        this.invulnerable = invulnerable;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this.id = buf.readInt();
-        this.invulnerable = buf.readBoolean();
+        this.filename = ByteBufUtils.readUTF8String(buf);
         this.name = ByteBufUtils.readUTF8String(buf);
         this.skin = ByteBufUtils.readUTF8String(buf);
+        this.invulnerable = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(this.id);
-        buf.writeBoolean(this.invulnerable);
+        ByteBufUtils.writeUTF8String(buf, this.filename);
         ByteBufUtils.writeUTF8String(buf, this.name);
         ByteBufUtils.writeUTF8String(buf, this.skin);
+        buf.writeBoolean(this.invulnerable);
     }
 }

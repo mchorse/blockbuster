@@ -32,11 +32,19 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  */
 public class GuiActor extends GuiScreen
 {
+    private String stringTitle = I18n.format("blockbuster.gui.actor.title");
+    private String stringDefault = I18n.format("blockbuster.gui.actor.default");
+    private String stringName = I18n.format("blockbuster.gui.actor.name");
+    private String stringFilename = I18n.format("blockbuster.gui.actor.filename");
+    private String stringSkin = I18n.format("blockbuster.gui.actor.skin");
+    private String stringInvulnerability = I18n.format("blockbuster.gui.actor.invulnerability");
+
     private EntityActor actor;
     private BlockPos pos;
     private int id;
 
     private GuiTextField name;
+    private GuiTextField filename;
 
     private GuiButton done;
     private GuiButton next;
@@ -47,6 +55,9 @@ public class GuiActor extends GuiScreen
     private List<String> skins;
     private int skinIndex;
 
+    /**
+     * Constructor for director map block
+     */
     public GuiActor(EntityActor actor, BlockPos pos, int id)
     {
         this(actor);
@@ -54,6 +65,9 @@ public class GuiActor extends GuiScreen
         this.id = id;
     }
 
+    /**
+     * Constructor for director block and skin manager item
+     */
     public GuiActor(EntityActor actor)
     {
         this.actor = actor;
@@ -67,17 +81,22 @@ public class GuiActor extends GuiScreen
         int x = 30;
         int w = 120;
 
-        this.buttonList.add(this.done = new GuiButton(0, x, 200, w, 20, I18n.format("blockbuster.gui.done")));
-        this.buttonList.add(this.next = new GuiButton(1, x, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.next")));
-        this.buttonList.add(this.prev = new GuiButton(2, x + w / 2 + 4, 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous")));
-        this.buttonList.add(this.restore = new GuiButton(3, x, 105, w, 20, I18n.format("blockbuster.gui.restore")));
-        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 155, w, 20, "No", "Yes"));
+        this.buttonList.add(this.done = new GuiButton(0, x, 210, w, 20, I18n.format("blockbuster.gui.done")));
+        this.buttonList.add(this.next = new GuiButton(1, x, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.next")));
+        this.buttonList.add(this.prev = new GuiButton(2, x + w / 2 + 4, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous")));
+        this.buttonList.add(this.restore = new GuiButton(3, x, 145, w, 20, I18n.format("blockbuster.gui.restore")));
+        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 185, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes")));
 
         this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
+        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, 81, w - 2, 18);
 
         this.next.enabled = this.prev.enabled = this.skins.size() != 0;
         this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
+
         this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
+        this.name.setMaxStringLength(30);
+        this.filename.setText(this.actor.filename);
+        this.filename.setMaxStringLength(40);
     }
 
     /* Actions */
@@ -87,20 +106,7 @@ public class GuiActor extends GuiScreen
     {
         if (button.id == 0)
         {
-            SimpleNetworkWrapper dispatcher = Dispatcher.getInstance();
-
-            if (this.pos == null)
-            {
-                dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), this.invincibility.getValue(), this.name.getText(), this.getSkin()));
-            }
-            else
-            {
-                this.actor.modify(this.invincibility.getValue(), this.name.getText(), this.getSkin(), false);
-
-                dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
-            }
-
-            this.mc.displayGuiScreen(null);
+            this.saveAndQuit();
         }
         else if (button.id == 1)
         {
@@ -119,6 +125,36 @@ public class GuiActor extends GuiScreen
         {
             this.invincibility.toggle();
         }
+    }
+
+    /**
+     * Save and quit this screen
+     *
+     * Depends on the fact where does this GUI was opened from, it either
+     * sends modify actor packet, which modifies entity's properties directly,
+     * or sends edit action to director map block
+     */
+    private void saveAndQuit()
+    {
+        SimpleNetworkWrapper dispatcher = Dispatcher.getInstance();
+
+        String filename = this.filename.getText();
+        String name = this.name.getText();
+        String skin = this.getSkin();
+        boolean invulnerability = this.invincibility.getValue();
+
+        if (this.pos == null)
+        {
+            dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, invulnerability));
+        }
+        else
+        {
+            this.actor.modify(filename, name, skin, invulnerability, false);
+
+            dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
+        }
+
+        this.mc.displayGuiScreen(null);
     }
 
     private void updateSkin(int index)
@@ -144,6 +180,7 @@ public class GuiActor extends GuiScreen
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
+        this.filename.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -151,6 +188,7 @@ public class GuiActor extends GuiScreen
     {
         super.keyTyped(typedChar, keyCode);
         this.name.textboxKeyTyped(typedChar, keyCode);
+        this.filename.textboxKeyTyped(typedChar, keyCode);
     }
 
     /* Drawing */
@@ -159,8 +197,8 @@ public class GuiActor extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         int centerX = this.width / 2;
-        String title = I18n.format("blockbuster.gui.skin.title");
-        String skin = I18n.format("blockbuster.gui.skin.default");
+
+        String skin = this.stringDefault;
 
         if (this.skinIndex != -1)
         {
@@ -168,17 +206,21 @@ public class GuiActor extends GuiScreen
         }
 
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, title, centerX, 15, 0xffffffff);
-        this.drawCenteredString(this.fontRendererObj, skin, centerX + 40, 208, 0xffffffff);
-        this.drawString(this.fontRendererObj, "Name", 30, 30, 0xffcccccc);
-        this.drawString(this.fontRendererObj, "Skin", 30, 70, 0xffcccccc);
-        this.drawString(this.fontRendererObj, "Can be killed?", 30, 145, 0xffcccccc);
+
+        this.drawCenteredString(this.fontRendererObj, this.stringTitle, centerX, 15, 0xffffffff);
+        this.drawCenteredString(this.fontRendererObj, skin, centerX + 50, 214, 0xffffffff);
+
+        this.drawString(this.fontRendererObj, this.stringName, 30, 30, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringFilename, 30, 70, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringSkin, 30, 110, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringInvulnerability, 30, 175, 0xffcccccc);
 
         this.actor.renderName = false;
-        drawEntityOnScreen(centerX + 40, 190, 75, centerX - mouseX, 70 - mouseY, this.actor);
+        drawEntityOnScreen(centerX + 50, 200, 75, centerX - mouseX, 70 - mouseY, this.actor);
         this.actor.renderName = true;
 
         this.name.drawTextBox();
+        this.filename.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
