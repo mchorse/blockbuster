@@ -20,8 +20,29 @@ import noname.blockbuster.recording.Mocap;
 
 public class GuiCast extends GuiScrollPane
 {
+    /**
+     * Comparator, sorts by alphabet in ascending order
+     */
+    public static final Comparator<Entry> ALPHA = new Comparator<Entry>()
+    {
+        @Override
+        public int compare(Entry a, Entry b)
+        {
+            return a.name.compareTo(b.name);
+        }
+    };
+
+    /* Input data */
     public BlockPos pos;
-    public List<GuiCast.Entry> entries = new ArrayList<GuiCast.Entry>();
+
+    /**
+     * List of entries
+     *
+     * This list is being compiled in the setCast method, basically this list
+     * is used for rendering of the rows and storing the data for edit and
+     * remove actions.
+     */
+    public List<Entry> entries = new ArrayList<Entry>();
 
     public GuiCast(BlockPos pos, int x, int y, int w, int h)
     {
@@ -29,6 +50,9 @@ public class GuiCast extends GuiScrollPane
         this.pos = pos;
     }
 
+    /**
+     * Compile entries out of passed actors and cameras UUIDs
+     */
     public void setCast(List<String> actors, List<String> cameras)
     {
         World world = Minecraft.getMinecraft().theWorld;
@@ -37,29 +61,37 @@ public class GuiCast extends GuiScrollPane
         this.scrollHeight = (actors.size() + cameras.size()) * 24;
 
         for (int i = 0; i < actors.size(); i++)
-        {
-            Entity entity = Mocap.entityByUUID(world, actors.get(i));
-
-            this.entries.add(new GuiCast.Entry(entity.getEntityId(), i, entity.getName(), true));
-        }
+            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)), true);
 
         for (int i = 0; i < cameras.size(); i++)
-        {
-            Entity entity = Mocap.entityByUUID(world, cameras.get(i));
+            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)), true);
 
-            this.entries.add(new GuiCast.Entry(entity.getEntityId(), i, entity.getName(), false));
-        }
-
-        this.entries.sort(new Comparator<Entry>()
-        {
-            @Override
-            public int compare(Entry a, Entry b)
-            {
-                return a.name.compareTo(b.name);
-            }
-        });
+        this.entries.sort(ALPHA);
     }
 
+    /**
+     * Add entry to the entry list
+     */
+    private void addEntry(int index, Entity entity, boolean isActor)
+    {
+        int id = entity != null ? entity.getEntityId() : -1;
+        String name = entity != null ? entity.getName() : (isActor ? "Actor" : "Camera");
+
+        this.entries.add(new GuiCast.Entry(id, index, name, isActor, entity == null));
+    }
+
+    /* Handling */
+
+    /**
+     * Performs an action.
+     *
+     * Remove action is triggered when this method is invoked with button which
+     * has id of 0, however edit action is triggered when this method invoked
+     * with button of id 1.
+     *
+     * Edit action only can be performed when the entity is in reach (i.e. loaded
+     * by the client), else, pal, you're on your own.
+     */
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
@@ -70,12 +102,17 @@ public class GuiCast extends GuiScrollPane
         {
             Dispatcher.getInstance().sendToServer(new PacketDirectorRemove(this.pos, entry.index, entry.isActor));
         }
-        else if (buttonIn.id == 1)
+        else if (buttonIn.id == 1 && !entry.outOfReach)
         {
             this.mc.thePlayer.openGui(Blockbuster.instance, entry.isActor ? 1 : 0, this.mc.theWorld, entry.id, 0, 0);
         }
     }
 
+    /* GUI & drawing */
+
+    /**
+     * Initiate GUI, this gets invoked after the setCast method get invoke
+     */
     @Override
     public void initGui()
     {
@@ -106,18 +143,24 @@ public class GuiCast extends GuiScrollPane
 
             this.mc.renderEngine.bindTexture(GuiRecordingOverlay.TEXTURE);
 
-            GlStateManager.pushAttrib();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.disableLighting();
 
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
 
+            /* Icon of the entry */
             this.drawTexturedModalRect(x - 20, y + 4, entry.isActor ? 16 : 32, 0, 16, 16);
+
+            /* X over the actor/camera icon */
+            if (entry.outOfReach)
+            {
+                this.drawTexturedModalRect(x - 20, y + 4, 48, 0, 16, 16);
+            }
+
             this.fontRendererObj.drawStringWithShadow(entry.name, x, y + 8, 0xffffffff);
 
-            GlStateManager.popAttrib();
-
+            /* Border under the row */
             if (i != c - 1)
             {
                 this.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
@@ -136,13 +179,15 @@ public class GuiCast extends GuiScrollPane
         public int index;
         public String name;
         public boolean isActor;
+        public boolean outOfReach;
 
-        public Entry(int id, int index, String name, boolean isActor)
+        public Entry(int id, int index, String name, boolean isActor, boolean outOfReach)
         {
             this.id = id;
             this.index = index;
             this.name = name;
             this.isActor = isActor;
+            this.outOfReach = outOfReach;
         }
     }
 }

@@ -1,5 +1,6 @@
 package noname.blockbuster.network.server;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.common.PacketModifyActor;
@@ -9,8 +10,11 @@ public class ServerHandlerModifyActor extends ServerMessageHandler<PacketModifyA
     @Override
     public void run(EntityPlayerMP player, PacketModifyActor message)
     {
-        EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
+        Entity entity = player.worldObj.getEntityByID(message.id);
 
-        actor.modify(message.filename, message.name, message.skin, message.invulnerable, true);
+        if (entity instanceof EntityActor)
+        {
+            ((EntityActor) entity).modify(message.filename, message.name, message.skin, message.invulnerable, true);
+        }
     }
 }
