@@ -5,7 +5,6 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketDirectorMapCast extends PacketDirector
 {
@@ -25,23 +24,14 @@ public class PacketDirectorMapCast extends PacketDirector
     {
         super.fromBytes(buf);
 
-        int count = buf.readInt();
-
-        for (int i = 0; i < count; i++)
-        {
-            this.cast.add(ByteBufUtils.readUTF8String(buf));
-        }
+        PacketDirector.listFromBytes(buf, this.cast);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         super.toBytes(buf);
-        buf.writeInt(this.cast.size());
 
-        for (String member : this.cast)
-        {
-            ByteBufUtils.writeUTF8String(buf, member);
-        }
+        PacketDirector.listToBytes(buf, this.cast);
     }
 }

@@ -68,7 +68,7 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         mouseY += this.scrollY;
 
-        if (mouseY < this.y && mouseY > this.y + this.h)
+        if (mouseY < this.y || mouseY > this.y + this.h)
             return;
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -79,7 +79,7 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         mouseY += this.scrollY;
 
-        if (mouseY < this.y && mouseY > this.y + this.h)
+        if (mouseY < this.y || mouseY > this.y + this.h)
             return;
 
         super.mouseReleased(mouseX, mouseY, state);
@@ -103,6 +103,9 @@ public abstract class GuiScrollPane extends GuiScreen
      */
     protected void drawScrollBar()
     {
+        if (this.scrollHeight < this.h)
+            return;
+
         float progress = (float) this.scrollY / (float) (this.scrollHeight - this.h);
         int x = this.x + this.w - 8;
         float y = this.y + 3 + progress * (this.h - 26);
@@ -129,11 +132,7 @@ public abstract class GuiScrollPane extends GuiScreen
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
         this.drawPane();
-
-        for (int i = 0; i < this.buttonList.size(); ++i)
-        {
-            this.buttonList.get(i).drawButton(this.mc, mouseX, mouseY + this.scrollY);
-        }
+        super.drawScreen(mouseX, mouseY + this.scrollY, partialTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GL11.glPopMatrix();

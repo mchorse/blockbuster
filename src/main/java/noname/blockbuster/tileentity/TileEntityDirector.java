@@ -40,15 +40,17 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
     /* Public API */
 
-    @Override
-    public List<String> getCast()
+    public void reset()
     {
-        List<String> cast = new ArrayList<String>();
+        this.actors = new ArrayList<String>();
+        this.cameras = new ArrayList<String>();
+        this.markDirty();
+    }
 
-        cast.addAll(this.actors);
-        cast.addAll(this.cameras);
-
-        return cast;
+    public void remove(int id, boolean type)
+    {
+        (type ? this.actors : this.cameras).remove(id);
+        this.markDirty();
     }
 
     /**
@@ -86,6 +88,17 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return false;
+    }
+
+    @Override
+    public List<String> getCast()
+    {
+        List<String> cast = new ArrayList<String>();
+
+        cast.addAll(this.actors);
+        cast.addAll(this.cameras);
+
+        return cast;
     }
 
     /**

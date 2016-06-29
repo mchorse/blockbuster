@@ -49,30 +49,33 @@ blockbuster.gui.actor.filename=Recording ID
 blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
 
+# Key bindings
 key.blockbuster.camera=Blockbuster: Camera
 key.blockbuster.next=Switch to the next camera
 key.blockbuster.previous=Switch to the previous camera
 
-# Chat messsages
+# Director block
 blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!
 blockbuster.director.already_registered=This entity is already registered by director block!
 blockbuster.director.was_registered=This entity was succesfully attached to director block!
 
-blockbuster.director_map.already_registered=This replay is already registered by director block!
-blockbuster.director_map.was_registered=This replay was succesfully attached to director block!
-
 blockbuster.director.attached_device=This recording device was succesfully attached to director block!
 blockbuster.director.missing=The director block, that was attached to this device, was destroyed. Attach this device to another director block!
 
-blockbuster.director.cast=Registered cameras and actors:\n
+blockbuster.director.title=Director Block's Cast
 blockbuster.director.no_cast=No registered cameras or actors!
 blockbuster.director.missing_cast=Missing entity with UUID: %s
 
-blockbuster.actor.noname=Current actor doesn't have a custom name, please assign him a name (using name tag)!
-blockbuster.actor.playing=Current actor is already playing!
-
 # Director map block
 blockbuster.director_map.title=Director Map Block's Cast
+blockbuster.director_map.no_cast=No registered replays!
+
+blockbuster.director_map.already_registered=This replay is already registered by director block!
+blockbuster.director_map.was_registered=This replay was succesfully attached to director block!
+
+# Actor
+blockbuster.actor.noname=Current actor doesn't have a custom name, please assign him a name (using name tag)!
+blockbuster.actor.playing=Current actor is already playing!
 
 # Commands
 blockbuster.commands.play=Usage: /play <replay_name> [entity_name] [skin_name] [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments

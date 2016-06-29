@@ -39,7 +39,7 @@ public class BlockDirectorMap extends AbstractBlockDirector
     {
         AbstractTileEntityDirector tile = (AbstractTileEntityDirector) worldIn.getTileEntity(pos);
 
-        Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.actors, tile.getPos()), (EntityPlayerMP) player);
+        Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), tile.getPos()), (EntityPlayerMP) player);
     }
 
     /**

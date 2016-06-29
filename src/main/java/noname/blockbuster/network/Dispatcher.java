@@ -14,6 +14,7 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerCameraRecording;
+import noname.blockbuster.network.client.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
@@ -22,16 +23,21 @@ import noname.blockbuster.network.common.PacketCameraRecording;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.PacketSwitchCamera;
+import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;
+import noname.blockbuster.network.common.director.PacketDirectorRemove;
+import noname.blockbuster.network.common.director.PacketDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapEdit;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
+import noname.blockbuster.network.server.ServerHandlerDirectorRemove;
+import noname.blockbuster.network.server.ServerHandlerDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
 import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
 
@@ -84,6 +90,12 @@ public class Dispatcher
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
 
         /* Director block management messages */
+        register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
+
+        register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
+        register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
+
+        /* Director block map management messages */
         register(PacketDirectorMapCast.class, ClientHandlerDirectorMapCast.class, Side.CLIENT);
 
         register(PacketDirectorMapAdd.class, ServerHandlerDirectorMapAdd.class, Side.SERVER);

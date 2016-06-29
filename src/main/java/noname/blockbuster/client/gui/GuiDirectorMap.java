@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
-import noname.blockbuster.client.gui.elements.GuiCast;
+import noname.blockbuster.client.gui.elements.GuiReplays;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;
@@ -21,9 +21,9 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 public class GuiDirectorMap extends GuiScreen
 {
     protected String title = I18n.format("blockbuster.director_map.title");
-    protected String noCast = I18n.format("blockbuster.director.no_cast");
+    protected String noCast = I18n.format("blockbuster.director_map.no_cast");
 
-    protected GuiCast cast;
+    protected GuiReplays cast;
     protected GuiButton done;
     protected GuiButton reset;
     protected GuiTextField input;
@@ -44,7 +44,7 @@ public class GuiDirectorMap extends GuiScreen
             return;
         }
 
-        this.cast = new GuiCast(this, this.width / 2 - 125, 80, 250, 115, this.pos);
+        this.cast = new GuiReplays(this, this.width / 2 - 120, 80, 240, 115, this.pos);
         this.cast.setCast(cast);
         this.cast.setWorldAndResolution(this.mc, this.width, this.height);
     }
@@ -99,7 +99,7 @@ public class GuiDirectorMap extends GuiScreen
         {
             Dispatcher.getInstance().sendToServer(new PacketDirectorMapReset(this.pos));
         }
-        else if (button.id == 2)
+        else if (button.id == 2 && !this.input.getText().isEmpty())
         {
             Dispatcher.getInstance().sendToServer(new PacketDirectorMapAdd(this.pos, this.input.getText()));
         }

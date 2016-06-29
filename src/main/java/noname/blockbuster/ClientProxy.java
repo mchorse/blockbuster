@@ -26,6 +26,7 @@ import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.client.gui.GuiCamera;
+import noname.blockbuster.client.gui.GuiDirector;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
@@ -139,6 +140,10 @@ public class ClientProxy extends CommonProxy
         else if (ID == 1)
         {
             return new GuiActor(null, (EntityActor) entity);
+        }
+        else if (ID == 2)
+        {
+            return new GuiDirector(new BlockPos(x, y, z));
         }
         else if (ID == 3)
         {
