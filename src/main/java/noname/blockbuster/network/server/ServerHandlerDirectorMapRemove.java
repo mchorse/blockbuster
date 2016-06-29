@@ -13,7 +13,7 @@ public class ServerHandlerDirectorMapRemove extends ServerMessageHandler<PacketD
     {
         TileEntityDirectorMap tile = ((TileEntityDirectorMap) player.worldObj.getTileEntity(message.pos));
 
-        tile.remove(message.replay);
+        tile.remove(message.id);
         Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
     }
 }

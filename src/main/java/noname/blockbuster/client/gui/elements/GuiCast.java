@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
+import noname.blockbuster.recording.Mocap;
 
 /**
  * Director map block cast view
@@ -19,12 +21,14 @@ import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
  */
 public class GuiCast extends GuiScrollPane
 {
-    public List<String> cast;
-    public BlockPos pos;
+    private List<String> cast;
+    private BlockPos pos;
+    private GuiScreen parent;
 
-    public GuiCast(int x, int y, int w, int h, BlockPos pos)
+    public GuiCast(GuiScreen parent, int x, int y, int w, int h, BlockPos pos)
     {
         super(x, y, w, h);
+        this.parent = parent;
         this.pos = pos;
     }
 
@@ -59,21 +63,12 @@ public class GuiCast extends GuiScrollPane
         {
             if (button.id % 2 == 0)
             {
-                Dispatcher.getInstance().sendToServer(new PacketDirectorMapRemove(this.pos, member));
+                Dispatcher.getInstance().sendToServer(new PacketDirectorMapRemove(this.pos, index));
             }
             else
             {
-                String[] args = member.split(":");
-
-                String filename = args.length >= 1 ? args[0] : "";
-                String name = args.length >= 2 ? args[1] : "";
-                String skin = args.length >= 3 ? args[2] : "";
-                boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
-
-                EntityActor actor = new EntityActor(this.mc.theWorld);
-                actor.modify(filename, name, skin, isInvulnerable, false);
-
-                this.mc.displayGuiScreen(new GuiActor(actor, this.pos, index));
+                EntityActor actor = Mocap.actorFromArgs(member.split(":"), this.mc.theWorld);
+                this.mc.displayGuiScreen(new GuiActor(this.parent, actor, this.pos, index));
             }
         }
     }

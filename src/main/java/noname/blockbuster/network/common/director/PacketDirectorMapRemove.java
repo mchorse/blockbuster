@@ -2,32 +2,31 @@ package noname.blockbuster.network.common.director;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketDirectorMapRemove extends PacketDirector
 {
-    public String replay;
+    public int id;
 
     public PacketDirectorMapRemove()
     {}
 
-    public PacketDirectorMapRemove(BlockPos pos, String replay)
+    public PacketDirectorMapRemove(BlockPos pos, int id)
     {
         super(pos);
-        this.replay = replay;
+        this.id = id;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
         super.fromBytes(buf);
-        this.replay = ByteBufUtils.readUTF8String(buf);
+        this.id = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         super.toBytes(buf);
-        ByteBufUtils.writeUTF8String(buf, this.replay);
+        buf.writeInt(this.id);
     }
 }

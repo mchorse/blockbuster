@@ -160,6 +160,21 @@ public class Mocap
         Dispatcher.getInstance().sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
     }
 
+    public static EntityActor actorFromArgs(String[] args, World world)
+    {
+        EntityActor actor = null;
+
+        String filename = args.length >= 1 ? args[0] : "";
+        String name = args.length >= 2 ? args[1] : "";
+        String skin = args.length >= 3 ? args[2] : "";
+        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
+
+        actor = new EntityActor(world);
+        actor.modify(filename, name, skin, isInvulnerable, true);
+
+        return actor;
+    }
+
     public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)
     {
         EntityActor actor = null;

@@ -34,9 +34,9 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
     /**
      * Remove a replay
      */
-    public void remove(String replay)
+    public void remove(int id)
     {
-        this.actors.remove(replay);
+        this.actors.remove(id);
         this.markDirty();
     }
 

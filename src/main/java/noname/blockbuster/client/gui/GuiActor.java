@@ -32,6 +32,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  */
 public class GuiActor extends GuiScreen
 {
+    /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.actor.title");
     private String stringDefault = I18n.format("blockbuster.gui.actor.default");
     private String stringName = I18n.format("blockbuster.gui.actor.name");
@@ -39,9 +40,16 @@ public class GuiActor extends GuiScreen
     private String stringSkin = I18n.format("blockbuster.gui.actor.skin");
     private String stringInvulnerability = I18n.format("blockbuster.gui.actor.invulnerability");
 
+    /* Domain objects, they're provide data */
     private EntityActor actor;
     private BlockPos pos;
     private int id;
+
+    private List<String> skins;
+    private int skinIndex;
+
+    /* GUI fields */
+    private GuiScreen parent;
 
     private GuiTextField name;
     private GuiTextField filename;
@@ -52,15 +60,12 @@ public class GuiActor extends GuiScreen
     private GuiButton restore;
     private GuiToggle invincibility;
 
-    private List<String> skins;
-    private int skinIndex;
-
     /**
      * Constructor for director map block
      */
-    public GuiActor(EntityActor actor, BlockPos pos, int id)
+    public GuiActor(GuiScreen parent, EntityActor actor, BlockPos pos, int id)
     {
-        this(actor);
+        this(parent, actor);
         this.pos = pos;
         this.id = id;
     }
@@ -68,35 +73,12 @@ public class GuiActor extends GuiScreen
     /**
      * Constructor for director block and skin manager item
      */
-    public GuiActor(EntityActor actor)
+    public GuiActor(GuiScreen parent, EntityActor actor)
     {
+        this.parent = parent;
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getReloadedSkins();
         this.skinIndex = this.skins.indexOf(actor.skin);
-    }
-
-    @Override
-    public void initGui()
-    {
-        int x = 30;
-        int w = 120;
-
-        this.buttonList.add(this.done = new GuiButton(0, x, 210, w, 20, I18n.format("blockbuster.gui.done")));
-        this.buttonList.add(this.next = new GuiButton(1, x, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.next")));
-        this.buttonList.add(this.prev = new GuiButton(2, x + w / 2 + 4, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous")));
-        this.buttonList.add(this.restore = new GuiButton(3, x, 145, w, 20, I18n.format("blockbuster.gui.restore")));
-        this.buttonList.add(this.invincibility = new GuiToggle(4, x, 185, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes")));
-
-        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
-        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, 81, w - 2, 18);
-
-        this.next.enabled = this.prev.enabled = this.skins.size() != 0;
-        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
-
-        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
-        this.name.setMaxStringLength(30);
-        this.filename.setText(this.actor.filename);
-        this.filename.setMaxStringLength(40);
     }
 
     /* Actions */
@@ -154,7 +136,7 @@ public class GuiActor extends GuiScreen
             dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
         }
 
-        this.mc.displayGuiScreen(null);
+        this.mc.displayGuiScreen(this.parent);
     }
 
     private void updateSkin(int index)
@@ -191,7 +173,44 @@ public class GuiActor extends GuiScreen
         this.filename.textboxKeyTyped(typedChar, keyCode);
     }
 
-    /* Drawing */
+    /* Initiating GUI and drawing */
+
+    /**
+     * I think Mojang should come up with something better than hardcoded
+     * positions and sizes for buttons. Something like HTML. Maybe I should
+     * write this library (for constructing minecraft GUIs). Hm...
+     */
+    @Override
+    public void initGui()
+    {
+        int x = 30;
+        int w = 120;
+
+        /* Initializing all GUI fields first */
+        this.done = new GuiButton(0, x, 210, w, 20, I18n.format("blockbuster.gui.done"));
+        this.next = new GuiButton(1, x, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.next"));
+        this.prev = new GuiButton(2, x + w / 2 + 4, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous"));
+        this.restore = new GuiButton(3, x, 145, w, 20, I18n.format("blockbuster.gui.restore"));
+        this.invincibility = new GuiToggle(4, x, 185, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+
+        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
+        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, 81, w - 2, 18);
+
+        /* And then, we're configuring them and injecting input data */
+        this.buttonList.add(this.done);
+        this.buttonList.add(this.next);
+        this.buttonList.add(this.prev);
+        this.buttonList.add(this.restore);
+        this.buttonList.add(this.invincibility);
+
+        this.next.enabled = this.prev.enabled = this.skins.size() != 0;
+        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
+
+        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
+        this.name.setMaxStringLength(30);
+        this.filename.setText(this.actor.filename);
+        this.filename.setMaxStringLength(40);
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)

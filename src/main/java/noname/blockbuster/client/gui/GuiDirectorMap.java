@@ -44,7 +44,7 @@ public class GuiDirectorMap extends GuiScreen
             return;
         }
 
-        this.cast = new GuiCast(this.width / 2 - 125, 80, 250, 115, this.pos);
+        this.cast = new GuiCast(this, this.width / 2 - 125, 80, 250, 115, this.pos);
         this.cast.setCast(cast);
         this.cast.setWorldAndResolution(this.mc, this.width, this.height);
     }

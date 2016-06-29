@@ -136,7 +136,7 @@ public class ClientProxy extends CommonProxy
         }
         else if (ID == 1)
         {
-            return new GuiActor((EntityActor) entity);
+            return new GuiActor(null, (EntityActor) entity);
         }
         else if (ID == 3)
         {
