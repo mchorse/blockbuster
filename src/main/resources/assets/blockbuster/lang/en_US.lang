@@ -5,8 +5,8 @@ blockbuster.yes=Yes
 blockbuster.no=No
 
 # Item tooltips
-blockbuster.info.director_block=Use it for machinimas
-blockbuster.info.director_map_block=Use it for adventure maps
+blockbuster.info.director=Use it for machinimas
+blockbuster.info.director_map=Use it for adventure maps
 
 # Creative tabs
 itemGroup.blockbuster=Blockbuster
@@ -19,7 +19,7 @@ item.blockbuster.camera.name=Camera
 item.blockbuster.camera_config.name=Camera configuration device
 item.blockbuster.playback.name=Playback button
 item.blockbuster.register.name=Registering device
-item.blockbuster.skin_manager.name=Skin manager device
+item.blockbuster.actor_config.name=Actor configuration device
 
 # Entities names
 entity.blockbuster.Camera.name=Camera

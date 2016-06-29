@@ -32,7 +32,7 @@ public class BlockDirector extends AbstractBlockDirector
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
     {
-        tooltip.add(I18n.format("blockbuster.info.director_block"));
+        tooltip.add(I18n.format("blockbuster.info.director"));
     }
 
     @Override

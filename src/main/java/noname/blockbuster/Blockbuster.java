@@ -48,7 +48,7 @@ public class Blockbuster
     public static Item cameraConfigItem;
     public static Item playbackItem;
     public static Item registerItem;
-    public static Item skinManagerItem;
+    public static Item actorConfigItem;
 
     /* Blocks */
     public static Block directorBlock;

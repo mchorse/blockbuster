@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.ItemRegister;
-import noname.blockbuster.item.ItemSkinManager;
+import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.recording.Mocap;
@@ -300,7 +300,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
-        boolean holdsSkinItem = stack.getItem() instanceof ItemSkinManager;
+        boolean holdsSkinItem = stack.getItem() instanceof ItemActorConfig;
 
         if (this.worldObj.isRemote && holdsSkinItem)
         {

@@ -25,7 +25,7 @@ import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 
 /**
- * Actor skin picker
+ * Actor configuration GUI
  *
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.

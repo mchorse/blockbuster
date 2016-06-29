@@ -52,7 +52,7 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("camera_config"));
         this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
         this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
-        this.registerItemModel(Blockbuster.skinManagerItem, Blockbuster.path("skin_manager"));
+        this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
 
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
@@ -120,10 +120,12 @@ public class ClientProxy extends CommonProxy
 
     /**
      * There's two types of GUI are available right now:
-     * - Camera configuration GUI
-     * - Actor skin picker GUI
+     * - Camera configuration GUI (0)
+     * - Actor configuration GUI (1)
+     * - Director block management GUI (2)
+     * - Director map block management GUI (3)
      *
-     * IGuiHandler is used to centralize GUI invocation
+     * IGuiHandler is used to centralize GUI invocations
      */
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
