@@ -3,9 +3,10 @@ package noname.blockbuster.client.gui;
 import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSlider;
+import noname.blockbuster.client.gui.elements.GuiChildScreen;
+import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.Dispatcher;
@@ -19,7 +20,7 @@ import noname.blockbuster.network.common.PacketCameraAttributes;
  *
  * For more information, see vanilla GUI screens.
  */
-public class GuiCamera extends GuiScreen
+public class GuiCamera extends GuiChildScreen
 {
     private String title = I18n.format("blockbuster.gui.camera.title");
 
@@ -31,8 +32,9 @@ public class GuiCamera extends GuiScreen
 
     private EntityCamera camera;
 
-    public GuiCamera(EntityCamera entity)
+    public GuiCamera(GuiParentScreen parent, EntityCamera entity)
     {
+        super(parent);
         this.camera = entity;
     }
 
@@ -81,14 +83,14 @@ public class GuiCamera extends GuiScreen
     private void saveAndExit()
     {
         int id = this.camera.getEntityId();
-        float cSpeed = (float) this.speed.getValue();
-        float cRate = (float) this.accelerationRate.getValue();
-        float cMax = (float) this.accelerationMax.getValue();
-        boolean cCanFly = this.canFly.getValue();
+        float speed = (float) this.speed.getValue();
+        float rate = (float) this.accelerationRate.getValue();
+        float max = (float) this.accelerationMax.getValue();
+        boolean canFly = this.canFly.getValue();
 
-        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, cSpeed, cRate, cMax, cCanFly));
+        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, speed, rate, max, canFly));
 
-        this.mc.displayGuiScreen(null);
+        this.close();
     }
 
     @Override

@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -18,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import noname.blockbuster.ClientProxy;
+import noname.blockbuster.client.gui.elements.GuiChildScreen;
+import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
@@ -30,7 +31,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.
  */
-public class GuiActor extends GuiScreen
+public class GuiActor extends GuiChildScreen
 {
     /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.actor.title");
@@ -49,8 +50,6 @@ public class GuiActor extends GuiScreen
     private int skinIndex;
 
     /* GUI fields */
-    private GuiScreen parent;
-
     private GuiTextField name;
     private GuiTextField filename;
 
@@ -63,7 +62,7 @@ public class GuiActor extends GuiScreen
     /**
      * Constructor for director map block
      */
-    public GuiActor(GuiScreen parent, EntityActor actor, BlockPos pos, int id)
+    public GuiActor(GuiParentScreen parent, EntityActor actor, BlockPos pos, int id)
     {
         this(parent, actor);
         this.pos = pos;
@@ -73,9 +72,9 @@ public class GuiActor extends GuiScreen
     /**
      * Constructor for director block and skin manager item
      */
-    public GuiActor(GuiScreen parent, EntityActor actor)
+    public GuiActor(GuiParentScreen parent, EntityActor actor)
     {
-        this.parent = parent;
+        super(parent);
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getReloadedSkins();
         this.skinIndex = this.skins.indexOf(actor.skin);
@@ -136,7 +135,7 @@ public class GuiActor extends GuiScreen
             dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
         }
 
-        this.mc.displayGuiScreen(this.parent);
+        this.close();
     }
 
     private void updateSkin(int index)

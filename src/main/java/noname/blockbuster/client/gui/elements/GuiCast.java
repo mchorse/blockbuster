@@ -12,8 +12,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import noname.blockbuster.Blockbuster;
+import noname.blockbuster.client.gui.GuiActor;
+import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
+import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.recording.Mocap;
@@ -34,6 +37,7 @@ public class GuiCast extends GuiScrollPane
 
     /* Input data */
     public BlockPos pos;
+    private GuiParentScreen parent;
 
     /**
      * List of entries
@@ -44,9 +48,10 @@ public class GuiCast extends GuiScrollPane
      */
     public List<Entry> entries = new ArrayList<Entry>();
 
-    public GuiCast(BlockPos pos, int x, int y, int w, int h)
+    public GuiCast(GuiParentScreen parent, BlockPos pos, int x, int y, int w, int h)
     {
         super(x, y, w, h);
+        this.parent = parent;
         this.pos = pos;
     }
 
@@ -59,12 +64,13 @@ public class GuiCast extends GuiScrollPane
 
         this.scrollY = 0;
         this.scrollHeight = (actors.size() + cameras.size()) * 24;
+        this.entries.clear();
 
         for (int i = 0; i < actors.size(); i++)
             this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)), true);
 
         for (int i = 0; i < cameras.size(); i++)
-            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)), true);
+            this.addEntry(i, Mocap.entityByUUID(world, cameras.get(i)), false);
 
         this.entries.sort(ALPHA);
     }
@@ -104,7 +110,16 @@ public class GuiCast extends GuiScrollPane
         }
         else if (buttonIn.id == 1 && !entry.outOfReach)
         {
-            this.mc.thePlayer.openGui(Blockbuster.instance, entry.isActor ? 1 : 0, this.mc.theWorld, entry.id, 0, 0);
+            Entity entity = this.mc.theWorld.getEntityByID(entry.id);
+
+            if (entry.isActor)
+            {
+                this.mc.displayGuiScreen(new GuiActor(this.parent, (EntityActor) entity));
+            }
+            else
+            {
+                this.mc.displayGuiScreen(new GuiCamera(this.parent, (EntityCamera) entity));
+            }
         }
     }
 

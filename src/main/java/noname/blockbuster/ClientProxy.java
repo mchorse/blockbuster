@@ -135,7 +135,7 @@ public class ClientProxy extends CommonProxy
 
         if (ID == 0)
         {
-            return new GuiCamera((EntityCamera) entity);
+            return new GuiCamera(null, (EntityCamera) entity);
         }
         else if (ID == 1)
         {

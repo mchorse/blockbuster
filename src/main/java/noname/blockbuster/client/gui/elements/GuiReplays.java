@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.client.gui.GuiActor;
@@ -23,9 +22,9 @@ public class GuiReplays extends GuiScrollPane
 {
     private List<String> cast;
     private BlockPos pos;
-    private GuiScreen parent;
+    private GuiParentScreen parent;
 
-    public GuiReplays(GuiScreen parent, int x, int y, int w, int h, BlockPos pos)
+    public GuiReplays(GuiParentScreen parent, int x, int y, int w, int h, BlockPos pos)
     {
         super(x, y, w, h);
         this.parent = parent;

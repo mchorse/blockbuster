@@ -4,9 +4,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiChildScreen extends GuiScreen
 {
-    protected GuiScreen parent;
+    protected GuiParentScreen parent;
 
-    public GuiChildScreen(GuiScreen parent)
+    public GuiChildScreen(GuiParentScreen parent)
     {
         this.parent = parent;
     }
@@ -14,5 +14,6 @@ public abstract class GuiChildScreen extends GuiScreen
     public void close()
     {
         this.mc.displayGuiScreen(this.parent);
+        this.parent.appear(this);
     }
 }

@@ -30,6 +30,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
+import noname.blockbuster.network.common.director.PacketDirectorRequestCast;
 import noname.blockbuster.network.common.director.PacketDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
@@ -37,6 +38,7 @@ import noname.blockbuster.network.server.ServerHandlerDirectorMapEdit;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
 import noname.blockbuster.network.server.ServerHandlerDirectorRemove;
+import noname.blockbuster.network.server.ServerHandlerDirectorRequestCast;
 import noname.blockbuster.network.server.ServerHandlerDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
 import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
@@ -92,6 +94,7 @@ public class Dispatcher
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
 
+        register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
         register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
 

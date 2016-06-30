@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiReplays;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
@@ -18,7 +18,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
  *
  * Helps manage adventure director block replays
  */
-public class GuiDirectorMap extends GuiScreen
+public class GuiDirectorMap extends GuiParentScreen
 {
     protected String title = I18n.format("blockbuster.director_map.title");
     protected String noCast = I18n.format("blockbuster.director_map.no_cast");
