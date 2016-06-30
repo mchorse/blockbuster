@@ -26,7 +26,8 @@ wrong.
 
 ## Videos
 
-**Tutorial video** for 1.0:
+### Tutorial video
+
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
     <img align="center" height="480" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>
