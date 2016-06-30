@@ -3,6 +3,7 @@ package noname.blockbuster.client.gui;
 import java.io.IOException;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
@@ -61,6 +62,22 @@ public class GuiDirectorMap extends GuiParentScreen
         this.buttonList.add(this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done")));
         this.buttonList.add(this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset")));
         this.buttonList.add(this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add")));
+
+        if (this.cast != null)
+        {
+            this.cast.updateRect(this.width / 2 - 120, 80, 240, 115);
+        }
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+
+        if (this.cast != null)
+        {
+            this.cast.setWorldAndResolution(mc, width, height);
+        }
     }
 
     @Override

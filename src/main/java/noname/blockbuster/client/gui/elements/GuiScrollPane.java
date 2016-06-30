@@ -31,6 +31,11 @@ public abstract class GuiScrollPane extends GuiScreen
 
     public GuiScrollPane(int x, int y, int w, int h)
     {
+        this.updateRect(x, y, w, h);
+    }
+
+    public void updateRect(int x, int y, int w, int h)
+    {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -119,8 +124,8 @@ public abstract class GuiScrollPane extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        int rx = this.mc.displayWidth / this.width;
-        int ry = this.mc.displayHeight / this.height;
+        float rx = (float) this.mc.displayWidth / (float) this.width;
+        float ry = (float) this.mc.displayHeight / (float) this.height;
 
         this.drawBackground();
 
@@ -128,7 +133,12 @@ public abstract class GuiScrollPane extends GuiScreen
         GL11.glTranslatef(0, -this.scrollY, 0);
 
         /* Clipping area around scroll area */
-        GL11.glScissor((this.x + 1) * rx, this.mc.displayHeight - (this.y + this.h - 1) * ry, (this.w - 2) * rx, (this.h - 2) * ry);
+        int x = (int) ((this.x + 1) * rx);
+        int y = (int) (this.mc.displayHeight - (this.y + this.h - 1) * ry);
+        int w = (int) ((this.w - 2) * rx);
+        int h = (int) ((this.h - 2) * ry);
+
+        GL11.glScissor(x, y, w, h);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
         this.drawPane();
