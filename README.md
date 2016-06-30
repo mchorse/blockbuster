@@ -15,10 +15,6 @@ Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
 ## Install
 
-<a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
-    <img align="right" width="32%" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
-</a>
-
 Install Minecraft Forge, then go to 
 [releases](https://github.com/mchorse/blockbuster/releases) and download the 
 latest version jar file. Put it in minecraft's `mods` folder, launch the game, 
@@ -27,6 +23,14 @@ and done.
 After that, Blockbuster mod should be installed and will appear in Minecraft's 
 mods menu. If Blockbuster didn't appeared in mods menu, then something went 
 wrong.
+
+## Videos
+
+Blockbuster 1.0 – Tutorial by me
+
+<a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
+    <img height="420" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+</a>
 
 ## License
 
