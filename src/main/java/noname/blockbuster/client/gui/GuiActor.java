@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,6 +31,8 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  *
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.
+ *
+ * @todo return skin cycling
  */
 public class GuiActor extends GuiChildScreen
 {
@@ -184,16 +187,17 @@ public class GuiActor extends GuiChildScreen
     {
         int x = 30;
         int w = 120;
+        int y = 25;
 
         /* Initializing all GUI fields first */
-        this.done = new GuiButton(0, x, 210, w, 20, I18n.format("blockbuster.gui.done"));
-        this.next = new GuiButton(1, x, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.next"));
-        this.prev = new GuiButton(2, x + w / 2 + 4, 120, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous"));
-        this.restore = new GuiButton(3, x, 145, w, 20, I18n.format("blockbuster.gui.restore"));
-        this.invincibility = new GuiToggle(4, x, 185, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+        this.done = new GuiButton(0, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done"));
+        this.next = new GuiButton(1, x, y + 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.next"));
+        this.prev = new GuiButton(2, x + w / 2 + 4, y + 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous"));
+        this.restore = new GuiButton(3, x, y + 105, w, 20, I18n.format("blockbuster.gui.restore"));
+        this.invincibility = new GuiToggle(4, x, y + 145, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
-        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, 41, w - 2, 18);
-        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, 81, w - 2, 18);
+        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
 
         /* And then, we're configuring them and injecting input data */
         this.buttonList.add(this.done);
@@ -215,6 +219,8 @@ public class GuiActor extends GuiChildScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         int centerX = this.width / 2;
+        int x = 30;
+        int y = 15;
 
         String skin = this.stringDefault;
 
@@ -224,22 +230,31 @@ public class GuiActor extends GuiChildScreen
         }
 
         this.drawDefaultBackground();
+        this.drawString(this.fontRendererObj, this.stringTitle, x + 120 + 20, 15, 0xffffffff);
 
-        this.drawCenteredString(this.fontRendererObj, this.stringTitle, centerX, 15, 0xffffffff);
-        this.drawCenteredString(this.fontRendererObj, skin, centerX + 50, 214, 0xffffffff);
+        this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringFilename, x, y + 40, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringSkin, x, y + 80, 0xffcccccc);
+        this.drawRightString(this.fontRendererObj, skin, x + 120, y + 80, 0xffffffff);
+        this.drawString(this.fontRendererObj, this.stringInvulnerability, x, y + 145, 0xffcccccc);
 
-        this.drawString(this.fontRendererObj, this.stringName, 30, 30, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringFilename, 30, 70, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringSkin, 30, 110, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringInvulnerability, 30, 175, 0xffcccccc);
+        int size = this.height / 4;
+        y = this.height / 2 + this.height / 4;
+        x = x + 120 + 30;
+        x = x + (this.width - x) / 2;
 
         this.actor.renderName = false;
-        drawEntityOnScreen(centerX + 50, 200, 75, centerX - mouseX, 70 - mouseY, this.actor);
+        drawEntityOnScreen(x, y, size, centerX - mouseX, y - mouseY, this.actor);
         this.actor.renderName = true;
 
         this.name.drawTextBox();
         this.filename.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    public void drawRightString(FontRenderer fontRendererIn, String text, int x, int y, int color)
+    {
+        fontRendererIn.drawStringWithShadow(text, x - fontRendererIn.getStringWidth(text), y, color);
     }
 
     /**

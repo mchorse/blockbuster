@@ -14,6 +14,10 @@ public abstract class GuiChildScreen extends GuiScreen
     public void close()
     {
         this.mc.displayGuiScreen(this.parent);
-        this.parent.appear(this);
+
+        if (this.parent != null)
+        {
+            this.parent.appear(this);
+        }
     }
 }

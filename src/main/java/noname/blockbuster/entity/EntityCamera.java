@@ -39,6 +39,7 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
     public boolean isRecording = false;
 
     public BlockPos directorBlock;
+    public boolean renderName = true;
 
     protected float acceleration = 0.0F;
 

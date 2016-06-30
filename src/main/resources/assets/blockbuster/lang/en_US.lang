@@ -26,21 +26,23 @@ entity.blockbuster.Camera.name=Camera
 entity.blockbuster.Actor.name=Actor
 
 # GUI
+blockbuster.gui.x=X
 blockbuster.gui.done=Done
-blockbuster.gui.next=<
-blockbuster.gui.previous=>
+blockbuster.gui.next=Next
+blockbuster.gui.previous=Previous
 blockbuster.gui.restore=Restore Default
 blockbuster.gui.reset=Reset
 blockbuster.gui.add=Add
 blockbuster.gui.edit=Edit
 blockbuster.gui.remove=Remove
 
-blockbuster.gui.camera.title=Camera's configuration
-blockbuster.gui.camera.speed=Speed: 
-blockbuster.gui.camera.rate=Acceleration rate: 
-blockbuster.gui.camera.max=Max acceleration: 
-blockbuster.gui.camera.canFly=Can fly: any direction
-blockbuster.gui.camera.cantFly=Can fly: only horizontally
+blockbuster.gui.camera.title=Camera configuration
+blockbuster.gui.camera.speed=Speed
+blockbuster.gui.camera.rate=Acceleration rate 
+blockbuster.gui.camera.max=Max acceleration
+blockbuster.gui.camera.dir=Direction of flight
+blockbuster.gui.camera.canFly=Any direction
+blockbuster.gui.camera.cantFly=Only horizontally
 
 blockbuster.gui.actor.title=Actor Configuration
 blockbuster.gui.actor.default=Default

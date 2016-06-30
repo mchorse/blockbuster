@@ -31,6 +31,12 @@ public class RenderCamera extends RenderLiving
         return resource;
     }
 
+    @Override
+    protected boolean canRenderName(EntityLiving entity)
+    {
+        return super.canRenderName(entity) && ((EntityCamera) entity).renderName;
+    }
+
     /**
      * Render the camera only if it's not recording, basically hide cameras
      * when the director block is playbacks its actors
