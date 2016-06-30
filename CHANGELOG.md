@@ -2,11 +2,40 @@
 
 Blockbuster's change log
 
+## Version 1.1
+
+Second version of Blockbuster mod. This release removes the "Name Tag" mechanism 
+(redundant running here and there with intention to register/give recording name 
+to the actor/director map block) and substituted this with _nice looking_ GUIs.  
+
+**Tutorial video** for 1.1:
+Coming soon
+
+* Supports Minecraft 1.9.4 and Forge whatever supports Minecraft 1.9.4, he-he
+* Added GUIs for director and director map blocks
+* Added HUD overlay while player recording (red circle with caption in top-left 
+  corner of the screen)
+* Renamed _skin manager device_ to _actor manager device_
+* Changed actor behavior regarding name of the recording, now file name of the 
+  recording is not depends on the actor's name tag, but stored in separate 
+  field in actor's class. Use _actor configuration device_ to change to which 
+  file actor is being recorded
+* (gonna be) Changed camera's model and texture 
+* Removed "Name Tag" mechanism
+* Reduced the amount of console messages
+
+P.S.: where "_nice looking_ GUIs" is a subjective statement
+
 ## Version 1.0
 
 First version of Blockbuster mod. This release provides really basic features 
 that allows to capture simple Minecraft machinimas and cinematics for 
 adventure maps.
+
+**Tutorial video** for 1.0:
+<a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
+    <img width="100%" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+</a>
 
 * Supports Minecraft 1.9.0 and Forge 12.6.1.1907
 * Added director and director map blocks
