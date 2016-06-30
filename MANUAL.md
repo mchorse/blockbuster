@@ -1,17 +1,20 @@
 # Manual
 
+For version 1.1.
+
 ## Player recording
 
-Player's actions can be recorded via `record` command or using actors.
+Player's actions can be recorded via `record` command or by interacting (right  
+clicking the) with actors.
 
 Following actions are fully supported by this mod:
 
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and sneaking
-* Interacting with blocks (opening doors, pushing buttons, toggling levers)
+* Interacting with blocks (opening doors/gates, pushing buttons, toggling levers)
 * Placing/breaking blocks
 * Holding items in both arms
 * Equipping armor
-* Send messages in chat
+* Send formatted messages in chat (use `[` instead of `§` for formatting)
 * Mounting entities
 * Shoot arrow
 * Flying elytra
@@ -32,15 +35,16 @@ actors and cameras. It has also special redstone hooks.
 With the power of *director block* you can playback all registered actors together 
 without having to setup big contraptions from redstone and command blocks.
 
-To register actor or camera, you should use *register* item. Right click on actor or 
-camera first, to take a sample of UUID onto *register* item, and then right 
-click *register* item on *director block*. If you succesfully registered the entity 
-(actor or camera), you'll get message in the chat that entity was succesfully 
-registered.
+To register an actor or a camera, you should use *register item*. Right click on 
+actor or camera first, to take a sample of entity's UUID onto *register item*, 
+and then right click *register item* on *director block*. If you have succesfully 
+registered the entity (actor or camera), you'll get message in the chat that 
+entity was succesfully registered.
 
 When you'll register your actors and cameras, you'll be able to use full potential 
 of this mod. Already recorded actors will be played when you'll start recording 
-another actor, and cameras will have a really useful feature.
+another actor, and cameras will disappear when *director block* starts playing 
+and will appear again when *director block* will stop playing.
 
 When the camera is registered to your *director block*, you can switch between 
 cameras using "[" and "]" keys ("[" is for previous, and "]" is for next camera). 
@@ -51,8 +55,15 @@ you registered the cameras, you can name all your cameras from "Camera 1" to
 members: actors and cameras, and their names).
 
 To playback the scene, you need to attach a *playback button* to *director block*. 
-Simply right click *director block* while holding *playback button*, and use the 
-*playback button* (right click while holding *playback* item), to playback the scene.
+Simply right click *director block* while holding *playback button* in your hand, 
+and use the *playback button* (right click while holding *playback* item), to 
+playback the scene.
+
+You can manage director block's cast by right clicking the director block, the 
+GUI will pop up. You'll see a scroll list with entries of registered entities, 
+their name, icon (which signify either that's an actor or a camera) and two 
+buttons for managing the entity (edit or remove). In previous version you would 
+have to break the block to reset the scene.
 
 By the way, all of these items are available in creative "Blockbuster" tab.
 
@@ -62,17 +73,13 @@ By the way, all of these items are available in creative "Blockbuster" tab.
 adventure maps (cinematics FTW). It's just like *director block*, but functions 
 more as `play` command.
 
-With *director map block*, you register actors with the *name tag* item. 
-Name of the name tag specifies the custon name tag for your actor and the file 
-name from which he's being played. You may specify custom skin by appending 
-colon (`:`) and the name of the skin. Hint: to give a custom name to a name tag, 
-use anvil.
+To register replay with *director map block* you need to open up 
+*director map block*'s GUI (right click the block). Then input your new actor's 
+recording id (file name from which actor would be played), and press "Add" 
+button, after that a new entry will appear in the scroll box below "Add" button. 
 
-For example, if you want your actor to have file name of "JustDoIt", and actor's 
-skin "Shia LaBeouf", you should name your tag "JustDoIt:Shia LaBeouf" and  
-record a replay with this command:
-
-    /record JustDoIt
+You can edit following actor's properties: name tag, recording id, skin and 
+invincibility.
 
 When you'll register your actors, you can playback this block with playback 
 button (just as with regular *director block*). Redstone hooks are also supported 
@@ -100,9 +107,10 @@ director starts playing, no worries, use the redstone play hook.
 
 Actors are the entities that you use to record your actions. Actors, by default, 
 look like crash test dummies, but you may change their skin, by using the 
-*skin manager* item. First you'll have to put some skins into 
+*actor configuration* item. First you'll have to put some skins into 
 `minecraft/config/blockbuster/skins` folder, and then you can select a skin 
-from this folder using GUI.
+from this folder using GUI. In this GUI you can also change other properties such 
+as name, recording file name, skin and invincibility. 
 
 To record the actor, simply right click it, and start performing some sick 
 movements. When you'll be done, you need to stop the recording either by 
@@ -112,7 +120,9 @@ you can use any name for file, as long as you providing first argument).
 For adventure maps makers: you can put skins into world's save folder 
 `blockbuster/skins` to transfer the skins with the map.
 
-Note: Blockbuster mod supports only 64x32 textured skins, yet.
+Player records are saved in `blockbuster/records` folder in world's save folder.
+
+Note: Blockbuster mod supports only 64x32 textured skins, for now.
 
 ## Cameras
 
