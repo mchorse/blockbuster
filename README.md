@@ -42,6 +42,40 @@ without the my permission. Yeah.
 
 This mod provides following features:
 
+#### Player's recording
+
+* All stuff that Mocap, but more
+* Interacting with blocks (opening doors, toggling levers, pushing buttons, etc.)
+* Breaking blocks
+* Mounting entities like pigs (tested with AnimalBikes, works well, but keep animals in fences)
+* Flying elytra
+* Text formatting in chat using '[' character instead of '§'
+
+#### Director blocks
+
+* Has two variations: for machinimas and for adventure maps
+* Ties actors and cameras into an organizable scene (with lots of benefits)
+* Can be playbacked by playback button or /play-director command
+* Both of the block have their own GUIs for managing the cast (view, add, edit, remove, reset)
+
+#### Actors
+
+* Can playback player's actions
+* Customizable skins (simply drop 64x32 skins into minecraft/config/blockbsuter/skins folder)
+* Mostly look like players
+* When tied to director block and player starts recording this actor, player will be able to react to previously recorded actors
+
+#### Cameras
+
+* Configurable camera's properties such as: speed, acceleration rate, maximum acceleration and flying direction
+* Jump between cameras when tied to director block
+
+#### Commands
+
+* Record command (/record) – allows players to record their actions to a filename for a later playback
+* Play command (/play) – allows playback of earlier recorded file
+* Play director command (/play-director) – allows player to trigger playback in director block specified at XYZ position
+
 ## Manual
 
 Manual is located in the root of this repository in file named [MANUAL.md](./MANUAL.md).
