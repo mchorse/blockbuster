@@ -28,7 +28,7 @@ wrong.
 
 **Tutorial video** for 1.0:
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
-    <img width="100%" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+    <img align="center" height="480" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>
 
 ## License
