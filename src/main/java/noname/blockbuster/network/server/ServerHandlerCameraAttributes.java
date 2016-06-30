@@ -17,7 +17,7 @@ public class ServerHandlerCameraAttributes extends ServerMessageHandler<PacketCa
 
         if (entity instanceof EntityCamera)
         {
-            ((EntityCamera) entity).setConfiguration(message.speed, message.accelerationRate, message.accelerationMax, message.canFly, true);
+            ((EntityCamera) entity).setConfiguration(message.name, message.speed, message.accelerationRate, message.accelerationMax, message.canFly, true);
         }
     }
 }

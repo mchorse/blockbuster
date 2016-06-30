@@ -77,6 +77,7 @@ public class GuiCamera extends GuiChildScreen
         this.buttonList.add(this.canFly = new GuiToggle(3, x, y + 160, w, 20, I18n.format("blockbuster.gui.camera.canFly"), I18n.format("blockbuster.gui.camera.cantFly")));
         this.buttonList.add(this.done = new GuiButton(4, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done")));
 
+        this.name.setText(this.camera.getCustomNameTag());
         this.canFly.setValue(this.camera.canFly);
     }
 
@@ -96,13 +97,14 @@ public class GuiCamera extends GuiChildScreen
 
     private void saveAndExit()
     {
+        String name = this.name.getText();
         int id = this.camera.getEntityId();
         float speed = (float) this.speed.getValue() / 4;
         float rate = (float) this.accelerationRate.getValue();
         float max = (float) this.accelerationMax.getValue() / 100;
         boolean canFly = this.canFly.getValue();
 
-        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, speed, rate, max, canFly));
+        Dispatcher.getInstance().sendToServer(new PacketCameraAttributes(id, name, speed, rate, max, canFly));
 
         this.close();
     }

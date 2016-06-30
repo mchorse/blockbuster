@@ -241,8 +241,9 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
      * Update camera's custom attributes and send notification to tracking players
      * (if it's needed)
      */
-    public void setConfiguration(float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
+    public void setConfiguration(String name, float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
     {
+        this.setCustomNameTag(name);
         this.speed = speed2;
         this.accelerationRate = accelerationRate2;
         this.accelerationMax = accelerationMax2;
@@ -250,7 +251,7 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
+            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), name, this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
         }
     }
 
