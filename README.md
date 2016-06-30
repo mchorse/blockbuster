@@ -20,19 +20,13 @@ Install Minecraft Forge, then go to
 latest version jar file. Put it in minecraft's `mods` folder, launch the game, 
 and done. 
 
+<a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
+    <img align="right" width="32%" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+</a>
+
 After that, Blockbuster mod should be installed and will appear in Minecraft's 
 mods menu. If Blockbuster didn't appeared in mods menu, then something went 
 wrong.
-
-## Videos
-
-### Tutorial video
-
-<p>
-    <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
-        <img align="center" height="480" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
-    </a>
-</p>
 
 ## License
 
