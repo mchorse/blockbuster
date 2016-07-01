@@ -244,7 +244,7 @@ public class GuiActor extends GuiChildScreen
         x = x + (this.width - x) / 2;
 
         this.actor.renderName = false;
-        drawEntityOnScreen(x, y, size, centerX - mouseX, y - mouseY, this.actor);
+        drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
         this.actor.renderName = true;
 
         this.name.drawTextBox();
@@ -266,7 +266,7 @@ public class GuiActor extends GuiChildScreen
     {
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, posY, 50.0F);
+        GlStateManager.translate(posX, posY, 100.0F);
         GlStateManager.scale((-scale), scale, scale);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 

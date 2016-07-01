@@ -18,29 +18,42 @@ public class ModelCamera extends ModelBase
      * Body parts of me camera: body with recording thingy, two storage thingies
      * on top, and super-puper awesome magnifying lens
      */
-    ModelRenderer body;
-    ModelRenderer backTape;
-    ModelRenderer frontTape;
-    ModelRenderer lens;
+    private ModelRenderer body;
+    private ModelRenderer lens;
+    private ModelRenderer cap;
+    private ModelRenderer button;
+    private ModelRenderer viewFinder;
 
     /**
-     * I hate hard-coded models ):[
+     * So there's the deal with the coordinate system:
+     *
+     * - y=16 is actually the bottom of the entity
+     * - x=0,y=0 is the center point (x and z) above the head (max y)
+     * - z<0 shifts in direction of head rotation (where the entity looks)
+     * - Box's origin is actually bottom, left, front corner of the box (relative to the entity's yaw rotation)
+     *
+     * Still hate hard-coded models
      */
     public ModelCamera()
     {
-        float yOffset = 5.0F;
+        int yOffset = 16;
 
         this.body = new ModelRenderer(this, 0, 0);
-        this.body.addBox(-2.0F, 8.0F + yOffset, -4.0F, 4, 4, 8);
+        this.body.addBox(-3, yOffset - 3, -2, 6, 6, 10);
 
-        this.backTape = new ModelRenderer(this, 24, 0);
-        this.backTape.addBox(-1.0F, 5.0F + yOffset, 0.5F, 2, 3, 3);
-        this.frontTape = new ModelRenderer(this, 24, 0);
-        this.frontTape.addBox(-1.0F, 5.0F + yOffset, -3.5F, 2, 3, 3);
+        this.lens = new ModelRenderer(this, 14, 16);
+        this.lens.addBox(-2.5F, yOffset - 2.5F, -6.0F, 5, 5, 4);
+        this.lens.setTextureOffset(22, 0).addBox(-2F, yOffset - 2F, -7.0F, 4, 4, 1);
 
-        this.lens = new ModelRenderer(this, 0, 12);
-        this.lens.addBox(-1.0F, 9.0F + yOffset, -5.0F, 2, 2, 1);
-        this.lens.setTextureOffset(0, 15).addBox(-2.0F, 8.0F + yOffset, -7.0F, 4, 4, 2);
+        this.cap = new ModelRenderer(this, 0, 16);
+        this.cap.addBox(3, yOffset - 2, 1, 1, 4, 6);
+
+        this.button = new ModelRenderer(this, 0, 0);
+        this.button.addBox(-3.5F, yOffset - 2F, 6F, 1, 1, 1);
+
+        this.viewFinder = new ModelRenderer(this, 32, 5);
+        this.viewFinder.addBox(-1.5F, yOffset - 4.0F, 6, 3, 3, 4);
+        this.viewFinder.setTextureOffset(32, 0).addBox(-1.0F, yOffset - 3.5F, 10.0F, 2, 2, 3);
     }
 
     /**
@@ -50,9 +63,10 @@ public class ModelCamera extends ModelBase
     @Override
     public void render(Entity entityIn, float p_78088_2_, float limbSwing, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        this.backTape.render(scale);
-        this.frontTape.render(scale);
-        this.lens.render(scale);
         this.body.render(scale);
+        this.lens.render(scale);
+        this.cap.render(scale);
+        this.button.render(scale);
+        this.viewFinder.render(scale);
     }
 }

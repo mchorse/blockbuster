@@ -8,12 +8,12 @@ Second version of Blockbuster mod. This release removes the "Name Tag" mechanism
 (redundant running here and there with intention to register/give recording name 
 to the actor/director map block) and substituted this with _nice looking_ GUIs.
 
-Basically, this release mostly focuses on enhancing GUI.
+Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 
 **Tutorial video** for 1.1:
 Coming soon
 
-* Supports Minecraft 1.9.4 and Forge whatever supports Minecraft 1.9.4, he-he
+* Supports Minecraft 1.9.4 and Forge whatever supports Minecraft 1.9.4, he-he (thanks to [Lightwave](http://www.minecraftforge.net/forum/index.php?action=profile;u=36902))
 * Added GUIs for director and director map blocks
 * Added HUD overlay while player recording (red circle with caption in top-left 
   corner of the screen)

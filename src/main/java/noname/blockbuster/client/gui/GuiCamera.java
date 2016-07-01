@@ -163,7 +163,7 @@ public class GuiCamera extends GuiChildScreen
         x = x + (this.width - x) / 2;
 
         this.camera.renderName = false;
-        GuiActor.drawEntityOnScreen(x, y, size, this.width / 2 - mouseX, 155 - mouseY, this.camera);
+        GuiActor.drawEntityOnScreen(x, y, size, x - mouseX, y - mouseY, this.camera);
         this.camera.renderName = true;
 
         super.drawScreen(mouseX, mouseY, partialTicks);
