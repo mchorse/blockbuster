@@ -77,13 +77,15 @@ public class GuiDirector extends GuiParentScreen
         int w = 200;
         int x = this.width / 2 - w / 2;
 
-        this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done"));
-        this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset"));
+        this.done = new GuiButton(0, x, this.height - 30, 95, 20, I18n.format("blockbuster.gui.done"));
+        this.reset = new GuiButton(1, x + 105, this.height - 30, 95, 20, I18n.format("blockbuster.gui.reset"));
 
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.cast.updateRect(this.width / 2 - 120, 40, 240, 155);
+        int y = 40;
+
+        this.cast.updateRect(this.width / 2 - 120, y, 240, this.height - (y + 40));
     }
 
     @Override

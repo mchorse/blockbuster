@@ -98,11 +98,17 @@ public class GuiDirectorMap extends GuiParentScreen
         this.input = new GuiTextField(3, this.fontRendererObj, x + 1, 51, 143, 18);
         this.input.setMaxStringLength(100);
 
-        this.buttonList.add(this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done")));
-        this.buttonList.add(this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset")));
-        this.buttonList.add(this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add")));
+        this.done = new GuiButton(0, x, this.height - 30, 95, 20, I18n.format("blockbuster.gui.done"));
+        this.reset = new GuiButton(1, x + 105, this.height - 30, 95, 20, I18n.format("blockbuster.gui.reset"));
+        this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add"));
 
-        this.cast.updateRect(this.width / 2 - 120, 80, 240, 115);
+        this.buttonList.add(this.done);
+        this.buttonList.add(this.reset);
+        this.buttonList.add(this.add);
+
+        int y = 80;
+
+        this.cast.updateRect(this.width / 2 - 120, y, 240, this.height - (y + 40));
     }
 
     /**

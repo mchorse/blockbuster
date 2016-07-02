@@ -407,11 +407,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public String toReplayString()
     {
-        String name = this.hasCustomName() ? ":" + this.getCustomNameTag() : "";
-        String skin = this.skin != "" ? ":" + this.skin : "";
-        String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : "";
+        String name = this.hasCustomName() ? ":" + this.getCustomNameTag() : ":";
+        String skin = !this.skin.equals("") ? ":" + this.skin : ":";
+        String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : ":0";
 
-        return this.filename + name + skin + (skin.equals("") ? ":" + invulnerable : invulnerable);
+        return this.filename + name + skin + invulnerable;
     }
 
     /* Reading/writing to disk */
