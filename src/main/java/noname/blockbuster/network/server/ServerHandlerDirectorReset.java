@@ -6,6 +6,12 @@ import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorReset;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
+/**
+ * Server handler director reset
+ *
+ * This handler is responsible for reseting the director block given at position
+ * received from message.
+ */
 public class ServerHandlerDirectorReset extends ServerMessageHandler<PacketDirectorReset>
 {
     @Override

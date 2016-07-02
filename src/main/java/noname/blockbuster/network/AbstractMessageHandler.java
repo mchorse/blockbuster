@@ -6,14 +6,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.api.Comment;
 
 /**
  * Base of all MessageHandlers.
  *
  * @author Ernio (Ernest Sadowski)
  */
-@Comment(author = "Ernio (Ernest Sadowski)")
 public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler<T, IMessage>
 {
     /**

@@ -20,9 +20,12 @@ import noname.blockbuster.recording.Mocap;
  */
 public class GuiReplays extends GuiScrollPane
 {
-    private List<String> cast;
-    private BlockPos pos;
+    /* GUI */
     private GuiParentScreen parent;
+
+    /* Input data */
+    private BlockPos pos;
+    private List<String> cast;
 
     public GuiReplays(GuiParentScreen parent, int x, int y, int w, int h, BlockPos pos)
     {
@@ -34,9 +37,7 @@ public class GuiReplays extends GuiScrollPane
     public void setCast(List<String> cast)
     {
         this.cast = cast;
-
-        this.scrollHeight = cast.size() * 24;
-        this.scrollY = 0;
+        this.setHeight(cast.size() * 24);
     }
 
     @Override

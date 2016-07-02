@@ -6,7 +6,10 @@ import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.common.PacketCameraAttributes;
 
 /**
- * Someone, please write comments for every of client and server handlers for me :)
+ * Server handle camera attributes
+ *
+ * This handler is responsible for setting values from message into the entity
+ * via setConfiguration method.
  */
 public class ServerHandlerCameraAttributes extends ServerMessageHandler<PacketCameraAttributes>
 {

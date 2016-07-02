@@ -1,13 +1,14 @@
 package noname.blockbuster.network.server;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
+/**
+ * This handler resets director map block
+ */
 public class ServerHandlerDirectorMapReset extends ServerMessageHandler<PacketDirectorMapReset>
 {
     @Override

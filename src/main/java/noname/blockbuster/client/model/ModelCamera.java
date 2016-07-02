@@ -8,8 +8,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Hardcoded camera model
- *
- * Those comments are for me, by the way
  */
 @SideOnly(Side.CLIENT)
 public class ModelCamera extends ModelBase
@@ -32,7 +30,7 @@ public class ModelCamera extends ModelBase
      * - z<0 shifts in direction of head rotation (where the entity looks)
      * - Box's origin is actually bottom, left, front corner of the box (relative to the entity's yaw rotation)
      *
-     * Still hate hard-coded models
+     * Still hate hard-coded models, and I may be wrong about these points above
      */
     public ModelCamera()
     {

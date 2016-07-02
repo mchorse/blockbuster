@@ -22,7 +22,7 @@ import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.recording.MocapEventHandler;
+import noname.blockbuster.recording.PlayerEventHandler;
 import noname.blockbuster.tileentity.TileEntityDirector;
 import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
@@ -53,7 +53,7 @@ public class CommonProxy implements IGuiHandler
 
     public void load(FMLInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
     }
 
     /**

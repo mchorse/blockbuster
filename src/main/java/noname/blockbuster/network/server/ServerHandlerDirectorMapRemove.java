@@ -6,6 +6,9 @@ import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapRemove;
 import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
+/**
+ * This handler removes replay from director map block
+ */
 public class ServerHandlerDirectorMapRemove extends ServerMessageHandler<PacketDirectorMapRemove>
 {
     @Override

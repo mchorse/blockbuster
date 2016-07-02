@@ -29,6 +29,9 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.previousCamera);
     }
 
+    /**
+     * Handle keys
+     */
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {

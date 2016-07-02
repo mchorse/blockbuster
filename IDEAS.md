@@ -29,5 +29,6 @@ There's some ideas that I might implement in next Blockbuster mod:
 * Custom actor models (not only player-like, but also custom one)
     * If you gonna do it, also supply minecraft vanilla mobs with skins and 
       create a tool to create those models (that's to me)
+    * Also add the ability to morph player into this entity
 * Custom actor actions (like dancing, waving with hands like crazy person, or making a blow kiss)
 * Animating actor skins (basically to create illusion of lip syncing or eyes blinking)  

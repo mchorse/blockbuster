@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
 import noname.blockbuster.network.client.ClientHandlerCameraRecording;
 import noname.blockbuster.network.client.ClientHandlerDirectorCast;
@@ -48,7 +47,6 @@ import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
  *
  * @author Ernio (Ernest Sadowski)
  */
-@Comment(author = "Ernio (Ernest Sadowski)")
 public class Dispatcher
 {
     private static final SimpleNetworkWrapper DISPATCHER = NetworkRegistry.INSTANCE.newSimpleChannel(Blockbuster.MODID);

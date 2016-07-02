@@ -6,6 +6,9 @@ import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
 import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
+/**
+ * This handler substitutes replay by given index in the director map block
+ */
 public class ServerHandlerDirectorMapEdit extends ServerMessageHandler<PacketDirectorMapEdit>
 {
     @Override

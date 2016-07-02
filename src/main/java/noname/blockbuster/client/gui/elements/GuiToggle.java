@@ -2,6 +2,12 @@ package noname.blockbuster.client.gui.elements;
 
 import net.minecraft.client.gui.GuiButton;
 
+/**
+ * GuiToggle
+ *
+ * Boolean implementation of GuiButton. On button press (i.e. action performed),
+ * you should toggle this button.
+ */
 public class GuiToggle extends GuiButton
 {
     public String onText;

@@ -6,6 +6,9 @@ import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
+/**
+ * This handler is responsible for removing actor or camera from director block.
+ */
 public class ServerHandlerDirectorRemove extends ServerMessageHandler<PacketDirectorRemove>
 {
     @Override

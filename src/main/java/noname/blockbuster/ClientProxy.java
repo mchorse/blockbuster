@@ -34,6 +34,14 @@ import noname.blockbuster.client.render.RenderCamera;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.entity.EntityCamera;
 
+/**
+ * Client proxy
+ *
+ * This class is responsible for registering item models, block models,
+ * entity renders and injecting actor skin resource pack.
+ *
+ * This class als provides GUIs.
+ */
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {

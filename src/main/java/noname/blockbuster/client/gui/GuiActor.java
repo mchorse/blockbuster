@@ -15,7 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiChildScreen;
@@ -31,8 +30,6 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  *
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.
- *
- * @todo return skin cycling
  */
 public class GuiActor extends GuiChildScreen
 {
@@ -143,7 +140,11 @@ public class GuiActor extends GuiChildScreen
 
     private void updateSkin(int index)
     {
-        this.skinIndex = MathHelper.clamp_int(index, 0, this.skins.size() - 1);
+        int min = 0;
+        int max = this.skins.size() - 1;
+
+        /* This expression is just like clamp, but with flipped range values */
+        this.skinIndex = index < min ? max : (index > max ? min : index);
         this.updateSkin();
     }
 
@@ -252,6 +253,9 @@ public class GuiActor extends GuiChildScreen
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
+    /**
+     * Draw right aligned text on the screen
+     */
     public void drawRightString(FontRenderer fontRendererIn, String text, int x, int y, int color)
     {
         fontRendererIn.drawStringWithShadow(text, x - fontRendererIn.getStringWidth(text), y, color);

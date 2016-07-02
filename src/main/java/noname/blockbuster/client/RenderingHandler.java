@@ -5,6 +5,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 
+/**
+ * Rendering handler
+ *
+ * This handler is another handler in this mod that responsible for rendering.
+ * Currently this handler only renders recording overlay
+ */
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;

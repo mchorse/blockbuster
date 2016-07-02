@@ -13,7 +13,8 @@ import noname.blockbuster.recording.PlayThread;
 /**
  * Director map tile entity
  *
- * This TE is responsible for main logic of  */
+ * This TE is responsible for main logic and storage of adventure map replays.
+ */
 public class TileEntityDirectorMap extends AbstractTileEntityDirector
 {
     /**
@@ -94,7 +95,7 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
     /**
      * Remove duplicates from actor list
      */
-    private void removeDuplicates()
+    protected void removeDuplicates()
     {
         List<String> replays = new ArrayList<String>();
         Iterator<String> iterator = this.actors.iterator();

@@ -5,6 +5,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.common.PacketModifyActor;
 
+/**
+ * Server handler modify actor
+ *
+ * This handler is responsible for injecting all of the values from recieved
+ * message into actor entity via special defined method.
+ */
 public class ServerHandlerModifyActor extends ServerMessageHandler<PacketModifyActor>
 {
     @Override

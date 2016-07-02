@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import noname.blockbuster.api.Comment;
 import noname.blockbuster.commands.CommandPlay;
 import noname.blockbuster.commands.CommandPlayDirector;
 import noname.blockbuster.commands.CommandRecord;
@@ -22,26 +21,22 @@ import noname.blockbuster.commands.CommandRecord;
  * complaining actors).
  *
  * This mod is possible thanks to the following code/examples/resources:
- * - Jabelar's minecraft modding tutorials
+ * - Jabelar's and TGG's minecraft modding tutorials
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
  * - Ernio for helping with camera attributes sync + sharing with his own
- *   network abstract layer
+ *   network abstract layer code
  * - diesieben07 for giving idea for actor skins
  * - Choonster for pointing out that processInteract triggers for each hand
- *
- * ToDo list:
- * - Add GUI for director tile entity
- * - Make camera's model prettier
+ * - Lightwave for porting some of the code to 1.9.4
  */
-@Comment(comment = "This mod uses portion of Mocap mod's recording code")
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
 public class Blockbuster
 {
-    /* Mod name and version info */
+    /* Mod info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1";
 
     /* Items */
     public static Item cameraItem;

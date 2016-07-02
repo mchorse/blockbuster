@@ -2,6 +2,13 @@ package noname.blockbuster.client.gui.elements;
 
 import net.minecraft.client.gui.GuiScreen;
 
+/**
+ * This GuiChildScreen
+ *
+ * It's like iOS's table views (you know these table views when you press on
+ * the table row and its WHOOSHs on the right and other screen appears). You
+ * need to pass to your screen a parent screen so it could invoke appear.
+ */
 public abstract class GuiChildScreen extends GuiScreen
 {
     protected GuiParentScreen parent;

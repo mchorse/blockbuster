@@ -6,6 +6,12 @@ import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
+/**
+ * Server handle director map add cast member
+ *
+ * This handler responsible for adding a cast member (a replay of actor) to
+ * the director map block
+ */
 public class ServerHandlerDirectorMapAdd extends ServerMessageHandler<PacketDirectorMapAdd>
 {
     @Override

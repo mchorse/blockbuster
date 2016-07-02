@@ -6,6 +6,9 @@ import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorRequestCast;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
+/**
+ * This handler is used to force request of the cast by the director.
+ */
 public class ServerHandlerDirectorRequestCast extends ServerMessageHandler<PacketDirectorRequestCast>
 {
     @Override

@@ -15,6 +15,13 @@ import noname.blockbuster.block.AbstractBlockDirector;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 
+/**
+ * Abstract Tile Entity Director
+ *
+ * This class is base class for director block's tile entities. This class
+ * provides basic methods for changing state of the block, and defines
+ * some abstract methods for playback.
+ */
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();

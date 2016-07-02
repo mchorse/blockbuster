@@ -6,6 +6,12 @@ import java.io.IOException;
 
 import noname.blockbuster.entity.EntityActor;
 
+/**
+ * Elytra flying action
+ *
+ * This action toggles actor's elytra flying state, this action is mostly used
+ * for rendering, server doesn't really care.
+ */
 public class ElytraFlyingAction extends Action
 {
     public boolean isFlying;

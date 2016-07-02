@@ -49,37 +49,7 @@ public class GuiCamera extends GuiChildScreen
         this.camera = entity;
     }
 
-    @Override
-    public void initGui()
-    {
-        int w = 120;
-        int x = 30;
-        int y = 25;
-
-        this.name = new GuiTextField(6, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
-
-        this.speed = new GuiSlider(0, x, y + 40, w, 20, "~", " blocks/s", 0, 5, 0, true, true);
-        this.accelerationRate = new GuiSlider(1, x, y + 80, w, 20, "", "", 0, 0.5, 0, true, true);
-        this.accelerationMax = new GuiSlider(2, x, y + 120, w, 20, "", "%", 0, 100, 0, true, true);
-
-        this.speed.precision = this.accelerationMax.precision = 1;
-        this.accelerationRate.precision = 2;
-
-        this.speed.setValue(this.camera.speed * 4);
-        this.accelerationRate.setValue(this.camera.accelerationRate);
-        this.accelerationMax.setValue(this.camera.accelerationMax * 100);
-
-        this.speed.updateSlider();
-        this.accelerationRate.updateSlider();
-        this.accelerationMax.updateSlider();
-
-        this.buttonList.clear();
-        this.buttonList.add(this.canFly = new GuiToggle(3, x, y + 160, w, 20, I18n.format("blockbuster.gui.camera.canFly"), I18n.format("blockbuster.gui.camera.cantFly")));
-        this.buttonList.add(this.done = new GuiButton(4, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done")));
-
-        this.name.setText(this.camera.getCustomNameTag());
-        this.canFly.setValue(this.camera.canFly);
-    }
+    /* Action handling */
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
@@ -108,6 +78,8 @@ public class GuiCamera extends GuiChildScreen
 
         this.close();
     }
+
+    /* Input handling */
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
@@ -138,6 +110,46 @@ public class GuiCamera extends GuiChildScreen
         this.name.textboxKeyTyped(typedChar, keyCode);
     }
 
+    /* GUI and drawing */
+
+    @Override
+    public void initGui()
+    {
+        int w = 120;
+        int x = 30;
+        int y = 25;
+
+        /* Initializing the fields */
+        this.name = new GuiTextField(6, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.speed = new GuiSlider(0, x, y + 40, w, 20, "~", " blocks/s", 0, 5, 0, true, true);
+        this.accelerationRate = new GuiSlider(1, x, y + 80, w, 20, "", "", 0, 0.5, 0, true, true);
+        this.accelerationMax = new GuiSlider(2, x, y + 120, w, 20, "", "%", 0, 100, 0, true, true);
+        this.canFly = new GuiToggle(3, x, y + 160, w, 20, I18n.format("blockbuster.gui.camera.canFly"), I18n.format("blockbuster.gui.camera.cantFly"));
+        this.done = new GuiButton(4, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done"));
+
+        /* Adding buttons to the list */
+        this.buttonList.add(this.speed);
+        this.buttonList.add(this.accelerationRate);
+        this.buttonList.add(this.accelerationMax);
+        this.buttonList.add(this.canFly);
+        this.buttonList.add(this.done);
+
+        /* Setting values */
+        this.speed.precision = this.accelerationMax.precision = 1;
+        this.accelerationRate.precision = 2;
+
+        this.speed.setValue(this.camera.speed * 4);
+        this.accelerationRate.setValue(this.camera.accelerationRate);
+        this.accelerationMax.setValue(this.camera.accelerationMax * 100);
+
+        this.speed.updateSlider();
+        this.accelerationRate.updateSlider();
+        this.accelerationMax.updateSlider();
+
+        this.name.setText(this.camera.getCustomNameTag());
+        this.canFly.setValue(this.camera.canFly);
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
@@ -150,11 +162,8 @@ public class GuiCamera extends GuiChildScreen
         this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
         this.name.drawTextBox();
         this.drawString(this.fontRendererObj, this.stringSpeed, x, y + 40, 0xffcccccc);
-        this.speed.drawButton(this.mc, mouseX, mouseY);
         this.drawString(this.fontRendererObj, this.stringRate, x, y + 80, 0xffcccccc);
-        this.accelerationRate.drawButton(this.mc, mouseX, mouseY);
         this.drawString(this.fontRendererObj, this.stringMax, x, y + 120, 0xffcccccc);
-        this.accelerationMax.drawButton(this.mc, mouseX, mouseY);
         this.drawString(this.fontRendererObj, this.stringDir, x, y + 160, 0xffcccccc);
 
         int size = this.height / 2;

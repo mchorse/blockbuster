@@ -17,6 +17,7 @@ Coming soon
 * Added GUIs for director and director map blocks
 * Added HUD overlay while player recording (red circle with caption in top-left 
   corner of the screen)
+* Added arm pose while holding a bow
 * Renamed _skin manager device_ to _actor manager device_
 * Changed actor behavior regarding name of the recording, now file name of the 
   recording is not depends on the actor's name tag, but stored in separate 

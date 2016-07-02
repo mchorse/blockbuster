@@ -34,7 +34,7 @@ import noname.blockbuster.recording.actions.ShootArrowAction;
  *
  * Taken from Mocap mod and rewritten.
  */
-public class MocapEventHandler
+public class PlayerEventHandler
 {
     @SubscribeEvent
     public void onPlayerBreaksBlock(BreakEvent event)

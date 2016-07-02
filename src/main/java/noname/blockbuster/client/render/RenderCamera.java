@@ -12,6 +12,11 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.client.model.ModelCamera;
 import noname.blockbuster.entity.EntityCamera;
 
+/**
+ * Camera renderer
+ *
+ * Renders camera and more
+ */
 public class RenderCamera extends RenderLiving
 {
     private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");

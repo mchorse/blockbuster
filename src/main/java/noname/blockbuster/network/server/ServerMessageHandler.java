@@ -2,7 +2,6 @@ package noname.blockbuster.network.server;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.AbstractMessageHandler;
 
 /**
@@ -12,7 +11,6 @@ import noname.blockbuster.network.AbstractMessageHandler;
  *
  * @author Ernio (Ernest Sadowski)
  */
-@Comment(author = "Ernio (Ernest Sadowski)")
 public abstract class ServerMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {
     public abstract void run(final EntityPlayerMP player, final T message);

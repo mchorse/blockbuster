@@ -20,6 +20,9 @@ import noname.blockbuster.recording.Mocap;
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
+    /**
+     * UUID list of registered cameras
+     */
     public List<String> cameras = new ArrayList<String>();
 
     /* Read/write this TE to disk */
@@ -40,6 +43,9 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
     /* Public API */
 
+    /**
+     * Remove all registered actors and cameras from this TE
+     */
     public void reset()
     {
         this.actors = new ArrayList<String>();
@@ -47,6 +53,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         this.markDirty();
     }
 
+    /**
+     * Remove either actor or camera by id.
+     *
+     * Oh gosh, this method does too many things!!!
+     */
     public void remove(int id, boolean type)
     {
         (type ? this.actors : this.cameras).remove(id);
@@ -88,17 +99,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return false;
-    }
-
-    @Override
-    public List<String> getCast()
-    {
-        List<String> cast = new ArrayList<String>();
-
-        cast.addAll(this.actors);
-        cast.addAll(this.cameras);
-
-        return cast;
     }
 
     /**

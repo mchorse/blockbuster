@@ -42,6 +42,12 @@ public abstract class GuiScrollPane extends GuiScreen
         this.h = h;
     }
 
+    public void setHeight(int height)
+    {
+        this.scrollY = 0;
+        this.scrollHeight = height;
+    }
+
     /* Scroll content methods */
 
     public void scrollBy(int y)
@@ -124,6 +130,7 @@ public abstract class GuiScrollPane extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        /* F*$! those ints */
         float rx = (float) this.mc.displayWidth / (float) this.width;
         float ry = (float) this.mc.displayHeight / (float) this.height;
 

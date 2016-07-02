@@ -15,6 +15,9 @@ import noname.blockbuster.entity.EntityActor;
  *
  * Makes actor interact with a block (press button, switch lever, open the door,
  * etc.)
+ *
+ * If there was CL4P-TP actor in this mod, this action would be called
+ * IntergradeBlockAction :D
  */
 public class InteractBlockAction extends Action
 {

@@ -6,7 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.AbstractMessageHandler;
 
 /**
@@ -16,7 +15,6 @@ import noname.blockbuster.network.AbstractMessageHandler;
  *
  * @author Ernio (Ernest Sadowski)
  */
-@Comment(author = "Ernio (Ernest Sadowski)")
 @SideOnly(Side.CLIENT)
 public abstract class ClientMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {

@@ -21,6 +21,13 @@ import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.recording.Mocap;
 
+/**
+ * Director block's cast GUI
+ *
+ * This class is responsible for rendering scroll list with director block's
+ * cast and execute different actions (edit, remove) when player hits the
+ * button.
+ */
 public class GuiCast extends GuiScrollPane
 {
     /**

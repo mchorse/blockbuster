@@ -4,6 +4,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 
+/**
+ * Server handler switch camera
+ *
+ * This handler teleports player between cameras either in forward or backward.
+ */
 public class ServerHandlerSwitchCamera extends ServerMessageHandler<PacketSwitchCamera>
 {
     @Override
