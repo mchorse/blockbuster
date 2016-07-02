@@ -32,10 +32,6 @@ Blockbuster 1.0 – Tutorial by me
     <img height="420" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>
 
-## License
-
-Screw it, let it be MIT License.
-
 ## Features
 
 This mod provides following features:

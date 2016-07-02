@@ -55,9 +55,10 @@ public class BlockDirector extends AbstractBlockDirector
         }
 
         TileEntityDirector tile = (TileEntityDirector) world.getTileEntity(pos);
+
         NBTTagCompound tag = item.getTagCompound();
 
-        if (!tag.hasKey("EntityID"))
+        if (tag == null || !tag.hasKey("EntityID"))
         {
             return false;
         }
