@@ -3,10 +3,13 @@ package noname.blockbuster.network.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 
+@SideOnly(Side.CLIENT)
 public class ClientHandlerDirectorMapCast extends ClientMessageHandler<PacketDirectorMapCast>
 {
     @Override

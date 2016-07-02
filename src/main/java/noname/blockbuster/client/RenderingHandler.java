@@ -3,6 +3,8 @@ package noname.blockbuster.client;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 
 /**
@@ -11,6 +13,7 @@ import noname.blockbuster.client.gui.GuiRecordingOverlay;
  * This handler is another handler in this mod that responsible for rendering.
  * Currently this handler only renders recording overlay
  */
+@SideOnly(Side.CLIENT)
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;

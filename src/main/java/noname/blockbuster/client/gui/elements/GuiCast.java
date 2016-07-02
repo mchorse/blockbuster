@@ -12,6 +12,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
@@ -28,6 +30,7 @@ import noname.blockbuster.recording.Mocap;
  * cast and execute different actions (edit, remove) when player hits the
  * button.
  */
+@SideOnly(Side.CLIENT)
 public class GuiCast extends GuiScrollPane
 {
     /**

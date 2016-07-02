@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiReplays;
 import noname.blockbuster.network.Dispatcher;
@@ -19,6 +21,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
  *
  * Helps manage adventure director block replays
  */
+@SideOnly(Side.CLIENT)
 public class GuiDirectorMap extends GuiParentScreen
 {
     protected String title = I18n.format("blockbuster.director_map.title");

@@ -7,6 +7,8 @@ import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
@@ -19,6 +21,7 @@ import noname.blockbuster.recording.Mocap;
  * This view is responsible for viewing director map block's cast, and providing
  * actions to edit or remove cast members.
  */
+@SideOnly(Side.CLIENT)
 public class GuiReplays extends GuiScrollPane
 {
     /* Strings */

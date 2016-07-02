@@ -13,6 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.EntityActor;
@@ -22,6 +24,7 @@ import noname.blockbuster.entity.EntityActor;
  *
  * Renders actor entities with swag
  */
+@SideOnly(Side.CLIENT)
 public class RenderActor extends RenderBiped<EntityActor>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");

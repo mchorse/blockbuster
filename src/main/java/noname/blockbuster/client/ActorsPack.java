@@ -18,6 +18,8 @@ import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actors pack
@@ -26,6 +28,7 @@ import net.minecraftforge.common.DimensionManager;
  * that is responsible for loading skins from config/blockbuster/skins and
  * world's save skins folder with resource domain of blockbuster.actors)
  */
+@SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
     /**

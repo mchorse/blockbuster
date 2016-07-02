@@ -16,6 +16,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiChildScreen;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
@@ -31,6 +33,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapEdit;
  * This GUI is opened via player.openGui and has an id of 1. Most of the code
  * below is easy to understand, so no comments are needed.
  */
+@SideOnly(Side.CLIENT)
 public class GuiActor extends GuiChildScreen
 {
     /* Cached localization strings */

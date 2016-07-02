@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.elements.GuiCast;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.network.Dispatcher;
@@ -17,6 +19,7 @@ import noname.blockbuster.network.common.director.PacketDirectorReset;
 /**
  * Director block (the one for machinimas) GUI
  */
+@SideOnly(Side.CLIENT)
 public class GuiDirector extends GuiParentScreen
 {
     /* Cached localized strings */

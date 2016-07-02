@@ -6,6 +6,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 
 /**
@@ -14,6 +16,7 @@ import noname.blockbuster.Blockbuster;
  * This class is responsible for rendering red circle (like the icon that
  * represents recording in progress) and name of the recording file.
  */
+@SideOnly(Side.CLIENT)
 public class GuiRecordingOverlay extends Gui
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(Blockbuster.MODID, "textures/gui/recording.png");

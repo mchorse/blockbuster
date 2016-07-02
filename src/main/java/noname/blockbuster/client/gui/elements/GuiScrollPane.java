@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Abstract class for scrolling elements.
@@ -17,8 +19,11 @@ import net.minecraft.util.math.MathHelper;
  * You can freely borrow this class, but keep the author annotation below and
  * this comment.
  *
+ * By the way, this class doesn't support nested scroll panes.
+ *
  * @author mchorse
  */
+@SideOnly(Side.CLIENT)
 public abstract class GuiScrollPane extends GuiScreen
 {
     protected int x;

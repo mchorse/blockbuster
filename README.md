@@ -2,16 +2,16 @@
 
 # Blockbuster
 
-Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple Minecraft machinimas in 
-single player (without having to recruit/organize a crowd of actors and cameras) 
-and simple cinematics in adventure maps.
+Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
+Minecraft machinimas in single player (without having to recruit/organize a 
+crowd of actors and cameras) and simple cinematics in adventure maps.
 
 Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and recording 
 code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) (author of the mod gave me permission 
 to use his code). 
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
-Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). Tested on Mac OS X 10.10 only, but in 
+theory suppose to work on any OS.
 
 ## Install
 
@@ -58,6 +58,7 @@ This mod provides following features:
 * Customizable skins (simply drop 64x32 skins into minecraft/config/blockbsuter/skins folder)
 * Mostly look like players
 * When tied to director block and player starts recording this actor, player will be able to react to previously recorded actors
+* When recorded HUD overlay would be displayed with caption where it records
 
 #### Cameras
 

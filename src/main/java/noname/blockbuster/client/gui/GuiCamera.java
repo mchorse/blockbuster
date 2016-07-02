@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.elements.GuiChildScreen;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiToggle;
@@ -21,6 +23,7 @@ import noname.blockbuster.network.common.PacketCameraAttributes;
  *
  * For more information, see vanilla GUI screens.
  */
+@SideOnly(Side.CLIENT)
 public class GuiCamera extends GuiChildScreen
 {
     /* Localized strings */

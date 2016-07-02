@@ -1,6 +1,8 @@
 package noname.blockbuster.client.gui.elements;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * GuiToggle
@@ -8,6 +10,7 @@ import net.minecraft.client.gui.GuiButton;
  * Boolean implementation of GuiButton. On button press (i.e. action performed),
  * you should toggle this button.
  */
+@SideOnly(Side.CLIENT)
 public class GuiToggle extends GuiButton
 {
     public String onText;
