@@ -42,8 +42,10 @@ public class GuiCast extends GuiScrollPane
         }
     };
 
+    private String noCast = I18n.format("blockbuster.director.no_cast");
+
     /* Input data */
-    public BlockPos pos;
+    private BlockPos pos;
     private GuiParentScreen parent;
 
     /**
@@ -55,9 +57,8 @@ public class GuiCast extends GuiScrollPane
      */
     public List<Entry> entries = new ArrayList<Entry>();
 
-    public GuiCast(GuiParentScreen parent, BlockPos pos, int x, int y, int w, int h)
+    public GuiCast(GuiParentScreen parent, BlockPos pos)
     {
-        super(x, y, w, h);
         this.parent = parent;
         this.pos = pos;
     }
@@ -80,6 +81,9 @@ public class GuiCast extends GuiScrollPane
             this.addEntry(i, Mocap.entityByUUID(world, cameras.get(i)), false);
 
         this.entries.sort(ALPHA);
+
+        this.buttonList.clear();
+        this.initGui();
     }
 
     /**
@@ -90,7 +94,7 @@ public class GuiCast extends GuiScrollPane
         int id = entity != null ? entity.getEntityId() : -1;
         String name = entity != null ? entity.getName() : (isActor ? "Actor" : "Camera");
 
-        this.entries.add(new GuiCast.Entry(id, index, name, isActor, entity == null));
+        this.entries.add(new Entry(id, index, name, isActor, entity == null));
     }
 
     /* Handling */
@@ -108,7 +112,7 @@ public class GuiCast extends GuiScrollPane
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        GuiCustomButton<Entry> buttonIn = (GuiCustomButton<GuiCast.Entry>) button;
+        GuiCustomButton<Entry> buttonIn = (GuiCustomButton<Entry>) button;
         Entry entry = buttonIn.getValue();
 
         if (buttonIn.id == 0)
@@ -157,6 +161,12 @@ public class GuiCast extends GuiScrollPane
     @Override
     protected void drawPane()
     {
+        if (this.entries.size() == 0)
+        {
+            this.drawCenteredString(this.fontRendererObj, this.noCast, this.width / 2, this.y + 8, 0xffffff);
+            return;
+        }
+
         for (int i = 0, c = this.entries.size(); i < c; i++)
         {
             Entry entry = this.entries.get(i);

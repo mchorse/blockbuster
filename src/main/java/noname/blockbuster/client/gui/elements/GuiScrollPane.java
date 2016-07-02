@@ -29,11 +29,6 @@ public abstract class GuiScrollPane extends GuiScreen
     protected int scrollY = 0;
     protected int scrollHeight = 0;
 
-    public GuiScrollPane(int x, int y, int w, int h)
-    {
-        this.updateRect(x, y, w, h);
-    }
-
     public void updateRect(int x, int y, int w, int h)
     {
         this.x = x;

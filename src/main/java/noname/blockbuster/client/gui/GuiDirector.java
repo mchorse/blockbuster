@@ -20,33 +20,25 @@ import noname.blockbuster.network.common.director.PacketDirectorReset;
 public class GuiDirector extends GuiParentScreen
 {
     /* Cached localized strings */
-    protected String title = I18n.format("blockbuster.director.title");
-    protected String noCast = I18n.format("blockbuster.director.no_cast");
+    private String title = I18n.format("blockbuster.director.title");
 
     /* Input data */
     private BlockPos pos;
 
     /* GUI fields */
-    protected GuiCast cast;
-    protected GuiButton done;
-    protected GuiButton reset;
+    private GuiCast cast;
+    private GuiButton done;
+    private GuiButton reset;
 
     public GuiDirector(BlockPos pos)
     {
         this.pos = pos;
+        this.cast = new GuiCast(this, pos);
     }
 
     public void setCast(List<String> actors, List<String> cameras)
     {
-        if (actors == null || cameras == null || (actors.isEmpty() && cameras.isEmpty()))
-        {
-            this.cast = null;
-            return;
-        }
-
-        this.cast = new GuiCast(this, this.pos, this.width / 2 - 120, 40, 240, 155);
         this.cast.setCast(actors, cameras);
-        this.cast.setWorldAndResolution(this.mc, this.width, this.height);
     }
 
     @Override
@@ -74,11 +66,7 @@ public class GuiDirector extends GuiParentScreen
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
-
-        if (this.cast != null)
-        {
-            this.cast.handleMouseInput();
-        }
+        this.cast.handleMouseInput();
     }
 
     /* GUI and drawing */
@@ -95,10 +83,7 @@ public class GuiDirector extends GuiParentScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        if (this.cast != null)
-        {
-            this.cast.updateRect(this.width / 2 - 120, 40, 240, 155);
-        }
+        this.cast.updateRect(this.width / 2 - 120, 40, 240, 155);
     }
 
     @Override
@@ -106,10 +91,7 @@ public class GuiDirector extends GuiParentScreen
     {
         super.setWorldAndResolution(mc, width, height);
 
-        if (this.cast != null)
-        {
-            this.cast.setWorldAndResolution(mc, width, height);
-        }
+        this.cast.setWorldAndResolution(mc, width, height);
     }
 
     @Override
@@ -118,14 +100,7 @@ public class GuiDirector extends GuiParentScreen
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, 15, 0xffffffff);
 
-        if (this.cast != null)
-        {
-            this.cast.drawScreen(mouseX, mouseY, partialTicks);
-        }
-        else
-        {
-            this.drawCenteredString(this.fontRendererObj, this.noCast, this.width / 2, 80, 0xffffff);
-        }
+        this.cast.drawScreen(mouseX, mouseY, partialTicks);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

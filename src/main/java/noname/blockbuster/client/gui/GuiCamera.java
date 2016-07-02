@@ -32,13 +32,13 @@ public class GuiCamera extends GuiChildScreen
     private String stringDir = I18n.format("blockbuster.gui.camera.dir");
 
     /* GUI fields */
-    protected GuiTextField name;
+    private GuiTextField name;
 
-    protected GuiSlider speed;
-    protected GuiSlider accelerationRate;
-    protected GuiSlider accelerationMax;
-    protected GuiToggle canFly;
-    protected GuiButton done;
+    private GuiSlider speed;
+    private GuiSlider accelerationRate;
+    private GuiSlider accelerationMax;
+    private GuiToggle canFly;
+    private GuiButton done;
 
     /* Input data */
     private EntityCamera camera;
@@ -54,14 +54,13 @@ public class GuiCamera extends GuiChildScreen
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        switch (button.id)
+        if (button.id == 4)
         {
-            case 3:
-                this.canFly.toggle();
-                break;
-            case 4:
-                this.saveAndExit();
-                break;
+            this.saveAndExit();
+        }
+        else if (button.id == 3)
+        {
+            this.canFly.toggle();
         }
     }
 

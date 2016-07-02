@@ -22,8 +22,8 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.item.ItemActorConfig;
+import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.recording.Mocap;
@@ -411,7 +411,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         String skin = this.skin != "" ? ":" + this.skin : "";
         String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : "";
 
-        return this.filename + name + skin + invulnerable;
+        return this.filename + name + skin + (skin.equals("") ? ":" + invulnerable : invulnerable);
     }
 
     /* Reading/writing to disk */

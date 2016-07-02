@@ -22,7 +22,6 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 public class GuiDirectorMap extends GuiParentScreen
 {
     protected String title = I18n.format("blockbuster.director_map.title");
-    protected String noCast = I18n.format("blockbuster.director_map.no_cast");
 
     protected GuiReplays cast;
     protected GuiButton done;
@@ -35,49 +34,19 @@ public class GuiDirectorMap extends GuiParentScreen
     public GuiDirectorMap(BlockPos pos)
     {
         this.pos = pos;
+        this.cast = new GuiReplays(this, pos);
     }
 
     public void setCast(List<String> cast)
     {
-        if (cast == null || cast.isEmpty())
-        {
-            this.cast = null;
-            return;
-        }
-
-        this.cast = new GuiReplays(this, this.width / 2 - 120, 80, 240, 115, this.pos);
         this.cast.setCast(cast);
-        this.cast.setWorldAndResolution(this.mc, this.width, this.height);
-    }
-
-    @Override
-    public void initGui()
-    {
-        int w = 200;
-        int x = this.width / 2 - w / 2;
-
-        this.input = new GuiTextField(3, this.fontRendererObj, x + 1, 51, 143, 18);
-        this.input.setMaxStringLength(100);
-
-        this.buttonList.add(this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done")));
-        this.buttonList.add(this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset")));
-        this.buttonList.add(this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add")));
-
-        if (this.cast != null)
-        {
-            this.cast.updateRect(this.width / 2 - 120, 80, 240, 115);
-        }
     }
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc, width, height);
-
-        if (this.cast != null)
-        {
-            this.cast.setWorldAndResolution(mc, width, height);
-        }
+        this.cast.setWorldAndResolution(mc, width, height);
     }
 
     @Override
@@ -98,11 +67,7 @@ public class GuiDirectorMap extends GuiParentScreen
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
-
-        if (this.cast != null)
-        {
-            this.cast.handleMouseInput();
-        }
+        this.cast.handleMouseInput();
     }
 
     @Override
@@ -122,6 +87,24 @@ public class GuiDirectorMap extends GuiParentScreen
         }
     }
 
+    /* GUI and drawing */
+
+    @Override
+    public void initGui()
+    {
+        int w = 200;
+        int x = this.width / 2 - w / 2;
+
+        this.input = new GuiTextField(3, this.fontRendererObj, x + 1, 51, 143, 18);
+        this.input.setMaxStringLength(100);
+
+        this.buttonList.add(this.done = new GuiButton(0, x, 205, 95, 20, I18n.format("blockbuster.gui.done")));
+        this.buttonList.add(this.reset = new GuiButton(1, x + 105, 205, 95, 20, I18n.format("blockbuster.gui.reset")));
+        this.buttonList.add(this.add = new GuiButton(2, x + 155, 50, 45, 20, I18n.format("blockbuster.gui.add")));
+
+        this.cast.updateRect(this.width / 2 - 120, 80, 240, 115);
+    }
+
     /**
      * Draw all the elements on the screen
      */
@@ -132,14 +115,7 @@ public class GuiDirectorMap extends GuiParentScreen
         this.drawCenteredString(this.fontRendererObj, this.title, this.width / 2, 25, 0xffffffff);
         this.input.drawTextBox();
 
-        if (this.cast != null)
-        {
-            this.cast.drawScreen(mouseX, mouseY, partialTicks);
-        }
-        else
-        {
-            this.drawCenteredString(this.fontRendererObj, this.noCast, this.width / 2, 80, 0xffffff);
-        }
+        this.cast.drawScreen(mouseX, mouseY, partialTicks);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

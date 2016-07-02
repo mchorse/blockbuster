@@ -1,6 +1,7 @@
 package noname.blockbuster.client.gui.elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
@@ -20,74 +21,116 @@ import noname.blockbuster.recording.Mocap;
  */
 public class GuiReplays extends GuiScrollPane
 {
+    /* Strings */
+    private String noCast = I18n.format("blockbuster.director_map.no_cast");
+
     /* GUI */
     private GuiParentScreen parent;
 
     /* Input data */
     private BlockPos pos;
-    private List<String> cast;
 
-    public GuiReplays(GuiParentScreen parent, int x, int y, int w, int h, BlockPos pos)
+    /* Entries */
+    private List<Entry> entries = new ArrayList<Entry>();
+
+    public GuiReplays(GuiParentScreen parent, BlockPos pos)
     {
-        super(x, y, w, h);
         this.parent = parent;
         this.pos = pos;
     }
 
     public void setCast(List<String> cast)
     {
-        this.cast = cast;
+        System.out.println(cast);
+
         this.setHeight(cast.size() * 24);
+        this.entries.clear();
+
+        for (int i = 0; i < cast.size(); i++)
+            this.entries.add(new Entry(i, cast.get(i)));
+
+        this.buttonList.clear();
+        this.initGui();
     }
 
-    @Override
-    public void initGui()
-    {
-        for (int i = 0; i < this.cast.size(); i++)
-        {
-            int x = this.x + this.w - 64;
-            int y = this.y + i * 24 + 3;
-
-            this.buttonList.add(new GuiButton(i * 2, x, y, 54, 20, I18n.format("blockbuster.gui.remove")));
-            this.buttonList.add(new GuiButton(i * 2 + 1, x - 60, y, 54, 20, I18n.format("blockbuster.gui.edit")));
-        }
-    }
+    /* Action handling */
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        int index = Math.floorDiv(button.id, 2);
-        String member = this.cast.get(index);
+        Entry entry = ((GuiCustomButton<Entry>) button).getValue();
 
-        if (member != null)
+        if (button.id == 0)
         {
-            if (button.id % 2 == 0)
-            {
-                Dispatcher.getInstance().sendToServer(new PacketDirectorMapRemove(this.pos, index));
-            }
-            else
-            {
-                EntityActor actor = Mocap.actorFromArgs(member.split(":"), this.mc.theWorld);
-                this.mc.displayGuiScreen(new GuiActor(this.parent, actor, this.pos, index));
-            }
+            Dispatcher.getInstance().sendToServer(new PacketDirectorMapRemove(this.pos, entry.index));
+        }
+        else if (button.id == 1)
+        {
+            EntityActor actor = Mocap.actorFromArgs(entry.replay.split(":"), this.mc.theWorld);
+
+            this.mc.displayGuiScreen(new GuiActor(this.parent, actor, this.pos, entry.index));
+        }
+    }
+
+    /* GUI and drawing */
+
+    @Override
+    public void initGui()
+    {
+        for (int i = 0; i < this.entries.size(); i++)
+        {
+            Entry entry = this.entries.get(i);
+            int x = this.x + this.w - 64;
+            int y = this.y + i * 24 + 3;
+
+            GuiCustomButton<Entry> remove = new GuiCustomButton<Entry>(0, x, y, 54, 20, I18n.format("blockbuster.gui.remove"));
+            GuiCustomButton<Entry> edit = new GuiCustomButton<Entry>(1, x - 60, y, 54, 20, I18n.format("blockbuster.gui.edit"));
+
+            remove.setValue(entry);
+            edit.setValue(entry);
+
+            this.buttonList.add(remove);
+            this.buttonList.add(edit);
         }
     }
 
     @Override
     protected void drawPane()
     {
-        for (int i = 0, c = this.cast.size(); i < c; i++)
+        if (this.entries.size() == 0)
         {
-            String member = this.cast.get(i).split(":")[0];
+            this.drawCenteredString(this.fontRendererObj, this.noCast, this.width / 2, this.y + 8, 0xffffff);
+            return;
+        }
+
+        for (int i = 0, c = this.entries.size(); i < c; i++)
+        {
+            Entry entry = this.entries.get(i);
             int x = this.x + 6;
             int y = this.y + i * 24;
 
-            this.fontRendererObj.drawStringWithShadow(member, x, y + 8, 0xffffffff);
+            /* Label */
+            this.fontRendererObj.drawStringWithShadow(entry.caption, x, y + 8, 0xffffffff);
 
+            /* Separator */
             if (i != c - 1)
             {
                 this.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
             }
+        }
+    }
+
+    static class Entry
+    {
+        public int index;
+        public String replay;
+        public String caption;
+
+        public Entry(int index, String replay)
+        {
+            this.index = index;
+            this.replay = replay;
+            this.caption = replay.split(":")[0];
         }
     }
 }
