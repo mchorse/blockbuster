@@ -49,7 +49,7 @@ public class CommandPlayDirector extends CommandBase
         CommandBase.CoordinateArg y = parseCoordinate(0, args[1], false);
         CommandBase.CoordinateArg z = parseCoordinate(0, args[2], false);
 
-        BlockPos pos = new BlockPos(x.func_179628_a(), y.func_179628_a(), z.func_179628_a());
+        BlockPos pos = new BlockPos(x.getResult(), y.getResult(), z.getResult());
 
         ((AbstractTileEntityDirector) server.getEntityWorld().getTileEntity(pos)).startPlayback();
     }

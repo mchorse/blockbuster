@@ -34,9 +34,7 @@ Blockbuster 1.0 – Tutorial by me
 
 ## License
 
-Mmm, I want something like MIT, but with restriciton on reposting on some 
-websites like 9minecraft or something, and forbidding using in mod packs 
-without the my permission. Yeah. 
+Screw it, let it be MIT License.
 
 ## Features
 

@@ -91,7 +91,7 @@ public class Mocap
     {
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
         {
-            if (slot.func_188452_c() == index)
+            if (slot.getSlotIndex() == index)
                 return slot;
         }
 

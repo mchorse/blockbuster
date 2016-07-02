@@ -35,10 +35,12 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Cameras", this.cameras);
+        
+        return compound;
     }
 
     /* Public API */

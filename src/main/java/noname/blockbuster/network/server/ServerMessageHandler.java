@@ -18,7 +18,7 @@ public abstract class ServerMessageHandler<T extends IMessage> extends AbstractM
     @Override
     public IMessage handleServerMessage(final EntityPlayerMP player, final T message)
     {
-        player.getServerForPlayer().addScheduledTask(new Runnable()
+        player.getServer().addScheduledTask(new Runnable()
         {
             @Override
             public void run()

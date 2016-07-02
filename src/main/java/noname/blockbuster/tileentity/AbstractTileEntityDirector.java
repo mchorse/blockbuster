@@ -43,10 +43,12 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.actors);
+        
+        return compound;
     }
 
     /* NBT list utils */

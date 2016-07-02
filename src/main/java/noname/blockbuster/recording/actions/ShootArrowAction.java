@@ -43,9 +43,9 @@ public class ShootArrowAction extends Action
         World world = actor.worldObj;
 
         EntityTippedArrow arrow = new EntityTippedArrow(world, actor);
-        float f = ItemBow.func_185059_b(this.charge);
+        float f = ItemBow.getArrowVelocity(this.charge);
 
-        arrow.func_184547_a(actor, actor.rotationPitch, actor.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+        arrow.setAim(actor, actor.rotationPitch, actor.rotationYaw, 0.0F, f * 3.0F, 1.0F);
         world.spawnEntityInWorld(arrow);
     }
 

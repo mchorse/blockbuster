@@ -30,7 +30,7 @@ import noname.blockbuster.commands.CommandRecord;
  * - Choonster for pointing out that processInteract triggers for each hand
  * - Lightwave for porting some of the code to 1.9.4
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9]")
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9.4]")
 public class Blockbuster
 {
     /* Mod info */
