@@ -67,9 +67,10 @@ This mod provides following features:
 
 #### Commands
 
-* Record command (/record) – allows players to record their actions to a filename for a later playback
-* Play command (/play) – allows playback of earlier recorded file
-* Play director command (/play-director) – allows player to trigger playback in director block specified at XYZ position
+* Record command (`/record`) – allows players to record their actions to a filename for a later playback
+* Play command (`/play`) – allows playback of earlier recorded file
+* Play director command (`/play-director`) – allows player to trigger playback in director block specified at XYZ position
+* Stop director command (`/stop-director`) – allows player to stop playback in director block specified at XYZ position
 
 ## Manual
 

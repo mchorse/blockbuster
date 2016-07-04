@@ -18,6 +18,7 @@ Coming soon
 * Added HUD overlay while player recording (red circle with caption in top-left 
   corner of the screen)
 * Added arm pose while holding a bow
+* Added `stop-director` command which allows you to stop playback of director at specified position
 * Renamed _skin manager device_ to _actor manager device_
 * Changed actor behavior regarding name of the recording, now file name of the 
   recording is not depends on the actor's name tag, but stored in separate 

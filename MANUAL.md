@@ -154,6 +154,8 @@ This mod provides two commands:
    invulnerability, if it's 1, actor is invulnerable, if it's 0, actor is vulnurable 
 3. `play-director` command which triggers playback of director block located on 
    specified position 
+4. `stop-director` command which stops playback of director block located on 
+   specified position
 
 Examples:
 
@@ -169,8 +171,11 @@ Examples:
     # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin" and make actor invulnerable
     /play football DavidBeckham DavidBeckhamsSkin 1
     
-    # Play a director block that is located on X: 19, Y: 4, Z:-100
+    # Play director block that is located on X: 19, Y: 4, Z:-100
     /play-director 19 4 -100
+    
+    # Stop director block that is located on X: 19, Y: 4, Z:-100
+    /stop-director 19 4 -100
 
 Note: all arguments (file name, actor's custom tag name, and actor's skin) can't 
 have spaces. That's due to the fact how minecraft's command handler parses arguments.
