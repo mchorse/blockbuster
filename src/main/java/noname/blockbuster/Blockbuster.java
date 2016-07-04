@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.commands.CommandPlay;
 import noname.blockbuster.commands.CommandPlayDirector;
 import noname.blockbuster.commands.CommandRecord;
+import noname.blockbuster.commands.CommandStopDirector;
 
 /**
  * Blockbuster's main entry
@@ -99,5 +100,6 @@ public class Blockbuster
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandPlay());
         event.registerServerCommand(new CommandPlayDirector());
+        event.registerServerCommand(new CommandStopDirector());
     }
 }

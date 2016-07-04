@@ -7,26 +7,27 @@ import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
- * Command play director
+ * Command stop director
  *
- * This command is triggering playback in a director block which is located
+ * This command is stopping playback in a director block which is located
  * in passed coordinates. Makes a nice addition to adventure maps and command
  * blocks.
  *
- * Side note: you can use this command in command block.
+ * I added 'cause I hate to wait when a long scene would finish playing. So,
+ * shutdown this mutha... you get it.
  */
-public class CommandPlayDirector extends CommandDirector
+public class CommandStopDirector extends CommandDirector
 {
     @Override
     public String getCommandName()
     {
-        return "play-director";
+        return "stop-director";
     }
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "blockbuster.commands.play_director";
+        return "blockbuster.commands.stop_director";
     }
 
     @Override
@@ -44,6 +45,6 @@ public class CommandPlayDirector extends CommandDirector
             throw new CommandException("blockbuster.commands.no_director", args[0], args[1], args[2]);
         }
 
-        director.startPlayback();
+        director.stopPlayback();
     }
 }

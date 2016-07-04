@@ -354,7 +354,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.playing"));
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.not_playing"));
             return;
         }
 
