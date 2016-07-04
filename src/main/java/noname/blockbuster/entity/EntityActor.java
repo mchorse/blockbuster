@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityCreature;
@@ -17,8 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
@@ -82,10 +82,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super(worldIn);
 
-        if (!worldIn.isRemote)
+        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_xXx"))
         {
-            this.fakePlayer = FakePlayerFactory.getMinecraft((WorldServer) worldIn);
-        }
+            @Override
+            public boolean isSpectator()
+            {
+                return false;
+            }
+
+            @Override
+            public boolean isCreative()
+            {
+                return false;
+            }
+        };
     }
 
     /**
@@ -170,6 +180,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (!this.worldObj.isRemote)
         {
+            this.fakePlayer.posX = this.posX;
+            this.fakePlayer.posY = this.posY;
+            this.fakePlayer.posZ = this.posZ;
             this.fakePlayer.rotationYaw = this.rotationYaw;
             this.fakePlayer.rotationPitch = this.rotationPitch;
         }

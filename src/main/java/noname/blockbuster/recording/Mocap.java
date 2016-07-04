@@ -114,7 +114,7 @@ public class Mocap
      */
     public static Entity entityByUUID(World world, UUID target)
     {
-        for (Entity entity : world.getLoadedEntityList())
+        for (Entity entity : world.loadedEntityList)
         {
             if (entity.getUniqueID().equals(target))
             {

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.commands.CommandPlay;
 import noname.blockbuster.commands.CommandPlayDirector;
 import noname.blockbuster.commands.CommandRecord;
@@ -90,7 +91,7 @@ public class Blockbuster
     @EventHandler
     public void registerServerCommands(FMLServerStartingEvent event)
     {
-        if (ClientProxy.actorPack != null)
+        if (event.getSide() == Side.CLIENT)
         {
             ClientProxy.actorPack.reloadSkins();
         }
