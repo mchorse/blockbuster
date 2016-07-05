@@ -25,9 +25,11 @@ Coming soon
   field in actor's class. Use _actor configuration device_ to change to which 
   file actor is being recorded
 * Changed camera and actor configuration GUIs
-* (gonna be) Changed camera's model and texture 
+* Changed camera's model and texture
+* Fixed place block action, now actors can place any block (before, they couldn't place redstone) 
 * Removed "Name Tag" mechanism
 * Reduced the amount of console messages
+* Recording format was broken, so old recordings won't work
 
 P.S.: where "_nice looking_ GUIs" is a subjective statement
 
