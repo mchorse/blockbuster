@@ -58,7 +58,7 @@ This mod provides following features:
 * Customizable skins (simply drop 64x32 skins into minecraft/config/blockbsuter/skins folder)
 * Mostly look like players
 * When tied to director block and player starts recording this actor, player will be able to react to previously recorded actors
-* When recorded HUD overlay would be displayed with caption where it records
+* When recording, HUD overlay would be displayed with caption to which file it records actions
 
 #### Cameras
 
