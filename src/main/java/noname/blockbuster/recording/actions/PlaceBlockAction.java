@@ -1,15 +1,12 @@
 package noname.blockbuster.recording.actions;
 
 import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.entity.EntityActor;
 
@@ -21,17 +18,16 @@ import noname.blockbuster.entity.EntityActor;
 public class PlaceBlockAction extends InteractBlockAction
 {
     public byte metadata;
-    public NBTTagCompound itemData = new NBTTagCompound();
+    public String block;
 
     public PlaceBlockAction()
     {}
 
-    public PlaceBlockAction(BlockPos pos, byte metadata, ItemStack item)
+    public PlaceBlockAction(BlockPos pos, byte metadata, String block)
     {
         super(pos);
         this.metadata = metadata;
-
-        item.writeToNBT(this.itemData);
+        this.block = block;
     }
 
     @Override
@@ -43,14 +39,10 @@ public class PlaceBlockAction extends InteractBlockAction
     @Override
     public void apply(EntityActor actor)
     {
-        ItemStack item = ItemStack.loadItemStackFromNBT(this.itemData);
+        Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
+        IBlockState state = block.getStateFromMeta(this.metadata);
 
-        if (item.getItem() instanceof ItemBlock)
-        {
-            ItemBlock block = (ItemBlock) item.getItem();
-
-            block.placeBlockAt(item, actor.fakePlayer, actor.worldObj, this.pos, EnumFacing.UP, 0, 0, 0, block.block.getStateFromMeta(this.metadata));
-        }
+        actor.worldObj.setBlockState(this.pos, state);
     }
 
     @Override
@@ -59,7 +51,7 @@ public class PlaceBlockAction extends InteractBlockAction
         super.fromBytes(in);
 
         this.metadata = in.readByte();
-        this.itemData = CompressedStreamTools.read((DataInputStream) in);
+        this.block = in.readUTF();
     }
 
     @Override
@@ -68,6 +60,6 @@ public class PlaceBlockAction extends InteractBlockAction
         super.toBytes(out);
 
         out.writeByte(this.metadata);
-        CompressedStreamTools.write(this.itemData, out);
+        out.writeUTF(this.block);
     }
 }

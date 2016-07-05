@@ -44,7 +44,7 @@ public class Mocap
      * Signature used for replay files, this is usually the first entry to
      * read.
      */
-    public static final short signature = 3209;
+    public static final short signature = 3210;
 
     /**
      * Timing delay between two replay frames. Default is 100 milliseconds or
