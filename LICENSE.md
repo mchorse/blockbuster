@@ -1,3 +1,8 @@
+This project uses portion of code (`noname.blockbuster.recording` package) 
+from [Mocap mod](https://github.com/EchebKeso/Mocap) 
+[licensed](https://github.com/EchebKeso/Mocap/blob/master/licence.md) under GPL.
+
+    
     The MIT License (MIT)
     
     Copyright (c) 2016 McHorse
