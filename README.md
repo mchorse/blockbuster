@@ -1,5 +1,3 @@
-![Blockbuster logo](./logo.png)
-
 # Blockbuster
 
 Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
