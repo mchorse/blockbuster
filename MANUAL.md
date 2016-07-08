@@ -2,9 +2,9 @@
 
 For version 1.1.
 
-## Player recording
+## Player's recording
 
-Player's actions can be recorded via `record` command or by interacting (right  
+Player's actions can be recorded via `record` command or by interacting (right 
 clicking the) with actors.
 
 Following actions are fully supported by this mod:
@@ -14,7 +14,7 @@ Following actions are fully supported by this mod:
 * Placing/breaking blocks
 * Holding items in both arms
 * Equipping armor
-* Send formatted messages in chat (use `[` instead of `§` for formatting)
+* Send (formatted messages) in chat (use `[` instead of `§` for formatting)
 * Mounting entities
 * Shoot arrow
 * Flying elytra
@@ -22,22 +22,27 @@ Following actions are fully supported by this mod:
 Recorded actions are stored in the `blockbuster/records` folder in world's save 
 folder.
 
-Recorded player actions can be played either by `play` command or by actor entity. 
+Recorded player actions can be played either by `play` command or by an actor entity 
+tied to director block.
 
 See Commands section for more reference about the commands.
+
+**Side note**: this mod records only player's actions, not his visual look, so recording 
+yourself with morphing mods, or mods that modify your player model won't affect the 
+playbacked actors (actors will not look like a chicken or will not have hat or cape).
 
 ## Director block
 
 *Director block* is a special block, that comes with this mod, which is responsible 
-managing scene (like real life director). Its purpose is to tie together 
-actors and cameras. It has also special redstone hooks.
+for managing scene (like real life director). Its purpose is to tie together 
+actors and cameras.
 
 With the power of *director block* you can playback all registered actors together 
 without having to setup big contraptions from redstone and command blocks.
 
-To register an actor or a camera, you should use *register item*. Right click on 
-actor or camera first, to take a sample of entity's UUID onto *register item*, 
-and then right click *register item* on *director block*. If you have succesfully 
+To register an actor or a camera to *director block*, you should use *register item*. 
+Right click on actor or camera first, to take a sample of entity's UUID onto *register 
+item*, and then right click *register item* on *director block*. If you have succesfully 
 registered the entity (actor or camera), you'll get message in the chat that 
 entity was succesfully registered.
 
@@ -47,12 +52,10 @@ another actor, and cameras will disappear when *director block* starts playing
 and will appear again when *director block* will stop playing.
 
 When the camera is registered to your *director block*, you can switch between 
-cameras using "[" and "]" keys ("[" is for previous, and "]" is for next camera). 
+cameras using `[` and `]` keys (`[` is for previous, and `]` is for next camera). 
 The order in which you'll be switched around, is depends on the order in which 
 you registered the cameras, you can name all your cameras from "Camera 1" to 
-"Camera N" and see the order of your cameras by right clicking *director block* 
-(*director block* will send you the message in the chat with the list of all cast 
-members: actors and cameras, and their names).
+"Camera N" and see the order of your cameras by right clicking *director block*.
 
 To playback the scene, you need to attach a *playback button* to *director block*. 
 Simply right click *director block* while holding *playback button* in your hand, 
@@ -98,27 +101,27 @@ east side of the block (the side of the block where a stop white square is drawn
 This can be useful for reseting the scene. You might want to explode a TNT while 
 recording your scene, so to avoid tedious rebuilding, you can use stop hook 
 (when block stops playing) and attach redstone with command block that resets 
-the scene (using /clone command).
+the scene (using `/clone` command, for example).
 
 Or maybe you want start playing a tune, or summon some zombies when the 
 director starts playing, no worries, use the redstone play hook. 
 
 ## Actors
 
-Actors are the entities that you use to record your actions. Actors, by default, 
-look like crash test dummies, but you may change their skin, by using the 
+Actors are the entities that you are used to playback your actions. Actors, by default, 
+look like crash test dummies, but you may change their skin using the 
 *actor configuration* item. First you'll have to put some skins into 
 `minecraft/config/blockbuster/skins` folder, and then you can select a skin 
 from this folder using GUI. In this GUI you can also change other properties such 
 as name, recording file name, skin and invincibility. 
 
-To record the actor, simply right click it, and start performing some sick 
-movements. When you'll be done, you need to stop the recording either by 
+To record the actor, you must attach it first to *director block*, and simply right click it, 
+and start performing some sick movements. When you'll be done, you need to stop the recording either by 
 right clicking actor again or entering `record` command with his name (actually, 
-you can use any name for file, as long as you providing first argument).
+you can use any name for file, as long as you providing the first argument).
 
 For adventure maps makers: you can put skins into world's save folder 
-`blockbuster/skins` to transfer the skins with the map.
+`blockbuster/skins` to transfer the skins with the map, but they won't work in multiplayer.
 
 Player records are saved in `blockbuster/records` folder in world's save folder.
 
