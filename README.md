@@ -4,12 +4,12 @@ Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple
 Minecraft machinimas in single player (without having to recruit/organize a 
 crowd of actors and cameras) and simple cinematics in adventure maps.
 
-Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and recording 
-code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) (author of the mod gave me permission 
-to use his code). 
+Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9.4, and recording 
+code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
+(author of the mod gave me permission to use his code). 
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). Tested on Mac OS X 10.10 only, but in 
-theory suppose to work on any OS.
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
+Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
 ## Install
 
@@ -73,3 +73,8 @@ This mod provides following features:
 ## Manual
 
 Manual is located in the root of this repository in file named [MANUAL.md](./MANUAL.md).
+
+## License
+
+See file `LICENSE.md`. Most of the code is licensed under MIT license, but recording code 
+from Mocap mod is actually licensed under GPL license (`noname.blockbuster.recording` package).
