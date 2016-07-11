@@ -26,7 +26,7 @@ latest version jar file. Put it in minecraft's `mods` folder, launch the game,
 and done. 
 
 After that, Blockbuster mod should be installed and will appear in Minecraft's 
-mods menu. If Blockbuster didn't appeared in mods menu, then something went 
+mods menu. If Blockbuster didn't appear in the mods menu, then something went 
 wrong.
 
 ## Show me what you got
@@ -201,7 +201,7 @@ Examples:
     /record football 
     
     # To stop the recording
-    /record footbal
+    /record football
     
     # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin"
     /play football DavidBeckham DavidBeckhamsSkin
