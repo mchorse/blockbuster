@@ -201,7 +201,7 @@ Examples:
     /record football 
     
     # To stop the recording
-    /record footbal
+    /record football
     
     # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin"
     /play football DavidBeckham DavidBeckhamsSkin
