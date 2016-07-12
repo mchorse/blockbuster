@@ -24,10 +24,16 @@ wrong.
 
 ## Videos
 
-Blockbuster 1.0 – Tutorial by me
+**Tutorial video**:
 
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
     <img height="420" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+</a>
+
+**Machinima example**: "Addictive Redstone"
+
+<a href="https://www.youtube.com/watch?v=ua3kfAe0bKo">
+    <img height="420" src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
 </a>
 
 ## Features

@@ -1,16 +1,15 @@
 # Ideas for next Blockbuster versions
 
-There's some ideas that I might implement in next Blockbuster mod: 
+There's some ideas that I want to implement in next Blockbuster mod: 
 
 * Record cameras (basic movement and jumps between cameras), so you wouldn't need
   to follow the actors by yourself every time
 * Advanced cameras configuration
     * Setting custom path
     * Setting look target (always align towards target)
-* In-game subtitles during playback (like printing letter by letter "Washington D.C., USA" captions in movies)
 * Add more of recording stuff like:
     * Use and throw potions
-    * Set shit on file with flint and steel
+    * Set shit on fire with flint and steel
     * Kick asses with diamond sword/axe
     * Use put stuff in chests
     * Use furnances
