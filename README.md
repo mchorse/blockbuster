@@ -30,8 +30,8 @@ Tutorial for version 1.1. This tutorial covers all items, blocks, and commands
 that this mod adds into the game. It's also covers the concepts it introduces, 
 and shows how to use this mod. Machinima intro included.
 
-<a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
-    <img height="420" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
+<a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
+    <img height="420" src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
 </a>
 
 ### Machinima Example: Addicting Redstone

@@ -28,6 +28,7 @@ Coming soon
 * Changed (improved) camera and actor configuration GUIs
 * Changed camera's model and texture
 * Fixed place block action, now actors can place any block (before, they couldn't place redstone wire) 
+* Fixed crash on dedicated server
 * Removed "Name Tag" mechanism
 * Reduced the amount of console messages
 * Recording format was broken, so old recordings won't work
