@@ -4,10 +4,10 @@ For version 1.1.
 
 ## Player's recording
 
-Player's actions can be recorded via `record` command or by interacting (right
-clicking the) with actors.
+The player's actions can be recorded via the `record` command or by interacting (right
+clicking) with actors.
 
-Following actions are fully supported by this mod:
+The following actions are fully supported by this mod:
 
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and
   sneaking
@@ -18,8 +18,8 @@ Following actions are fully supported by this mod:
 * Equipping armor
 * Send (formatted messages) in chat (use `[` instead of `§` for formatting)
 * Mounting entities
-* Shoot arrow
-* Flying elytra
+* Shooting arrows
+* Flying the elytra
 
 Recorded actions are stored in the `blockbuster/records` folder in world's save
 folder.
@@ -37,23 +37,23 @@ not have hat or cape).
 ## Director block
 
 *Director block* is a special block, that comes with this mod, which is
-responsible for managing scene (like real life director). Its purpose is to tie
+responsible for managing the scene (like a real life director). Its purpose is to tie
 together actors and cameras.
 
-With the power of *director block* you can playback all registered actors
+With the power of the *director block* you can playback all registered actors
 together without having to setup big contraptions from redstone and command
 blocks.
 
-To register an actor or a camera to *director block*, you should use *register
-item*. Right click on actor or camera first, to take a sample of entity's UUID
-onto *register item*, and then right click *register item* on *director block*.
-If you have succesfully registered the entity (actor or camera), you'll get
+To register an actor or a camera to the *director block*, you should use *register
+item*. Right click on an actor or a camera first, to take a sample of entity's UUID
+onto *register item*, and then right click *register item* on the *director block*.
+If you have succesfully registered the entity (actor or camera), you'll get a
 message in the chat that entity was succesfully registered.
 
-When you'll register your actors and cameras, you'll be able to use full
-potential of this mod. Already recorded actors will be played when you'll start
-recording another actor, and cameras will disappear when *director block* starts
-playing and will appear again when *director block* will stop playing.
+When you register your actors and cameras, you'll be able to use full the
+potential of this mod. The recorded actors will be played when you'll start
+recording another actor, and cameras will disappear when the *director block* starts
+playing and will appear again when it stops playing.
 
 When the camera is registered to your *director block*, you can switch between
 cameras using `[` and `]` keys (`[` is for previous, and `]` is for next
