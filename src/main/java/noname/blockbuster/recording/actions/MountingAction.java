@@ -13,7 +13,7 @@ import noname.blockbuster.recording.Mocap;
  * Mounting action
  *
  * This actor makes actor to mount or unmount an entity by UUID.
- * I should probably move from UUID to using a type of entity withing given
+ * I should probably move from UUID to using a type of entity with given
  * radius (3-5 blocks).
  */
 public class MountingAction extends Action

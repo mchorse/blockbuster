@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "blockbuster:items/skin_manager"
+        "layer0": "blockbuster:items/actor_config"
     }
 }

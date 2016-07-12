@@ -4,9 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.api.Comment;
 import noname.blockbuster.network.AbstractMessageHandler;
 
 /**
@@ -16,8 +13,6 @@ import noname.blockbuster.network.AbstractMessageHandler;
  *
  * @author Ernio (Ernest Sadowski)
  */
-@Comment(author = "Ernio (Ernest Sadowski)")
-@SideOnly(Side.CLIENT)
 public abstract class ClientMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {
     public abstract void run(final EntityPlayerSP player, final T message);

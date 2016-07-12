@@ -19,7 +19,7 @@ import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.PacketRecording;
+import noname.blockbuster.network.common.PacketCameraRecording;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
@@ -39,13 +39,14 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
     public boolean isRecording = false;
 
     public BlockPos directorBlock;
+    public boolean renderName = true;
 
     protected float acceleration = 0.0F;
 
     public EntityCamera(World worldIn)
     {
         super(worldIn);
-        this.setSize(0.9F, 0.9F);
+        this.setSize(1.0F, 1.0F);
     }
 
     /**
@@ -240,8 +241,9 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
      * Update camera's custom attributes and send notification to tracking players
      * (if it's needed)
      */
-    public void setConfiguration(float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
+    public void setConfiguration(String name, float speed2, float accelerationRate2, float accelerationMax2, boolean canFly2, boolean notify)
     {
+        this.setCustomNameTag(name);
         this.speed = speed2;
         this.accelerationRate = accelerationRate2;
         this.accelerationMax = accelerationMax2;
@@ -249,7 +251,7 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
+            Dispatcher.updateTrackers(this, new PacketCameraAttributes(this.getEntityId(), name, this.speed, this.accelerationRate, this.accelerationMax, this.canFly));
         }
     }
 
@@ -263,7 +265,7 @@ public class EntityCamera extends EntityLiving implements IEntityAdditionalSpawn
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketRecording(this.getEntityId(), recording));
+            Dispatcher.updateTrackers(this, new PacketCameraRecording(this.getEntityId(), recording));
         }
     }
 

@@ -1,11 +1,9 @@
 package noname.blockbuster.commands;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
@@ -17,7 +15,7 @@ import noname.blockbuster.tileentity.AbstractTileEntityDirector;
  *
  * Side note: you can use this command in command block.
  */
-public class CommandPlayDirector extends CommandBase
+public class CommandPlayDirector extends CommandDirector
 {
     @Override
     public String getCommandName()
@@ -32,12 +30,6 @@ public class CommandPlayDirector extends CommandBase
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 2;
-    }
-
-    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length < 3)
@@ -45,12 +37,13 @@ public class CommandPlayDirector extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(null));
         }
 
-        CommandBase.CoordinateArg x = parseCoordinate(0, args[0], false);
-        CommandBase.CoordinateArg y = parseCoordinate(0, args[1], false);
-        CommandBase.CoordinateArg z = parseCoordinate(0, args[2], false);
+        AbstractTileEntityDirector director = this.getDirector(server, args[0], args[1], args[2]);
 
-        BlockPos pos = new BlockPos(x.func_179628_a(), y.func_179628_a(), z.func_179628_a());
+        if (director == null)
+        {
+            throw new CommandException("blockbuster.commands.no_director", args[0], args[1], args[2]);
+        }
 
-        ((AbstractTileEntityDirector) server.getEntityWorld().getTileEntity(pos)).startPlayback();
+        director.startPlayback();
     }
 }

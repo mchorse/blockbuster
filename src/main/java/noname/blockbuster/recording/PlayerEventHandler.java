@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -34,8 +35,11 @@ import noname.blockbuster.recording.actions.ShootArrowAction;
  *
  * Taken from Mocap mod and rewritten.
  */
-public class MocapEventHandler
+public class PlayerEventHandler
 {
+    /**
+     * Event listener for Action.BREAK_BLOCK
+     */
     @SubscribeEvent
     public void onPlayerBreaksBlock(BreakEvent event)
     {
@@ -73,6 +77,9 @@ public class MocapEventHandler
         }
     }
 
+    /**
+     * Event listener for Action.PLACE_BLOCK
+     */
     @SubscribeEvent
     public void onPlayerPlacesBlock(PlaceEvent event)
     {
@@ -84,11 +91,14 @@ public class MocapEventHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = Mocap.getActionListForPlayer(player);
 
+        System.out.println(event.getPlacedBlock().getBlock());
+
         if (events != null)
         {
             byte metadata = (byte) event.getPlacedBlock().getBlock().getMetaFromState(event.getPlacedBlock());
+            ResourceLocation id = event.getPlacedBlock().getBlock().getRegistryName();
 
-            events.add(new PlaceBlockAction(event.getPos(), metadata, event.getItemInHand()));
+            events.add(new PlaceBlockAction(event.getPos(), metadata, id.toString()));
         }
     }
 

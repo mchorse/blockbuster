@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.mojang.authlib.GameProfile;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityCreature;
@@ -11,20 +13,19 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.item.ItemRegister;
-import noname.blockbuster.item.ItemSkinManager;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketChangeSkin;
+import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.actions.Action;
 import noname.blockbuster.tileentity.TileEntityDirector;
@@ -56,6 +57,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public String skin = "";
 
     /**
+     * File name that will be used by recording code
+     */
+    public String filename = "";
+
+    /**
      * Position of director's block (needed to start the playback of other
      * actors while recording this actor).
      */
@@ -67,7 +73,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public boolean renderName = true;
 
     /**
-     * Fake player used in some of methods like onBlockActivated to solve
+     * Fake player used in some of methods like onBlockActivated to avoid
      * NullPointerException
      */
     public EntityPlayer fakePlayer;
@@ -76,10 +82,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super(worldIn);
 
-        if (!worldIn.isRemote)
+        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_xXx"))
         {
-            this.fakePlayer = FakePlayerFactory.getMinecraft((WorldServer) worldIn);
-        }
+            @Override
+            public boolean isSpectator()
+            {
+                return false;
+            }
+
+            @Override
+            public boolean isCreative()
+            {
+                return false;
+            }
+        };
     }
 
     /**
@@ -102,35 +118,47 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         return false;
     }
 
+    /**
+     * Brutally stolen from EntityPlayer class
+     */
+    public void setElytraFlying(boolean isFlying)
+    {
+        this.setFlag(7, isFlying);
+    }
+
+    /**
+     * This is also brutally stolen from EntityPlayer class, by the way, I don't
+     * think that chaning the height while sneaking can save player's life
+     */
     protected void updateSize()
     {
-        float f = this.width;
-        float f1 = this.height;
+        float width = this.width;
+        float height = this.height;
 
         if (this.isElytraFlying())
         {
-            f = 0.6F;
-            f1 = 0.6F;
+            width = 0.6F;
+            height = 0.6F;
         }
         else if (this.isSneaking())
         {
-            f = 0.6F;
-            f1 = 1.65F;
+            width = 0.6F;
+            height = 1.65F;
         }
         else
         {
-            f = 0.6F;
-            f1 = 1.8F;
+            width = 0.6F;
+            height = 1.8F;
         }
 
-        if (f != this.width || f1 != this.height)
+        if (width != this.width || height != this.height)
         {
             AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
-            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + f, axisalignedbb.minY + f1, axisalignedbb.minZ + f);
+            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width);
 
             if (!this.worldObj.collidesWithAnyBlock(axisalignedbb))
             {
-                this.setSize(f, f1);
+                this.setSize(width, height);
             }
         }
     }
@@ -152,6 +180,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (!this.worldObj.isRemote)
         {
+            this.fakePlayer.posX = this.posX;
+            this.fakePlayer.posY = this.posY;
+            this.fakePlayer.posZ = this.posZ;
             this.fakePlayer.rotationYaw = this.rotationYaw;
             this.fakePlayer.rotationPitch = this.rotationPitch;
         }
@@ -168,10 +199,10 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
-            double d2 = MathHelper.wrapAngleTo180_double(this.interpTargetYaw - this.rotationYaw);
+            double d2 = MathHelper.wrapDegrees(this.interpTargetYaw - this.rotationYaw);
 
             this.rotationYaw = 360 + (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
-            this.rotationPitch = (float) (this.rotationPitch + (this.newPosX - this.rotationPitch) / this.newPosRotationIncrements);
+            this.rotationPitch = (float) (this.rotationPitch + (this.interpTargetPitch - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 
             this.setPosition(d5, d0, d1);
@@ -282,7 +313,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
     {
-        boolean holdsSkinItem = stack.getItem() instanceof ItemSkinManager;
+        boolean holdsSkinItem = stack.getItem() instanceof ItemActorConfig;
 
         if (this.worldObj.isRemote && holdsSkinItem)
         {
@@ -293,19 +324,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /* Public API */
-
-    /**
-     * Set actor's skin, and possibly notify the clients about the change
-     */
-    public void setSkin(String skin, boolean notify)
-    {
-        this.skin = skin;
-
-        if (!this.worldObj.isRemote && notify)
-        {
-            Dispatcher.updateTrackers(this, new PacketChangeSkin(this.getEntityId(), this.skin));
-        }
-    }
 
     /**
      * Start the playback, invoked by director block (more specifically by
@@ -319,13 +337,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        if (!this.hasCustomName())
+        if (this.filename.isEmpty())
         {
             Mocap.broadcastMessage(I18n.format("blockbuster.actor.no_name"));
         }
         else
         {
-            Mocap.startPlayback(this.getCustomNameTag(), this, false);
+            Mocap.startPlayback(this.filename, this, false);
         }
     }
 
@@ -336,18 +354,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.playing"));
+            Mocap.broadcastMessage(I18n.format("blockbuster.actor.not_playing"));
             return;
         }
 
-        if (!this.hasCustomName())
-        {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.no_name"));
-        }
-        else
-        {
-            Mocap.playbacks.get(this).playing = false;
-        }
+        Mocap.playbacks.get(this).playing = false;
     }
 
     /**
@@ -362,7 +373,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     private void startRecording(EntityPlayer player)
     {
-        if (!this.hasCustomName())
+        if (this.filename.isEmpty())
         {
             Mocap.broadcastMessage(I18n.format("blockbuster.actor.noname"));
             return;
@@ -382,12 +393,38 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             }
         }
 
-        Mocap.startRecording(this.getCustomNameTag(), player);
+        Mocap.startRecording(this.filename, player);
     }
 
-    public void setElytraFlying(boolean isFlying)
+    /**
+     * Configure this actor
+     *
+     * Takes four properties to modify: filename used as id for recording, displayed
+     * name, rendering skin and invulnerability flag
+     */
+    public void modify(String filename, String name, String skin, boolean invulnerable, boolean notify)
     {
-        this.setFlag(7, isFlying);
+        this.filename = filename;
+        this.setCustomNameTag(name);
+        this.skin = skin;
+        this.setEntityInvulnerable(invulnerable);
+
+        if (!this.worldObj.isRemote && notify)
+        {
+            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), filename, name, skin, invulnerable));
+        }
+    }
+
+    /**
+     * Get formatted string for director map block's storage
+     */
+    public String toReplayString()
+    {
+        String name = this.hasCustomName() ? ":" + this.getCustomNameTag() : ":";
+        String skin = !this.skin.equals("") ? ":" + this.skin : ":";
+        String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : ":0";
+
+        return this.filename + name + skin + invulnerable;
     }
 
     /* Reading/writing to disk */
@@ -395,6 +432,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void readEntityFromNBT(NBTTagCompound tag)
     {
+        this.filename = tag.getString("Filename");
         this.skin = tag.getString("Skin");
 
         if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
@@ -408,6 +446,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void writeEntityToNBT(NBTTagCompound tag)
     {
+        if (this.filename != "")
+        {
+            tag.setString("Filename", this.filename);
+        }
+
         if (this.skin != "")
         {
             tag.setString("Skin", this.skin);
@@ -428,12 +471,14 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
+        ByteBufUtils.writeUTF8String(buffer, this.filename);
         ByteBufUtils.writeUTF8String(buffer, this.skin);
     }
 
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
+        this.filename = ByteBufUtils.readUTF8String(buffer);
         this.skin = ByteBufUtils.readUTF8String(buffer);
     }
 }

@@ -9,6 +9,12 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.world.World;
 import noname.blockbuster.entity.EntityActor;
 
+/**
+ * Shoot arrow action
+ *
+ * This action shoots emulates arrow shooting. This would look confusing when
+ * the actor lack of bow, he would be like freaking arrow mage or something.
+ */
 public class ShootArrowAction extends Action
 {
     public int charge;
@@ -27,15 +33,19 @@ public class ShootArrowAction extends Action
         return Action.SHOOT_ARROW;
     }
 
+    /**
+     * Some code in this method is borrowed from ItemBow, I guess, I don't
+     * remember
+     */
     @Override
     public void apply(EntityActor actor)
     {
         World world = actor.worldObj;
 
         EntityTippedArrow arrow = new EntityTippedArrow(world, actor);
-        float f = ItemBow.func_185059_b(this.charge);
+        float f = ItemBow.getArrowVelocity(this.charge);
 
-        arrow.func_184547_a(actor, actor.rotationPitch, actor.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+        arrow.setAim(actor, actor.rotationPitch, actor.rotationYaw, 0.0F, f * 3.0F, 1.0F);
         world.spawnEntityInWorld(arrow);
     }
 

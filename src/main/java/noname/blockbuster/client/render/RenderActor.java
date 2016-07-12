@@ -7,10 +7,14 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.entity.EntityActor;
@@ -18,8 +22,9 @@ import noname.blockbuster.entity.EntityActor;
 /**
  * Actor renderer
  *
- * Renders actor entities with
+ * Renders actor entities with swag
  */
+@SideOnly(Side.CLIENT)
 public class RenderActor extends RenderBiped<EntityActor>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
@@ -49,6 +54,7 @@ public class RenderActor extends RenderBiped<EntityActor>
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         this.modelBipedMain.isSneak = entity.isSneaking();
+        this.setArmsPoses(entity);
 
         if (!entity.renderName)
         {
@@ -73,6 +79,54 @@ public class RenderActor extends RenderBiped<EntityActor>
             entity.rotationYawHead = lastYaw;
             entity.prevRotationYawHead = lastPrevYaw;
         }
+    }
+
+    /**
+     * Sets arms poses
+     */
+    private void setArmsPoses(EntityActor entity)
+    {
+        ItemStack itemstack = entity.getHeldItemMainhand();
+        ItemStack itemstack1 = entity.getHeldItemOffhand();
+        ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
+        ModelBiped.ArmPose modelbiped$armpose1 = ModelBiped.ArmPose.EMPTY;
+
+        if (itemstack != null)
+        {
+            modelbiped$armpose = ModelBiped.ArmPose.ITEM;
+
+            if (entity.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction = itemstack.getItemUseAction();
+
+                if (enumaction == EnumAction.BLOCK)
+                {
+                    modelbiped$armpose = ModelBiped.ArmPose.BLOCK;
+                }
+                else if (enumaction == EnumAction.BOW)
+                {
+                    modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }
+            }
+        }
+
+        if (itemstack1 != null)
+        {
+            modelbiped$armpose1 = ModelBiped.ArmPose.ITEM;
+
+            if (entity.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction1 = itemstack1.getItemUseAction();
+
+                if (enumaction1 == EnumAction.BLOCK)
+                {
+                    modelbiped$armpose1 = ModelBiped.ArmPose.BLOCK;
+                }
+            }
+        }
+
+        this.modelBipedMain.rightArmPose = modelbiped$armpose;
+        this.modelBipedMain.leftArmPose = modelbiped$armpose1;
     }
 
     /**

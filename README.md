@@ -1,21 +1,14 @@
-![Blockbuster logo](./logo.png)
+# ![Blockbuster](./logo.png) Blockbuster
 
-# Blockbuster
+Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
+Minecraft machinimas in single player (without having to recruit/organize a 
+crowd of actors and cameras) and simple cinematics in adventure maps.
 
-Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple Minecraft machinimas in 
-single player (without having to recruit/organize a crowd of actors and cameras) 
-and simple cinematics in adventure maps.
-
-Blockbuster mod is built on top of Forge 12.6.1.1907 for Minecraft 1.9, and recording 
+Blockbuster mod is built on top of Forge 12.17.0.1976 for Minecraft 1.9.4, and recording 
 code is based on the code borrowed from [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (author of the mod gave me permission to use his code). 
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure).
-
-Tutorial video:
-
-[![Tutorial video](https://img.youtube.com/vi/LPJb49VUUqk/0.jpg)](https://www.youtube.com/watch?v=LPJb49VUUqk)
-
+[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
 Tested on Mac OS X 10.10 only, but in theory suppose to work on any OS.
 
 ## Install
@@ -29,188 +22,73 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's
 mods menu. If Blockbuster didn't appear in the mods menu, then something went 
 wrong.
 
-## Show me what you got
+## Videos
 
-See the demo video, tutorial video and checkout 
-[my adventure map with cinematics](https://github.com/mchorse/blockbuster/releases/tag/1.0-rc1) 
-(made available by this mod).
+### Tutorial video
 
-P.S.: there will be links, soon.
+Tutorial for version 1.1. This tutorial covers all items, blocks, and commands 
+that this mod adds into the game. It's also covers the concepts it introduces, 
+and shows how to use this mod. Machinima intro included.
 
-## License
+<a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
+    <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
+</a>
 
-There's no license yet, but it doesn't mean that you can do anything you want 
-with this mod, in practice, because I based my code on Mocap's code, the license 
-is there with source code.
+### Machinima Example: Addicting Redstone
 
-<!-- Borderlands reference -->
-I don't state that source code has the same license, but I imply it, maybe. 
+My first machinima made with Blockbuster 1.1. This video show off basic actor 
+acting (basic walking, running, jumping), placing blocks and tossing items to 
+each other. The cameras jumps are partially made mostly with camera entities 
+that this mod adds in the game, and some basic video editing.
 
-## Features / Manual
+<a href="https://www.youtube.com/watch?v=ua3kfAe0bKo">
+    <img src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
+</a>
+
+## Features
 
 This mod provides following features:
 
-### Player recording
+#### Player's recording
 
-Player's actions can be recorded via `record` command or using actors.
-
-Following actions are fully supported by this mod:
-
-* Basic walking, jumping, looking, sprinting, swinging with left hand, and sneaking
-* Interacting with blocks (opening doors, pushing buttons, toggling levers)
-* Placing/breaking blocks
-* Holding items in both arms
-* Equipping armor
-* Send messages in chat
-* Mounting entities
-* Shoot arrow
+* All stuff that Mocap, but more
+* Interacting with blocks (opening doors, toggling levers, pushing buttons, etc.)
+* Breaking blocks
+* Mounting entities like pigs (tested with AnimalBikes, works well, but keep animals in fences)
 * Flying elytra
+* Text formatting in chat using '[' character instead of '§'
 
-Recorded actions are stored in the `blockbuster/records` folder in world's save 
-folder.
+#### Director blocks
 
-Recorded player actions can be played either by `play` command or by actor entity. 
+* Has two variations: for machinimas and for adventure maps
+* Ties actors and cameras into an organizable scene (with lots of benefits)
+* Can be playbacked by playback button or /play-director command
+* Both of the block have their own GUIs for managing the cast (view, add, edit, remove, reset)
 
-See Commands section for more reference about the commands.
+#### Actors
 
-### Director block
+* Can playback player's actions
+* Customizable skins (simply drop 64x32 skins into minecraft/config/blockbsuter/skins folder)
+* Mostly look like players
+* When tied to director block and player starts recording this actor, player will be able to react to previously recorded actors
+* When recording, HUD overlay would be displayed with caption to which file it records actions
 
-*Director block* is a special block, that comes with this mod, which is responsible 
-managing scene (like real life director). Its purpose is to tie together 
-actors and cameras. It has also special redstone hooks.
+#### Cameras
 
-With the power of *director block* you can playback all registered actors together 
-without having to setup big contraptions from redstone and command blocks.
+* Configurable camera's properties such as: speed, acceleration rate, maximum acceleration and flying direction
+* Jump between cameras when tied to director block
 
-To register actor or camera, you should use *register* item. Right click on actor or 
-camera first, to take a sample of UUID onto *register* item, and then right 
-click *register* item on *director block*. If you succesfully registered the entity 
-(actor or camera), you'll get message in the chat that entity was succesfully 
-registered.
+#### Commands
 
-When you'll register your actors and cameras, you'll be able to use full potential 
-of this mod. Already recorded actors will be played when you'll start recording 
-another actor, and cameras will have a really useful feature.
+* Record command (`/record`) – allows players to record their actions to a filename for a later playback
+* Play command (`/play`) – allows playback of earlier recorded file
+* Play director command (`/play-director`) – allows player to trigger playback in director block specified at XYZ position
+* Stop director command (`/stop-director`) – allows player to stop playback in director block specified at XYZ position
 
-When the camera is registered to your *director block*, you can switch between 
-cameras using "[" and "]" keys ("[" is for previous, and "]" is for next camera). 
-The order in which you'll be switched around, is depends on the order in which 
-you registered the cameras, you can name all your cameras from "Camera 1" to 
-"Camera N" and see the order of your cameras by right clicking *director block* 
-(*director block* will send you the message in the chat with the list of all cast 
-members: actors and cameras, and their names).
+## Manual
 
-To playback the scene, you need to attach a *playback button* to *director block*. 
-Simply right click *director block* while holding *playback button*, and use the 
-*playback button* (right click while holding *playback* item), to playback the scene.
+Manual is located in the root of this repository in file named [MANUAL.md](./MANUAL.md).
+## License
 
-By the way, all of these items are available in creative "Blockbuster" tab.
-
-#### Director map block
-
-*Director map block* is another variation of *director block* designed for 
-adventure maps (cinematics FTW). It's just like *director block*, but functions 
-more as `play` command.
-
-With *director map block*, you register actors with the *name tag* item. 
-Name of the name tag specifies the custon name tag for your actor and the file 
-name from which he's being played. You may specify custom skin by appending 
-colon (`:`) and the name of the skin. Hint: to give a custom name to a name tag, 
-use anvil.
-
-For example, if you want your actor to have file name of "JustDoIt", and actor's 
-skin "Shia LaBeouf", you should name your tag "JustDoIt:Shia LaBeouf" and  
-record a replay with this command:
-
-    /record JustDoIt
-
-When you'll register your actors, you can playback this block with playback 
-button (just as with regular *director block*). Redstone hooks are also supported 
-by *director map* block.
-
-Note: *director map block* doesn't support cameras, yet. That would be cool, 
-though. 
-
-#### Redstone Hooks
-
-When *director block* starts playing the scene, it emits redstone signal on the 
-west side of the block (the side of the block where a play white triangle is drawn). 
-When *director block* stops playing the scene, it emits redstone signal on the 
-east side of the block (the side of the block where a stop white square is drawn).
-
-This can be useful for reseting the scene. You might want to explode a TNT while 
-recording your scene, so to avoid tedious rebuilding, you can use stop hook 
-(when block stops playing) and attach redstone with command block that resets 
-the scene (using /clone command).
-
-Or maybe you want start playing a tune, or summon some zombies when the 
-director starts playing, no worries, use the redstone play hook. 
-
-### Actors
-
-Actors are the entities that you use to record your actions. Actors, by default, 
-look like crash test dummies, but you may change their skin, by using the 
-*skin manager* item. First you'll have to put some skins into 
-`minecraft/config/blockbuster/skins` folder, and then you can select a skin 
-from this folder using GUI.
-
-To record the actor, simply right click it, and start performing some sick 
-movements. When you'll be done, you need to stop the recording either by 
-right clicking actor again or entering `record` command with his name (actually, 
-you can use any name for file, as long as you providing first argument).
-
-For adventure maps makers: you can put skins into world's save folder 
-`blockbuster/skins` to transfer the skins with the map.
-
-Note: Blockbuster mod supports only 64x32 textured skins, yet.
-
-### Cameras
-
-Cameras are special rideable entities which is used as cameras. They're not 
-acturally recording the scene, they're just giving you ability to traverse the 
-space more freely.
-
-Camera is a flying rideable entity with some configuration properties. With the 
-help of *camera configuration* item, you can change camera's characteristic, such as: 
-speed, maximum acceleration, acceleration rate, and direction of movement 
-(any direction, or only horizontal).
-
-If the camera is attached to the *director block*, then you can jump between 
-cameras using "[" and "]" keys, you can rebind those keys in the Settings -> Controls
-menu.
-
-Also, if the camera is attached to the *director block*, during scene's playback, 
-all attached cameras to current scene will be hidden, and will appear as soon 
-as *director block* will stop playing the scene.
-
-### Commands
-
-This mod provides two commands:
-
-1. `record` command which records player's actions to file name provided specified 
-   in first argument, and stops the recording (run `record` again)
-2. `play` command which playbacks player's actions from a file specified with 
-   actor's custom tag name and skin, 4th optional argument is for actor's 
-   invulnerability, if it's 1, actor is invulnurable, if it's 0, actor is vulnurable 
-3. `play-director` command which triggers playback of director block located on 
-   specified position 
-
-Examples:
-
-    # Record player's actions to file named "football"
-    /record football 
-    
-    # To stop the recording
-    /record football
-    
-    # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin"
-    /play football DavidBeckham DavidBeckhamsSkin
-    
-    # Play football recording with actor's custom tag name "DavidBeckham" and skin "DavidBeckhamsSkin" and make actor invulnurable
-    /play football DavidBeckham DavidBeckhamsSkin 1
-    
-    # Play a director block that is located on X: 19, Y: 4, Z:-100
-    /play-director 19 4 -100
-
-Note: all arguments (file name, actor's custom tag name, and actor's skin) can't 
-have spaces. That's due to the fact how minecraft's command handler parses arguments.
+See file `LICENSE.md`. Most of the code is licensed under MIT license, but recording code 
+from Mocap mod is actually licensed under GPL license (`noname.blockbuster.recording` package).

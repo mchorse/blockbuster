@@ -8,10 +8,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.client.model.ModelCamera;
 import noname.blockbuster.entity.EntityCamera;
 
+/**
+ * Camera renderer
+ *
+ * Renders camera and more
+ */
+@SideOnly(Side.CLIENT)
 public class RenderCamera extends RenderLiving
 {
     private static final ResourceLocation resource = new ResourceLocation(Blockbuster.MODID, "textures/entity/camera.png");
@@ -29,6 +37,12 @@ public class RenderCamera extends RenderLiving
     protected ResourceLocation getEntityTexture(Entity entity)
     {
         return resource;
+    }
+
+    @Override
+    protected boolean canRenderName(EntityLiving entity)
+    {
+        return super.canRenderName(entity) && ((EntityCamera) entity).renderName;
     }
 
     /**

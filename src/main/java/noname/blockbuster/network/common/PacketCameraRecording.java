@@ -1,34 +1,33 @@
 package noname.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketChangeSkin implements IMessage
+public class PacketCameraRecording implements IMessage
 {
     public int id;
-    public String skin;
+    public boolean recording;
 
-    public PacketChangeSkin()
+    public PacketCameraRecording()
     {}
 
-    public PacketChangeSkin(int id, String skin)
+    public PacketCameraRecording(int id, boolean recording)
     {
+        this.recording = recording;
         this.id = id;
-        this.skin = skin;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this.id = buf.readInt();
-        this.skin = ByteBufUtils.readUTF8String(buf);
+        this.recording = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(this.id);
-        ByteBufUtils.writeUTF8String(buf, this.skin);
+        buf.writeBoolean(this.recording);
     }
 }

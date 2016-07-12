@@ -14,18 +14,17 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.block.BlockDirector;
 import noname.blockbuster.block.BlockDirectorMap;
-import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.entity.EntityCamera;
-import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemCamera;
+import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
-import noname.blockbuster.item.ItemSkinManager;
+import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.recording.MocapEventHandler;
-import noname.blockbuster.tileentity.TileEntityDirectorMap;
+import noname.blockbuster.recording.PlayerEventHandler;
 import noname.blockbuster.tileentity.TileEntityDirector;
+import noname.blockbuster.tileentity.TileEntityDirectorMap;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -40,7 +39,7 @@ public class CommonProxy implements IGuiHandler
         this.registerItem(Blockbuster.cameraConfigItem = new ItemCameraConfig());
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
-        this.registerItem(Blockbuster.skinManagerItem = new ItemSkinManager());
+        this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
 
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
         this.registerBlock(Blockbuster.directorBlockMap = new BlockDirectorMap());
@@ -54,8 +53,7 @@ public class CommonProxy implements IGuiHandler
 
     public void load(FMLInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new MocapEventHandler());
-        MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
+        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
     }
 
     /**

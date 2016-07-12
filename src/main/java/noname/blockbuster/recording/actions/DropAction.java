@@ -47,24 +47,24 @@ public class DropAction extends Action
 
         ItemStack items = ItemStack.loadItemStackFromNBT(this.itemData);
 
-        EntityItem ea = new EntityItem(actor.worldObj, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);
+        EntityItem item = new EntityItem(actor.worldObj, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);
         Random rand = new Random();
 
         float f = 0.3F;
 
-        ea.motionX = (-MathHelper.sin(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
-        ea.motionZ = (MathHelper.cos(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
-        ea.motionY = (-MathHelper.sin(actor.rotationPitch / 180.0F * PI) * f + 0.1F);
-        ea.setDefaultPickupDelay();
+        item.motionX = (-MathHelper.sin(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
+        item.motionZ = (MathHelper.cos(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
+        item.motionY = (-MathHelper.sin(actor.rotationPitch / 180.0F * PI) * f + 0.1F);
+        item.setDefaultPickupDelay();
 
         f = 0.02F;
         float f1 = rand.nextFloat() * PI * 2.0F * rand.nextFloat();
 
-        ea.motionX += Math.cos(f1) * f;
-        ea.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
-        ea.motionZ += Math.sin(f1) * f;
+        item.motionX += Math.cos(f1) * f;
+        item.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+        item.motionZ += Math.sin(f1) * f;
 
-        actor.worldObj.spawnEntityInWorld(ea);
+        actor.worldObj.spawnEntityInWorld(item);
     }
 
     @Override

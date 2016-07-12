@@ -61,7 +61,7 @@ public abstract class Action
     }
 
     /**
-     * Get type of action
+     * Get type of the action
      */
     public abstract byte getType();
 
@@ -75,13 +75,13 @@ public abstract class Action
     {}
 
     /**
-     * Construct action from data input stream
+     * Construct action from data input stream (from file)
      */
     public void fromBytes(DataInput in) throws IOException
     {}
 
     /**
-     * Persist action to data output stream
+     * Persist action to data output stream (to file)
      */
     public void toBytes(DataOutput out) throws IOException
     {}

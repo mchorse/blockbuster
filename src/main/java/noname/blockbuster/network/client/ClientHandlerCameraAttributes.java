@@ -16,7 +16,7 @@ public class ClientHandlerCameraAttributes extends ClientMessageHandler<PacketCa
         {
             EntityCamera camera = (EntityCamera) entity;
 
-            camera.setConfiguration(message.speed, message.accelerationRate, message.accelerationMax, message.canFly, false);
+            camera.setConfiguration(message.name, message.speed, message.accelerationRate, message.accelerationMax, message.canFly, false);
         }
     }
 }

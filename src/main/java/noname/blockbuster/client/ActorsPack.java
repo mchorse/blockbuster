@@ -15,10 +15,11 @@ import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
-import noname.blockbuster.api.Comment;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actors pack
@@ -27,7 +28,7 @@ import noname.blockbuster.api.Comment;
  * that is responsible for loading skins from config/blockbuster/skins and
  * world's save skins folder with resource domain of blockbuster.actors)
  */
-@Comment(comment = "Used to inject actor skins from config/blockbuster/skins folder and save's skins folder. See ClientProxy for more info.")
+@SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
     /**
@@ -153,12 +154,6 @@ public class ActorsPack implements IResourcePack
     }
 
     @Override
-    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
-    {
-        return null;
-    }
-
-    @Override
     public BufferedImage getPackImage() throws IOException
     {
         return null;
@@ -168,5 +163,12 @@ public class ActorsPack implements IResourcePack
     public String getPackName()
     {
         return "Blockbuster's Actor Skin Pack";
+    }
+
+    @Override
+    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

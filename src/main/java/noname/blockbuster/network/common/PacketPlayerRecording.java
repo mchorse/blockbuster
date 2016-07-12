@@ -1,33 +1,34 @@
 package noname.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketRecording implements IMessage
+public class PacketPlayerRecording implements IMessage
 {
-    public int id;
     public boolean recording;
+    public String filename;
 
-    public PacketRecording()
+    public PacketPlayerRecording()
     {}
 
-    public PacketRecording(int id, boolean recording)
+    public PacketPlayerRecording(boolean recording, String filename)
     {
-        this.id = id;
         this.recording = recording;
+        this.filename = filename;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.id = buf.readInt();
         this.recording = buf.readBoolean();
+        this.filename = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(this.id);
         buf.writeBoolean(this.recording);
+        ByteBufUtils.writeUTF8String(buf, this.filename);
     }
 }

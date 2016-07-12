@@ -1,6 +1,7 @@
 package noname.blockbuster.tileentity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -19,6 +20,9 @@ import noname.blockbuster.recording.Mocap;
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
+    /**
+     * UUID list of registered cameras
+     */
     public List<String> cameras = new ArrayList<String>();
 
     /* Read/write this TE to disk */
@@ -31,23 +35,35 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Cameras", this.cameras);
+        
+        return compound;
     }
 
     /* Public API */
 
-    @Override
-    public List<String> getCast()
+    /**
+     * Remove all registered actors and cameras from this TE
+     */
+    public void reset()
     {
-        List<String> cast = new ArrayList<String>();
+        this.actors = new ArrayList<String>();
+        this.cameras = new ArrayList<String>();
+        this.markDirty();
+    }
 
-        cast.addAll(this.actors);
-        cast.addAll(this.cameras);
-
-        return cast;
+    /**
+     * Remove either actor or camera by id.
+     *
+     * Oh gosh, this method does too many things!!!
+     */
+    public void remove(int id, boolean type)
+    {
+        (type ? this.actors : this.cameras).remove(id);
+        this.markDirty();
     }
 
     /**
@@ -143,6 +159,25 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.playBlock(false);
+    }
+
+    /**
+     * Remove unused entitites
+     */
+    protected void removeUnusedEntities(List<String> list)
+    {
+        Iterator<String> iterator = list.iterator();
+
+        while (iterator.hasNext())
+        {
+            String id = iterator.next();
+            Entity entity = Mocap.entityByUUID(this.worldObj, id);
+
+            if (entity == null)
+            {
+                iterator.remove();
+            }
+        }
     }
 
     /**

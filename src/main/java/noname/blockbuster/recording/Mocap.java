@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import noname.blockbuster.entity.EntityActor;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.recording.actions.Action;
 
 /**
@@ -42,7 +44,7 @@ public class Mocap
      * Signature used for replay files, this is usually the first entry to
      * read.
      */
-    public static final short signature = 3209;
+    public static final short signature = 3210;
 
     /**
      * Timing delay between two replay frames. Default is 100 milliseconds or
@@ -89,7 +91,7 @@ public class Mocap
     {
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
         {
-            if (slot.func_188452_c() == index)
+            if (slot.getSlotIndex() == index)
                 return slot;
         }
 
@@ -112,7 +114,7 @@ public class Mocap
      */
     public static Entity entityByUUID(World world, UUID target)
     {
-        for (Entity entity : world.getLoadedEntityList())
+        for (Entity entity : world.loadedEntityList)
         {
             if (entity.getUniqueID().equals(target))
             {
@@ -137,7 +139,9 @@ public class Mocap
         {
             recorder.capture = false;
             records.remove(player);
-            broadcastMessage(I18n.format("blockbuster.mocap.stopped", recorder.filename));
+
+            Dispatcher.getInstance().sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
+
             return;
         }
 
@@ -153,7 +157,22 @@ public class Mocap
         recorder = new RecordThread(player, filename);
         records.put(player, recorder);
 
-        broadcastMessage(I18n.format("blockbuster.mocap.started", filename));
+        Dispatcher.getInstance().sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+    }
+
+    public static EntityActor actorFromArgs(String[] args, World world)
+    {
+        EntityActor actor = null;
+
+        String filename = args.length >= 1 ? args[0] : "";
+        String name = args.length >= 2 ? args[1] : "";
+        String skin = args.length >= 3 ? args[2] : "";
+        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
+
+        actor = new EntityActor(world);
+        actor.modify(filename, name, skin, isInvulnerable, true);
+
+        return actor;
     }
 
     public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)
@@ -177,8 +196,7 @@ public class Mocap
     public static EntityActor startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
         EntityActor actor = new EntityActor(world);
-        actor.setCustomNameTag(name);
-        actor.setSkin(skin, true);
+        actor.modify(filename, name, skin, false, true);
 
         startPlayback(filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);

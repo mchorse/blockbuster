@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.item.ItemRegister;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
@@ -32,7 +35,7 @@ public class BlockDirector extends AbstractBlockDirector
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
     {
-        tooltip.add(I18n.format("blockbuster.info.director_block"));
+        tooltip.add(I18n.format("blockbuster.info.director"));
     }
 
     @Override
@@ -52,9 +55,10 @@ public class BlockDirector extends AbstractBlockDirector
         }
 
         TileEntityDirector tile = (TileEntityDirector) world.getTileEntity(pos);
+
         NBTTagCompound tag = item.getTagCompound();
 
-        if (!tag.hasKey("EntityID"))
+        if (tag == null || !tag.hasKey("EntityID"))
         {
             return false;
         }
@@ -76,6 +80,14 @@ public class BlockDirector extends AbstractBlockDirector
 
         player.addChatMessage(new TextComponentTranslation("blockbuster.director.was_registered"));
         return true;
+    }
+
+    @Override
+    protected void outputCast(EntityPlayer player, World worldIn, BlockPos pos)
+    {
+        TileEntityDirector tile = (TileEntityDirector) worldIn.getTileEntity(pos);
+
+        Dispatcher.getInstance().sendTo(new PacketDirectorCast(tile.getPos(), tile.actors, tile.cameras), (EntityPlayerMP) player);
     }
 
     /**

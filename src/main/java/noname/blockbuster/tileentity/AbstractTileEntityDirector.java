@@ -1,11 +1,9 @@
 package noname.blockbuster.tileentity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -17,10 +15,23 @@ import noname.blockbuster.block.AbstractBlockDirector;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.recording.Mocap;
 
+/**
+ * Abstract Tile Entity Director
+ *
+ * This class is base class for director block's tile entities. This class
+ * provides basic methods for changing state of the block, and defines
+ * some abstract methods for playback.
+ */
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
     private int tick = 0;
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return false;
+    }
 
     /* Read/write this TE to disk */
 
@@ -32,19 +43,15 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.actors);
+        
+        return compound;
     }
 
     /* NBT list utils */
-
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
-        return false;
-    }
 
     /**
      * Read string typed list from NBT
@@ -117,25 +124,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      * Stop scene's playback
      */
     public abstract void stopPlayback();
-
-    /**
-     * Remove unused entitites
-     */
-    protected void removeUnusedEntities(List<String> list)
-    {
-        Iterator<String> iterator = list.iterator();
-
-        while (iterator.hasNext())
-        {
-            String id = iterator.next();
-            Entity entity = Mocap.entityByUUID(this.worldObj, id);
-
-            if (entity == null)
-            {
-                iterator.remove();
-            }
-        }
-    }
 
     /**
      * Checks every 4 ticks if the actors (that registered by this TE) are

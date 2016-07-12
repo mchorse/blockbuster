@@ -1,7 +1,5 @@
 package noname.blockbuster.block;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -9,22 +7,17 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.item.ItemPlayback;
-import noname.blockbuster.recording.Mocap;
-import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
  * <p>
@@ -62,7 +55,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
 
     public AbstractBlockDirector()
     {
-        super(Material.rock);
+        super(Material.ROCK);
         this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setHardness(8);
@@ -141,7 +134,10 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      *
      * Used by children classes.
      */
-    protected abstract boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player);
+    protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
+    {
+        return this.handlePlaybackItem(item, pos, player);
+    }
 
     /**
      * Attach recording item to current director block
@@ -174,25 +170,5 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      * Temporary solution for browsing registered entities by DirectorTileEntity.
      * Creating GUI for this job is on ToDo list.
      */
-    protected void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos)
-    {
-        AbstractTileEntityDirector tile = (AbstractTileEntityDirector) worldIn.getTileEntity(pos);
-        String output = I18n.format("blockbuster.director.cast");
-        List<String> cast = tile.getCast();
-
-        for (String id : cast)
-        {
-            Entity entity = Mocap.entityByUUID(worldIn, id);
-            String name = entity != null ? entity.getName() : I18n.format("blockbuster.director.missing_cast", id);
-
-            output += "* " + name + "\n";
-        }
-
-        if (cast.isEmpty())
-        {
-            output = I18n.format("blockbuster.director.no_cast");
-        }
-
-        playerIn.addChatComponentMessage(new TextComponentString(output.trim()));
-    }
+    protected abstract void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
 }

@@ -6,12 +6,15 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketSwitchCamera;
 
 /**
  * Separate event handler for keyboard events
  */
+@SideOnly(Side.CLIENT)
 public class KeyboardHandler
 {
     private KeyBinding nextCamera;
@@ -29,6 +32,9 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.previousCamera);
     }
 
+    /**
+     * Handle keys
+     */
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {
