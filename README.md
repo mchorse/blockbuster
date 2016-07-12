@@ -24,13 +24,22 @@ wrong.
 
 ## Videos
 
-**Tutorial video**:
+### Tutorial video
+
+Tutorial for version 1.1. This tutorial covers all items, blocks, and commands 
+that this mod adds into the game. It's also covers the concepts it introduces, 
+and shows how to use this mod. Machinima intro included.
 
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
     <img height="420" src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>
 
-**Machinima example**: "Addictive Redstone"
+### Machinima Example: Addicting Redstone
+
+My first machinima made with Blockbuster 1.1. This video show off basic actor 
+acting (basic walking, running, jumping), placing blocks and tossing items to 
+each other. The cameras jumps are partially made mostly with camera entities 
+that this mod adds in the game, and some basic video editing.
 
 <a href="https://www.youtube.com/watch?v=ua3kfAe0bKo">
     <img height="420" src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
