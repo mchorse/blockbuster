@@ -31,7 +31,7 @@ that this mod adds into the game. It's also covers the concepts it introduces,
 and shows how to use this mod. Machinima intro included.
 
 <a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
-    <img height="420" src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
+    <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
 </a>
 
 ### Machinima Example: Addicting Redstone
@@ -42,7 +42,7 @@ each other. The cameras jumps are partially made mostly with camera entities
 that this mod adds in the game, and some basic video editing.
 
 <a href="https://www.youtube.com/watch?v=ua3kfAe0bKo">
-    <img height="420" src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
+    <img src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
 </a>
 
 ## Features
