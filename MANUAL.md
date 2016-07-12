@@ -81,12 +81,12 @@ By the way, all of these items are available in creative "Blockbuster" tab.
 adventure maps (cinematics FTW). It's just like *director block*, but functions
 more as `play` command.
 
-To register replay with *director map block* you need to open up *director map
+To register replay with *director map block* you need to open up the *director map
 block*'s GUI (right click the block). Then input your new actor's recording id
-(file name from which actor would be played), and press "Add" button, after that
-a new entry will appear in the scroll box below "Add" button. 
+(file name from which actor would be played), and press the "Add" button, after that
+a new entry will appear in the scroll box below the "Add" button. 
 
-You can edit following actor's properties: name tag, recording id, skin and
+You can edit the following actor's properties: name tag, recording id, skin and
 invincibility.
 
 When you'll register your actors, you can playback this block with playback
@@ -98,36 +98,36 @@ though.
 
 ### Redstone Hooks
 
-When *director block* starts playing the scene, it emits redstone signal on the
+When the *director block* starts playing the scene, it emits a redstone signal on the
 west side of the block (the side of the block where a play white triangle is
-drawn).  When *director block* stops playing the scene, it emits redstone signal
+drawn).  When the *director block* stops playing the scene, it emits redstone signal
 on the east side of the block (the side of the block where a stop white square
 is drawn).
 
-This can be useful for reseting the scene. You might want to explode a TNT while
+This can be useful for resetting the scene. You might want to explode a TNT while
 recording your scene, so to avoid tedious rebuilding, you can use stop hook
 (when block stops playing) and attach redstone with command block that resets
-the scene (using `/clone` command, for example).
+the scene (using the `/clone` command, for example).
 
 Or maybe you want start playing a tune, or summon some zombies when the director
 starts playing, no worries, use the redstone play hook. 
 
 ## Actors
 
-Actors are the entities that you are used to playback your actions. Actors, by
+Actors are the entities that you use to playback your actions. Actors, by
 default, look like crash test dummies, but you may change their skin using the
-*actor configuration* item. First you'll have to put some skins into
+*actor configuration* item. First you'll have to put some skins into the
 `minecraft/config/blockbuster/skins` folder, and then you can select a skin from
-this folder using GUI. In this GUI you can also change other properties such as
+this folder using the GUI. In this GUI you can also change other properties such as
 name, recording file name, skin and invincibility. 
 
-To record the actor, you must attach it first to *director block*, and simply
-right click it, and start performing some sick movements. When you'll be done,
+To record the actor, you must attach it first to a *director block*, and simply
+right click it (the actor), and start performing some sick movements. When you'll be done,
 you need to stop the recording either by right clicking actor again or entering
 `record` command with his name (actually, you can use any name for file, as long
-as you providing the first argument).
+as you provide the first argument).
 
-For adventure maps makers: you can put skins into world's save folder
+For adventure maps makers: you can put your skins into world's save folder
 `blockbuster/skins` to transfer the skins with the map, but they won't work in
 multiplayer.
 
@@ -137,12 +137,12 @@ Note: Blockbuster mod supports only 64x32 textured skins, for now.
 
 ## Cameras
 
-Cameras are special rideable entities which is used as cameras. They're not
-acturally recording the scene, they're just giving you ability to traverse the
+Cameras are special rideable entities which are used as cameras. They're not
+acturally recording the scene, they're just giving you the ability to traverse the
 space more freely.
 
-Camera is a flying rideable entity with some configuration properties. With the
-help of *camera configuration* item, you can change camera's characteristic,
+The camera is a flying rideable entity with some configuration properties. With the
+help of the *camera configuration* item, you can change the camera's characteristics,
 such as: speed, maximum acceleration, acceleration rate, and direction of
 movement (any direction, or only horizontal).
 
@@ -150,7 +150,7 @@ If the camera is attached to the *director block*, then you can jump between
 cameras using "[" and "]" keys, you can rebind those keys in the Settings ->
 Controls menu.
 
-Also, if the camera is attached to the *director block*, during scene's
+Also, if the camera is attached to the *director block*, during the scene's
 playback, all attached cameras to current scene will be hidden, and will appear
 as soon as *director block* will stop playing the scene.
 
@@ -162,7 +162,7 @@ This mod provides two commands:
    specified in first argument, and stops the recording (run `record` again)
 2. `play` command which playbacks player's actions from a file specified with
    actor's custom tag name and skin, 2nd through 4th are optional arguments
-   invulnerability, if it's 1, actor is invulnerable, if it's 0, actor is
+   invulnerability, if it's 1, the actor is invulnerable, if it's 0, the actor is
    vulnurable 
 3. `play-director` command which triggers playback of director block located on
    specified position 
@@ -171,24 +171,24 @@ This mod provides two commands:
 
 Examples:
 
-    # Record player's actions to file named "football" 
+    # Record player's actions to a file named "football" 
     /record football 
     
     # To stop the recording 
-    /record footbal
+    /record football
     
-    # Play football recording with actor's custom tag name "DavidBeckham" and
+    # Play the football recording with actor's custom tag name "DavidBeckham" and
     # skin "DavidBeckhamsSkin" 
     /play football DavidBeckham DavidBeckhamsSkin
     
-    # Play football recording with actor's custom tag name "DavidBeckham" and
+    # Play the football recording with actor's custom tag name "DavidBeckham" and
     # skin "DavidBeckhamsSkin" and make actor invulnerable 
     /play football DavidBeckham DavidBeckhamsSkin 1
     
-    # Play director block that is located on X: 19, Y: 4, Z:-100 
+    # Play adirector block that is located on X: 19, Y: 4, Z:-100 
     /play-director 19 4 -100
     
-    # Stop director block that is located on X: 19, Y: 4, Z:-100 
+    # Stop a director block that is located on X: 19, Y: 4, Z:-100 
     /stop-director 19 4 -100
 
 Note: all arguments (file name, actor's custom tag name, and actor's skin) can't
