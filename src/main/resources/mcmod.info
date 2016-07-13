@@ -3,7 +3,7 @@
         "modid": "blockbuster",
         "name": "Blockbuster",
         "description": "Create simple machinimas and adventure map cinematics",
-        "version": "1.1",
+        "version": "1.2-dev",
         "mcversion": "1.9",
         "url": "https://github.com/mchorse/blockbuster",
         "authorList": ["mchorse"],
