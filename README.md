@@ -88,7 +88,6 @@ This mod provides following features:
 ## Manual
 
 Manual is located in the root of this repository in file named [MANUAL.md](./MANUAL.md).
-
 ## License
 
 See file `LICENSE.md`. Most of the code is licensed under MIT license, but recording code 
