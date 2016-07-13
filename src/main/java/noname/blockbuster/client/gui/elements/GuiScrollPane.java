@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -79,8 +80,7 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         mouseY += this.scrollY;
 
-        if (mouseY < this.y || mouseY > this.y + this.h)
-            return;
+        if (mouseY < this.y || mouseY > this.y + this.h) return;
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -90,8 +90,7 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         mouseY += this.scrollY;
 
-        if (mouseY < this.y || mouseY > this.y + this.h)
-            return;
+        if (mouseY < this.y || mouseY > this.y + this.h) return;
 
         super.mouseReleased(mouseX, mouseY, state);
     }
@@ -105,8 +104,8 @@ public abstract class GuiScrollPane extends GuiScreen
      */
     protected void drawBackground()
     {
-        this.drawRect(this.x, this.y, this.x + this.w, this.y + this.h, -6250336);
-        this.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, -16777216);
+        Gui.drawRect(this.x, this.y, this.x + this.w, this.y + this.h, -6250336);
+        Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, -16777216);
     }
 
     /**
@@ -114,14 +113,13 @@ public abstract class GuiScrollPane extends GuiScreen
      */
     protected void drawScrollBar()
     {
-        if (this.scrollHeight < this.h)
-            return;
+        if (this.scrollHeight < this.h) return;
 
         float progress = (float) this.scrollY / (float) (this.scrollHeight - this.h);
         int x = this.x + this.w - 8;
         float y = this.y + 3 + progress * (this.h - 26);
 
-        this.drawRect(x, (int) y, x + 5, (int) y + 20, -6250336);
+        Gui.drawRect(x, (int) y, x + 5, (int) y + 20, -6250336);
     }
 
     /**

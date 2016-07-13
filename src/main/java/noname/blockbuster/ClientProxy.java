@@ -37,8 +37,8 @@ import noname.blockbuster.entity.EntityCamera;
 /**
  * Client proxy
  *
- * This class is responsible for registering item models, block models,
- * entity renders and injecting actor skin resource pack.
+ * This class is responsible for registering item models, block models, entity
+ * renders and injecting actor skin resource pack.
  *
  * This class als provides GUIs.
  */
@@ -49,8 +49,8 @@ public class ClientProxy extends CommonProxy
     public static GuiRecordingOverlay recordingOverlay;
 
     /**
-     * Register mod items, blocks, tile entites and entities, and load
-     * item, block models and register entity renderer.
+     * Register mod items, blocks, tile entites and entities, and load item,
+     * block models and register entity renderer.
      */
     @Override
     public void preLoad(FMLPreInitializationEvent event)
@@ -66,8 +66,8 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
-        this.registerEntityRender(EntityCamera.class, new RenderCamera.CameraFactory());
-        this.registerEntityRender(EntityActor.class, new RenderActor.ActorFactory());
+        this.registerEntityRender(EntityCamera.class, new RenderCamera.FactoryCamera());
+        this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
@@ -80,6 +80,7 @@ public class ClientProxy extends CommonProxy
      *
      * Thanks to diesieben07 for giving the idea.
      */
+    @SuppressWarnings("unchecked")
     private void injectResourcePack(String path)
     {
         path = path.substring(0, path.length() - 4);
@@ -122,6 +123,7 @@ public class ClientProxy extends CommonProxy
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(path, "inventory"));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
@@ -129,6 +131,7 @@ public class ClientProxy extends CommonProxy
 
     /**
      * There's two types of GUI are available right now:
+     *
      * - Camera configuration GUI (0)
      * - Actor configuration GUI (1)
      * - Director block management GUI (2)

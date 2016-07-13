@@ -45,14 +45,14 @@ import noname.blockbuster.tileentity.TileEntityDirector;
 public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData
 {
     /**
-     * Event list. Each tick there's might be added an event action which
-     * should be performed by this actor. The events are injected by PlayThread.
+     * Event list. Each tick there's might be added an event action which should
+     * be performed by this actor. The events are injected by PlayThread.
      */
-    public List<Action> eventsList = Collections.synchronizedList(new ArrayList());
+    public List<Action> eventsList = Collections.synchronizedList(new ArrayList<Action>());
 
     /**
-     * Skin used by the actor. If empty – means default skin provided with
-     * this mod.
+     * Skin used by the actor. If empty – means default skin provided with this
+     * mod.
      */
     public String skin = "";
 
@@ -189,11 +189,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         this.updateArmSwingProgress();
 
-        /* Taken from the EntityDragon, IDK what it does, but the same code
-         * was in Mocap's EntityMocap (which is serves like an actor in
-         * Mocap mod)
+        /*
+         * Taken from the EntityDragon, IDK what it does, but the same code was
+         * in Mocap's EntityMocap (which is serves like an actor in Mocap mod)
          *
-         * It looks like position and rotation interpolation, though */
+         * It looks like position and rotation interpolation, though
+         */
         if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
         {
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
@@ -216,12 +217,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             this.motionZ *= 0.98D;
         }
 
-        if (Math.abs(this.motionX) < 0.005D)
-            this.motionX = 0.0D;
-        if (Math.abs(this.motionY) < 0.005D)
-            this.motionY = 0.0D;
-        if (Math.abs(this.motionZ) < 0.005D)
-            this.motionZ = 0.0D;
+        if (Math.abs(this.motionX) < 0.005D) this.motionX = 0.0D;
+        if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
+        if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
         if (!this.isServerWorld())
         {
@@ -235,8 +233,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         double d1 = this.posZ - this.prevPosZ;
         float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
 
-        if (f > 1.0F)
-            f = 1.0F;
+        if (f > 1.0F) f = 1.0F;
 
         this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
         this.limbSwing += this.limbSwingAmount;
@@ -268,8 +265,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Process interact
      *
-     * Inject UUID of actor to registering device, open GUI for changing
-     * actor's skin, or start recording him
+     * Inject UUID of actor to registering device, open GUI for changing actor's
+     * skin, or start recording him
      */
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
@@ -282,8 +279,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else if (item == null)
         {
-            if (!this.worldObj.isRemote)
-                this.startRecording(player);
+            if (!this.worldObj.isRemote) this.startRecording(player);
 
             return true;
         }
@@ -292,8 +288,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
-     * Set actor's id on register item (while using register item on this
-     * actor)
+     * Set actor's id on register item (while using register item on this actor)
      */
     private boolean handleRegisterItem(ItemStack stack)
     {
@@ -363,13 +358,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     /**
      * Start recording the player's actions for this actor
-     *
-     * Few notes:
-     * - Actor performs a playback specified by his name tag, so if you'll kill
-     *   actor by accident, you can create new actor and name him as the old one.
-     *   He'll still be able to playback the same recording.
-     * - Don't use the same name for actors in different scenes. It will cause
-     *   total overwrite of your previous recording, be careful.
      */
     private void startRecording(EntityPlayer player)
     {
@@ -399,8 +387,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Configure this actor
      *
-     * Takes four properties to modify: filename used as id for recording, displayed
-     * name, rendering skin and invulnerability flag
+     * Takes four properties to modify: filename used as id for recording,
+     * displayed name, rendering skin and invulnerability flag
      */
     public void modify(String filename, String name, String skin, boolean invulnerable, boolean notify)
     {

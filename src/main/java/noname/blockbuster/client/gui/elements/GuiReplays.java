@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
@@ -59,6 +60,7 @@ public class GuiReplays extends GuiScrollPane
     /* Action handling */
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void actionPerformed(GuiButton button) throws IOException
     {
         Entry entry = ((GuiCustomButton<Entry>) button).getValue();
@@ -118,7 +120,7 @@ public class GuiReplays extends GuiScrollPane
             /* Separator */
             if (i != c - 1)
             {
-                this.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
+                Gui.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
             }
         }
     }

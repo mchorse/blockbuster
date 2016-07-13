@@ -1,6 +1,7 @@
 package noname.blockbuster;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -16,11 +17,11 @@ import noname.blockbuster.block.BlockDirector;
 import noname.blockbuster.block.BlockDirectorMap;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.entity.EntityCamera;
+import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.item.ItemCamera;
 import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
-import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.recording.PlayerEventHandler;
 import noname.blockbuster.tileentity.TileEntityDirector;
@@ -81,12 +82,12 @@ public class CommonProxy implements IGuiHandler
      *
      * Or go to minecraft forge forum and ask people to help you #smartass
      */
-    protected void registerEntity(Class entity, String name)
+    protected void registerEntity(Class<? extends Entity> entity, String name)
     {
         EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false);
     }
 
-    protected void registerEntityWithEgg(Class entity, String name, int primary, int secondary)
+    protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
         EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
     }

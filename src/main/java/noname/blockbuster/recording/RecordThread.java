@@ -19,9 +19,9 @@ import noname.blockbuster.recording.actions.SwipeAction;
 /**
  * Record thread
  *
- * This class is responsible for recording all player's actions into a given file.
- * That's includes: movement, rotation, and the actions that player is commiting
- * during recording.
+ * This class is responsible for recording all player's actions into a given
+ * file. That's includes: movement, rotation, and the actions that player is
+ * commiting during recording.
  */
 public class RecordThread implements Runnable
 {
@@ -150,7 +150,10 @@ public class RecordThread implements Runnable
         ItemStack mainhand = this.player.getHeldItemMainhand();
         ItemStack offhand = this.player.getHeldItemOffhand();
 
-        boolean blank = this.trackItemToSlot(mainhand, 0) || this.trackItemToSlot(offhand, 5);
+        if (!this.trackItemToSlot(mainhand, 0))
+        {
+            this.trackItemToSlot(offhand, 5);
+        }
     }
 
     /**

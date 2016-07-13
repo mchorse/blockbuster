@@ -114,9 +114,9 @@ public class GuiActor extends GuiChildScreen
     /**
      * Save and quit this screen
      *
-     * Depends on the fact where does this GUI was opened from, it either
-     * sends modify actor packet, which modifies entity's properties directly,
-     * or sends edit action to director map block
+     * Depends on the fact where does this GUI was opened from, it either sends
+     * modify actor packet, which modifies entity's properties directly, or
+     * sends edit action to director map block
      */
     private void saveAndQuit()
     {
@@ -222,7 +222,6 @@ public class GuiActor extends GuiChildScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        int centerX = this.width / 2;
         int x = 30;
         int y = 15;
 

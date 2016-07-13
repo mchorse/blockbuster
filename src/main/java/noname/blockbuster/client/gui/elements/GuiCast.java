@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -54,9 +55,9 @@ public class GuiCast extends GuiScrollPane
     /**
      * List of entries
      *
-     * This list is being compiled in the setCast method, basically this list
-     * is used for rendering of the rows and storing the data for edit and
-     * remove actions.
+     * This list is being compiled in the setCast method, basically this list is
+     * used for rendering of the rows and storing the data for edit and remove
+     * actions.
      */
     public List<Entry> entries = new ArrayList<Entry>();
 
@@ -109,9 +110,10 @@ public class GuiCast extends GuiScrollPane
      * has id of 0, however edit action is triggered when this method invoked
      * with button of id 1.
      *
-     * Edit action only can be performed when the entity is in reach (i.e. loaded
-     * by the client), else, pal, you're on your own.
+     * Edit action only can be performed when the entity is in reach (i.e.
+     * loaded by the client), else, pal, you're on your own.
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
@@ -198,7 +200,7 @@ public class GuiCast extends GuiScrollPane
             /* Border under the row */
             if (i != c - 1)
             {
-                this.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
+                Gui.drawRect(x - 5, y + 24, this.x + this.w - 1, y + 25, 0xff181818);
             }
         }
     }

@@ -35,20 +35,20 @@ import noname.blockbuster.recording.actions.Action;
  * @author mchorse
  * @link http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000
  */
+
 public class Mocap
 {
-    public static Map<EntityPlayer, RecordThread> records = Collections.synchronizedMap(new HashMap());
-    public static Map<EntityActor, PlayThread> playbacks = Collections.synchronizedMap(new HashMap());
+    public static Map<EntityPlayer, RecordThread> records = Collections.synchronizedMap(new HashMap<EntityPlayer, RecordThread>());
+    public static Map<EntityActor, PlayThread> playbacks = Collections.synchronizedMap(new HashMap<EntityActor, PlayThread>());
 
     /**
-     * Signature used for replay files, this is usually the first entry to
-     * read.
+     * Signature used for replay files, this is usually the first entry to read.
      */
     public static final short signature = 3210;
 
     /**
-     * Timing delay between two replay frames. Default is 100 milliseconds or
-     * 10 ticks per second.
+     * Timing delay between two replay frames. Default is 100 milliseconds or 10
+     * ticks per second.
      */
     public static final long delay = 100L;
 
@@ -91,8 +91,7 @@ public class Mocap
     {
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
         {
-            if (slot.getSlotIndex() == index)
-                return slot;
+            if (slot.getSlotIndex() == index) return slot;
         }
 
         return null;
@@ -133,7 +132,6 @@ public class Mocap
     public static void startRecording(String filename, EntityPlayer player)
     {
         RecordThread recorder = records.get(player);
-        String username = player.getDisplayName().getFormattedText();
 
         if (recorder != null)
         {

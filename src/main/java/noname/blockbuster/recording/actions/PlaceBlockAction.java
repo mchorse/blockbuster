@@ -36,12 +36,12 @@ public class PlaceBlockAction extends InteractBlockAction
         return Action.PLACE_BLOCK;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void apply(EntityActor actor)
     {
         Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
         IBlockState state = block.getStateFromMeta(this.metadata);
-
         actor.worldObj.setBlockState(this.pos, state);
     }
 
@@ -49,7 +49,6 @@ public class PlaceBlockAction extends InteractBlockAction
     public void fromBytes(DataInput in) throws IOException
     {
         super.fromBytes(in);
-
         this.metadata = in.readByte();
         this.block = in.readUTF();
     }
@@ -58,7 +57,6 @@ public class PlaceBlockAction extends InteractBlockAction
     public void toBytes(DataOutput out) throws IOException
     {
         super.toBytes(out);
-
         out.writeByte(this.metadata);
         out.writeUTF(this.block);
     }

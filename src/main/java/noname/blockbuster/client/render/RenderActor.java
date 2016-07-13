@@ -3,7 +3,6 @@ package noname.blockbuster.client.render;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
@@ -47,8 +46,8 @@ public class RenderActor extends RenderBiped<EntityActor>
      * would look like an idiot who's clipping through the ground for a minute.
      *
      * Also, head rotation is interpolated inside of this method, another thing,
-     * yeah previousYaw thing is pretty stupid (the renderer is one for all), but
-     * it works...
+     * yeah previousYaw thing is pretty stupid (the renderer is one for all),
+     * but it works...
      */
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
@@ -131,8 +130,8 @@ public class RenderActor extends RenderBiped<EntityActor>
 
     /**
      * Most important extension! Don't render the name in GUI, that looks
-     * irritating. actor.renderName is switched for awhile to false during
-     * GUI rendering.
+     * irritating. actor.renderName is switched for awhile to false during GUI
+     * rendering.
      *
      * See GuiActorSkin for a reference.
      */
@@ -143,8 +142,8 @@ public class RenderActor extends RenderBiped<EntityActor>
     }
 
     /**
-     * Make actor a little bit smaller (so he looked like steve, and not like
-     * a giant weirdo).
+     * Make actor a little bit smaller (so he looked like steve, and not like a
+     * giant weirdo).
      */
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
     {
@@ -204,10 +203,10 @@ public class RenderActor extends RenderBiped<EntityActor>
     /**
      * Renderer factory
      */
-    public static class ActorFactory implements IRenderFactory
+    public static class FactoryActor implements IRenderFactory<EntityActor>
     {
         @Override
-        public Render createRenderFor(RenderManager manager)
+        public RenderActor createRenderFor(RenderManager manager)
         {
             return new RenderActor(manager, new ModelBiped(), 0.5F);
         }
