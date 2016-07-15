@@ -1,5 +1,6 @@
 package noname.blockbuster.camera.fixtures;
 
+import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.camera.Point;
 import noname.blockbuster.camera.Position;
 
@@ -60,9 +61,9 @@ public class CircularFixture extends AbstractFixture
         float y = this.start.y;
         float z = this.start.z + dist * sin;
 
-        float yaw = 0;
+        float yaw = (float) (MathHelper.atan2(dist * sin, dist * cos) * (180D / Math.PI)) - 90.0F;
 
-        pos.setPosition(x, y, z);
-        pos.setAngle(yaw, 0);
+        pos.setPosition(x - 0.5F, y, z - 0.5F);
+        pos.setAngle(MathHelper.wrapDegrees(yaw - 180.0F), 0);
     }
 }
