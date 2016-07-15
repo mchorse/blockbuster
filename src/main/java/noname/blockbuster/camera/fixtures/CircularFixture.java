@@ -1,6 +1,7 @@
 package noname.blockbuster.camera.fixtures;
 
-import net.minecraft.util.math.Vec3d;
+import noname.blockbuster.camera.Point;
+import noname.blockbuster.camera.Position;
 
 /**
  * Circular camera fixture
@@ -13,11 +14,11 @@ import net.minecraft.util.math.Vec3d;
  */
 public class CircularFixture extends AbstractFixture
 {
-    public Vec3d point;
-    public Vec3d start;
+    public Point point;
+    public Point start;
     public float circles;
 
-    public CircularFixture(float duration, Vec3d point, Vec3d start, float circles)
+    public CircularFixture(float duration, Point point, Point start, float circles)
     {
         super(duration);
 
@@ -26,12 +27,12 @@ public class CircularFixture extends AbstractFixture
         this.circles = circles;
     }
 
-    public Vec3d getPoint()
+    public Point getPoint()
     {
         return this.point;
     }
 
-    public Vec3d getStart()
+    public Point getStart()
     {
         return this.start;
     }
@@ -39,5 +40,11 @@ public class CircularFixture extends AbstractFixture
     public float getCircles()
     {
         return this.circles;
+    }
+
+    @Override
+    public void applyFixture(long progress, Position pos)
+    {
+
     }
 }

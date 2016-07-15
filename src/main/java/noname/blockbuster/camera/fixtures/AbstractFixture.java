@@ -1,5 +1,7 @@
 package noname.blockbuster.camera.fixtures;
 
+import noname.blockbuster.camera.Position;
+
 /**
  * Abstract camera fixture
  *
@@ -26,4 +28,6 @@ public abstract class AbstractFixture
     {
         return this.duration;
     }
+
+    public abstract void applyFixture(long progress, Position pos);
 }

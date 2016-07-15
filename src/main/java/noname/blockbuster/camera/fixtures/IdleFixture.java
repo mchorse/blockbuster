@@ -23,4 +23,10 @@ public class IdleFixture extends AbstractFixture
     {
         return this.position;
     }
+
+    @Override
+    public void applyFixture(long progress, Position pos)
+    {
+        pos.copy(this.position);
+    }
 }

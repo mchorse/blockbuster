@@ -1,7 +1,5 @@
 package noname.blockbuster.camera;
 
-import net.minecraft.util.math.Vec3d;
-
 /**
  * Position class
  *
@@ -9,7 +7,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public class Position
 {
-    public Vec3d position;
+    public Point point = new Point(0, 0, 0);
     public Angle angle = new Angle(0, 0);
 
     public Position(float x, float y, float z, float yaw, float pitch)
@@ -20,11 +18,21 @@ public class Position
 
     public void setPosition(float x, float y, float z)
     {
-        this.position = new Vec3d(x, y, z);
+        this.point.set(x, y, z);
     }
 
     public void setAngle(float yaw, float pitch)
     {
         this.angle.set(yaw, pitch);
+    }
+
+    public void copy(Position position)
+    {
+        this.point.x = position.point.x;
+        this.point.y = position.point.y;
+        this.point.z = position.point.z;
+
+        this.angle.yaw = position.angle.yaw;
+        this.angle.pitch = position.angle.pitch;
     }
 }

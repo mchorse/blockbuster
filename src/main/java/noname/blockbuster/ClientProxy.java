@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.camera.CommandCameraStart;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
@@ -111,6 +113,7 @@ public class ClientProxy extends CommonProxy
 
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
+        ClientCommandHandler.instance.registerCommand(new CommandCameraStart());
     }
 
     protected void registerItemModel(Block block, String path)
