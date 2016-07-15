@@ -9,7 +9,7 @@ public class FollowFixture extends LookFixture
     protected float distance;
     protected Angle angle;
 
-    public FollowFixture(float duration, Position position, Entity entity, float distance, Angle angle)
+    public FollowFixture(long duration, Position position, Entity entity, float distance, Angle angle)
     {
         super(duration, position, entity);
 

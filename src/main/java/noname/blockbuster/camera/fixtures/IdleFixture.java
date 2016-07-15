@@ -12,7 +12,7 @@ public class IdleFixture extends AbstractFixture
 {
     protected Position position;
 
-    public IdleFixture(float duration, Position position)
+    public IdleFixture(long duration, Position position)
     {
         super(duration);
 

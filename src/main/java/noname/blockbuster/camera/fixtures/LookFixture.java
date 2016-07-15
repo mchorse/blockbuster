@@ -13,7 +13,7 @@ public class LookFixture extends IdleFixture
 {
     protected Entity entity;
 
-    public LookFixture(float duration, Position position, Entity entity)
+    public LookFixture(long duration, Position position, Entity entity)
     {
         super(duration, position);
 

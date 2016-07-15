@@ -12,19 +12,19 @@ import noname.blockbuster.camera.Position;
  */
 public abstract class AbstractFixture
 {
-    protected float duration;
+    protected long duration;
 
-    public AbstractFixture(float duration)
+    public AbstractFixture(long duration)
     {
         this.setDuration(duration);
     }
 
-    public void setDuration(float duration)
+    public void setDuration(long duration)
     {
         this.duration = duration;
     }
 
-    public float getDuration()
+    public long getDuration()
     {
         return this.duration;
     }

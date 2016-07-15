@@ -18,7 +18,7 @@ public class CircularFixture extends AbstractFixture
     public Point start;
     public float circles;
 
-    public CircularFixture(float duration, Point point, Point start, float circles)
+    public CircularFixture(long duration, Point point, Point start, float circles)
     {
         super(duration);
 
@@ -45,7 +45,7 @@ public class CircularFixture extends AbstractFixture
     @Override
     public void applyFixture(long progress, Position pos)
     {
-        float time = progress / this.duration;
+        float time = ((float) progress) / ((float) this.duration);
         float angle = time * (this.circles / 180 * (float) Math.PI);
 
         double diffX = Math.abs(this.point.x - this.start.x);
