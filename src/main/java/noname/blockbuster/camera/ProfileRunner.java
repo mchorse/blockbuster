@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
+import noname.blockbuster.camera.fixtures.CircularFixture;
 import noname.blockbuster.camera.fixtures.IdleFixture;
 
 public class ProfileRunner
@@ -18,15 +19,23 @@ public class ProfileRunner
     protected long duration;
 
     protected List<AbstractFixture> profile = new ArrayList<AbstractFixture>();
-    protected Position position;
+    protected Position position = new Position(0, 0, 0, 0, 0);
 
     public ProfileRunner()
     {
         this.profile.add(new IdleFixture(1000, new Position(-132, 9, -95, 0, 45)));
-        this.profile.add(new IdleFixture(1000, new Position(-126, 9, -95, 90, 45)));
+        this.profile.add(new IdleFixture(1000, new Position(-126, 9, -95, 90, 0)));
+        this.profile.add(new CircularFixture(4000, new Point(-132, 9, -95), new Point(-132, 9, -100), 720));
 
-        this.duration = 2000;
-        this.position = new Position(0, 0, 0, 0, 0);
+        this.calculateDuration();
+    }
+
+    private void calculateDuration()
+    {
+        for (AbstractFixture fixture : this.profile)
+        {
+            this.duration += fixture.getDuration();
+        }
     }
 
     public void start()
@@ -60,25 +69,24 @@ public class ProfileRunner
             return;
         }
 
-        AbstractFixture fixture = this.profile.get(this.getIndexForTime(progress));
-        fixture.applyFixture(progress, this.position);
+        this.applyFixture(progress);
 
         player.setPositionAndRotation(this.position.point.x, this.position.point.y, this.position.point.z, this.position.angle.yaw, this.position.angle.pitch);
     }
 
-    private int getIndexForTime(long progress)
+    private void applyFixture(long progress)
     {
-        int index = 0;
+        int index = -1;
 
         for (AbstractFixture fixture : this.profile)
         {
-            progress -= fixture.getDuration();
-
             if (progress <= 0) break;
 
+            progress -= fixture.getDuration();
             index += 1;
         }
 
-        return index;
+        AbstractFixture fixture = this.profile.get(index);
+        fixture.applyFixture(progress, this.position);
     }
 }
