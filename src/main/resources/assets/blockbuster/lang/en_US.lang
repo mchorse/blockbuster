@@ -85,6 +85,12 @@ blockbuster.commands.play=/play <replay_name> [entity_name] [skin_name] [is_invu
 blockbuster.commands.record=/record <replay_name>, e.g.: /record forrestrun
 blockbuster.commands.play_director=/play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.stop_director=/stop-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
+
+blockbuster.commands.camera=Camera command has following subcommands:\n\n/camera start - Starts camera profile\n/camera stop - Stops camera profile\n/camera profile - Profile management, see /camera profile help
+blockbuster.commands.camera.start=Starts camera profile
+blockbuster.commands.camera.stop=Stops camera profile
+blockbuster.commands.camera.profile=Profile management subcommand. This subcommand has its own subcommands:\n\n/camera profile new - First saves current profile and switches it to new camera profile\n/camera profile reset - Resets current profile (removes all fixtures)\n/camera profile move <from> <to> - Moves fixture <from> index to <to> index\n/camera profile remove <index> - Removes a fixture at specified <index>
+
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 
 # Recording

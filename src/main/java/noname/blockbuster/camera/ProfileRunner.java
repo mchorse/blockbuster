@@ -30,6 +30,11 @@ public class ProfileRunner
         return this.profile;
     }
 
+    public void setProfile(CameraProfile profile)
+    {
+        this.profile = profile;
+    }
+
     /* Playback methods (start/stop) */
 
     public void start()

@@ -1,6 +1,5 @@
 package noname.blockbuster.commands;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.Point;
@@ -38,9 +37,9 @@ import noname.blockbuster.commands.sub.SubCommandCameraStop;
  */
 public class CommandCamera extends SubCommandBase
 {
-    public ProfileRunner runner;
+    public static final ProfileRunner runner;
 
-    public CommandCamera()
+    static
     {
         CameraProfile profile = new CameraProfile();
 
@@ -48,8 +47,13 @@ public class CommandCamera extends SubCommandBase
         profile.add(new IdleFixture(1000, new Position(-126, 9, -95, 90, 0)));
         profile.add(new CircularFixture(16000, new Point(-132, 9, -95), new Point(-132, 9, -100), 720));
 
-        this.runner = new ProfileRunner(profile);
-        this.subcommands = new CommandBase[] {new SubCommandCameraStart(this), new SubCommandCameraStop(this), new SubCommandCameraProfile(this)};
+        runner = new ProfileRunner(profile);
+    }
+
+    {
+        this.subcommands.add(new SubCommandCameraStart());
+        this.subcommands.add(new SubCommandCameraStop());
+        this.subcommands.add(new SubCommandCameraProfile());
     }
 
     @Override
@@ -60,6 +64,12 @@ public class CommandCamera extends SubCommandBase
 
     @Override
     public String getCommandUsage(ICommandSender sender)
+    {
+        return "blockbuster.commands.camera";
+    }
+
+    @Override
+    protected String getHelp()
     {
         return "blockbuster.commands.camera";
     }
