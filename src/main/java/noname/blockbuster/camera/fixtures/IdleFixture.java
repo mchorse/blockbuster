@@ -1,5 +1,7 @@
 package noname.blockbuster.camera.fixtures;
 
+import com.google.common.base.Objects.ToStringHelper;
+
 import noname.blockbuster.camera.Position;
 
 /**
@@ -28,5 +30,11 @@ public class IdleFixture extends AbstractFixture
     public void applyFixture(long progress, Position pos)
     {
         pos.copy(this.position);
+    }
+
+    @Override
+    protected ToStringHelper getToStringHelper()
+    {
+        return super.getToStringHelper().add("position", this.position);
     }
 }

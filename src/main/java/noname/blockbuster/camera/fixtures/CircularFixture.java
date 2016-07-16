@@ -1,5 +1,7 @@
 package noname.blockbuster.camera.fixtures;
 
+import com.google.common.base.Objects.ToStringHelper;
+
 import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.camera.Point;
 import noname.blockbuster.camera.Position;
@@ -15,9 +17,9 @@ import noname.blockbuster.camera.Position;
  */
 public class CircularFixture extends AbstractFixture
 {
-    public Point point;
-    public Point start;
-    public float circles;
+    protected Point point;
+    protected Point start;
+    protected float circles;
 
     public CircularFixture(long duration, Point point, Point start, float circles)
     {
@@ -65,5 +67,11 @@ public class CircularFixture extends AbstractFixture
 
         pos.setPosition(x - 0.5F, y, z - 0.5F);
         pos.setAngle(MathHelper.wrapDegrees(yaw - 180.0F), 0);
+    }
+
+    @Override
+    protected ToStringHelper getToStringHelper()
+    {
+        return super.getToStringHelper().add("start", this.start).add("point", this.point).add("circles", this.circles);
     }
 }

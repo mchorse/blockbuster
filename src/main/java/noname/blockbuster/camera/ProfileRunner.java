@@ -25,6 +25,11 @@ public class ProfileRunner
         this.profile = profile;
     }
 
+    public CameraProfile getProfile()
+    {
+        return this.profile;
+    }
+
     /* Playback methods (start/stop) */
 
     public void start()

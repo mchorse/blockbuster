@@ -81,10 +81,10 @@ blockbuster.director_map.was_registered=This replay was succesfully attached to 
 blockbuster.actor.not_playing=Current actor doesn't play!
 
 # Commands
-blockbuster.commands.play=Usage: /play <replay_name> [entity_name] [skin_name] [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments
-blockbuster.commands.record=Usage: /record <replay_name>, e.g.: /record forrestrun
-blockbuster.commands.play_director=Usage: /play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
-blockbuster.commands.stop_director=Usage: /stop-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
+blockbuster.commands.play=/play <replay_name> [entity_name] [skin_name] [is_invulnerable]\n\ne.g.: /play forest_gump_bench_scene Forrest ForrestGump 1\n where 1 is flag for invulnerability, if fourth parameter is 1, then actor is invulnerable, else it's vulnerable.\n\nSide note: <replay_name>, <entity_name> and <skin_name> should be without spaces, sorry, but that's how minecraft parses command arguments
+blockbuster.commands.record=/record <replay_name>, e.g.: /record forrestrun
+blockbuster.commands.play_director=/play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
+blockbuster.commands.stop_director=/stop-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 
 # Recording

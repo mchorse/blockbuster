@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.camera.CommandCameraStart;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
@@ -33,6 +32,7 @@ import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
 import noname.blockbuster.client.render.RenderCamera;
+import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.entity.EntityCamera;
 
@@ -113,7 +113,7 @@ public class ClientProxy extends CommonProxy
 
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
-        ClientCommandHandler.instance.registerCommand(new CommandCameraStart());
+        ClientCommandHandler.instance.registerCommand(new CommandCamera());
     }
 
     protected void registerItemModel(Block block, String path)

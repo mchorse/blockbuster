@@ -28,9 +28,24 @@ public class CameraProfile
         return duration;
     }
 
-    public AbstractFixture getFixture(int index)
+    public AbstractFixture get(int index)
     {
         return this.fixtures.get(index);
+    }
+
+    public List<AbstractFixture> getAll()
+    {
+        return this.fixtures;
+    }
+
+    public void add(AbstractFixture fixture)
+    {
+        this.fixtures.add(fixture);
+    }
+
+    public void remove(int index)
+    {
+        this.fixtures.remove(index);
     }
 
     public void applyProfile(long progress, Position position)
@@ -46,10 +61,5 @@ public class CameraProfile
         }
 
         this.fixtures.get(index).applyFixture(+progress, position);
-    }
-
-    public void addFixture(AbstractFixture fixture)
-    {
-        this.fixtures.add(fixture);
     }
 }

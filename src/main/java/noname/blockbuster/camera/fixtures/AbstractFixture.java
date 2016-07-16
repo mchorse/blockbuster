@@ -1,5 +1,8 @@
 package noname.blockbuster.camera.fixtures;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+
 import noname.blockbuster.camera.Position;
 
 /**
@@ -30,4 +33,15 @@ public abstract class AbstractFixture
     }
 
     public abstract void applyFixture(long progress, Position pos);
+
+    @Override
+    public String toString()
+    {
+        return this.getToStringHelper().toString();
+    }
+
+    protected ToStringHelper getToStringHelper()
+    {
+        return Objects.toStringHelper(this).add("duration", this.duration);
+    }
 }

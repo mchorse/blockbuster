@@ -1,5 +1,7 @@
 package noname.blockbuster.camera;
 
+import com.google.common.base.Objects;
+
 /**
  * Position class
  *
@@ -34,5 +36,11 @@ public class Position
 
         this.angle.yaw = position.angle.yaw;
         this.angle.pitch = position.angle.pitch;
+    }
+
+    @Override
+    public String toString()
+    {
+        return Objects.toStringHelper(this).add("point", this.point).add("angle", this.angle).toString();
     }
 }
