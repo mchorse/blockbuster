@@ -2,6 +2,8 @@ package noname.blockbuster.camera;
 
 import com.google.common.base.Objects;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 /**
  * Angle class
  *
@@ -24,9 +26,14 @@ public class Angle
         this.pitch = pitch;
     }
 
+    public void set(EntityPlayer player)
+    {
+        this.set(player.rotationYaw, player.rotationPitch);
+    }
+
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).add("yaw", this.yaw).add("pitch", this.pitch).toString();
+        return Objects.toStringHelper(this).addValue(this.yaw).addValue(this.pitch).toString();
     }
 }

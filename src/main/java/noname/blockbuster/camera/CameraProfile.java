@@ -104,6 +104,8 @@ public class CameraProfile
             index += 1;
         }
 
-        this.fixtures.get(index).applyFixture(Math.abs(progress), position);
+        AbstractFixture fixture = this.fixtures.get(index);
+
+        fixture.applyFixture(Math.abs((float) progress / (float) fixture.getDuration()), position);
     }
 }

@@ -2,6 +2,8 @@ package noname.blockbuster.camera;
 
 import com.google.common.base.Objects;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 public class Point
 {
     public float x;
@@ -13,6 +15,11 @@ public class Point
         this.set(x, y, z);
     }
 
+    public Point(EntityPlayer player)
+    {
+        this.set(player);
+    }
+
     public void set(float x, float y, float z)
     {
         this.x = x;
@@ -20,9 +27,14 @@ public class Point
         this.z = z;
     }
 
+    public void set(EntityPlayer player)
+    {
+        this.set((float) player.posX, (float) player.posY, (float) player.posZ);
+    }
+
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).add("x", this.x).add("y", this.y).add("z", this.z).toString();
+        return Objects.toStringHelper(this).addValue(this.x).addValue(this.y).addValue(this.z).toString();
     }
 }

@@ -9,7 +9,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 /**
  * Profile runner
  *
- * This class is responsible for
+ * This class is responsible for running camera profiles (i.e. applying current's
+ * fixture camera transformations on player).
  */
 public class ProfileRunner
 {
@@ -24,6 +25,8 @@ public class ProfileRunner
     {
         this.profile = profile;
     }
+
+    /* Profile access methods */
 
     public CameraProfile getProfile()
     {
@@ -59,7 +62,8 @@ public class ProfileRunner
 
     /**
      * The method that does the most exciting thing! This method is responsible
-     * for applying interpolated fixture and apply the output onto player.
+     * for applying interpolated fixture on position and apply the output from
+     * fixture onto player.
      */
     @SubscribeEvent
     public void onRenderTick(RenderTickEvent event)

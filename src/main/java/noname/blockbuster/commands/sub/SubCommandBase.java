@@ -35,7 +35,7 @@ public abstract class SubCommandBase extends CommandBase
         {
             if (command.getCommandName().equals(args[0]))
             {
-                command.execute(server, sender, this.dropFirstArgument(args));
+                command.execute(server, sender, dropFirstArgument(args));
 
                 return;
             }
@@ -45,15 +45,26 @@ public abstract class SubCommandBase extends CommandBase
     }
 
     /**
+     * Drop only the first argument
+     */
+    public static String[] dropFirstArgument(String[] input)
+    {
+        return dropFirstArguments(input, 1);
+    }
+
+    /**
      * Totally not copied from CommandHandler.
      */
-    private String[] dropFirstArgument(String[] input)
+    public static String[] dropFirstArguments(String[] input, int amount)
     {
-        String[] astring = new String[input.length - 1];
-        System.arraycopy(input, 1, astring, 0, input.length - 1);
+        String[] astring = new String[input.length - amount];
+        System.arraycopy(input, amount, astring, 0, input.length - amount);
 
         return astring;
     }
 
+    /**
+     * Get help message language key
+     */
     protected abstract String getHelp();
 }

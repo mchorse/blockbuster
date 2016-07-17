@@ -1,29 +1,24 @@
 package noname.blockbuster.camera.fixtures;
 
 import net.minecraft.entity.Entity;
-import noname.blockbuster.camera.Angle;
 import noname.blockbuster.camera.Position;
 
+/**
+ * Follow camera fixture
+ *
+ * This camera fixture is responsible for following entity
+ */
 public class FollowFixture extends LookFixture
 {
-    protected float distance;
-    protected Angle angle;
-
-    public FollowFixture(long duration, Position position, Entity entity, float distance, Angle angle)
+    public FollowFixture(long duration, Position position, Entity entity)
     {
         super(duration, position, entity);
-
-        this.distance = distance;
-        this.angle = angle;
     }
 
-    public float getDistance()
+    @Override
+    public void applyFixture(float progress, Position pos)
     {
-        return this.distance;
-    }
-
-    public Angle getAngle()
-    {
-        return this.angle;
+        pos.copy(this.position);
+        pos.point.set((float) this.entity.posX + this.position.point.x, (float) this.entity.posY + this.position.point.y, (float) this.entity.posZ + this.position.point.z);
     }
 }

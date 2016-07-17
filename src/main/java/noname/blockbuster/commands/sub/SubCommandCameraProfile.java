@@ -10,6 +10,19 @@ import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's profile subcommand
+ *
+ * This subcommand is responsible for managing current camera profile.
+ * This subcommand has following subcommands:
+ *
+ * - [X] Create new profiles
+ * - [ ] Select current profile
+ * - [ ] Remove profiles
+ * - [X] Move fixtures around in current profile
+ * - [X] Display all fixtures in current profile
+ * - [X] Remove fixtures
+ */
 public class SubCommandCameraProfile extends CommandBase
 {
     @Override
@@ -50,7 +63,7 @@ public class SubCommandCameraProfile extends CommandBase
 
             sender.addChatMessage(new TextComponentString(fixtures.trim()));
         }
-        else if (args.length < 3 && subcommand.equals("move"))
+        else if (subcommand.equals("move") && args.length >= 3)
         {
             profile.move(CommandBase.parseInt(args[1]), CommandBase.parseInt(args[2]));
         }

@@ -2,6 +2,9 @@ package noname.blockbuster.camera.fixtures;
 
 import com.google.common.base.Objects.ToStringHelper;
 
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.camera.Point;
 import noname.blockbuster.camera.Position;
@@ -46,10 +49,20 @@ public class CircularFixture extends AbstractFixture
     }
 
     @Override
-    public void applyFixture(long progress, Position pos)
+    public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        float time = ((float) progress) / ((float) this.duration);
-        float angle = time * (this.circles / 180 * (float) Math.PI);
+        super.edit(args, player);
+
+        if (args.length > 1)
+        {
+            this.circles = (float) CommandBase.parseDouble(args[1]);
+        }
+    }
+
+    @Override
+    public void applyFixture(float progress, Position pos)
+    {
+        float angle = progress * (this.circles / 180 * (float) Math.PI);
 
         double diffX = Math.abs(this.point.x - this.start.x);
         double diffZ = Math.abs(this.point.z - this.start.z);
