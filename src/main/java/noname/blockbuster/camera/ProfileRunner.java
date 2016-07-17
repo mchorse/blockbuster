@@ -21,11 +21,6 @@ public class ProfileRunner
     protected CameraProfile profile;
     protected Position position = new Position(0, 0, 0, 0, 0);
 
-    public ProfileRunner(CameraProfile profile)
-    {
-        this.profile = profile;
-    }
-
     /* Profile access methods */
 
     public CameraProfile getProfile()

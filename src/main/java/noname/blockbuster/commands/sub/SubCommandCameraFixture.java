@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.Position;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
@@ -17,11 +18,11 @@ import noname.blockbuster.commands.CommandCamera;
  * This subcommand is responsible for managing camera profile's fixtures.
  * This subcommand has following subcommands:
  *
- * - [/] Add any type of fixtures based on player values
+ * - [X] Add any type of fixtures based on player values
  * - [X] Manage PathFixture's paths
  *    - [X] Add point
  *    - [X] Remove point
- * - [ ] Edit fixture's properties
+ * - [X] Edit fixture's properties
  */
 public class SubCommandCameraFixture extends CommandBase
 {
@@ -47,25 +48,32 @@ public class SubCommandCameraFixture extends CommandBase
 
         String subcommand = args[0];
         EntityPlayer player = (EntityPlayer) sender;
+        CameraProfile profile = CommandCamera.runner.getProfile();
 
+        if (subcommand.equals("add"))
+        {
+            String[] input = SubCommandBase.dropFirstArgument(args);
+
+            profile.add(AbstractFixture.fromCommand(input, player));
+        }
         if (subcommand.equals("edit") && args.length >= 2)
         {
             int index = CommandBase.parseInt(args[1]);
 
-            CommandCamera.runner.getProfile().get(index).edit(SubCommandBase.dropFirstArguments(args, 2), player);
+            profile.get(index).edit(SubCommandBase.dropFirstArguments(args, 2), player);
         }
         else if (subcommand.equals("duration") && args.length >= 3)
         {
             int index = CommandBase.parseInt(args[1]);
             long duration = CommandBase.parseInt(args[2]);
 
-            CommandCamera.runner.getProfile().get(index).setDuration(duration);
+            profile.get(index).setDuration(duration);
         }
         else if (subcommand.equals("add_sub") && args.length >= 2)
         {
             int index = CommandBase.parseInt(args[1]);
 
-            AbstractFixture fixture = CommandCamera.runner.getProfile().get(index);
+            AbstractFixture fixture = profile.get(index);
 
             if (!(fixture instanceof PathFixture))
             {
@@ -80,7 +88,7 @@ public class SubCommandCameraFixture extends CommandBase
             int index = CommandBase.parseInt(args[1]);
             int pathIndex = CommandBase.parseInt(args[2]);
 
-            AbstractFixture fixture = CommandCamera.runner.getProfile().get(index);
+            AbstractFixture fixture = profile.get(index);
 
             if (!(fixture instanceof PathFixture))
             {

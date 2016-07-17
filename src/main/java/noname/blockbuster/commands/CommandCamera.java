@@ -1,11 +1,7 @@
 package noname.blockbuster.commands;
 
 import net.minecraft.command.ICommandSender;
-import noname.blockbuster.camera.CameraProfile;
-import noname.blockbuster.camera.Position;
 import noname.blockbuster.camera.ProfileRunner;
-import noname.blockbuster.camera.fixtures.IdleFixture;
-import noname.blockbuster.camera.fixtures.PathFixture;
 import noname.blockbuster.commands.sub.SubCommandBase;
 import noname.blockbuster.commands.sub.SubCommandCameraFixture;
 import noname.blockbuster.commands.sub.SubCommandCameraProfile;
@@ -21,22 +17,7 @@ import noname.blockbuster.commands.sub.SubCommandCameraStop;
  */
 public class CommandCamera extends SubCommandBase
 {
-    public static final ProfileRunner runner;
-
-    static
-    {
-        CameraProfile profile = new CameraProfile();
-        PathFixture path = new PathFixture(8000);
-
-        path.addPoint(new Position(-132, 9, -95, 0, 45));
-        path.addPoint(new Position(-132, 9, -120, 0, 0));
-
-        profile.add(new IdleFixture(1000, new Position(-132, 9, -95, 0, 45)));
-        profile.add(new IdleFixture(1000, new Position(-126, 9, -95, 90, 0)));
-        profile.add(path);
-
-        runner = new ProfileRunner(profile);
-    }
+    public static final ProfileRunner runner = new ProfileRunner();
 
     {
         /**

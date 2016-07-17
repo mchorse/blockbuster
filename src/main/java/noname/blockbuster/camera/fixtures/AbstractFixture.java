@@ -26,11 +26,11 @@ public abstract class AbstractFixture
      * a fixture from command line arguments and player's space attributes (i.e.
      * position and rotation).
      */
-    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws Exception
+    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws CommandException
     {
         if (args.length < 2 || player == null)
         {
-            throw new Exception("Not enough data to create from command!");
+            throw new CommandException("Not enough data to create from command!");
         }
 
         String type = args[0];
