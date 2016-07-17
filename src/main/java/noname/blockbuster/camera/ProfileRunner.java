@@ -23,6 +23,11 @@ public class ProfileRunner
 
     /* Profile access methods */
 
+    public ProfileRunner(CameraProfile profile)
+    {
+        this.profile = profile;
+    }
+
     public CameraProfile getProfile()
     {
         return this.profile;

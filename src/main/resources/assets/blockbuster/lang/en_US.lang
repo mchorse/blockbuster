@@ -86,12 +86,21 @@ blockbuster.commands.record=/record <replay_name>, e.g.: /record forrestrun
 blockbuster.commands.play_director=/play-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.stop_director=/stop-director <x> <y> <z>\nwhere <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 
-blockbuster.commands.camera=Camera command has following subcommands:\n\n/camera start - Starts camera profile\n/camera stop - Stops camera profile\n/camera profile - Profile management, see /camera profile help
-blockbuster.commands.camera.start=Starts camera profile
-blockbuster.commands.camera.stop=Stops camera profile
-blockbuster.commands.camera.profile=Profile management subcommand. This subcommand has its own subcommands:\n\n/camera profile new - First saves current profile and switches it to new camera profile\n/camera profile reset - Resets current profile (removes all fixtures)\n/camera profile move <from> <to> - Moves fixture <from> index to <to> index\n/camera profile remove <index> - Removes a fixture at specified <index>
-
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
+
+# Camera's commands
+blockbuster.commands.camera=Camera command has following subcommands:\n\n/camera start - Starts a camera profile\n/camera stop - Stops currently running camera profile\n/camera profile - Profile management, see /camera profile help\n/camera fixture - Set of subcommands for fixture management
+blockbuster.commands.camera.start=/camera start - Starts a camera profile
+blockbuster.commands.camera.stop=/camera stop - Stops currently running camera profile
+blockbuster.commands.camera.profile=Profile management subcommand. This subcommand has its own subcommands:\n\n/camera profile new - First saves current profile and switches it to new camera profile\n/camera profile reset - Resets current profile (removes all fixtures)\n/camera profile move <from> <to> - Moves fixture <from> index to <to> index\n/camera profile remove <index> - Removes a fixture at specified <index>\n/camera profile list - List all existing camera fixtures in currently selected camera profile
+
+blockbuster.commands.camera.fixture=Profile's fixtures manager subcommand. This subcommand has its own subcommands:\n\n/camera fixture add <idle|path|follow|look|circular> <duration> - Adds new fixture by the given type with duration in milliseconds (1000 = 1 second)\n/camera fixture edit <index> <values...> - Sets values for specific camera fixture at given index\n/camera fixture duration <index> <duration> - Set duration in milliseconds to given fixture at given <index>\n/camera fixture path <fixture_index> [point_index] - Add a point to path fixture (if [point_index] isn't specified), or remove path point in fixture at index [point_index] 
+blockbuster.commands.camera.fixture.add=/camera fixture add <idle|path|follow|look|circular> <duration> - Creates a new camera fixture at the end of the current camera profile with given <duration>.
+blockbuster.commands.camera.fixture.edit=/camera fixture edit <index> <values...> - Edit fixture's values at <index> in currently selected camera profile
+blockbuster.commands.camera.fixture.duration=/camera fixture duration <index> <duration> - Set duration in milliseconds to given fixture at given <index>\n\n
+blockbuster.commands.camera.fixture.path=/camera fixture path <fixture_index> [point_index] - Add a point to path fixture (if [point_index] isn't specified), or remove path point in fixture at index [point_index]
+
+blockbuster.commands.camera.profile.no_fixtures=This camera profile is empty!
 
 # Recording
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.

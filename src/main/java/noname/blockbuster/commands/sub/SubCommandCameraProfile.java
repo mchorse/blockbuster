@@ -1,5 +1,6 @@
 package noname.blockbuster.commands.sub;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -59,6 +60,11 @@ public class SubCommandCameraProfile extends CommandBase
             for (AbstractFixture fixture : profile.getAll())
             {
                 fixtures += fixture + "\n";
+            }
+
+            if (fixtures.equals(""))
+            {
+                fixtures = I18n.format("blockbuster.commands.camera.profile.no_fixtures");
             }
 
             sender.addChatMessage(new TextComponentString(fixtures.trim()));
