@@ -75,13 +75,7 @@ public abstract class AbstractFixture
         return this.duration;
     }
 
-    public void edit(String args[], EntityPlayer player) throws CommandException
-    {
-        if (args.length > 0)
-        {
-            this.duration = CommandBase.parseInt(args[0]);
-        }
-    }
+    public abstract void edit(String args[], EntityPlayer player) throws CommandException;
 
     public abstract void applyFixture(float progress, Position pos);
 

@@ -3,6 +3,8 @@ package noname.blockbuster.camera.fixtures;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.command.CommandException;
+import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
 
 /**
@@ -28,6 +30,10 @@ public class PathFixture extends AbstractFixture
     {
         this.points.remove(index);
     }
+
+    @Override
+    public void edit(String[] args, EntityPlayer player) throws CommandException
+    {}
 
     @Override
     public void applyFixture(float progress, Position pos)

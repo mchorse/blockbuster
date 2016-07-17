@@ -51,11 +51,9 @@ public class CircularFixture extends AbstractFixture
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        super.edit(args, player);
-
-        if (args.length > 1)
+        if (args.length > 0)
         {
-            this.circles = (float) CommandBase.parseDouble(args[1]);
+            this.circles = (float) CommandBase.parseDouble(args[0]);
         }
     }
 

@@ -31,7 +31,6 @@ public class IdleFixture extends AbstractFixture
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        super.edit(args, player);
         this.position.set(player);
     }
 
