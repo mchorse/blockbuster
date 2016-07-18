@@ -2,11 +2,6 @@
 
 There's some ideas that I want to implement in next Blockbuster mod: 
 
-* Record cameras (basic movement and jumps between cameras), so you wouldn't need
-  to follow the actors by yourself every time
-* Advanced cameras configuration
-    * Setting custom path
-    * Setting look target (always align towards target)
 * Add more of recording stuff like:
     * Use and throw potions
     * Set shit on fire with flint and steel

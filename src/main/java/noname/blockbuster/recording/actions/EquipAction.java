@@ -72,7 +72,9 @@ public class EquipAction extends Action
         this.armorId = in.readShort();
 
         if (this.armorId != -1)
+        {
             this.itemData = CompressedStreamTools.read((DataInputStream) in);
+        }
     }
 
     @Override
@@ -82,6 +84,8 @@ public class EquipAction extends Action
         out.writeShort(this.armorId);
 
         if (this.armorId != -1)
+        {
             CompressedStreamTools.write(this.itemData, out);
+        }
     }
 }

@@ -43,8 +43,8 @@ public class LookFixture extends IdleFixture
         float yaw = (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
         float pitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
 
-        dX = Math.abs(yaw - this.lastYaw);
-        dY = Math.abs(pitch - this.lastPitch);
+        if (Math.abs(yaw - this.lastYaw) > 90) this.lastYaw = yaw;
+        if (Math.abs(pitch - this.lastPitch) > 90) this.lastPitch = pitch;
 
         /* When progress is close to 1.0, the camera starts jagging, so instead
          * of giving the progress to reach its maximum value of 1.0, I decided
