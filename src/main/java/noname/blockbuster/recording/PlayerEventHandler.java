@@ -91,8 +91,6 @@ public class PlayerEventHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = Mocap.getActionListForPlayer(player);
 
-        System.out.println(event.getPlacedBlock().getBlock());
-
         if (events != null)
         {
             byte metadata = (byte) event.getPlacedBlock().getBlock().getMetaFromState(event.getPlacedBlock());
