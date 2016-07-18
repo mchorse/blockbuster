@@ -1,8 +1,12 @@
 package noname.blockbuster.camera;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -16,6 +20,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.DimensionManager;
 
 /**
  * Utils for camera classes.
@@ -95,7 +100,34 @@ public class CameraUtils
         return target;
     }
 
+    /**
+     * Get path to camera profile file (located in current world save's folder)
+     */
+    public static String cameraFile(String filename)
+    {
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/cameras");
+
+        if (!file.exists())
+        {
+            file.mkdirs();
+        }
+
+        return file.getAbsolutePath() + "/" + filename;
+    }
+
     /* Load utilities */
+
+    public static CameraProfile readCameraProfile(String filename) throws Exception
+    {
+        filename = cameraFile(filename);
+
+        DataInputStream file = new DataInputStream(new FileInputStream(filename));
+        CameraProfile profile = new CameraProfile();
+
+        profile.read(file);
+
+        return profile;
+    }
 
     public static Position readPosition(DataInput in) throws IOException
     {
@@ -113,6 +145,16 @@ public class CameraUtils
     }
 
     /* Save utilities */
+
+    public static void writeCameraProfile(String filename, CameraProfile profile) throws IOException
+    {
+        filename = cameraFile(filename);
+
+        RandomAccessFile file = new RandomAccessFile(filename, "rw");
+
+        profile.write(file);
+        file.close();
+    }
 
     public static void writePosition(DataOutput out, Position position) throws IOException
     {

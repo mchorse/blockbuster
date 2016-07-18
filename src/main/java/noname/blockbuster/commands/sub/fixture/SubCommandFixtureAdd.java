@@ -19,12 +19,19 @@ public class SubCommandFixtureAdd extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.command.camera.fixture.add";
+        return "blockbuster.commands.camera.fixture.add";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        CommandCamera.runner.getProfile().add(AbstractFixture.fromCommand(args, (EntityPlayer) sender));
+        try
+        {
+            CommandCamera.runner.getProfile().add(AbstractFixture.fromCommand(args, (EntityPlayer) sender));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

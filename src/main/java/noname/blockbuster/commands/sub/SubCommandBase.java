@@ -57,7 +57,7 @@ public abstract class SubCommandBase extends CommandBase
             message += I18n.format(key) + "\n";
         }
 
-        return message;
+        return message.trim();
     }
 
     @Override

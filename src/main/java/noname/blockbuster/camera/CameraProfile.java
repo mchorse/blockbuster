@@ -1,5 +1,8 @@
 package noname.blockbuster.camera;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,5 +110,34 @@ public class CameraProfile
         AbstractFixture fixture = this.fixtures.get(index);
 
         fixture.applyFixture(Math.abs((float) progress / (float) fixture.getDuration()), position);
+    }
+
+    /**
+     * Read camera profile into data input interface
+     */
+    public void read(DataInput in) throws Exception
+    {
+        for (int i = 0, count = in.readInt(); i < count; i++)
+        {
+            AbstractFixture fixture = AbstractFixture.fromType(in.readByte(), in.readLong());
+
+            fixture.read(in);
+            this.add(fixture);
+        }
+    }
+
+    /**
+     * Write camera profile to data output interface
+     */
+    public void write(DataOutput out) throws IOException
+    {
+        out.writeInt(this.fixtures.size());
+
+        for (AbstractFixture fixture : this.fixtures)
+        {
+            out.writeByte(fixture.getType());
+            out.writeLong(fixture.getDuration());
+            fixture.write(out);
+        }
     }
 }

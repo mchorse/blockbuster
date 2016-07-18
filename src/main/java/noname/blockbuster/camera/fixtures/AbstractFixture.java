@@ -1,12 +1,16 @@
 package noname.blockbuster.camera.fixtures;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import noname.blockbuster.camera.CameraUtils;
-import noname.blockbuster.camera.Point;
 import noname.blockbuster.camera.Position;
+import noname.blockbuster.commands.sub.SubCommandBase;
 
 /**
  * Abstract camera fixture
@@ -18,10 +22,47 @@ import noname.blockbuster.camera.Position;
  */
 public abstract class AbstractFixture
 {
+    public static final byte IDLE = 1;
+    public static final byte PATH = 2;
+    public static final byte LOOK = 3;
+    public static final byte FOLLOW = 4;
+    public static final byte CIRCULAR = 5;
+
+    public static final Map<String, Byte> STRING_TO_TYPE;
+
+    static
+    {
+        Map<String, Byte> map = new HashMap<String, Byte>();
+
+        map.put("idle", Byte.valueOf(IDLE));
+        map.put("path", Byte.valueOf(PATH));
+        map.put("look", Byte.valueOf(LOOK));
+        map.put("follow", Byte.valueOf(FOLLOW));
+        map.put("circular", Byte.valueOf(CIRCULAR));
+
+        STRING_TO_TYPE = map;
+    }
+
     protected long duration;
 
     /**
      * This is abstract's fixture factory method.
+     *
+     * It's responsible creating a camera fixture from type.
+     */
+    public static AbstractFixture fromType(byte type, long duration) throws Exception
+    {
+        if (type == IDLE) return new IdleFixture(duration);
+        else if (type == PATH) return new PathFixture(duration);
+        else if (type == LOOK) return new LookFixture(duration);
+        else if (type == FOLLOW) return new FollowFixture(duration);
+        else if (type == CIRCULAR) return new CircularFixture(duration);
+
+        throw new Exception("Camera fixture by type '" + type + "' wasn't found!");
+    }
+
+    /**
+     * This is another abstract's fixture factory method.
      *
      * It's responsible for creating a fixture from command line arguments and
      * player's space attributes (i.e. position and rotation).
@@ -29,7 +70,7 @@ public abstract class AbstractFixture
      * Commands can also be updated using {@link #edit(String[], EntityPlayer)}
      * method.
      */
-    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws CommandException
+    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws Exception
     {
         if (args.length < 2 || player == null)
         {
@@ -37,32 +78,12 @@ public abstract class AbstractFixture
         }
 
         String type = args[0];
-        Entity target = CameraUtils.getTargetEntity(player);
         long duration = CommandBase.parseLong(args[1]);
 
-        if (type.equals("idle"))
-        {
-            return new IdleFixture(duration, new Position(player));
-        }
-        else if (type.equals("circular"))
-        {
-            return new CircularFixture(duration, new Point(player), new Point(player), 360);
-        }
-        else if (type.equals("follow") || type.equals("look"))
-        {
-            if (target == null)
-            {
-                throw new CommandException("Player must look at entity to create this fixture!");
-            }
+        AbstractFixture fixture = fromType(STRING_TO_TYPE.get(type), duration);
+        fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
 
-            return type.equals("follow") ? new FollowFixture(duration, new Position(player), target) : new LookFixture(duration, new Position(player), target);
-        }
-        else if (type.equals("path"))
-        {
-            return new PathFixture(duration);
-        }
-
-        return null;
+        return fixture;
     }
 
     /* Instance stuff */
@@ -97,4 +118,19 @@ public abstract class AbstractFixture
      *       if this feature would be requested.
      */
     public abstract void applyFixture(float progress, Position pos);
+
+    /**
+     * Get the type of this fixture
+     */
+    public abstract byte getType();
+
+    /**
+     * Create camera fixture from input
+     */
+    public abstract void read(DataInput in) throws IOException;
+
+    /**
+     * Save camera fixture to output
+     */
+    public abstract void write(DataOutput out) throws IOException;
 }

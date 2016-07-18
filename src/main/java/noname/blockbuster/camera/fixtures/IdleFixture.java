@@ -1,7 +1,12 @@
 package noname.blockbuster.camera.fixtures;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.camera.Position;
 
 /**
@@ -12,13 +17,11 @@ import noname.blockbuster.camera.Position;
  */
 public class IdleFixture extends AbstractFixture
 {
-    protected Position position;
+    protected Position position = new Position(0, 0, 0, 0, 0);
 
-    public IdleFixture(long duration, Position position)
+    public IdleFixture(long duration)
     {
         super(duration);
-
-        this.position = position;
     }
 
     @Override
@@ -31,5 +34,25 @@ public class IdleFixture extends AbstractFixture
     public void applyFixture(float progress, Position pos)
     {
         pos.copy(this.position);
+    }
+
+    /* Save/load methods */
+
+    @Override
+    public byte getType()
+    {
+        return AbstractFixture.IDLE;
+    }
+
+    @Override
+    public void read(DataInput in) throws IOException
+    {
+        this.position = CameraUtils.readPosition(in);
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException
+    {
+        CameraUtils.writePosition(out, this.position);
     }
 }

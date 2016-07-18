@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Profile runner
@@ -12,6 +14,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
  * This class is responsible for running camera profiles (i.e. applying current's
  * fixture camera transformations on player).
  */
+@SideOnly(Side.CLIENT)
 public class ProfileRunner
 {
     protected boolean isRunning;

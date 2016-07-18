@@ -92,12 +92,15 @@ blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 blockbuster.commands.camera=Camera command. Provides subcommands for managing camera profiles and fixtures. 
 blockbuster.commands.camera.start=/camera start - Starts a camera profile
 blockbuster.commands.camera.stop=/camera stop - Stops currently running camera profile
-blockbuster.commands.camera.profile=/camera profile <remove|reset|reset|new> – Profile management subcommand
+blockbuster.commands.camera.profile=/camera profile <remove|reset|reset|new> - Profile management subcommand
+blockbuster.commands.camera.load=/camera load <file> - Load camera profile
+blockbuster.commands.camera.save=/camera save <file> - Save camera profile to a file
+
 blockbuster.commands.camera.fixture.add=/camera add <idle|path|follow|look|circular> <duration> - Creates a new camera fixture at the end of the current camera profile with given <duration>.
 blockbuster.commands.camera.fixture.edit=/camera edit <index> <values...> - Edit fixture's values at <index> in currently selected camera profile
-blockbuster.commands.camera.fixture.duration=/camera duration <index> <duration> - Set duration in milliseconds to given fixture at given <index>\n\n
+blockbuster.commands.camera.fixture.duration=/camera duration <index> <duration> - Set duration in milliseconds to given fixture at given <index>
 blockbuster.commands.camera.fixture.path=/camera path <fixture_index> [point_index] - Add a point to path fixture (if [point_index] isn't specified), or remove path point in fixture at index [point_index]
-blockbuster.commands.camera.fixture.list=/camera list – Lists all available fixtures in current profile
+blockbuster.commands.camera.fixture.list=/camera list - Lists all available fixtures in current profile
 
 blockbuster.commands.camera.fixture.empty=This camera profile is empty!
 

@@ -1,7 +1,6 @@
 package noname.blockbuster.camera.fixtures;
 
 import net.minecraft.command.CommandException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
 
@@ -13,10 +12,9 @@ import noname.blockbuster.camera.Position;
  */
 public class FollowFixture extends LookFixture
 {
-    public FollowFixture(long duration, Position position, Entity entity)
+    public FollowFixture(long duration)
     {
-        super(duration, position, entity);
-        this.calculateRelativePosition();
+        super(duration);
     }
 
     @Override
@@ -51,5 +49,11 @@ public class FollowFixture extends LookFixture
 
         pos.copy(this.position);
         pos.point.set(x, y, z);
+    }
+
+    @Override
+    public byte getType()
+    {
+        return AbstractFixture.FOLLOW;
     }
 }

@@ -1,10 +1,14 @@
 package noname.blockbuster.camera.fixtures;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.camera.Position;
 
 /**
@@ -62,5 +66,33 @@ public class PathFixture extends AbstractFixture
     private float interpolate(float a, float b, float position)
     {
         return a + (b - a) * position;
+    }
+
+    /* Save/load methods */
+
+    @Override
+    public byte getType()
+    {
+        return AbstractFixture.PATH;
+    }
+
+    @Override
+    public void read(DataInput in) throws IOException
+    {
+        for (int i = 0, count = in.readInt(); i < count; i++)
+        {
+            this.addPoint(CameraUtils.readPosition(in));
+        }
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException
+    {
+        out.writeInt(this.points.size());
+
+        for (Position point : this.points)
+        {
+            CameraUtils.writePosition(out, point);
+        }
     }
 }

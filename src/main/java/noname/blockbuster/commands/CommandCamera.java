@@ -3,7 +3,9 @@ package noname.blockbuster.commands;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.ProfileRunner;
 import noname.blockbuster.commands.sub.SubCommandBase;
+import noname.blockbuster.commands.sub.SubCommandCameraLoad;
 import noname.blockbuster.commands.sub.SubCommandCameraProfile;
+import noname.blockbuster.commands.sub.SubCommandCameraSave;
 import noname.blockbuster.commands.sub.SubCommandCameraStart;
 import noname.blockbuster.commands.sub.SubCommandCameraStop;
 import noname.blockbuster.commands.sub.fixture.SubCommandFixtureAdd;
@@ -28,6 +30,8 @@ public class CommandCamera extends SubCommandBase
         this.subcommands.add(new SubCommandCameraStart());
         this.subcommands.add(new SubCommandCameraStop());
         this.subcommands.add(new SubCommandCameraProfile());
+        this.subcommands.add(new SubCommandCameraSave());
+        this.subcommands.add(new SubCommandCameraLoad());
 
         this.subcommands.add(new SubCommandFixtureAdd());
         this.subcommands.add(new SubCommandFixtureEdit());

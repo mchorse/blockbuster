@@ -18,7 +18,7 @@ public class SubCommandFixtureDuration extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.command.camera.fixture.duration";
+        return "blockbuster.commands.camera.fixture.duration";
     }
 
     @Override

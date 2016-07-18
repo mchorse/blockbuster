@@ -1,11 +1,17 @@
 package noname.blockbuster.camera.fixtures;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.camera.Position;
+import noname.blockbuster.recording.Mocap;
 
 /**
  * Look camera fixture
@@ -20,11 +26,9 @@ public class LookFixture extends IdleFixture
     private float lastYaw;
     private float lastPitch;
 
-    public LookFixture(long duration, Position position, Entity entity)
+    public LookFixture(long duration)
     {
-        super(duration, position);
-
-        this.entity = entity;
+        super(duration);
     }
 
     @Override
@@ -71,5 +75,29 @@ public class LookFixture extends IdleFixture
     private float interpolate(float a, float b, float position)
     {
         return a + (b - a) * position;
+    }
+
+    /* Save/load methods */
+
+    @Override
+    public byte getType()
+    {
+        return AbstractFixture.LOOK;
+    }
+
+    @Override
+    public void read(DataInput in) throws IOException
+    {
+        super.read(in);
+
+        this.entity = Mocap.entityByUUID(Minecraft.getMinecraft().theWorld, in.readUTF());
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException
+    {
+        super.write(out);
+
+        out.writeUTF(this.entity.getUniqueID().toString());
     }
 }
