@@ -42,22 +42,18 @@ public class ProfileRunner
 
     public void start()
     {
-        if (this.isRunning) return;
+        if (!this.isRunning) MinecraftForge.EVENT_BUS.register(this);
 
         this.isRunning = true;
         this.duration = this.profile.getDuration();
         this.startTime = System.currentTimeMillis();
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void stop()
     {
-        if (!this.isRunning) return;
+        if (this.isRunning) MinecraftForge.EVENT_BUS.unregister(this);
 
         this.isRunning = false;
-
-        MinecraftForge.EVENT_BUS.unregister(this);
     }
 
     /**
@@ -68,12 +64,9 @@ public class ProfileRunner
     @SubscribeEvent
     public void onRenderTick(RenderTickEvent event)
     {
-        if (!this.isRunning) return;
+        long progress = Math.min(System.currentTimeMillis() - this.startTime, this.duration);
 
-        long progress = System.currentTimeMillis() - this.startTime;
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
-        if (progress > this.duration)
+        if (progress >= this.duration)
         {
             this.stop();
         }
@@ -81,7 +74,11 @@ public class ProfileRunner
         {
             this.profile.applyProfile(progress, this.position);
 
-            player.setPositionAndRotation(this.position.point.x, this.position.point.y, this.position.point.z, this.position.angle.yaw, this.position.angle.pitch);
+            Point point = this.position.point;
+            Angle angle = this.position.angle;
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+            player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
         }
     }
 }

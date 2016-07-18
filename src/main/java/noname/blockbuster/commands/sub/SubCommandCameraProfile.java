@@ -1,14 +1,11 @@
 package noname.blockbuster.commands.sub;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 import noname.blockbuster.camera.CameraProfile;
-import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.commands.CommandCamera;
 
 /**
@@ -52,22 +49,6 @@ public class SubCommandCameraProfile extends CommandBase
         if (subcommand.equals("remove"))
         {
             profile.remove(CommandBase.parseInt(args[1]));
-        }
-        else if (subcommand.equals("list"))
-        {
-            String fixtures = "";
-
-            for (AbstractFixture fixture : profile.getAll())
-            {
-                fixtures += fixture + "\n";
-            }
-
-            if (fixtures.equals(""))
-            {
-                fixtures = I18n.format("blockbuster.commands.camera.profile.no_fixtures");
-            }
-
-            sender.addChatMessage(new TextComponentString(fixtures.trim()));
         }
         else if (subcommand.equals("move") && args.length >= 3)
         {

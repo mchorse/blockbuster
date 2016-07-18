@@ -1,7 +1,5 @@
 package noname.blockbuster.camera.fixtures;
 
-import com.google.common.base.Objects.ToStringHelper;
-
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
@@ -23,11 +21,6 @@ public class IdleFixture extends AbstractFixture
         this.position = position;
     }
 
-    public Position getPosition()
-    {
-        return this.position;
-    }
-
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
@@ -38,11 +31,5 @@ public class IdleFixture extends AbstractFixture
     public void applyFixture(float progress, Position pos)
     {
         pos.copy(this.position);
-    }
-
-    @Override
-    protected ToStringHelper getToStringHelper()
-    {
-        return super.getToStringHelper().add("position", this.position);
     }
 }

@@ -3,8 +3,6 @@ package noname.blockbuster.camera.fixtures;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Objects.ToStringHelper;
-
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
@@ -57,18 +55,12 @@ public class PathFixture extends AbstractFixture
         float yaw = this.interpolate(prevPos.angle.yaw, nextPos.angle.yaw, progress);
         float pitch = this.interpolate(prevPos.angle.pitch, nextPos.angle.pitch, progress);
 
-        pos.setPosition(x, y, z);
-        pos.setAngle(yaw, pitch);
+        pos.point.set(x, y, z);
+        pos.angle.set(yaw, pitch);
     }
 
     private float interpolate(float a, float b, float position)
     {
         return a + (b - a) * position;
-    }
-
-    @Override
-    protected ToStringHelper getToStringHelper()
-    {
-        return super.getToStringHelper().add("points", this.points.size());
     }
 }

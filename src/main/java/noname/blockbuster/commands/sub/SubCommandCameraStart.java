@@ -23,7 +23,7 @@ public class SubCommandCameraStart extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.camera.play";
+        return "blockbuster.commands.camera.start";
     }
 
     @Override

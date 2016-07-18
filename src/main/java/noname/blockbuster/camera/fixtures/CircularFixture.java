@@ -1,7 +1,5 @@
 package noname.blockbuster.camera.fixtures;
 
-import com.google.common.base.Objects.ToStringHelper;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,21 +31,6 @@ public class CircularFixture extends AbstractFixture
         this.circles = circles;
     }
 
-    public Point getPoint()
-    {
-        return this.point;
-    }
-
-    public Point getStart()
-    {
-        return this.start;
-    }
-
-    public float getCircles()
-    {
-        return this.circles;
-    }
-
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
@@ -76,13 +59,7 @@ public class CircularFixture extends AbstractFixture
 
         float yaw = (float) (MathHelper.atan2(dist * sin, dist * cos) * (180D / Math.PI)) - 90.0F;
 
-        pos.setPosition(x - 0.5F, y, z - 0.5F);
-        pos.setAngle(MathHelper.wrapDegrees(yaw - 180.0F), 0);
-    }
-
-    @Override
-    protected ToStringHelper getToStringHelper()
-    {
-        return super.getToStringHelper().add("start", this.start).add("point", this.point).add("circles", this.circles);
+        pos.point.set(x - 0.5F, y, z - 0.5F);
+        pos.angle.set(MathHelper.wrapDegrees(yaw - 180.0F), 0);
     }
 }

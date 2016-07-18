@@ -1,13 +1,16 @@
 package noname.blockbuster.commands;
 
-import net.minecraft.command.ICommandSender;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.ProfileRunner;
 import noname.blockbuster.commands.sub.SubCommandBase;
-import noname.blockbuster.commands.sub.SubCommandCameraFixture;
 import noname.blockbuster.commands.sub.SubCommandCameraProfile;
 import noname.blockbuster.commands.sub.SubCommandCameraStart;
 import noname.blockbuster.commands.sub.SubCommandCameraStop;
+import noname.blockbuster.commands.sub.fixture.SubCommandFixtureAdd;
+import noname.blockbuster.commands.sub.fixture.SubCommandFixtureDuration;
+import noname.blockbuster.commands.sub.fixture.SubCommandFixtureEdit;
+import noname.blockbuster.commands.sub.fixture.SubCommandFixtureList;
+import noname.blockbuster.commands.sub.fixture.SubCommandFixturePath;
 
 /**
  * Camera command
@@ -20,26 +23,23 @@ public class CommandCamera extends SubCommandBase
 {
     public static final ProfileRunner runner = new ProfileRunner(new CameraProfile());
 
+    public CommandCamera()
     {
-        /**
-         * Register camera's subcommands
-         */
         this.subcommands.add(new SubCommandCameraStart());
         this.subcommands.add(new SubCommandCameraStop());
         this.subcommands.add(new SubCommandCameraProfile());
-        this.subcommands.add(new SubCommandCameraFixture());
+
+        this.subcommands.add(new SubCommandFixtureAdd());
+        this.subcommands.add(new SubCommandFixtureEdit());
+        this.subcommands.add(new SubCommandFixtureDuration());
+        this.subcommands.add(new SubCommandFixturePath());
+        this.subcommands.add(new SubCommandFixtureList());
     }
 
     @Override
     public String getCommandName()
     {
         return "camera";
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender sender)
-    {
-        return "blockbuster.commands.camera";
     }
 
     @Override

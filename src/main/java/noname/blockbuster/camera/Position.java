@@ -14,10 +14,16 @@ public class Position
     public Point point = new Point(0, 0, 0);
     public Angle angle = new Angle(0, 0);
 
+    public Position(Point point, Angle angle)
+    {
+        this.point = point;
+        this.angle = angle;
+    }
+
     public Position(float x, float y, float z, float yaw, float pitch)
     {
-        this.setPosition(x, y, z);
-        this.setAngle(yaw, pitch);
+        this.point.set(x, y, z);
+        this.angle.set(yaw, pitch);
     }
 
     public Position(EntityPlayer player)
@@ -29,16 +35,6 @@ public class Position
     {
         this.point.set(player);
         this.angle.set(player);
-    }
-
-    public void setPosition(float x, float y, float z)
-    {
-        this.point.set(x, y, z);
-    }
-
-    public void setAngle(float yaw, float pitch)
-    {
-        this.angle.set(yaw, pitch);
     }
 
     public void copy(Position position)

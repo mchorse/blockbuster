@@ -1,7 +1,10 @@
 package noname.blockbuster.camera.fixtures;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
+import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.camera.Position;
 
 /**
@@ -24,9 +27,14 @@ public class LookFixture extends IdleFixture
         this.entity = entity;
     }
 
-    public Entity getEntity()
+    @Override
+    public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        return this.entity;
+        super.edit(args, player);
+
+        Entity target = CameraUtils.getTargetEntity(player);
+
+        if (target != null) this.entity = target;
     }
 
     /**
@@ -54,7 +62,7 @@ public class LookFixture extends IdleFixture
         pitch = this.interpolate(this.lastPitch, pitch, progress / 2);
 
         pos.copy(this.position);
-        pos.setAngle(yaw, pitch);
+        pos.angle.set(yaw, pitch);
 
         this.lastYaw = yaw;
         this.lastPitch = pitch;
