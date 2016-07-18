@@ -59,10 +59,20 @@ public abstract class AbstractFixture
         }
         else if (type.equals("follow"))
         {
+            if (target == null)
+            {
+                throw new CommandException("Player must look at entity to create this fixture!");
+            }
+
             return new FollowFixture(duration, new Position(player), target);
         }
         else if (type.equals("look"))
         {
+            if (target == null)
+            {
+                throw new CommandException("Player must look at entity to create this fixture!");
+            }
+
             return new LookFixture(duration, new Position(player), target);
         }
         else if (type.equals("path"))

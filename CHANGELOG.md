@@ -2,6 +2,33 @@
 
 Blockbuster's change log
 
+## Version 1.2
+
+Third version of Blockbuster mod. This release focuses on improving cameras. 
+Old entity-like camera was removed, and more flexible and complex cameras were 
+added. Now, instead of riding cameras every time when you doing screen recording, 
+you can just press play button and sit down, because you setup once, play camera 
+how many times you want.
+
+* Added camera profile. Camera profile is a list of camera fixtures that can be 
+  imported/exported and played
+* Added camera fixtures. Camera fixture is the definition of how camera should 
+  behave. Following fixtures were added:
+  	* Idle fixture – static camera shot 
+    * Path fixture – linear-interpolated camera path way
+    * Follow fixture – camera follows given entity from specified angle 
+      (specified angle is determined when the fixture is being added) 
+    * Look fixture – camera looks at given entity from specified point of view
+      (specified point of view is determined when the fixture is being added)
+    * Circular fixture – camera circles around given point for specified amount 
+      of circles in degrees
+* Added `camera` command which allows players to manage profiles, and fixtures
+* Added camera profile rendering
+* Removed camera item, camera entity, and camera entities support in director 
+  block
+* Merged `play-director` and `stop-director` into `director` command
+* Merged `record` and `play` into `action` command
+
 ## Version 1.1
 
 Second version of Blockbuster mod. This release removes the "Name Tag" mechanism 
