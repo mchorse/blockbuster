@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.ClientProxy;
 
 /**
  * Profile runner
@@ -39,6 +40,7 @@ public class ProfileRunner
     public void setProfile(CameraProfile profile)
     {
         this.profile = profile;
+        ClientProxy.profileRenderer.setProfile(profile);
     }
 
     /* Playback methods (start/stop) */

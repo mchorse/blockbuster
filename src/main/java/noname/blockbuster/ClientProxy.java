@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -22,15 +21,17 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.camera.CameraProfile;
+import noname.blockbuster.camera.ProfileRunner;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
+import noname.blockbuster.client.ProfileRenderer;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.client.gui.GuiDirector;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
-import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.entity.EntityActor;
 
 /**
@@ -46,6 +47,9 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
+
+    public static ProfileRunner profileRunner = new ProfileRunner(new CameraProfile());
+    public static ProfileRenderer profileRenderer = new ProfileRenderer();
 
     /**
      * Register mod items, blocks, tile entites and entities, and load item,
@@ -107,7 +111,7 @@ public class ClientProxy extends CommonProxy
 
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
-        ClientCommandHandler.instance.registerCommand(new CommandCamera());
+        MinecraftForge.EVENT_BUS.register(profileRenderer);
     }
 
     protected void registerItemModel(Block block, String path)

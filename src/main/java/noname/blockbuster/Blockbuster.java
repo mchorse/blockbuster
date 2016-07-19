@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.commands.CommandAction;
+import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.commands.CommandDirector;
 
 /**
@@ -66,7 +67,7 @@ public class Blockbuster
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
-     * entities, blocks, or etc.
+     * entities, blocks, etc.
      */
     public static String path(String path)
     {
@@ -95,5 +96,6 @@ public class Blockbuster
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
+        event.registerServerCommand(new CommandCamera());
     }
 }

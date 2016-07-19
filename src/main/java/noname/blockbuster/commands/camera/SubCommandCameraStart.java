@@ -4,8 +4,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
-import noname.blockbuster.commands.CommandCamera;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraState;
 
 /**
  * Camera's stop subcommand
@@ -29,7 +29,6 @@ public class SubCommandCameraStart extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        CommandCamera.runner.start();
-        sender.addChatMessage(new TextComponentString("Current camera profile was started."));
+        Dispatcher.getInstance().sendTo(new PacketCameraState(true), getCommandSenderAsPlayer(sender));
     }
 }

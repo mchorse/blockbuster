@@ -35,7 +35,7 @@ public class SubCommandFixturePath extends CommandBase
 
         int index = CommandBase.parseInt(args[0]);
 
-        AbstractFixture fixture = CommandCamera.runner.getProfile().get(index);
+        AbstractFixture fixture = CommandCamera.getProfile().get(index);
 
         if (!(fixture instanceof PathFixture))
         {
@@ -52,5 +52,7 @@ public class SubCommandFixturePath extends CommandBase
         {
             path.removePoint(CommandBase.parseInt(args[1]));
         }
+
+        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

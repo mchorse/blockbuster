@@ -1,7 +1,7 @@
 package noname.blockbuster.commands;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.camera.CameraProfile;
-import noname.blockbuster.camera.ProfileRunner;
 import noname.blockbuster.commands.camera.SubCommandCameraLoad;
 import noname.blockbuster.commands.camera.SubCommandCameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraSave;
@@ -12,18 +12,41 @@ import noname.blockbuster.commands.fixture.SubCommandFixtureDuration;
 import noname.blockbuster.commands.fixture.SubCommandFixtureEdit;
 import noname.blockbuster.commands.fixture.SubCommandFixtureList;
 import noname.blockbuster.commands.fixture.SubCommandFixturePath;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketUpdateProfile;
 
 /**
  * Camera /command
  *
  * This command is an interface to work with camera, in general, but specifically
- * this commands provides sub commands for manipulating camera fixtures and
+ * this commands provides sub-commands for manipulating camera fixtures and
  * camera profiles.
  */
 public class CommandCamera extends SubCommandBase
 {
-    public static final ProfileRunner runner = new ProfileRunner(new CameraProfile());
+    private static CameraProfile profile = new CameraProfile();
 
+    public static CameraProfile getProfile()
+    {
+        return profile;
+    }
+
+    public static void setProfile(CameraProfile profile, EntityPlayerMP player)
+    {
+        CommandCamera.profile = profile;
+        updateProfile(player);
+    }
+
+    public static void updateProfile(EntityPlayerMP player)
+    {
+        Dispatcher.getInstance().sendTo(new PacketUpdateProfile(profile), player);
+    }
+
+    /**
+     * Camera's command constructor
+     *
+     * This constructor is responsible for registering its sub-commands.
+     */
     public CommandCamera()
     {
         this.subcommands.add(new SubCommandCameraStart());

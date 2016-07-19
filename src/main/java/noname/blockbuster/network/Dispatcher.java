@@ -11,12 +11,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.network.client.ClientHandlerCameraState;
 import noname.blockbuster.network.client.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
+import noname.blockbuster.network.client.ClientHandlerUpdateProfile;
+import noname.blockbuster.network.common.PacketCameraState;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
+import noname.blockbuster.network.common.PacketUpdateProfile;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
@@ -86,6 +90,10 @@ public class Dispatcher
         register(PacketDirectorMapEdit.class, ServerHandlerDirectorMapEdit.class, Side.SERVER);
         register(PacketDirectorMapReset.class, ServerHandlerDirectorMapReset.class, Side.SERVER);
         register(PacketDirectorMapRemove.class, ServerHandlerDirectorMapRemove.class, Side.SERVER);
+
+        /* Camera management */
+        register(PacketUpdateProfile.class, ClientHandlerUpdateProfile.class, Side.CLIENT);
+        register(PacketCameraState.class, ClientHandlerCameraState.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

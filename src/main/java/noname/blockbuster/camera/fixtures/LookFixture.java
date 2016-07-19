@@ -4,11 +4,11 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.DimensionManager;
 import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.camera.Position;
 import noname.blockbuster.recording.Mocap;
@@ -90,7 +90,7 @@ public class LookFixture extends IdleFixture
     {
         super.read(in);
 
-        this.entity = Mocap.entityByUUID(Minecraft.getMinecraft().theWorld, in.readUTF());
+        this.entity = Mocap.entityByUUID(DimensionManager.getWorld(0), in.readUTF());
     }
 
     @Override

@@ -42,7 +42,7 @@ public class SubCommandCameraSave extends CommandBase
 
         try
         {
-            CameraUtils.writeCameraProfile(filename, CommandCamera.runner.getProfile());
+            CameraUtils.writeCameraProfile(filename, CommandCamera.getProfile());
             sender.addChatMessage(new TextComponentString("Current camera profile was saved."));
         }
         catch (IOException e)

@@ -33,6 +33,7 @@ public class SubCommandFixtureEdit extends CommandBase
 
         int index = CommandBase.parseInt(args[0]);
 
-        CommandCamera.runner.getProfile().get(index).edit(SubCommandBase.dropFirstArgument(args), (EntityPlayer) sender);
+        CommandCamera.getProfile().get(index).edit(SubCommandBase.dropFirstArgument(args), (EntityPlayer) sender);
+        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

@@ -42,7 +42,7 @@ public class SubCommandCameraProfile extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        CameraProfile profile = CommandCamera.runner.getProfile();
+        CameraProfile profile = CommandCamera.getProfile();
         String subcommand = args[0];
 
         if (subcommand.equals("remove"))
@@ -59,11 +59,13 @@ public class SubCommandCameraProfile extends CommandBase
         }
         else if (subcommand.equals("new"))
         {
-            CommandCamera.runner.setProfile(new CameraProfile());
+            CommandCamera.setProfile(new CameraProfile(), getCommandSenderAsPlayer(sender));
         }
         else
         {
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
+
+        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

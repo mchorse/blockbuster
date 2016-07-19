@@ -28,7 +28,7 @@ public class SubCommandFixtureList extends CommandBase
     {
         String fixtures = "";
 
-        for (AbstractFixture fixture : CommandCamera.runner.getProfile().getAll())
+        for (AbstractFixture fixture : CommandCamera.getProfile().getAll())
         {
             fixtures += fixture + "\n";
         }
