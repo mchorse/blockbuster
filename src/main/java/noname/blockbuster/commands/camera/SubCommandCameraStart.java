@@ -4,8 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketCameraState;
+import noname.blockbuster.ClientProxy;
 
 /**
  * Camera's stop subcommand
@@ -29,6 +28,6 @@ public class SubCommandCameraStart extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        Dispatcher.getInstance().sendTo(new PacketCameraState(true), getCommandSenderAsPlayer(sender));
+        ClientProxy.profileRunner.start();
     }
 }

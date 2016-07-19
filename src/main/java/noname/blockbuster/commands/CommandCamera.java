@@ -1,6 +1,6 @@
 package noname.blockbuster.commands;
 
-import net.minecraft.entity.player.EntityPlayerMP;
+import noname.blockbuster.ClientProxy;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraLoad;
 import noname.blockbuster.commands.camera.SubCommandCameraProfile;
@@ -12,8 +12,6 @@ import noname.blockbuster.commands.fixture.SubCommandFixtureDuration;
 import noname.blockbuster.commands.fixture.SubCommandFixtureEdit;
 import noname.blockbuster.commands.fixture.SubCommandFixtureList;
 import noname.blockbuster.commands.fixture.SubCommandFixturePath;
-import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketUpdateProfile;
 
 /**
  * Camera /command
@@ -21,6 +19,12 @@ import noname.blockbuster.network.common.PacketUpdateProfile;
  * This command is an interface to work with camera, in general, but specifically
  * this commands provides sub-commands for manipulating camera fixtures and
  * camera profiles.
+ *
+ * This command works on the client side, so there's no way you could use it in
+ * command block, yet.
+ *
+ * @todo Create /cb-camera, which will be able to start/stop camera using
+ *       command block, only if being requested.
  */
 public class CommandCamera extends SubCommandBase
 {
@@ -31,15 +35,11 @@ public class CommandCamera extends SubCommandBase
         return profile;
     }
 
-    public static void setProfile(CameraProfile profile, EntityPlayerMP player)
+    public static void setProfile(CameraProfile profile)
     {
         CommandCamera.profile = profile;
-        updateProfile(player);
-    }
-
-    public static void updateProfile(EntityPlayerMP player)
-    {
-        Dispatcher.getInstance().sendTo(new PacketUpdateProfile(profile), player);
+        ClientProxy.profileRunner.setProfile(profile);
+        ClientProxy.profileRenderer.setProfile(profile);
     }
 
     /**

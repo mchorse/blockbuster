@@ -1,15 +1,13 @@
 package noname.blockbuster.commands.camera;
 
-import java.io.IOException;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
-import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.commands.CommandCamera;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraProfile;
 
 /**
  * Camera's save subcommand
@@ -38,17 +36,6 @@ public class SubCommandCameraSave extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        String filename = args[0];
-
-        try
-        {
-            CameraUtils.writeCameraProfile(filename, CommandCamera.getProfile());
-            sender.addChatMessage(new TextComponentString("Current camera profile was saved."));
-        }
-        catch (IOException e)
-        {
-            sender.addChatMessage(new TextComponentString("Current camera profile couldn't saved."));
-            e.printStackTrace();
-        }
+        Dispatcher.getInstance().sendToServer(new PacketCameraProfile(args[0], CommandCamera.getProfile()));
     }
 }

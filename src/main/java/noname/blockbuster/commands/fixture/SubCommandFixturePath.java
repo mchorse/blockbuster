@@ -52,7 +52,5 @@ public class SubCommandFixturePath extends CommandBase
         {
             path.removePoint(CommandBase.parseInt(args[1]));
         }
-
-        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

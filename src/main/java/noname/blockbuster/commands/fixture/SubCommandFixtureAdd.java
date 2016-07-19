@@ -30,7 +30,6 @@ public class SubCommandFixtureAdd extends CommandBase
             EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 
             CommandCamera.getProfile().add(AbstractFixture.fromCommand(args, player));
-            CommandCamera.updateProfile(player);
         }
         catch (Exception e)
         {

@@ -5,9 +5,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
-import noname.blockbuster.camera.CameraUtils;
-import noname.blockbuster.commands.CommandCamera;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketLoadCameraProfile;
 
 /**
  * Camera's load subcommand
@@ -36,18 +35,6 @@ public class SubCommandCameraLoad extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        String filename = args[0];
-
-        try
-        {
-            CommandCamera.setProfile(CameraUtils.readCameraProfile(filename), getCommandSenderAsPlayer(sender));
-
-            sender.addChatMessage(new TextComponentString("Current camera profile was loaded."));
-        }
-        catch (Exception e)
-        {
-            sender.addChatMessage(new TextComponentString("Current camera profile couldn't be loaded."));
-            e.printStackTrace();
-        }
+        Dispatcher.getInstance().sendToServer(new PacketLoadCameraProfile(args[0]));
     }
 }

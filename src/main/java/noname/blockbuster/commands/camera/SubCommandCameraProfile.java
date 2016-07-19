@@ -59,13 +59,11 @@ public class SubCommandCameraProfile extends CommandBase
         }
         else if (subcommand.equals("new"))
         {
-            CommandCamera.setProfile(new CameraProfile(), getCommandSenderAsPlayer(sender));
+            CommandCamera.setProfile(new CameraProfile());
         }
         else
         {
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
-
-        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

@@ -33,6 +33,5 @@ public class SubCommandFixtureDuration extends CommandBase
         long duration = CommandBase.parseInt(args[1]);
 
         CommandCamera.getProfile().get(index).setDuration(duration);
-        CommandCamera.updateProfile(getCommandSenderAsPlayer(sender));
     }
 }

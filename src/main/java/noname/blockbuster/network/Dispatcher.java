@@ -11,16 +11,17 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.network.client.ClientHandlerCameraProfile;
 import noname.blockbuster.network.client.ClientHandlerCameraState;
 import noname.blockbuster.network.client.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
-import noname.blockbuster.network.client.ClientHandlerUpdateProfile;
+import noname.blockbuster.network.common.PacketCameraProfile;
 import noname.blockbuster.network.common.PacketCameraState;
+import noname.blockbuster.network.common.PacketLoadCameraProfile;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
-import noname.blockbuster.network.common.PacketUpdateProfile;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
@@ -30,6 +31,7 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.network.common.director.PacketDirectorRequestCast;
 import noname.blockbuster.network.common.director.PacketDirectorReset;
+import noname.blockbuster.network.server.ServerHandlerCameraProfile;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapEdit;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
@@ -37,6 +39,7 @@ import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
 import noname.blockbuster.network.server.ServerHandlerDirectorRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorRequestCast;
 import noname.blockbuster.network.server.ServerHandlerDirectorReset;
+import noname.blockbuster.network.server.ServerHandlerLoadCameraProfile;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
 
 /**
@@ -92,8 +95,10 @@ public class Dispatcher
         register(PacketDirectorMapRemove.class, ServerHandlerDirectorMapRemove.class, Side.SERVER);
 
         /* Camera management */
-        register(PacketUpdateProfile.class, ClientHandlerUpdateProfile.class, Side.CLIENT);
+        register(PacketCameraProfile.class, ClientHandlerCameraProfile.class, Side.CLIENT);
+        register(PacketCameraProfile.class, ServerHandlerCameraProfile.class, Side.SERVER);
         register(PacketCameraState.class, ClientHandlerCameraState.class, Side.CLIENT);
+        register(PacketLoadCameraProfile.class, ServerHandlerLoadCameraProfile.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
