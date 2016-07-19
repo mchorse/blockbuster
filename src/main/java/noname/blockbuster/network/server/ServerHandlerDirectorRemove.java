@@ -7,7 +7,7 @@ import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
- * This handler is responsible for removing actor or camera from director block.
+ * This handler is responsible for removing actor from director block.
  */
 public class ServerHandlerDirectorRemove extends ServerMessageHandler<PacketDirectorRemove>
 {
@@ -16,7 +16,7 @@ public class ServerHandlerDirectorRemove extends ServerMessageHandler<PacketDire
     {
         TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
 
-        tile.remove(message.id, message.type);
-        Dispatcher.getInstance().sendTo(new PacketDirectorCast(message.pos, tile.actors, tile.cameras), player);
+        tile.remove(message.id);
+        Dispatcher.getInstance().sendTo(new PacketDirectorCast(message.pos, tile.actors), player);
     }
 }

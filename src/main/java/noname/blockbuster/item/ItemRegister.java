@@ -9,7 +9,7 @@ import noname.blockbuster.Blockbuster;
 /**
  * Register item
  *
- * Used to register an actor or a camera to director block (a scene)
+ * Used to register an actor to director block (a scene)
  */
 public class ItemRegister extends Item
 {

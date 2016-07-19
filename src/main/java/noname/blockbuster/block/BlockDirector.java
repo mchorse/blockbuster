@@ -45,7 +45,7 @@ public class BlockDirector extends AbstractBlockDirector
     }
 
     /**
-     * Attach an entity (actor or camera) to director block
+     * Attach an entity (actor) to director block
      */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
@@ -87,7 +87,7 @@ public class BlockDirector extends AbstractBlockDirector
     {
         TileEntityDirector tile = (TileEntityDirector) worldIn.getTileEntity(pos);
 
-        Dispatcher.getInstance().sendTo(new PacketDirectorCast(tile.getPos(), tile.actors, tile.cameras), (EntityPlayerMP) player);
+        Dispatcher.getInstance().sendTo(new PacketDirectorCast(tile.getPos(), tile.actors), (EntityPlayerMP) player);
     }
 
     /**

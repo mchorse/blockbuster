@@ -39,9 +39,9 @@ public class GuiDirector extends GuiParentScreen
         this.cast = new GuiCast(this, pos);
     }
 
-    public void setCast(List<String> actors, List<String> cameras)
+    public void setCast(List<String> actors)
     {
-        this.cast.setCast(actors, cameras);
+        this.cast.setCast(actors);
     }
 
     @Override

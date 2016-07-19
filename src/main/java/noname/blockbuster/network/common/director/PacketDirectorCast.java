@@ -9,16 +9,14 @@ import net.minecraft.util.math.BlockPos;
 public class PacketDirectorCast extends PacketDirector
 {
     public List<String> actors = new ArrayList<String>();
-    public List<String> cameras = new ArrayList<String>();
 
     public PacketDirectorCast()
     {}
 
-    public PacketDirectorCast(BlockPos pos, List<String> actors, List<String> cameras)
+    public PacketDirectorCast(BlockPos pos, List<String> actors)
     {
         super(pos);
         this.actors.addAll(actors);
-        this.cameras.addAll(cameras);
     }
 
     @Override
@@ -27,7 +25,6 @@ public class PacketDirectorCast extends PacketDirector
         super.fromBytes(buf);
 
         PacketDirector.listFromBytes(buf, this.actors);
-        PacketDirector.listFromBytes(buf, this.cameras);
     }
 
     @Override
@@ -36,6 +33,5 @@ public class PacketDirectorCast extends PacketDirector
         super.toBytes(buf);
 
         PacketDirector.listToBytes(buf, this.actors);
-        PacketDirector.listToBytes(buf, this.cameras);
     }
 }

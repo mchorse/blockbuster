@@ -11,17 +11,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
-import noname.blockbuster.network.client.ClientHandlerCameraAttributes;
-import noname.blockbuster.network.client.ClientHandlerCameraRecording;
 import noname.blockbuster.network.client.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
-import noname.blockbuster.network.common.PacketCameraAttributes;
-import noname.blockbuster.network.common.PacketCameraRecording;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayerRecording;
-import noname.blockbuster.network.common.PacketSwitchCamera;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
@@ -31,7 +26,6 @@ import noname.blockbuster.network.common.director.PacketDirectorMapReset;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.network.common.director.PacketDirectorRequestCast;
 import noname.blockbuster.network.common.director.PacketDirectorReset;
-import noname.blockbuster.network.server.ServerHandlerCameraAttributes;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapAdd;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapEdit;
 import noname.blockbuster.network.server.ServerHandlerDirectorMapRemove;
@@ -40,7 +34,6 @@ import noname.blockbuster.network.server.ServerHandlerDirectorRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorRequestCast;
 import noname.blockbuster.network.server.ServerHandlerDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
-import noname.blockbuster.network.server.ServerHandlerSwitchCamera;
 
 /**
  * Network dispatcher
@@ -72,19 +65,9 @@ public class Dispatcher
      */
     public static void register()
     {
-        /* Update camera attributes (speed, acceleration, flying */
-        register(PacketCameraAttributes.class, ClientHandlerCameraAttributes.class, Side.CLIENT);
-        register(PacketCameraAttributes.class, ServerHandlerCameraAttributes.class, Side.SERVER);
-
         /* Update actor properties */
         register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
         register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
-
-        /* Teleport player to another camera */
-        register(PacketSwitchCamera.class, ServerHandlerSwitchCamera.class, Side.SERVER);
-
-        /* Make cameras invinsible during playback */
-        register(PacketCameraRecording.class, ClientHandlerCameraRecording.class, Side.CLIENT);
 
         /* Show up recording label when player starts recording */
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);

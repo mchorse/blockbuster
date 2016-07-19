@@ -6,16 +6,14 @@ import net.minecraft.util.math.BlockPos;
 public class PacketDirectorRemove extends PacketDirector
 {
     public int id;
-    public boolean type;
 
     public PacketDirectorRemove()
     {}
 
-    public PacketDirectorRemove(BlockPos pos, int id, boolean type)
+    public PacketDirectorRemove(BlockPos pos, int id)
     {
         super(pos);
         this.id = id;
-        this.type = type;
     }
 
     @Override
@@ -23,7 +21,6 @@ public class PacketDirectorRemove extends PacketDirector
     {
         super.fromBytes(buf);
         this.id = buf.readInt();
-        this.type = buf.readBoolean();
     }
 
     @Override
@@ -31,6 +28,5 @@ public class PacketDirectorRemove extends PacketDirector
     {
         super.toBytes(buf);
         buf.writeInt(this.id);
-        buf.writeBoolean(this.type);
     }
 }

@@ -78,7 +78,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] { PLAYING });
+        return new BlockStateContainer(this, new IProperty[] {PLAYING});
     }
 
     /* Redstone */
@@ -165,10 +165,9 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     /**
-     * Output to chat actors and cameras
+     * Output actors
      *
      * Temporary solution for browsing registered entities by DirectorTileEntity.
-     * Creating GUI for this job is on ToDo list.
      */
     protected abstract void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
 }

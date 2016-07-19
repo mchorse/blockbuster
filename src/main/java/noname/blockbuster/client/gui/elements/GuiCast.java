@@ -16,10 +16,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.GuiActor;
-import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.entity.EntityActor;
-import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorRemove;
 import noname.blockbuster.recording.Mocap;
@@ -68,24 +66,20 @@ public class GuiCast extends GuiScrollPane
     }
 
     /**
-     * Compile entries out of passed actors and cameras UUIDs
+     * Compile entries out of passed actors UUIDs
      */
-    public void setCast(List<String> actors, List<String> cameras)
+    public void setCast(List<String> actors)
     {
         World world = Minecraft.getMinecraft().theWorld;
 
         this.scrollY = 0;
-        this.scrollHeight = (actors.size() + cameras.size()) * 24;
+        this.scrollHeight = actors.size() * 24;
         this.entries.clear();
 
         for (int i = 0; i < actors.size(); i++)
-            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)), true);
-
-        for (int i = 0; i < cameras.size(); i++)
-            this.addEntry(i, Mocap.entityByUUID(world, cameras.get(i)), false);
+            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)));
 
         this.entries.sort(ALPHA);
-
         this.buttonList.clear();
         this.initGui();
     }
@@ -93,12 +87,12 @@ public class GuiCast extends GuiScrollPane
     /**
      * Add entry to the entry list
      */
-    private void addEntry(int index, Entity entity, boolean isActor)
+    private void addEntry(int index, Entity entity)
     {
         int id = entity != null ? entity.getEntityId() : -1;
-        String name = entity != null ? entity.getName() : (isActor ? "Actor" : "Camera");
+        String name = entity != null ? entity.getName() : "Actor";
 
-        this.entries.add(new Entry(id, index, name, isActor, entity == null));
+        this.entries.add(new Entry(id, index, name, entity == null));
     }
 
     /* Handling */
@@ -122,20 +116,13 @@ public class GuiCast extends GuiScrollPane
 
         if (buttonIn.id == 0)
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorRemove(this.pos, entry.index, entry.isActor));
+            Dispatcher.getInstance().sendToServer(new PacketDirectorRemove(this.pos, entry.index));
         }
         else if (buttonIn.id == 1 && !entry.outOfReach)
         {
             Entity entity = this.mc.theWorld.getEntityByID(entry.id);
 
-            if (entry.isActor)
-            {
-                this.mc.displayGuiScreen(new GuiActor(this.parent, (EntityActor) entity));
-            }
-            else
-            {
-                this.mc.displayGuiScreen(new GuiCamera(this.parent, (EntityCamera) entity));
-            }
+            this.mc.displayGuiScreen(new GuiActor(this.parent, (EntityActor) entity));
         }
     }
 
@@ -187,9 +174,9 @@ public class GuiCast extends GuiScrollPane
             GlStateManager.enableBlend();
 
             /* Icon of the entry */
-            this.drawTexturedModalRect(x - 20, y + 4, entry.isActor ? 16 : 32, 0, 16, 16);
+            this.drawTexturedModalRect(x - 20, y + 4, 16, 0, 16, 16);
 
-            /* X over the actor/camera icon */
+            /* X over the actor icon */
             if (entry.outOfReach)
             {
                 this.drawTexturedModalRect(x - 20, y + 4, 48, 0, 16, 16);
@@ -215,15 +202,13 @@ public class GuiCast extends GuiScrollPane
         public int id;
         public int index;
         public String name;
-        public boolean isActor;
         public boolean outOfReach;
 
-        public Entry(int id, int index, String name, boolean isActor, boolean outOfReach)
+        public Entry(int id, int index, String name, boolean outOfReach)
         {
             this.id = id;
             this.index = index;
             this.name = name;
-            this.isActor = isActor;
             this.outOfReach = outOfReach;
         }
     }

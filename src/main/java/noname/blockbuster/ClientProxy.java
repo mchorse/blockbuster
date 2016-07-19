@@ -26,15 +26,12 @@ import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiActor;
-import noname.blockbuster.client.gui.GuiCamera;
 import noname.blockbuster.client.gui.GuiDirector;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
-import noname.blockbuster.client.render.RenderCamera;
 import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.entity.EntityActor;
-import noname.blockbuster.entity.EntityCamera;
 
 /**
  * Client proxy
@@ -59,8 +56,6 @@ public class ClientProxy extends CommonProxy
     {
         super.preLoad(event);
 
-        this.registerItemModel(Blockbuster.cameraItem, Blockbuster.path("camera"));
-        this.registerItemModel(Blockbuster.cameraConfigItem, Blockbuster.path("camera_config"));
         this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
         this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
         this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
@@ -68,7 +63,6 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
-        this.registerEntityRender(EntityCamera.class, new RenderCamera.FactoryCamera());
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
@@ -135,7 +129,6 @@ public class ClientProxy extends CommonProxy
     /**
      * There's two types of GUI are available right now:
      *
-     * - Camera configuration GUI (0)
      * - Actor configuration GUI (1)
      * - Director block management GUI (2)
      * - Director map block management GUI (3)
@@ -147,11 +140,7 @@ public class ClientProxy extends CommonProxy
     {
         Entity entity = world.getEntityByID(x);
 
-        if (ID == 0)
-        {
-            return new GuiCamera(null, (EntityCamera) entity);
-        }
-        else if (ID == 1)
+        if (ID == 1)
         {
             return new GuiActor(null, (EntityActor) entity);
         }

@@ -21,7 +21,7 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
 
         if (screen instanceof GuiDirector)
         {
-            ((GuiDirector) screen).setCast(message.actors, message.cameras);
+            ((GuiDirector) screen).setCast(message.actors);
         }
     }
 }

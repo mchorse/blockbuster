@@ -15,14 +15,11 @@ itemGroup.blockbuster=Blockbuster
 tile.blockbuster.director.name=Director block
 tile.blockbuster.director_map.name=Director map block
 
-item.blockbuster.camera.name=Camera
-item.blockbuster.camera_config.name=Camera configuration device
 item.blockbuster.playback.name=Playback button
 item.blockbuster.register.name=Registering device
 item.blockbuster.actor_config.name=Actor configuration device
 
 # Entities names
-entity.blockbuster.Camera.name=Camera
 entity.blockbuster.Actor.name=Actor
 
 # GUI
@@ -37,15 +34,6 @@ blockbuster.gui.add=Add
 blockbuster.gui.edit=Edit
 blockbuster.gui.remove=Remove
 
-# Camera configuration strings
-blockbuster.gui.camera.title=Camera configuration
-blockbuster.gui.camera.speed=Speed
-blockbuster.gui.camera.rate=Acceleration rate 
-blockbuster.gui.camera.max=Max acceleration
-blockbuster.gui.camera.dir=Direction of flight
-blockbuster.gui.camera.canFly=Any direction
-blockbuster.gui.camera.cantFly=Only horizontally
-
 # Actor configuration strings
 blockbuster.gui.actor.title=Actor Configuration
 blockbuster.gui.actor.default=Default
@@ -55,13 +43,13 @@ blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
 
 # Key bindings
-key.blockbuster.camera=Blockbuster: Camera
-key.blockbuster.next=Switch to the next camera
-key.blockbuster.previous=Switch to the previous camera
+# key.blockbuster.camera=Blockbuster: Camera
+# key.blockbuster.next=Switch to the next camera
+# key.blockbuster.previous=Switch to the previous camera
 
 # Director block
 blockbuster.director.title=Director Block's Cast
-blockbuster.director.no_cast=No registered cameras or actors!
+blockbuster.director.no_cast=No registered actors!
 
 blockbuster.director.not_exist=The entity which is attached to this registering device doesn't exist!
 blockbuster.director.already_registered=This entity is already registered by director block!

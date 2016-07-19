@@ -16,10 +16,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import noname.blockbuster.block.BlockDirector;
 import noname.blockbuster.block.BlockDirectorMap;
 import noname.blockbuster.entity.EntityActor;
-import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.item.ItemActorConfig;
-import noname.blockbuster.item.ItemCamera;
-import noname.blockbuster.item.ItemCameraConfig;
 import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
@@ -36,8 +33,6 @@ public class CommonProxy implements IGuiHandler
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, this);
         Dispatcher.register();
 
-        this.registerItem(Blockbuster.cameraItem = new ItemCamera());
-        this.registerItem(Blockbuster.cameraConfigItem = new ItemCameraConfig());
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
@@ -45,7 +40,6 @@ public class CommonProxy implements IGuiHandler
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
         this.registerBlock(Blockbuster.directorBlockMap = new BlockDirectorMap());
 
-        this.registerEntity(EntityCamera.class, "Camera");
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");

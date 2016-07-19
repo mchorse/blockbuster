@@ -5,10 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import noname.blockbuster.entity.EntityActor;
-import noname.blockbuster.entity.EntityCamera;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -20,49 +17,23 @@ import noname.blockbuster.recording.Mocap;
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
-    /**
-     * UUID list of registered cameras
-     */
-    public List<String> cameras = new ArrayList<String>();
-
-    /* Read/write this TE to disk */
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound)
-    {
-        super.readFromNBT(compound);
-        this.readListFromNBT(compound, "Cameras", this.cameras);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
-    {
-        super.writeToNBT(compound);
-        this.saveListToNBT(compound, "Cameras", this.cameras);
-        
-        return compound;
-    }
-
     /* Public API */
 
     /**
-     * Remove all registered actors and cameras from this TE
+     * Remove all registered actors from this TE
      */
     public void reset()
     {
         this.actors = new ArrayList<String>();
-        this.cameras = new ArrayList<String>();
         this.markDirty();
     }
 
     /**
-     * Remove either actor or camera by id.
-     *
-     * Oh gosh, this method does too many things!!!
+     * Remove an actor by id.
      */
-    public void remove(int id, boolean type)
+    public void remove(int id)
     {
-        (type ? this.actors : this.cameras).remove(id);
+        this.actors.remove(id);
         this.markDirty();
     }
 
@@ -71,33 +42,9 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      */
     public boolean add(Entity entity)
     {
-        if (entity instanceof EntityCamera)
-        {
-            return this.add((EntityCamera) entity);
-        }
-        else if (entity instanceof EntityActor)
+        if (entity instanceof EntityActor)
         {
             return this.add((EntityActor) entity);
-        }
-
-        return false;
-    }
-
-    /**
-     * Add a camera to director block
-     */
-    public boolean add(EntityCamera camera)
-    {
-        String id = camera.getUniqueID().toString();
-
-        if (!this.cameras.contains(id))
-        {
-            camera.directorBlock = this.getPos();
-
-            this.cameras.add(id);
-            this.markDirty();
-
-            return true;
         }
 
         return false;
@@ -124,7 +71,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.removeUnusedEntities(this.actors);
-        this.removeUnusedEntities(this.cameras);
 
         for (EntityActor actor : this.getActors(exception))
         {
@@ -200,52 +146,5 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return actors;
-    }
-
-    /**
-     * Switch (teleport/jump) to another camera
-     *
-     * Some of the code has been looked up from classes such as CommandTeleport
-     * and... that's it.
-     */
-    public void switchTo(EntityCamera camera, int direction)
-    {
-        int index = this.cameras.indexOf(camera.getUniqueID().toString()) + direction;
-
-        if (index >= this.cameras.size())
-        {
-            index = 0;
-        }
-        else if (index < 0)
-        {
-            index = this.cameras.size() - 1;
-        }
-
-        EntityCamera newCamera = (EntityCamera) Mocap.entityByUUID(this.worldObj, this.cameras.get(index));
-        EntityPlayer player = (EntityPlayer) camera.getControllingPassenger();
-
-        player.dismountRidingEntity();
-        player.setLocationAndAngles(newCamera.posX, newCamera.posY, newCamera.posZ, newCamera.rotationYaw, newCamera.rotationPitch);
-        player.setRotationYawHead(newCamera.rotationYaw);
-        player.startRiding(newCamera);
-    }
-
-    /**
-     * Set the state of the block playing (needed to update redstone thingy-stuff)
-     *
-     * And make cameras invisible or visible (depending on passed boolean), so
-     * they aren't seen in the main shot.
-     */
-    @Override
-    protected void playBlock(boolean isPlaying)
-    {
-        super.playBlock(isPlaying);
-
-        for (String id : this.cameras)
-        {
-            EntityCamera camera = (EntityCamera) Mocap.entityByUUID(this.worldObj, id);
-
-            camera.setRecording(isPlaying, true);
-        }
     }
 }
