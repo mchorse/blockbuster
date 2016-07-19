@@ -11,7 +11,7 @@ import noname.blockbuster.network.common.PacketLoadCameraProfile;
 /**
  * Camera's load subcommand
  *
- * This subcommand is responsible for load camera profile.
+ * This subcommand is responsible for loading camera profile.
  */
 public class SubCommandCameraLoad extends CommandBase
 {

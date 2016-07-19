@@ -28,7 +28,7 @@ import noname.blockbuster.commands.fixture.SubCommandFixturePath;
  */
 public class CommandCamera extends SubCommandBase
 {
-    private static CameraProfile profile = new CameraProfile();
+    private static CameraProfile profile;
 
     public static CameraProfile getProfile()
     {
@@ -40,6 +40,11 @@ public class CommandCamera extends SubCommandBase
         CommandCamera.profile = profile;
         ClientProxy.profileRunner.setProfile(profile);
         ClientProxy.profileRenderer.setProfile(profile);
+    }
+
+    static
+    {
+        setProfile(new CameraProfile());
     }
 
     /**

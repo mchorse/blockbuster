@@ -25,6 +25,11 @@ public class PathFixture extends AbstractFixture
         super(duration);
     }
 
+    public List<Position> getPoints()
+    {
+        return this.points;
+    }
+
     public void addPoint(Position point)
     {
         this.points.add(point);
