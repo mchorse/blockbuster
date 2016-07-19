@@ -1,4 +1,6 @@
-package noname.blockbuster.commands.sub;
+package noname.blockbuster.commands.camera;
+
+import java.io.IOException;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -6,27 +8,26 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.commands.CommandCamera;
 
 /**
- * Camera's load subcommand
+ * Camera's save subcommand
  *
- * This subcommand is responsible for load camera profile.
+ * This subcommand is responsible for save current camera profile.
  */
-public class SubCommandCameraLoad extends CommandBase
+public class SubCommandCameraSave extends CommandBase
 {
     @Override
     public String getCommandName()
     {
-        return "load";
+        return "save";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.camera.load";
+        return "blockbuster.commands.camera.save";
     }
 
     @Override
@@ -41,13 +42,12 @@ public class SubCommandCameraLoad extends CommandBase
 
         try
         {
-            CameraProfile profile = CameraUtils.readCameraProfile(filename);
-            CommandCamera.runner.setProfile(profile);
-            sender.addChatMessage(new TextComponentString("Current camera profile was loaded."));
+            CameraUtils.writeCameraProfile(filename, CommandCamera.runner.getProfile());
+            sender.addChatMessage(new TextComponentString("Current camera profile was saved."));
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            sender.addChatMessage(new TextComponentString("Current camera profile couldn't be loaded."));
+            sender.addChatMessage(new TextComponentString("Current camera profile couldn't saved."));
             e.printStackTrace();
         }
     }

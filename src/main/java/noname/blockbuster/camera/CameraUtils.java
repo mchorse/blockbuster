@@ -23,19 +23,24 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.DimensionManager;
 
 /**
- * Utils for camera classes.
+ * Utilities for camera classes
+ *
+ * Includes methods for writing/reading camera profile, position, point, angle
+ * to the file, and finding entity via ray tracing.
  */
 public class CameraUtils
 {
     /**
      * Get the entity at which given player is looking at.
      * Taken from EntityRenderer class.
+     *
+     * That's a big method...
      */
     public static Entity getTargetEntity(Entity input)
     {
         double maxReach = 64;
         double blockDistance = maxReach;
-        RayTraceResult result = input.rayTrace(maxReach, 1.0F);
+        RayTraceResult result = rayTrace(input, maxReach, 1.0F);
 
         Vec3d eyes = input.getPositionEyes(1.0F);
 
@@ -98,6 +103,19 @@ public class CameraUtils
         }
 
         return target;
+    }
+
+    /**
+     * Does block ray tracing
+     *
+     * Copied from Entity class, because it the method is client-only.
+     */
+    private static RayTraceResult rayTrace(Entity input, double blockReachDistance, float partialTicks)
+    {
+        Vec3d vec3d = input.getPositionEyes(partialTicks);
+        Vec3d vec3d1 = input.getLook(partialTicks);
+        Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
+        return input.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
     }
 
     /**

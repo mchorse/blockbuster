@@ -2,24 +2,23 @@ package noname.blockbuster.commands;
 
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.ProfileRunner;
-import noname.blockbuster.commands.sub.SubCommandBase;
-import noname.blockbuster.commands.sub.SubCommandCameraLoad;
-import noname.blockbuster.commands.sub.SubCommandCameraProfile;
-import noname.blockbuster.commands.sub.SubCommandCameraSave;
-import noname.blockbuster.commands.sub.SubCommandCameraStart;
-import noname.blockbuster.commands.sub.SubCommandCameraStop;
-import noname.blockbuster.commands.sub.fixture.SubCommandFixtureAdd;
-import noname.blockbuster.commands.sub.fixture.SubCommandFixtureDuration;
-import noname.blockbuster.commands.sub.fixture.SubCommandFixtureEdit;
-import noname.blockbuster.commands.sub.fixture.SubCommandFixtureList;
-import noname.blockbuster.commands.sub.fixture.SubCommandFixturePath;
+import noname.blockbuster.commands.camera.SubCommandCameraLoad;
+import noname.blockbuster.commands.camera.SubCommandCameraProfile;
+import noname.blockbuster.commands.camera.SubCommandCameraSave;
+import noname.blockbuster.commands.camera.SubCommandCameraStart;
+import noname.blockbuster.commands.camera.SubCommandCameraStop;
+import noname.blockbuster.commands.fixture.SubCommandFixtureAdd;
+import noname.blockbuster.commands.fixture.SubCommandFixtureDuration;
+import noname.blockbuster.commands.fixture.SubCommandFixtureEdit;
+import noname.blockbuster.commands.fixture.SubCommandFixtureList;
+import noname.blockbuster.commands.fixture.SubCommandFixturePath;
 
 /**
- * Camera command
+ * Camera /command
  *
- * This `camera` command is an interface to work with camera, in general, but
- * specifically this commands provides sub commands for manipulating camera
- * fixtures and camera profiles.
+ * This command is an interface to work with camera, in general, but specifically
+ * this commands provides sub commands for manipulating camera fixtures and
+ * camera profiles.
  */
 public class CommandCamera extends SubCommandBase
 {

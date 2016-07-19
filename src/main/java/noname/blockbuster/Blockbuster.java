@@ -10,10 +10,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import noname.blockbuster.commands.CommandPlay;
-import noname.blockbuster.commands.CommandPlayDirector;
-import noname.blockbuster.commands.CommandRecord;
-import noname.blockbuster.commands.CommandStopDirector;
+import noname.blockbuster.commands.CommandAction;
+import noname.blockbuster.commands.CommandDirector;
 
 /**
  * Blockbuster's main entry
@@ -95,9 +93,7 @@ public class Blockbuster
             ClientProxy.actorPack.reloadSkins();
         }
 
-        event.registerServerCommand(new CommandRecord());
-        event.registerServerCommand(new CommandPlay());
-        event.registerServerCommand(new CommandPlayDirector());
-        event.registerServerCommand(new CommandStopDirector());
+        event.registerServerCommand(new CommandAction());
+        event.registerServerCommand(new CommandDirector());
     }
 }

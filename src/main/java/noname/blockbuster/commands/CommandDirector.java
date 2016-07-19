@@ -2,21 +2,61 @@ package noname.blockbuster.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
- * Base command class for commands that need director
+ * Command /director
  *
- * There's only one method that is useful {@link CommandDirector#getDirector}
+ * This command is responsible for playing or stopping director block.
+ *
+ * This command is unified version of previous existed commands CommandStopDirector
+ * and CommandPlayDirector. These unifications were made to avoid duplicate
+ * code, and less command memorizing.
  */
-public abstract class CommandDirector extends CommandBase
+public class CommandDirector extends CommandBase
 {
+    @Override
+    public String getCommandName()
+    {
+        return "director";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender icommandsender)
+    {
+        return "blockbuster.commands.director";
+    }
+
     @Override
     public int getRequiredPermissionLevel()
     {
         return 2;
+    }
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length < 4)
+        {
+            throw new WrongUsageException(this.getCommandUsage(null));
+        }
+
+        String action = args[0];
+        AbstractTileEntityDirector director = this.getDirector(server, args[1], args[2], args[3]);
+
+        if (action.equals("play"))
+        {
+            director.startPlayback();
+        }
+        else if (action.equals("stop"))
+        {
+            director.stopPlayback();
+        }
     }
 
     /**
@@ -24,12 +64,18 @@ public abstract class CommandDirector extends CommandBase
      */
     protected AbstractTileEntityDirector getDirector(MinecraftServer server, String x, String y, String z) throws CommandException
     {
-        CommandBase.CoordinateArg cX = parseCoordinate(0, x, false);
-        CommandBase.CoordinateArg cY = parseCoordinate(0, y, false);
-        CommandBase.CoordinateArg cZ = parseCoordinate(0, z, false);
+        CommandBase.CoordinateArg cX = CommandBase.parseCoordinate(0, x, false);
+        CommandBase.CoordinateArg cY = CommandBase.parseCoordinate(0, y, false);
+        CommandBase.CoordinateArg cZ = CommandBase.parseCoordinate(0, z, false);
 
         BlockPos pos = new BlockPos(cX.getResult(), cY.getResult(), cZ.getResult());
+        TileEntity entity = server.getEntityWorld().getTileEntity(pos);
 
-        return (AbstractTileEntityDirector) server.getEntityWorld().getTileEntity(pos);
+        if (entity instanceof AbstractTileEntityDirector)
+        {
+            return (AbstractTileEntityDirector) entity;
+        }
+
+        throw new CommandException("blockbuster.commands.no_director", x, y, z);
     }
 }

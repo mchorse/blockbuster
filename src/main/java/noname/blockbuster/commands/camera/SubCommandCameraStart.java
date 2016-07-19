@@ -1,4 +1,4 @@
-package noname.blockbuster.commands.sub;
+package noname.blockbuster.commands.camera;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -12,24 +12,24 @@ import noname.blockbuster.commands.CommandCamera;
  *
  * This subcommand is responsible for stopping current running camera profile.
  */
-public class SubCommandCameraStop extends CommandBase
+public class SubCommandCameraStart extends CommandBase
 {
     @Override
     public String getCommandName()
     {
-        return "stop";
+        return "start";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.camera.stop";
+        return "blockbuster.commands.camera.start";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        CommandCamera.runner.stop();
-        sender.addChatMessage(new TextComponentString("Current camera profile was stopped."));
+        CommandCamera.runner.start();
+        sender.addChatMessage(new TextComponentString("Current camera profile was started."));
     }
 }

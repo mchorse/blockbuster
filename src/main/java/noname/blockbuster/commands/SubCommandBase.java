@@ -1,4 +1,4 @@
-package noname.blockbuster.commands.sub;
+package noname.blockbuster.commands;
 
 import java.util.ArrayList;
 import java.util.List;

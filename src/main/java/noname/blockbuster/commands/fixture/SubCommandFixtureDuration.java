@@ -1,4 +1,4 @@
-package noname.blockbuster.commands.sub.fixture;
+package noname.blockbuster.commands.fixture;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

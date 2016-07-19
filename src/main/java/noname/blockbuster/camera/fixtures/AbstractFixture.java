@@ -10,7 +10,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
-import noname.blockbuster.commands.sub.SubCommandBase;
+import noname.blockbuster.commands.SubCommandBase;
 
 /**
  * Abstract camera fixture

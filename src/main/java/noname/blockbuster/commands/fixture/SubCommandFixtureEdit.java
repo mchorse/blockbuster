@@ -1,4 +1,4 @@
-package noname.blockbuster.commands.sub.fixture;
+package noname.blockbuster.commands.fixture;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -7,7 +7,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.commands.CommandCamera;
-import noname.blockbuster.commands.sub.SubCommandBase;
+import noname.blockbuster.commands.SubCommandBase;
 
 public class SubCommandFixtureEdit extends CommandBase
 {

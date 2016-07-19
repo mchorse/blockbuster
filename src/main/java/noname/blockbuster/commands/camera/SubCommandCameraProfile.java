@@ -1,4 +1,4 @@
-package noname.blockbuster.commands.sub;
+package noname.blockbuster.commands.camera;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -15,8 +15,7 @@ import noname.blockbuster.commands.CommandCamera;
  * This subcommand has following subcommands:
  *
  * - [X] Create new profiles
- * - [ ] Select current profile
- * - [ ] Remove profiles
+ * - [X] Select current profile
  * - [X] Move fixtures around in current profile
  * - [X] Display all fixtures in current profile
  * - [X] Remove fixtures
