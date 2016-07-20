@@ -16,11 +16,15 @@ import com.google.common.base.Predicates;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.DimensionManager;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraProfile;
 
 /**
  * Utilities for camera classes
@@ -191,5 +195,21 @@ public class CameraUtils
     {
         out.writeFloat(angle.yaw);
         out.writeFloat(angle.pitch);
+    }
+
+    /* Commands */
+
+    public static void sendProfileToPlayer(String filename, EntityPlayerMP player, boolean play)
+    {
+        try
+        {
+            CameraProfile profile = readCameraProfile(filename);
+            Dispatcher.getInstance().sendTo(new PacketCameraProfile(filename, profile, play), player);
+        }
+        catch (Exception e)
+        {
+            // TODO Not really helpful
+            player.addChatComponentMessage(new TextComponentString("Oops!"));
+        }
     }
 }

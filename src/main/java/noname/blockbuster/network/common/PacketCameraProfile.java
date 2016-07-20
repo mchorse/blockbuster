@@ -11,6 +11,7 @@ import noname.blockbuster.camera.CameraProfile;
 
 public class PacketCameraProfile implements IMessage
 {
+    public boolean play;
     public String filename;
     public CameraProfile profile;
 
@@ -19,6 +20,12 @@ public class PacketCameraProfile implements IMessage
 
     public PacketCameraProfile(String filename, CameraProfile profile)
     {
+        this(filename, profile, false);
+    }
+
+    public PacketCameraProfile(String filename, CameraProfile profile, boolean play)
+    {
+        this.play = play;
         this.filename = filename;
         this.profile = profile;
     }
@@ -26,6 +33,7 @@ public class PacketCameraProfile implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
+        this.play = buf.readBoolean();
         this.filename = ByteBufUtils.readUTF8String(buf);
         this.profile = new CameraProfile();
 
@@ -42,6 +50,7 @@ public class PacketCameraProfile implements IMessage
     @Override
     public void toBytes(ByteBuf buf)
     {
+        buf.writeBoolean(this.play);
         ByteBufUtils.writeUTF8String(buf, this.filename);
 
         try

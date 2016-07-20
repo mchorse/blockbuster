@@ -1,6 +1,7 @@
 package noname.blockbuster.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
@@ -35,7 +37,7 @@ public class ItemPlayback extends Item
      * director block is attached to this item stack).
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand)
     {
         if (!worldIn.isRemote)
         {
@@ -54,14 +56,18 @@ public class ItemPlayback extends Item
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                playerIn.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
+            if (tag.hasKey("CameraProfile"))
+            {
+                String profile = tag.getString("CameraProfile");
+                CameraUtils.sendProfileToPlayer(profile, (EntityPlayerMP) player, true);
+            }
 
-            director.startPlayback();
+            ((AbstractTileEntityDirector) tile).startPlayback();
         }
 
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
