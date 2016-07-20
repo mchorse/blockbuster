@@ -39,12 +39,8 @@ public class Position
 
     public void copy(Position position)
     {
-        this.point.x = position.point.x;
-        this.point.y = position.point.y;
-        this.point.z = position.point.z;
-
-        this.angle.yaw = position.angle.yaw;
-        this.angle.pitch = position.angle.pitch;
+        this.point.set(position.point.x, position.point.y, position.point.z);
+        this.angle.set(position.angle.yaw, position.angle.pitch);
     }
 
     @Override

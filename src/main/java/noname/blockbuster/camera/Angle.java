@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Angle class
  *
- * Well, it's kind of obvious what it does, and this comment is absolutely
- * useless. Great job, McHorse, great job!
+ * Don't set yaw and pitch properties directly, unless you're know what you're
+ * doing. If yaw is incorrect, you're screwed.
  */
 public class Angle
 {
@@ -22,6 +22,10 @@ public class Angle
 
     public void set(float yaw, float pitch)
     {
+        /* Fix yaw */
+        yaw = yaw % 360;
+        yaw = yaw > 180 ? -(360 - yaw) : yaw;
+
         this.yaw = yaw;
         this.pitch = pitch;
     }

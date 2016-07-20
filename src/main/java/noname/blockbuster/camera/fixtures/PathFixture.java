@@ -47,6 +47,8 @@ public class PathFixture extends AbstractFixture
     @Override
     public void applyFixture(float progress, Position pos)
     {
+        if (this.points.isEmpty()) return;
+
         progress = progress * (this.points.size() - 1);
 
         int prev = (int) Math.floor(progress);
