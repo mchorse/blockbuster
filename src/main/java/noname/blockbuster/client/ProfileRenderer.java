@@ -5,19 +5,22 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.Blockbuster;
+import noname.blockbuster.ClientProxy;
 import noname.blockbuster.camera.CameraProfile;
-import noname.blockbuster.camera.Point;
 import noname.blockbuster.camera.Position;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.CircularFixture;
-import noname.blockbuster.camera.fixtures.FollowFixture;
-import noname.blockbuster.camera.fixtures.IdleFixture;
-import noname.blockbuster.camera.fixtures.LookFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
 
 /**
@@ -28,22 +31,41 @@ import noname.blockbuster.camera.fixtures.PathFixture;
 @SideOnly(Side.CLIENT)
 public class ProfileRenderer
 {
+    /**
+     * Background texture for a fixture rendering.
+     */
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Blockbuster.MODID, "textures/gui/fixture.png");
+
     protected Minecraft mc = Minecraft.getMinecraft();
     protected boolean render = true;
     protected CameraProfile profile;
+
+    protected double playerX;
+    protected double playerY;
+    protected double playerZ;
+
+    public static double partial;
 
     public void setProfile(CameraProfile profile)
     {
         this.profile = profile;
     }
 
-    /**
-     * Wurst code ever! lol
-     */
+    public void toggleRender()
+    {
+        this.render = !this.render;
+    }
+
     @SubscribeEvent
     public void onLastRender(RenderWorldLastEvent event)
     {
-        if (this.profile == null || this.profile.getCount() < 1) return;
+        boolean badProfile = this.profile == null || this.profile.getCount() < 1;
+
+        partial = event.getPartialTicks();
+
+        if (ClientProxy.profileRunner.isRunning()) return;
+        if (!this.render) return;
+        if (badProfile) return;
 
         Position prev = new Position(0, 0, 0, 0, 0);
         Position next = new Position(0, 0, 0, 0, 0);
@@ -51,81 +73,169 @@ public class ProfileRenderer
         EntityPlayer player = this.mc.thePlayer;
         float ticks = event.getPartialTicks();
 
-        double playerX = player.prevPosX + (player.posX - player.prevPosX) * ticks;
-        double playerY = player.prevPosY + (player.posY - player.prevPosY) * ticks;
-        double playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * ticks;
+        this.playerX = player.prevPosX + (player.posX - player.prevPosX) * ticks;
+        this.playerY = player.prevPosY + (player.posY - player.prevPosY) * ticks;
+        this.playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * ticks;
 
-        GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GlStateManager.pushAttrib();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableBlend();
 
-        GL11.glLineWidth(2);
-        GL11.glPointSize(10);
-        GL11.glTranslated(-playerX, -playerY + player.eyeHeight, -playerZ);
-
-        GL11.glEnable(GL11.GL_LINE_SMOOTH);
-        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+        int i = 0;
 
         for (AbstractFixture fixture : this.profile.getAll())
         {
-            if (fixture instanceof IdleFixture || fixture instanceof LookFixture || fixture instanceof FollowFixture)
-            {
-                this.drawStaticFixture(fixture, prev);
-            }
-            else if (fixture instanceof PathFixture)
-            {
-                this.drawPathFixture(fixture);
-            }
-            else if (fixture instanceof CircularFixture)
-            {
-                this.drawCircularFixture(fixture, prev, next);
-            }
+            fixture.applyFixture(0, prev);
+            fixture.applyFixture(1, next);
+
+            long duration = fixture.getDuration();
+            float distance = Math.abs(next.point.x - prev.point.x) + Math.abs(next.point.y - prev.point.y) + Math.abs(next.point.z - prev.point.z);
+
+            if (distance > 6) this.drawCard(i, duration, next);
+
+            this.drawCard(i++, duration, prev);
+            this.drawFixture(fixture, prev, next);
         }
 
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPopMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.popAttrib();
     }
 
-    private void drawStaticFixture(AbstractFixture fixture, Position prev)
+    /**
+     * Draw a fixture's */
+    private void drawFixture(AbstractFixture fixture, Position prev, Position next)
     {
-        fixture.applyFixture(0, prev);
-
-        GL11.glColor3ub((byte) 240, (byte) 0, (byte) 0);
-        GL11.glBegin(GL11.GL_POINTS);
-        GL11.glVertex3f(prev.point.x, prev.point.y, prev.point.z);
-        GL11.glEnd();
+        if (fixture instanceof PathFixture)
+        {
+            this.drawPathFixture(fixture, prev, next);
+        }
+        else if (fixture instanceof CircularFixture)
+        {
+            this.drawCircularFixture(fixture, prev, next);
+        }
     }
 
-    private void drawPathFixture(AbstractFixture fixture)
+    /**
+     * Draw the passed path fixture
+     */
+    private void drawPathFixture(AbstractFixture fixture, Position prev, Position next)
     {
-        GL11.glColor3ub((byte) 0, (byte) 0, (byte) 250);
         List<Position> points = ((PathFixture) fixture).getPoints();
 
-        for (int i = 0, count = points.size() - 1; i < count; i++)
+        for (int i = 0, size = points.size() - 1; i < size; i++)
         {
-            this.drawLine(points.get(i).point, points.get(i + 1).point);
+            prev.copy(points.get(i));
+            next.copy(points.get(i + 1));
+
+            this.drawLine(this.playerX, this.playerY, this.playerZ, prev, next);
         }
     }
 
+    /**
+     * Draw the passed circular fixture
+     */
     private void drawCircularFixture(AbstractFixture fixture, Position prev, Position next)
     {
-        GL11.glColor3ub((byte) 0, (byte) 230, (byte) 0);
-        CircularFixture circle = (CircularFixture) fixture;
-        float circles = circle.getCircles();
+        float circles = ((CircularFixture) fixture).getCircles();
 
-        for (int i = 0; i < (int) circles; i++)
+        for (int i = 0; i < circles / 2; i += 2)
         {
             fixture.applyFixture(i / circles, prev);
-            fixture.applyFixture((i + 1) / circles, next);
+            fixture.applyFixture((i + 2) / circles, next);
 
-            this.drawLine(prev.point, next.point);
+            this.drawLine(this.playerX, this.playerY, this.playerZ, prev, next);
         }
     }
 
-    private void drawLine(Point prev, Point next)
+    /**
+     * Draw the card of the fixture with the information about this fixture,
+     * like duration and stuff.
+     */
+    private void drawCard(int index, long duration, Position pos)
     {
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        GL11.glVertex3f(prev.x, prev.y, prev.z);
-        GL11.glVertex3f(next.x, next.y, next.z);
-        GL11.glEnd();
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        GlStateManager.enableBlend();
+        GlStateManager.color(1, 1, 1, 0.75F);
+
+        this.mc.renderEngine.bindTexture(TEXTURE);
+
+        double x = pos.point.x - this.playerX;
+        double y = pos.point.y - this.playerY;
+        double z = pos.point.z - this.playerZ;
+
+        GL11.glNormal3f(0, 1, 0);
+        GlStateManager.translate(x, y + this.mc.thePlayer.eyeHeight, z);
+        GlStateManager.rotate(-this.mc.getRenderManager().playerViewY, 0, 1, 0);
+        GlStateManager.rotate(this.mc.getRenderManager().playerViewX, 1, 0, 0);
+
+        float minX = -0.5f;
+        float minY = -0.5f;
+        float maxX = 0.5f;
+        float maxY = 0.5f;
+
+        float size = 1;
+
+        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+
+        vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(minX, minY, 0).tex(size, size).endVertex();
+        vb.pos(minX, maxY, 0).tex(size, 0).endVertex();
+        vb.pos(maxX, maxY, 0).tex(0, 0).endVertex();
+        vb.pos(maxX, minY, 0).tex(0, size).endVertex();
+
+        Tessellator.getInstance().draw();
+        GlStateManager.disableBlend();
+
+        String indexString = String.valueOf(index);
+        String durationString = String.valueOf(duration) + "ms";
+        int indexWidth = this.mc.fontRendererObj.getStringWidth(indexString) / 2;
+        int durationWidth = this.mc.fontRendererObj.getStringWidth(durationString) / 2;
+
+        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.scale(0.05f, 0.05f, 0.05f);
+        GlStateManager.translate(0, -3.5, -0.1);
+
+        this.mc.fontRendererObj.drawString(indexString, -indexWidth, 0, -1);
+
+        GlStateManager.translate(0, -13, 0);
+        GlStateManager.scale(0.5f, 0.5f, 0.5f);
+
+        this.mc.fontRendererObj.drawString(durationString, -durationWidth, 0, -1);
+
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+    }
+
+    /**
+     * Draw a line between two positions
+     */
+    private void drawLine(double playerX, double playerY, double playerZ, Position prev, Position next)
+    {
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+
+        double x = prev.point.x - playerX;
+        double y = prev.point.y - playerY;
+        double z = prev.point.z - playerZ;
+
+        GL11.glLineWidth(4);
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(240, 0, 0, 0.5f);
+
+        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+
+        vb.setTranslation(x, y + this.mc.thePlayer.eyeHeight, z);
+        vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+        vb.pos(next.point.x - prev.point.x, next.point.y - prev.point.y, next.point.z - prev.point.z).endVertex();
+        vb.pos(0, 0, 0).endVertex();
+
+        Tessellator.getInstance().draw();
+
+        vb.setTranslation(0, 0, 0);
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
     }
 }

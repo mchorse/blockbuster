@@ -18,7 +18,7 @@ import noname.blockbuster.ClientProxy;
 @SideOnly(Side.CLIENT)
 public class ProfileRunner
 {
-    protected boolean isRunning;
+    protected boolean isRunning = false;
     protected long startTime;
     protected long duration;
 
@@ -41,6 +41,11 @@ public class ProfileRunner
     {
         this.profile = profile;
         ClientProxy.profileRenderer.setProfile(profile);
+    }
+
+    public boolean isRunning()
+    {
+        return this.isRunning;
     }
 
     /* Playback methods (start/stop) */
