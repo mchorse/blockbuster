@@ -21,7 +21,7 @@ import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraProfile;
@@ -195,8 +195,7 @@ public class CameraUtils
         }
         catch (Exception e)
         {
-            // TODO Not really helpful
-            player.addChatComponentMessage(new TextComponentString("Oops!"));
+            player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_load"));
         }
     }
 
@@ -208,8 +207,7 @@ public class CameraUtils
         }
         catch (IOException e)
         {
-            // TODO Not really helpful
-            player.addChatComponentMessage(new TextComponentString("Oops!"));
+            player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_save"));
         }
     }
 }

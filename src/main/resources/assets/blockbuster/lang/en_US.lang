@@ -43,9 +43,12 @@ blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
 
 # Key bindings
-# key.blockbuster.camera=Blockbuster: Camera
-# key.blockbuster.next=Switch to the next camera
-# key.blockbuster.previous=Switch to the previous camera
+key.blockbuster.profile.title=Blockbuster: Camera
+key.blockbuster.profile.add=Add idle camera fixture
+key.blockbuster.profile.remove=Remove last camera fixture
+key.blockbuster.profile.toggle=Toggle camera profile rendering
+key.blockbuster.profile.start=Start camera profile
+key.blockbuster.profile.stop=Stop camera profile
 
 # Director block
 blockbuster.director.title=Director Block's Cast
@@ -105,6 +108,9 @@ blockbuster.profile.start=Current camera profile was started.
 blockbuster.profile.stop=Currently running camera profile was stopped.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
+
+blockbuster.profile.cant_save=§cCan't save camera profile by file name '%s'
+blockbuster.profile.cant_load=§cCan't load camera profile by file name '%s'
 
 # Recording
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
