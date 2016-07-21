@@ -7,11 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,9 +24,6 @@ import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.ProfileRenderer;
 import noname.blockbuster.client.RenderingHandler;
-import noname.blockbuster.client.gui.GuiActor;
-import noname.blockbuster.client.gui.GuiDirector;
-import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.render.RenderActor;
 import noname.blockbuster.commands.CommandCamera;
@@ -131,35 +124,5 @@ public class ClientProxy extends CommonProxy
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
-    }
-
-    /**
-     * There's two types of GUI are available right now:
-     *
-     * - Actor configuration GUI (1)
-     * - Director block management GUI (2)
-     * - Director map block management GUI (3)
-     *
-     * IGuiHandler is used to centralize GUI invocations
-     */
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        Entity entity = world.getEntityByID(x);
-
-        if (ID == 1)
-        {
-            return new GuiActor(null, (EntityActor) entity);
-        }
-        else if (ID == 2)
-        {
-            return new GuiDirector(new BlockPos(x, y, z));
-        }
-        else if (ID == 3)
-        {
-            return new GuiDirectorMap(new BlockPos(x, y, z));
-        }
-
-        return null;
     }
 }

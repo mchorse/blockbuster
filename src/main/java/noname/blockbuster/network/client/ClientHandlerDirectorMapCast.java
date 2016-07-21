@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.GuiHandler;
 import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
 
@@ -14,7 +15,11 @@ public class ClientHandlerDirectorMapCast extends ClientMessageHandler<PacketDir
     {
         if (Minecraft.getMinecraft().currentScreen == null)
         {
-            player.openGui(Blockbuster.instance, 3, player.worldObj, message.pos.getX(), message.pos.getY(), message.pos.getZ());
+            int x = message.pos.getX();
+            int y = message.pos.getY();
+            int z = message.pos.getZ();
+
+            player.openGui(Blockbuster.instance, GuiHandler.DIRECTOR_MAP, player.worldObj, x, y, z);
         }
 
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;

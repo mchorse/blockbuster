@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.GuiHandler;
 import noname.blockbuster.item.ItemActorConfig;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
@@ -312,7 +313,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.worldObj.isRemote && holdsSkinItem)
         {
-            player.openGui(Blockbuster.instance, 1, this.worldObj, this.getEntityId(), 0, 0);
+            player.openGui(Blockbuster.instance, GuiHandler.ACTOR, this.worldObj, this.getEntityId(), 0, 0);
         }
 
         return holdsSkinItem;
