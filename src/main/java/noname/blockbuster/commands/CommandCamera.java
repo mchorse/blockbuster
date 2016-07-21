@@ -2,16 +2,16 @@ package noname.blockbuster.commands;
 
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.camera.CameraProfile;
+import noname.blockbuster.commands.camera.SubCommandCameraClear;
 import noname.blockbuster.commands.camera.SubCommandCameraLoad;
-import noname.blockbuster.commands.camera.SubCommandCameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraSave;
 import noname.blockbuster.commands.camera.SubCommandCameraStart;
 import noname.blockbuster.commands.camera.SubCommandCameraStop;
 import noname.blockbuster.commands.fixture.SubCommandFixtureAdd;
 import noname.blockbuster.commands.fixture.SubCommandFixtureDuration;
 import noname.blockbuster.commands.fixture.SubCommandFixtureEdit;
-import noname.blockbuster.commands.fixture.SubCommandFixtureList;
 import noname.blockbuster.commands.fixture.SubCommandFixturePath;
+import noname.blockbuster.commands.fixture.SubCommandFixtureRemove;
 
 /**
  * Camera /command
@@ -54,17 +54,23 @@ public class CommandCamera extends SubCommandBase
      */
     public CommandCamera()
     {
+        /* Start/stop */
         this.subcommands.add(new SubCommandCameraStart());
         this.subcommands.add(new SubCommandCameraStop());
-        this.subcommands.add(new SubCommandCameraProfile());
-        this.subcommands.add(new SubCommandCameraSave());
-        this.subcommands.add(new SubCommandCameraLoad());
 
+        /* Load/save */
+        this.subcommands.add(new SubCommandCameraLoad());
+        this.subcommands.add(new SubCommandCameraSave());
+
+        /* Fixture editing */
         this.subcommands.add(new SubCommandFixtureAdd());
         this.subcommands.add(new SubCommandFixtureEdit());
+        this.subcommands.add(new SubCommandFixtureRemove());
         this.subcommands.add(new SubCommandFixtureDuration());
         this.subcommands.add(new SubCommandFixturePath());
-        this.subcommands.add(new SubCommandFixtureList());
+
+        /* Profile */
+        this.subcommands.add(new SubCommandCameraClear());
     }
 
     @Override

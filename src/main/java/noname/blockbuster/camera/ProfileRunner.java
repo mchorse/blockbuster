@@ -50,6 +50,11 @@ public class ProfileRunner
 
     /* Playback methods (start/stop) */
 
+    /**
+     * Start the profile runner. This method also responsible for setting
+     * important values before starting the run (like setting duration, and
+     * setting the start time).
+     */
     public void start()
     {
         if (!this.isRunning) MinecraftForge.EVENT_BUS.register(this);

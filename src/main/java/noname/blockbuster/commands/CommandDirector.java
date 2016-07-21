@@ -1,5 +1,7 @@
 package noname.blockbuster.commands;
 
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -77,5 +79,16 @@ public class CommandDirector extends CommandBase
         }
 
         throw new CommandException("blockbuster.commands.no_director", x, y, z);
+    }
+
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, "play", "stop");
+        }
+
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }

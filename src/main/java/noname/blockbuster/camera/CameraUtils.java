@@ -44,7 +44,7 @@ public class CameraUtils
     {
         double maxReach = 64;
         double blockDistance = maxReach;
-        RayTraceResult result = rayTrace(input, maxReach, 1.0F);
+        RayTraceResult result = input.rayTrace(maxReach, 1.0F);
 
         Vec3d eyes = input.getPositionEyes(1.0F);
 
@@ -107,19 +107,6 @@ public class CameraUtils
         }
 
         return target;
-    }
-
-    /**
-     * Does block ray tracing
-     *
-     * Copied from Entity class, because it the method is client-only.
-     */
-    private static RayTraceResult rayTrace(Entity input, double blockReachDistance, float partialTicks)
-    {
-        Vec3d vec3d = input.getPositionEyes(partialTicks);
-        Vec3d vec3d1 = input.getLook(partialTicks);
-        Vec3d vec3d2 = vec3d.addVector(vec3d1.xCoord * blockReachDistance, vec3d1.yCoord * blockReachDistance, vec3d1.zCoord * blockReachDistance);
-        return input.worldObj.rayTraceBlocks(vec3d, vec3d2, false, false, true);
     }
 
     /**

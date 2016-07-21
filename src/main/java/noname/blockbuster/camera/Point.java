@@ -4,6 +4,12 @@ import com.google.common.base.Objects;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Point class
+ *
+ * This class represents a point in 3 dimensional space. This point class
+ * used by {@link Position} class to represent coordinates for fixtures.
+ */
 public class Point
 {
     public float x;

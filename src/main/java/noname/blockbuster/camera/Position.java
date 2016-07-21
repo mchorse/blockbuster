@@ -46,6 +46,6 @@ public class Position
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).addValue(this.point.x).addValue(this.point.y).addValue(this.point.z).addValue(this.angle.yaw).addValue(this.angle.pitch).toString();
+        return Objects.toStringHelper(this).addValue(this.point).addValue(this.angle).toString();
     }
 }

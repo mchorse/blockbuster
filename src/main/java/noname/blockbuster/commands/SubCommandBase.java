@@ -9,6 +9,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class SubCommandBase extends CommandBase
 {
@@ -42,7 +43,7 @@ public abstract class SubCommandBase extends CommandBase
     protected abstract String getHelp();
 
     /**
-     * Automated way to output subcommand's usage
+     * Automated way to output command's and sub-commands' usage messages.
      *
      */
     @Override
@@ -52,14 +53,17 @@ public abstract class SubCommandBase extends CommandBase
 
         for (CommandBase command : this.subcommands)
         {
-            String key = command instanceof SubCommandBase ? ((SubCommandBase) command).getHelp() : command.getCommandUsage(sender);
-
-            message += I18n.format(key) + "\n";
+            message += I18n.format(command.getCommandUsage(sender)).split("\n")[0] + "\n";
         }
 
         return message.trim();
     }
 
+    /**
+     * Execute the command
+     *
+     * This method basically delegates the execution to the mathced sub-command,
+     * if the command was found, otherwise it shows usage message. */
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
@@ -79,5 +83,42 @@ public abstract class SubCommandBase extends CommandBase
         }
 
         throw new WrongUsageException(this.getCommandUsage(sender));
+    }
+
+    /**
+     * Get completions for this command or its sub-commands.
+     *
+     * This method is responsible for giving completions of this command (names
+     * of sub-commands) or completions of subcommand.
+     */
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 0)
+        {
+            return super.getTabCompletionOptions(server, sender, args, pos);
+        }
+
+        if (args.length == 1)
+        {
+            List<String> options = new ArrayList<String>();
+
+            for (CommandBase command : this.subcommands)
+            {
+                options.add(command.getCommandName());
+            }
+
+            return getListOfStringsMatchingLastWord(args, options);
+        }
+
+        for (CommandBase command : this.subcommands)
+        {
+            if (command.getCommandName().equals(args[0]))
+            {
+                return command.getTabCompletionOptions(server, sender, dropFirstArgument(args), pos);
+            }
+        }
+
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }

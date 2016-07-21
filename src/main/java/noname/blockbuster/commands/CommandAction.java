@@ -1,10 +1,13 @@
 package noname.blockbuster.commands;
 
+import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.recording.Mocap;
 
 /**
@@ -55,5 +58,16 @@ public class CommandAction extends CommandBase
         {
             Mocap.startPlayback(SubCommandBase.dropFirstArgument(args), sender.getEntityWorld(), true);
         }
+    }
+
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 1)
+        {
+            return getListOfStringsMatchingLastWord(args, "record", "play");
+        }
+
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }
