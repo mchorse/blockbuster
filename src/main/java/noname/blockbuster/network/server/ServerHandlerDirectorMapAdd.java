@@ -21,7 +21,7 @@ public class ServerHandlerDirectorMapAdd extends ServerMessageHandler<PacketDire
 
         if (tile.add(message.replay))
         {
-            Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
+            Dispatcher.sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
         }
     }
 }

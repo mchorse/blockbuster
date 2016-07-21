@@ -124,8 +124,9 @@ public class CameraUtils
         return file.getAbsolutePath() + "/" + filename;
     }
 
-    /* Load utilities */
-
+    /**
+     * Read CameraProfile instance from given file
+     */
     public static CameraProfile readCameraProfile(String filename) throws Exception
     {
         filename = cameraFile(filename);
@@ -138,39 +139,45 @@ public class CameraUtils
         return profile;
     }
 
-    public static Position readPosition(DataInput in) throws IOException
-    {
-        return new Position(readPoint(in), readAngle(in));
-    }
-
-    public static Point readPoint(DataInput in) throws IOException
-    {
-        return new Point(in.readFloat(), in.readFloat(), in.readFloat());
-    }
-
-    public static Angle readAngle(DataInput in) throws IOException
-    {
-        return new Angle(in.readFloat(), in.readFloat());
-    }
-
-    /* Save utilities */
-
+    /**
+     * Write CameraProfile instance to given file
+     */
     public static void writeCameraProfile(String filename, CameraProfile profile) throws IOException
     {
-        filename = cameraFile(filename);
-
-        RandomAccessFile file = new RandomAccessFile(filename, "rw");
+        RandomAccessFile file = new RandomAccessFile(cameraFile(filename), "rw");
 
         profile.write(file);
         file.close();
     }
 
+    /**
+     * Read Position instance from input stream
+     */
+    public static Position readPosition(DataInput in) throws IOException
+    {
+        return new Position(readPoint(in), readAngle(in));
+    }
+
+    /**
+     * Write Position instance to output stream
+     */
     public static void writePosition(DataOutput out, Position position) throws IOException
     {
         writePoint(out, position.point);
         writeAngle(out, position.angle);
     }
 
+    /**
+     * Read Point instance from input stream
+     */
+    public static Point readPoint(DataInput in) throws IOException
+    {
+        return new Point(in.readFloat(), in.readFloat(), in.readFloat());
+    }
+
+    /**
+     * Write Point instance to output stream
+     */
     public static void writePoint(DataOutput out, Point point) throws IOException
     {
         out.writeFloat(point.x);
@@ -178,6 +185,17 @@ public class CameraUtils
         out.writeFloat(point.z);
     }
 
+    /**
+     * Read Angle instance from input stream
+     */
+    public static Angle readAngle(DataInput in) throws IOException
+    {
+        return new Angle(in.readFloat(), in.readFloat());
+    }
+
+    /**
+     * Write Angle instance to output stream
+     */
     public static void writeAngle(DataOutput out, Angle angle) throws IOException
     {
         out.writeFloat(angle.yaw);
@@ -186,19 +204,27 @@ public class CameraUtils
 
     /* Commands */
 
+    /**
+     * Send a camera profile that was read from given file to player.
+     */
     public static void sendProfileToPlayer(String filename, EntityPlayerMP player, boolean play)
     {
         try
         {
             CameraProfile profile = readCameraProfile(filename);
-            Dispatcher.getInstance().sendTo(new PacketCameraProfile(filename, profile, play), player);
+            Dispatcher.sendTo(new PacketCameraProfile(filename, profile, play), player);
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_load"));
         }
     }
 
+    /**
+     * Save given camera profile to file. Inform user about the problem, if the
+     * camera profile couldn't be saved.
+     */
     public static void saveCameraProfile(String filename, CameraProfile profile, EntityPlayerMP player)
     {
         try
@@ -207,6 +233,7 @@ public class CameraUtils
         }
         catch (IOException e)
         {
+            e.printStackTrace();
             player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_save"));
         }
     }

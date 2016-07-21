@@ -17,6 +17,6 @@ public class ServerHandlerDirectorMapReset extends ServerMessageHandler<PacketDi
         TileEntityDirectorMap tile = ((TileEntityDirectorMap) player.worldObj.getTileEntity(message.pos));
 
         tile.reset();
-        Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
+        Dispatcher.sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
     }
 }

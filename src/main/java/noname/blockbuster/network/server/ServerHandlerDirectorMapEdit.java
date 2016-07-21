@@ -17,6 +17,6 @@ public class ServerHandlerDirectorMapEdit extends ServerMessageHandler<PacketDir
         TileEntityDirectorMap tile = ((TileEntityDirectorMap) player.worldObj.getTileEntity(message.pos));
 
         tile.edit(message.id, message.replay);
-        Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
+        Dispatcher.sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
     }
 }

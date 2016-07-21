@@ -82,11 +82,11 @@ public class GuiDirectorMap extends GuiParentScreen
         }
         else if (button.id == 1)
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorMapReset(this.pos));
+            Dispatcher.sendToServer(new PacketDirectorMapReset(this.pos));
         }
         else if (button.id == 2 && !this.input.getText().isEmpty())
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorMapAdd(this.pos, this.input.getText()));
+            Dispatcher.sendToServer(new PacketDirectorMapAdd(this.pos, this.input.getText()));
         }
     }
 

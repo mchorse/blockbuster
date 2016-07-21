@@ -52,7 +52,7 @@ public class Dispatcher
     private static final SimpleNetworkWrapper DISPATCHER = NetworkRegistry.INSTANCE.newSimpleChannel(Blockbuster.MODID);
     private static byte PACKET_ID;
 
-    public static SimpleNetworkWrapper getInstance()
+    public static SimpleNetworkWrapper get()
     {
         return DISPATCHER;
     }
@@ -65,6 +65,16 @@ public class Dispatcher
         {
             DISPATCHER.sendTo(message, (EntityPlayerMP) player);
         }
+    }
+
+    public static void sendTo(IMessage message, EntityPlayerMP player)
+    {
+        DISPATCHER.sendTo(message, player);
+    }
+
+    public static void sendToServer(IMessage message)
+    {
+        DISPATCHER.sendToServer(message);
     }
 
     /**

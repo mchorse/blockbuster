@@ -15,7 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.ClientProxy;
@@ -120,8 +119,6 @@ public class GuiActor extends GuiChildScreen
      */
     private void saveAndQuit()
     {
-        SimpleNetworkWrapper dispatcher = Dispatcher.getInstance();
-
         String filename = this.filename.getText();
         String name = this.name.getText();
         String skin = this.getSkin();
@@ -129,13 +126,13 @@ public class GuiActor extends GuiChildScreen
 
         if (this.pos == null)
         {
-            dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, invulnerability));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, invulnerability));
         }
         else
         {
             this.actor.modify(filename, name, skin, invulnerability, false);
 
-            dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
+            Dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
         }
 
         this.close();
@@ -234,7 +231,6 @@ public class GuiActor extends GuiChildScreen
 
         this.drawDefaultBackground();
         this.drawString(this.fontRendererObj, this.stringTitle, x + 120 + 20, 15, 0xffffffff);
-
         this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringFilename, x, y + 40, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringSkin, x, y + 80, 0xffcccccc);

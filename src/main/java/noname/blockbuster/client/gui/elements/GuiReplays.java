@@ -67,7 +67,7 @@ public class GuiReplays extends GuiScrollPane
 
         if (button.id == 0)
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorMapRemove(this.pos, entry.index));
+            Dispatcher.sendToServer(new PacketDirectorMapRemove(this.pos, entry.index));
         }
         else if (button.id == 1)
         {

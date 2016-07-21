@@ -17,6 +17,6 @@ public class ServerHandlerDirectorMapRemove extends ServerMessageHandler<PacketD
         TileEntityDirectorMap tile = ((TileEntityDirectorMap) player.worldObj.getTileEntity(message.pos));
 
         tile.remove(message.id);
-        Dispatcher.getInstance().sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
+        Dispatcher.sendTo(new PacketDirectorMapCast(tile.getCast(), message.pos), player);
     }
 }

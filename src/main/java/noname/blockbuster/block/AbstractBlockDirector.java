@@ -124,7 +124,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
             return true;
         }
 
-        this.outputCast(playerIn, worldIn, pos);
+        this.displayCast(playerIn, worldIn, pos);
 
         return true;
     }
@@ -169,5 +169,5 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      *
      * Temporary solution for browsing registered entities by DirectorTileEntity.
      */
-    protected abstract void outputCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
+    protected abstract void displayCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
 }

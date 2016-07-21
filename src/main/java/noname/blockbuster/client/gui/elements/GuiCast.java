@@ -116,7 +116,7 @@ public class GuiCast extends GuiScrollPane
 
         if (buttonIn.id == 0)
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorRemove(this.pos, entry.index));
+            Dispatcher.sendToServer(new PacketDirectorRemove(this.pos, entry.index));
         }
         else if (buttonIn.id == 1 && !entry.outOfReach)
         {

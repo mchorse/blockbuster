@@ -138,8 +138,7 @@ public class Mocap
             recorder.capture = false;
             records.remove(player);
 
-            Dispatcher.getInstance().sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
-
+            Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
             return;
         }
 
@@ -155,7 +154,7 @@ public class Mocap
         recorder = new RecordThread(player, filename);
         records.put(player, recorder);
 
-        Dispatcher.getInstance().sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+        Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
     }
 
     public static EntityActor actorFromArgs(String[] args, World world)

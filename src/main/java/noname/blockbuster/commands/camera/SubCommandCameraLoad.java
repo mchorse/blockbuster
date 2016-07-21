@@ -37,6 +37,6 @@ public class SubCommandCameraLoad extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        Dispatcher.getInstance().sendToServer(new PacketLoadCameraProfile(args[0]));
+        Dispatcher.sendToServer(new PacketLoadCameraProfile(args[0]));
     }
 }

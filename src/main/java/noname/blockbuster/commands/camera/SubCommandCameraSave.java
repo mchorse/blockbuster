@@ -38,6 +38,6 @@ public class SubCommandCameraSave extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        Dispatcher.getInstance().sendToServer(new PacketCameraProfile(args[0], CommandCamera.getProfile()));
+        Dispatcher.sendToServer(new PacketCameraProfile(args[0], CommandCamera.getProfile()));
     }
 }

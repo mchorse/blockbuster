@@ -47,7 +47,7 @@ public class GuiDirector extends GuiParentScreen
     @Override
     public void appear(GuiScreen screen)
     {
-        Dispatcher.getInstance().sendToServer(new PacketDirectorRequestCast(this.pos));
+        Dispatcher.sendToServer(new PacketDirectorRequestCast(this.pos));
     }
 
     /* Actions and handling */
@@ -61,7 +61,7 @@ public class GuiDirector extends GuiParentScreen
         }
         else if (button.id == 1)
         {
-            Dispatcher.getInstance().sendToServer(new PacketDirectorReset(this.pos));
+            Dispatcher.sendToServer(new PacketDirectorReset(this.pos));
         }
     }
 
