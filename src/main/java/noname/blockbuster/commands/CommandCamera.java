@@ -10,6 +10,7 @@ import noname.blockbuster.commands.camera.SubCommandCameraStop;
 import noname.blockbuster.commands.fixture.SubCommandFixtureAdd;
 import noname.blockbuster.commands.fixture.SubCommandFixtureDuration;
 import noname.blockbuster.commands.fixture.SubCommandFixtureEdit;
+import noname.blockbuster.commands.fixture.SubCommandFixtureMove;
 import noname.blockbuster.commands.fixture.SubCommandFixturePath;
 import noname.blockbuster.commands.fixture.SubCommandFixtureRemove;
 
@@ -67,6 +68,7 @@ public class CommandCamera extends SubCommandBase
         this.subcommands.add(new SubCommandFixtureEdit());
         this.subcommands.add(new SubCommandFixtureRemove());
         this.subcommands.add(new SubCommandFixtureDuration());
+        this.subcommands.add(new SubCommandFixtureMove());
         this.subcommands.add(new SubCommandFixturePath());
 
         /* Profile */
