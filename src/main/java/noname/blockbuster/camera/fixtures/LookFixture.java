@@ -39,7 +39,12 @@ public class LookFixture extends IdleFixture
 
         Entity target = CameraUtils.getTargetEntity(player);
 
-        if (target != null) this.entity = target;
+        if (target == null)
+        {
+            throw new CommandException("blockbuster.fixtures.no_entity");
+        }
+
+        this.entity = target;
     }
 
     /**
@@ -105,6 +110,6 @@ public class LookFixture extends IdleFixture
     @Override
     public String toString()
     {
-        return I18n.format("blockbuster.fixtures.look", this.position, this.entity.getName(), this.duration);
+        return I18n.format("blockbuster.fixtures.look", this.entity.getName(), this.position, this.duration);
     }
 }

@@ -44,7 +44,9 @@ blockbuster.gui.actor.invulnerability=Can be killed?
 
 # Key bindings
 key.blockbuster.profile.title=Blockbuster: Camera
-key.blockbuster.profile.add=Add idle camera fixture
+key.blockbuster.profile.add_idle=Add idle camera fixture
+key.blockbuster.profile.add_look=Add look camera fixture
+key.blockbuster.profile.add_follow=Add follow camera fixture
 key.blockbuster.profile.remove=Remove last camera fixture
 key.blockbuster.profile.toggle=Toggle camera profile rendering
 key.blockbuster.profile.start=Start camera profile
@@ -101,6 +103,7 @@ blockbuster.fixtures.circular=Circular camera fixture, it looks directly at %s a
 
 blockbuster.fixtures.few_args=You passed not enough arguments for this command!
 blockbuster.fixtures.wrong_type=Camera fixture by type '%s' doesn't exist!
+blockbuster.fixtures.no_entity=You should look at any entity to add this fixture!
 
 # Camera profile
 blockbuster.profile.clear=Currently used camera profile was cleared.

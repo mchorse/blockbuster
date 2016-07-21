@@ -23,10 +23,7 @@ public class FollowFixture extends LookFixture
     {
         super.edit(args, player);
 
-        if (this.entity != null)
-        {
-            this.calculateRelativePosition();
-        }
+        this.calculateRelativePosition();
     }
 
     /**
@@ -44,8 +41,6 @@ public class FollowFixture extends LookFixture
     @Override
     public void applyFixture(float progress, Position pos)
     {
-        if (this.entity == null) return;
-
         float x = (float) (this.entity.posX + this.position.point.x);
         float y = (float) (this.entity.posY + this.position.point.y);
         float z = (float) (this.entity.posZ + this.position.point.z);
