@@ -4,8 +4,9 @@ Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple
 Minecraft machinimas in single player (without having to recruit and organize a 
 crowd of actors and cameras) and simple cinematics in adventure maps.
 
-Blockbuster mod is built on top of Forge 12.17.0.1976 for Minecraft 1.9.4, and the recording 
-code is based on the code borrowed from the [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
+Blockbuster mod is built on top of Forge 12.17.0.1976 for Minecraft 1.9.4, and 
+the recording code is based on the code from the 
+[Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (the author of the mod gave me permission to use his code). 
 
 [Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
@@ -17,7 +18,7 @@ Install [Minecraft Forge](http://files.minecraftforge.net/), then go to
 [releases](https://github.com/mchorse/blockbuster/releases) and download the 
 latest version jar file. Put it in minecraft's `mods` folder, and launch the game. 
 
-After that, the Blockbuster mod should be installed and will appear in Minecraft's 
+After that, Blockbuster mod should be installed and will appear in Minecraft's 
 mods menu. If Blockbuster didn't appear in the mods menu, then something went 
 wrong.
 
@@ -33,9 +34,9 @@ and shows how to use this mod. Machinima intro included.
     <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
 </a>
 
-### Machinima Example: Addicting Redstone
+### Machinima Example
 
-My first machinima made with Blockbuster 1.1. This video show off basic actor 
+My first machinima is made with Blockbuster 1.1. This video shows off basic actor 
 acting (basic walking, running, jumping), placing blocks and tossing items to 
 each other. The cameras jumps are partially made mostly with camera entities 
 that this mod adds in the game, and some basic video editing.
@@ -44,8 +45,6 @@ that this mod adds in the game, and some basic video editing.
     <img src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
 </a>
 
-**Disclaimer**: some of the camera jumps are edited out.
-
 ## Features
 
 This mod provides following features:
@@ -53,7 +52,7 @@ This mod provides following features:
 #### Player's recording
 
 * All stuff in Mocap, but more
-* Text formatting in chat using the '[' character instead of '§'
+* Text formatting in chat using the `[` character instead of `§`
 * Interacting with blocks (opening doors, toggling levers, pushing buttons, etc.)
 * Breaking blocks
 * Mounting entities like pigs (tested with AnimalBikes, works well, but keep 
@@ -64,7 +63,7 @@ This mod provides following features:
 
 * Has two variations: for machinimas and for adventure maps
 * Ties actors into an organizable scene (with lots of benefits)
-* Can be playbacked by the playback button or the `/director play` command
+* Can be playbacked by using the playback button or the `/director play` command
 * Both of the block have their own GUIs for managing the cast (view, add, edit, 
   remove, reset)
 
@@ -81,9 +80,9 @@ This mod provides following features:
 #### Cameras
 
 * Flexible and complex customizations of cameras
-* Camera profiles can be saved or loaded
-* Camera fixtures that defines how your camera going to move. Following fixtures 
-  are provided by the mod:
+* Camera profiles – saveable and loadable list of camera fixtures
+* Camera fixtures – constructing blocks of camera profiles, they define how the camera 
+  moves. Following fixtures are provided by the mod:
     * Idle fixture – static looking at camera
     * Path fixture – smooth path which camera follows
     * Look fixture – look fixture which keeps focus on a given entity
@@ -107,5 +106,6 @@ Manual is located in the root of this repository in file named [MANUAL.md](./MAN
 
 ## License
 
-See file `LICENSE.md`. Most of the code is licensed under MIT license, but recording code 
-from Mocap mod is actually licensed under GPL license (`noname.blockbuster.recording` package).
+See the file `LICENSE.md`. Most of the code is licensed under MIT license, but 
+recording code from Mocap mod is actually licensed under GPL license 
+(`noname.blockbuster.recording` package).
