@@ -63,8 +63,8 @@ public class ProfileRenderer
 
         partial = event.getPartialTicks();
 
-        if (ClientProxy.profileRunner.isRunning()) return;
         if (!this.render) return;
+        if (ClientProxy.profileRunner.isRunning()) return;
         if (badProfile) return;
 
         Position prev = new Position(0, 0, 0, 0, 0);
@@ -91,7 +91,7 @@ public class ProfileRenderer
             long duration = fixture.getDuration();
             float distance = Math.abs(next.point.x - prev.point.x) + Math.abs(next.point.y - prev.point.y) + Math.abs(next.point.z - prev.point.z);
 
-            if (distance > 6) this.drawCard(i, duration, next);
+            if (distance > 3) this.drawCard(i, duration, next);
 
             this.drawCard(i++, duration, prev);
             this.drawFixture(fixture, prev, next);
@@ -138,7 +138,7 @@ public class ProfileRenderer
     {
         float circles = ((CircularFixture) fixture).getCircles();
 
-        for (int i = 0; i < circles / 2; i += 2)
+        for (int i = 0; i < circles; i += 2)
         {
             fixture.applyFixture(i / circles, prev);
             fixture.applyFixture((i + 2) / circles, next);

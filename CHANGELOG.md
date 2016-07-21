@@ -10,6 +10,9 @@ added. Now, instead of riding cameras every time when you doing screen recording
 you can just press play button and sit down, because you setup once, play camera 
 how many times you want.
 
+**Tutorial video** for 1.2:
+Coming soon
+
 * Added camera profile. Camera profile is a list of camera fixtures that can be 
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
@@ -24,8 +27,13 @@ how many times you want.
       of circles in degrees
 * Added `camera` command which allows players to manage profiles, and fixtures
 * Added camera profile rendering
-* Removed camera item, camera entity, and camera entities support in director 
-  block
+* Added camera key bindings for:
+	* Removing last fixture
+	* Adding idle fixture
+	* Toggle camera profile rendering
+	* Start/stop camera profile
+* Removed camera item, camera entity, camera jump keybindings, and camera 
+  entities support in director block
 * Merged `play-director` and `stop-director` into `director` command
 * Merged `record` and `play` into `action` command
 
@@ -38,7 +46,9 @@ to the actor/director map block) and substituted this with _nice looking_ GUIs.
 Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 
 **Tutorial video** for 1.1:
-Coming soon
+<a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
+    <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
+</a>
 
 * Update to Minecraft 1.9.4 and Forge 12.17.0.1976 (thanks to [Lightwave](http://www.minecraftforge.net/forum/index.php?action=profile;u=36902))
 * Added GUIs for director and director map blocks
