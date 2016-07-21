@@ -10,9 +10,11 @@ import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraProfile;
 
 /**
- * Camera's save subcommand
+ * Camera's sub-command /camera save
  *
- * This subcommand is responsible for save current camera profile.
+ * This sub-command is responsible for saving the camera profile to the disk.
+ * As with /camera load sub-command, this sub-command also sends message to
+ * the server with request to save profile that was sent.
  */
 public class SubCommandCameraSave extends CommandBase
 {

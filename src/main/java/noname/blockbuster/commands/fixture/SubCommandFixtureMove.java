@@ -7,6 +7,12 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's sub-command /camera move
+ *
+ * This sub-command is responsible for moving camera fixture at passed index
+ * to another place in camera profile.
+ */
 public class SubCommandFixtureMove extends CommandBase
 {
     @Override

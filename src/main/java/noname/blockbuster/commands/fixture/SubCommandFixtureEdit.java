@@ -11,6 +11,15 @@ import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.commands.SubCommandBase;
 
+/**
+ * Camera's sub-command /camera edit
+ *
+ * This command is responsible for editing camera fixture's values passed from
+ * this command in string array or directly from player's properties such as
+ * position and rotation.
+ *
+ * It also outputs fixture's values if the values aren't specified.
+ */
 public class SubCommandFixtureEdit extends CommandBase
 {
     @Override

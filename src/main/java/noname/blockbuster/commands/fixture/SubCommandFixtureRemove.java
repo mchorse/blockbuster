@@ -7,6 +7,12 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's sub-command /camera remove
+ *
+ * This sub-command is responsible for removing camera fixture from currently
+ * loaded camera profile at specified index.
+ */
 public class SubCommandFixtureRemove extends CommandBase
 {
     @Override

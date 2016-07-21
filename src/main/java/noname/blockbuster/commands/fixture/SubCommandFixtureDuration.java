@@ -7,6 +7,12 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's sub-command /camera duration
+ *
+ * This sub-command is responsible for setting duration for specified camera
+ * fixture at given index.
+ */
 public class SubCommandFixtureDuration extends CommandBase
 {
     @Override

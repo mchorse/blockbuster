@@ -12,6 +12,13 @@ import net.minecraft.util.math.BlockPos;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's sub-command /camera add
+ *
+ * This sub-command is responsible for adding a new camera fixture to current
+ * camera profile. The camera fixture that is going to be added is depends
+ * on the values passed by this command.
+ */
 public class SubCommandFixtureAdd extends CommandBase
 {
     @Override

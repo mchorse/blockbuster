@@ -11,6 +11,12 @@ import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
 import noname.blockbuster.commands.CommandCamera;
 
+/**
+ * Camera's sub-command /camera path
+ *
+ * This sub-command is responsible for adding or removing path points to/from
+ * Path fixture passed by this sub-command.
+ */
 public class SubCommandFixturePath extends CommandBase
 {
     @Override

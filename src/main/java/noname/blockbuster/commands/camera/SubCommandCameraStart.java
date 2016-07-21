@@ -7,9 +7,9 @@ import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.ClientProxy;
 
 /**
- * Camera's stop subcommand
+ * Camera's sub-command /camera start
  *
- * This subcommand is responsible for stopping current running camera profile.
+ * This sub-command is responsible for starting current camera profile.
  */
 public class SubCommandCameraStart extends CommandBase
 {

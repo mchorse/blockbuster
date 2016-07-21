@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -103,5 +104,11 @@ public class CircularFixture extends AbstractFixture
         out.writeFloat(this.circles);
         out.writeFloat(this.offset);
         CameraUtils.writePoint(out, this.start);
+    }
+
+    @Override
+    public String toString()
+    {
+        return I18n.format("blockbuster.fixtures.circular", this.start, this.distance, this.circles, this.offset, this.duration);
     }
 }

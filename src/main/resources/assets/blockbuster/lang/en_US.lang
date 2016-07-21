@@ -89,6 +89,13 @@ blockbuster.commands.camera.fixture.path=/camera path <fixture_index> [point_ind
 
 blockbuster.commands.camera.fixture.empty=This camera profile is empty!
 
+# Fixtures
+blockbuster.fixtures.idle=Idle camera fixture, it positioned statically at %s, and runs for %d milliseconds.
+blockbuster.fixtures.look=Look camera fixture, it looks at %s entity from %s, and runs for %d milliseconds.
+blockbuster.fixtures.path=Path camera fixture, it has %d points in the path, and runs for %d milliseconds.
+blockbuster.fixtures.follow=Follow camera fixture, it follows %s entity relatively from %s, and runs for %d milliseconds.
+blockbuster.fixtures.circular=Circular camera fixture, it looks directly at %s and goes around from %d blocks away for %d degrees, has %d offset in degrees, and runs for %d milliseconds.
+
 # Recording
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
 blockbuster.mocap.stopped_logout=§9Stopped recording %s. Bye!

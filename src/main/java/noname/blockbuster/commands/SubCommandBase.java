@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 public abstract class SubCommandBase extends CommandBase
 {
     /**
-     * Sub commands array, initialize your sub commands here.
+     * Sub-commands list, add your sub commands in this list.
      */
     protected List<CommandBase> subcommands = new ArrayList<CommandBase>();
 
@@ -62,7 +62,7 @@ public abstract class SubCommandBase extends CommandBase
     /**
      * Execute the command
      *
-     * This method basically delegates the execution to the mathced sub-command,
+     * This method basically delegates the execution to the matched sub-command,
      * if the command was found, otherwise it shows usage message. */
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
@@ -89,7 +89,7 @@ public abstract class SubCommandBase extends CommandBase
      * Get completions for this command or its sub-commands.
      *
      * This method is responsible for giving completions of this command (names
-     * of sub-commands) or completions of subcommand.
+     * of sub-commands) or completions of sub-command.
      */
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
