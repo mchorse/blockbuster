@@ -70,18 +70,26 @@ public abstract class AbstractFixture
      * Commands can also be updated using {@link #edit(String[], EntityPlayer)}
      * method.
      */
-    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws Exception
+    public static AbstractFixture fromCommand(String[] args, EntityPlayer player) throws CommandException
     {
         if (args.length < 2 || player == null)
         {
-            throw new CommandException("Not enough data to create from command!");
+            throw new CommandException("blockbuster.fixtures.few_args");
         }
 
         String type = args[0];
         long duration = CommandBase.parseLong(args[1]);
+        AbstractFixture fixture;
 
-        AbstractFixture fixture = fromType(STRING_TO_TYPE.get(type), duration);
-        fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
+        try
+        {
+            fixture = fromType(STRING_TO_TYPE.get(type), duration);
+            fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
+        }
+        catch (Exception e)
+        {
+            throw new CommandException("blockbuster.fixtures.wrong_type", type);
+        }
 
         return fixture;
     }

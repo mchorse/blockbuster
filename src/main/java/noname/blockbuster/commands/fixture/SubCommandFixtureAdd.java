@@ -41,14 +41,7 @@ public class SubCommandFixtureAdd extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        try
-        {
-            CommandCamera.getProfile().add(AbstractFixture.fromCommand(args, (EntityPlayer) sender));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        CommandCamera.getProfile().add(AbstractFixture.fromCommand(args, (EntityPlayer) sender));
     }
 
     @Override

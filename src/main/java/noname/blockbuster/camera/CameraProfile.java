@@ -51,6 +51,16 @@ public class CameraProfile
     }
 
     /**
+     * Checks if fixture at specified index is exists
+     */
+    public boolean has(int index)
+    {
+        int size = this.fixtures.size();
+
+        return index >= 0 && index < size;
+    }
+
+    /**
      * Get all of the fixtures
      */
     public List<AbstractFixture> getAll()

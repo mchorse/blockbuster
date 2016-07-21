@@ -4,6 +4,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentTranslation;
 import noname.blockbuster.commands.CommandCamera;
 
 /**
@@ -30,5 +31,6 @@ public class SubCommandCameraClear extends CommandBase
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         CommandCamera.getProfile().reset();
+        sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.clear"));
     }
 }

@@ -35,6 +35,13 @@ public class SubCommandFixtureRemove extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        CommandCamera.getProfile().remove(CommandBase.parseInt(args[0]));
+        int index = CommandBase.parseInt(args[0]);
+
+        if (!CommandCamera.getProfile().has(index))
+        {
+            throw new CommandException("blockbuster.profile.not_exists", index);
+        }
+
+        CommandCamera.getProfile().remove(index);
     }
 }

@@ -42,7 +42,14 @@ public class SubCommandFixtureEdit extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        AbstractFixture fixture = CommandCamera.getProfile().get(CommandBase.parseInt(args[0]));
+        int index = CommandBase.parseInt(args[0]);
+
+        if (!CommandCamera.getProfile().has(index))
+        {
+            throw new CommandException("blockbuster.profile.not_exists", index);
+        }
+
+        AbstractFixture fixture = CommandCamera.getProfile().get(index);
 
         if (args.length < 2)
         {

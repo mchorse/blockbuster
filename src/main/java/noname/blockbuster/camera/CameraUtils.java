@@ -199,4 +199,17 @@ public class CameraUtils
             player.addChatComponentMessage(new TextComponentString("Oops!"));
         }
     }
+
+    public static void saveCameraProfile(String filename, CameraProfile profile, EntityPlayerMP player)
+    {
+        try
+        {
+            CameraUtils.writeCameraProfile(filename, profile);
+        }
+        catch (IOException e)
+        {
+            // TODO Not really helpful
+            player.addChatComponentMessage(new TextComponentString("Oops!"));
+        }
+    }
 }
