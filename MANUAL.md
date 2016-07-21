@@ -1,13 +1,13 @@
 # Manual
 
-For version 1.1.
+For version 1.2.
 
 ## Player's recording
 
 The player's actions can be recorded via the `/action record` command or by 
 interacting (right clicking the) with actors.
 
-The following actions are fully supported by this mod:
+The following actions are supported by this mod:
 
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and
   sneaking
@@ -36,42 +36,33 @@ not have hat or cape).
 
 ## Director block
 
-*Director block* is a special block, that comes with this mod, which is
+*Director block* is a special block, which comes with this mod, that
 responsible for managing the scene (like a real life director). Its purpose is to tie
-together actors and cameras.
+the actors together.
 
 With the power of the *director block* you can playback all registered actors
 together without having to setup big contraptions from redstone and command
 blocks.
 
-To register an actor or a camera to the *director block*, you should use *register
-item*. Right click on an actor or a camera first, to take a sample of entity's UUID
-onto *register item*, and then right click *register item* on the *director block*.
-If you have succesfully registered the entity (actor or camera), you'll get a
-message in the chat that entity was succesfully registered.
+To register an actor to the *director block*, you should use *register item*. 
+Right click on actor, to take a sample of entity's UUID onto *register item*, 
+and then right click *register item* on the *director block*. If you have 
+succesfully registered the actor, you'll get a message in the chat that 
+actor was succesfully registered.
 
-When you register your actors and cameras, you'll be able to use full the
-potential of this mod. The recorded actors will be played when you'll start
-recording another actor, and cameras will disappear when the *director block* starts
-playing and will appear again when it stops playing.
+When you register your actors, you'll be able to use full the potential of 
+*director block*. The recorded actors will be played when you'll start
+recording another actor.
 
-When the camera is registered to your *director block*, you can switch between
-cameras using `[` and `]` keys (`[` is for previous, and `]` is for next
-camera).  The order in which you'll be switched around, is depends on the order
-in which you registered the cameras, you can name all your cameras from "Camera
-1" to "Camera N" and see the order of your cameras by right clicking *director
-block*.
-
-To playback the scene, you need to attach a *playback button* to *director
-block*.  Simply right click *director block* while holding *playback button* in
+To playback the scene, you need to attach a *playback button* to *director block*. 
+Simply right click *director block* while holding *playback button* in
 your hand, and use the *playback button* (right click while holding *playback*
 item), to playback the scene.
 
 You can manage director block's cast by right clicking the director block, the
 GUI will pop up. You'll see a scroll list with entries of registered entities,
-their name, icon (which signify either that's an actor or a camera) and two
-buttons for managing the entity (edit or remove). In previous version you would
-have to break the block to reset the scene.
+their name, icon and two buttons for managing the entity (edit or remove). 
+In previous version you would have to break the block to reset the scene.
 
 By the way, all of these items are available in creative "Blockbuster" tab.
 
@@ -92,9 +83,6 @@ invincibility.
 When you'll register your actors, you can playback this block with playback
 button (just as with regular *director block*). Redstone hooks are also
 supported by *director map* block.
-
-Note: *director map block* doesn't support cameras, yet. That would be cool,
-though. 
 
 ### Redstone Hooks
 
@@ -137,7 +125,7 @@ Note: Blockbuster mod supports only 64x32 textured skins, for now.
 
 ## Cameras
 
-ToDo: update this section.
+ToDo: update this section, add a video, pls.
 
 ## Commands
 
