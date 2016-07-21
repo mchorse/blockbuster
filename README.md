@@ -97,9 +97,9 @@ This mod provides following features:
 
 * Action command (`/action <play|record>`) – allows players to record their 
   actions to a file and playback recorded actions
-* Director command (`/director <play|stop>`) – allows player to trigger or stop 
+* Director command (`/director <play|stop>`) – allows players to trigger or stop 
   playback in director block specified at XYZ position
-* Camera command (`/camera`) – allows player to customize camera profiles
+* Camera command (`/camera`) – allows players to customize camera profiles
 
 ## Manual
 

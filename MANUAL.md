@@ -4,15 +4,15 @@ For version 1.1.
 
 ## Player's recording
 
-The player's actions can be recorded via the `record` command or by interacting (right
-clicking) with actors.
+The player's actions can be recorded via the `/action record` command or by 
+interacting (right clicking the) with actors.
 
 The following actions are fully supported by this mod:
 
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and
   sneaking
 * Interacting with blocks (opening doors/gates, pushing buttons, toggling
-  levers)
+  levers), blocks like furnaces, chests and crafting table aren't supported
 * Placing/breaking blocks
 * Holding items in both arms
 * Equipping armor
@@ -24,8 +24,8 @@ The following actions are fully supported by this mod:
 Recorded actions are stored in the `blockbuster/records` folder in world's save
 folder.
 
-Recorded player actions can be played either by `play` command or by an actor
-entity tied to director block.
+Recorded player actions can be played either by `action play` command or by using 
+*playback button* when an actor entity is tied to director block.
 
 See Commands section for more reference about the commands.
 
@@ -137,60 +137,153 @@ Note: Blockbuster mod supports only 64x32 textured skins, for now.
 
 ## Cameras
 
-Cameras are special rideable entities which are used as cameras. They're not
-acturally recording the scene, they're just giving you the ability to traverse the
-space more freely.
-
-The camera is a flying rideable entity with some configuration properties. With the
-help of the *camera configuration* item, you can change the camera's characteristics,
-such as: speed, maximum acceleration, acceleration rate, and direction of
-movement (any direction, or only horizontal).
-
-If the camera is attached to the *director block*, then you can jump between
-cameras using "[" and "]" keys, you can rebind those keys in the Settings ->
-Controls menu.
-
-Also, if the camera is attached to the *director block*, during the scene's
-playback, all attached cameras to current scene will be hidden, and will appear
-as soon as *director block* will stop playing the scene.
+ToDo: update this section.
 
 ## Commands
 
-This mod provides two commands:
+This mod provides following commands:
 
-1. `record` command which records player's actions to file name provided
-   specified in first argument, and stops the recording (run `record` again)
-2. `play` command which playbacks player's actions from a file specified with
-   actor's custom tag name and skin, 2nd through 4th are optional arguments
-   invulnerability, if it's 1, the actor is invulnerable, if it's 0, the actor is
-   vulnurable 
-3. `play-director` command which triggers playback of director block located on
-   specified position 
-4. `stop-director` command which stops playback of director block located on
-   specified position
+### Action command
 
-Examples:
+Action command records player's actions to given file, or playbacks recorded 
+player's actions from file with optionally specified name tag, skin name and 
+invulnerability flag. General command's syntax:
 
-    # Record player's actions to a file named "football" 
-    /record football 
-    
-    # To stop the recording 
-    /record football
-    
-    # Play the football recording with actor's custom tag name "DavidBeckham" and
-    # skin "DavidBeckhamsSkin" 
-    /play football DavidBeckham DavidBeckhamsSkin
-    
-    # Play the football recording with actor's custom tag name "DavidBeckham" and
-    # skin "DavidBeckhamsSkin" and make actor invulnerable 
-    /play football DavidBeckham DavidBeckhamsSkin 1
-    
-    # Play adirector block that is located on X: 19, Y: 4, Z:-100 
-    /play-director 19 4 -100
-    
-    # Stop a director block that is located on X: 19, Y: 4, Z:-100 
-    /stop-director 19 4 -100
+	/action <play|stop> <record_name>
 
-Note: all arguments (file name, actor's custom tag name, and actor's skin) can't
+Alternative command's syntax for `/action play`:
+
+	/action play <record_name> [custom_name] [skin_name] [is_invulnerable] 
+
+### Director command
+
+Director command plays or stops director (or director map block) at specified 
+position. Command's syntax:
+
+    /director <play|stop> <x> <y> <z>
+
+### Camera command
+
+**Attention**: camera command is a client-side command, so don't use it in 
+command blocks.
+
+Camera command allows you to manage camera profile and its camera fixtures. 
+This command has a lot of sub-commands which are covered below.
+
+#### Saving and loading camera profiles
+
+With camera command you can save and load camera profiles using following syntax 
+of camera command:
+
+	/camera <save|load> <filename>
+
+#### Starting and stopping camera profiles
+
+Camera command gives you ability to start or stop camera's playback (based on 
+camera's profile fixtures). General syntax for starting and stopping camera 
+profile:
+
+	/camera <start|stop>
+
+Alternatively you can use key bindings `Z` (for starting the camera) and `X` (for  
+stopping the camera).
+
+#### Camera profile clear
+
+You might want to remove all fixtures from currently loaded camera profile. To 
+remove all fixtures, you need to clear camera profile with the following syntax 
+of camera command:
+
+	/camera clear
+
+#### Camera fixture management
+
+There's lots of sub-commands for camera fixture management. Let's start off with 
+adding camera fixtures to camera profile.
+
+##### Adding camera fixtures to camera profile
+
+Command's syntax for adding camera fixtures:
+
+	/camera add <idle|path|look|follow|circular> <duration> [values...]
+
+The first argument is the type of fixture you want to add, and second one is the 
+duration of camera fixture that you adding, and sets the values of camera fixture. 
+For every type of fixture, there's different requirements for `[values...]` argument,  
+but they're optional since all of these `[values...]` have default values. 
+
+See "Editing camera fixtures" section for more information about these  
+`[values...]`. 
+
+##### Editing camera fixtures
+
+Command's syntax for editing camera fixtures:
+
+	/camera edit <index> [values...]
+
+Again these `[values...]`, let's find out what do they mean. Every type of 
+commands have its own properties, like position. When you add or edit fixtures, 
+fixtures have two input sources which they can use to extract required information: 
+`[values...]` and player himself.
+
+Only `circular` command actually uses `[values...]`, other fixtures use only 
+the player as input source.
+
+So there's the list of possible `[values...]` for fixture types:
+
+* Circular fixture – `/camera edit <index> <distance> <circles>`, `<distance>` 
+  means how many blocks away to offset the circular motion from center point, 
+  and `<circles>` means for how many degrees to spin around the center point.
+
+##### Removing camera fixtures
+
+To remove the camera fixture from camera profile, simply use following camera 
+command syntax:
+
+	/camera remove <index>
+
+##### Moving camera fixtures
+
+Let's say you want to move the camera fixture at the end or to beginning, then 
+you'll need to use following camera command syntax:
+
+	/camera move <from> <to>
+
+The argument names are pretty self-explanatory. To move fixture from index 2 
+to beginning (index 0), you'll use following command:
+
+	/camera move 2 0  
+
+##### Setting fixture's duration
+
+To set camera fixture's duration, simply use following camera command syntax:
+
+	/camera duration <index> <duration>
+
+Duration of camera fixture is measured in milliseconds. 1000 milliseconds is 
+basically 1 second.
+
+##### Configuring points in path fixture
+
+There's only one type of camera fixture that requires more than just adding 
+or editing itself, and it's the path fixture. Path fixture lets you create 
+smooth camera movements, but to configure these paths you need to modify the 
+path itself.
+
+The syntax for managing path points in path fixture is following:
+
+	/camera path <fixture_index> [remove_point]
+
+**Note**: you need to create path camera fixture first, before managing the 
+path fixture.
+
+If you'll provide only the `<fixture_index>` argument, the command will add a 
+point to path fixture based on the player's position and rotation. If you'll 
+provide also a `[remove_point]` argument, it will remove point from path 
+fixture at given index.
+
+### Side note regarding string arguments 
+
+All arguments (file name, actor's custom tag name, and actor's skin) can't
 have spaces. That's due to the fact how minecraft's command handler parses
 arguments.
