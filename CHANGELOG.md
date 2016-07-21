@@ -29,10 +29,10 @@ Coming soon
 * Added camera profile rendering
 * Added camera key bindings for:
 	* Removing last fixture
-	* Adding idle fixture
+	* Adding idle, look or follow fixture to current camera profile
 	* Toggle camera profile rendering
-	* Start/stop camera profile
-* Removed camera item, camera entity, camera jump keybindings, and camera 
+	* Start or stop camera profile
+* Removed camera item, camera entity, camera jump key bindings, and camera 
   entities support in director block
 * Merged `play-director` and `stop-director` into `director` command
 * Merged `record` and `play` into `action` command
