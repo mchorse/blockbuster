@@ -45,8 +45,6 @@ public class GuiReplays extends GuiScrollPane
 
     public void setCast(List<String> cast)
     {
-        System.out.println(cast);
-
         this.setHeight(cast.size() * 24);
         this.entries.clear();
 

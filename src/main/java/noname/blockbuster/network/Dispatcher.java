@@ -21,6 +21,7 @@ import noname.blockbuster.network.common.PacketCameraProfile;
 import noname.blockbuster.network.common.PacketCameraState;
 import noname.blockbuster.network.common.PacketLoadCameraProfile;
 import noname.blockbuster.network.common.PacketModifyActor;
+import noname.blockbuster.network.common.PacketPlayback;
 import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
@@ -41,6 +42,7 @@ import noname.blockbuster.network.server.ServerHandlerDirectorRequestCast;
 import noname.blockbuster.network.server.ServerHandlerDirectorReset;
 import noname.blockbuster.network.server.ServerHandlerLoadCameraProfile;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
+import noname.blockbuster.network.server.ServerHandlerPlaybackButton;
 
 /**
  * Network dispatcher
@@ -109,6 +111,8 @@ public class Dispatcher
         register(PacketCameraProfile.class, ServerHandlerCameraProfile.class, Side.SERVER);
         register(PacketCameraState.class, ClientHandlerCameraState.class, Side.CLIENT);
         register(PacketLoadCameraProfile.class, ServerHandlerLoadCameraProfile.class, Side.SERVER);
+
+        register(PacketPlayback.class, ServerHandlerPlaybackButton.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

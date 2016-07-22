@@ -13,10 +13,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.GuiHandler;
 import noname.blockbuster.item.ItemPlayback;
 
 /**
@@ -61,6 +61,12 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
         this.setHardness(8);
     }
 
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    {
+        return true;
+    }
+
     /* States */
 
     @Override
@@ -82,12 +88,6 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     /* Redstone */
-
-    @Override
-    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
-    {
-        return true;
-    }
 
     @Override
     public boolean canProvidePower(IBlockState state)
@@ -112,11 +112,6 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        if (worldIn.isRemote)
-        {
-            return true;
-        }
-
         ItemStack item = playerIn.getHeldItemMainhand();
 
         if (item != null && this.handleItem(item, worldIn, pos, playerIn))
@@ -124,7 +119,10 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
             return true;
         }
 
-        this.displayCast(playerIn, worldIn, pos);
+        if (!worldIn.isRemote)
+        {
+            this.displayCast(playerIn, worldIn, pos);
+        }
 
         return true;
     }
@@ -136,13 +134,13 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      */
     protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        return this.handlePlaybackItem(item, pos, player);
+        return this.handlePlaybackItem(item, world, pos, player);
     }
 
     /**
      * Attach recording item to current director block
      */
-    protected boolean handlePlaybackItem(ItemStack item, BlockPos pos, EntityPlayer player)
+    protected boolean handlePlaybackItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
         if (!(item.getItem() instanceof ItemPlayback))
         {
@@ -160,7 +158,8 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
         tag.setInteger("DirY", pos.getY());
         tag.setInteger("DirZ", pos.getZ());
 
-        player.addChatMessage(new TextComponentTranslation("blockbuster.director.attached_device"));
+        player.openGui(Blockbuster.instance, GuiHandler.PLAYBACK, player.worldObj, 0, 0, 0);
+
         return true;
     }
 

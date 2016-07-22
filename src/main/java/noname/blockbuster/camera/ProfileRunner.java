@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,6 +80,8 @@ public class ProfileRunner
     @SubscribeEvent
     public void onRenderTick(RenderTickEvent event)
     {
+        if (event.phase == Phase.START) return;
+
         long progress = Math.min(System.currentTimeMillis() - this.startTime, this.duration);
 
         if (progress >= this.duration)
@@ -93,7 +96,7 @@ public class ProfileRunner
             Angle angle = this.position.angle;
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-            player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+            player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
         }
     }
 }

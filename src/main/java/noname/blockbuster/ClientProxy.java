@@ -95,7 +95,8 @@ public class ClientProxy extends CommonProxy
     }
 
     /**
-     * Subscribe keyboard handler and rendering event listener to EVENT_BUS
+     * Subscribe all event listeners to EVENT_BUS and attach any client-side
+     * commands to the ClientCommandRegistry.
      */
     @Override
     public void load(FMLInitializationEvent event)
@@ -107,6 +108,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
         MinecraftForge.EVENT_BUS.register(profileRenderer);
+
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
     }
 

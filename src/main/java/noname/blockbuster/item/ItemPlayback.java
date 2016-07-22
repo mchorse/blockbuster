@@ -14,6 +14,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.camera.CameraUtils;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraState;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
@@ -61,7 +63,11 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (tag.hasKey("CameraProfile"))
+            if (tag.hasKey("CameraPlay"))
+            {
+                Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player);
+            }
+            else if (tag.hasKey("CameraProfile"))
             {
                 String profile = tag.getString("CameraProfile");
                 CameraUtils.sendProfileToPlayer(profile, (EntityPlayerMP) player, true);

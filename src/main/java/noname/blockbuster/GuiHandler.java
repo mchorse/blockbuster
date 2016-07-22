@@ -8,10 +8,12 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import noname.blockbuster.client.gui.GuiActor;
 import noname.blockbuster.client.gui.GuiDirector;
 import noname.blockbuster.client.gui.GuiDirectorMap;
+import noname.blockbuster.client.gui.GuiPlayback;
 import noname.blockbuster.entity.EntityActor;
 
 public class GuiHandler implements IGuiHandler
 {
+    public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int DIRECTOR_MAP = 3;
@@ -30,6 +32,10 @@ public class GuiHandler implements IGuiHandler
     {
         Entity entity = world.getEntityByID(x);
 
+        if (ID == PLAYBACK)
+        {
+            return new GuiPlayback(player);
+        }
         if (ID == ACTOR)
         {
             return new GuiActor(null, (EntityActor) entity);

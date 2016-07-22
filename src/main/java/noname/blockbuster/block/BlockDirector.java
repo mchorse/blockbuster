@@ -41,7 +41,7 @@ public class BlockDirector extends AbstractBlockDirector
     @Override
     protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        return this.handleRegisterItem(item, world, pos, player) || this.handlePlaybackItem(item, pos, player);
+        return this.handlePlaybackItem(item, world, pos, player) || this.handleRegisterItem(item, world, pos, player);
     }
 
     /**
@@ -49,9 +49,14 @@ public class BlockDirector extends AbstractBlockDirector
      */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof ItemRegister) && item.getTagCompound() == null)
+        if (!(item.getItem() instanceof ItemRegister))
         {
             return false;
+        }
+
+        if (world.isRemote)
+        {
+            return true;
         }
 
         TileEntityDirector tile = (TileEntityDirector) world.getTileEntity(pos);

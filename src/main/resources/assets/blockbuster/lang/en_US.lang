@@ -42,6 +42,15 @@ blockbuster.gui.actor.filename=Recording ID
 blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
 
+# Playback GUI
+blockbuster.gui.playback.title=Playback configuration
+blockbuster.gui.playback.camera_mode=Camera mode
+blockbuster.gui.playback.profile=Profile filename
+
+blockbuster.gui.playback.nothing=Do nothing
+blockbuster.gui.playback.play=Play only
+blockbuster.gui.playback.load_profile=Load and play
+
 # Key bindings
 key.blockbuster.profile.title=Blockbuster: Camera
 key.blockbuster.profile.add_idle=Add idle camera fixture
