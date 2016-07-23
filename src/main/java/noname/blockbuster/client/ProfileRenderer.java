@@ -89,9 +89,12 @@ public class ProfileRenderer
             fixture.applyFixture(1, next);
 
             long duration = fixture.getDuration();
-            float distance = Math.abs(next.point.x - prev.point.x) + Math.abs(next.point.y - prev.point.y) + Math.abs(next.point.z - prev.point.z);
 
-            if (distance > 3) this.drawCard(i, duration, next);
+            float distX = Math.abs(next.point.x - prev.point.x);
+            float distY = Math.abs(next.point.y - prev.point.y);
+            float distZ = Math.abs(next.point.z - prev.point.z);
+
+            if (distX >= 0.5 && distY >= 0.5 && distZ >= 0.5) this.drawCard(i, duration, next);
 
             this.drawCard(i++, duration, prev);
             this.drawFixture(fixture, prev, next);
