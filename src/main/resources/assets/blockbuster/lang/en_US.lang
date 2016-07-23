@@ -122,8 +122,8 @@ blockbuster.profile.stop=Currently running camera profile was stopped.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
 
-blockbuster.profile.cant_save=§cCan't save camera profile by file name '%s'
-blockbuster.profile.cant_load=§cCan't load camera profile by file name '%s'
+blockbuster.profile.cant_save=§cCan't save camera profile by file name %s
+blockbuster.profile.cant_load=§cCan't load camera profile by file name %s
 
 # Recording
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
