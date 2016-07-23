@@ -3,12 +3,21 @@ package noname.blockbuster.recording;
 import java.io.IOException;
 import java.util.List;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
+import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
@@ -93,11 +102,61 @@ public class PlayerEventHandler
 
         if (events != null)
         {
-            byte metadata = (byte) event.getPlacedBlock().getBlock().getMetaFromState(event.getPlacedBlock());
-            ResourceLocation id = event.getPlacedBlock().getBlock().getRegistryName();
+            IBlockState state = event.getPlacedBlock();
+            Block block = state.getBlock();
 
-            events.add(new PlaceBlockAction(event.getPos(), metadata, id.toString()));
+            this.placeBlock(events, event.getPos(), block, state);
         }
+    }
+
+    /**
+     * Event listener for bucket using. When you place water or lava with
+     * bucket it doesn't considered place block action like with any other
+     * types of blocks.
+     *
+     * So here's my hack for placing water and lava blocks.
+     */
+    @SubscribeEvent
+    public void onPlayerUseBucket(FillBucketEvent event)
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        {
+            return;
+        }
+
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
+        RayTraceResult target = event.getTarget();
+
+        if (events != null && target != null && target.typeOfHit == Type.BLOCK)
+        {
+            Item bucket = event.getEmptyBucket().getItem();
+            BlockPos pos = target.getBlockPos().offset(target.sideHit);
+
+            if (bucket == Items.LAVA_BUCKET)
+            {
+                this.placeBlock(events, pos, Blocks.FLOWING_LAVA, 0);
+            }
+            else if (bucket == Items.WATER_BUCKET)
+            {
+                this.placeBlock(events, pos, Blocks.FLOWING_WATER, 0);
+            }
+        }
+    }
+
+    private void placeBlock(List<Action> events, BlockPos pos, Block block, IBlockState state)
+    {
+        this.placeBlock(events, pos, block, block.getMetaFromState(state));
+    }
+
+    /**
+     * Place block in given event list
+     */
+    private void placeBlock(List<Action> events, BlockPos pos, Block block, int metadata)
+    {
+        ResourceLocation id = block.getRegistryName();
+
+        events.add(new PlaceBlockAction(pos, (byte) metadata, id.toString()));
     }
 
     /**
