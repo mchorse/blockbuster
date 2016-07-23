@@ -128,8 +128,8 @@ public class GuiPlayback extends GuiScreen
 
         this.drawDefaultBackground();
         this.drawString(this.fontRendererObj, this.stringTitle, x, 15, 0xffffffff);
-        this.drawString(this.fontRendererObj, this.stringCameraMode, x, y, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringProfile, x, y + 40, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringProfile, x, y, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringCameraMode, x, y + 40, 0xffcccccc);
         this.profileField.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
