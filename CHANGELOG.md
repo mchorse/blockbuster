@@ -32,10 +32,11 @@ Coming soon
 	* Adding idle, look or follow fixture to current camera profile
 	* Toggle camera profile rendering
 	* Start or stop camera profile
-* Removed camera item, camera entity, camera jump key bindings, and camera 
-  entities support in director block
+* Added lava and water support to place block action
 * Merged `play-director` and `stop-director` into `director` command
 * Merged `record` and `play` into `action` command
+* Removed camera item, camera entity, camera jump key bindings, and camera 
+  entities support in director block
 
 ## Version 1.1
 
