@@ -94,7 +94,7 @@ public class ProfileRenderer
             float distY = Math.abs(next.point.y - prev.point.y);
             float distZ = Math.abs(next.point.z - prev.point.z);
 
-            if (distX >= 0.5 && distY >= 0.5 && distZ >= 0.5) this.drawCard(i, duration, next);
+            if (distX + distY + distZ >= 0.5) this.drawCard(i, duration, next);
 
             this.drawCard(i++, duration, prev);
             this.drawFixture(fixture, prev, next);
