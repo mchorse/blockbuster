@@ -33,6 +33,7 @@ Coming soon
 	* Toggle camera profile rendering
 	* Start or stop camera profile
 * Added lava and water support to place block action
+* Fixed actor's rotation when he is spawned with `/action play` command
 * Merged `play-director` and `stop-director` into `director` command
 * Merged `record` and `play` into `action` command
 * Removed camera item, camera entity, camera jump key bindings, and camera 

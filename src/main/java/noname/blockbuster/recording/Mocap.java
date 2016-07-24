@@ -214,6 +214,8 @@ public class Mocap
             return;
         }
 
+        double yaw = 0.0D;
+        double pitch = 0.0D;
         double x = 0.0D;
         double y = 0.0D;
         double z = 0.0D;
@@ -229,8 +231,8 @@ public class Mocap
                 return;
             }
 
-            /* Skips entity's rotation */
-            in.skipBytes(16);
+            yaw = in.readDouble();
+            pitch = in.readDouble();
             x = in.readDouble();
             y = in.readDouble();
             z = in.readDouble();
@@ -243,6 +245,7 @@ public class Mocap
         }
 
         entity.setPosition(x, y, z);
+        entity.setRotation(yaw, pitch);
         entity.setNoAI(true);
 
         playbacks.put(entity, new PlayThread(entity, filename, killOnDead));
