@@ -143,6 +143,8 @@ Alternative command's syntax for `/action play`:
 
 	/action play <record_name> [custom_name] [skin_name] [is_invulnerable] 
 
+`[is_invulnerable]` is a flag, it's either 1 (for) or 0.
+
 ### Director command
 
 Director command plays or stops director (or director map block) at specified 
@@ -173,14 +175,26 @@ profile:
 
 	/camera <start|stop>
 
-Alternatively you can use key bindings `Z` (for starting the camera) and `X` (for  
-stopping the camera).
+Alternatively you can use the default key bindings `Z` (for starting the camera) 
+and `X` (for stopping the camera).
 
-#### Camera profile clear
+#### Teleporting to camera fixture
+
+Sometimes you may want to teleport to a camera fixture. You can use following 
+camera command syntax to teleport to specific camera fixture:
+
+	/camera goto <index> [progress]
+
+`[progress]` is an optional argument that allows you to set progress for 
+fixtures like circular or path. For example, if you want to teleport in the 
+middle of the path or circular fixture, you can type this command:
+
+	/camera goto 0 0.5
+
+#### Clear camera profile
 
 You might want to remove all fixtures from currently loaded camera profile. To 
-remove all fixtures, you need to clear camera profile with the following syntax 
-of camera command:
+remove all fixtures, use following syntax of camera command:
 
 	/camera clear
 
@@ -246,10 +260,21 @@ to beginning (index 0), you'll use following command:
 
 To set camera fixture's duration, simply use following camera command syntax:
 
-	/camera duration <index> <duration>
+	/camera duration [index] [duration]
 
 Duration of camera fixture is measured in milliseconds. 1000 milliseconds is 
 basically 1 second.
+
+If you want to know the duration of current bound camera profile, simply 
+invoke this command without arguments:
+
+	/camera duration
+
+If you want to know the duration of camera fixture in current camera profile, 
+simply specify the index of camera fixture, and the command will output the 
+duration of given camera fixture:
+
+	/camera duration 0
 
 ##### Configuring points in path fixture
 
