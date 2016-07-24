@@ -43,8 +43,18 @@ public class SubCommandCameraGoto extends CommandBase
         CameraProfile profile = CommandCamera.getProfile();
         Position pos = new Position(player);
 
-        int index = CommandBase.parseInt(args[0], 0, profile.getCount() - 1);
-        float progress = args.length < 2 ? 0 : (float) CommandBase.parseDouble(args[1], 0, 1);
+        int index = CommandBase.parseInt(args[0]);
+        float progress = 0;
+
+        if (args.length > 1)
+        {
+            progress = (float) CommandBase.parseDouble(args[1], 0, 1);
+        }
+
+        if (!profile.has(index))
+        {
+            throw new CommandException("blockbuster.profile.not_exists", index);
+        }
 
         Point point = pos.point;
         Angle angle = pos.angle;

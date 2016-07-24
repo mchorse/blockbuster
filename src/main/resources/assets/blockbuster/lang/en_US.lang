@@ -99,11 +99,13 @@ blockbuster.commands.camera.goto=/camera goto <index> [progress]\n\nTeleports yo
 blockbuster.commands.camera.fixture.add=/camera add <idle|path|follow|look|circular> <duration>\n\nCreates a new camera fixture at the end of the current camera profile with given <duration>
 blockbuster.commands.camera.fixture.edit=/camera edit <index> <values...>\n\nEdit fixture's values at <index> in currently selected camera profile
 blockbuster.commands.camera.fixture.remove=/camera remove <index>\n\nRemove camera fixture from currently used camera profile at <index>
-blockbuster.commands.camera.fixture.duration=/camera duration <index> <duration>\n\nSet duration in milliseconds to given fixture at given <index>
+blockbuster.commands.camera.fixture.duration=/camera duration [index] [duration]\n\nSet duration in milliseconds to given fixture at given <index>
 blockbuster.commands.camera.fixture.path=/camera path <fixture_index> [point_index]\n\nAdd a point to path fixture (if [point_index] isn't specified), or remove path point in fixture at index [point_index]
 blockbuster.commands.camera.fixture.move=/camera move <from> <to>\n\nMove camera fixture at <from> index to <to> index in the camera profile
 
 blockbuster.commands.camera.fixture.empty=This camera profile is empty!
+blockbuster.duration.fixture=Camera fixture at index %d runs for %d milliseconds.
+blockbuster.duration.profile=Camera profile runs for %d milliseconds.
 
 # Camera fixtures
 blockbuster.fixtures.idle=Idle camera fixture, it positioned statically at %s, and runs for %d milliseconds.
