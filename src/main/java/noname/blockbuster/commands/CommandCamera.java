@@ -3,6 +3,7 @@ package noname.blockbuster.commands;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraClear;
+import noname.blockbuster.commands.camera.SubCommandCameraGoto;
 import noname.blockbuster.commands.camera.SubCommandCameraLoad;
 import noname.blockbuster.commands.camera.SubCommandCameraSave;
 import noname.blockbuster.commands.camera.SubCommandCameraStart;
@@ -63,16 +64,17 @@ public class CommandCamera extends SubCommandBase
         this.subcommands.add(new SubCommandCameraLoad());
         this.subcommands.add(new SubCommandCameraSave());
 
+        /* Profile */
+        this.subcommands.add(new SubCommandCameraClear());
+        this.subcommands.add(new SubCommandCameraGoto());
+
         /* Fixture editing */
         this.subcommands.add(new SubCommandFixtureAdd());
         this.subcommands.add(new SubCommandFixtureEdit());
+        this.subcommands.add(new SubCommandFixtureMove());
         this.subcommands.add(new SubCommandFixtureRemove());
         this.subcommands.add(new SubCommandFixtureDuration());
-        this.subcommands.add(new SubCommandFixtureMove());
         this.subcommands.add(new SubCommandFixturePath());
-
-        /* Profile */
-        this.subcommands.add(new SubCommandCameraClear());
     }
 
     @Override

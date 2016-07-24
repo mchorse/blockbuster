@@ -94,6 +94,7 @@ blockbuster.commands.camera.stop=/camera stop\n\nStops currently running camera 
 blockbuster.commands.camera.load=/camera load <file>\n\nLoad camera profile
 blockbuster.commands.camera.save=/camera save <file>\n\nSave camera profile to a file
 blockbuster.commands.camera.clear=/camera clear\n\nClears the camera profile (removes all fixtures)
+blockbuster.commands.camera.goto=/camera goto <index> [progress]\n\nTeleports you to the camera fixture at <index> index. Optionally you might specify [progress] (from 0.0 to 1.0) argument which will allow you to teleport in the middle of the path or circular fixture
 
 blockbuster.commands.camera.fixture.add=/camera add <idle|path|follow|look|circular> <duration>\n\nCreates a new camera fixture at the end of the current camera profile with given <duration>
 blockbuster.commands.camera.fixture.edit=/camera edit <index> <values...>\n\nEdit fixture's values at <index> in currently selected camera profile
