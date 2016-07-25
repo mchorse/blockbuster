@@ -1,5 +1,8 @@
 package noname.blockbuster.item;
 
+import java.util.List;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -32,6 +35,34 @@ public class ItemPlayback extends Item
         this.setRegistryName("playback");
         this.setUnlocalizedName("blockbuster.playback");
         this.setCreativeTab(Blockbuster.blockbusterTab);
+    }
+
+    /**
+     * Adds information about camera profile and */
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        NBTTagCompound tag = stack.getTagCompound();
+
+        if (tag == null) return;
+
+        if (tag.hasKey("CameraProfile"))
+        {
+            tooltip.add(I18n.format("blockbuster.info.playback_profile", tag.getString("CameraProfile")));
+        }
+        else if (tag.hasKey("CameraPlay"))
+        {
+            tooltip.add(I18n.format("blockbuster.info.playback_play"));
+        }
+
+        if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
+        {
+            int x = tag.getInteger("DirX");
+            int y = tag.getInteger("DirY");
+            int z = tag.getInteger("DirZ");
+
+            tooltip.add(I18n.format("blockbuster.info.playback_director", x, y, z));
+        }
     }
 
     /**
