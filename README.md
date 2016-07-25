@@ -1,4 +1,6 @@
-# ![Blockbuster](./logo.png) Blockbuster
+![Blockbuster](./logo.png) 
+
+# Blockbuster mod
 
 Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
 Minecraft machinimas in single player (without having to recruit and organize a 
