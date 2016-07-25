@@ -214,8 +214,8 @@ public class Mocap
             return;
         }
 
-        double yaw = 0.0D;
-        double pitch = 0.0D;
+        float yaw = 0.0F;
+        float pitch = 0.0F;
         double x = 0.0D;
         double y = 0.0D;
         double z = 0.0D;
@@ -231,8 +231,8 @@ public class Mocap
                 return;
             }
 
-            yaw = in.readDouble();
-            pitch = in.readDouble();
+            yaw = in.readFloat();
+            pitch = in.readFloat();
             x = in.readDouble();
             y = in.readDouble();
             z = in.readDouble();
@@ -244,8 +244,7 @@ public class Mocap
             e.printStackTrace();
         }
 
-        entity.setPosition(x, y, z);
-        entity.setRotation(yaw, pitch);
+        entity.setPositionAndRotation(x, y, z, yaw, pitch);
         entity.setNoAI(true);
 
         playbacks.put(entity, new PlayThread(entity, filename, killOnDead));
