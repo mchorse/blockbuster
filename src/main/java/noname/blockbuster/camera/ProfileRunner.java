@@ -96,6 +96,7 @@ public class ProfileRunner
             Angle angle = this.position.angle;
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
+            player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
         }
     }
