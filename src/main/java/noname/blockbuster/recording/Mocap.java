@@ -231,6 +231,8 @@ public class Mocap
                 return;
             }
 
+            in.readLong();
+
             yaw = in.readFloat();
             pitch = in.readFloat();
             x = in.readDouble();
