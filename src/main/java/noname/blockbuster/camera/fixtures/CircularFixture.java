@@ -21,8 +21,6 @@ import noname.blockbuster.camera.Position;
  *
  * You know, like one of these rotating thingies on car expos that rotate cars
  * round and round and around...
- *
- * @todo Fix this fixture in editing mode
  */
 public class CircularFixture extends AbstractFixture
 {
@@ -65,14 +63,15 @@ public class CircularFixture extends AbstractFixture
     @Override
     public void applyFixture(float progress, Position pos)
     {
-        float angle = (this.offset / 180 * (float) Math.PI) + progress * (this.circles / 180 * (float) Math.PI);
+        float angle = (float) (Math.toRadians(this.offset) + progress * Math.toRadians(this.circles));
 
         float cos = this.distance * (float) Math.cos(angle);
         float sin = this.distance * (float) Math.sin(angle);
 
-        float x = this.start.x + cos;
+        /* +0.5, because player's position isn't in the entity's center */
+        float x = this.start.x + 0.5F + cos;
         float y = this.start.y;
-        float z = this.start.z + sin;
+        float z = this.start.z + 0.5F + sin;
 
         float yaw = (float) (MathHelper.atan2(sin, cos) * (180D / Math.PI)) - 90.0F;
 
