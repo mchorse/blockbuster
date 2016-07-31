@@ -57,24 +57,24 @@ public class CommandCamera extends SubCommandBase
     public CommandCamera()
     {
         /* Start/stop */
-        this.subcommands.add(new SubCommandCameraStart());
-        this.subcommands.add(new SubCommandCameraStop());
+        this.add(new SubCommandCameraStart());
+        this.add(new SubCommandCameraStop());
 
         /* Load/save */
-        this.subcommands.add(new SubCommandCameraLoad());
-        this.subcommands.add(new SubCommandCameraSave());
+        this.add(new SubCommandCameraLoad());
+        this.add(new SubCommandCameraSave());
 
         /* Profile */
-        this.subcommands.add(new SubCommandCameraClear());
-        this.subcommands.add(new SubCommandCameraGoto());
+        this.add(new SubCommandCameraClear());
+        this.add(new SubCommandCameraGoto());
 
         /* Fixture editing */
-        this.subcommands.add(new SubCommandFixtureAdd());
-        this.subcommands.add(new SubCommandFixtureEdit());
-        this.subcommands.add(new SubCommandFixtureMove());
-        this.subcommands.add(new SubCommandFixtureRemove());
-        this.subcommands.add(new SubCommandFixtureDuration());
-        this.subcommands.add(new SubCommandFixturePath());
+        this.add(new SubCommandFixtureAdd());
+        this.add(new SubCommandFixtureEdit());
+        this.add(new SubCommandFixtureMove());
+        this.add(new SubCommandFixtureRemove());
+        this.add(new SubCommandFixtureDuration());
+        this.add(new SubCommandFixturePath());
     }
 
     @Override
