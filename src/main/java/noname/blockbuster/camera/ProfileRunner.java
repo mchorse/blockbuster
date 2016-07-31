@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.ClientProxy;
 
 /**
  * Profile runner
@@ -28,11 +27,6 @@ public class ProfileRunner
 
     /* Profile access methods */
 
-    public ProfileRunner(CameraProfile profile)
-    {
-        this.profile = profile;
-    }
-
     public CameraProfile getProfile()
     {
         return this.profile;
@@ -41,7 +35,6 @@ public class ProfileRunner
     public void setProfile(CameraProfile profile)
     {
         this.profile = profile;
-        ClientProxy.profileRenderer.setProfile(profile);
     }
 
     public boolean isRunning()
@@ -92,12 +85,13 @@ public class ProfileRunner
         {
             this.profile.applyProfile(progress, this.position);
 
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             Point point = this.position.point;
             Angle angle = this.position.angle;
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+            player.motionY = 0;
         }
     }
 }
