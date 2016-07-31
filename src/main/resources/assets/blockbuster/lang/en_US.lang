@@ -93,6 +93,7 @@ blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 blockbuster.commands.camera=Camera command. Provides sub-commands for managing camera profile and its camera fixtures. 
 blockbuster.commands.camera.start=/camera start\n\nStarts a camera profile
 blockbuster.commands.camera.stop=/camera stop\n\nStops currently running camera profile
+blockbuster.commands.camera.new=/camera new <filename>\n\nCreates a new camera profile in current session with given <filename>
 blockbuster.commands.camera.load=/camera load <filename>\n\nLoad camera profile
 blockbuster.commands.camera.save=/camera save [filename]\n\nSave camera profile to a file. If the file isn't specified, then this camera profile will be saved to the file that previously was saved or loaded
 blockbuster.commands.camera.clear=/camera clear\n\nClears the camera profile (removes all fixtures)
@@ -122,6 +123,7 @@ blockbuster.fixtures.no_entity=You should look at any entity to add this fixture
 
 # Camera profile
 blockbuster.profile.clear=Currently used camera profile was cleared.
+blockbuster.profile.new=Created new camera profile with filename %s.
 
 blockbuster.profile.start=Current camera profile was started.
 blockbuster.profile.stop=Currently running camera profile was stopped.
@@ -130,6 +132,7 @@ blockbuster.profile.load=Camera profile was loaded from file %s.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
 
+blockbuster.profile.empty_filename=§cThis camera profile has empty filename! In current situation, specify the [filename] argument, please.
 blockbuster.profile.cant_save=§cCan't save camera profile by file name %s
 blockbuster.profile.cant_load=§cCan't load camera profile by file name %s
 

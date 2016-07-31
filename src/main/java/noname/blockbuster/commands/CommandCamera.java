@@ -5,6 +5,7 @@ import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraClear;
 import noname.blockbuster.commands.camera.SubCommandCameraGoto;
 import noname.blockbuster.commands.camera.SubCommandCameraLoad;
+import noname.blockbuster.commands.camera.SubCommandCameraNew;
 import noname.blockbuster.commands.camera.SubCommandCameraSave;
 import noname.blockbuster.commands.camera.SubCommandCameraStart;
 import noname.blockbuster.commands.camera.SubCommandCameraStop;
@@ -61,6 +62,7 @@ public class CommandCamera extends SubCommandBase
         this.add(new SubCommandCameraStop());
 
         /* Load/save */
+        this.add(new SubCommandCameraNew());
         this.add(new SubCommandCameraLoad());
         this.add(new SubCommandCameraSave());
 
