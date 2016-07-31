@@ -84,12 +84,13 @@ public abstract class AbstractFixture
         try
         {
             fixture = fromType(STRING_TO_TYPE.get(type), duration);
-            fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
         }
         catch (Exception e)
         {
             throw new CommandException("blockbuster.fixtures.wrong_type", type);
         }
+
+        fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
 
         return fixture;
     }
