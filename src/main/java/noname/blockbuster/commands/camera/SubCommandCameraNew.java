@@ -41,6 +41,6 @@ public class SubCommandCameraNew extends CommandBase
 
         profile.reset();
         profile.setFilename(args[0]);
-        sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.clear_rename", args[0]));
+        sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.new", args[0]));
     }
 }
