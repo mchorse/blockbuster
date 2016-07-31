@@ -35,7 +35,7 @@ public class PacketCameraProfile implements IMessage
     {
         this.play = buf.readBoolean();
         this.filename = ByteBufUtils.readUTF8String(buf);
-        this.profile = new CameraProfile();
+        this.profile = new CameraProfile(this.filename);
 
         try
         {

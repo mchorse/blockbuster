@@ -18,7 +18,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.ProfileRunner;
 import noname.blockbuster.client.ActorsPack;
 import noname.blockbuster.client.KeyboardHandler;
@@ -43,7 +42,7 @@ public class ClientProxy extends CommonProxy
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
 
-    public static ProfileRunner profileRunner = new ProfileRunner(new CameraProfile());
+    public static ProfileRunner profileRunner = new ProfileRunner();
     public static ProfileRenderer profileRenderer = new ProfileRenderer();
 
     /**

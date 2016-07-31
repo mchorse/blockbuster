@@ -18,6 +18,22 @@ import noname.blockbuster.camera.fixtures.AbstractFixture;
 public class CameraProfile
 {
     protected List<AbstractFixture> fixtures = new ArrayList<AbstractFixture>();
+    protected String filename = "";
+
+    public CameraProfile(String filename)
+    {
+        this.filename = filename;
+    }
+
+    public String getFilename()
+    {
+        return this.filename;
+    }
+
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
 
     /**
      * Get duration of current camera profile

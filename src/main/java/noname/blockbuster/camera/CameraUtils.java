@@ -129,10 +129,9 @@ public class CameraUtils
      */
     public static CameraProfile readCameraProfile(String filename) throws Exception
     {
-        filename = cameraFile(filename);
-
-        DataInputStream file = new DataInputStream(new FileInputStream(filename));
-        CameraProfile profile = new CameraProfile();
+        String path = cameraFile(filename);
+        DataInputStream file = new DataInputStream(new FileInputStream(path));
+        CameraProfile profile = new CameraProfile(filename);
 
         profile.read(file);
 

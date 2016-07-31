@@ -56,14 +56,14 @@ blockbuster.gui.playback.play=Play only
 blockbuster.gui.playback.load_profile=Load and play
 
 # Key bindings
-key.blockbuster.profile.title=Blockbuster camera
-key.blockbuster.profile.add_idle=Add idle camera fixture
-key.blockbuster.profile.add_look=Add look camera fixture
-key.blockbuster.profile.add_follow=Add follow camera fixture
-key.blockbuster.profile.remove=Remove last camera fixture
-key.blockbuster.profile.toggle=Toggle camera profile rendering
-key.blockbuster.profile.start=Start camera profile
-key.blockbuster.profile.stop=Stop camera profile
+key.blockbuster.profile.title=Blockbuster Camera
+key.blockbuster.profile.add_idle=Add Idle Camera Fixture
+key.blockbuster.profile.add_look=Add Look Camera Fixture
+key.blockbuster.profile.add_follow=Add Follow Camera Fixture
+key.blockbuster.profile.remove=Remove Last Camera Fixture
+key.blockbuster.profile.toggle=Toggle Camera Profile Rendering
+key.blockbuster.profile.start=Start Camera Profile
+key.blockbuster.profile.stop=Stop Camera Profile
 
 # Director block
 blockbuster.director.title=Director Block's Cast
@@ -93,8 +93,8 @@ blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 blockbuster.commands.camera=Camera command. Provides sub-commands for managing camera profile and its camera fixtures. 
 blockbuster.commands.camera.start=/camera start\n\nStarts a camera profile
 blockbuster.commands.camera.stop=/camera stop\n\nStops currently running camera profile
-blockbuster.commands.camera.load=/camera load <file>\n\nLoad camera profile
-blockbuster.commands.camera.save=/camera save <file>\n\nSave camera profile to a file
+blockbuster.commands.camera.load=/camera load <filename>\n\nLoad camera profile
+blockbuster.commands.camera.save=/camera save [filename]\n\nSave camera profile to a file. If the file isn't specified, then this camera profile will be saved to the file that previously was saved or loaded
 blockbuster.commands.camera.clear=/camera clear\n\nClears the camera profile (removes all fixtures)
 blockbuster.commands.camera.goto=/camera goto <index> [progress]\n\nTeleports you to the camera fixture at <index> index. Optionally you might specify [progress] (from 0.0 to 1.0) argument which will allow you to teleport in the middle of the path or circular fixture
 
@@ -122,8 +122,11 @@ blockbuster.fixtures.no_entity=You should look at any entity to add this fixture
 
 # Camera profile
 blockbuster.profile.clear=Currently used camera profile was cleared.
+
 blockbuster.profile.start=Current camera profile was started.
 blockbuster.profile.stop=Currently running camera profile was stopped.
+blockbuster.profile.save=Current camera profile was saved in file %s.
+blockbuster.profile.load=Camera profile was loaded from file %s.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
 

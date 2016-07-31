@@ -46,7 +46,7 @@ public class CommandCamera extends SubCommandBase
 
     static
     {
-        setProfile(new CameraProfile());
+        setProfile(new CameraProfile(""));
     }
 
     /**

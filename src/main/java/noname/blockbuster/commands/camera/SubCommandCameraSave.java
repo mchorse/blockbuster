@@ -3,8 +3,9 @@ package noname.blockbuster.commands.camera;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentTranslation;
+import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketCameraProfile;
@@ -33,11 +34,16 @@ public class SubCommandCameraSave extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 1)
+        CameraProfile profile = CommandCamera.getProfile();
+        String filename = args.length == 0 ? profile.getFilename() : args[0];
+
+        if (filename.isEmpty())
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.empty_filename"));
+            return;
         }
 
-        Dispatcher.sendToServer(new PacketCameraProfile(args[0], CommandCamera.getProfile()));
+        Dispatcher.sendToServer(new PacketCameraProfile(filename, profile));
+        profile.setFilename(filename);
     }
 }
