@@ -51,7 +51,11 @@ public class ProfileRunner
      */
     public void start()
     {
-        if (!this.isRunning) MinecraftForge.EVENT_BUS.register(this);
+        if (!this.isRunning)
+        {
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode 3");
+            MinecraftForge.EVENT_BUS.register(this);
+        }
 
         this.isRunning = true;
         this.duration = this.profile.getDuration();
@@ -60,7 +64,11 @@ public class ProfileRunner
 
     public void stop()
     {
-        if (this.isRunning) MinecraftForge.EVENT_BUS.unregister(this);
+        if (this.isRunning)
+        {
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode 1");
+            MinecraftForge.EVENT_BUS.unregister(this);
+        }
 
         this.isRunning = false;
     }
