@@ -6,8 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
-import noname.blockbuster.camera.fixtures.AbstractFixture;
+import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.commands.SubCommandBase;
 
@@ -42,22 +41,14 @@ public class SubCommandFixtureEdit extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
+        CameraProfile profile = CommandCamera.getProfile();
         int index = CommandBase.parseInt(args[0]);
 
-        if (!CommandCamera.getProfile().has(index))
+        if (!profile.has(index))
         {
             throw new CommandException("blockbuster.profile.not_exists", index);
         }
 
-        AbstractFixture fixture = CommandCamera.getProfile().get(index);
-
-        if (args.length < 2)
-        {
-            sender.addChatMessage(new TextComponentString(fixture.toString()));
-        }
-        else
-        {
-            fixture.edit(SubCommandBase.dropFirstArgument(args), (EntityPlayer) sender);
-        }
+        profile.get(index).edit(SubCommandBase.dropFirstArgument(args), (EntityPlayer) sender);
     }
 }
