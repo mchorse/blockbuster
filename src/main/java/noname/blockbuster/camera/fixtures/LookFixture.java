@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -108,11 +107,5 @@ public class LookFixture extends IdleFixture
         super.write(out);
 
         out.writeUTF(this.entity.getUniqueID().toString());
-    }
-
-    @Override
-    public String toString()
-    {
-        return I18n.format("blockbuster.fixtures.look", this.entity.getName(), this.position, this.duration);
     }
 }

@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.CameraUtils;
@@ -55,11 +54,5 @@ public class IdleFixture extends AbstractFixture
     public void write(DataOutput out) throws IOException
     {
         CameraUtils.writePosition(out, this.position);
-    }
-
-    @Override
-    public String toString()
-    {
-        return I18n.format("blockbuster.fixtures.idle", this.position, this.duration);
     }
 }

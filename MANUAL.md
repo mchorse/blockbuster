@@ -12,8 +12,8 @@ The following actions are supported by this mod:
 * Basic walking, jumping, looking, sprinting, swinging with left hand, and
   sneaking
 * Interacting with blocks (opening doors/gates, pushing buttons, toggling
-  levers), blocks like furnaces, chests and crafting table aren't supported
-* Placing/breaking blocks
+  levers). Blocks like furnaces, chests and crafting table **aren't supported**!
+* Placing and breaking blocks
 * Holding items in both arms
 * Equipping armor
 * Send (formatted messages) in chat (use `[` instead of `§` for formatting)
@@ -32,13 +32,13 @@ See Commands section for more reference about the commands.
 **Side note**: this mod records only player's actions, not his visual look, so
 recording yourself with morphing mods, or mods that modify your player model
 won't affect the playbacked actors (actors will not look like a chicken or will
-not have hat or cape).
+not have hat or cape). Only armor would be visible.
 
 ## Director block
 
-*Director block* is a special block, which comes with this mod, that
+*Director block* is a special block, which comes with this mod that
 responsible for managing the scene (like a real life director). Its purpose is to tie
-the actors together.
+actors together.
 
 With the power of the *director block* you can playback all registered actors
 together without having to setup big contraptions from redstone and command
@@ -70,7 +70,7 @@ By the way, all of these items are available in creative "Blockbuster" tab.
 
 *Director map block* is another variation of *director block* designed for
 adventure maps (cinematics FTW). It's just like *director block*, but functions
-more as `play` command.
+more as `/action play` command.
 
 To register replay with *director map block* you need to open up the *director map
 block*'s GUI (right click the block). Then input your new actor's recording id
@@ -88,7 +88,7 @@ supported by *director map* block.
 
 When the *director block* starts playing the scene, it emits a redstone signal on the
 west side of the block (the side of the block where a play white triangle is
-drawn).  When the *director block* stops playing the scene, it emits redstone signal
+drawn). When the *director block* stops playing the scene, it emits redstone signal
 on the east side of the block (the side of the block where a stop white square
 is drawn).
 
@@ -100,28 +100,41 @@ the scene (using the `/clone` command, for example).
 Or maybe you want start playing a tune, or summon some zombies when the director
 starts playing, no worries, use the redstone play hook. 
 
+### Attaching camera profile
+
+When you attach *playback button* to *director block* you will see new (since 1.2) 
+GUI with two fields "profile name" and "camera mode."
+
+Those fields are allowing you to bind camera playback on *playback button* use. There 
+are list and explanation for every camera mode:
+
+* Do nothing – doesn't playbacks camera profile
+* Play only – when you use the button, it starts current attached camera profile
+* Load and play – when you use the button, client loads the camera profile that you specified in the "Profile name" field and playbacks it
+
+Default camera mode is "Do nothing."
+
 ## Actors
 
 Actors are the entities that you use to playback your actions. Actors, by
 default, look like crash test dummies, but you may change their skin using the
 *actor configuration* item. First you'll have to put some skins into the
 `minecraft/config/blockbuster/skins` folder, and then you can select a skin from
-this folder using the GUI. In this GUI you can also change other properties such as
+this folder using the GUI. In this GUI, you can also change other properties such as
 name, recording file name, skin and invincibility. 
 
 To record the actor, you must attach it first to a *director block*, and simply
 right click it (the actor), and start performing some sick movements. When you'll be done,
 you need to stop the recording either by right clicking actor again or entering
-`record` command with his name (actually, you can use any name for file, as long
-as you provide the first argument).
-
-For adventure maps makers: you can put your skins into world's save folder
-`blockbuster/skins` to transfer the skins with the map, but they won't work in
-multiplayer.
+`/action record` command with his recording id (actually, you can use any name for file, as long as you provide the first argument).
 
 Player records are saved in `blockbuster/records` folder in world's save folder.
 
-Note: Blockbuster mod supports only 64x32 textured skins, for now.
+**For adventure maps makers**: you can put your skins into world's save folder
+`blockbuster/skins` to transfer the skins with the map, but they won't work on 
+dedicated servers.
+
+**Limitations**: Blockbuster mod supports only 64x32 textured skins, for now.
 
 ## Cameras
 
@@ -129,7 +142,8 @@ ToDo: update this section, add a video, pls.
 
 ## Commands
 
-This mod provides following commands:
+This mod provides following commands, this section is detailed documentation 
+of these commands.
 
 ### Action command
 
@@ -154,18 +168,11 @@ position. Command's syntax:
 
 ### Camera command
 
-**Attention**: camera command is a client-side command, so don't use it in 
-command blocks.
+**Attention**: camera command is a client-side command. Don't use it in command 
+blocks.
 
 Camera command allows you to manage camera profile and its camera fixtures. 
 This command has a lot of sub-commands which are covered below.
-
-#### Saving and loading camera profiles
-
-With camera command you can save and load camera profiles using following syntax 
-of camera command:
-
-	/camera <save|load> <filename>
 
 #### Starting and stopping camera profiles
 
@@ -178,18 +185,29 @@ profile:
 Alternatively you can use the default key bindings `Z` (for starting the camera) 
 and `X` (for stopping the camera).
 
-#### Teleporting to camera fixture
+#### Saving and loading camera profiles
 
-Sometimes you may want to teleport to a camera fixture. You can use following 
-camera command syntax to teleport to specific camera fixture:
+With camera command you can save and load camera profiles using following syntax 
+of camera command:
 
-	/camera goto <index> [progress]
+	/camera <save|load> <filename>
 
-`[progress]` is an optional argument that allows you to set progress for 
-fixtures like circular or path. For example, if you want to teleport in the 
-middle of the path or circular fixture, you can type this command:
+For `/camera save`, the `<filename>` argument isn't required, as long as your currently 
+bound camera profile has a filename (you saved it once by providing it `<filename>` argument). 
 
-	/camera goto 0 0.5
+For example, if you saved your camera profile once with:
+
+    /camera save test
+
+Then you can omit `<filename>` argument, and type directly:
+
+    /camera save
+
+Your current camera profile will be saved to file named `test`.
+
+If you'll specify the `<filename>` argument anyway, it will simply save your camera 
+profile to another file, and next time you'll be saving to new `<filename>` if you'll 
+omit `<filename>` argument.
 
 #### Clear camera profile
 
@@ -197,6 +215,16 @@ You might want to remove all fixtures from currently loaded camera profile. To
 remove all fixtures, use following syntax of camera command:
 
 	/camera clear
+
+#### Creating a camera profile
+
+If you want not only clear the camera profile, but also rename it (see `/camera save` 
+command above), you can use following syntax of camera command to clear and rename (i.e. 
+create new camera profile):
+
+    /camera new <filename>
+
+This will create new camera profile with no fixtures, and different filename.
 
 #### Camera fixture management
 
@@ -294,6 +322,19 @@ If you'll provide only the `<fixture_index>` argument, the command will add a
 point to path fixture based on the player's position and rotation. If you'll 
 provide also a `[remove_point]` argument, it will remove point from path 
 fixture at given index.
+
+#### Teleporting to camera fixture
+
+Sometimes you may want to teleport to a camera fixture. You can use following 
+camera command syntax to teleport to specific camera fixture:
+
+	/camera goto <index> [progress]
+
+`[progress]` is an optional argument that allows you to set progress for 
+fixtures like circular or path. For example, if you want to teleport in the 
+middle of the path or circular fixture, you can type this command:
+
+	/camera goto 0 0.5
 
 ### Side note regarding string arguments 
 

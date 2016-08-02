@@ -1,6 +1,5 @@
 package noname.blockbuster.camera.fixtures;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
@@ -53,11 +52,5 @@ public class FollowFixture extends LookFixture
     public byte getType()
     {
         return AbstractFixture.FOLLOW;
-    }
-
-    @Override
-    public String toString()
-    {
-        return I18n.format("blockbuster.fixtures.follow", this.position, this.entity.getName(), this.duration);
     }
 }

@@ -111,12 +111,6 @@ blockbuster.duration.fixture=Camera fixture at index %d runs for %d milliseconds
 blockbuster.duration.profile=Camera profile runs for %d milliseconds.
 
 # Camera fixtures
-blockbuster.fixtures.idle=Idle camera fixture, it positioned statically at %s, and runs for %d milliseconds.
-blockbuster.fixtures.look=Look camera fixture, it looks at %s entity from %s, and runs for %d milliseconds.
-blockbuster.fixtures.path=Path camera fixture, it has %d points in the path, and runs for %d milliseconds.
-blockbuster.fixtures.follow=Follow camera fixture, it follows %s entity relatively from %s, and runs for %d milliseconds.
-blockbuster.fixtures.circular=Circular camera fixture, it looks directly at %s and goes around from %d blocks away for %d degrees, has %d offset in degrees, and runs for %d milliseconds.
-
 blockbuster.fixtures.few_args=You passed not enough arguments for this command!
 blockbuster.fixtures.wrong_type=Camera fixture by type '%s' doesn't exist!
 blockbuster.fixtures.no_entity=You should look at any entity to add this fixture!

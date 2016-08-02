@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -134,11 +133,5 @@ public class PathFixture extends AbstractFixture
         {
             CameraUtils.writePosition(out, point);
         }
-    }
-
-    @Override
-    public String toString()
-    {
-        return I18n.format("blockbuster.fixtures.path", this.points.size(), this.duration);
     }
 }
