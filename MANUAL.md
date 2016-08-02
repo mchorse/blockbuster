@@ -128,8 +128,6 @@ right click it (the actor), and start performing some sick movements. When you'l
 you need to stop the recording either by right clicking actor again or entering
 `/action record` command with his recording id (actually, you can use any name for file, as long as you provide the first argument).
 
-Player records are saved in `blockbuster/records` folder in world's save folder.
-
 **For adventure maps makers**: you can put your skins into world's save folder
 `blockbuster/skins` to transfer the skins with the map, but they won't work on 
 dedicated servers.
@@ -193,7 +191,7 @@ of camera command:
 	/camera <save|load> <filename>
 
 For `/camera save`, the `<filename>` argument isn't required, as long as your currently 
-bound camera profile has a filename (you saved it once by providing it `<filename>` argument). 
+bound camera profile has a filename (you saved it once by providing it `<filename>` argument, or created new camera profile with `/camera new`). 
 
 For example, if you saved your camera profile once with:
 
@@ -242,8 +240,7 @@ duration of camera fixture that you adding, and sets the values of camera fixtur
 For every type of fixture, there's different requirements for `[values...]` argument,  
 but they're optional since all of these `[values...]` have default values. 
 
-See "Editing camera fixtures" section for more information about these  
-`[values...]`. 
+See "Editing camera fixtures" section for more information about these `[values...]`. 
 
 ##### Editing camera fixtures
 

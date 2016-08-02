@@ -25,7 +25,7 @@ Coming soon
       (specified point of view is determined when the fixture is being added)
     * Circular fixture – camera circles around given point for specified amount 
       of circles in degrees
-* Added `camera` command which allows players to manage profiles, and fixtures
+* Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
 	* Removing last fixture
@@ -33,6 +33,7 @@ Coming soon
 	* Toggle camera profile rendering
 	* Start or stop camera profile
 * Added lava and water support to place block action
+* Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command
 * Merged `play-director` and `stop-director` into `director` command
 * Merged `record` and `play` into `action` command
