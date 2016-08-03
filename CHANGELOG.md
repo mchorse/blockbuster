@@ -10,8 +10,10 @@ added. Now, instead of riding cameras every time when you doing screen recording
 you can just press play button and sit down, because you setup once, play camera 
 how many times you want.
 
-**Tutorial video** for 1.2:
-Coming soon
+**Tutorial video** for 1.2:  
+<a href="https://youtu.be/gq7sg-njyUk?list=PL6UPd2Tj65nHjnaQqL3gscufRcVDBezPm">
+    <img src="https://img.youtube.com/vi/gq7sg-njyUk/0.jpg">
+</a>
 
 * Added camera profile. Camera profile is a list of camera fixtures that can be 
   imported/exported and played
@@ -48,7 +50,7 @@ to the actor/director map block) and substituted this with _nice looking_ GUIs.
 
 Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 
-**Tutorial video** for 1.1:
+**Tutorial video** for 1.1:  
 <a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
     <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
 </a>
@@ -81,7 +83,7 @@ First version of Blockbuster mod. This release provides really basic features
 that allows to capture simple Minecraft machinimas and cinematics for 
 adventure maps.
 
-**Tutorial video** for 1.0:
+**Tutorial video** for 1.0:  
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
     <img src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>
