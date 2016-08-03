@@ -3,8 +3,8 @@
         "modid": "blockbuster",
         "name": "Blockbuster",
         "description": "Create simple machinimas and adventure map cinematics",
-        "version": "1.2-pre",
-        "mcversion": "1.9",
+        "version": "1.2",
+        "mcversion": "1.9.4",
         "url": "https://github.com/mchorse/blockbuster",
         "authorList": ["mchorse"],
         "credits": "This mod is available thanks to Minecraft Forge, Minecraft Forge forum, Ernio, Animal Bikes mod, and Mocap mod"
