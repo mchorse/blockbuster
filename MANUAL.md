@@ -136,7 +136,11 @@ dedicated servers.
 
 ## Cameras
 
-ToDo: update this section, add a video, pls.
+See this video tutorial, because there's so much to cover:
+
+<a href="https://youtu.be/ghv9lNAmcC0">
+    <img src="https://img.youtube.com/vi/ghv9lNAmcC0/0.jpg">
+</a>
 
 ## Commands
 

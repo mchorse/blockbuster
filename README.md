@@ -38,13 +38,13 @@ and shows how to use this mod. Machinima intro included.
 
 ### Machinima Example
 
-My first machinima is made with Blockbuster 1.1. This video shows off basic actor 
-acting (basic walking, running, jumping), placing blocks and tossing items to 
-each other. The cameras jumps are partially made mostly with camera entities 
-that this mod adds in the game, and some basic video editing.
+This is my second machinima which is made with Blockbuster 1.2. This video shows off 
+basic actor acting (basic walking, running, jumping), placing blocks. This machinima 
+also demonstrates some of the fixtures that were added to Blockbuster mod (mostly idle 
+and path fixtures were used).
 
-<a href="https://www.youtube.com/watch?v=ua3kfAe0bKo">
-    <img src="https://img.youtube.com/vi/ua3kfAe0bKo/0.jpg">
+<a href="https://www.youtube.com/watch?v=hPpai2jPEvg">
+    <img src="https://img.youtube.com/vi/hPpai2jPEvg/0.jpg">
 </a>
 
 ## Features
