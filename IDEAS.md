@@ -26,6 +26,8 @@ There's some ideas that I want to implement in next Blockbuster mod:
     * Also add the ability to morph player into this entity
 * Custom actor actions (like dancing, waving with hands like crazy person, or making a blow kiss)
 * Animating actor skins (basically to create illusion of lip syncing or eyes blinking)  
+* Add support editing skins with `/entitydata`
+* Add maximized camera editing with keyboard
 
 ## Things needed to be done before update
 
