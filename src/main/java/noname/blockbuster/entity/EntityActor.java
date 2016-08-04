@@ -422,11 +422,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public void readEntityFromNBT(NBTTagCompound tag)
     {
         this.filename = tag.getString("Filename");
-        this.skin = tag.getString("Skin");
 
         if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
         {
             this.directorBlock = new BlockPos(tag.getInteger("DirX"), tag.getInteger("DirY"), tag.getInteger("DirZ"));
+        }
+
+        if (!this.skin.equals(tag.getString("Skin")))
+        {
+            this.skin = tag.getString("Skin");
+
+            if (!this.worldObj.isRemote)
+            {
+                this.modify(this.filename, this.getCustomNameTag(), this.skin, this.isEntityInvulnerable(DamageSource.anvil), true);
+            }
         }
 
         super.readEntityFromNBT(tag);
