@@ -3,11 +3,9 @@ package noname.blockbuster.block;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -15,7 +13,6 @@ import net.minecraft.world.World;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
-import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**
@@ -59,31 +56,9 @@ public class BlockDirector extends AbstractBlockDirector
             return true;
         }
 
-        TileEntityDirector tile = (TileEntityDirector) world.getTileEntity(pos);
+        ((ItemRegister) item.getItem()).registerStack(item, pos);
+        player.addChatMessage(new TextComponentTranslation("blockbuster.director.attached_device"));
 
-        NBTTagCompound tag = item.getTagCompound();
-
-        if (tag == null || !tag.hasKey("EntityID"))
-        {
-            return false;
-        }
-
-        String id = tag.getString("EntityID");
-        Entity entity = Mocap.entityByUUID(world, id);
-
-        if (entity == null)
-        {
-            player.addChatMessage(new TextComponentTranslation("blockbuster.director.not_exist"));
-            return true;
-        }
-
-        if (!tile.add(entity))
-        {
-            player.addChatMessage(new TextComponentTranslation("blockbuster.director.already_registered"));
-            return true;
-        }
-
-        player.addChatMessage(new TextComponentTranslation("blockbuster.director.was_registered"));
         return true;
     }
 

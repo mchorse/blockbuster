@@ -38,19 +38,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     /**
-     * Something like factory method
-     */
-    public boolean add(Entity entity)
-    {
-        if (entity instanceof EntityActor)
-        {
-            return this.add((EntityActor) entity);
-        }
-
-        return false;
-    }
-
-    /**
      * Start a playback (make actors play their roles from the files)
      */
     @Override

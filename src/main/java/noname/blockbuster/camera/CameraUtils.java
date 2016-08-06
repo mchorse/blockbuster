@@ -216,7 +216,7 @@ public class CameraUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_load", filename));
+            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_load", filename));
         }
     }
 
@@ -233,7 +233,7 @@ public class CameraUtils
         catch (IOException e)
         {
             e.printStackTrace();
-            player.addChatComponentMessage(new TextComponentTranslation("blockbuster.profile.cant_save", filename));
+            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_save", filename));
         }
     }
 }

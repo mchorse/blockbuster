@@ -72,7 +72,6 @@ blockbuster.director.stop=Director block at (%s, %s, %s) has stopped!
 blockbuster.director.title=Director Block's Cast
 blockbuster.director.no_cast=No registered actors!
 
-blockbuster.director.not_exist=The actor which is attached to this registering device doesn't exist!
 blockbuster.director.already_registered=This actor is already registered by director block!
 blockbuster.director.was_registered=This actor was successfully attached to director block!
 
@@ -87,6 +86,8 @@ blockbuster.director_map.no_cast=No registered replays!
 blockbuster.actor.not_playing=This actor doesn't play!
 blockbuster.actor.playing=This actor already play!
 blockbuster.actor.no_name=This actor doesn't have a recording ID!
+blockbuster.actor.not_attached=This registering item isn't attached to a director block!
+blockbuster.actor.not_director=It seems like the director block at (%s, %s, %s) has been destroyed. Please, tie this register item to director block.
 
 # Commands
 blockbuster.commands.action=/action <record|play> <file_name> [entity_name] [skin_name] [invulnerable]\n\nExamples:\n/action record MeDoingTricks\n/action play MeDoingTricks TonyHawk TonysSkin 1\n\nNote: optional arguments [entity_name] [skin_name] [is_invulnerable] are only for "play" action.\nSide note: <file_name>, [entity_name] [skin_name] can't contain spaces.   

@@ -131,7 +131,7 @@ public class KeyboardHandler
         }
         catch (CommandException e)
         {
-            player.addChatComponentMessage(new TextComponentTranslation(e.getMessage()));
+            player.addChatMessage(new TextComponentTranslation(e.getMessage()));
         }
     }
 }

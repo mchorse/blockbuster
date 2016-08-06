@@ -12,6 +12,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -274,7 +275,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item) || this.handleSkinItem(item, player)))
+        if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
         {
             return true;
         }
@@ -291,14 +292,37 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Set actor's id on register item (while using register item on this actor)
      */
-    private boolean handleRegisterItem(ItemStack stack)
+    private boolean handleRegisterItem(ItemStack stack, EntityPlayer player)
     {
         boolean holdsRegisterItem = stack.getItem() instanceof ItemRegister;
 
         if (!this.worldObj.isRemote && holdsRegisterItem)
         {
             ItemRegister item = (ItemRegister) stack.getItem();
-            item.registerStack(stack, this);
+            BlockPos pos = item.getBlockPos(stack);
+
+            if (pos == null)
+            {
+                player.addChatMessage(new TextComponentTranslation("blockbuster.actor.not_attached"));
+            }
+
+            TileEntity tile = this.worldObj.getTileEntity(pos);
+
+            if (tile != null && tile instanceof TileEntityDirector)
+            {
+                if (!((TileEntityDirector) tile).add(this))
+                {
+                    player.addChatMessage(new TextComponentTranslation("blockbuster.director.already_registered"));
+                }
+                else
+                {
+                    player.addChatMessage(new TextComponentTranslation("blockbuster.director.was_registered"));
+                }
+            }
+            else
+            {
+                player.addChatMessage(new TextComponentTranslation("blockbuster.actor.not_director", pos.getX(), pos.getY(), pos.getZ()));
+            }
         }
 
         return holdsRegisterItem;
