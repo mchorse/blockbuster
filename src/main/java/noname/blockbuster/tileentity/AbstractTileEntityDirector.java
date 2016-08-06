@@ -47,7 +47,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.actors);
-        
+
         return compound;
     }
 
@@ -124,6 +124,23 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      * Stop scene's playback
      */
     public abstract void stopPlayback();
+
+    /**
+     * Toggle scene's playback
+     */
+    public boolean togglePlayback()
+    {
+        if (this.isPlaying())
+        {
+            this.stopPlayback();
+        }
+        else
+        {
+            this.startPlayback();
+        }
+
+        return this.isPlaying();
+    }
 
     /**
      * Checks every 4 ticks if the actors (that registered by this TE) are

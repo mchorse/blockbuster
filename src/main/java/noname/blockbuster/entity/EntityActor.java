@@ -388,7 +388,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (this.filename.isEmpty())
         {
-            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.noname"));
+            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
             return;
         }
 

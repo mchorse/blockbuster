@@ -94,17 +94,18 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (tag.hasKey("CameraPlay"))
+            if (((AbstractTileEntityDirector) tile).togglePlayback())
             {
-                Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player);
+                if (tag.hasKey("CameraPlay"))
+                {
+                    Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player);
+                }
+                else if (tag.hasKey("CameraProfile"))
+                {
+                    String profile = tag.getString("CameraProfile");
+                    CameraUtils.sendProfileToPlayer(profile, (EntityPlayerMP) player, true);
+                }
             }
-            else if (tag.hasKey("CameraProfile"))
-            {
-                String profile = tag.getString("CameraProfile");
-                CameraUtils.sendProfileToPlayer(profile, (EntityPlayerMP) player, true);
-            }
-
-            ((AbstractTileEntityDirector) tile).startPlayback();
         }
 
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
