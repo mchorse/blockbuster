@@ -135,16 +135,7 @@ public class Mocap
      */
     public static void startRecording(String filename, EntityPlayer player)
     {
-        RecordThread recorder = records.get(player);
-
-        if (recorder != null)
-        {
-            recorder.capture = false;
-            records.remove(player);
-
-            Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
-            return;
-        }
+        if (stopRecording(player)) return;
 
         for (RecordThread registeredRecorder : records.values())
         {
@@ -155,10 +146,30 @@ public class Mocap
             }
         }
 
-        recorder = new RecordThread(player, filename);
+        RecordThread recorder = new RecordThread(player, filename);
         records.put(player, recorder);
 
         Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+    }
+
+    /**
+     * Stop the recording
+     */
+    public static boolean stopRecording(EntityPlayer player)
+    {
+        RecordThread recorder = records.get(player);
+
+        if (recorder != null)
+        {
+            recorder.capture = false;
+            records.remove(player);
+
+            Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.filename), (EntityPlayerMP) player);
+
+            return true;
+        }
+
+        return false;
     }
 
     public static EntityActor actorFromArgs(String[] args, World world)

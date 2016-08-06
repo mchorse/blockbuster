@@ -43,20 +43,28 @@ public class CommandAction extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 2)
+        if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(null));
+            throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
         String action = args[0];
 
-        if (action.equals("record"))
+        if (action.equals("record") && args.length >= 2)
         {
             Mocap.startRecording(args[1], getCommandSenderAsPlayer(sender));
         }
-        else if (action.equals("play"))
+        else if (action.equals("play") && args.length >= 2)
         {
             Mocap.startPlayback(SubCommandBase.dropFirstArgument(args), sender.getEntityWorld(), true);
+        }
+        else if (action.equals("stop"))
+        {
+            Mocap.stopRecording(getCommandSenderAsPlayer(sender));
+        }
+        else
+        {
+            throw new WrongUsageException(this.getCommandUsage(sender));
         }
     }
 
@@ -65,7 +73,7 @@ public class CommandAction extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "record", "play");
+            return getListOfStringsMatchingLastWord(args, "record", "play", "stop");
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
