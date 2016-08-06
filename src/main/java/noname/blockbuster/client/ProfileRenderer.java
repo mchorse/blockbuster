@@ -22,6 +22,8 @@ import noname.blockbuster.camera.Position;
 import noname.blockbuster.camera.TimeUtils;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.CircularFixture;
+import noname.blockbuster.camera.fixtures.FollowFixture;
+import noname.blockbuster.camera.fixtures.LookFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
 
 /**
@@ -95,10 +97,12 @@ public class ProfileRenderer
             float distY = Math.abs(next.point.y - prev.point.y);
             float distZ = Math.abs(next.point.z - prev.point.z);
 
-            if (distX + distY + distZ >= 0.5) this.drawCard(i, duration, next);
+            Color color = this.fromFixture(fixture);
 
-            this.drawCard(i++, duration, prev);
-            this.drawFixture(fixture, prev, next);
+            if (distX + distY + distZ >= 0.5) this.drawCard(color, i, duration, next);
+
+            this.drawCard(color, i++, duration, prev);
+            this.drawFixture(color, fixture, prev, next);
         }
 
         GlStateManager.disableBlend();
@@ -106,23 +110,24 @@ public class ProfileRenderer
     }
 
     /**
-     * Draw a fixture's */
-    private void drawFixture(AbstractFixture fixture, Position prev, Position next)
+     * Draw a fixture's fixture
+     */
+    private void drawFixture(Color color, AbstractFixture fixture, Position prev, Position next)
     {
         if (fixture instanceof PathFixture)
         {
-            this.drawPathFixture(fixture, prev, next);
+            this.drawPathFixture(color, fixture, prev, next);
         }
         else if (fixture instanceof CircularFixture)
         {
-            this.drawCircularFixture(fixture, prev, next);
+            this.drawCircularFixture(color, fixture, prev, next);
         }
     }
 
     /**
      * Draw the passed path fixture
      */
-    private void drawPathFixture(AbstractFixture fixture, Position prev, Position next)
+    private void drawPathFixture(Color color, AbstractFixture fixture, Position prev, Position next)
     {
         List<Position> points = ((PathFixture) fixture).getPoints();
 
@@ -131,23 +136,23 @@ public class ProfileRenderer
             prev.copy(points.get(i));
             next.copy(points.get(i + 1));
 
-            this.drawLine(this.playerX, this.playerY, this.playerZ, prev, next);
+            this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
         }
     }
 
     /**
      * Draw the passed circular fixture
      */
-    private void drawCircularFixture(AbstractFixture fixture, Position prev, Position next)
+    private void drawCircularFixture(Color color, AbstractFixture fixture, Position prev, Position next)
     {
         float circles = ((CircularFixture) fixture).getCircles();
 
-        for (int i = 0; i < circles; i += 2)
+        for (int i = 0; i < circles; i += 3)
         {
             fixture.applyFixture(i / circles, prev);
             fixture.applyFixture((i + 2) / circles, next);
 
-            this.drawLine(this.playerX, this.playerY, this.playerZ, prev, next);
+            this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
         }
     }
 
@@ -155,12 +160,12 @@ public class ProfileRenderer
      * Draw the card of the fixture with the information about this fixture,
      * like duration and stuff.
      */
-    private void drawCard(int index, long duration, Position pos)
+    private void drawCard(Color color, int index, long duration, Position pos)
     {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         GlStateManager.enableBlend();
-        GlStateManager.color(1, 1, 1, 0.75F);
+        GlStateManager.color(color.red, color.green, color.blue, 0.75F);
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 
@@ -177,7 +182,6 @@ public class ProfileRenderer
         float minY = -0.5f;
         float maxX = 0.5f;
         float maxY = 0.5f;
-
         float size = 1;
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
@@ -209,12 +213,13 @@ public class ProfileRenderer
 
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
+        GlStateManager.color(1, 1, 1, 1);
     }
 
     /**
      * Draw a line between two positions
      */
-    private void drawLine(double playerX, double playerY, double playerZ, Position prev, Position next)
+    private void drawLine(Color color, double playerX, double playerY, double playerZ, Position prev, Position next)
     {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
@@ -225,7 +230,7 @@ public class ProfileRenderer
 
         GL11.glLineWidth(4);
         GlStateManager.disableTexture2D();
-        GlStateManager.color(240, 0, 0, 0.5f);
+        GlStateManager.color(color.red, color.green, color.blue, 0.5F);
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 
@@ -241,5 +246,37 @@ public class ProfileRenderer
         GlStateManager.enableTexture2D();
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
+
+    }
+
+    /**
+     * Get color for a fixture
+     *
+     * Don't forget about instanceof thing with order and extend.
+     */
+    private ProfileRenderer.Color fromFixture(AbstractFixture fixture)
+    {
+        if (fixture instanceof PathFixture) return ProfileRenderer.Color.PATH;
+        else if (fixture instanceof FollowFixture) return ProfileRenderer.Color.LOOK;
+        else if (fixture instanceof LookFixture) return ProfileRenderer.Color.FOLLOW;
+        else if (fixture instanceof CircularFixture) return ProfileRenderer.Color.CIRCULAR;
+
+        return ProfileRenderer.Color.IDLE;
+    }
+
+    public static enum Color
+    {
+        IDLE(0, 0, 0), PATH(1, 0, 0), LOOK(0.85F, 0.137F, 0.329F), FOLLOW(0.298F, 0.690F, 0.972F), CIRCULAR(0.298F, 0.631F, 0.247F);
+
+        public float red;
+        public float green;
+        public float blue;
+
+        Color(float red, float green, float blue)
+        {
+            this.red = red;
+            this.green = green;
+            this.blue = blue;
+        }
     }
 }
