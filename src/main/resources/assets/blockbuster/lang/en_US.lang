@@ -6,11 +6,11 @@ blockbuster.no=No
 
 # Item tool tips
 
-blockbuster.info.director=Use it for machinimas
-blockbuster.info.director_map=Use it for adventure maps
+blockbuster.info.director=Use it for §omachinimas
+blockbuster.info.director_map=Use it for §oadventure maps
 
-blockbuster.info.playback_director=Attached to (%d, %d, %d)
-blockbuster.info.playback_profile=Plays profile "%s"
+blockbuster.info.playback_director=Attached to (§r%d§7, §r%d§7, §r%d§7)
+blockbuster.info.playback_profile=Plays profile "§f§o%s§r§7"
 blockbuster.info.playback_play=Plays camera
 
 # Vanilla strings
@@ -87,7 +87,7 @@ blockbuster.director_map.no_cast=No registered replays!
 # Actor
 
 blockbuster.actor.not_playing=This actor doesn't play!
-blockbuster.actor.playing=This actor already play!
+blockbuster.actor.playing=This actor already plays!
 blockbuster.actor.no_name=This actor doesn't have a recording ID!
 blockbuster.actor.not_attached=This registering item isn't attached to a director block!
 
@@ -122,7 +122,7 @@ blockbuster.duration.profile=Camera profile runs for %d milliseconds.
 # Camera fixtures
 
 blockbuster.fixtures.few_args=You passed not enough arguments for this command!
-blockbuster.fixtures.wrong_type=Camera fixture by type '%s' doesn't exist!
+blockbuster.fixtures.wrong_type=Camera fixture by type %s doesn't exist!
 blockbuster.fixtures.no_entity=You should look at any entity to add this fixture!
 
 # Camera profile
@@ -137,15 +137,15 @@ blockbuster.profile.load=Camera profile was loaded from file %s.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
 
-blockbuster.profile.empty_filename=§cThis camera profile has empty filename! In current situation, specify the [filename] argument, please.
-blockbuster.profile.cant_save=§cCan't save camera profile by file name %s
-blockbuster.profile.cant_load=§cCan't load camera profile by file name %s
+blockbuster.profile.empty_filename=This camera profile has empty filename! In current situation, specify the [filename] argument, please.
+blockbuster.profile.cant_save=Can't save camera profile by file name %s
+blockbuster.profile.cant_load=Can't load camera profile by file name %s
 
 # Recording
 
-blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
-blockbuster.mocap.stopped_logout=§9Stopped recording %s. Bye!
-blockbuster.mocap.already_recording=§c%s is already being recorded to?
-blockbuster.mocap.wrong_signature=§c%s isn't a record file (or is an old version?)
-blockbuster.mocap.cant_find_file=§cCan't find %s replay file!
-blockbuster.mocap.error_file=§cError loading record file, either not a record file or recorded by an older version.
+blockbuster.mocap.stopped_dead=Stopped recording %s, because player's dead.
+blockbuster.mocap.stopped_logout=Stopped recording %s. Bye!
+blockbuster.mocap.already_recording=%s is already being recorded to?
+blockbuster.mocap.wrong_signature=%s isn't a record file (or is an old version?)
+blockbuster.mocap.cant_find_file=Can't find %s replay file!
+blockbuster.mocap.error_file=Error loading record file, either not a record file or recorded by an older version.
