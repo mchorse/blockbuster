@@ -19,6 +19,7 @@ import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.camera.Position;
+import noname.blockbuster.camera.TimeUtils;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.CircularFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
@@ -191,7 +192,7 @@ public class ProfileRenderer
         GlStateManager.disableBlend();
 
         String indexString = String.valueOf(index);
-        String durationString = String.valueOf(duration) + "ms";
+        String durationString = TimeUtils.formatMillis(duration);
         int indexWidth = this.mc.fontRendererObj.getStringWidth(indexString) / 2;
         int durationWidth = this.mc.fontRendererObj.getStringWidth(durationString) / 2;
 

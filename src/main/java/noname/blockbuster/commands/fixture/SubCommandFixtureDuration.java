@@ -1,13 +1,16 @@
 package noname.blockbuster.commands.fixture;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import noname.blockbuster.camera.CameraProfile;
+import noname.blockbuster.camera.TimeUtils;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.commands.CommandCamera;
 
@@ -19,6 +22,8 @@ import noname.blockbuster.commands.CommandCamera;
  */
 public class SubCommandFixtureDuration extends CommandBase
 {
+    private Pattern time = Pattern.compile("(\\d+(?:\\.\\d+)?)([hms])?");
+
     @Override
     public String getCommandName()
     {
@@ -38,7 +43,9 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 0)
         {
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.profile", profile.getDuration())));
+            String duration = TimeUtils.formatMillis(profile.getDuration());
+
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.profile", duration)));
             return;
         }
 
@@ -53,11 +60,21 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 1)
         {
-            sender.addChatMessage(new TextComponentTranslation(I18n.format("blockbuster.duration.fixture", index, fixture.getDuration())));
+            String duration = TimeUtils.formatMillis(fixture.getDuration());
+
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.fixture", index, duration)));
             return;
         }
 
-        long duration = CommandBase.parseInt(args[1]);
-        fixture.setDuration(duration);
+        Matcher matcher = this.time.matcher(args[1]);
+
+        if (matcher.find())
+        {
+            fixture.setDuration(CommandBase.parseLong(matcher.group(1)) * TimeUtils.toMillis(matcher.group(2)));
+        }
+        else
+        {
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.wrong", args[1])));
+        }
     }
 }
