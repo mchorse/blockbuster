@@ -29,7 +29,7 @@ import noname.blockbuster.commands.CommandDirector;
  * - diesieben07 for giving idea for actor skins
  * - Choonster for pointing out that processInteract triggers for each hand
  * - Lightwave for porting some of the code to 1.9.4
- * - NIL5 for testing and giving some feedback on the mod
+ * - NlL5 for testing and giving feedback and ideas for the mod
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9.4]")
 public class Blockbuster

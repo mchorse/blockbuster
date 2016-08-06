@@ -20,24 +20,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     /* Public API */
 
     /**
-     * Remove all registered actors from this TE
-     */
-    public void reset()
-    {
-        this.actors = new ArrayList<String>();
-        this.markDirty();
-    }
-
-    /**
-     * Remove an actor by id.
-     */
-    public void remove(int id)
-    {
-        this.actors.remove(id);
-        this.markDirty();
-    }
-
-    /**
      * Start a playback (make actors play their roles from the files)
      */
     @Override

@@ -4,7 +4,8 @@ blockbuster.recording=Recording to %s
 blockbuster.yes=Yes
 blockbuster.no=No
 
-# Item tooltips
+# Item tool tips
+
 blockbuster.info.director=Use it for machinimas
 blockbuster.info.director_map=Use it for adventure maps
 
@@ -12,10 +13,10 @@ blockbuster.info.playback_director=Attached to (%d, %d, %d)
 blockbuster.info.playback_profile=Plays profile "%s"
 blockbuster.info.playback_play=Plays camera
 
-# Creative tabs
+# Vanilla strings
+
 itemGroup.blockbuster=Blockbuster
 
-# Item and block names
 tile.blockbuster.director.name=Director block
 tile.blockbuster.director_map.name=Director map block
 
@@ -23,12 +24,19 @@ item.blockbuster.playback.name=Playback button
 item.blockbuster.register.name=Registering device
 item.blockbuster.actor_config.name=Actor configuration device
 
-# Entities names
 entity.blockbuster.Actor.name=Actor
+
+key.blockbuster.profile.title=Blockbuster Camera
+key.blockbuster.profile.add_idle=Add Idle Camera Fixture
+key.blockbuster.profile.add_look=Add Look Camera Fixture
+key.blockbuster.profile.add_follow=Add Follow Camera Fixture
+key.blockbuster.profile.remove=Remove Last Camera Fixture
+key.blockbuster.profile.toggle=Toggle Camera Profile Rendering
+key.blockbuster.profile.start=Start Camera Profile
+key.blockbuster.profile.stop=Stop Camera Profile
 
 # GUI
 
-# General GUI strings
 blockbuster.gui.done=Done
 blockbuster.gui.next=Next
 blockbuster.gui.previous=Previous
@@ -39,6 +47,7 @@ blockbuster.gui.edit=Edit
 blockbuster.gui.remove=Remove
 
 # Actor configuration strings
+
 blockbuster.gui.actor.title=Actor Configuration
 blockbuster.gui.actor.default=Default
 blockbuster.gui.actor.name=Name
@@ -47,6 +56,7 @@ blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
 
 # Playback GUI
+
 blockbuster.gui.playback.title=Playback configuration
 blockbuster.gui.playback.camera_mode=Camera mode
 blockbuster.gui.playback.profile=Profile filename
@@ -55,46 +65,40 @@ blockbuster.gui.playback.nothing=Do nothing
 blockbuster.gui.playback.play=Play only
 blockbuster.gui.playback.load_profile=Load and play
 
-# Key bindings
-key.blockbuster.profile.title=Blockbuster Camera
-key.blockbuster.profile.add_idle=Add Idle Camera Fixture
-key.blockbuster.profile.add_look=Add Look Camera Fixture
-key.blockbuster.profile.add_follow=Add Follow Camera Fixture
-key.blockbuster.profile.remove=Remove Last Camera Fixture
-key.blockbuster.profile.toggle=Toggle Camera Profile Rendering
-key.blockbuster.profile.start=Start Camera Profile
-key.blockbuster.profile.stop=Stop Camera Profile
-
 # Director block
-blockbuster.director.play=Director block at (%s, %s, %s) has started playing!
-blockbuster.director.stop=Director block at (%s, %s, %s) has stopped!
 
 blockbuster.director.title=Director Block's Cast
 blockbuster.director.no_cast=No registered actors!
 
+blockbuster.director.play=Director block at (%s, %s, %s) has started playing!
+blockbuster.director.stop=Director block at (%s, %s, %s) has stopped!
+
 blockbuster.director.already_registered=This actor is already registered by director block!
 blockbuster.director.was_registered=This actor was successfully attached to director block!
 
-blockbuster.director.attached_device=This recording device was successfully attached to director block!
-blockbuster.director.missing=The director block, that was attached to this device, was destroyed or moved. Attach this device to another director block!
+blockbuster.director.attached_device=This registering device was successfully attached to director block!
+blockbuster.director.missing=The director block, that was attached to this device at (%s, %s, %s), was destroyed or moved. Attach this device to another director block!
 
 # Director map block
+
 blockbuster.director_map.title=Director Map Block's Cast
 blockbuster.director_map.no_cast=No registered replays!
 
 # Actor
+
 blockbuster.actor.not_playing=This actor doesn't play!
 blockbuster.actor.playing=This actor already play!
 blockbuster.actor.no_name=This actor doesn't have a recording ID!
 blockbuster.actor.not_attached=This registering item isn't attached to a director block!
-blockbuster.actor.not_director=It seems like the director block at (%s, %s, %s) has been destroyed. Please, tie this register item to director block.
 
 # Commands
+
 blockbuster.commands.action=/action <record|play|stop> [file_name] [entity_name] [skin_name] [invulnerable]\n\nExamples:\n/action record MeDoingTricks\n/action stop\n/action play MeDoingTricks TonyHawk TonysSkin 1\n\nNote: optional arguments [entity_name] [skin_name] [is_invulnerable] are only for "play" action.\nSide note: <file_name>, [entity_name] [skin_name] can't contain spaces.   
 blockbuster.commands.director=/director <play|stop> <x> <y> <z> where <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 
 # Camera's commands
+
 blockbuster.commands.camera=Camera command. Provides sub-commands for managing camera profile and its camera fixtures. 
 blockbuster.commands.camera.start=/camera start\n\nStarts a camera profile
 blockbuster.commands.camera.stop=/camera stop\n\nStops currently running camera profile
@@ -116,11 +120,13 @@ blockbuster.duration.fixture=Camera fixture at index %d runs for %d milliseconds
 blockbuster.duration.profile=Camera profile runs for %d milliseconds.
 
 # Camera fixtures
+
 blockbuster.fixtures.few_args=You passed not enough arguments for this command!
 blockbuster.fixtures.wrong_type=Camera fixture by type '%s' doesn't exist!
 blockbuster.fixtures.no_entity=You should look at any entity to add this fixture!
 
 # Camera profile
+
 blockbuster.profile.clear=Currently used camera profile was cleared.
 blockbuster.profile.new=Created new camera profile with filename %s.
 
@@ -136,6 +142,7 @@ blockbuster.profile.cant_save=§cCan't save camera profile by file name %s
 blockbuster.profile.cant_load=§cCan't load camera profile by file name %s
 
 # Recording
+
 blockbuster.mocap.stopped_dead=§dStopped recording %s, because player's dead.
 blockbuster.mocap.stopped_logout=§9Stopped recording %s. Bye!
 blockbuster.mocap.already_recording=§c%s is already being recorded to?

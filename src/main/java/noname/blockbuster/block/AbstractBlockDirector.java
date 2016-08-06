@@ -78,7 +78,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(PLAYING, meta == 1 ? true : false);
+        return this.getDefaultState().withProperty(PLAYING, meta == 1);
     }
 
     @Override
@@ -164,9 +164,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     /**
-     * Output actors
-     *
-     * Temporary solution for browsing registered entities by DirectorTileEntity.
+     * Display director block's cast
      */
     protected abstract void displayCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
 }

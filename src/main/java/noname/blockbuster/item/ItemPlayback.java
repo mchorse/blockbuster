@@ -89,12 +89,14 @@ public class ItemPlayback extends Item
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing"));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", x, y, z));
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (((AbstractTileEntityDirector) tile).togglePlayback())
+            AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
+
+            if (director.togglePlayback())
             {
                 if (tag.hasKey("CameraPlay"))
                 {
@@ -102,8 +104,7 @@ public class ItemPlayback extends Item
                 }
                 else if (tag.hasKey("CameraProfile"))
                 {
-                    String profile = tag.getString("CameraProfile");
-                    CameraUtils.sendProfileToPlayer(profile, (EntityPlayerMP) player, true);
+                    CameraUtils.sendProfileToPlayer(tag.getString("CameraProfile"), (EntityPlayerMP) player, true);
                 }
             }
         }

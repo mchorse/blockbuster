@@ -85,6 +85,24 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     /* Public API */
 
     /**
+     * Remove everything
+     */
+    public void reset()
+    {
+        this.actors = new ArrayList<String>();
+        this.markDirty();
+    }
+
+    /**
+     * Remove an actor by id.
+     */
+    public void remove(int id)
+    {
+        this.actors.remove(id);
+        this.markDirty();
+    }
+
+    /**
      * Add an actor to this director block (dah, TE is part of the director
      * block)
      */

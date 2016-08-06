@@ -84,7 +84,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super(worldIn);
 
-        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_xXx"))
+        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_420_xXx"))
         {
             @Override
             public boolean isSpectator()
@@ -130,7 +130,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     /**
      * This is also brutally stolen from EntityPlayer class, by the way, I don't
-     * think that chaning the height while sneaking can save player's life
+     * think that changing the height while sneaking can save player's life
      */
     protected void updateSize()
     {
@@ -310,7 +310,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
             if (tile != null && tile instanceof TileEntityDirector)
             {
-                if (!((TileEntityDirector) tile).add(this))
+                TileEntityDirector director = (TileEntityDirector) tile;
+
+                if (!director.add(this))
                 {
                     player.addChatMessage(new TextComponentTranslation("blockbuster.director.already_registered"));
                 }
@@ -321,7 +323,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             }
             else
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.actor.not_director", pos.getX(), pos.getY(), pos.getZ()));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", pos.getX(), pos.getY(), pos.getZ()));
             }
         }
 
@@ -394,15 +396,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.directorBlock != null)
         {
-            TileEntityDirector director = (TileEntityDirector) player.worldObj.getTileEntity(this.directorBlock);
+            TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
 
-            if (!Mocap.records.containsKey(player))
+            if (tile != null && tile instanceof TileEntityDirector)
             {
-                director.startPlayback(this);
-            }
-            else
-            {
-                director.stopPlayback(this);
+                TileEntityDirector director = (TileEntityDirector) tile;
+
+                if (!Mocap.records.containsKey(player))
+                {
+                    director.startPlayback(this);
+                }
+                else
+                {
+                    director.stopPlayback(this);
+                }
             }
         }
 

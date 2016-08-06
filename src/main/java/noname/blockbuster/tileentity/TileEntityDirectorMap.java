@@ -24,24 +24,6 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
     protected Map<String, EntityActor> actorMap = new HashMap<String, EntityActor>();
 
     /**
-     * Remove everything
-     */
-    public void reset()
-    {
-        this.actors = new ArrayList<String>();
-        this.markDirty();
-    }
-
-    /**
-     * Remove a replay
-     */
-    public void remove(int id)
-    {
-        this.actors.remove(id);
-        this.markDirty();
-    }
-
-    /**
      * Edit a replay
      */
     public void edit(int id, String replay)
@@ -71,7 +53,7 @@ public class TileEntityDirectorMap extends AbstractTileEntityDirector
      *
      * This method is different from the method in DirectorTileEntity, instead
      * of finding all entities and making them play, this method is basically
-     * do the same thing as CommandPlay#execute, launching the playback
+     * do the same thing as `/action play`, launching the playback
      * and adding new created entity to actors map.
      */
     @Override
