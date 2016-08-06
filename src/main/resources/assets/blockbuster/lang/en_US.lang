@@ -66,6 +66,9 @@ key.blockbuster.profile.start=Start Camera Profile
 key.blockbuster.profile.stop=Stop Camera Profile
 
 # Director block
+blockbuster.director.play=Director block at (%s, %s, %s) has started playing!
+blockbuster.director.stop=Director block at (%s, %s, %s) has stopped!
+
 blockbuster.director.title=Director Block's Cast
 blockbuster.director.no_cast=No registered actors!
 
@@ -82,7 +85,8 @@ blockbuster.director_map.no_cast=No registered replays!
 
 # Actor
 blockbuster.actor.not_playing=This actor doesn't play!
-blockbuster.actor.noname=This actor doesn't have a recording ID!
+blockbuster.actor.playing=This actor already play!
+blockbuster.actor.no_name=This actor doesn't have a recording ID!
 
 # Commands
 blockbuster.commands.action=/action <record|play> <file_name> [entity_name] [skin_name] [invulnerable]\n\nExamples:\n/action record MeDoingTricks\n/action play MeDoingTricks TonyHawk TonysSkin 1\n\nNote: optional arguments [entity_name] [skin_name] [is_invulnerable] are only for "play" action.\nSide note: <file_name>, [entity_name] [skin_name] can't contain spaces.   

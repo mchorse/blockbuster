@@ -64,14 +64,18 @@ public class Mocap
         return record.eventList;
     }
 
+    public static void broadcastMessage(String message)
+    {
+        broadcastMessage(new TextComponentString(message));
+    }
+
     /**
      * Send given message to everyone on the server, to everyone.
      *
      * Invoke this method only on the server side.
      */
-    public static void broadcastMessage(String message)
+    public static void broadcastMessage(ITextComponent message)
     {
-        ITextComponent chatMessage = new TextComponentString(message);
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
         for (String username : players.getAllUsernames())
@@ -80,7 +84,7 @@ public class Mocap
 
             if (player != null)
             {
-                player.addChatMessage(chatMessage);
+                player.addChatMessage(message);
             }
         }
     }

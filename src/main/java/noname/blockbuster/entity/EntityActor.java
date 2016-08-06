@@ -7,7 +7,6 @@ import java.util.List;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -329,13 +329,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.playing"));
+            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.playing"));
             return;
         }
 
         if (this.filename.isEmpty())
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.no_name"));
+            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
         }
         else
         {
@@ -350,7 +350,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.not_playing"));
+            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.not_playing"));
             return;
         }
 
@@ -364,7 +364,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (this.filename.isEmpty())
         {
-            Mocap.broadcastMessage(I18n.format("blockbuster.actor.noname"));
+            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.noname"));
             return;
         }
 

@@ -9,6 +9,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
@@ -54,10 +55,12 @@ public class CommandDirector extends CommandBase
         if (action.equals("play"))
         {
             director.startPlayback();
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.director.play", args[1], args[2], args[3]));
         }
         else if (action.equals("stop"))
         {
             director.stopPlayback();
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.director.stop", args[1], args[2], args[3]));
         }
     }
 
