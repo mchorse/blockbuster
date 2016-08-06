@@ -99,7 +99,7 @@ public class ProfileRunner
 
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
-            player.motionY = 0;
+            player.motionX = player.motionY = player.motionZ = 0;
         }
     }
 }

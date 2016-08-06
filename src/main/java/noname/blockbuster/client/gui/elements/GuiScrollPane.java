@@ -58,7 +58,7 @@ public abstract class GuiScrollPane extends GuiScreen
 
     public void scrollTo(int y)
     {
-        this.scrollY = MathHelper.clamp_int(y, 0, this.scrollHeight - this.h);
+        this.scrollY = MathHelper.clamp_int(y, 0, this.scrollHeight - this.h + 2);
     }
 
     /* Remapping buttons coordinates */
@@ -71,28 +71,24 @@ public abstract class GuiScrollPane extends GuiScreen
 
         if (i != 0 && this.scrollHeight > this.h)
         {
-            this.scrollBy((int) Math.copySign(1, i));
+            this.scrollBy((int) Math.copySign(2, i));
         }
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        mouseY += this.scrollY;
-
         if (mouseY < this.y || mouseY > this.y + this.h) return;
 
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        super.mouseClicked(mouseX, mouseY + this.scrollY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        mouseY += this.scrollY;
-
         if (mouseY < this.y || mouseY > this.y + this.h) return;
 
-        super.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(mouseX, mouseY + this.scrollY, state);
     }
 
     /* Drawing methods */
@@ -115,7 +111,7 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         if (this.scrollHeight < this.h) return;
 
-        float progress = (float) this.scrollY / (float) (this.scrollHeight - this.h);
+        float progress = (float) this.scrollY / (float) (this.scrollHeight - this.h + 2);
         int x = this.x + this.w - 8;
         float y = this.y + 3 + progress * (this.h - 26);
 
