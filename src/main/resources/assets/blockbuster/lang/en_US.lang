@@ -46,6 +46,7 @@ key.blockbuster.profile.reduce_duration=Reduce Duration
 key.blockbuster.profile.add_path_point=Add Path Point
 key.blockbuster.profile.remove_path_point=Remove Last Path Point
 
+key.blockbuster.profile.goto=Go to Camera Fixture
 key.blockbuster.profile.toggle=Toggle Camera Profile Rendering
 
 key.blockbuster.profile.save=Save Camera Profile

@@ -50,6 +50,7 @@ public class KeyboardHandler
     private KeyBinding profileAddPathPoint;
     private KeyBinding profileRemovePathPoint;
 
+    private KeyBinding profileGoToFixture;
     private KeyBinding profileToggleRender;
 
     private KeyBinding profileLoadProfile;
@@ -90,6 +91,7 @@ public class KeyboardHandler
         this.profileSaveProfile = new KeyBinding("key.blockbuster.profile.save", Keyboard.KEY_NONE, profile);
         this.profileLoadProfile = new KeyBinding("key.blockbuster.profile.load", Keyboard.KEY_NONE, profile);
 
+        this.profileGoToFixture = new KeyBinding("key.blockbuster.profile.goto", Keyboard.KEY_G, general);
         this.profileToggleRender = new KeyBinding("key.blockbuster.profile.toggle", Keyboard.KEY_P, general);
         this.profileNextFixture = new KeyBinding("key.blockbuster.profile.next", Keyboard.KEY_RBRACKET, general);
         this.profilePrevFixture = new KeyBinding("key.blockbuster.profile.prev", Keyboard.KEY_LBRACKET, general);
@@ -112,6 +114,7 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.profileAddPathPoint);
         ClientRegistry.registerKeyBinding(this.profileRemovePathPoint);
 
+        ClientRegistry.registerKeyBinding(this.profileGoToFixture);
         ClientRegistry.registerKeyBinding(this.profileToggleRender);
 
         ClientRegistry.registerKeyBinding(this.profileSaveProfile);
@@ -211,6 +214,11 @@ public class KeyboardHandler
         }
 
         /* Utilities */
+        if (this.profileGoToFixture.isPressed())
+        {
+            control.goTo(player);
+        }
+
         if (this.profileToggleRender.isPressed())
         {
             ClientProxy.profileRenderer.toggleRender();

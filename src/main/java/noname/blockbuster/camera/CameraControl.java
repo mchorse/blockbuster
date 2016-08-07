@@ -165,4 +165,16 @@ public class CameraControl
 
         Dispatcher.sendToServer(new PacketLoadCameraProfile(this.profile.getFilename()));
     }
+
+    public void goTo(EntityPlayer player) throws CommandException
+    {
+        AbstractFixture fixture = this.current();
+        Position pos = new Position(0, 0, 0, 0, 0);
+
+        Point point = pos.point;
+        Angle angle = pos.angle;
+
+        fixture.applyFixture(0, pos);
+        player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+    }
 }
