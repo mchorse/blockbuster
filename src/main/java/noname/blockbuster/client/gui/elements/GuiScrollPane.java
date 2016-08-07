@@ -35,6 +35,8 @@ public abstract class GuiScrollPane extends GuiScreen
     protected int scrollY = 0;
     protected int scrollHeight = 0;
 
+    private boolean dragging = false;
+
     public void updateRect(int x, int y, int w, int h)
     {
         this.x = x;
@@ -80,12 +82,22 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         if (mouseY < this.y || mouseY > this.y + this.h) return;
 
+        int x = this.x + this.w - 8;
+        int y = this.y + 3;
+
+        if (mouseX >= x && mouseX <= x + 5 && mouseY >= y && mouseY <= y + this.h - 6)
+        {
+            this.dragging = true;
+        }
+
         super.mouseClicked(mouseX, mouseY + this.scrollY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
+        this.dragging = false;
+
         if (mouseY < this.y || mouseY > this.y + this.h) return;
 
         super.mouseReleased(mouseX, mouseY + this.scrollY, state);
@@ -124,6 +136,15 @@ public abstract class GuiScrollPane extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        if (this.dragging)
+        {
+            int y = mouseY - this.y - 3;
+            int h = this.h - 26;
+            float progress = (float) y / (float) h;
+
+            this.scrollTo((int) (progress * (this.scrollHeight - this.h + 2)));
+        }
+
         /* F*$! those ints */
         float rx = (float) this.mc.displayWidth / (float) this.width;
         float ry = (float) this.mc.displayHeight / (float) this.height;
