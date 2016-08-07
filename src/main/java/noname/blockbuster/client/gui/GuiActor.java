@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,6 +20,7 @@ import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiChildScreen;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiToggle;
+import noname.blockbuster.client.gui.utils.TabCompleter;
 import noname.blockbuster.entity.EntityActor;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketModifyActor;
@@ -37,7 +37,6 @@ public class GuiActor extends GuiChildScreen
 {
     /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.actor.title");
-    private String stringDefault = I18n.format("blockbuster.gui.actor.default");
     private String stringName = I18n.format("blockbuster.gui.actor.name");
     private String stringFilename = I18n.format("blockbuster.gui.actor.filename");
     private String stringSkin = I18n.format("blockbuster.gui.actor.skin");
@@ -49,17 +48,17 @@ public class GuiActor extends GuiChildScreen
     private int id;
 
     private List<String> skins;
-    private int skinIndex;
 
     /* GUI fields */
     private GuiTextField name;
     private GuiTextField filename;
+    private GuiTextField skin;
 
     private GuiButton done;
-    private GuiButton next;
-    private GuiButton prev;
     private GuiButton restore;
     private GuiToggle invincibility;
+
+    private TabCompleter completer;
 
     /**
      * Constructor for director map block
@@ -79,7 +78,6 @@ public class GuiActor extends GuiChildScreen
         super(parent);
         this.actor = actor;
         this.skins = ClientProxy.actorPack.getReloadedSkins();
-        this.skinIndex = this.skins.indexOf(actor.skin);
     }
 
     /* Actions */
@@ -91,17 +89,9 @@ public class GuiActor extends GuiChildScreen
         {
             this.saveAndQuit();
         }
-        else if (button.id == 1)
-        {
-            this.updateSkin(this.skinIndex + 1);
-        }
-        else if (button.id == 2)
-        {
-            this.updateSkin(this.skinIndex - 1);
-        }
         else if (button.id == 3)
         {
-            this.skinIndex = -1;
+            this.skin.setText("");
             this.updateSkin();
         }
         else if (button.id == 4)
@@ -138,16 +128,6 @@ public class GuiActor extends GuiChildScreen
         this.close();
     }
 
-    private void updateSkin(int index)
-    {
-        int min = 0;
-        int max = this.skins.size() - 1;
-
-        /* This expression is just like clamp, but with flipped range values */
-        this.skinIndex = index < min ? max : (index > max ? min : index);
-        this.updateSkin();
-    }
-
     private void updateSkin()
     {
         this.actor.skin = this.getSkin();
@@ -155,7 +135,7 @@ public class GuiActor extends GuiChildScreen
 
     private String getSkin()
     {
-        return this.skinIndex >= 0 ? this.skins.get(this.skinIndex) : "";
+        return this.skin.getText();
     }
 
     /* Handling input */
@@ -166,14 +146,31 @@ public class GuiActor extends GuiChildScreen
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.filename.mouseClicked(mouseX, mouseY, mouseButton);
+        this.skin.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         super.keyTyped(typedChar, keyCode);
+
+        if (keyCode == 15)
+        {
+            this.completer.complete();
+        }
+        else
+        {
+            this.completer.resetDidComplete();
+        }
+
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.filename.textboxKeyTyped(typedChar, keyCode);
+        this.skin.textboxKeyTyped(typedChar, keyCode);
+
+        if (this.skins.contains(this.skin.getText()))
+        {
+            this.updateSkin();
+        }
     }
 
     /* Initiating GUI and drawing */
@@ -192,28 +189,28 @@ public class GuiActor extends GuiChildScreen
 
         /* Initializing all GUI fields first */
         this.done = new GuiButton(0, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done"));
-        this.next = new GuiButton(1, x, y + 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.next"));
-        this.prev = new GuiButton(2, x + w / 2 + 4, y + 80, w / 2 - 4, 20, I18n.format("blockbuster.gui.previous"));
         this.restore = new GuiButton(3, x, y + 105, w, 20, I18n.format("blockbuster.gui.restore"));
         this.invincibility = new GuiToggle(4, x, y + 145, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         this.name = new GuiTextField(5, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
         this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
+        this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 81, w - 2, 18);
 
         /* And then, we're configuring them and injecting input data */
         this.buttonList.add(this.done);
-        this.buttonList.add(this.next);
-        this.buttonList.add(this.prev);
         this.buttonList.add(this.restore);
         this.buttonList.add(this.invincibility);
 
-        this.next.enabled = this.prev.enabled = this.skins.size() != 0;
         this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
 
         this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
         this.name.setMaxStringLength(30);
         this.filename.setText(this.actor.filename);
         this.filename.setMaxStringLength(40);
+        this.skin.setText(this.actor.skin);
+
+        this.completer = new TabCompleter(this.skin);
+        this.completer.setAllCompletions(this.skins);
     }
 
     @Override
@@ -222,19 +219,11 @@ public class GuiActor extends GuiChildScreen
         int x = 30;
         int y = 15;
 
-        String skin = this.stringDefault;
-
-        if (this.skinIndex != -1)
-        {
-            skin = this.skins.get(this.skinIndex);
-        }
-
         this.drawDefaultBackground();
         this.drawString(this.fontRendererObj, this.stringTitle, x + 120 + 20, 15, 0xffffffff);
         this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringFilename, x, y + 40, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringSkin, x, y + 80, 0xffcccccc);
-        this.drawRightString(this.fontRendererObj, skin, x + 120, y + 80, 0xffffffff);
         this.drawString(this.fontRendererObj, this.stringInvulnerability, x, y + 145, 0xffcccccc);
 
         int size = this.height / 4;
@@ -248,15 +237,9 @@ public class GuiActor extends GuiChildScreen
 
         this.name.drawTextBox();
         this.filename.drawTextBox();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-    }
+        this.skin.drawTextBox();
 
-    /**
-     * Draw right aligned text on the screen
-     */
-    public void drawRightString(FontRenderer fontRendererIn, String text, int x, int y, int color)
-    {
-        fontRendererIn.drawStringWithShadow(text, x - fontRendererIn.getStringWidth(text), y, color);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     /**
