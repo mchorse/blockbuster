@@ -25,6 +25,7 @@ import noname.blockbuster.camera.fixtures.CircularFixture;
 import noname.blockbuster.camera.fixtures.FollowFixture;
 import noname.blockbuster.camera.fixtures.LookFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
+import noname.blockbuster.commands.CommandCamera;
 
 /**
  * Profile path renderer
@@ -165,7 +166,7 @@ public class ProfileRenderer
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         GlStateManager.enableBlend();
-        GlStateManager.color(color.red, color.green, color.blue, 0.75F);
+        GlStateManager.color(color.red, color.green, color.blue, 0.8F);
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 
@@ -182,15 +183,21 @@ public class ProfileRenderer
         float minY = -0.5f;
         float maxX = 0.5f;
         float maxY = 0.5f;
-        float size = 1;
+
+        int i = index == CommandCamera.getControl().index ? 1 : 0;
+
+        float texX = i * 0.5F;
+        float texY = 0;
+        float texRX = i * 0.5F + 0.5F;
+        float texRY = 1;
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 
         vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(minX, minY, 0).tex(size, size).endVertex();
-        vb.pos(minX, maxY, 0).tex(size, 0).endVertex();
-        vb.pos(maxX, maxY, 0).tex(0, 0).endVertex();
-        vb.pos(maxX, minY, 0).tex(0, size).endVertex();
+        vb.pos(minX, minY, 0).tex(texRX, texRY).endVertex();
+        vb.pos(minX, maxY, 0).tex(texRX, texY).endVertex();
+        vb.pos(maxX, maxY, 0).tex(texX, texY).endVertex();
+        vb.pos(maxX, minY, 0).tex(texX, texRY).endVertex();
 
         Tessellator.getInstance().draw();
         GlStateManager.disableBlend();

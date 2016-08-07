@@ -4,11 +4,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.CommandCamera;
-import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketCameraProfile;
 
 /**
  * Camera's sub-command /camera save
@@ -39,11 +36,10 @@ public class SubCommandCameraSave extends CommandBase
 
         if (filename.isEmpty())
         {
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.empty_filename"));
-            return;
+            throw new CommandException("blockbuster.profile.empty_filename");
         }
 
-        Dispatcher.sendToServer(new PacketCameraProfile(filename, profile));
         profile.setFilename(filename);
+        profile.save();
     }
 }

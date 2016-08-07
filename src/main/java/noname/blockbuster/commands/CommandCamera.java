@@ -1,6 +1,7 @@
 package noname.blockbuster.commands;
 
 import noname.blockbuster.ClientProxy;
+import noname.blockbuster.camera.CameraControl;
 import noname.blockbuster.camera.CameraProfile;
 import noname.blockbuster.commands.camera.SubCommandCameraClear;
 import noname.blockbuster.commands.camera.SubCommandCameraGoto;
@@ -32,21 +33,29 @@ import noname.blockbuster.commands.fixture.SubCommandFixtureRemove;
 public class CommandCamera extends SubCommandBase
 {
     private static CameraProfile profile;
+    private static CameraControl control = new CameraControl();
 
     public static CameraProfile getProfile()
     {
         return profile;
     }
 
+    public static CameraControl getControl()
+    {
+        return control;
+    }
+
     public static void setProfile(CameraProfile profile)
     {
         CommandCamera.profile = profile;
+        CommandCamera.control.profile = profile;
         ClientProxy.profileRunner.setProfile(profile);
         ClientProxy.profileRenderer.setProfile(profile);
     }
 
-    static
+    public static void reset()
     {
+        control.reset();
         setProfile(new CameraProfile(""));
     }
 

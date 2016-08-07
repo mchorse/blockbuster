@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import noname.blockbuster.camera.fixtures.AbstractFixture;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraProfile;
 
 /**
  * Camera profile class
@@ -169,6 +171,14 @@ public class CameraProfile
             out.writeByte(fixture.getType());
             out.writeLong(fixture.getDuration());
             fixture.write(out);
+        }
+    }
+
+    public void save()
+    {
+        if (this.fixtures.size() != 0)
+        {
+            Dispatcher.sendToServer(new PacketCameraProfile(this.filename, this));
         }
     }
 }

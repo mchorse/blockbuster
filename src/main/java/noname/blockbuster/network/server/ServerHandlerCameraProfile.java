@@ -10,7 +10,9 @@ public class ServerHandlerCameraProfile extends ServerMessageHandler<PacketCamer
     @Override
     public void run(EntityPlayerMP player, PacketCameraProfile message)
     {
-        CameraUtils.saveCameraProfile(message.filename, message.profile, player);
-        player.addChatMessage(new TextComponentTranslation("blockbuster.profile.save", message.filename));
+        if (CameraUtils.saveCameraProfile(message.filename, message.profile, player))
+        {
+            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.save", message.filename));
+        }
     }
 }

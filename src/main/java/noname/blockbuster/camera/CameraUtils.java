@@ -224,7 +224,7 @@ public class CameraUtils
      * Save given camera profile to file. Inform user about the problem, if the
      * camera profile couldn't be saved.
      */
-    public static void saveCameraProfile(String filename, CameraProfile profile, EntityPlayerMP player)
+    public static boolean saveCameraProfile(String filename, CameraProfile profile, EntityPlayerMP player)
     {
         try
         {
@@ -234,6 +234,10 @@ public class CameraUtils
         {
             e.printStackTrace();
             player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_save", filename));
+
+            return false;
         }
+
+        return true;
     }
 }

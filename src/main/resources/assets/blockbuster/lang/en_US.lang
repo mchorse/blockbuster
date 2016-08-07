@@ -26,12 +26,34 @@ item.blockbuster.actor_config.name=Actor configuration device
 
 entity.blockbuster.Actor.name=Actor
 
-key.blockbuster.profile.title=Blockbuster Camera
+key.blockbuster.general=Blockbuster General
+key.blockbuster.profile=Blockbuster Profile Management
+key.blockbuster.duration=Blockbuster Fixture Duration
+key.blockbuster.path=Blockbuster Path Fixture
+
 key.blockbuster.profile.add_idle=Add Idle Camera Fixture
+key.blockbuster.profile.add_path=Add Path Camera Fixture
 key.blockbuster.profile.add_look=Add Look Camera Fixture
 key.blockbuster.profile.add_follow=Add Follow Camera Fixture
-key.blockbuster.profile.remove=Remove Last Camera Fixture
+key.blockbuster.profile.add_circular=Add Circular Camera Fixture
+
+key.blockbuster.profile.edit=Edit Camera Fixture
+key.blockbuster.profile.remove=Remove Camera Fixture
+
+key.blockbuster.profile.add_duration=Add Duration
+key.blockbuster.profile.reduce_duration=Reduce Duration
+
+key.blockbuster.profile.add_path_point=Add Path Point
+key.blockbuster.profile.remove_path_point=Remove Last Path Point
+
 key.blockbuster.profile.toggle=Toggle Camera Profile Rendering
+
+key.blockbuster.profile.save=Save Camera Profile
+key.blockbuster.profile.load=Reload Current Camera Profile
+
+key.blockbuster.profile.next=Next Camera Fixture
+key.blockbuster.profile.prev=Previous Camera Fixture
+
 key.blockbuster.profile.start=Start Camera Profile
 key.blockbuster.profile.stop=Stop Camera Profile
 
