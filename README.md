@@ -91,8 +91,7 @@ This mod provides following features:
     * Follow fixture – GoPro fixture
     * Circular fixture – fixture that rotates around the given point with 
       specified offset and distance
-* Keyboard bindings that allows add and remove fixtures, toggle rendering of 
-  camera profile, and start or stop camera
+* Keyboard bindings that allows almost full control of camera profile
 
 #### Commands
 
