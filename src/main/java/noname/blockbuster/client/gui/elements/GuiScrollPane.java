@@ -36,6 +36,7 @@ public abstract class GuiScrollPane extends GuiScreen
     protected int scrollHeight = 0;
 
     private boolean dragging = false;
+    protected boolean hidden = false;
 
     public void updateRect(int x, int y, int w, int h)
     {
@@ -49,6 +50,23 @@ public abstract class GuiScrollPane extends GuiScreen
     {
         this.scrollY = 0;
         this.scrollHeight = height;
+    }
+
+    public boolean isInside(int x, int y)
+    {
+        return !this.hidden && x >= this.x && this.x <= this.x + this.w && y >= this.y && y <= this.y + this.h;
+    }
+
+    /* Visibility */
+
+    public void setHidden(boolean hidden)
+    {
+        this.hidden = hidden;
+    }
+
+    public boolean getHidden()
+    {
+        return this.hidden;
     }
 
     /* Scroll content methods */
@@ -136,6 +154,11 @@ public abstract class GuiScrollPane extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        if (this.hidden)
+        {
+            return;
+        }
+
         if (this.dragging)
         {
             int y = mouseY - this.y - 3;

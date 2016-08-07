@@ -61,7 +61,10 @@ public class TabCompleter
             this.requestCompletions(this.textField.getText());
         }
 
-        this.textField.setText(this.completions.get(this.index));
+        if (this.completions.size() != 0)
+        {
+            this.textField.setText(this.completions.get(this.index));
+        }
     }
 
     private void requestCompletions(String prefix)
@@ -70,7 +73,7 @@ public class TabCompleter
 
         for (String str : this.allCompletions)
         {
-            if (str.startsWith(prefix) || prefix.isEmpty())
+            if (str.toLowerCase().startsWith(prefix.toLowerCase()) || prefix.isEmpty())
             {
                 completions.add(str);
             }
@@ -109,5 +112,6 @@ public class TabCompleter
     public void resetDidComplete()
     {
         this.didComplete = false;
+        this.completions.clear();
     }
 }

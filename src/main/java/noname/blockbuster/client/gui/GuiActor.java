@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.gui.elements.GuiChildScreen;
+import noname.blockbuster.client.gui.elements.GuiCompleterViewer;
 import noname.blockbuster.client.gui.elements.GuiParentScreen;
 import noname.blockbuster.client.gui.elements.GuiToggle;
 import noname.blockbuster.client.gui.utils.TabCompleter;
@@ -53,6 +54,7 @@ public class GuiActor extends GuiChildScreen
     private GuiTextField name;
     private GuiTextField filename;
     private GuiTextField skin;
+    private GuiCompleterViewer skinViewer;
 
     private GuiButton done;
     private GuiButton restore;
@@ -130,7 +132,10 @@ public class GuiActor extends GuiChildScreen
 
     private void updateSkin()
     {
-        this.actor.skin = this.getSkin();
+        if (this.skins.contains(this.skin.getText()))
+        {
+            this.actor.skin = this.getSkin();
+        }
     }
 
     private String getSkin()
@@ -138,15 +143,37 @@ public class GuiActor extends GuiChildScreen
         return this.skin.getText();
     }
 
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+
+        this.skinViewer.setWorldAndResolution(mc, width, height);
+    }
+
     /* Handling input */
+
+    @Override
+    public void handleMouseInput() throws IOException
+    {
+        this.skinViewer.handleMouseInput();
+
+        super.handleMouseInput();
+    }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!this.skinViewer.isInside(mouseX, mouseY))
+        {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.filename.mouseClicked(mouseX, mouseY, mouseButton);
         this.skin.mouseClicked(mouseX, mouseY, mouseButton);
+
+        this.updateSkin();
     }
 
     @Override
@@ -157,6 +184,8 @@ public class GuiActor extends GuiChildScreen
         if (keyCode == 15)
         {
             this.completer.complete();
+            this.skinViewer.setHeight(0);
+            this.skinViewer.setHidden(this.completer.getCompletions().size() == 0);
         }
         else
         {
@@ -167,10 +196,7 @@ public class GuiActor extends GuiChildScreen
         this.filename.textboxKeyTyped(typedChar, keyCode);
         this.skin.textboxKeyTyped(typedChar, keyCode);
 
-        if (this.skins.contains(this.skin.getText()))
-        {
-            this.updateSkin();
-        }
+        this.updateSkin();
     }
 
     /* Initiating GUI and drawing */
@@ -211,6 +237,9 @@ public class GuiActor extends GuiChildScreen
 
         this.completer = new TabCompleter(this.skin);
         this.completer.setAllCompletions(this.skins);
+
+        this.skinViewer = new GuiCompleterViewer(this.completer);
+        this.skinViewer.updateRect(x, y + 105, w, 100);
     }
 
     @Override
@@ -240,6 +269,8 @@ public class GuiActor extends GuiChildScreen
         this.skin.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        this.skinViewer.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     /**
