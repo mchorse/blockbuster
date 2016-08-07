@@ -1,8 +1,5 @@
 package noname.blockbuster.commands.fixture;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -22,8 +19,6 @@ import noname.blockbuster.commands.CommandCamera;
  */
 public class SubCommandFixtureDuration extends CommandBase
 {
-    private Pattern time = Pattern.compile("(\\d+(?:\\.\\d+)?)([hms])?");
-
     @Override
     public String getCommandName()
     {
@@ -66,15 +61,6 @@ public class SubCommandFixtureDuration extends CommandBase
             return;
         }
 
-        Matcher matcher = this.time.matcher(args[1]);
-
-        if (matcher.find())
-        {
-            fixture.setDuration(CommandBase.parseLong(matcher.group(1)) * TimeUtils.toMillis(matcher.group(2)));
-        }
-        else
-        {
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.wrong", args[1])));
-        }
+        fixture.setDuration(TimeUtils.getDuration(args[1]));
     }
 }

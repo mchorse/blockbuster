@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.Position;
+import noname.blockbuster.camera.TimeUtils;
 import noname.blockbuster.commands.SubCommandBase;
 
 /**
@@ -78,7 +78,7 @@ public abstract class AbstractFixture
         }
 
         String type = args[0];
-        long duration = CommandBase.parseLong(args[1]);
+        long duration = TimeUtils.getDuration(args[1]);
         AbstractFixture fixture;
 
         try
