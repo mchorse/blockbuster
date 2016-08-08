@@ -12,6 +12,10 @@ import noname.blockbuster.camera.Position;
  */
 public class FollowFixture extends LookFixture
 {
+    private float oldX = 0;
+    private float oldY = 0;
+    private float oldZ = 0;
+
     public FollowFixture(long duration)
     {
         super(duration);
@@ -44,8 +48,21 @@ public class FollowFixture extends LookFixture
         float y = (float) (this.entity.posY + this.position.point.y);
         float z = (float) (this.entity.posZ + this.position.point.z);
 
+        x = this.interpolate(this.oldX, x, 0.25F);
+        y = this.interpolate(this.oldY, y, 0.25F);
+        z = this.interpolate(this.oldZ, z, 0.25F);
+
         pos.copy(this.position);
         pos.point.set(x, y, z);
+
+        this.oldX = x;
+        this.oldY = y;
+        this.oldZ = z;
+    }
+
+    private float interpolate(float a, float b, float position)
+    {
+        return a + (b - a) * position;
     }
 
     @Override
