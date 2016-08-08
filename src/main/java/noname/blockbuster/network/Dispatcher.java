@@ -15,14 +15,17 @@ import noname.blockbuster.network.client.ClientHandlerCameraProfile;
 import noname.blockbuster.network.client.ClientHandlerCameraState;
 import noname.blockbuster.network.client.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.ClientHandlerDirectorMapCast;
+import noname.blockbuster.network.client.ClientHandlerListCameraProfiles;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
 import noname.blockbuster.network.common.PacketCameraProfile;
 import noname.blockbuster.network.common.PacketCameraState;
+import noname.blockbuster.network.common.PacketListCameraProfiles;
 import noname.blockbuster.network.common.PacketLoadCameraProfile;
 import noname.blockbuster.network.common.PacketModifyActor;
 import noname.blockbuster.network.common.PacketPlayback;
 import noname.blockbuster.network.common.PacketPlayerRecording;
+import noname.blockbuster.network.common.PacketRequestCameraProfiles;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorMapAdd;
 import noname.blockbuster.network.common.director.PacketDirectorMapCast;
@@ -40,6 +43,7 @@ import noname.blockbuster.network.server.ServerHandlerDirectorMapReset;
 import noname.blockbuster.network.server.ServerHandlerDirectorRemove;
 import noname.blockbuster.network.server.ServerHandlerDirectorRequestCast;
 import noname.blockbuster.network.server.ServerHandlerDirectorReset;
+import noname.blockbuster.network.server.ServerHandlerListCameraProfiles;
 import noname.blockbuster.network.server.ServerHandlerLoadCameraProfile;
 import noname.blockbuster.network.server.ServerHandlerModifyActor;
 import noname.blockbuster.network.server.ServerHandlerPlaybackButton;
@@ -111,6 +115,9 @@ public class Dispatcher
         register(PacketCameraProfile.class, ServerHandlerCameraProfile.class, Side.SERVER);
         register(PacketCameraState.class, ClientHandlerCameraState.class, Side.CLIENT);
         register(PacketLoadCameraProfile.class, ServerHandlerLoadCameraProfile.class, Side.SERVER);
+
+        register(PacketRequestCameraProfiles.class, ServerHandlerListCameraProfiles.class, Side.SERVER);
+        register(PacketListCameraProfiles.class, ClientHandlerListCameraProfiles.class, Side.CLIENT);
 
         register(PacketPlayback.class, ServerHandlerPlaybackButton.class, Side.SERVER);
     }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -239,5 +240,24 @@ public class CameraUtils
         }
 
         return true;
+    }
+
+    /**
+     * Gets all camera profiles names and ignore invisible files
+     */
+    public static List<String> listProfiles()
+    {
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/cameras");
+        List<String> files = new ArrayList<String>();
+
+        for (String filename : file.list())
+        {
+            if (!filename.startsWith("."))
+            {
+                files.add(filename);
+            }
+        }
+
+        return files;
     }
 }

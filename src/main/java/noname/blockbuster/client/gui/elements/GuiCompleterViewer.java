@@ -28,7 +28,7 @@ public class GuiCompleterViewer extends GuiScrollPane
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (!this.isInside(mouseX, mouseY))
+        if (!this.isInside(mouseX, mouseY) || mouseX > this.x + this.w - 8)
         {
             return;
         }
@@ -43,6 +43,7 @@ public class GuiCompleterViewer extends GuiScrollPane
 
         this.completer.getField().setText(completions.get(index));
         this.completer.resetDidComplete();
+        this.setHidden(true);
     }
 
     @Override

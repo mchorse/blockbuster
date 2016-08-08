@@ -132,9 +132,11 @@ public class GuiActor extends GuiChildScreen
 
     private void updateSkin()
     {
-        if (this.skins.contains(this.skin.getText()))
+        String skin = this.getSkin();
+
+        if (this.skins.contains(skin) || skin.isEmpty())
         {
-            this.actor.skin = this.getSkin();
+            this.actor.skin = skin;
         }
     }
 
@@ -142,6 +144,8 @@ public class GuiActor extends GuiChildScreen
     {
         return this.skin.getText();
     }
+
+    /* Handling input */
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
@@ -151,14 +155,13 @@ public class GuiActor extends GuiChildScreen
         this.skinViewer.setWorldAndResolution(mc, width, height);
     }
 
-    /* Handling input */
-
     @Override
     public void handleMouseInput() throws IOException
     {
-        this.skinViewer.handleMouseInput();
-
         super.handleMouseInput();
+
+        this.skinViewer.handleMouseInput();
+        this.updateSkin();
     }
 
     @Override
@@ -172,8 +175,6 @@ public class GuiActor extends GuiChildScreen
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.filename.mouseClicked(mouseX, mouseY, mouseButton);
         this.skin.mouseClicked(mouseX, mouseY, mouseButton);
-
-        this.updateSkin();
     }
 
     @Override

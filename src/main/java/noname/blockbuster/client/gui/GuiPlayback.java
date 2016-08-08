@@ -1,7 +1,10 @@
 package noname.blockbuster.client.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -9,9 +12,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noname.blockbuster.client.gui.elements.GuiCirculate;
+import noname.blockbuster.client.gui.elements.GuiCompleterViewer;
+import noname.blockbuster.client.gui.utils.TabCompleter;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketPlayback;
+import noname.blockbuster.network.common.PacketRequestCameraProfiles;
 
+/**
+ * GUI playback
+ *
+ * This GUI is responsible for attaching some properties to playback button's
+ * ItemStack.
+ */
 public class GuiPlayback extends GuiScreen
 {
     private String stringTitle = I18n.format("blockbuster.gui.playback.title");
@@ -24,6 +36,10 @@ public class GuiPlayback extends GuiScreen
     private GuiCirculate cameraMode;
     private GuiButton done;
 
+    private GuiCompleterViewer profiles;
+    private List<String> completions = new ArrayList<String>();
+    private TabCompleter completer;
+
     public GuiPlayback(EntityPlayer player)
     {
         this.player = player;
@@ -34,6 +50,19 @@ public class GuiPlayback extends GuiScreen
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
+        if (keyCode == 15)
+        {
+            this.completer.complete();
+
+            int size = this.completer.getCompletions().size();
+            this.profiles.setHeight(size * 20);
+            this.profiles.setHidden(size == 0);
+        }
+        else
+        {
+            this.completer.resetDidComplete();
+        }
+
         super.keyTyped(typedChar, keyCode);
 
         this.profileField.textboxKeyTyped(typedChar, keyCode);
@@ -72,6 +101,13 @@ public class GuiPlayback extends GuiScreen
         this.mc.displayGuiScreen(null);
     }
 
+    @Override
+    public void handleMouseInput() throws IOException
+    {
+        this.profiles.handleMouseInput();
+        super.handleMouseInput();
+    }
+
     /* GUI and drawing */
 
     @Override
@@ -106,6 +142,42 @@ public class GuiPlayback extends GuiScreen
         {
             this.setValue(0);
         }
+
+        this.completer = new TabCompleter(this.profileField);
+        this.profiles = new GuiCompleterViewer(this.completer);
+        this.profiles.updateRect(x, y + 19, w, 140);
+
+        if (this.completions.isEmpty())
+        {
+            this.requestCompletions();
+        }
+        else
+        {
+            this.completer.setAllCompletions(this.completions);
+        }
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+
+        this.profiles.setWorldAndResolution(mc, width, height);
+    }
+
+    private void requestCompletions()
+    {
+        Dispatcher.sendToServer(new PacketRequestCameraProfiles());
+    }
+
+    public void setCompletions(List<String> completions)
+    {
+        this.completions.addAll(completions);
+
+        if (this.completer != null)
+        {
+            this.completer.setAllCompletions(completions);
+        }
     }
 
     private void setValue(int value)
@@ -133,5 +205,6 @@ public class GuiPlayback extends GuiScreen
         this.profileField.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+        this.profiles.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
