@@ -94,7 +94,6 @@ public class GuiActor extends GuiChildScreen
         else if (button.id == 3)
         {
             this.skin.setText("");
-            this.updateSkin();
         }
         else if (button.id == 4)
         {
@@ -113,7 +112,7 @@ public class GuiActor extends GuiChildScreen
     {
         String filename = this.filename.getText();
         String name = this.name.getText();
-        String skin = this.getSkin();
+        String skin = this.skin.getText();
         boolean invulnerability = this.invincibility.getValue();
 
         if (this.pos == null)
@@ -128,21 +127,6 @@ public class GuiActor extends GuiChildScreen
         }
 
         this.close();
-    }
-
-    private void updateSkin()
-    {
-        String skin = this.getSkin();
-
-        if (this.skins.contains(skin) || skin.isEmpty())
-        {
-            this.actor.skin = skin;
-        }
-    }
-
-    private String getSkin()
-    {
-        return this.skin.getText();
     }
 
     /* Setting up child GUI screens */
@@ -160,7 +144,6 @@ public class GuiActor extends GuiChildScreen
     {
         super.handleMouseInput();
         this.skinViewer.handleMouseInput();
-        this.updateSkin();
     }
 
     /* Handling input */
@@ -200,8 +183,6 @@ public class GuiActor extends GuiChildScreen
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.filename.textboxKeyTyped(typedChar, keyCode);
         this.skin.textboxKeyTyped(typedChar, keyCode);
-
-        this.updateSkin();
     }
 
     /* Initiating GUI and drawing */
@@ -266,9 +247,13 @@ public class GuiActor extends GuiChildScreen
         x = x + 120 + 30;
         x = x + (this.width - x) / 2;
 
+        String skin = this.actor.skin;
+
+        this.actor.skin = this.skin.getText();
         this.actor.renderName = false;
         drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
         this.actor.renderName = true;
+        this.actor.skin = skin;
 
         this.name.drawTextBox();
         this.filename.drawTextBox();
