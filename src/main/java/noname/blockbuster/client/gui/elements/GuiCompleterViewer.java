@@ -8,9 +8,14 @@ import noname.blockbuster.client.gui.utils.TabCompleter;
 
 /**
  * Gui tab completer viewer
+ *
+ * This class is responsible for viewing the completions from
+ * {@link net.minecraft.util.TabCompleter} and allowing to insert the value from
+ * TabCompleter by clicking on one of the elements
  */
 public class GuiCompleterViewer extends GuiScrollPane
 {
+    private final int span = 20;
     private TabCompleter completer;
 
     public GuiCompleterViewer(TabCompleter completer)
@@ -29,7 +34,7 @@ public class GuiCompleterViewer extends GuiScrollPane
         }
 
         List<String> completions = this.completer.getCompletions();
-        int index = (mouseY - this.y + this.scrollY) / 20;
+        int index = (mouseY - this.y + this.scrollY) / this.span;
 
         if (completions.isEmpty() || index < 0 || index > completions.size() - 1)
         {
@@ -44,25 +49,27 @@ public class GuiCompleterViewer extends GuiScrollPane
     protected void drawPane()
     {
         List<String> completions = this.completer.getCompletions();
-        this.scrollHeight = completions.size() * 20;
 
         for (int i = 0, c = completions.size(); i < c; i++)
         {
             String entry = completions.get(i);
             int x = this.x + 6;
-            int y = this.y + i * 20;
+            int y = this.y + i * this.span;
 
             /* Label */
-            this.fontRendererObj.drawStringWithShadow(entry, x, y + 8, 0xffffffff);
+            this.fontRendererObj.drawStringWithShadow(entry, x, y + 4, 0xffffffff);
 
             /* Separator */
             if (i != c - 1)
             {
-                Gui.drawRect(x - 5, y + 19, this.x + this.w - 1, y + 20, 0xff181818);
+                Gui.drawRect(x - 5, y + this.span - 1, this.x + this.w - 1, y + this.span, 0xff181818);
             }
         }
     }
 
+    /**
+     * Don't draw the screen in case if there's no completions to draw
+     */
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {

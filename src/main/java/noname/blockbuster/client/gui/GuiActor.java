@@ -184,8 +184,10 @@ public class GuiActor extends GuiChildScreen
         if (keyCode == 15)
         {
             this.completer.complete();
-            this.skinViewer.setHeight(0);
-            this.skinViewer.setHidden(this.completer.getCompletions().size() == 0);
+
+            int size = this.completer.getCompletions().size();
+            this.skinViewer.setHeight(size * 20);
+            this.skinViewer.setHidden(size == 0);
         }
         else
         {
@@ -239,7 +241,7 @@ public class GuiActor extends GuiChildScreen
         this.completer.setAllCompletions(this.skins);
 
         this.skinViewer = new GuiCompleterViewer(this.completer);
-        this.skinViewer.updateRect(x, y + 105, w, 100);
+        this.skinViewer.updateRect(x, y + 100 - 1, w, 100);
     }
 
     @Override
