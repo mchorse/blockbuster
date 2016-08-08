@@ -63,14 +63,11 @@ public class LookFixture extends IdleFixture
         float yaw = (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
         float pitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
 
-        if (Math.abs(yaw - this.lastYaw) > 90) this.lastYaw = yaw;
-        if (Math.abs(pitch - this.lastPitch) > 90) this.lastPitch = pitch;
-
         /* When progress is close to 1.0, the camera starts jagging, so instead
          * of giving the progress to reach its maximum value of 1.0, I decided
          * to limit its maximum to something like 0.5.
          */
-        yaw = this.interpolate(this.lastYaw, yaw, progress / 2);
+        yaw = this.interpolateYaw(this.lastYaw, yaw, progress / 2);
         pitch = this.interpolate(this.lastPitch, pitch, progress / 2);
 
         pos.copy(this.position);
@@ -78,6 +75,28 @@ public class LookFixture extends IdleFixture
 
         this.lastYaw = yaw;
         this.lastPitch = pitch;
+    }
+
+    /**
+     * Special interpolation method for interpolating yaw. The problem with yaw,
+     * is that it may go in the "wrong" direction when having, for example,
+     * -170 (as a) and 170 (as b) degress or other way around (170 and -170).
+     *
+     * This interpolation method fixes this problem.
+     */
+    private float interpolateYaw(float a, float b, float position)
+    {
+        float diff = b - a;
+
+        if (diff > 180 || diff < -180)
+        {
+            diff = Math.copySign(360 - Math.abs(diff), -diff);
+            float value = a + diff * position;
+
+            return value > 180 ? -(360 - value) : (value < -180 ? 360 + value : value);
+        }
+
+        return a + (b - a) * position;
     }
 
     private float interpolate(float a, float b, float position)

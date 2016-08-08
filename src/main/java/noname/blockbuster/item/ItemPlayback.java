@@ -145,7 +145,7 @@ public class ItemPlayback extends Item
 
             AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
 
-            if (!director.togglePlayback())
+            if (director.togglePlayback())
             {
                 if (tag.hasKey("CameraPlay"))
                 {
