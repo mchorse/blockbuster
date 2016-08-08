@@ -61,6 +61,7 @@ public class GuiPlayback extends GuiScreen
         else
         {
             this.completer.resetDidComplete();
+            this.profiles.setHidden(true);
         }
 
         super.keyTyped(typedChar, keyCode);

@@ -193,6 +193,7 @@ public class GuiActor extends GuiChildScreen
         else
         {
             this.completer.resetDidComplete();
+            this.skinViewer.setHidden(true);
         }
 
         this.name.textboxKeyTyped(typedChar, keyCode);
