@@ -25,6 +25,10 @@ import noname.blockbuster.recording.Mocap;
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
     public List<String> actors = new ArrayList<String>();
+
+    /**
+     * This tick used for checking if actors still playing
+     */
     private int tick = 0;
 
     @Override
@@ -167,7 +171,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     @Override
     public void update()
     {
-        if (this.tick-- > 0 || this.worldObj.isRemote || !this.isPlaying())
+        if (this.worldObj.isRemote || !this.isPlaying() || this.tick-- > 0)
         {
             return;
         }

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.camera.CameraUtils;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketCameraState;
+import noname.blockbuster.network.common.camera.PacketCameraState;
 import noname.blockbuster.tileentity.AbstractTileEntityDirector;
 
 /**
@@ -29,6 +29,58 @@ import noname.blockbuster.tileentity.AbstractTileEntityDirector;
  */
 public class ItemPlayback extends Item
 {
+    /* NBTTag + BlockPos helpers */
+
+    /**
+     * Save given {@link BlockPos} into ItemStack's {@link NBTTagCompound} tag
+     */
+    public static void saveBlockPos(String key, ItemStack stack, BlockPos pos)
+    {
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        saveBlockPos(key, stack.getTagCompound(), pos);
+    }
+
+    /**
+     * Save given {@link BlockPos} into {@link NBTTagCompound} tag
+     */
+    public static void saveBlockPos(String key, NBTTagCompound tag, BlockPos pos)
+    {
+        tag.setInteger(key + "X", pos.getX());
+        tag.setInteger(key + "Y", pos.getY());
+        tag.setInteger(key + "Z", pos.getZ());
+    }
+
+    /**
+     * Get {@link BlockPos} position from {@link NBTTagCompound} tag
+     */
+    public static BlockPos getBlockPos(String key, NBTTagCompound tag)
+    {
+        String x = key + "X";
+        String y = key + "Y";
+        String z = key + "Z";
+
+        if (tag == null || !tag.hasKey(x) || !tag.hasKey(y) || !tag.hasKey(z))
+        {
+            return null;
+        }
+
+        return new BlockPos(tag.getInteger(x), tag.getInteger(y), tag.getInteger(z));
+    }
+
+    /**
+     * Get {@link BlockPos} position from ItemStack's {@link NBTTagCompound} tag
+     */
+    public static BlockPos getBlockPos(String key, ItemStack stack)
+    {
+        return getBlockPos(key, stack.getTagCompound());
+    }
+
+    /* ItemPlayback */
+
     public ItemPlayback()
     {
         this.setMaxStackSize(1);
@@ -38,7 +90,9 @@ public class ItemPlayback extends Item
     }
 
     /**
-     * Adds information about camera profile and */
+     * Adds information about camera profile and the location of director block
+     * to which it's attached
+     */
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
@@ -55,13 +109,11 @@ public class ItemPlayback extends Item
             tooltip.add(I18n.format("blockbuster.info.playback_play"));
         }
 
-        if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
-        {
-            int x = tag.getInteger("DirX");
-            int y = tag.getInteger("DirY");
-            int z = tag.getInteger("DirZ");
+        BlockPos pos = getBlockPos("Dir", stack);
 
-            tooltip.add(I18n.format("blockbuster.info.playback_director", x, y, z));
+        if (pos != null)
+        {
+            tooltip.add(I18n.format("blockbuster.info.playback_director", pos.getX(), pos.getY(), pos.getZ()));
         }
     }
 
@@ -74,29 +126,26 @@ public class ItemPlayback extends Item
     {
         if (!worldIn.isRemote)
         {
-            if (stack.getTagCompound() == null)
+            BlockPos pos = getBlockPos("Dir", stack);
+            NBTTagCompound tag = stack.getTagCompound();
+
+            if (pos == null || tag == null)
             {
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            NBTTagCompound tag = stack.getTagCompound();
-
-            int x = tag.getInteger("DirX");
-            int y = tag.getInteger("DirY");
-            int z = tag.getInteger("DirZ");
-
-            TileEntity tile = worldIn.getTileEntity(new BlockPos(x, y, z));
+            TileEntity tile = worldIn.getTileEntity(pos);
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", x, y, z));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", pos.getX(), pos.getY(), pos.getZ()));
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
             AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
 
-            if (director.togglePlayback())
+            if (!director.togglePlayback())
             {
                 if (tag.hasKey("CameraPlay"))
                 {

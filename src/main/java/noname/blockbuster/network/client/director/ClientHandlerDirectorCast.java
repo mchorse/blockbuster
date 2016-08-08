@@ -1,11 +1,11 @@
-package noname.blockbuster.network.client;
+package noname.blockbuster.network.client.director;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
-import noname.blockbuster.Blockbuster;
 import noname.blockbuster.GuiHandler;
 import noname.blockbuster.client.gui.GuiDirector;
+import noname.blockbuster.network.client.ClientMessageHandler;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 
 public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirectorCast>
@@ -19,7 +19,7 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
             int y = message.pos.getY();
             int z = message.pos.getZ();
 
-            player.openGui(Blockbuster.instance, GuiHandler.DIRECTOR, player.worldObj, x, y, z);
+            GuiHandler.open(player, GuiHandler.DIRECTOR, x, y, z);
         }
 
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;

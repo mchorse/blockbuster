@@ -11,12 +11,25 @@ import noname.blockbuster.client.gui.GuiDirectorMap;
 import noname.blockbuster.client.gui.GuiPlayback;
 import noname.blockbuster.entity.EntityActor;
 
+/**
+ * Gui handler class
+ *
+ * This class is responsible for opening GUIs.
+ */
 public class GuiHandler implements IGuiHandler
 {
     public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int DIRECTOR_MAP = 3;
+
+    /**
+     * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
+     */
+    public static void open(EntityPlayer player, int ID, int x, int y, int z)
+    {
+        player.openGui(Blockbuster.instance, ID, player.worldObj, x, y, z);
+    }
 
     /**
      * There's two types of GUI are available right now:

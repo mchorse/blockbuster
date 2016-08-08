@@ -8,7 +8,7 @@ import java.util.List;
 
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketCameraProfile;
+import noname.blockbuster.network.common.camera.PacketCameraProfile;
 
 /**
  * Camera profile class

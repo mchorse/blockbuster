@@ -1,9 +1,10 @@
-package noname.blockbuster.network.server;
+package noname.blockbuster.network.server.director;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.director.PacketDirectorCast;
 import noname.blockbuster.network.common.director.PacketDirectorReset;
+import noname.blockbuster.network.server.ServerMessageHandler;
 import noname.blockbuster.tileentity.TileEntityDirector;
 
 /**

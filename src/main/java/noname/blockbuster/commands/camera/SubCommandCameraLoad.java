@@ -6,7 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketLoadCameraProfile;
+import noname.blockbuster.network.common.camera.PacketLoadCameraProfile;
 
 /**
  * Camera's sub-command /camera load

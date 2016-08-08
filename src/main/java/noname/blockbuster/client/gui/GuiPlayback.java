@@ -16,7 +16,7 @@ import noname.blockbuster.client.gui.elements.GuiCompleterViewer;
 import noname.blockbuster.client.gui.utils.TabCompleter;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketPlayback;
-import noname.blockbuster.network.common.PacketRequestCameraProfiles;
+import noname.blockbuster.network.common.camera.PacketRequestCameraProfiles;
 
 /**
  * GUI playback

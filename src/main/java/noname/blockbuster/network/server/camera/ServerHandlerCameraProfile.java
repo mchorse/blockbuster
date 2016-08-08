@@ -1,9 +1,10 @@
-package noname.blockbuster.network.server;
+package noname.blockbuster.network.server.camera;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentTranslation;
 import noname.blockbuster.camera.CameraUtils;
-import noname.blockbuster.network.common.PacketCameraProfile;
+import noname.blockbuster.network.common.camera.PacketCameraProfile;
+import noname.blockbuster.network.server.ServerMessageHandler;
 
 public class ServerHandlerCameraProfile extends ServerMessageHandler<PacketCameraProfile>
 {

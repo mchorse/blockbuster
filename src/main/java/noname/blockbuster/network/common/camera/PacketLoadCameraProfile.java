@@ -1,4 +1,4 @@
-package noname.blockbuster.network.common;
+package noname.blockbuster.network.common.camera;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

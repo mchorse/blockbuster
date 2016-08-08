@@ -145,7 +145,7 @@ public class GuiActor extends GuiChildScreen
         return this.skin.getText();
     }
 
-    /* Handling input */
+    /* Setting up child GUI screens */
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
@@ -163,6 +163,8 @@ public class GuiActor extends GuiChildScreen
         this.skinViewer.handleMouseInput();
         this.updateSkin();
     }
+
+    /* Handling input */
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException

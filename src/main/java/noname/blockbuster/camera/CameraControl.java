@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import noname.blockbuster.camera.fixtures.AbstractFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketLoadCameraProfile;
+import noname.blockbuster.network.common.camera.PacketLoadCameraProfile;
 
 /**
  * Camera control class

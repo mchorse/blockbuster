@@ -25,7 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 import noname.blockbuster.network.Dispatcher;
-import noname.blockbuster.network.common.PacketCameraProfile;
+import noname.blockbuster.network.common.camera.PacketCameraProfile;
 
 /**
  * Utilities for camera classes

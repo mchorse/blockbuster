@@ -25,6 +25,10 @@ public class CommonProxy
 {
     protected static int ID = 0;
 
+    /**
+     * Registers network messages (and their handlers), items, blocks, director
+     * block tile entities and actor entity.
+     */
     public void preLoad(FMLPreInitializationEvent event)
     {
         Dispatcher.register();
@@ -43,6 +47,10 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileEntityDirectorMap.class, "blockbuster_director_map_tile_entity");
     }
 
+    /**
+     * This method is responsible for registering Mocap's event handler which
+     * is responsible for capturing <s>pokemons</s> player actions.
+     */
     public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());

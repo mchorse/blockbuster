@@ -9,7 +9,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -147,18 +146,8 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
             return false;
         }
 
-        NBTTagCompound tag = item.getTagCompound();
-
-        if (tag == null)
-        {
-            item.setTagCompound(tag = new NBTTagCompound());
-        }
-
-        tag.setInteger("DirX", pos.getX());
-        tag.setInteger("DirY", pos.getY());
-        tag.setInteger("DirZ", pos.getZ());
-
-        player.openGui(Blockbuster.instance, GuiHandler.PLAYBACK, player.worldObj, 0, 0, 0);
+        ItemPlayback.saveBlockPos("Dir", item, pos);
+        GuiHandler.open(player, GuiHandler.PLAYBACK, 0, 0, 0);
 
         return true;
     }

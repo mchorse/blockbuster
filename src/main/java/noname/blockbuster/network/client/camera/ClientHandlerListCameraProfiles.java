@@ -1,10 +1,11 @@
-package noname.blockbuster.network.client;
+package noname.blockbuster.network.client.camera;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import noname.blockbuster.client.gui.GuiPlayback;
-import noname.blockbuster.network.common.PacketListCameraProfiles;
+import noname.blockbuster.network.client.ClientMessageHandler;
+import noname.blockbuster.network.common.camera.PacketListCameraProfiles;
 
 public class ClientHandlerListCameraProfiles extends ClientMessageHandler<PacketListCameraProfiles>
 {

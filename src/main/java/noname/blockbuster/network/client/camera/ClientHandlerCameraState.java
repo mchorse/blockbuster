@@ -1,8 +1,9 @@
-package noname.blockbuster.network.client;
+package noname.blockbuster.network.client.camera;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import noname.blockbuster.ClientProxy;
-import noname.blockbuster.network.common.PacketCameraState;
+import noname.blockbuster.network.client.ClientMessageHandler;
+import noname.blockbuster.network.common.camera.PacketCameraState;
 
 public class ClientHandlerCameraState extends ClientMessageHandler<PacketCameraState>
 {

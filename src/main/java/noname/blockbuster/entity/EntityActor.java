@@ -22,9 +22,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import noname.blockbuster.Blockbuster;
 import noname.blockbuster.GuiHandler;
 import noname.blockbuster.item.ItemActorConfig;
+import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketModifyActor;
@@ -339,7 +339,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.worldObj.isRemote && holdsSkinItem)
         {
-            player.openGui(Blockbuster.instance, GuiHandler.ACTOR, this.worldObj, this.getEntityId(), 0, 0);
+            GuiHandler.open(player, GuiHandler.ACTOR, this.getEntityId(), 0, 0);
         }
 
         return holdsSkinItem;
@@ -453,11 +453,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public void readEntityFromNBT(NBTTagCompound tag)
     {
         this.filename = tag.getString("Filename");
-
-        if (tag.hasKey("DirX") && tag.hasKey("DirY") && tag.hasKey("DirZ"))
-        {
-            this.directorBlock = new BlockPos(tag.getInteger("DirX"), tag.getInteger("DirY"), tag.getInteger("DirZ"));
-        }
+        this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
 
         if (!this.skin.equals(tag.getString("Skin")))
         {
@@ -487,9 +483,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.directorBlock != null)
         {
-            tag.setInteger("DirX", this.directorBlock.getX());
-            tag.setInteger("DirY", this.directorBlock.getY());
-            tag.setInteger("DirZ", this.directorBlock.getZ());
+            ItemPlayback.saveBlockPos("Dir", tag, this.directorBlock);
         }
 
         super.writeEntityToNBT(tag);
