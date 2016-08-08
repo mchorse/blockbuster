@@ -159,7 +159,6 @@ public class GuiActor extends GuiChildScreen
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
-
         this.skinViewer.handleMouseInput();
         this.updateSkin();
     }
@@ -184,7 +183,7 @@ public class GuiActor extends GuiChildScreen
     {
         super.keyTyped(typedChar, keyCode);
 
-        if (keyCode == 15)
+        if (keyCode == 15 && this.skin.isFocused())
         {
             this.completer.complete();
 
@@ -246,6 +245,7 @@ public class GuiActor extends GuiChildScreen
 
         this.skinViewer = new GuiCompleterViewer(this.completer);
         this.skinViewer.updateRect(x, y + 100 - 1, w, 100);
+        this.skinViewer.setHidden(true);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class GuiPlayback extends GuiScreen
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        if (keyCode == 15)
+        if (keyCode == 15 && this.profileField.isFocused())
         {
             this.completer.complete();
 
@@ -72,7 +72,10 @@ public class GuiPlayback extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!this.profiles.isInside(mouseX, mouseY))
+        {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
 
         this.profileField.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -102,11 +105,21 @@ public class GuiPlayback extends GuiScreen
         this.mc.displayGuiScreen(null);
     }
 
+    /* Child screens */
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+
+        this.profiles.setWorldAndResolution(mc, width, height);
+    }
+
     @Override
     public void handleMouseInput() throws IOException
     {
-        this.profiles.handleMouseInput();
         super.handleMouseInput();
+        this.profiles.handleMouseInput();
     }
 
     /* GUI and drawing */
@@ -147,6 +160,7 @@ public class GuiPlayback extends GuiScreen
         this.completer = new TabCompleter(this.profileField);
         this.profiles = new GuiCompleterViewer(this.completer);
         this.profiles.updateRect(x, y + 19, w, 140);
+        this.profiles.setHidden(true);
 
         if (this.completions.isEmpty())
         {
@@ -156,14 +170,6 @@ public class GuiPlayback extends GuiScreen
         {
             this.completer.setAllCompletions(this.completions);
         }
-    }
-
-    @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
-    {
-        super.setWorldAndResolution(mc, width, height);
-
-        this.profiles.setWorldAndResolution(mc, width, height);
     }
 
     private void requestCompletions()
