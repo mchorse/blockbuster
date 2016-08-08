@@ -29,6 +29,7 @@ public class RecordThread implements Runnable
     public boolean capture = false;
     public List<Action> eventList = Collections.synchronizedList(new ArrayList<Action>());
     public String filename;
+    public long startTime;
 
     private EntityPlayer player;
     private RandomAccessFile in;
@@ -36,7 +37,7 @@ public class RecordThread implements Runnable
     private boolean elytraFlying = false;
     private int[] itemsEquipped = new int[6];
 
-    RecordThread(EntityPlayer player, String filename)
+    public RecordThread(EntityPlayer player, String filename)
     {
         try
         {
@@ -59,6 +60,8 @@ public class RecordThread implements Runnable
     @Override
     public void run()
     {
+        this.startTime = System.currentTimeMillis();
+
         try
         {
             this.in.writeShort(Mocap.signature);

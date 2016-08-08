@@ -24,6 +24,8 @@ import noname.blockbuster.camera.fixtures.IdleFixture;
 import noname.blockbuster.camera.fixtures.LookFixture;
 import noname.blockbuster.camera.fixtures.PathFixture;
 import noname.blockbuster.commands.CommandCamera;
+import noname.blockbuster.network.Dispatcher;
+import noname.blockbuster.network.common.PacketCameraMarker;
 
 /**
  * Separate event handler for keyboard events
@@ -62,6 +64,9 @@ public class KeyboardHandler
     private KeyBinding profileStartRunner;
     private KeyBinding profileStopRunner;
 
+    /* Undocumented feature!!! */
+    private KeyBinding featureUndocumented;
+
     /**
      * Create and register key bindings for mod
      */
@@ -98,6 +103,9 @@ public class KeyboardHandler
         this.profileStartRunner = new KeyBinding("key.blockbuster.profile.start", Keyboard.KEY_Z, general);
         this.profileStopRunner = new KeyBinding("key.blockbuster.profile.stop", Keyboard.KEY_X, general);
 
+        /* Undocumented */
+        this.featureUndocumented = new KeyBinding("key.blockbuster.feature", Keyboard.KEY_V, general);
+
         /* Add all key bindings to client registry */
         ClientRegistry.registerKeyBinding(this.profileAddIdleFixture);
         ClientRegistry.registerKeyBinding(this.profileAddPathFixture);
@@ -125,6 +133,9 @@ public class KeyboardHandler
 
         ClientRegistry.registerKeyBinding(this.profileStartRunner);
         ClientRegistry.registerKeyBinding(this.profileStopRunner);
+
+        /* Wow, so undocumented!!! */
+        ClientRegistry.registerKeyBinding(this.featureUndocumented);
     }
 
     @SubscribeEvent
@@ -252,6 +263,11 @@ public class KeyboardHandler
         else if (this.profileStopRunner.isPressed())
         {
             ClientProxy.profileRunner.stop();
+        }
+
+        if (this.featureUndocumented.isPressed())
+        {
+            Dispatcher.sendToServer(new PacketCameraMarker());
         }
     }
 }

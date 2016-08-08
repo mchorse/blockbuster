@@ -30,6 +30,7 @@ key.blockbuster.general=Blockbuster General
 key.blockbuster.profile=Blockbuster Profile Management
 key.blockbuster.duration=Blockbuster Fixture Duration
 key.blockbuster.path=Blockbuster Path Fixture
+key.blockbuster.feature=Undocumented feature!!!
 
 key.blockbuster.profile.add_idle=Add Idle Camera Fixture
 key.blockbuster.profile.add_path=Add Path Camera Fixture

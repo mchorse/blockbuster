@@ -40,6 +40,8 @@ public class TimeUtils
      */
     public static long toMillis(String suffix)
     {
+        if (suffix == null) return 1;
+
         if (suffix.equals("s")) return 1000;
         if (suffix.equals("m")) return 1000 * 60;
         if (suffix.equals("h")) return 1000 * 60 * 60;
@@ -60,7 +62,7 @@ public class TimeUtils
         {
             long factor = TimeUtils.toMillis(matcher.group(2));
 
-            return CommandBase.parseLong(matcher.group(1), 0, 1000 * 1000) * factor;
+            return (long) (CommandBase.parseDouble(matcher.group(1), 0) * factor);
         }
         else
         {
