@@ -452,41 +452,39 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void readEntityFromNBT(NBTTagCompound tag)
     {
+        super.readEntityFromNBT(tag);
+
+        String skin = this.skin;
+
+        this.skin = tag.getString("Skin");
         this.filename = tag.getString("Filename");
         this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
 
-        if (!this.skin.equals(tag.getString("Skin")))
+        if (!skin.equals(this.skin) && !this.worldObj.isRemote)
         {
-            this.skin = tag.getString("Skin");
-
-            if (!this.worldObj.isRemote)
-            {
-                this.modify(this.filename, this.getCustomNameTag(), this.skin, this.isEntityInvulnerable(DamageSource.anvil), true);
-            }
+            this.modify(this.filename, this.getCustomNameTag(), this.skin, this.isEntityInvulnerable(DamageSource.anvil), true);
         }
-
-        super.readEntityFromNBT(tag);
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound tag)
     {
-        if (this.filename != "")
-        {
-            tag.setString("Filename", this.filename);
-        }
+        super.writeEntityToNBT(tag);
 
         if (this.skin != "")
         {
             tag.setString("Skin", this.skin);
         }
 
+        if (this.filename != "")
+        {
+            tag.setString("Filename", this.filename);
+        }
+
         if (this.directorBlock != null)
         {
             ItemPlayback.saveBlockPos("Dir", tag, this.directorBlock);
         }
-
-        super.writeEntityToNBT(tag);
     }
 
     /* IEntityAdditionalSpawnData implementation */
@@ -496,6 +494,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         ByteBufUtils.writeUTF8String(buffer, this.filename);
         ByteBufUtils.writeUTF8String(buffer, this.skin);
+
+        /* What a shame, Mojang, why do I need to synchronize your shit?! */
+        buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.anvil));
     }
 
     @Override
@@ -503,5 +504,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         this.filename = ByteBufUtils.readUTF8String(buffer);
         this.skin = ByteBufUtils.readUTF8String(buffer);
+        this.setEntityInvulnerable(buffer.readBoolean());
     }
 }
