@@ -140,7 +140,7 @@ public class CameraControl
         this.profile = null;
     }
 
-    private void clampIndex()
+    public void clampIndex()
     {
         if (this.index < 0) this.index = this.profile.getCount() - 1;
         if (this.index > this.profile.getCount() - 1) this.index = 0;
@@ -163,6 +163,7 @@ public class CameraControl
     {
         if (this.profile.getFilename().isEmpty()) return;
 
+        this.index = 0;
         Dispatcher.sendToServer(new PacketLoadCameraProfile(this.profile.getFilename()));
     }
 

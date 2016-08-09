@@ -48,8 +48,6 @@ public class ProfileRenderer
     protected double playerY;
     protected double playerZ;
 
-    public static double partial;
-
     public void setProfile(CameraProfile profile)
     {
         this.profile = profile;
@@ -64,8 +62,6 @@ public class ProfileRenderer
     public void onLastRender(RenderWorldLastEvent event)
     {
         boolean badProfile = this.profile == null || this.profile.getCount() < 1;
-
-        partial = event.getPartialTicks();
 
         if (!this.render) return;
         if (ClientProxy.profileRunner.isRunning()) return;
@@ -163,10 +159,12 @@ public class ProfileRenderer
      */
     private void drawCard(Color color, int index, long duration, Position pos)
     {
+        boolean selected = index == CommandCamera.getControl().index;
+
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         GlStateManager.enableBlend();
-        GlStateManager.color(color.red, color.green, color.blue, 0.8F);
+        GlStateManager.color(color.red, color.green, color.blue, selected ? 1.0F : 0.75F);
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 
@@ -179,12 +177,14 @@ public class ProfileRenderer
         GlStateManager.rotate(-this.mc.getRenderManager().playerViewY, 0, 1, 0);
         GlStateManager.rotate(this.mc.getRenderManager().playerViewX, 1, 0, 0);
 
-        float minX = -0.5f;
-        float minY = -0.5f;
-        float maxX = 0.5f;
-        float maxY = 0.5f;
+        float factor = selected ? 0.65F : 0.5F;
 
-        int i = index == CommandCamera.getControl().index ? 1 : 0;
+        float minX = -factor;
+        float minY = -factor;
+        float maxX = factor;
+        float maxY = factor;
+
+        int i = selected ? 1 : 0;
 
         float texX = i * 0.5F;
         float texY = 0;
@@ -273,7 +273,7 @@ public class ProfileRenderer
 
     public static enum Color
     {
-        IDLE(0, 0, 0), PATH(1, 0, 0), LOOK(0.85F, 0.137F, 0.329F), FOLLOW(0.298F, 0.690F, 0.972F), CIRCULAR(0.298F, 0.631F, 0.247F);
+        IDLE(0.085F, 0.62F, 0.395F), PATH(0.408F, 0.128F, 0.681F), LOOK(0.85F, 0.137F, 0.329F), FOLLOW(0.298F, 0.690F, 0.972F), CIRCULAR(0.298F, 0.631F, 0.247F);
 
         public float red;
         public float green;
