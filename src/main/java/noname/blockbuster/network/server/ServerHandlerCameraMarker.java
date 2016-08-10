@@ -2,6 +2,7 @@ package noname.blockbuster.network.server;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
+import noname.blockbuster.camera.TimeUtils;
 import noname.blockbuster.network.common.PacketCameraMarker;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.RecordThread;
@@ -17,7 +18,7 @@ public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCamera
         if (record == null) return;
 
         long time = System.currentTimeMillis() - record.startTime;
-        String string = String.format("Recording to %s for about %d.", record.filename, time);
+        String string = String.format("Recording to §4%s§r for about §2%d§r.", record.filename, TimeUtils.formatMillis(time));
 
         record.eventList.add(new ChatAction(string));
         player.addChatMessage(new TextComponentString(string));
