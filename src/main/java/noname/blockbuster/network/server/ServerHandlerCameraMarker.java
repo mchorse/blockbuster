@@ -18,7 +18,7 @@ public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCamera
         if (record == null) return;
 
         long time = System.currentTimeMillis() - record.startTime;
-        String string = String.format("§c/-§r Marker by §4%s§r: §2%d§r", record.filename, TimeUtils.formatMillis(time));
+        String string = String.format("§c---§r Marker by §4%s§r: §2%s§r", record.filename, TimeUtils.formatMillis(time));
 
         record.eventList.add(new ChatAction(string));
         player.addChatMessage(new TextComponentString(string));
