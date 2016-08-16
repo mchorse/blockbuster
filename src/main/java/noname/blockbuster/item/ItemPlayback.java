@@ -134,6 +134,13 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
+            if (player.isSneaking())
+            {
+                player.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+            }
+
             TileEntity tile = worldIn.getTileEntity(pos);
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))

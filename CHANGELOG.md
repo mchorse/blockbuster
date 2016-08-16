@@ -8,12 +8,13 @@ This is a small patch that enhances existing elements of the mod.
 
 * Added `/entitydata` skin client synchronization
 * Added `/action stop` sub-command
-*  Added time formatting for argument `<duration>` (seconds `s`, minutes `m`, and hours `h` were added)
+* Added time formatting for argument `<duration>` (seconds `s`, minutes `m`, and hours `h` were added)
 * Added feedback messages to `/director` command
 * Added lots of camera shortcuts for better camera control
 * Added colors for profile rendering
 * Changed registering item behavior – now it ties to director block instead of actor which allows register actors without running here and there many times
 * Changed playback button behavior – now it toggles playback instead of play only
+* Changed playback button behavior on sneak and use – now you teleport to director block
 * Fixed director block GUIs – now scroll bar is draggable, and buttons are clickable
 * Improved skin picker in actor GUI – now it supports tab completition and much easier to use when you have tons of skins
 
