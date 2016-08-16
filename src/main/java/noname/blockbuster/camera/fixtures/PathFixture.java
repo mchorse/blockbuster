@@ -44,13 +44,11 @@ public class PathFixture extends AbstractFixture
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        if (args.length == 0)
+        if (args.length == 1)
         {
-            this.addPoint(new Position(player));
-        }
-        else
-        {
-            this.removePoint(CommandBase.parseInt(args[0], 0, this.points.size() - 1));
+            int max = this.points.size() - 1;
+
+            this.points.get(CommandBase.parseInt(args[0], 0, max)).set(player);
         }
     }
 

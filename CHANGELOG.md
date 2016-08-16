@@ -15,6 +15,7 @@ This is a small patch that enhances existing elements of the mod.
 * Changed registering item behavior – now it ties to director block instead of actor which allows register actors without running here and there many times
 * Changed playback button behavior – now it toggles playback instead of play only
 * Changed playback button behavior on sneak and use – now you teleport to director block
+* Changed path fixture behavior when you `/camera edit` it, instead of adding/removing, you pass it index of point, and edit the point's position
 * Fixed director block GUIs – now scroll bar is draggable, and buttons are clickable
 * Improved skin picker in actor GUI – now it supports tab completition and much easier to use when you have tons of skins
 
