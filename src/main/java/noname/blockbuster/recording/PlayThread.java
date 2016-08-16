@@ -26,6 +26,8 @@ public class PlayThread implements Runnable
     private DataInputStream in;
     private boolean deadAfterPlay;
 
+    private long delay;
+
     public PlayThread(EntityActor actor, String filename, boolean deadAfterPlay)
     {
         this.filename = filename;
@@ -54,27 +56,24 @@ public class PlayThread implements Runnable
         }
     }
 
+    /**
+     * Run Forest, run!
+     *
+     * Not really, this method is just responsible for running the whole
+     * playback: starting it up, playing, and cleaning up after the playback
+     * is finished.
+     */
     @Override
     public void run()
     {
-        System.out.println("Replay started.");
-
         try
         {
-            short magic = this.in.readShort();
-            long delay = this.in.readLong();
-
-            if (magic != Mocap.signature)
-            {
-                throw new Exception("Not a record file");
-            }
+            this.start();
 
             while (this.playing)
             {
-                this.injectMovement();
-                this.injectAction();
-
-                Thread.sleep(delay);
+                this.next();
+                Thread.sleep(this.delay);
             }
         }
         catch (EOFException e)
@@ -83,10 +82,49 @@ public class PlayThread implements Runnable
         {
             System.out.println("Replay thread interrupted.");
             e.printStackTrace();
-
             Mocap.broadcastMessage(I18n.format("blockbuster.mocap.error_file"));
         }
 
+        this.reset();
+    }
+
+    /**
+     * Start this playback
+     *
+     * Check if signature matches current's version signature (that's kind of
+     * hack-ish) and set the delay between frames.
+     */
+    public void start() throws Exception
+    {
+        System.out.println("Replay started.");
+
+        short magic = this.in.readShort();
+
+        if (magic != Mocap.signature)
+        {
+            throw new Exception("Not a record file");
+        }
+
+        this.delay = this.in.readLong();
+    }
+
+    /**
+     * Play next frame
+     */
+    public void next() throws Exception
+    {
+        this.injectMovement();
+        this.injectAction();
+    }
+
+    /**
+     * Reset the playback
+     *
+     * Reset entity, remove this playback from Mocap's list of playing
+     * threads, and close the file.
+     */
+    public void reset()
+    {
         System.out.println("Replay thread completed.");
 
         if (this.deadAfterPlay)
@@ -134,17 +172,28 @@ public class PlayThread implements Runnable
      */
     public void injectMovement() throws Exception
     {
+        /* Rotation */
         float yaw = this.in.readFloat();
         float pitch = this.in.readFloat();
+
+        /* Position */
         double x = this.in.readDouble();
         double y = this.in.readDouble();
         double z = this.in.readDouble();
+
+        /* Forward & strafe */
         float movef = this.in.readFloat();
         float moves = this.in.readFloat();
+
+        /* Motion */
         double mx = this.in.readDouble();
         double my = this.in.readDouble();
         double mz = this.in.readDouble();
+
+        /* Fall distance */
         float fd = this.in.readFloat();
+
+        /* Booleans */
         boolean iab = this.in.readBoolean();
         boolean isn = this.in.readBoolean();
         boolean isp = this.in.readBoolean();

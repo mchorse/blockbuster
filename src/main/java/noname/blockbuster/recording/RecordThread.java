@@ -25,12 +25,14 @@ import noname.blockbuster.recording.actions.SwipeAction;
  */
 public class RecordThread implements Runnable
 {
+    /* Public fields */
     public Thread thread;
     public boolean capture = false;
     public List<Action> eventList = Collections.synchronizedList(new ArrayList<Action>());
     public String filename;
     public long startTime;
 
+    /* Tracking fields */
     private EntityPlayer player;
     private RandomAccessFile in;
     private boolean lastTickSwipe = false;
@@ -80,10 +82,7 @@ public class RecordThread implements Runnable
 
                 if (this.player.isDead)
                 {
-                    this.capture = false;
-
-                    Mocap.records.remove(this.player);
-                    Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_dead", this.player.getDisplayName().getFormattedText()));
+                    this.reset("blockbuster.mocap.stopped_dead");
                 }
             }
 
@@ -99,6 +98,13 @@ public class RecordThread implements Runnable
         }
 
         System.out.println("Exiting record thread.");
+    }
+
+    private void reset(String reason)
+    {
+        this.capture = false;
+        Mocap.records.remove(this.player);
+        Mocap.broadcastMessage(I18n.format(reason, this.player.getName()));
     }
 
     private void trackElytraFlying()
@@ -226,9 +232,7 @@ public class RecordThread implements Runnable
 
         if (action.getType() == Action.LOGOUT)
         {
-            this.capture = false;
-            Mocap.records.remove(this.player);
-            Mocap.broadcastMessage(I18n.format("blockbuster.mocap.stopped_logout", this.player.getDisplayName().getUnformattedText()));
+            this.reset("blockbuster.mocap.stopped_logout");
         }
     }
 }

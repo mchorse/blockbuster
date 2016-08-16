@@ -21,10 +21,8 @@ import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.recording.actions.Action;
 import noname.blockbuster.recording.actions.BreakBlockAction;
 import noname.blockbuster.recording.actions.ChatAction;
@@ -52,14 +50,10 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerBreaksBlock(BreakEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
+        EntityPlayer player = event.getPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
-
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new BreakBlockAction(event.getPos()));
         }
@@ -72,15 +66,10 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerRightClickBlock(RightClickBlock event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
-
         EntityPlayer player = event.getEntityPlayer();
         List<Action> events = Mocap.getActionListForPlayer(player);
 
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new InteractBlockAction(event.getPos()));
         }
@@ -92,15 +81,10 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerPlacesBlock(PlaceEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
-
         EntityPlayer player = event.getPlayer();
         List<Action> events = Mocap.getActionListForPlayer(player);
 
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             IBlockState state = event.getPlacedBlock();
             Block block = state.getBlock();
@@ -119,16 +103,11 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerUseBucket(FillBucketEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
-
         EntityPlayer player = event.getEntityPlayer();
         List<Action> events = Mocap.getActionListForPlayer(player);
         RayTraceResult target = event.getTarget();
 
-        if (events != null && target != null && target.typeOfHit == Type.BLOCK)
+        if (!player.worldObj.isRemote && events != null && target != null && target.typeOfHit == Type.BLOCK)
         {
             Item bucket = event.getEmptyBucket().getItem();
             BlockPos pos = target.getBlockPos().offset(target.sideHit);
@@ -165,17 +144,12 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerMountsSomething(EntityMountEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
-
         if (event.getEntityMounting() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntityMounting();
             List<Action> events = Mocap.getActionListForPlayer(player);
 
-            if (events != null)
+            if (!player.worldObj.isRemote && events != null)
             {
                 events.add(new MountingAction(event.getEntityBeingMounted().getUniqueID(), event.isMounting()));
             }
@@ -188,39 +162,27 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
+        EntityPlayer player = event.player;
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-        List<Action> events = Mocap.getActionListForPlayer(event.player);
-
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new LogoutAction());
         }
     }
 
     /**
-     * Doesn't work for some reason
-     *
-     * I'll fix it later
+     * Event listener for Action.SHOOT_ARROW
      */
     @SubscribeEvent
     public void onArrowLooseEvent(ArrowLooseEvent event) throws IOException
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
+
+        if (!player.worldObj.isRemote && events != null)
         {
-            return;
-        }
-
-        List<Action> events = Mocap.getActionListForPlayer(event.getEntityPlayer());
-
-        if (events != null)
-        {
-            Action action = new ShootArrowAction(event.getCharge());
-
-            events.add(action);
+            events.add(new ShootArrowAction(event.getCharge()));
         }
     }
 
@@ -231,14 +193,10 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onItemTossEvent(ItemTossEvent event) throws IOException
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
+        EntityPlayer player = event.getPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
-
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new DropAction(event.getEntityItem().getEntityItem()));
         }
@@ -251,14 +209,10 @@ public class PlayerEventHandler
     @SubscribeEvent
     public void onServerChatEvent(ServerChatEvent event)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER)
-        {
-            return;
-        }
+        EntityPlayer player = event.getPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
 
-        List<Action> events = Mocap.getActionListForPlayer(event.getPlayer());
-
-        if (events != null)
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new ChatAction(event.getMessage()));
         }
