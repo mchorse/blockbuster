@@ -49,8 +49,6 @@ public class TabCompleter
     {
         if (this.didComplete)
         {
-            this.index++;
-
             if (this.index >= this.completions.size())
             {
                 this.index = 0;
@@ -64,6 +62,7 @@ public class TabCompleter
         if (this.completions.size() != 0)
         {
             this.textField.setText(this.completions.get(this.index));
+            this.index++;
         }
     }
 
