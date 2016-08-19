@@ -103,7 +103,7 @@ This mod provides following features:
 
 ## Manual
 
-Manual is located in the root of this repository in file named [MANUAL.md](./MANUAL.md).
+Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki).
 
 ## License
 
