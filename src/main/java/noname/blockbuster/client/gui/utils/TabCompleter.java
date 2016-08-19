@@ -47,8 +47,17 @@ public class TabCompleter
      */
     public void complete()
     {
+        int size = this.completions.size();
+
+        if (size != 0 && this.index >= 0 && this.index < size)
+        {
+            this.textField.setText(this.completions.get(this.index));
+        }
+
         if (this.didComplete)
         {
+            this.index++;
+
             if (this.index >= this.completions.size())
             {
                 this.index = 0;
@@ -57,12 +66,6 @@ public class TabCompleter
         else
         {
             this.requestCompletions(this.textField.getText());
-        }
-
-        if (this.completions.size() != 0)
-        {
-            this.textField.setText(this.completions.get(this.index));
-            this.index++;
         }
     }
 
