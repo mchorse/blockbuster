@@ -4,7 +4,12 @@ Blockbuster's change log.
 
 ## Version 1.2.1
 
-This is a small patch that enhances existing elements of the mod.
+This is a small patch that enhances existing elements of the mod. Nothing new, just enhancements and fixes.
+
+**Tutorial video** for 1.2.1:  
+<a href="https://youtu.be/mDCYX1oRKYk?list=PL6UPd2Tj65nHvEH-_F_brz6LQDdlsCIXJ">
+    <img src="https://img.youtube.com/vi/mDCYX1oRKYk/0.jpg">
+</a>
 
 * Added `/entitydata` skin client synchronization
 * Added `/action stop` sub-command
