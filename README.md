@@ -33,19 +33,16 @@ Tutorial for version 1.2. This tutorial covers all items, blocks, and commands
 that this mod adds into the game. It's also covers the concepts it introduces, 
 and shows how to use this mod. Machinima intro included.
 
-<a href="https://youtu.be/gq7sg-njyUk?list=PL6UPd2Tj65nHjnaQqL3gscufRcVDBezPm">
-    <img src="https://img.youtube.com/vi/gq7sg-njyUk/0.jpg">
+<a href="https://youtu.be/mDCYX1oRKYk?list=PL6UPd2Tj65nHvEH-_F_brz6LQDdlsCIXJ">
+    <img src="https://img.youtube.com/vi/mDCYX1oRKYk/0.jpg">
 </a>
 
-### Machinima Example
+### Machinima Examples
 
-This is my second machinima which is made with Blockbuster 1.2. This video shows off 
-basic actor acting (basic walking, running, jumping), placing blocks. This machinima 
-also demonstrates some of the fixtures that were added to Blockbuster mod (mostly idle 
-and path fixtures were used).
+This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
 
-<a href="https://www.youtube.com/watch?v=hPpai2jPEvg">
-    <img src="https://img.youtube.com/vi/hPpai2jPEvg/0.jpg">
+<a href="https://youtu.be/PyAO7DOdL00?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF">
+    <img src="https://img.youtube.com/vi/PyAO7DOdL00/0.jpg">
 </a>
 
 ## Features
@@ -96,7 +93,7 @@ This mod provides following features:
 
 #### Commands
 
-* Action command (`/action <play|record>`) – allows players to record their 
+* Action command (`/action <play|record|stop>`) – allows players to record their 
   actions to a file and playback recorded actions
 * Director command (`/director <play|stop>`) – allows players to trigger or stop 
   playback in director block specified at XYZ position
