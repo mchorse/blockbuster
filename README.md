@@ -11,7 +11,8 @@ the recording code is based on the code from the
 [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (the author of the mod gave me permission to use his code). 
 
-[Original minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure). 
+Original [minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) 
+and [planet minecraft post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/). 
 Tested on Mac OS X 10.10 only, but in theory supposed to work on any OS.
 
 ## Install
