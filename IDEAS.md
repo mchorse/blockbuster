@@ -25,6 +25,7 @@ This is my list for what I should do before releasing an update:
     - In `Blockbuster.java`
     - In `build.gradle`
     - In `mcmod.info`
+- Make sure that `README.md` and `CHANGELOG.md` have correct links and that
 - Make a github release (tag)
 - Post update message and update original post on minecraftforum.net
 - Post update message and update original post on minecraftforge.net
