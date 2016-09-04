@@ -1,7 +1,9 @@
 package noname.blockbuster;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Scanner;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -24,7 +26,9 @@ import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.ProfileRenderer;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
-import noname.blockbuster.client.render.RenderActor;
+import noname.blockbuster.client.model.ModelCustom;
+import noname.blockbuster.client.model.parsing.ModelParser;
+import noname.blockbuster.client.render.RenderTest;
 import noname.blockbuster.commands.CommandCamera;
 import noname.blockbuster.entity.EntityActor;
 
@@ -61,9 +65,23 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
-        this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
+        this.registerEntityRender(EntityActor.class, new RenderTest.FactoryActor());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
+        this.loadActorModels();
+    }
+
+    private void loadActorModels()
+    {
+        ModelParser parser = new ModelParser();
+
+        InputStream stream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json");
+        Scanner scanner = new Scanner(stream, "UTF-8");
+
+        ModelCustom test = parser.parseModel(scanner.useDelimiter("\\A").next());
+        ModelCustom.MODELS.put("steve", test);
+
+        scanner.close();
     }
 
     /**

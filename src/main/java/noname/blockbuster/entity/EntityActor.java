@@ -173,6 +173,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void onLivingUpdate()
     {
+        this.updateSize();
         this.pickUpNearByItems();
 
         if (this.eventsList.size() > 0)
