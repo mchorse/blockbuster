@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noname.blockbuster.client.model.parsing.Model;
 
 /**
  * Custom Model class
@@ -26,6 +27,11 @@ public class ModelCustom extends ModelBase
     public static Map<String, ModelCustom> MODELS = new HashMap<String, ModelCustom>();
 
     /**
+     * Model data
+     */
+    public Model model;
+
+    /**
      * Array of all limbs that has been parsed from JSON model
      */
     public ModelCustomRenderer[] limbs;
@@ -39,10 +45,11 @@ public class ModelCustom extends ModelBase
     /**
      * Initiate the model with the size of the texture
      */
-    public ModelCustom(int width, int height)
+    public ModelCustom(Model model)
     {
-        this.textureWidth = width;
-        this.textureHeight = height;
+        this.model = model;
+        this.textureWidth = model.texture[0];
+        this.textureHeight = model.texture[1];
     }
 
     @Override
@@ -57,8 +64,8 @@ public class ModelCustom extends ModelBase
     }
 
     /**
-     * This method is responsible for setting gameplay wise features like
-     * head looking, idle rotating (like arm swinging), swinging
+     * This method is responsible for setting gameplay wise features like head
+     * looking, idle rotating (like arm swinging), swinging and swiping
      */
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
@@ -85,13 +92,35 @@ public class ModelCustom extends ModelBase
 
             if (limb.limb.swinging)
             {
-                /* @TODO: Implement swinging */
+                float f = 1.0F;
+
+                if (limb.limb.mirror)
+                {
+                    limb.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 2.0F * limbSwingAmount * 0.5F / f;
+                }
+                else
+                {
+                    limb.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / f;
+                }
             }
 
-            if (limb.limb.swiping)
+            if (limb.limb.swiping && this.swingProgress > 0.0F)
             {
                 /* @TODO: Implement swiping */
             }
+        }
+    }
+
+    /**
+     * Apply a pose on this model
+     */
+    public void applyPose(String name)
+    {
+        Model.Pose pose = this.model.poses.get(name);
+
+        for (ModelCustomRenderer limb : this.limbs)
+        {
+            limb.applyTransform(pose.limbs.get(limb.limb.name));
         }
     }
 }

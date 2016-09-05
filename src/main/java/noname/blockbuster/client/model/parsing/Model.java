@@ -25,6 +25,9 @@ public class Model
     public Map<String, Limb> limbs = new HashMap<String, Limb>();
     public Map<String, Pose> poses = new HashMap<String, Pose>();
 
+    /**
+     * Fill in missing transforms and assign name to every limb
+     */
     public void fillInMissing()
     {
         for (Map.Entry<String, Limb> entry : this.limbs.entrySet())
@@ -38,6 +41,8 @@ public class Model
                     pose.limbs.put(key, new Transform());
                 }
             }
+
+            entry.getValue().name = key;
         }
     }
 
@@ -56,6 +61,7 @@ public class Model
     public static class Limb
     {
         /* Meta data */
+        public String name = "";
         public String parent = "";
 
         /* Visuals */

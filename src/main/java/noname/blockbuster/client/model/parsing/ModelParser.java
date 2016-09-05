@@ -25,7 +25,8 @@ import noname.blockbuster.client.model.ModelCustomRenderer;
 public class ModelParser
 {
     /**
-     * Parse the model
+     * Parse given input stream as JSON model, and then save this model in
+     * the custom model repository
      */
     public static void parse(String key, InputStream stream)
     {
@@ -47,7 +48,7 @@ public class ModelParser
         Gson gson = new GsonBuilder().create();
 
         Model data = gson.fromJson(json, Model.class);
-        ModelCustom model = new ModelCustom(data.texture[0], data.texture[1]);
+        ModelCustom model = new ModelCustom(data);
 
         data.fillInMissing();
         this.generateLimbs(data, model);
@@ -69,12 +70,7 @@ public class ModelParser
         {
             Model.Limb limb = entry.getValue();
             Model.Transform transform = standing.limbs.get(entry.getKey());
-
             ModelCustomRenderer renderer = new ModelCustomRenderer(model, limb, transform);
-
-            float x = transform.translate[0];
-            float y = transform.translate[1];
-            float z = transform.translate[2];
 
             float w = limb.size[0];
             float h = limb.size[1];
@@ -86,14 +82,7 @@ public class ModelParser
 
             renderer.mirror = limb.mirror;
             renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d);
-
-            renderer.offsetX = x / 16;
-            renderer.offsetY = limb.parent.isEmpty() ? (-y + 24) / 16 : -y / 16;
-            renderer.offsetZ = -z / 16;
-
-            renderer.rotateAngleX = transform.rotate[0] * (float) Math.PI / 180;
-            renderer.rotateAngleY = transform.rotate[1] * (float) Math.PI / 180;
-            renderer.rotateAngleZ = transform.rotate[2] * (float) Math.PI / 180;
+            renderer.applyTransform(transform);
 
             limbs.put(entry.getKey(), renderer);
         }
@@ -115,6 +104,7 @@ public class ModelParser
             }
         }
 
+        /* Assign values */
         model.limbs = limbs.values().toArray(new ModelCustomRenderer[limbs.size()]);
         model.renderable = renderable.toArray(new ModelCustomRenderer[renderable.size()]);
     }
