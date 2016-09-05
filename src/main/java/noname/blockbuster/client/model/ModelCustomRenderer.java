@@ -31,7 +31,8 @@ public class ModelCustomRenderer extends ModelRenderer
     }
 
     /**
-     * Apply transformations on */
+     * Apply transformations on this model renderer
+     */
     public void applyTransform(Model.Transform transform)
     {
         this.trasnform = transform;

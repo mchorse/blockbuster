@@ -32,6 +32,11 @@ public class ModelCustom extends ModelBase
     public Model model;
 
     /**
+     * Current pose
+     */
+    public Model.Pose pose;
+
+    /**
      * Array of all limbs that has been parsed from JSON model
      */
     public ModelCustomRenderer[] limbs;
@@ -127,21 +132,11 @@ public class ModelCustom extends ModelBase
         }
     }
 
+    /**
+     * Apply transform from current pose on given limb
+     */
     private void applyLimbPose(ModelCustomRenderer limb)
     {
-        limb.applyTransform(this.model.poses.get("standing").limbs.get(limb.limb.name));
-    }
-
-    /**
-     * Apply a pose on this model
-     */
-    public void applyPose(String name)
-    {
-        Model.Pose pose = this.model.poses.get(name);
-
-        for (ModelCustomRenderer limb : this.limbs)
-        {
-            limb.applyTransform(pose.limbs.get(limb.limb.name));
-        }
+        limb.applyTransform(this.pose.limbs.get(limb.limb.name));
     }
 }

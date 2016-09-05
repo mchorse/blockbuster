@@ -437,8 +437,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.model = model;
         this.setEntityInvulnerable(invulnerable);
 
-        System.out.println(model);
-
         if (!this.worldObj.isRemote && notify)
         {
             Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), filename, name, skin, model, invulnerable));
