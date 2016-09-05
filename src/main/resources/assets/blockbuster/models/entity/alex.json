@@ -78,6 +78,7 @@
             "mirror": false,
             "holding": "right",
             "swinging": true,
+            "swiping": true,
             "idle": true
         },
         "left_leg": {

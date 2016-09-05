@@ -19,7 +19,7 @@ import noname.blockbuster.client.model.ModelCustomRenderer;
 /**
  * Model parser
  *
- * This class is responsible for parsing JSON models and
+ * This class is responsible for parsing JSON models
  */
 @SideOnly(Side.CLIENT)
 public class ModelParser
@@ -30,14 +30,22 @@ public class ModelParser
      */
     public static void parse(String key, InputStream stream)
     {
-        ModelParser parser = new ModelParser();
+        try
+        {
+            ModelParser parser = new ModelParser();
 
-        Scanner scanner = new Scanner(stream, "UTF-8");
+            Scanner scanner = new Scanner(stream, "UTF-8");
 
-        ModelCustom test = parser.parseModel(scanner.useDelimiter("\\A").next());
-        ModelCustom.MODELS.put(key, test);
+            ModelCustom model = parser.parseModel(scanner.useDelimiter("\\A").next());
+            ModelCustom.MODELS.put(key, model);
 
-        scanner.close();
+            scanner.close();
+        }
+        catch (Exception e)
+        {
+            System.out.println("JSON model for key '" + key + "' couldn't be loaded!");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -63,6 +71,8 @@ public class ModelParser
     private void generateLimbs(Model data, ModelCustom model)
     {
         Map<String, ModelCustomRenderer> limbs = new HashMap<String, ModelCustomRenderer>();
+        List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
+
         Model.Pose standing = data.poses.get("standing");
 
         /* First, iterate to create every limb */
@@ -86,8 +96,6 @@ public class ModelParser
 
             limbs.put(entry.getKey(), renderer);
         }
-
-        List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
 
         /* Then, iterate to attach child to their parents */
         for (Map.Entry<String, ModelCustomRenderer> entry : limbs.entrySet())

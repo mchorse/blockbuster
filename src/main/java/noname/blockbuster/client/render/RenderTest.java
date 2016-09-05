@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import noname.blockbuster.Blockbuster;
+import noname.blockbuster.ClientProxy;
 import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.entity.EntityActor;
 
@@ -28,6 +29,13 @@ public class RenderTest extends RenderLiving<EntityActor>
     @Override
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
+        ResourceLocation location = new ResourceLocation("blockbuster.actors", entity.skin);
+
+        if (ClientProxy.actorPack.resourceExists(location))
+        {
+            return location;
+        }
+
         return defaultTexture;
     }
 

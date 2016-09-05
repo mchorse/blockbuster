@@ -77,9 +77,7 @@ public class ModelCustom extends ModelBase
             float PI = (float) Math.PI;
 
             /* Reseting the angles */
-            limb.rotateAngleX = 0.0F;
-            limb.rotateAngleY = 0.0F;
-            limb.rotateAngleZ = 0.0F;
+            this.applyLimbPose(limb);
 
             if (limb.limb.looking)
             {
@@ -129,6 +127,11 @@ public class ModelCustom extends ModelBase
                 limb.rotateAngleZ += MathHelper.sin(this.swingProgress * (float) Math.PI) * -0.4F;
             }
         }
+    }
+
+    private void applyLimbPose(ModelCustomRenderer limb)
+    {
+        limb.applyTransform(this.model.poses.get("standing").limbs.get(limb.limb.name));
     }
 
     /**
