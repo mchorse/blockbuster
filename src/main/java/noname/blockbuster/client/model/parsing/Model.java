@@ -18,9 +18,9 @@ import scala.actors.threadpool.Arrays;
 @SideOnly(Side.CLIENT)
 public class Model
 {
-    public String scheme;
-    public String name;
-    public int[] texture;
+    public String scheme = "";
+    public String name = "";
+    public int[] texture = new int[] {64, 32};
 
     public Map<String, Limb> limbs = new HashMap<String, Limb>();
     public Map<String, Pose> poses = new HashMap<String, Pose>();
@@ -56,12 +56,12 @@ public class Model
     public static class Limb
     {
         /* Meta data */
-        public String parent;
+        public String parent = "";
 
         /* Visuals */
-        public int[] size;
-        public int[] texture;
-        public float[] anchor;
+        public int[] size = new int[] {4, 4, 4};
+        public int[] texture = new int[] {0, 0};
+        public float[] anchor = new float[] {0.5F, 0.5F, 0.5F};
         public boolean mirror;
 
         /* Game play */
@@ -87,7 +87,7 @@ public class Model
      */
     public static class Pose
     {
-        public float[] size;
+        public float[] size = new float[] {1, 1, 1};
         public Map<String, Transform> limbs = new HashMap<String, Transform>();
 
         @Override

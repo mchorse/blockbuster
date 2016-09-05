@@ -1,8 +1,11 @@
 package noname.blockbuster.client.model.parsing;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +23,21 @@ import noname.blockbuster.client.model.ModelCustom;
 @SideOnly(Side.CLIENT)
 public class ModelParser
 {
+    /**
+     * Parse the model
+     */
+    public static void parse(String key, InputStream stream)
+    {
+        ModelParser parser = new ModelParser();
+
+        Scanner scanner = new Scanner(stream, "UTF-8");
+
+        ModelCustom test = parser.parseModel(scanner.useDelimiter("\\A").next());
+        ModelCustom.MODELS.put(key, test);
+
+        scanner.close();
+    }
+
     /**
      * Parse and build model out of given JSON string
      */
@@ -42,13 +60,14 @@ public class ModelParser
      */
     private void generateLimbs(Model data, ModelCustom model)
     {
-        List<ModelRenderer> limbs = new ArrayList<ModelRenderer>();
+        Map<String, ModelRenderer> limbs = new HashMap<String, ModelRenderer>();
         Model.Pose standing = data.poses.get("standing");
 
-        for (Map.Entry<String, Model.Limb> set : data.limbs.entrySet())
+        /* First, iterate to create every limb */
+        for (Map.Entry<String, Model.Limb> entry : data.limbs.entrySet())
         {
-            Model.Limb limb = set.getValue();
-            Model.Transform transform = standing.limbs.get(set.getKey());
+            Model.Limb limb = entry.getValue();
+            Model.Transform transform = standing.limbs.get(entry.getKey());
 
             ModelRenderer renderer = new ModelRenderer(model, limb.texture[0], limb.texture[1]);
 
@@ -56,16 +75,46 @@ public class ModelParser
             float y = transform.translate[1];
             float z = transform.translate[2];
 
-            x -= limb.anchor[0] * limb.size[0];
-            y += limb.anchor[1] * limb.size[1];
-            z -= limb.anchor[2] * limb.size[2];
+            float w = limb.size[0];
+            float h = limb.size[1];
+            float d = limb.size[2];
 
-            renderer.addBox(x, -y + 24, z, limb.size[0], limb.size[1], limb.size[2]);
+            float ax = limb.anchor[0];
+            float ay = limb.anchor[1];
+            float az = limb.anchor[2];
+
             renderer.mirror = limb.mirror;
+            renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d);
 
-            limbs.add(renderer);
+            renderer.offsetX = x / 16;
+            renderer.offsetY = limb.parent.isEmpty() ? (-y + 24) / 16 : -y / 16;
+            renderer.offsetZ = -z / 16;
+
+            renderer.rotateAngleX = transform.rotate[0] * (float) Math.PI / 180;
+            renderer.rotateAngleY = transform.rotate[1] * (float) Math.PI / 180;
+            renderer.rotateAngleZ = transform.rotate[2] * (float) Math.PI / 180;
+
+            limbs.put(entry.getKey(), renderer);
         }
 
-        model.limbs = limbs.toArray(new ModelRenderer[limbs.size()]);
+        List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
+
+        /* Then, iterate to attach child to their parents */
+        for (Map.Entry<String, ModelRenderer> entry : limbs.entrySet())
+        {
+            Model.Limb limb = data.limbs.get(entry.getKey());
+
+            if (!limb.parent.isEmpty())
+            {
+                limbs.get(limb.parent).addChild(entry.getValue());
+            }
+            else
+            {
+                renderable.add(entry.getValue());
+            }
+        }
+
+        model.limbs = limbs.values().toArray(new ModelRenderer[limbs.size()]);
+        model.renderable = renderable.toArray(new ModelRenderer[renderable.size()]);
     }
 }

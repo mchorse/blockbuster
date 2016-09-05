@@ -1,9 +1,7 @@
 package noname.blockbuster;
 
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Scanner;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -26,7 +24,6 @@ import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.ProfileRenderer;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
-import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.client.model.parsing.ModelParser;
 import noname.blockbuster.client.render.RenderTest;
 import noname.blockbuster.commands.CommandCamera;
@@ -73,15 +70,8 @@ public class ClientProxy extends CommonProxy
 
     private void loadActorModels()
     {
-        ModelParser parser = new ModelParser();
-
-        InputStream stream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json");
-        Scanner scanner = new Scanner(stream, "UTF-8");
-
-        ModelCustom test = parser.parseModel(scanner.useDelimiter("\\A").next());
-        ModelCustom.MODELS.put("steve", test);
-
-        scanner.close();
+        ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
+        ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
     }
 
     /**

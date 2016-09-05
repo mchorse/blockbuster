@@ -25,9 +25,15 @@ public class ModelCustom extends ModelBase
     public static Map<String, ModelCustom> MODELS = new HashMap<String, ModelCustom>();
 
     /**
-     * List of limbs that has been parsed from JSON model
+     * Array of all limbs that has been parsed from JSON model
      */
     public ModelRenderer[] limbs;
+
+    /**
+     * Array of limbs that has to be rendered (child limbs doesn't have to
+     * be rendered, because they're getting render call from parent).
+     */
+    public ModelRenderer[] renderable;
 
     /**
      * Initiate the model with the size of the texture
@@ -41,7 +47,7 @@ public class ModelCustom extends ModelBase
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        for (ModelRenderer limb : this.limbs)
+        for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
         }

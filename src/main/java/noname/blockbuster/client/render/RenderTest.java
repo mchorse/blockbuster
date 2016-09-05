@@ -37,7 +37,7 @@ public class RenderTest extends RenderLiving<EntityActor>
         @Override
         public RenderTest createRenderFor(RenderManager manager)
         {
-            return new RenderTest(manager, ModelCustom.MODELS.get("steve"), 0.5F);
+            return new RenderTest(manager, ModelCustom.MODELS.get("alex"), 0.5F);
         }
     }
 }
