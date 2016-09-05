@@ -10,13 +10,15 @@ import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.entity.EntityActor;
 
 /**
- * Render actor test clas
+ * Render actor test class
  *
  * This is a temporary class for rendering an actor
  */
 public class RenderTest extends RenderLiving<EntityActor>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
+
+    private float previousYaw;
 
     public RenderTest(RenderManager manager, ModelBase model, float f)
     {
@@ -27,6 +29,34 @@ public class RenderTest extends RenderLiving<EntityActor>
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
         return defaultTexture;
+    }
+
+    @Override
+    public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
+        if (!entity.renderName)
+        {
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        }
+        else
+        {
+            float lastYaw = entity.rotationYawHead;
+            float lastPrevYaw = entity.prevRotationYawHead;
+
+            if (this.previousYaw != entityYaw)
+            {
+                this.previousYaw = entityYaw;
+            }
+
+            entity.prevRotationYawHead = entityYaw;
+            entityYaw = this.interpolateRotation(entityYaw, this.previousYaw, partialTicks);
+            entity.rotationYawHead = entityYaw;
+
+            super.doRender(entity, x, y, z, entityYaw, partialTicks * 0.5F);
+
+            entity.rotationYawHead = lastYaw;
+            entity.prevRotationYawHead = lastPrevYaw;
+        }
     }
 
     /**

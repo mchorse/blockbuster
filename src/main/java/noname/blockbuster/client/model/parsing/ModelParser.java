@@ -14,6 +14,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.model.ModelCustom;
+import noname.blockbuster.client.model.ModelCustomRenderer;
 
 /**
  * Model parser
@@ -60,7 +61,7 @@ public class ModelParser
      */
     private void generateLimbs(Model data, ModelCustom model)
     {
-        Map<String, ModelRenderer> limbs = new HashMap<String, ModelRenderer>();
+        Map<String, ModelCustomRenderer> limbs = new HashMap<String, ModelCustomRenderer>();
         Model.Pose standing = data.poses.get("standing");
 
         /* First, iterate to create every limb */
@@ -69,7 +70,7 @@ public class ModelParser
             Model.Limb limb = entry.getValue();
             Model.Transform transform = standing.limbs.get(entry.getKey());
 
-            ModelRenderer renderer = new ModelRenderer(model, limb.texture[0], limb.texture[1]);
+            ModelCustomRenderer renderer = new ModelCustomRenderer(model, limb, transform);
 
             float x = transform.translate[0];
             float y = transform.translate[1];
@@ -100,7 +101,7 @@ public class ModelParser
         List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
 
         /* Then, iterate to attach child to their parents */
-        for (Map.Entry<String, ModelRenderer> entry : limbs.entrySet())
+        for (Map.Entry<String, ModelCustomRenderer> entry : limbs.entrySet())
         {
             Model.Limb limb = data.limbs.get(entry.getKey());
 
@@ -114,7 +115,7 @@ public class ModelParser
             }
         }
 
-        model.limbs = limbs.values().toArray(new ModelRenderer[limbs.size()]);
-        model.renderable = renderable.toArray(new ModelRenderer[renderable.size()]);
+        model.limbs = limbs.values().toArray(new ModelCustomRenderer[limbs.size()]);
+        model.renderable = renderable.toArray(new ModelCustomRenderer[renderable.size()]);
     }
 }

@@ -47,45 +47,51 @@
         "body": {
             "size": [8, 12, 4],
             "texture": [16, 16],
-            "anchor": [0.5, 0, 0.5],
-            "mirror": false
+            "anchor": [0.5, 0, 0.5]
         },
         "head": {
             "size": [8, 8, 8],
             "texture": [0, 0],
             "anchor": [0.5, 1, 0.5],
-            "mirror": false
+            "looking": true
         },
         "outer": {
             "parent": "head",
             "size": [8, 8, 8],
             "texture": [32, 0],
-            "anchor": [0.5, 0.5, 0.5],
-            "mirror": false
+            "anchor": [0.5, 0.5, 0.5]
         },
         "left_arm": {
             "size": [3, 12, 4],
             "texture": [40, 16],
             "anchor": [0.5, 0, 0.5],
-            "mirror": true
+            "mirror": true,
+            "holding": "left",
+            "swinging": true,
+            "swiping": true,
+            "idle": true
         },
         "right_arm": {
             "size": [3, 12, 4],
             "texture": [40, 16],
             "anchor": [0.5, 0, 0.5],
-            "mirror": false
+            "mirror": false,
+            "holding": "right",
+            "swinging": true,
+            "idle": true
         },
         "left_leg": {
             "size": [4, 12, 4],
             "texture": [0, 16],
             "anchor": [0.5, 0, 0.5],
-            "mirror": true
+            "mirror": true,
+            "swinging": true
         },
         "right_leg": {
             "size": [4, 12, 4],
             "texture": [0, 16],
             "anchor": [0.5, 0, 0.5],
-            "mirror": false
+            "swinging": true
         }
     }
 }
