@@ -74,6 +74,12 @@ public class ModelCustom extends ModelBase
         {
             boolean mirror = limb.limb.mirror;
             float factor = mirror ? -1 : 1;
+            float PI = (float) Math.PI;
+
+            /* Reseting the angles */
+            limb.rotateAngleX = 0.0F;
+            limb.rotateAngleY = 0.0F;
+            limb.rotateAngleZ = 0.0F;
 
             if (limb.limb.looking)
             {
@@ -81,32 +87,46 @@ public class ModelCustom extends ModelBase
                 limb.rotateAngleY = netHeadYaw * 0.017453292F;
             }
 
+            if (limb.limb.swinging)
+            {
+                float f = 0.8F;
+
+                if (limb.limb.mirror)
+                {
+                    limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI) * 2.0F * limbSwingAmount * 0.5F / f;
+                }
+                else
+                {
+                    limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / f;
+                }
+            }
+
             if (limb.limb.idle)
             {
-                limb.rotateAngleZ = 0.0F;
-                limb.rotateAngleX = 0.0F;
-
                 limb.rotateAngleZ += (MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F) * factor;
                 limb.rotateAngleX += (MathHelper.sin(ageInTicks * 0.067F) * 0.05F) * factor;
             }
 
-            if (limb.limb.swinging)
+            if (limb.limb.swiping && this.swingProgress > 0.0F)
             {
-                float f = 1.0F;
+                float swing = this.swingProgress;
+                float bodyY = MathHelper.sin(MathHelper.sqrt_float(swing) * PI * 2F) * 0.2F;
 
                 if (limb.limb.mirror)
                 {
-                    limb.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 2.0F * limbSwingAmount * 0.5F / f;
+                    bodyY *= -1.0F;
                 }
-                else
-                {
-                    limb.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / f;
-                }
-            }
 
-            if (limb.limb.swiping && this.swingProgress > 0.0F)
-            {
-                /* @TODO: Implement swiping */
+                swing = 1.0F - swing;
+                swing = swing * swing * swing;
+                swing = 1.0F - swing;
+
+                float sinSwing = MathHelper.sin(swing * PI);
+                float sinSwing2 = MathHelper.sin(this.swingProgress * PI) * -(0.0F - 0.7F) * 0.75F;
+
+                limb.rotateAngleX = limb.rotateAngleX - (sinSwing * 1.2F + sinSwing2);
+                limb.rotateAngleY += bodyY * 2.0F;
+                limb.rotateAngleZ += MathHelper.sin(this.swingProgress * (float) Math.PI) * -0.4F;
             }
         }
     }
