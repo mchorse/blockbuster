@@ -20,7 +20,7 @@ public class ServerHandlerModifyActor extends ServerMessageHandler<PacketModifyA
 
         if (entity instanceof EntityActor)
         {
-            ((EntityActor) entity).modify(message.filename, message.name, message.skin, message.invulnerable, true);
+            ((EntityActor) entity).modify(message.filename, message.name, message.skin, message.model, message.invulnerable, true);
         }
     }
 }

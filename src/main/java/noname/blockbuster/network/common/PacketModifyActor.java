@@ -11,16 +11,18 @@ public class PacketModifyActor implements IMessage
     public String name;
     public String skin;
     public boolean invulnerable;
+    public String model;
 
     public PacketModifyActor()
     {}
 
-    public PacketModifyActor(int id, String filename, String name, String skin, boolean invulnerable)
+    public PacketModifyActor(int id, String filename, String name, String skin, String model, boolean invulnerable)
     {
         this.id = id;
         this.filename = filename;
         this.name = name;
         this.skin = skin;
+        this.model = model;
         this.invulnerable = invulnerable;
     }
 
@@ -31,6 +33,7 @@ public class PacketModifyActor implements IMessage
         this.filename = ByteBufUtils.readUTF8String(buf);
         this.name = ByteBufUtils.readUTF8String(buf);
         this.skin = ByteBufUtils.readUTF8String(buf);
+        this.model = ByteBufUtils.readUTF8String(buf);
         this.invulnerable = buf.readBoolean();
     }
 
@@ -41,6 +44,7 @@ public class PacketModifyActor implements IMessage
         ByteBufUtils.writeUTF8String(buf, this.filename);
         ByteBufUtils.writeUTF8String(buf, this.name);
         ByteBufUtils.writeUTF8String(buf, this.skin);
+        ByteBufUtils.writeUTF8String(buf, this.model);
         buf.writeBoolean(this.invulnerable);
     }
 }

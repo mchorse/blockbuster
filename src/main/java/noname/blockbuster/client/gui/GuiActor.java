@@ -117,11 +117,11 @@ public class GuiActor extends GuiChildScreen
 
         if (this.pos == null)
         {
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, invulnerability));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, "", invulnerability));
         }
         else
         {
-            this.actor.modify(filename, name, skin, invulnerability, false);
+            this.actor.modify(filename, name, skin, "", invulnerability, false);
 
             Dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
         }

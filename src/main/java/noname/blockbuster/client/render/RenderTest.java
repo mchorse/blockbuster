@@ -1,6 +1,5 @@
 package noname.blockbuster.client.render;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -21,9 +20,9 @@ public class RenderTest extends RenderLiving<EntityActor>
 
     private float previousYaw;
 
-    public RenderTest(RenderManager manager, ModelBase model, float f)
+    public RenderTest(RenderManager manager, float f)
     {
-        super(manager, model, f);
+        super(manager, ModelCustom.MODELS.get("alex"), f);
     }
 
     @Override
@@ -42,6 +41,10 @@ public class RenderTest extends RenderLiving<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        String key = ModelCustom.MODELS.containsKey(entity.model) ? entity.model : "alex";
+
+        this.mainModel = ModelCustom.MODELS.get(key);
+
         if (!entity.renderName)
         {
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -75,7 +78,7 @@ public class RenderTest extends RenderLiving<EntityActor>
         @Override
         public RenderTest createRenderFor(RenderManager manager)
         {
-            return new RenderTest(manager, ModelCustom.MODELS.get("alex"), 0.5F);
+            return new RenderTest(manager, 0.5F);
         }
     }
 }

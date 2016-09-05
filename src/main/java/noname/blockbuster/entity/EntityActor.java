@@ -53,10 +53,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public List<Action> eventsList = Collections.synchronizedList(new ArrayList<Action>());
 
     /**
-     * Skin used by the actor. If empty – means default skin provided with this
+     * Skin used by the actor. If empty - means default skin provided with this
      * mod.
      */
     public String skin = "";
+
+    /**
+     * Model which is used to display. If empty - means default model (steve)
+     * provided with this mod.
+     */
+    public String model = "";
 
     /**
      * File name that will be used by recording code
@@ -423,16 +429,19 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(String filename, String name, String skin, boolean invulnerable, boolean notify)
+    public void modify(String filename, String name, String skin, String model, boolean invulnerable, boolean notify)
     {
         this.filename = filename;
         this.setCustomNameTag(name);
         this.skin = skin;
+        this.model = model;
         this.setEntityInvulnerable(invulnerable);
+
+        System.out.println(model);
 
         if (!this.worldObj.isRemote && notify)
         {
-            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), filename, name, skin, invulnerable));
+            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), filename, name, skin, model, invulnerable));
         }
     }
 
@@ -456,14 +465,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         super.readEntityFromNBT(tag);
 
         String skin = this.skin;
+        String model = this.model;
 
         this.skin = tag.getString("Skin");
+        this.model = tag.getString("Model");
         this.filename = tag.getString("Filename");
         this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
 
-        if (!skin.equals(this.skin) && !this.worldObj.isRemote)
+        if ((!skin.equals(this.skin) || !model.equals(this.model)) && !this.worldObj.isRemote)
         {
-            this.modify(this.filename, this.getCustomNameTag(), this.skin, this.isEntityInvulnerable(DamageSource.anvil), true);
+            this.modify(this.filename, this.getCustomNameTag(), this.skin, this.model, this.isEntityInvulnerable(DamageSource.anvil), true);
         }
     }
 
@@ -472,12 +483,17 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.writeEntityToNBT(tag);
 
-        if (this.skin != "")
+        if (!this.skin.isEmpty())
         {
             tag.setString("Skin", this.skin);
         }
 
-        if (this.filename != "")
+        if (!this.model.isEmpty())
+        {
+            tag.setString("Model", this.model);
+        }
+
+        if (!this.filename.isEmpty())
         {
             tag.setString("Filename", this.filename);
         }
@@ -495,6 +511,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         ByteBufUtils.writeUTF8String(buffer, this.filename);
         ByteBufUtils.writeUTF8String(buffer, this.skin);
+        ByteBufUtils.writeUTF8String(buffer, this.model);
 
         /* What a shame, Mojang, why do I need to synchronize your shit?! */
         buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.anvil));
@@ -505,6 +522,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         this.filename = ByteBufUtils.readUTF8String(buffer);
         this.skin = ByteBufUtils.readUTF8String(buffer);
+        this.model = ByteBufUtils.readUTF8String(buffer);
+
         this.setEntityInvulnerable(buffer.readBoolean());
     }
 }

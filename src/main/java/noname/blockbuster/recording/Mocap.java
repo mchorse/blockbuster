@@ -182,7 +182,7 @@ public class Mocap
         boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(filename, name, skin, isInvulnerable, true);
+        actor.modify(filename, name, skin, "", isInvulnerable, true);
 
         return actor;
     }
@@ -208,7 +208,7 @@ public class Mocap
     public static EntityActor startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
     {
         EntityActor actor = new EntityActor(world);
-        actor.modify(filename, name, skin, false, true);
+        actor.modify(filename, name, skin, "", false, true);
 
         startPlayback(filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);

@@ -68,11 +68,14 @@ public class ClientProxy extends CommonProxy
         this.loadActorModels();
     }
 
+    /**
+     * Load some provided actor models
+     */
     private void loadActorModels()
     {
         ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
         ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
-        ModelParser.parse("freak", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/freak.json"));
+        ModelParser.parse("chicken", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/chicken.json"));
     }
 
     /**

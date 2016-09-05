@@ -86,7 +86,7 @@ public class ModelParser
             float h = limb.size[1];
             float d = limb.size[2];
 
-            float ax = limb.anchor[0];
+            float ax = 1 - limb.anchor[0];
             float ay = limb.anchor[1];
             float az = limb.anchor[2];
 
