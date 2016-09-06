@@ -38,7 +38,10 @@ public class RenderTest extends RenderLiving<EntityActor>
     @Override
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", entity.skin);
+        String model = !entity.model.isEmpty() ? entity.model : "";
+        String path = model + "/" + entity.skin;
+
+        ResourceLocation location = new ResourceLocation("blockbuster.actors", path);
 
         if (ClientProxy.actorPack.resourceExists(location))
         {
@@ -124,6 +127,9 @@ public class RenderTest extends RenderLiving<EntityActor>
 
     /**
      * Taken from RenderPlayer
+     *
+     * This code is primarily changes the angle of the actor while it's flying
+     * elytra
      */
     @Override
     protected void rotateCorpse(EntityActor actor, float p_77043_2_, float p_77043_3_, float partialTicks)

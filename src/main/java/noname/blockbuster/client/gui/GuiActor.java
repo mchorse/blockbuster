@@ -78,8 +78,11 @@ public class GuiActor extends GuiChildScreen
     public GuiActor(GuiParentScreen parent, EntityActor actor)
     {
         super(parent);
+
+        ClientProxy.actorPack.reload();
+
         this.actor = actor;
-        this.skins = ClientProxy.actorPack.getReloadedSkins();
+        this.skins = ClientProxy.actorPack.getSkins(actor.model);
     }
 
     /* Actions */
@@ -117,7 +120,7 @@ public class GuiActor extends GuiChildScreen
 
         if (this.pos == null)
         {
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, "", invulnerability));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, this.actor.model, invulnerability));
         }
         else
         {

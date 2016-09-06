@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,44 +38,59 @@ public class ActorsPack implements IResourcePack
     public static final Set<String> defaultResourceDomains = ImmutableSet.<String> of("blockbuster.actors");
 
     /**
-     * Cached skins, usually this map is getting reloaded while Skin Manager
-     * GUI is getting opened
+     * Cached models
      */
-    protected Map<String, File> skins = new HashMap<String, File>();
+    protected Map<String, File> models = new HashMap<String, File>();
+
+    /**
+     * Cached skins
+     */
+    protected Map<String, Map<String, File>> skins = new HashMap<String, Map<String, File>>();
 
     /**
      * Config folder where skins are located on the client side
      */
-    protected File skinsFolder;
+    protected File modelFolder;
 
+    /**
+     * Actor pack initialization
+     */
     public ActorsPack(String path)
     {
-        this.skinsFolder = new File(path);
+        this.modelFolder = new File(path);
 
-        if (!this.skinsFolder.exists())
+        if (!this.modelFolder.exists())
         {
-            this.skinsFolder.mkdirs();
+            this.modelFolder.mkdirs();
         }
 
-        this.reloadSkins();
+        this.reload();
     }
 
     /**
      * Get available skins
      */
-    public List<String> getSkins()
+    public List<String> getSkins(String model)
     {
-        return new ArrayList<String>(this.skins.keySet());
+        Set<String> keys = this.skins.containsKey(model) ? this.skins.get(model).keySet() : Collections.<String> emptySet();
+
+        return new ArrayList<String>(keys);
     }
 
     /**
-     * Get available skins, used by GuiActorSkin
+     * Get available skins
      */
-    public List<String> getReloadedSkins()
+    public Map<String, Map<String, File>> getAllSkins()
     {
-        this.reloadSkins();
+        return this.skins;
+    }
 
-        return this.getSkins();
+    /**
+     * Get available models
+     */
+    public List<String> getModels()
+    {
+        return new ArrayList<String>(this.models.keySet());
     }
 
     /**
@@ -88,75 +103,108 @@ public class ActorsPack implements IResourcePack
      * This method reloads skins from config/blockbuster/skins and current's
      * world folder skins (so people could transfer their adventure map skins
      * with the world's save).
-     *
-     * World skins are only available in single-player, because if those skins
-     * on server, then they couldn't be accessed via file-system. I'll figure
-     * out something, if this feature going to be requested (primarily by
-     * adventure map makers who want their map to be co-op).
      */
-    public void reloadSkins()
+    public void reload()
     {
-        this.skins.clear();
+        this.reloadModels();
+        this.reloadSkins();
+    }
 
-        for (File file : this.skinsFolder.listFiles())
+    /**
+     * Reload models
+     */
+    protected void reloadModels()
+    {
+        this.models.clear();
+
+        for (File file : this.modelFolder.listFiles())
         {
-            this.addSkin(file, "");
-        }
+            File model = new File(file.getAbsolutePath() + "/model.json");
 
-        if (DimensionManager.getCurrentSaveRootDirectory() == null)
-        {
-            return;
-        }
-
-        File worldSkins = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/skins");
-
-        if (!worldSkins.exists())
-        {
-            worldSkins.mkdirs();
-        }
-
-        for (File file : worldSkins.listFiles())
-        {
-            this.addSkin(file, "(Save)");
+            if (file.isDirectory() && model.isFile())
+            {
+                this.models.put(file.getName(), model);
+            }
         }
     }
 
     /**
-     * Check if file is a skin and add it to the map cache.
+     * Reload skins
      */
-    protected void addSkin(File skin, String prefix)
+    protected void reloadSkins()
     {
-        String name = skin.getName();
-        int suffix = name.length() - 4;
+        this.skins.clear();
 
-        if (name.indexOf(".png") == suffix)
+        for (File file : this.modelFolder.listFiles())
         {
-            this.skins.put(prefix + name.substring(0, suffix), skin);
+            File skins = new File(file.getAbsolutePath() + "/skins/");
+
+            if (file.isDirectory())
+            {
+                Map<String, File> map = new HashMap<String, File>();
+
+                skins.mkdirs();
+
+                for (File skin : skins.listFiles())
+                {
+                    int suffix = skin.getName().indexOf(".png");
+
+                    map.put(skin.getName().substring(0, suffix), skin);
+                }
+
+                this.skins.put(file.getName(), map);
+            }
         }
     }
 
+    /* IResourcePack implementation */
+
+    /**
+     * Read a JSON model or skin for an actor
+     */
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException
     {
-        return new FileInputStream(this.skins.get(location.getResourcePath()));
+        String[] path = location.getResourcePath().split("/");
+
+        if (path.length == 1)
+        {
+            return new FileInputStream(this.models.get(path[0]));
+        }
+        else if (path.length == 2)
+        {
+            return new FileInputStream(this.skins.get(path[0]).get(path[1]));
+        }
+
+        return null;
     }
 
+    /**
+     * Check if model or skin exists
+     */
     @Override
     public boolean resourceExists(ResourceLocation location)
     {
-        return this.skins.containsKey(location.getResourcePath());
+        String[] path = location.getResourcePath().split("/");
+
+        if (path.length == 1)
+        {
+            return this.models.containsKey(path[0]);
+        }
+        else if (path.length == 2)
+        {
+            Map<String, File> skins = this.skins.get(path[0]);
+
+            return skins != null && skins.containsKey(path[1]);
+        }
+
+        return false;
     }
 
     @Override
     public Set<String> getResourceDomains()
     {
         return defaultResourceDomains;
-    }
-
-    @Override
-    public BufferedImage getPackImage() throws IOException
-    {
-        return null;
     }
 
     @Override
@@ -168,7 +216,12 @@ public class ActorsPack implements IResourcePack
     @Override
     public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
     {
-        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public BufferedImage getPackImage() throws IOException
+    {
         return null;
     }
 }

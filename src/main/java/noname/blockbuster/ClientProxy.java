@@ -1,5 +1,6 @@
 package noname.blockbuster;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -69,14 +71,21 @@ public class ClientProxy extends CommonProxy
     }
 
     /**
-     * Load some provided actor models
+     * Load some actor models
      */
     private void loadActorModels()
     {
-        ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
-        ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
-        ModelParser.parse("chicken", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/chicken.json"));
-        ModelParser.parse("sheep", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/sheep.json"));
+        for (String model : actorPack.getModels())
+        {
+            try
+            {
+                ModelParser.parse(model, actorPack.getInputStream(new ResourceLocation("blockbuster.actors", model)));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -98,7 +107,10 @@ public class ClientProxy extends CommonProxy
             field.setAccessible(true);
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(actorPack = new ActorsPack(path + "/skins"));
+            packs.add(actorPack = new ActorsPack(path + "/models"));
+
+            System.out.println(actorPack.getModels());
+            System.out.println(actorPack.getAllSkins());
         }
         catch (Exception e)
         {
