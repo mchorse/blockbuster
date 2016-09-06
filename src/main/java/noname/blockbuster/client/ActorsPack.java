@@ -100,9 +100,7 @@ public class ActorsPack implements IResourcePack
      * another skin in the skins folder, so why not just reload it every time
      * the GUI is showed? It's easy to implement and requires no extra code.
      *
-     * This method reloads skins from config/blockbuster/skins and current's
-     * world folder skins (so people could transfer their adventure map skins
-     * with the world's save).
+     * This method reloads skins from config/blockbuster/skins.
      */
     public void reload()
     {
@@ -112,6 +110,8 @@ public class ActorsPack implements IResourcePack
 
     /**
      * Reload models
+     *
+     * Simply caches file instances in the map for retrieval in actor GUI
      */
     protected void reloadModels()
     {
@@ -129,7 +129,11 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * Reload skins
+     * Reload skins from model folders
+     *
+     * The algorithm of this method takes the same code from method that above
+     * (reloadModels) and scans all skins in the "skins" folder in model's
+     * folder.
      */
     protected void reloadSkins()
     {
@@ -180,7 +184,8 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * Check if model or skin exists
+     * Check if model or skin (texture mapped on the model) is existing
+     * in the actor's pack
      */
     @Override
     public boolean resourceExists(ResourceLocation location)
@@ -212,6 +217,8 @@ public class ActorsPack implements IResourcePack
     {
         return "Blockbuster's Actor Pack";
     }
+
+    /* No metadata and no image */
 
     @Override
     public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException

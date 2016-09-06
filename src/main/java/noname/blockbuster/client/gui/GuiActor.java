@@ -39,6 +39,7 @@ public class GuiActor extends GuiChildScreen
     /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.actor.title");
     private String stringName = I18n.format("blockbuster.gui.actor.name");
+    private String stringModel = I18n.format("blockbuster.gui.actor.model");
     private String stringFilename = I18n.format("blockbuster.gui.actor.filename");
     private String stringSkin = I18n.format("blockbuster.gui.actor.skin");
     private String stringInvulnerability = I18n.format("blockbuster.gui.actor.invulnerability");
@@ -52,6 +53,7 @@ public class GuiActor extends GuiChildScreen
 
     /* GUI fields */
     private GuiTextField name;
+    private GuiTextField model;
     private GuiTextField filename;
     private GuiTextField skin;
     private GuiCompleterViewer skinViewer;
@@ -116,11 +118,12 @@ public class GuiActor extends GuiChildScreen
         String filename = this.filename.getText();
         String name = this.name.getText();
         String skin = this.skin.getText();
+        String model = this.model.getText();
         boolean invulnerability = this.invincibility.getValue();
 
         if (this.pos == null)
         {
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, this.actor.model, invulnerability));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, model, invulnerability));
         }
         else
         {
@@ -159,9 +162,18 @@ public class GuiActor extends GuiChildScreen
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
 
+        boolean usedFocused = this.model.isFocused();
+
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
+        this.model.mouseClicked(mouseX, mouseY, mouseButton);
         this.filename.mouseClicked(mouseX, mouseY, mouseButton);
         this.skin.mouseClicked(mouseX, mouseY, mouseButton);
+
+        if (usedFocused && !this.model.isFocused())
+        {
+            this.skins = ClientProxy.actorPack.getSkins(this.model.getText());
+            this.completer.setAllCompletions(this.skins);
+        }
     }
 
     @Override
@@ -169,6 +181,7 @@ public class GuiActor extends GuiChildScreen
     {
         super.keyTyped(typedChar, keyCode);
 
+        /* 15 = tab */
         if (keyCode == 15 && this.skin.isFocused())
         {
             this.completer.complete();
@@ -184,6 +197,7 @@ public class GuiActor extends GuiChildScreen
         }
 
         this.name.textboxKeyTyped(typedChar, keyCode);
+        this.model.textboxKeyTyped(typedChar, keyCode);
         this.filename.textboxKeyTyped(typedChar, keyCode);
         this.skin.textboxKeyTyped(typedChar, keyCode);
     }
@@ -208,6 +222,7 @@ public class GuiActor extends GuiChildScreen
         this.invincibility = new GuiToggle(4, x, y + 145, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         this.name = new GuiTextField(5, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.model = new GuiTextField(7, this.fontRendererObj, this.width - w - x + 1, y + 1, w - 2, 18);
         this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
         this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 81, w - 2, 18);
 
@@ -220,6 +235,8 @@ public class GuiActor extends GuiChildScreen
 
         this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
         this.name.setMaxStringLength(30);
+        this.model.setText(this.actor.model);
+        this.model.setMaxStringLength(40);
         this.filename.setText(this.actor.filename);
         this.filename.setMaxStringLength(40);
         this.skin.setText(this.actor.skin);
@@ -241,24 +258,28 @@ public class GuiActor extends GuiChildScreen
         this.drawDefaultBackground();
         this.drawString(this.fontRendererObj, this.stringTitle, x + 120 + 20, 15, 0xffffffff);
         this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringModel, this.width - x - 120, y, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringFilename, x, y + 40, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringSkin, x, y + 80, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringInvulnerability, x, y + 145, 0xffcccccc);
 
         int size = this.height / 4;
         y = this.height / 2 + this.height / 4;
-        x = x + 120 + 30;
-        x = x + (this.width - x) / 2;
+        x = this.width / 2;
 
         String skin = this.actor.skin;
+        String model = this.actor.model;
 
         this.actor.skin = this.skin.getText();
+        this.actor.model = this.model.getText();
         this.actor.renderName = false;
         drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
         this.actor.renderName = true;
+        this.actor.model = model;
         this.actor.skin = skin;
 
         this.name.drawTextBox();
+        this.model.drawTextBox();
         this.filename.drawTextBox();
         this.skin.drawTextBox();
 

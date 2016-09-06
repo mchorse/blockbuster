@@ -108,9 +108,6 @@ public class ClientProxy extends CommonProxy
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(actorPack = new ActorsPack(path + "/models"));
-
-            System.out.println(actorPack.getModels());
-            System.out.println(actorPack.getAllSkins());
         }
         catch (Exception e)
         {

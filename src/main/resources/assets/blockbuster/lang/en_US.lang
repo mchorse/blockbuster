@@ -75,6 +75,7 @@ blockbuster.gui.remove=Remove
 blockbuster.gui.actor.title=Actor Configuration
 blockbuster.gui.actor.default=Default
 blockbuster.gui.actor.name=Name
+blockbuster.gui.actor.model=Custom Model
 blockbuster.gui.actor.filename=Recording ID
 blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.invulnerability=Can be killed?
