@@ -2,6 +2,7 @@ package noname.blockbuster.client.model.parsing;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,11 @@ import noname.blockbuster.client.model.ModelCustomRenderer;
 @SideOnly(Side.CLIENT)
 public class ModelParser
 {
+    /**
+     * Poses that are required by custom models
+     */
+    protected static final List<String> REQUIRED_POSES = Arrays.<String> asList("standing", "sneaking", "sleeping", "flying");;
+
     /**
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
@@ -49,9 +55,10 @@ public class ModelParser
     }
 
     /**
-     * Parse and build model out of given JSON string
+     * Parse and build model out of given JSON string. Throws exception in case
+     * if parsed model doesn't have at least one required pose.
      */
-    public ModelCustom parseModel(String json)
+    public ModelCustom parseModel(String json) throws Exception
     {
         Gson gson = new GsonBuilder().create();
 
@@ -59,6 +66,15 @@ public class ModelParser
         ModelCustom model = new ModelCustom(data);
 
         data.fillInMissing();
+
+        for (String key : REQUIRED_POSES)
+        {
+            if (!data.poses.containsKey(key))
+            {
+                throw new Exception("Parsed model with name \"" + data.name + "\" doesn't have \"" + key + "\" pose!");
+            }
+        }
+
         this.generateLimbs(data, model);
 
         return model;
