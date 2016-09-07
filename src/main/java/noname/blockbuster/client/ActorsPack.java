@@ -153,7 +153,10 @@ public class ActorsPack implements IResourcePack
                 {
                     int suffix = skin.getName().indexOf(".png");
 
-                    map.put(skin.getName().substring(0, suffix), skin);
+                    if (suffix != -1)
+                    {
+                        map.put(skin.getName().substring(0, suffix), skin);
+                    }
                 }
 
                 this.skins.put(file.getName(), map);
