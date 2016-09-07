@@ -113,10 +113,13 @@ public class RenderTest extends RenderLiving<EntityActor>
     protected void setupModel(EntityActor entity)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
+
         String key = models.containsKey(entity.model) ? entity.model : "alex";
+        String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");
+
         ModelCustom model = models.get(key);
 
-        model.pose = model.model.poses.get(entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing"));
+        model.pose = model.model.poses.get(pose);
         this.mainModel = model;
     }
 

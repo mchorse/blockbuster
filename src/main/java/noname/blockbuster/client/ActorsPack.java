@@ -173,12 +173,15 @@ public class ActorsPack implements IResourcePack
 
         if (path.length == 1)
         {
+            System.out.println("model: " + location.getResourcePath());
             return new FileInputStream(this.models.get(path[0]));
         }
         else if (path.length == 2)
         {
             return new FileInputStream(this.skins.get(path[0]).get(path[1]));
         }
+
+        System.out.println("null mofo: " + location.getResourcePath());
 
         return null;
     }

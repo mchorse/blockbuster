@@ -12,7 +12,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -90,16 +89,6 @@ public class Mocap
     }
 
     /* Action utilities */
-
-    public static EntityEquipmentSlot getSlotByIndex(int index)
-    {
-        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
-        {
-            if (slot.getSlotIndex() == index) return slot;
-        }
-
-        return null;
-    }
 
     /**
      * Simple method that decreases the need for writing additional
@@ -191,6 +180,9 @@ public class Mocap
         return actor;
     }
 
+    /**
+     * Start playback with command line arguments
+     */
     public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)
     {
         EntityActor actor = actorFromArgs(args, world);

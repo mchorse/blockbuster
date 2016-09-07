@@ -77,6 +77,8 @@ public class ClientProxy extends CommonProxy
     {
         for (String model : actorPack.getModels())
         {
+            if (model.equals("steve") || model.equals("alex")) continue;
+
             try
             {
                 ModelParser.parse(model, actorPack.getInputStream(new ResourceLocation("blockbuster.actors", model)));
@@ -86,6 +88,9 @@ public class ClientProxy extends CommonProxy
                 e.printStackTrace();
             }
         }
+
+        ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
+        ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
     }
 
     /**

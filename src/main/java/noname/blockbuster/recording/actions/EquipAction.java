@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import noname.blockbuster.entity.EntityActor;
-import noname.blockbuster.recording.Mocap;
 
 /**
  * Equip item action
@@ -53,7 +52,7 @@ public class EquipAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        EntityEquipmentSlot slot = Mocap.getSlotByIndex(this.armorSlot);
+        EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);
 
         if (this.armorId == -1)
         {
@@ -63,6 +62,16 @@ public class EquipAction extends Action
         {
             actor.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(this.itemData));
         }
+    }
+
+    private EntityEquipmentSlot getSlotByIndex(int index)
+    {
+        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
+        {
+            if (slot.getSlotIndex() == index) return slot;
+        }
+
+        return null;
     }
 
     @Override
