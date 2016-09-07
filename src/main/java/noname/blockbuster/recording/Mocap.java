@@ -172,6 +172,9 @@ public class Mocap
         return false;
     }
 
+    /**
+     * Create an actor from command line arguments (i.e. String array)
+     */
     public static EntityActor actorFromArgs(String[] args, World world)
     {
         EntityActor actor = null;
@@ -179,38 +182,20 @@ public class Mocap
         String filename = args.length >= 1 ? args[0] : "";
         String name = args.length >= 2 ? args[1] : "";
         String skin = args.length >= 3 ? args[2] : "";
-        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
+        String model = args.length >= 4 ? args[3] : "alex";
+        boolean isInvulnerable = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(filename, name, skin, "", isInvulnerable, true);
+        actor.modify(filename, name, skin, model, isInvulnerable, true);
 
         return actor;
     }
 
     public static EntityActor startPlayback(String[] args, World world, boolean killOnDead)
     {
-        EntityActor actor = null;
+        EntityActor actor = actorFromArgs(args, world);
 
-        String filename = args.length >= 1 ? args[0] : "";
-        String name = args.length >= 2 ? args[1] : "";
-        String skin = args.length >= 3 ? args[2] : "";
-        boolean isInvulnerable = args.length >= 4 && args[3].equals("1");
-
-        actor = startPlayback(filename, name, skin, world, killOnDead);
-        actor.setEntityInvulnerable(isInvulnerable);
-
-        return actor;
-    }
-
-    /**
-     * Start playback with new actor entity (used by CommandPlay class)
-     */
-    public static EntityActor startPlayback(String filename, String name, String skin, World world, boolean killOnDead)
-    {
-        EntityActor actor = new EntityActor(world);
-        actor.modify(filename, name, skin, "", false, true);
-
-        startPlayback(filename, actor, killOnDead);
+        startPlayback(actor.filename, actor, killOnDead);
         world.spawnEntityInWorld(actor);
 
         return actor;
