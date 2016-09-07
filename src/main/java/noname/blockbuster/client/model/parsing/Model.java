@@ -71,7 +71,7 @@ public class Model
         public boolean mirror;
 
         /* Game play */
-        public String holding;
+        public String holding = "";
         public boolean swiping;
         public boolean looking;
         public boolean swinging;

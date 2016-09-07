@@ -6,6 +6,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -29,6 +30,10 @@ public class RenderTest extends RenderLiving<EntityActor>
     public RenderTest(RenderManager manager, float f)
     {
         super(manager, ModelCustom.MODELS.get("alex"), f);
+
+        this.addLayer(new LayerElytra(this));
+        this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerBipedArmor(this));
     }
 
     /**

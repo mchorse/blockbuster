@@ -2,6 +2,7 @@ package noname.blockbuster.client.render;
 
 import net.minecraft.client.model.ModelElytra;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.init.Items;
@@ -21,11 +22,11 @@ public class LayerElytra implements LayerRenderer<EntityActor>
     /** The basic Elytra texture. */
     private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
     /** Instance of the player renderer. */
-    private final RenderActor renderPlayer;
+    private final RenderLiving<EntityActor> renderPlayer;
     /** The model used by the Elytra. */
     private final ModelElytra modelElytra = new ModelElytra();
 
-    public LayerElytra(RenderActor renderPlayerIn)
+    public LayerElytra(RenderLiving<EntityActor> renderPlayerIn)
     {
         this.renderPlayer = renderPlayerIn;
     }

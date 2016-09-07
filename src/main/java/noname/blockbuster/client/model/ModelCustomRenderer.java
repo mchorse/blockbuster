@@ -13,6 +13,7 @@ public class ModelCustomRenderer extends ModelRenderer
 {
     public Model.Limb limb;
     public Model.Transform trasnform;
+    public ModelCustomRenderer parent;
 
     public ModelCustomRenderer(ModelBase model, int texOffX, int texOffY)
     {
@@ -41,12 +42,31 @@ public class ModelCustomRenderer extends ModelRenderer
         float y = transform.translate[1];
         float z = transform.translate[2];
 
-        this.offsetX = x / 16;
-        this.offsetY = this.limb.parent.isEmpty() ? (-y + 24) / 16 : -y / 16;
-        this.offsetZ = -z / 16;
+        this.rotationPointX = x;
+        this.rotationPointY = this.limb.parent.isEmpty() ? (-y + 24) : -y;
+        this.rotationPointZ = -z;
 
         this.rotateAngleX = transform.rotate[0] * (float) Math.PI / 180;
         this.rotateAngleY = transform.rotate[1] * (float) Math.PI / 180;
         this.rotateAngleZ = transform.rotate[2] * (float) Math.PI / 180;
+    }
+
+    @Override
+    public void addChild(ModelRenderer renderer)
+    {
+        ((ModelCustomRenderer) renderer).parent = this;
+
+        super.addChild(renderer);
+    }
+
+    @Override
+    public void postRender(float scale)
+    {
+        if (this.parent != null)
+        {
+            this.parent.postRender(scale);
+        }
+
+        super.postRender(scale);
     }
 }

@@ -94,6 +94,9 @@ public class ModelParser
             renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d, (transform.scale[0] * w - w) / 2);
             renderer.applyTransform(transform);
 
+            if (limb.holding.equals("left")) model.left = renderer;
+            if (limb.holding.equals("right")) model.right = renderer;
+
             limbs.put(entry.getKey(), renderer);
         }
 

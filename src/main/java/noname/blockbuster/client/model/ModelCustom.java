@@ -6,6 +6,9 @@ import java.util.Map;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,6 +49,9 @@ public class ModelCustom extends ModelBase
      * be rendered, because they're getting render call from parent).
      */
     public ModelCustomRenderer[] renderable;
+
+    public ModelCustomRenderer left;
+    public ModelCustomRenderer right;
 
     /**
      * Initiate the model with the size of the texture
@@ -127,7 +133,18 @@ public class ModelCustom extends ModelBase
 
                 limb.rotateAngleX = limb.rotateAngleX - (sinSwing * 1.2F + sinSwing2);
                 limb.rotateAngleY += bodyY * 2.0F;
-                limb.rotateAngleZ += MathHelper.sin(this.swingProgress * (float) Math.PI) * -0.4F;
+                limb.rotateAngleZ += MathHelper.sin(this.swingProgress * PI) * -0.4F;
+            }
+
+            if (!limb.limb.holding.isEmpty())
+            {
+                EntityLivingBase entity = (EntityLivingBase) entityIn;
+                ItemStack stack = limb.limb.holding.equals("right") ? entity.getHeldItemMainhand() : entity.getHeldItemOffhand();
+
+                if (stack != null)
+                {
+                    limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
+                }
             }
         }
     }
@@ -138,5 +155,22 @@ public class ModelCustom extends ModelBase
     private void applyLimbPose(ModelCustomRenderer limb)
     {
         limb.applyTransform(this.pose.limbs.get(limb.limb.name));
+    }
+
+    /**
+     * Get renderer for an arm
+     */
+    public ModelCustomRenderer getRenderForArm(EnumHandSide side)
+    {
+        if (side == EnumHandSide.LEFT)
+        {
+            return this.left;
+        }
+        else if (side == EnumHandSide.RIGHT)
+        {
+            return this.right;
+        }
+
+        return null;
     }
 }
