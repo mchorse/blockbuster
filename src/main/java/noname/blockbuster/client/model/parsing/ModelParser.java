@@ -72,6 +72,8 @@ public class ModelParser
     {
         Map<String, ModelCustomRenderer> limbs = new HashMap<String, ModelCustomRenderer>();
         List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
+        List<ModelRenderer> left = new ArrayList<ModelRenderer>();
+        List<ModelRenderer> right = new ArrayList<ModelRenderer>();
 
         Model.Pose standing = data.poses.get("standing");
 
@@ -94,8 +96,8 @@ public class ModelParser
             renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d, (transform.scale[0] * w - w) / 2);
             renderer.applyTransform(transform);
 
-            if (limb.holding.equals("left")) model.left = renderer;
-            if (limb.holding.equals("right")) model.right = renderer;
+            if (limb.holding.equals("left")) left.add(renderer);
+            if (limb.holding.equals("right")) right.add(renderer);
 
             limbs.put(entry.getKey(), renderer);
         }
@@ -116,6 +118,9 @@ public class ModelParser
         }
 
         /* Assign values */
+        model.left = left.toArray(new ModelCustomRenderer[left.size()]);
+        model.right = right.toArray(new ModelCustomRenderer[right.size()]);
+
         model.limbs = limbs.values().toArray(new ModelCustomRenderer[limbs.size()]);
         model.renderable = renderable.toArray(new ModelCustomRenderer[renderable.size()]);
     }

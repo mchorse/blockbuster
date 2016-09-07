@@ -50,8 +50,8 @@ public class ModelCustom extends ModelBase
      */
     public ModelCustomRenderer[] renderable;
 
-    public ModelCustomRenderer left;
-    public ModelCustomRenderer right;
+    public ModelCustomRenderer[] left;
+    public ModelCustomRenderer[] right;
 
     /**
      * Initiate the model with the size of the texture
@@ -160,7 +160,7 @@ public class ModelCustom extends ModelBase
     /**
      * Get renderer for an arm
      */
-    public ModelCustomRenderer getRenderForArm(EnumHandSide side)
+    public ModelCustomRenderer[] getRenderForArm(EnumHandSide side)
     {
         if (side == EnumHandSide.LEFT)
         {

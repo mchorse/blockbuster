@@ -26,6 +26,7 @@ import noname.blockbuster.client.KeyboardHandler;
 import noname.blockbuster.client.ProfileRenderer;
 import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
+import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.client.model.parsing.ModelParser;
 import noname.blockbuster.client.render.RenderTest;
 import noname.blockbuster.commands.CommandCamera;
@@ -75,6 +76,9 @@ public class ClientProxy extends CommonProxy
      */
     private void loadActorModels()
     {
+        ModelCustom.MODELS.clear();
+
+        /* Load user supplied models */
         for (String model : actorPack.getModels())
         {
             if (model.equals("steve") || model.equals("alex")) continue;
@@ -89,6 +93,7 @@ public class ClientProxy extends CommonProxy
             }
         }
 
+        /* Default models */
         ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
         ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
     }

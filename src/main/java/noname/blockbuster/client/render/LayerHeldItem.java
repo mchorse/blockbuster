@@ -16,7 +16,12 @@ import noname.blockbuster.client.model.ModelCustomRenderer;
 /**
  * That's unbelievable!
  *
- * How many classes are you going to steal from
+ * - How many classes are you going to steal from Minecraft core?
+ * - As much as I want to.
+ *
+ * This is patched LayerHeldItem layer class. This class is responsible for
+ * rendering items in designated limbs in custom actor model. Lots of fun
+ * stuff going on here.
  */
 @SideOnly(Side.CLIENT)
 public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
@@ -29,45 +34,57 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        ItemStack itemstack1 = entitylivingbaseIn.getHeldItemMainhand();
-        ItemStack itemstack = entitylivingbaseIn.getHeldItemOffhand();
+        ItemStack itemstack1 = entity.getHeldItemMainhand();
+        ItemStack itemstack = entity.getHeldItemOffhand();
 
         if (itemstack != null || itemstack1 != null)
         {
             GlStateManager.pushMatrix();
-            this.renderHeldItem(entitylivingbaseIn, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
-            this.renderHeldItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
+            this.renderHeldItem(entity, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
+            this.renderHeldItem(entity, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
             GlStateManager.popMatrix();
         }
     }
 
-    private void renderHeldItem(EntityLivingBase p_188358_1_, ItemStack p_188358_2_, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide handSide)
+    /**
+     * Render item in every arm.
+     *
+     * Items could be rendered to several limbs.
+     */
+    private void renderHeldItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
-        ModelCustomRenderer arm = ((ModelCustom) this.livingEntityRenderer.getMainModel()).getRenderForArm(handSide);
-
-        if (p_188358_2_ != null && arm != null)
+        if (item != null)
         {
-            boolean flag = handSide == EnumHandSide.LEFT;
+            ModelCustom model = ((ModelCustom) this.livingEntityRenderer.getMainModel());
 
-            float y = arm.limb.size[1] * -0.0625F;
-            float z = arm.limb.size[2] / 2 * 0.0625F;
+            for (ModelCustomRenderer arm : model.getRenderForArm(handSide))
+            {
+                boolean flag = handSide == EnumHandSide.LEFT;
 
-            GlStateManager.pushMatrix();
+                float y = arm.limb.size[1] * -0.0625F;
+                float z = arm.limb.size[2] / 2 * 0.0625F;
 
-            arm.postRender(0.0625F);
+                GlStateManager.pushMatrix();
 
-            GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.translate(0.0F, z, y);
+                arm.postRender(0.0625F);
 
-            Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
+                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.0F, z, y);
 
-            GlStateManager.popMatrix();
+                Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
+
+                GlStateManager.popMatrix();
+            }
         }
     }
 
+    /**
+     * Don't really understand how this method is going to affect the rendering
+     * of this layer.
+     */
     @Override
     public boolean shouldCombineTextures()
     {
