@@ -169,19 +169,17 @@ public class ActorsPack implements IResourcePack
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException
     {
-        String[] path = location.getResourcePath().split("/");
+        String path = location.getResourcePath();
+        String[] splits = path.split("/");
 
-        if (path.length == 1)
+        if (splits.length == 1 && path.indexOf("/") == -1)
         {
-            System.out.println("model: " + location.getResourcePath());
-            return new FileInputStream(this.models.get(path[0]));
+            return new FileInputStream(this.models.get(splits[0]));
         }
-        else if (path.length == 2)
+        else if (splits.length == 2)
         {
-            return new FileInputStream(this.skins.get(path[0]).get(path[1]));
+            return new FileInputStream(this.skins.get(splits[0]).get(splits[1]));
         }
-
-        System.out.println("null mofo: " + location.getResourcePath());
 
         return null;
     }
@@ -193,17 +191,18 @@ public class ActorsPack implements IResourcePack
     @Override
     public boolean resourceExists(ResourceLocation location)
     {
-        String[] path = location.getResourcePath().split("/");
+        String path = location.getResourcePath();
+        String[] splits = path.split("/");
 
-        if (path.length == 1)
+        if (splits.length == 1 && path.indexOf("/") == -1)
         {
-            return this.models.containsKey(path[0]);
+            return this.models.containsKey(splits[0]);
         }
-        else if (path.length == 2)
+        else if (splits.length == 2)
         {
-            Map<String, File> skins = this.skins.get(path[0]);
+            Map<String, File> skins = this.skins.get(splits[0]);
 
-            return skins != null && skins.containsKey(path[1]);
+            return skins != null && skins.containsKey(splits[1]);
         }
 
         return false;
