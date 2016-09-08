@@ -107,4 +107,4 @@ Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/
 
 See the file `LICENSE.md`. Most of the code is licensed under MIT license, but 
 recording code from Mocap mod is actually licensed under GPL license 
-(`noname.blockbuster.recording` package).
+(`mchorse.blockbuster.recording` package).

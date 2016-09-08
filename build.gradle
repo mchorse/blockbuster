@@ -21,7 +21,7 @@ plugins {
 }
 */
 version = "1.3-pre"
-group= "noname.blockbuster"
+group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
 minecraft {

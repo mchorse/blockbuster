@@ -1,0 +1,73 @@
+package mchorse.blockbuster.camera.fixtures;
+
+import mchorse.blockbuster.camera.Position;
+import net.minecraft.command.CommandException;
+import net.minecraft.entity.player.EntityPlayer;
+
+/**
+ * Follow camera fixture
+ *
+ * This camera fixture is responsible for following given entity from specified
+ * angle and relative calculated position.
+ */
+public class FollowFixture extends LookFixture
+{
+    private float oldX = 0;
+    private float oldY = 0;
+    private float oldZ = 0;
+
+    public FollowFixture(long duration)
+    {
+        super(duration);
+    }
+
+    @Override
+    public void edit(String[] args, EntityPlayer player) throws CommandException
+    {
+        super.edit(args, player);
+
+        this.calculateRelativePosition();
+    }
+
+    /**
+     * Following method recalculates relative position from stored entity.
+     */
+    private void calculateRelativePosition()
+    {
+        float x = (float) (this.position.point.x - this.entity.posX);
+        float y = (float) (this.position.point.y - this.entity.posY);
+        float z = (float) (this.position.point.z - this.entity.posZ);
+
+        this.position.point.set(x, y, z);
+    }
+
+    @Override
+    public void applyFixture(float progress, Position pos)
+    {
+        float x = (float) (this.entity.posX + this.position.point.x);
+        float y = (float) (this.entity.posY + this.position.point.y);
+        float z = (float) (this.entity.posZ + this.position.point.z);
+
+        x = this.interpolate(this.oldX, x, 0.25F);
+        y = this.interpolate(this.oldY, y, 0.25F);
+        z = this.interpolate(this.oldZ, z, 0.25F);
+
+        pos.copy(this.position);
+        pos.point.set(x, y, z);
+
+        this.oldX = x;
+        this.oldY = y;
+        this.oldZ = z;
+    }
+
+    private float interpolate(float a, float b, float position)
+    {
+        return a + (b - a) * position;
+    }
+
+    @Override
+    public byte getType()
+    {
+        return AbstractFixture.FOLLOW;
+    }
+}
