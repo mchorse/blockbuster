@@ -28,8 +28,10 @@ import noname.blockbuster.client.RenderingHandler;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
 import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.client.model.parsing.ModelParser;
-import noname.blockbuster.client.render.RenderTest;
+import noname.blockbuster.client.render.RenderActor;
+import noname.blockbuster.client.render.RenderPlayer;
 import noname.blockbuster.commands.CommandCamera;
+import noname.blockbuster.commands.CommandMorph;
 import noname.blockbuster.entity.EntityActor;
 
 /**
@@ -45,6 +47,7 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
+    public static RenderPlayer playerRender;
 
     public static ProfileRunner profileRunner = new ProfileRunner();
     public static ProfileRenderer profileRenderer = new ProfileRenderer();
@@ -65,7 +68,7 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
-        this.registerEntityRender(EntityActor.class, new RenderTest.FactoryActor());
+        this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
         this.loadActorModels();
@@ -135,12 +138,14 @@ public class ClientProxy extends CommonProxy
         super.load(event);
 
         recordingOverlay = new GuiRecordingOverlay(Minecraft.getMinecraft());
+        playerRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager(), 0.5F);
 
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
-        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
+        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay, playerRender));
         MinecraftForge.EVENT_BUS.register(profileRenderer);
 
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
+        ClientCommandHandler.instance.registerCommand(new CommandMorph());
     }
 
     protected void registerItemModel(Block block, String path)

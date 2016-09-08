@@ -2,12 +2,14 @@ package noname.blockbuster.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.client.gui.GuiRecordingOverlay;
+import noname.blockbuster.client.render.RenderPlayer;
 
 /**
  * Rendering handler
@@ -19,10 +21,12 @@ import noname.blockbuster.client.gui.GuiRecordingOverlay;
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;
+    private RenderPlayer render;
 
-    public RenderingHandler(GuiRecordingOverlay overlay)
+    public RenderingHandler(GuiRecordingOverlay overlay, RenderPlayer render)
     {
         this.overlay = overlay;
+        this.render = render;
     }
 
     @SubscribeEvent
@@ -39,9 +43,15 @@ public class RenderingHandler
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Pre event)
     {
+        if (this.render.model.isEmpty()) return;
+
         if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 0)
         {
-            // event.setCanceled(true);
+            EntityPlayer player = event.getEntityPlayer();
+
+            event.setCanceled(true);
+
+            this.render.doRender(player, event.getX(), event.getY(), event.getZ(), player.rotationYaw, event.getPartialRenderTick());
         }
     }
 }

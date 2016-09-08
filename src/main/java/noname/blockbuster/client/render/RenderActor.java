@@ -1,44 +1,84 @@
 package noname.blockbuster.client.render;
 
+import java.util.Map;
+
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.ClientProxy;
+import noname.blockbuster.client.model.ModelCustom;
 import noname.blockbuster.entity.EntityActor;
 
 /**
- * Actor renderer
+ * Render actor class
  *
- * Renders actor entities with swag
+ * Render actor entities with custom swaggalicious models ?8|
  */
-@SideOnly(Side.CLIENT)
-public class RenderActor extends RenderBiped<EntityActor>
+public class RenderActor extends RenderLiving<EntityActor>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
+    private static final String defaultModel = "steve";
 
     private float previousYaw;
 
     /**
-     * Add armor layer to my biped texture
+     * Initiate render actor with set of layers.
+     *
+     * - Layer elytra is responsible for rendering elytra on the back of the
+     *   custom model
+     * - Layer held item is responsible for rendering item that selected in
+     *   hot bar and located in off hand slot for every limb that
+     *   has "holding" property
+     * - Layer biped armor is responsible for rendering armor on every limb
+     *   that has "armor" property
      */
-    public RenderActor(RenderManager renderManagerIn, ModelBiped modelBipedIn, float shadowSize)
+    public RenderActor(RenderManager manager, float f)
     {
-        super(renderManagerIn, modelBipedIn, shadowSize);
+        super(manager, ModelCustom.MODELS.get(defaultModel), f);
 
-        this.addLayer(new LayerBipedArmor(this));
         this.addLayer(new LayerElytra(this));
+        this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerBipedArmor(this));
+    }
+
+    /**
+     * Use skin from resource pack or default one (if skin is empty or just
+     * wasn't found by actor pack)
+     */
+    @Override
+    protected ResourceLocation getEntityTexture(EntityActor entity)
+    {
+        String model = !entity.model.isEmpty() ? entity.model : "";
+        String path = model + "/" + entity.skin;
+
+        ResourceLocation location = new ResourceLocation("blockbuster.actors", path);
+
+        if (ClientProxy.actorPack.resourceExists(location))
+        {
+            return location;
+        }
+
+        return defaultTexture;
+    }
+
+    /**
+     * Most important extension! Don't render the name in GUI, that looks
+     * irritating. actor.renderName is switched for awhile to false during GUI
+     * rendering.
+     *
+     * See GuiActorSkin for a reference.
+     */
+    @Override
+    protected boolean canRenderName(EntityActor entity)
+    {
+        return super.canRenderName(entity) && entity.renderName;
     }
 
     /**
@@ -52,8 +92,7 @@ public class RenderActor extends RenderBiped<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.modelBipedMain.isSneak = entity.isSneaking();
-        this.setArmsPoses(entity);
+        this.setupModel(entity);
 
         if (!entity.renderName)
         {
@@ -81,69 +120,27 @@ public class RenderActor extends RenderBiped<EntityActor>
     }
 
     /**
-     * Sets arms poses
-     */
-    private void setArmsPoses(EntityActor entity)
-    {
-        ItemStack itemstack = entity.getHeldItemMainhand();
-        ItemStack itemstack1 = entity.getHeldItemOffhand();
-        ModelBiped.ArmPose modelbiped$armpose = ModelBiped.ArmPose.EMPTY;
-        ModelBiped.ArmPose modelbiped$armpose1 = ModelBiped.ArmPose.EMPTY;
-
-        if (itemstack != null)
-        {
-            modelbiped$armpose = ModelBiped.ArmPose.ITEM;
-
-            if (entity.getItemInUseCount() > 0)
-            {
-                EnumAction enumaction = itemstack.getItemUseAction();
-
-                if (enumaction == EnumAction.BLOCK)
-                {
-                    modelbiped$armpose = ModelBiped.ArmPose.BLOCK;
-                }
-                else if (enumaction == EnumAction.BOW)
-                {
-                    modelbiped$armpose = ModelBiped.ArmPose.BOW_AND_ARROW;
-                }
-            }
-        }
-
-        if (itemstack1 != null)
-        {
-            modelbiped$armpose1 = ModelBiped.ArmPose.ITEM;
-
-            if (entity.getItemInUseCount() > 0)
-            {
-                EnumAction enumaction1 = itemstack1.getItemUseAction();
-
-                if (enumaction1 == EnumAction.BLOCK)
-                {
-                    modelbiped$armpose1 = ModelBiped.ArmPose.BLOCK;
-                }
-            }
-        }
-
-        this.modelBipedMain.rightArmPose = modelbiped$armpose;
-        this.modelBipedMain.leftArmPose = modelbiped$armpose1;
-    }
-
-    /**
-     * Most important extension! Don't render the name in GUI, that looks
-     * irritating. actor.renderName is switched for awhile to false during GUI
-     * rendering.
+     * Setup the model for actor instance.
      *
-     * See GuiActorSkin for a reference.
+     * This method is responsible for picking the right model and pose based
+     * on actor properties.
      */
-    @Override
-    protected boolean canRenderName(EntityActor entity)
+    protected void setupModel(EntityActor entity)
     {
-        return super.canRenderName(entity) && entity.renderName;
+        Map<String, ModelCustom> models = ModelCustom.MODELS;
+
+        String key = models.containsKey(entity.model) ? entity.model : defaultModel;
+        String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");
+
+        ModelCustom model = models.get(key);
+
+        model.pose = model.model.poses.get(pose);
+        this.mainModel = model;
     }
 
     /**
      * Make actor a little bit smaller (so he looked like steve, and not like a
-     * giant weirdo).
+     * overgrown rodent).
      */
     protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
     {
@@ -152,35 +149,23 @@ public class RenderActor extends RenderBiped<EntityActor>
     }
 
     /**
-     * Use skin from resource pack or default one (if skin is empty or just
-     * wasn't found by actor pack)
-     */
-    @Override
-    protected ResourceLocation getEntityTexture(EntityActor entity)
-    {
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", entity.skin);
-
-        if (ClientProxy.actorPack.resourceExists(location))
-        {
-            return location;
-        }
-
-        return defaultTexture;
-    }
-
-    /**
      * Taken from RenderPlayer
+     *
+     * This code is primarily changes the angle of the actor while it's flying
+     * an elytra. You know,
      */
     @Override
-    protected void rotateCorpse(EntityActor actor, float p_77043_2_, float p_77043_3_, float partialTicks)
+    protected void rotateCorpse(EntityActor actor, float pitch, float yaw, float partialTicks)
     {
+        super.rotateCorpse(actor, pitch, yaw, partialTicks);
+
         if (actor.isElytraFlying())
         {
-            super.rotateCorpse(actor, p_77043_2_, p_77043_3_, partialTicks);
-
             float f = actor.getTicksElytraFlying() + partialTicks;
             float f1 = MathHelper.clamp_float(f * f / 100.0F, 0.0F, 1.0F);
+
             Vec3d vec3d = actor.getLook(partialTicks);
+
             double d0 = actor.motionX * actor.motionX + actor.motionZ * actor.motionZ;
             double d1 = vec3d.xCoord * vec3d.xCoord + vec3d.zCoord * vec3d.zCoord;
 
@@ -194,21 +179,20 @@ public class RenderActor extends RenderBiped<EntityActor>
                 GlStateManager.rotate((float) (Math.signum(d3) * Math.acos(d2)) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
             }
         }
-        else
-        {
-            super.rotateCorpse(actor, p_77043_2_, p_77043_3_, partialTicks);
-        }
     }
 
     /**
      * Renderer factory
+     *
+     * Some interface provided by Minecraft Forge that will pass a RenderManager
+     * instance into the method for easier Renders initiation.
      */
     public static class FactoryActor implements IRenderFactory<EntityActor>
     {
         @Override
         public RenderActor createRenderFor(RenderManager manager)
         {
-            return new RenderActor(manager, new ModelBiped(), 0.5F);
+            return new RenderActor(manager, 0.5F);
         }
     }
 }
