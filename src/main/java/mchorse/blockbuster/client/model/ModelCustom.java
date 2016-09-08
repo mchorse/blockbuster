@@ -82,7 +82,9 @@ public class ModelCustom extends ModelBase
         for (ModelCustomRenderer limb : this.limbs)
         {
             boolean mirror = limb.limb.mirror;
-            float factor = mirror ? -1 : 1;
+            boolean invert = limb.limb.invert;
+
+            float factor = mirror ^ invert ? -1 : 1;
             float PI = (float) Math.PI;
 
             /* Reseting the angles */
@@ -97,15 +99,9 @@ public class ModelCustom extends ModelBase
             if (limb.limb.swinging)
             {
                 float f = 0.8F;
+                float f2 = mirror ^ invert ? 1 : 0;
 
-                if (limb.limb.mirror)
-                {
-                    limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI) * 2.0F * limbSwingAmount * 0.5F / f;
-                }
-                else
-                {
-                    limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / f;
-                }
+                limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI * f2) * 2.0F * limbSwingAmount * 0.5F / f;
             }
 
             if (limb.limb.idle)
@@ -117,12 +113,7 @@ public class ModelCustom extends ModelBase
             if (limb.limb.swiping && this.swingProgress > 0.0F)
             {
                 float swing = this.swingProgress;
-                float bodyY = MathHelper.sin(MathHelper.sqrt_float(swing) * PI * 2F) * 0.2F;
-
-                if (limb.limb.mirror)
-                {
-                    bodyY *= -1.0F;
-                }
+                float bodyY = MathHelper.sin(MathHelper.sqrt_float(swing) * PI * 2F) * 0.2F * factor;
 
                 swing = 1.0F - swing;
                 swing = swing * swing * swing;

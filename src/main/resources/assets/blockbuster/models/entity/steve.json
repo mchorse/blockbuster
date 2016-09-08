@@ -152,13 +152,15 @@
             "texture": [ 0, 16 ],
             "anchor": [ 0.5, 0, 0.5 ],
             "mirror": true,
-            "swinging": true
+            "swinging": true,
+            "invert": true
         },
         "right_leg": {
             "size": [ 4, 12, 4 ],
             "texture": [ 0, 16 ],
             "anchor": [ 0.5, 0, 0.5 ],
-            "swinging": true
+            "swinging": true,
+            "invert": true
         }
     },
     "texture": [ 64, 32 ]

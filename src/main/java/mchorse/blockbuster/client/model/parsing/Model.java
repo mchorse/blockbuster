@@ -76,6 +76,7 @@ public class Model
         public boolean looking;
         public boolean swinging;
         public boolean idle;
+        public boolean invert;
 
         @Override
         public String toString()
