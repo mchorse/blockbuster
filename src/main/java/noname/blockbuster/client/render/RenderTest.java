@@ -29,7 +29,7 @@ public class RenderTest extends RenderLiving<EntityActor>
 
     public RenderTest(RenderManager manager, float f)
     {
-        super(manager, ModelCustom.MODELS.get("alex"), f);
+        super(manager, ModelCustom.MODELS.get("steve"), f);
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerHeldItem(this));
