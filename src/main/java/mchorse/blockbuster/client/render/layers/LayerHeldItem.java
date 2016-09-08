@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.render;
+package mchorse.blockbuster.client.render.layers;
 
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;

@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.render;
+package mchorse.blockbuster.client.render.layers;
 
 import net.minecraft.client.model.ModelElytra;
 import net.minecraft.client.renderer.GlStateManager;

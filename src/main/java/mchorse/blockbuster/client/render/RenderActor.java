@@ -5,6 +5,8 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.render.layers.LayerElytra;
+import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.entity.EntityActor;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
