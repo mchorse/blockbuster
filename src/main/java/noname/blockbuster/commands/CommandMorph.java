@@ -34,8 +34,7 @@ public class CommandMorph extends CommandBase
 
         if (args.length == 0)
         {
-            render.model = "";
-            render.skin = "";
+            render.reset();
 
             sender.addChatMessage(new TextComponentString("You've been demorphed!"));
         }

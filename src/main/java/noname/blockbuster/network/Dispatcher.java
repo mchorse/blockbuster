@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import noname.blockbuster.Blockbuster;
 import noname.blockbuster.network.client.ClientHandlerModifyActor;
+import noname.blockbuster.network.client.ClientHandlerMorph;
 import noname.blockbuster.network.client.ClientHandlerPlayerRecording;
 import noname.blockbuster.network.client.camera.ClientHandlerCameraProfile;
 import noname.blockbuster.network.client.camera.ClientHandlerCameraState;
@@ -20,6 +21,7 @@ import noname.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import noname.blockbuster.network.client.director.ClientHandlerDirectorMapCast;
 import noname.blockbuster.network.common.PacketCameraMarker;
 import noname.blockbuster.network.common.PacketModifyActor;
+import noname.blockbuster.network.common.PacketMorph;
 import noname.blockbuster.network.common.PacketPlayback;
 import noname.blockbuster.network.common.PacketPlayerRecording;
 import noname.blockbuster.network.common.camera.PacketCameraProfile;
@@ -125,6 +127,9 @@ public class Dispatcher
 
         /* So undocumented!!! */
         register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
+
+        /* Morphing */
+        register(PacketMorph.class, ClientHandlerMorph.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

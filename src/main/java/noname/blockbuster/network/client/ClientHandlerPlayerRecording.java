@@ -11,5 +11,10 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
     {
         ClientProxy.recordingOverlay.setVisible(message.recording);
         ClientProxy.recordingOverlay.setCaption(message.filename);
+
+        if (!message.recording)
+        {
+            ClientProxy.playerRender.reset();
+        }
     }
 }

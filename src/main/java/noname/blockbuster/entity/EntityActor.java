@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,6 +29,7 @@ import noname.blockbuster.item.ItemPlayback;
 import noname.blockbuster.item.ItemRegister;
 import noname.blockbuster.network.Dispatcher;
 import noname.blockbuster.network.common.PacketModifyActor;
+import noname.blockbuster.network.common.PacketMorph;
 import noname.blockbuster.recording.Mocap;
 import noname.blockbuster.recording.actions.Action;
 import noname.blockbuster.tileentity.TileEntityDirector;
@@ -420,6 +422,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             }
         }
 
+        Dispatcher.sendTo(new PacketMorph(this.model, this.skin), (EntityPlayerMP) player);
         Mocap.startRecording(this.filename, player);
     }
 

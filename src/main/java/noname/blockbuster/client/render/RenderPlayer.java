@@ -127,4 +127,10 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
             }
         }
     }
+
+    public void reset()
+    {
+        this.model = "";
+        this.skin = "";
+    }
 }
