@@ -78,14 +78,6 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * Get available skins
-     */
-    public Map<String, Map<String, File>> getAllSkins()
-    {
-        return this.skins;
-    }
-
-    /**
      * Get available models
      */
     public List<String> getModels()
@@ -126,6 +118,9 @@ public class ActorsPack implements IResourcePack
                 this.models.put(file.getName(), model);
             }
         }
+
+        this.models.put("alex", null);
+        this.models.put("steve", null);
     }
 
     /**

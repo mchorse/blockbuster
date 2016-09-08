@@ -11,7 +11,8 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * Morph command
  *
- * Morphs player into given model with given skin in third person
+ * Morphs player into given model with given skin in third person. Works only
+ * in single player.
  */
 public class CommandMorph extends CommandBase
 {

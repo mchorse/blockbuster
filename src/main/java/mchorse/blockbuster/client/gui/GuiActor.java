@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.elements.GuiChildScreen;
 import mchorse.blockbuster.client.gui.elements.GuiCompleterViewer;
 import mchorse.blockbuster.client.gui.elements.GuiParentScreen;
 import mchorse.blockbuster.client.gui.elements.GuiToggle;
+import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -16,12 +17,7 @@ import mchorse.blockbuster.network.common.director.PacketDirectorMapEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -157,22 +153,31 @@ public class GuiActor extends GuiChildScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        if (!this.skinViewer.isInside(mouseX, mouseY))
-        {
-            super.mouseClicked(mouseX, mouseY, mouseButton);
-        }
+        if (this.skinViewer.isInside(mouseX, mouseY)) return;
 
-        boolean usedFocused = this.model.isFocused();
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        boolean modelUsedFocused = this.model.isFocused();
+        boolean skinUsedFocused = this.skin.isFocused();
 
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.model.mouseClicked(mouseX, mouseY, mouseButton);
         this.filename.mouseClicked(mouseX, mouseY, mouseButton);
         this.skin.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (usedFocused && !this.model.isFocused())
+        /* Populate the tab completer */
+        if (!modelUsedFocused && this.model.isFocused())
+        {
+            this.completer.setAllCompletions(ClientProxy.actorPack.getModels());
+            this.completer.setField(this.model);
+            this.skinViewer.updateRect(10, 50 + 20 - 1, 120, 100);
+        }
+        else if (!skinUsedFocused && this.skin.isFocused())
         {
             this.skins = ClientProxy.actorPack.getSkins(this.model.getText());
             this.completer.setAllCompletions(this.skins);
+            this.completer.setField(this.skin);
+            this.skinViewer.updateRect(10, 50 + 60 - 1, 120, 100);
         }
     }
 
@@ -182,7 +187,7 @@ public class GuiActor extends GuiChildScreen
         super.keyTyped(typedChar, keyCode);
 
         /* 15 = tab */
-        if (keyCode == 15 && this.skin.isFocused())
+        if (keyCode == 15 && (this.skin.isFocused() || this.model.isFocused()))
         {
             this.completer.complete();
 
@@ -212,58 +217,74 @@ public class GuiActor extends GuiChildScreen
     @Override
     public void initGui()
     {
-        int x = 30;
+        int x = 10;
         int w = 120;
-        int y = 25;
+        int y = 50;
+        int x2 = this.width - x - w;
+        int y2 = this.height - 25;
 
         /* Initializing all GUI fields first */
-        this.done = new GuiButton(0, x, this.height - 40, w, 20, I18n.format("blockbuster.gui.done"));
-        this.restore = new GuiButton(3, x, y + 105, w, 20, I18n.format("blockbuster.gui.restore"));
-        this.invincibility = new GuiToggle(4, x, y + 145, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+        this.model = new GuiTextField(7, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
 
-        this.name = new GuiTextField(5, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
-        this.model = new GuiTextField(7, this.fontRendererObj, this.width - w - x + 1, y + 1, w - 2, 18);
-        this.filename = new GuiTextField(6, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
-        this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 81, w - 2, 18);
+        this.name = new GuiTextField(5, this.fontRendererObj, x2 + 1, y + 1, w - 2, 18);
+        this.filename = new GuiTextField(6, this.fontRendererObj, x2 + 1, y + 41, w - 2, 18);
+        this.invincibility = new GuiToggle(4, x2, y + 80, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+
+        /* Buttons */
+        this.done = new GuiButton(0, x2, y2, w, 20, I18n.format("blockbuster.gui.done"));
+        this.restore = new GuiButton(3, x, y2, w, 20, I18n.format("blockbuster.gui.restore"));
 
         /* And then, we're configuring them and injecting input data */
+        this.model.setText(this.actor.model);
+        this.skin.setText(this.actor.skin);
+
+        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
+        this.name.setMaxStringLength(30);
+        this.filename.setText(this.actor.filename);
+        this.filename.setMaxStringLength(40);
+        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
+
         this.buttonList.add(this.done);
         this.buttonList.add(this.restore);
         this.buttonList.add(this.invincibility);
 
-        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
-
-        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
-        this.name.setMaxStringLength(30);
-        this.model.setText(this.actor.model);
-        this.model.setMaxStringLength(40);
-        this.filename.setText(this.actor.filename);
-        this.filename.setMaxStringLength(40);
-        this.skin.setText(this.actor.skin);
-
+        /* Additional utilities */
         this.completer = new TabCompleter(this.skin);
         this.completer.setAllCompletions(this.skins);
 
         this.skinViewer = new GuiCompleterViewer(this.completer);
-        this.skinViewer.updateRect(x, y + 100 - 1, w, 100);
+        this.skinViewer.updateRect(x, y + 60 - 1, w, 100);
         this.skinViewer.setHidden(true);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        int x = 30;
-        int y = 15;
+        int x = 10;
+        int y = 10;
 
+        int x2 = this.width - x - 120;
+
+        /* Draw background */
         this.drawDefaultBackground();
-        this.drawString(this.fontRendererObj, this.stringTitle, x + 120 + 20, 15, 0xffffffff);
-        this.drawString(this.fontRendererObj, this.stringName, x, y, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringModel, this.width - x - 120, y, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringFilename, x, y + 40, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringSkin, x, y + 80, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringInvulnerability, x, y + 145, 0xffcccccc);
+        this.drawGradientRect(0, 30, this.width, this.height - 30, -1072689136, -804253680);
 
+        /* Draw labels: title */
+        this.drawString(this.fontRendererObj, this.stringTitle, x, y, 0xffffffff);
+
+        /* Draw labels for visual properties */
+        this.drawString(this.fontRendererObj, this.stringModel, x, y + 30, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringSkin, x, y + 70, 0xffcccccc);
+
+        /* Draw labels for meta properties */
+        this.drawString(this.fontRendererObj, this.stringName, x2, y + 30, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringFilename, x2, y + 70, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringInvulnerability, x2, y + 110, 0xffcccccc);
+
+        /* Draw entity in the center of the screen */
         int size = this.height / 4;
+
         y = this.height / 2 + this.height / 4;
         x = this.width / 2;
 
@@ -273,11 +294,12 @@ public class GuiActor extends GuiChildScreen
         this.actor.skin = this.skin.getText();
         this.actor.model = this.model.getText();
         this.actor.renderName = false;
-        drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
+        GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
         this.actor.renderName = true;
         this.actor.model = model;
         this.actor.skin = skin;
 
+        /* Draw GUI elements */
         this.name.drawTextBox();
         this.model.drawTextBox();
         this.filename.drawTextBox();
@@ -286,52 +308,5 @@ public class GuiActor extends GuiChildScreen
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         this.skinViewer.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    /**
-     * Draw an entity on the screen
-     *
-     * Taken from minecraft's class GuiInventory
-     */
-    public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
-    {
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, posY, 100.0F);
-        GlStateManager.scale((-scale), scale, scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-
-        float f = ent.renderYawOffset;
-        float f1 = ent.rotationYaw;
-        float f2 = ent.rotationPitch;
-        float f3 = ent.prevRotationYawHead;
-        float f4 = ent.rotationYawHead;
-
-        ent.renderYawOffset = (float) Math.atan(mouseX / 40.0F) * 20.0F;
-        ent.rotationYaw = (float) Math.atan(mouseX / 40.0F) * 40.0F;
-        ent.rotationPitch = -((float) Math.atan(mouseY / 40.0F)) * 20.0F;
-        ent.rotationYawHead = ent.rotationYaw;
-        ent.prevRotationYawHead = ent.rotationYaw;
-
-        GlStateManager.translate(0.0F, 0.0F, 0.0F);
-
-        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
-
-        ent.renderYawOffset = f;
-        ent.rotationYaw = f1;
-        ent.rotationPitch = f2;
-        ent.prevRotationYawHead = f3;
-        ent.rotationYawHead = f4;
-
-        GlStateManager.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 }

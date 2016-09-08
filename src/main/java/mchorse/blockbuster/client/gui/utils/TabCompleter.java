@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TabCompleter
 {
-    protected final GuiTextField textField;
+    protected GuiTextField textField;
 
     protected List<String> allCompletions = Lists.<String> newArrayList();
     protected List<String> completions = Lists.<String> newArrayList();
@@ -26,9 +26,9 @@ public class TabCompleter
     protected boolean didComplete;
     protected int index;
 
-    public TabCompleter(GuiTextField textFieldIn)
+    public TabCompleter(GuiTextField textField)
     {
-        this.textField = textFieldIn;
+        this.textField = textField;
     }
 
     public List<String> getCompletions()
@@ -39,6 +39,11 @@ public class TabCompleter
     public GuiTextField getField()
     {
         return this.textField;
+    }
+
+    public void setField(GuiTextField textField)
+    {
+        this.textField = textField;
     }
 
     /**
