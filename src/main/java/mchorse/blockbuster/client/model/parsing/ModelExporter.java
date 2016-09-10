@@ -55,7 +55,7 @@ public class ModelExporter
     public String export(String name)
     {
         Model data = new Model();
-        Gson gson = new GsonBuilder().setPrettyPrinting().serializeSpecialFloatingPointValues().create();
+        Gson gson = this.createGson();
 
         this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         ModelBase model = this.getModel();
@@ -75,6 +75,19 @@ public class ModelExporter
         this.savePose("sneaking", data, limbs);
 
         return gson.toJson(data);
+    }
+
+    /**
+     * Create GSON instance
+     */
+    private Gson createGson()
+    {
+        GsonBuilder builder = new GsonBuilder();
+
+        builder.setPrettyPrinting();
+        builder.serializeSpecialFloatingPointValues();
+
+        return builder.create();
     }
 
     /**
@@ -120,8 +133,19 @@ public class ModelExporter
             float y = renderer.rotationPointY;
             float z = renderer.rotationPointZ;
 
+            if (data.limbs.get(key).parent.isEmpty())
+            {
+                x *= -1;
+                y = -(y - 24);
+                z *= -1;
+            }
+            else
+            {
+                x = y = z = 0;
+            }
+
             transform.rotate = new float[] {rx, ry, rz};
-            transform.translate = new float[] {-x, -(y - 24), -z};
+            transform.translate = new float[] {x, y, z};
 
             pose.limbs.put(key, transform);
         }
@@ -152,22 +176,29 @@ public class ModelExporter
         for (ModelRenderer renderer : this.getModelRenderers(model))
         {
             int j = 0;
+            String firstName = "";
 
             for (ModelBox box : renderer.cubeList)
             {
+                String name = "limb_" + i;
                 Model.Limb limb = new Model.Limb();
 
                 if (j == 0)
                 {
                     limb.mirror = renderer.mirror;
+                    firstName = name;
+                }
+                else
+                {
+                    limb.parent = firstName;
                 }
 
                 limb.size = this.getModelSize(box);
                 limb.texture = this.getModelOffset(box, renderer);
                 limb.anchor = this.getAnchor(box, limb.size);
 
-                data.limbs.put("limb_" + i, limb);
-                limbs.put("limb_" + i, renderer);
+                data.limbs.put(name, limb);
+                limbs.put(name, renderer);
 
                 j++;
                 i++;
