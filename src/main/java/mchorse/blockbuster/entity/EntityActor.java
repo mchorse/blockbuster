@@ -440,10 +440,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.model = model;
         this.setEntityInvulnerable(invulnerable);
 
-        if (!this.worldObj.isRemote && notify)
-        {
-            Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), filename, name, skin, model, invulnerable));
-        }
+        if (!this.worldObj.isRemote && notify) this.notifyPlayers();
+    }
+
+    public void notifyPlayers()
+    {
+        Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), this.filename, this.getCustomNameTag(), this.skin, this.model, this.isEntityInvulnerable(DamageSource.anvil)));
     }
 
     /**

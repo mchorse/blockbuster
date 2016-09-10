@@ -27,6 +27,8 @@ public class PlayThread implements Runnable
     private boolean deadAfterPlay;
 
     private long delay;
+    private String model;
+    private String skin;
 
     public PlayThread(EntityActor actor, String filename, boolean deadAfterPlay)
     {
@@ -98,6 +100,9 @@ public class PlayThread implements Runnable
     {
         System.out.println("Replay started.");
 
+        this.model = this.actor.model;
+        this.skin = this.actor.skin;
+
         short magic = this.in.readShort();
 
         if (magic != Mocap.signature)
@@ -153,6 +158,10 @@ public class PlayThread implements Runnable
      */
     private void resetEntity()
     {
+        this.actor.model = this.skin;
+        this.actor.skin = this.skin;
+        this.actor.notifyPlayers();
+
         try
         {
             this.in.close();

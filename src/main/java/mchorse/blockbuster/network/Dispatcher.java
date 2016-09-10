@@ -30,6 +30,7 @@ import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
+import mchorse.blockbuster.network.server.ServerHandlerMorph;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
@@ -130,6 +131,7 @@ public class Dispatcher
 
         /* Morphing */
         register(PacketMorph.class, ClientHandlerMorph.class, Side.CLIENT);
+        register(PacketMorph.class, ServerHandlerMorph.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

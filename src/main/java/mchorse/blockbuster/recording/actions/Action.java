@@ -26,6 +26,7 @@ public abstract class Action
     public static final byte INTERACT_BLOCK = 9;
     public static final byte BREAK_BLOCK = 10;
     public static final byte ELYTRA_FLYING = 11;
+    public static final byte MORPH = 12;
 
     /**
      * Factory method
@@ -34,28 +35,18 @@ public abstract class Action
      */
     public static Action fromType(byte type) throws Exception
     {
-        if (type == CHAT)
-            return new ChatAction();
-        if (type == SWIPE)
-            return new SwipeAction();
-        if (type == DROP)
-            return new DropAction();
-        if (type == EQUIP)
-            return new EquipAction();
-        if (type == SHOOT_ARROW)
-            return new ShootArrowAction();
-        if (type == LOGOUT)
-            return new LogoutAction();
-        if (type == PLACE_BLOCK)
-            return new PlaceBlockAction();
-        if (type == MOUNTING)
-            return new MountingAction();
-        if (type == INTERACT_BLOCK)
-            return new InteractBlockAction();
-        if (type == BREAK_BLOCK)
-            return new BreakBlockAction();
-        if (type == ELYTRA_FLYING)
-            return new ElytraFlyingAction();
+        if (type == CHAT) return new ChatAction();
+        if (type == SWIPE) return new SwipeAction();
+        if (type == DROP) return new DropAction();
+        if (type == EQUIP) return new EquipAction();
+        if (type == SHOOT_ARROW) return new ShootArrowAction();
+        if (type == LOGOUT) return new LogoutAction();
+        if (type == PLACE_BLOCK) return new PlaceBlockAction();
+        if (type == MOUNTING) return new MountingAction();
+        if (type == INTERACT_BLOCK) return new InteractBlockAction();
+        if (type == BREAK_BLOCK) return new BreakBlockAction();
+        if (type == ELYTRA_FLYING) return new ElytraFlyingAction();
+        if (type == MORPH) return new MorphAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }
