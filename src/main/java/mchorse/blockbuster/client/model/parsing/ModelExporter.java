@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.model.parsing;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class ModelExporter
     public String export(String name)
     {
         Model data = new Model();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeSpecialFloatingPointValues().create();
 
         this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         ModelBase model = this.getModel();
@@ -256,9 +257,11 @@ public class ModelExporter
     {
         List<ModelRenderer> renderers = new ArrayList<ModelRenderer>();
 
-        for (Field fieldRenderer : model.getClass().getFields())
+        for (Field fieldRenderer : getInheritedFields(model.getClass()))
         {
             ModelRenderer renderer;
+
+            System.out.println(fieldRenderer.getName() + ": " + fieldRenderer.getType().getSimpleName());
 
             if (!fieldRenderer.getType().isAssignableFrom(ModelRenderer.class)) continue;
             if (!fieldRenderer.isAccessible()) fieldRenderer.setAccessible(true);
@@ -287,7 +290,7 @@ public class ModelExporter
      * Get first field that corresponds to given class type in given class
      * subject
      */
-    private Field getFieldByType(Class type, Class subject)
+    private Field getFieldByType(Class<?> type, Class<?> subject)
     {
         for (Field field : subject.getDeclaredFields())
         {
@@ -295,5 +298,20 @@ public class ModelExporter
         }
 
         return null;
+    }
+
+    /**
+     * From StackOverflow
+     */
+    public static List<Field> getInheritedFields(Class<?> type)
+    {
+        List<Field> fields = new ArrayList<Field>();
+
+        for (Class<?> c = type; c != null; c = c.getSuperclass())
+        {
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+
+        return fields;
     }
 }
