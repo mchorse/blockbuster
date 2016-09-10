@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -15,6 +16,7 @@ import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.commands.CommandExportModel;
 import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.entity.EntityActor;
 import net.minecraft.block.Block;
@@ -51,6 +53,8 @@ public class ClientProxy extends CommonProxy
 
     public static ProfileRunner profileRunner = new ProfileRunner();
     public static ProfileRenderer profileRenderer = new ProfileRenderer();
+
+    public static File config;
 
     /**
      * Register mod items, blocks, tile entites and entities, and load item,
@@ -114,6 +118,8 @@ public class ClientProxy extends CommonProxy
     {
         path = path.substring(0, path.length() - 4);
 
+        config = new File(path);
+
         try
         {
             Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
@@ -146,6 +152,7 @@ public class ClientProxy extends CommonProxy
 
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandMorph());
+        ClientCommandHandler.instance.registerCommand(new CommandExportModel());
     }
 
     protected void registerItemModel(Block block, String path)

@@ -86,8 +86,10 @@ public class ModelParser
      */
     private void generateLimbs(Model data, ModelCustom model)
     {
+        /* Define lists for different purposes */
         Map<String, ModelCustomRenderer> limbs = new HashMap<String, ModelCustomRenderer>();
         List<ModelRenderer> renderable = new ArrayList<ModelRenderer>();
+
         List<ModelRenderer> left = new ArrayList<ModelRenderer>();
         List<ModelRenderer> right = new ArrayList<ModelRenderer>();
 

@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * That's unbelievable!
  *
  * - How many classes are you going to steal from Minecraft core?
- * - As much as I want to.
+ * - As much as I want to. Duh!
  *
  * This is patched LayerHeldItem layer class. This class is responsible for
  * rendering items in designated limbs in custom actor model. Lots of fun

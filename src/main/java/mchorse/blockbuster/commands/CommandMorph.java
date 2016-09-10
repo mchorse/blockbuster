@@ -9,10 +9,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
 /**
- * Morph command
+ * Command /morph
  *
  * Morphs player into given model with given skin in third person. Works only
  * in single player.
+ *
+ * @todo Move strings to language file
  */
 public class CommandMorph extends CommandBase
 {
@@ -44,7 +46,7 @@ public class CommandMorph extends CommandBase
             if (args.length > 0) render.model = args[0];
             if (args.length > 1) render.skin = args[1];
 
-            sender.addChatMessage(new TextComponentString("You've morphed into " + args[0] + " model!"));
+            sender.addChatMessage(new TextComponentString("You've morphed into \"" + args[0] + "\" model!"));
         }
     }
 }

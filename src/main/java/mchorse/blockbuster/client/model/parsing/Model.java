@@ -18,7 +18,7 @@ import scala.actors.threadpool.Arrays;
 @SideOnly(Side.CLIENT)
 public class Model
 {
-    public String scheme = "";
+    public String scheme = "1.3";
     public String name = "";
     public int[] texture = new int[] {64, 32};
 

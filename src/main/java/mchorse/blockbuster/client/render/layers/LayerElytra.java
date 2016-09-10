@@ -19,21 +19,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class LayerElytra implements LayerRenderer<EntityLivingBase>
 {
+    /**
+     * Texture of elytra located in minecraft's assets package
+     */
     private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
 
     private final ModelElytra modelElytra = new ModelElytra();
+    private final RenderLivingBase<?> renderPlayer;
 
-    protected final RenderLivingBase<?> renderPlayer;
-
-    public LayerElytra(RenderLivingBase<?> livingEntityRendererIn)
+    public LayerElytra(RenderLivingBase<?> render)
     {
-        this.renderPlayer = livingEntityRendererIn;
+        this.renderPlayer = render;
     }
 
     @Override
-    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        ItemStack itemstack = entitylivingbaseIn.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+        ItemStack itemstack = entity.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
         if (itemstack != null && itemstack.getItem() == Items.ELYTRA)
         {
@@ -43,12 +45,12 @@ public class LayerElytra implements LayerRenderer<EntityLivingBase>
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0.0F, 0.0F, 0.125F);
-            this.modelElytra.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
-            this.modelElytra.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            this.modelElytra.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+            this.modelElytra.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
             if (itemstack.isItemEnchanted())
             {
-                LayerArmorBase.renderEnchantedGlint(this.renderPlayer, entitylivingbaseIn, this.modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+                LayerArmorBase.renderEnchantedGlint(this.renderPlayer, entity, this.modelElytra, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
             }
 
             GlStateManager.popMatrix();
