@@ -251,35 +251,54 @@ public class ModelExporter
     }
 
     /**
-     * Get all model renderers that given model has
+     * Get all model renderers that given model has (even if that is an array
+     * of ModelRenderers)
      */
     private List<ModelRenderer> getModelRenderers(ModelBase model)
     {
         List<ModelRenderer> renderers = new ArrayList<ModelRenderer>();
 
-        for (Field fieldRenderer : getInheritedFields(model.getClass()))
+        Class<?> rClass = ModelRenderer.class;
+        Class<?> aRClass = ModelRenderer[].class;
+
+        for (Field field : getInheritedFields(model.getClass()))
         {
-            ModelRenderer renderer;
+            Class<?> type = field.getType();
 
-            System.out.println(fieldRenderer.getName() + ": " + fieldRenderer.getType().getSimpleName());
+            if (!type.isAssignableFrom(rClass) && !type.isAssignableFrom(aRClass)) continue;
+            if (!field.isAccessible()) field.setAccessible(true);
 
-            if (!fieldRenderer.getType().isAssignableFrom(ModelRenderer.class)) continue;
-            if (!fieldRenderer.isAccessible()) fieldRenderer.setAccessible(true);
+            System.out.println(field.getName() + ": " + field.getType().getSimpleName());
 
             try
             {
-                renderer = (ModelRenderer) fieldRenderer.get(model);
+                if (type.isAssignableFrom(rClass))
+                {
+                    ModelRenderer renderer = (ModelRenderer) field.get(model);
+
+                    if (renderer != null && renderers.indexOf(renderer) == -1)
+                    {
+                        renderers.add(renderer);
+                    }
+                }
+                else if (type.isAssignableFrom(aRClass))
+                {
+                    ModelRenderer[] moreRenderers = (ModelRenderer[]) field.get(model);
+
+                    for (ModelRenderer renderer : moreRenderers)
+                    {
+                        if (renderer != null && renderers.indexOf(renderer) == -1)
+                        {
+                            renderers.add(renderer);
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
                 e.printStackTrace();
 
                 continue;
-            }
-
-            if (renderer != null && renderers.indexOf(renderer) == -1)
-            {
-                renderers.add(renderer);
             }
         }
 
