@@ -250,6 +250,8 @@ public class CameraUtils
         File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/cameras");
         List<String> files = new ArrayList<String>();
 
+        file.mkdirs();
+
         for (String filename : file.list())
         {
             if (!filename.startsWith("."))

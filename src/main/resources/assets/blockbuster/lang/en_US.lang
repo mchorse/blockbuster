@@ -26,6 +26,8 @@ item.blockbuster.actor_config.name=Actor configuration device
 
 entity.blockbuster.Actor.name=Actor
 
+# Keys
+
 key.blockbuster.general=Blockbuster General
 key.blockbuster.profile=Blockbuster Profile Management
 key.blockbuster.duration=Blockbuster Fixture Duration
@@ -58,6 +60,11 @@ key.blockbuster.profile.prev=Previous Camera Fixture
 
 key.blockbuster.profile.start=Start Camera Profile
 key.blockbuster.profile.stop=Stop Camera Profile
+
+# Morphing
+
+blockbuster.morph=You morphed into "%s" model.
+blockbuster.morph.disable=You've been demorphed.
 
 # GUI
 
@@ -121,7 +128,12 @@ blockbuster.actor.not_attached=This registering item isn't attached to a directo
 blockbuster.commands.action=/action <record|play|stop> [file_name] [entity_name] [skin_name] [invulnerable]\n\nExamples:\n/action record MeDoingTricks\n/action stop\n/action play MeDoingTricks TonyHawk TonysSkin 1\n\nNote: optional arguments [entity_name] [skin_name] [is_invulnerable] are only for "play" action.\nSide note: <file_name>, [entity_name] [skin_name] can't contain spaces.   
 blockbuster.commands.director=/director <play|stop> <x> <y> <z> where <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
-blockbuster.commands.morph=/morph <model> <skin>\n\nMorphs current player into given <model> with skin named <skin> 
+blockbuster.commands.morph=/morph <model> <skin>\n\nMorphs current player into given <model> with skin named <skin>
+
+blockbuster.commands.export_model=/export-model <entity_name>\n\nExports model from <entity_name> mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder.\n\nAttention: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
+blockbuster.commands.export_model.error_save=Can't save exported model!
+blockbsuter.commands.export_model.wrong_type=Can't export model for "%s" type (because it has no renderer, or it's not a living entity renderer).
+blockbuster.commands.export_model.saved=Entity model "%s" was saved to %s.      
 
 # Camera's commands
 

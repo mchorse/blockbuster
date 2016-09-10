@@ -8,15 +8,13 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Command /morph
  *
  * Morphs player into given model with given skin in third person. Works only
  * in single player.
- *
- * @todo Move strings to language file
  */
 public class CommandMorph extends CommandBase
 {
@@ -41,7 +39,7 @@ public class CommandMorph extends CommandBase
         {
             render.reset();
 
-            sender.addChatMessage(new TextComponentString("You've been demorphed!"));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph.disable"));
         }
         else
         {
@@ -50,7 +48,7 @@ public class CommandMorph extends CommandBase
 
             Dispatcher.sendToServer(new PacketMorph(render.model, render.skin));
 
-            sender.addChatMessage(new TextComponentString("You've morphed into \"" + args[0] + "\" model!"));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph", render.model));
         }
     }
 }

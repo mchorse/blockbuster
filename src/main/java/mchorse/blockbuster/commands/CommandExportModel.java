@@ -23,7 +23,10 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.ClickEvent;
 
 /**
  * Command /export-model
@@ -56,15 +59,17 @@ public class CommandExportModel extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
+        /* Gather needed elements for exporter class */
         String type = args[0];
         Entity entity = EntityList.createEntityByName(type, sender.getEntityWorld());
         Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))
         {
-            throw new CommandException("Can't export model for \"%s\" type (because it has no renderer, or it's not a living entity renderer).", type);
+            throw new CommandException("blockbuster.commands.export_model.wrong_type", type);
         }
 
+        /* Export the model */
         ModelExporter exporter = new ModelExporter((EntityLivingBase) entity, (RenderLivingBase) render);
 
         String output = exporter.export(type);
@@ -72,18 +77,24 @@ public class CommandExportModel extends CommandBase
 
         exportFolder.mkdirs();
 
+        /* Save exported model */
         try
         {
-            PrintWriter writer = new PrintWriter(new File(ClientProxy.config.getAbsolutePath() + "/export/" + type + ".json"));
+            File destination = new File(ClientProxy.config.getAbsolutePath() + "/export/" + type + ".json");
+            PrintWriter writer = new PrintWriter(destination);
 
             writer.print(output);
             writer.close();
 
-            sender.addChatMessage(new TextComponentString("Model " + type + " was saved to export/" + type + ".json"));
+            ITextComponent file = new TextComponentString(destination.getName());
+            file.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, destination.getAbsolutePath()));
+            file.getStyle().setUnderlined(Boolean.valueOf(true));
+
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.commands.export_model.saved", type, file));
         }
         catch (FileNotFoundException e)
         {
-            throw new CommandException("Exported model couldn't be saved.");
+            throw new CommandException("blockbuster.commands.export_model.error_save");
         }
     }
 
