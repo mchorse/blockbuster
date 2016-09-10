@@ -14,6 +14,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
+import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.model.TexturedQuad;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,9 +37,6 @@ public class ModelExporter
         this.render = render;
     }
 
-    /**
-     * Get main model
-     */
     private ModelBase getModel()
     {
         return this.render.getMainModel();
@@ -99,8 +97,10 @@ public class ModelExporter
         {
             ((EntityTameable) entity).setSitting(true);
         }
-
-        entity.setSneaking(true);
+        else
+        {
+            entity.setSneaking(true);
+        }
     }
 
     /**
@@ -180,8 +180,9 @@ public class ModelExporter
 
             for (ModelBox box : renderer.cubeList)
             {
-                String name = "limb_" + i;
                 Model.Limb limb = new Model.Limb();
+                String boxName = box.boxName != null ? box.boxName : "";
+                String name = boxName.isEmpty() ? "limb_" + i : boxName;
 
                 if (j == 0)
                 {
@@ -194,7 +195,7 @@ public class ModelExporter
                 }
 
                 limb.size = this.getModelSize(box);
-                limb.texture = this.getModelOffset(box, renderer);
+                limb.texture = this.getModelOffset(box, renderer, model);
                 limb.anchor = this.getAnchor(box, limb.size);
 
                 data.limbs.put(name, limb);
@@ -246,8 +247,15 @@ public class ModelExporter
     /**
      * Get texture offset of the model based on its box
      */
-    private int[] getModelOffset(ModelBox box, ModelRenderer renderer)
+    private int[] getModelOffset(ModelBox box, ModelRenderer renderer, ModelBase model)
     {
+        TextureOffset offset = model.getTextureOffset(box.boxName);
+
+        if (offset != null)
+        {
+            return new int[] {offset.textureOffsetX, offset.textureOffsetY};
+        }
+
         int[] zero = new int[] {0, 0};
 
         Field field = this.getFieldByType(TexturedQuad[].class, ModelBox.class);
@@ -290,9 +298,9 @@ public class ModelExporter
      */
     private float[] getAnchor(ModelBox box, int[] size)
     {
-        float w = -box.posX1 / size[0];
-        float h = -box.posY1 / size[1];
-        float d = -box.posZ1 / size[2];
+        float w = size[0] != 0 ? -box.posX1 / size[0] : 0;
+        float h = size[1] != 0 ? -box.posY1 / size[1] : 0;
+        float d = size[2] != 0 ? -box.posZ1 / size[2] : 0;
 
         return new float[] {w, h, d};
     }
