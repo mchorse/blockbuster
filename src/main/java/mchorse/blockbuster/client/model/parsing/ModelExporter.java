@@ -17,6 +17,7 @@ import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TexturedQuad;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityTameable;
 
 /**
  * Model exporter
@@ -63,15 +64,30 @@ public class ModelExporter
         Map<String, ModelRenderer> limbs = this.generateLimbs(data, model);
 
         /* Save standing, sleeping and flying poses */
+        this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         this.savePose("standing", data, limbs);
         this.savePose("sleeping", data, limbs);
         this.savePose("flying", data, limbs);
 
         /* Save sneaking pose */
-        this.entity.setSneaking(true);
+        this.setSneaking(this.entity);
+        this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         this.savePose("sneaking", data, limbs);
 
         return gson.toJson(data);
+    }
+
+    /**
+     * Set entity sneaking
+     */
+    private void setSneaking(EntityLivingBase entity)
+    {
+        if (entity instanceof EntityTameable)
+        {
+            ((EntityTameable) entity).setSitting(true);
+        }
+
+        entity.setSneaking(true);
     }
 
     /**
@@ -105,7 +121,7 @@ public class ModelExporter
             float z = renderer.rotationPointZ;
 
             transform.rotate = new float[] {rx, ry, rz};
-            transform.translate = new float[] {x, -(y - 24), -z};
+            transform.translate = new float[] {-x, -(y - 24), -z};
 
             pose.limbs.put(key, transform);
         }
@@ -267,8 +283,6 @@ public class ModelExporter
 
             if (!type.isAssignableFrom(rClass) && !type.isAssignableFrom(aRClass)) continue;
             if (!field.isAccessible()) field.setAccessible(true);
-
-            System.out.println(field.getName() + ": " + field.getType().getSimpleName());
 
             try
             {
