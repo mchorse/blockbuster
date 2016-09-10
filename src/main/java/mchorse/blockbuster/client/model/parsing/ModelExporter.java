@@ -17,6 +17,12 @@ import net.minecraft.client.model.TexturedQuad;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.EntityLivingBase;
 
+/**
+ * Model exporter
+ *
+ * Model exporter class is responsible for exporting Minecraft in-game models
+ * based on the values of ModelBase ModelRenderer's ModelBoxes and given entity.
+ */
 public class ModelExporter
 {
     private EntityLivingBase entity;
@@ -37,7 +43,12 @@ public class ModelExporter
     }
 
     /**
-     * Export renderer from given entity and its render
+     * Main method of this class.
+     *
+     * This method is responsible for exporting a JSON model based on the values
+     * of given renderer's model and entity state.
+     *
+     * See private methods for more information about this export process.
      */
     public String export(String name)
     {
@@ -63,9 +74,9 @@ public class ModelExporter
     }
 
     /**
-     * Save given limbs
+     * Save pose transformations for every limb
      */
-    private void savePose(String string, Model data, Map<String, ModelRenderer> limbs)
+    private void savePose(String poseName, Model data, Map<String, ModelRenderer> limbs)
     {
         Model.Pose pose = new Model.Pose();
 
@@ -98,7 +109,7 @@ public class ModelExporter
             pose.limbs.put(key, transform);
         }
 
-        data.poses.put(string, pose);
+        data.poses.put(poseName, pose);
     }
 
     /**
@@ -118,21 +129,55 @@ public class ModelExporter
         Map<String, ModelRenderer> limbs = new HashMap<String, ModelRenderer>();
         int i = 0;
 
+        int width = 0;
+        int height = 0;
+
         for (ModelRenderer renderer : this.getModelRenderers(model))
         {
-            Model.Limb limb = new Model.Limb();
+            int j = 0;
 
-            System.out.println("limb_" + i);
+            for (ModelBox box : renderer.cubeList)
+            {
+                Model.Limb limb = new Model.Limb();
 
-            limb.mirror = renderer.mirror;
-            limb.size = this.getModelSize(renderer);
-            limb.texture = this.getModelOffset(renderer);
-            limb.anchor = this.getAnchor(renderer, limb.size);
+                if (j == 0)
+                {
+                    limb.mirror = renderer.mirror;
+                }
 
-            data.limbs.put("limb_" + i, limb);
-            limbs.put("limb_" + i, renderer);
+                limb.size = this.getModelSize(box);
+                limb.texture = this.getModelOffset(box, renderer);
+                limb.anchor = this.getAnchor(box, limb.size);
 
-            i++;
+                data.limbs.put("limb_" + i, limb);
+                limbs.put("limb_" + i, renderer);
+
+                j++;
+                i++;
+            }
+
+            width = Math.max(width, (int) renderer.textureWidth);
+            height = Math.max(width, (int) renderer.textureHeight);
+        }
+
+        /* Some bastard decided that it was a smart idea to define two variables
+         * in Model's constructor and inject those values directly into the
+         * ModelRenderer via setTextureSize() instead of setting model's
+         * properties textureWidth and textureHeight. Therefore ModelBase
+         * properties has misleading result.
+         *
+         * This is a workaround to inject the right texture size for exporting
+         * JSON model. Basically, if the texture size from JSON model doesn't
+         * correspond with values that has been set from ModelRenderers,
+         * it uses the greater value that was got from ModelRenderers.
+         *
+         * Zero check for width and height is just in case.
+         *
+         * See ModelIronGolem for more information. I hope it wasn't jeb.
+         */
+        if (data.texture[0] != width || data.texture[1] != height && width != 0 && height != 0)
+        {
+            data.texture = new int[] {width, height};
         }
 
         return limbs;
@@ -141,12 +186,8 @@ public class ModelExporter
     /**
      * Compute model size based on the box in the model renderer
      */
-    private int[] getModelSize(ModelRenderer renderer)
+    private int[] getModelSize(ModelBox box)
     {
-        if (renderer.cubeList.size() == 0) return new int[] {0, 0, 0};
-
-        ModelBox box = renderer.cubeList.get(0);
-
         int w = (int) (box.posX2 - box.posX1);
         int h = (int) (box.posY2 - box.posY1);
         int d = (int) (box.posZ2 - box.posZ1);
@@ -157,17 +198,10 @@ public class ModelExporter
     /**
      * Get texture offset of the model based on its box
      */
-    private int[] getModelOffset(ModelRenderer renderer)
+    private int[] getModelOffset(ModelBox box, ModelRenderer renderer)
     {
         int[] zero = new int[] {0, 0};
 
-        if (renderer.cubeList.size() == 0)
-        {
-            return zero;
-        }
-
-        /* Find the freaking TextureQuad that stores texture data */
-        ModelBox box = renderer.cubeList.get(0);
         Field field = this.getFieldByType(TexturedQuad[].class, ModelBox.class);
         TexturedQuad[] quads;
 
@@ -206,18 +240,11 @@ public class ModelExporter
     /**
      * Compute anchor based on the renderer
      */
-    private float[] getAnchor(ModelRenderer renderer, int[] size)
+    private float[] getAnchor(ModelBox box, int[] size)
     {
-        if (renderer.cubeList.size() == 0) return new float[] {0.5F, 0.5F, 0.5F};
-
-        ModelBox box = renderer.cubeList.get(0);
-
         float w = -box.posX1 / size[0];
         float h = -box.posY1 / size[1];
         float d = -box.posZ1 / size[2];
-
-        System.out.println("anchor: " + w + ", " + h + ", " + d);
-        System.out.println("size: " + size[0] + ", " + size[1] + ", " + size[2]);
 
         return new float[] {w, h, d};
     }
@@ -257,7 +284,8 @@ public class ModelExporter
     }
 
     /**
-     * Get first field that
+     * Get first field that corresponds to given class type in given class
+     * subject
      */
     private Field getFieldByType(Class type, Class subject)
     {
