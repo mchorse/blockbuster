@@ -35,7 +35,7 @@ import net.minecraft.util.text.event.ClickEvent;
  * models (ModelBase or his children) to JSON scheme that supports my custom
  * models.
  *
- * This is attempt number two.
+ * This is attempt number two, and it's a successful attempt!
  */
 public class CommandExportModel extends CommandBase
 {

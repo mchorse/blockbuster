@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.block.BlockDirectorMap;
 import mchorse.blockbuster.entity.EntityActor;
@@ -24,6 +25,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy
 {
     protected static int ID = 0;
+
+    public ModelHandler models;
 
     /**
      * Registers network messages (and their handlers), items, blocks, director
@@ -54,6 +57,27 @@ public class CommonProxy
     public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+    }
+
+    /**
+     * Gets called when server has started. This method should load all models
+     */
+    public void serverStarted()
+    {
+        this.models = new ModelHandler();
+
+        MinecraftForge.EVENT_BUS.register(this.models);
+    }
+
+    /**
+     * Get called when server has stopped. This method should unload all models.
+     */
+    public void serverStopped()
+    {
+        MinecraftForge.EVENT_BUS.unregister(this.models);
+
+        this.models.models.clear();
+        this.models = null;
     }
 
     /**

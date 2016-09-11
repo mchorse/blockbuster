@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.model;
 
-import mchorse.blockbuster.client.model.parsing.Model;
+import mchorse.blockbuster.actor.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 

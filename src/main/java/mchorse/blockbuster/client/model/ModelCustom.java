@@ -3,7 +3,7 @@ package mchorse.blockbuster.client.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import mchorse.blockbuster.client.model.parsing.Model;
+import mchorse.blockbuster.actor.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;

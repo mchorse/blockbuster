@@ -2,15 +2,12 @@ package mchorse.blockbuster.client.model.parsing;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.model.ModelRenderer;
@@ -25,11 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelParser
 {
-    /**
-     * Poses that are required by custom models
-     */
-    protected static final List<String> REQUIRED_POSES = Arrays.<String> asList("standing", "sneaking", "sleeping", "flying");;
-
     /**
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
@@ -60,20 +52,8 @@ public class ModelParser
      */
     public ModelCustom parseModel(String json) throws Exception
     {
-        Gson gson = new GsonBuilder().create();
-
-        Model data = gson.fromJson(json, Model.class);
+        Model data = Model.parse(json);
         ModelCustom model = new ModelCustom(data);
-
-        data.fillInMissing();
-
-        for (String key : REQUIRED_POSES)
-        {
-            if (!data.poses.containsKey(key))
-            {
-                throw new Exception("Parsed model with name \"" + data.name + "\" doesn't have \"" + key + "\" pose!");
-            }
-        }
 
         this.generateLimbs(data, model);
 

@@ -1,13 +1,15 @@
-package mchorse.blockbuster.client.model.parsing;
+package mchorse.blockbuster.actor;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Objects;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Model class
@@ -15,15 +17,41 @@ import scala.actors.threadpool.Arrays;
  * This class is a domain object that holds inside all information about the
  * model like its name, texture size, limbs and poses.
  */
-@SideOnly(Side.CLIENT)
 public class Model
 {
+    /**
+     * Poses that are required by custom models
+     */
+    protected static final List<String> REQUIRED_POSES = Arrays.<String> asList("standing", "sneaking", "sleeping", "flying");
+
     public String scheme = "1.3";
     public String name = "";
     public int[] texture = new int[] {64, 32};
 
     public Map<String, Limb> limbs = new HashMap<String, Limb>();
     public Map<String, Pose> poses = new HashMap<String, Pose>();
+
+    /**
+     * This method parses an instance of Model class from provided JSON string.
+     * This method also checks if model has all required poses for playing.
+     */
+    public static Model parse(String json) throws Exception
+    {
+        Gson gson = new GsonBuilder().create();
+        Model data = gson.fromJson(json, Model.class);
+
+        for (String key : REQUIRED_POSES)
+        {
+            if (!data.poses.containsKey(key))
+            {
+                throw new Exception(I18n.format("blockbuster.parsing.lacks_pose", data.name, key));
+            }
+        }
+
+        data.fillInMissing();
+
+        return data;
+    }
 
     /**
      * Fill in missing transforms and assign name to every limb

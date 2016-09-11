@@ -73,9 +73,7 @@ public class CameraProfile
      */
     public boolean has(int index)
     {
-        int size = this.fixtures.size();
-
-        return index >= 0 && index < size;
+        return index >= 0 && index < this.fixtures.size();
     }
 
     /**
@@ -174,6 +172,9 @@ public class CameraProfile
         }
     }
 
+    /**
+     * Save camera profile on the server
+     */
     public void save()
     {
         if (this.fixtures.size() != 0)

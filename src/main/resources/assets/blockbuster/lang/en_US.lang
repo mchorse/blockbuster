@@ -188,3 +188,7 @@ blockbuster.mocap.already_recording=%s is already being recorded to?
 blockbuster.mocap.wrong_signature=%s isn't a record file (or is an old version?)
 blockbuster.mocap.cant_find_file=Can't find %s replay file!
 blockbuster.mocap.error_file=Error loading record file, either not a record file or recorded by an older version.
+
+# Parsing
+
+blockbuster.parsing.lacks_pose=Parsed model with name "%s" doesn't have "%s" pose!

@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerMorph;
 import mchorse.blockbuster.network.client.ClientHandlerPlayerRecording;
@@ -10,6 +11,7 @@ import mchorse.blockbuster.network.client.camera.ClientHandlerListCameraProfiles
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorMapCast;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
+import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketPlayback;
@@ -132,6 +134,9 @@ public class Dispatcher
         /* Morphing */
         register(PacketMorph.class, ClientHandlerMorph.class, Side.CLIENT);
         register(PacketMorph.class, ServerHandlerMorph.class, Side.SERVER);
+
+        /* Multiplayer */
+        register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

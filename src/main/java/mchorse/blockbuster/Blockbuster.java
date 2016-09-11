@@ -10,7 +10,9 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
 /**
  * Blockbuster's main entry
@@ -90,5 +92,16 @@ public class Blockbuster
     {
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
+    }
+
+    @EventHandler
+    public void serverStarted(FMLServerStartedEvent event)
+    {
+        proxy.serverStarted();
+    }
+
+    public void serverStopped(FMLServerStoppedEvent event)
+    {
+        proxy.serverStopped();
     }
 }

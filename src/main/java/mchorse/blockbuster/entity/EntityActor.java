@@ -7,7 +7,9 @@ import java.util.List;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.GuiHandler;
+import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.item.ItemActorConfig;
 import mchorse.blockbuster.item.ItemPlayback;
 import mchorse.blockbuster.item.ItemRegister;
@@ -65,6 +67,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * provided with this mod.
      */
     public String model = "";
+
+    /**
+     * Model instance, used for setting the size of this entity in updateSize
+     * method
+     */
+    private Model modelInstance;
 
     /**
      * File name that will be used by recording code
@@ -149,16 +157,40 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             width = 0.6F;
             height = 0.6F;
+
+            if (this.modelInstance != null)
+            {
+                float[] pose = this.modelInstance.poses.get("flying").size;
+
+                width = pose[0];
+                height = pose[1];
+            }
         }
         else if (this.isSneaking())
         {
             width = 0.6F;
             height = 1.65F;
+
+            if (this.modelInstance != null)
+            {
+                float[] pose = this.modelInstance.poses.get("sneaking").size;
+
+                width = pose[0];
+                height = pose[1];
+            }
         }
         else
         {
             width = 0.6F;
             height = 1.8F;
+
+            if (this.modelInstance != null)
+            {
+                float[] pose = this.modelInstance.poses.get("standing").size;
+
+                width = pose[0];
+                height = pose[1];
+            }
         }
 
         if (width != this.width || height != this.height)
@@ -439,6 +471,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.skin = skin;
         this.model = model;
         this.setEntityInvulnerable(invulnerable);
+
+        if (Blockbuster.proxy.models.models.containsKey(this.model))
+        {
+            this.modelInstance = Blockbuster.proxy.models.models.get(this.model);
+        }
 
         if (!this.worldObj.isRemote && notify) this.notifyPlayers();
     }

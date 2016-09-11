@@ -126,7 +126,7 @@ public class ClientProxy extends CommonProxy
             field.setAccessible(true);
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(actorPack = new ActorsPack(path + "/models"));
+            packs.add(actorPack = new ActorsPack(path + "/models", path + "/downloads"));
         }
         catch (Exception e)
         {

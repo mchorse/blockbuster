@@ -53,16 +53,20 @@ public class ActorsPack implements IResourcePack
     protected File modelFolder;
 
     /**
+     * Config folder where client keeps downloaded from server skins and models
+     */
+    protected File downloadsFolder;
+
+    /**
      * Actor pack initialization
      */
-    public ActorsPack(String path)
+    public ActorsPack(String models, String downloaded)
     {
-        this.modelFolder = new File(path);
+        this.modelFolder = new File(models);
+        this.modelFolder.mkdirs();
 
-        if (!this.modelFolder.exists())
-        {
-            this.modelFolder.mkdirs();
-        }
+        this.downloadsFolder = new File(downloaded);
+        this.downloadsFolder.mkdir();
 
         this.reload();
     }
@@ -96,8 +100,11 @@ public class ActorsPack implements IResourcePack
      */
     public void reload()
     {
-        this.reloadModels();
-        this.reloadSkins();
+        this.reloadModels(this.modelFolder);
+        this.reloadSkins(this.modelFolder);
+
+        this.reloadModels(this.downloadsFolder);
+        this.reloadSkins(this.downloadsFolder);
     }
 
     /**
@@ -105,11 +112,11 @@ public class ActorsPack implements IResourcePack
      *
      * Simply caches file instances in the map for retrieval in actor GUI
      */
-    protected void reloadModels()
+    protected void reloadModels(File folder)
     {
         this.models.clear();
 
-        for (File file : this.modelFolder.listFiles())
+        for (File file : folder.listFiles())
         {
             File model = new File(file.getAbsolutePath() + "/model.json");
 
@@ -130,11 +137,11 @@ public class ActorsPack implements IResourcePack
      * (reloadModels) and scans all skins in the "skins" folder in model's
      * folder.
      */
-    protected void reloadSkins()
+    protected void reloadSkins(File folder)
     {
         this.skins.clear();
 
-        for (File file : this.modelFolder.listFiles())
+        for (File file : folder.listFiles())
         {
             File skins = new File(file.getAbsolutePath() + "/skins/");
 

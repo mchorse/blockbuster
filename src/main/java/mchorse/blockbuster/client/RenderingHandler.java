@@ -29,6 +29,9 @@ public class RenderingHandler
         this.render = render;
     }
 
+    /**
+     * Renders recording overlay during HUD rendering
+     */
     @SubscribeEvent
     public void onHUDRender(RenderGameOverlayEvent.Post event)
     {
@@ -40,15 +43,20 @@ public class RenderingHandler
         }
     }
 
+    /**
+     * Morph (render) player into custom model if player has its variables
+     * related to morphing (model and skin)
+     */
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Pre event)
     {
         if (this.render.model.isEmpty()) return;
 
-        if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 0)
-        {
-            EntityPlayer player = event.getEntityPlayer();
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = event.getEntityPlayer();
 
+        if (player != mc.thePlayer || mc.gameSettings.thirdPersonView != 0)
+        {
             event.setCanceled(true);
 
             this.render.doRender(player, event.getX(), event.getY(), event.getZ(), player.rotationYaw, event.getPartialRenderTick());
