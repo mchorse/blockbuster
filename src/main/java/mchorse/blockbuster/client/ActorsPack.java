@@ -100,6 +100,9 @@ public class ActorsPack implements IResourcePack
      */
     public void reload()
     {
+        this.models.clear();
+        this.skins.clear();
+
         this.reloadModels(this.modelFolder);
         this.reloadSkins(this.modelFolder);
 
@@ -114,8 +117,6 @@ public class ActorsPack implements IResourcePack
      */
     protected void reloadModels(File folder)
     {
-        this.models.clear();
-
         for (File file : folder.listFiles())
         {
             File model = new File(file.getAbsolutePath() + "/model.json");
@@ -139,8 +140,6 @@ public class ActorsPack implements IResourcePack
      */
     protected void reloadSkins(File folder)
     {
-        this.skins.clear();
-
         for (File file : folder.listFiles())
         {
             File skins = new File(file.getAbsolutePath() + "/skins/");

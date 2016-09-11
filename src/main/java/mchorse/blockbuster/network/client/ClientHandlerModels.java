@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -35,6 +36,9 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
                     this.bufferToFile(skinPath, skin.getValue());
                 }
             }
+
+            ClientProxy.actorPack.reload();
+            ((ClientProxy) Blockbuster.proxy).loadActorModels();
         }
         catch (IOException e)
         {

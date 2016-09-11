@@ -75,13 +75,12 @@ public class ClientProxy extends CommonProxy
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
-        this.loadActorModels();
     }
 
     /**
      * Load some actor models
      */
-    private void loadActorModels()
+    public void loadActorModels()
     {
         ModelCustom.MODELS.clear();
 

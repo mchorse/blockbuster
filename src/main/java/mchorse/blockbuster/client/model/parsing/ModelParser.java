@@ -46,15 +46,34 @@ public class ModelParser
         }
     }
 
+    public static void parse(String key, Model data)
+    {
+        try
+        {
+            ModelParser parser = new ModelParser();
+
+            ModelCustom model = parser.parseModel(data);
+            ModelCustom.MODELS.put(key, model);
+        }
+        catch (Exception e)
+        {
+            System.out.println("JSON model for key '" + key + "' couldn't be loaded!");
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Parse and build model out of given JSON string. Throws exception in case
      * if parsed model doesn't have at least one required pose.
      */
     public ModelCustom parseModel(String json) throws Exception
     {
-        Model data = Model.parse(json);
-        ModelCustom model = new ModelCustom(data);
+        return this.parseModel(Model.parse(json));
+    }
 
+    public ModelCustom parseModel(Model data) throws Exception
+    {
+        ModelCustom model = new ModelCustom(data);
         this.generateLimbs(data, model);
 
         return model;

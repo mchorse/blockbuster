@@ -207,7 +207,7 @@ public class ModelExporter
             }
 
             width = Math.max(width, (int) renderer.textureWidth);
-            height = Math.max(width, (int) renderer.textureHeight);
+            height = Math.max(height, (int) renderer.textureHeight);
         }
 
         /* Some bastard decided that it was a smart idea to define two variables
