@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import mchorse.blockbuster.actor.ActorsPack;
 import mchorse.blockbuster.camera.ProfileRunner;
-import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
@@ -73,7 +73,6 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
-
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
 
@@ -125,7 +124,10 @@ public class ClientProxy extends CommonProxy
             field.setAccessible(true);
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(actorPack = new ActorsPack(path + "/models", path + "/downloads"));
+            packs.add(actorPack = new ActorsPack());
+
+            actorPack.addFolder(path + "/models");
+            actorPack.addFolder(path + "/downloads");
         }
         catch (Exception e)
         {
@@ -168,5 +170,14 @@ public class ClientProxy extends CommonProxy
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
+    }
+
+    @Override
+    public ActorsPack getPack()
+    {
+        ActorsPack pack = super.getPack();
+        pack.addFolder(config.getAbsolutePath() + "/models");
+
+        return pack;
     }
 }

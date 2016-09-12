@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client;
+package mchorse.blockbuster.actor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,8 +18,6 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actors pack
@@ -28,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * that is responsible for loading skins from config/blockbuster/skins and
  * world's save skins folder with resource domain of blockbuster.actors)
  */
-@SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
     /**
@@ -48,27 +45,37 @@ public class ActorsPack implements IResourcePack
     protected Map<String, Map<String, File>> skins = new HashMap<String, Map<String, File>>();
 
     /**
-     * Config folder where skins are located on the client side
+     * Folders which to check when collecting all models and skins
      */
-    protected File modelFolder;
+    protected List<File> folders = new ArrayList<File>();
 
     /**
-     * Config folder where client keeps downloaded from server skins and models
+     * Add a folder to the list of folders to where to look up models and skins
      */
-    protected File downloadsFolder;
-
-    /**
-     * Actor pack initialization
-     */
-    public ActorsPack(String models, String downloaded)
+    public void addFolder(String path)
     {
-        this.modelFolder = new File(models);
-        this.modelFolder.mkdirs();
+        File folder = new File(path);
 
-        this.downloadsFolder = new File(downloaded);
-        this.downloadsFolder.mkdir();
+        folder.mkdirs();
 
-        this.reload();
+        if (folder.isDirectory()) this.folders.add(folder);
+    }
+
+    public int folders()
+    {
+        return this.folders.size();
+    }
+
+    /**
+     * Replace last folder with passed one
+     */
+    public void replaceLast(String path)
+    {
+        File folder = new File(path);
+
+        folder.mkdirs();
+
+        if (folder.isDirectory()) this.folders.set(this.folders() - 1, folder);
     }
 
     /**
@@ -103,11 +110,14 @@ public class ActorsPack implements IResourcePack
         this.models.clear();
         this.skins.clear();
 
-        this.reloadModels(this.modelFolder);
-        this.reloadSkins(this.modelFolder);
+        for (File folder : this.folders)
+        {
+            this.reloadModels(folder);
+            this.reloadSkins(folder);
+        }
 
-        this.reloadModels(this.downloadsFolder);
-        this.reloadSkins(this.downloadsFolder);
+        this.models.put("alex", null);
+        this.models.put("steve", null);
     }
 
     /**
@@ -126,9 +136,6 @@ public class ActorsPack implements IResourcePack
                 this.models.put(file.getName(), model);
             }
         }
-
-        this.models.put("alex", null);
-        this.models.put("steve", null);
     }
 
     /**

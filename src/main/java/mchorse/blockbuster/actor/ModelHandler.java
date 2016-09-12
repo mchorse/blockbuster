@@ -1,7 +1,7 @@
 package mchorse.blockbuster.actor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,10 +9,11 @@ import org.apache.commons.io.IOUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import mchorse.blockbuster.client.ActorsPack;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -31,12 +32,13 @@ public class ModelHandler
     @SubscribeEvent
     public void onPlayerLogsIn(PlayerLoggedInEvent event)
     {
-        if (!(event.player instanceof EntityPlayerMP)) return;
-
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         String file = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
-        ActorsPack pack = new ActorsPack(file, file);
         PacketModels message = new PacketModels();
+
+        ActorsPack pack = Blockbuster.proxy.getPack();
+        pack.addFolder(file);
+        pack.reload();
 
         for (String model : pack.getModels())
         {
@@ -46,11 +48,11 @@ public class ModelHandler
 
             try
             {
-                message.models.put(model, this.fileToString(file + "/" + model + "/model.json"));
+                message.models.put(model, this.fileToString(pack.getInputStream(new ResourceLocation(model))));
 
                 for (String skin : pack.getSkins(model))
                 {
-                    skinMap.put(skin, this.fileToBuffer(file + "/" + model + "/skins/" + skin + ".png"));
+                    skinMap.put(skin, this.fileToBuffer(pack.getInputStream(new ResourceLocation(model + "/" + skin))));
                 }
 
                 message.skins.put(model, skinMap);
@@ -67,9 +69,8 @@ public class ModelHandler
     /**
      * Convert file to string
      */
-    private String fileToString(String file) throws IOException
+    private String fileToString(InputStream input) throws IOException
     {
-        FileInputStream input = new FileInputStream(file);
         StringBuilder builder = new StringBuilder();
         int letter;
 
@@ -86,9 +87,9 @@ public class ModelHandler
     /**
      * Convert file to netty's byte buffer
      */
-    private ByteBuf fileToBuffer(String file) throws IOException
+    private ByteBuf fileToBuffer(InputStream input) throws IOException
     {
-        byte[] bytes = IOUtils.toByteArray(new FileInputStream(file));
+        byte[] bytes = IOUtils.toByteArray(input);
 
         return Unpooled.wrappedBuffer(bytes);
     }

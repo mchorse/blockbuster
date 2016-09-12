@@ -1,5 +1,6 @@
 package mchorse.blockbuster;
 
+import mchorse.blockbuster.actor.ActorsPack;
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.block.BlockDirectorMap;
@@ -113,5 +114,13 @@ public class CommonProxy
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
         EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
+    }
+
+    /**
+     * Get an actor pack
+     */
+    public ActorsPack getPack()
+    {
+        return new ActorsPack();
     }
 }
