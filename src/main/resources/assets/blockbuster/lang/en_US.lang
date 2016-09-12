@@ -192,3 +192,4 @@ blockbuster.mocap.error_file=Error loading record file, either not a record file
 # Parsing
 
 blockbuster.parsing.lacks_pose=Parsed model with name "%s" doesn't have "%s" pose!
+blockbuster.models.loaded=Received §7%d§r custom models and §7%d§r skins from server.

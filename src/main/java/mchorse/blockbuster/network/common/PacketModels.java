@@ -33,30 +33,35 @@ public class PacketModels implements IMessage
 
         try
         {
+            int skinModels = stream.readInt();
+
+            /* Read skins */
+            for (int i = 0; i < skinModels; i++)
+            {
+                String modelName = stream.readUTF();
+                int skinSize = stream.readInt();
+
+                if (skinSize == 0) continue;
+
+                Map<String, ByteBuf> skins = new HashMap<String, ByteBuf>();
+
+                for (int j = 0; j < skinSize; j++)
+                {
+                    String skinName = stream.readUTF();
+                    int length = stream.readInt();
+
+                    skins.put(skinName, buf.readBytes(length));
+                }
+
+                this.skins.put(modelName, skins);
+            }
+
             int models = stream.readInt();
 
             /* Read models */
             for (int i = 0; i < models; i++)
             {
-                String model = stream.readUTF();
-
-                this.models.put(model, stream.readUTF());
-
-                int skins = stream.readInt();
-                if (skins == 0) continue;
-
-                Map<String, ByteBuf> skin = new HashMap<String, ByteBuf>();
-
-                /* Read model skins */
-                for (int j = 0; j < skins; j++)
-                {
-                    String skinName = stream.readUTF();
-                    int length = stream.readInt();
-
-                    skin.put(skinName, buf.readBytes(length));
-                }
-
-                this.skins.put(model, skin);
+                this.models.put(stream.readUTF(), stream.readUTF());
             }
         }
         catch (IOException e)
@@ -72,26 +77,15 @@ public class PacketModels implements IMessage
 
         try
         {
-            stream.writeInt(this.models.size());
+            stream.writeInt(this.skins.size());
 
-            /* Write models */
-            for (Map.Entry<String, String> model : this.models.entrySet())
+            /* Write skins */
+            for (Map.Entry<String, Map<String, ByteBuf>> entry : this.skins.entrySet())
             {
-                stream.writeUTF(model.getKey());
-                stream.writeUTF(model.getValue());
+                stream.writeUTF(entry.getKey());
+                stream.writeInt(entry.getValue().size());
 
-                Map<String, ByteBuf> skins = this.skins.get(model.getKey());
-
-                /* Write skins */
-                if (skins == null || skins.size() == 0)
-                {
-                    stream.writeInt(0);
-                    continue;
-                }
-
-                stream.writeInt(skins.size());
-
-                for (Map.Entry<String, ByteBuf> skin : skins.entrySet())
+                for (Map.Entry<String, ByteBuf> skin : entry.getValue().entrySet())
                 {
                     ByteBuf buffer = skin.getValue();
 
@@ -99,6 +93,15 @@ public class PacketModels implements IMessage
                     buf.writeInt(buffer.readableBytes());
                     buf.writeBytes(buffer);
                 }
+            }
+
+            stream.writeInt(this.models.size());
+
+            /* Write models */
+            for (Map.Entry<String, String> model : this.models.entrySet())
+            {
+                stream.writeUTF(model.getKey());
+                stream.writeUTF(model.getValue());
             }
         }
         catch (IOException e)

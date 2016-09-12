@@ -11,6 +11,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentString;
 
 public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
 {
@@ -21,21 +23,38 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
 
         try
         {
+            int modelSize = 0;
+            int skinSize = 0;
+
+            /* Write skins to downloaded folder */
+            for (Map.Entry<String, Map<String, ByteBuf>> entry : message.skins.entrySet())
+            {
+                String modelName = entry.getKey();
+
+                for (Map.Entry<String, ByteBuf> skin : entry.getValue().entrySet())
+                {
+                    String skinPath = String.format("%s/%s/skins/%s.png", path, modelName, skin.getKey());
+
+                    new File(path + "/" + modelName + "/skins").mkdirs();
+                    this.bufferToFile(skinPath, skin.getValue());
+
+                    skinSize++;
+                }
+            }
+
+            /* Write models to downloaded folder */
             for (Map.Entry<String, String> model : message.models.entrySet())
             {
                 String modelName = model.getKey();
                 String modelPath = String.format("%s/%s/model.json", path, modelName);
 
-                new File(path + "/" + modelName + "/skins").mkdirs();
+                new File(path + "/" + modelName).mkdirs();
                 this.stringToFile(modelPath, model.getValue());
 
-                for (Map.Entry<String, ByteBuf> skin : message.skins.get(modelName).entrySet())
-                {
-                    String skinPath = String.format("%s/%s/skins/%s.png", path, modelName, skin.getKey());
-
-                    this.bufferToFile(skinPath, skin.getValue());
-                }
+                modelSize++;
             }
+
+            player.addChatMessage(new TextComponentString(I18n.format("blockbuster.models.loaded", modelSize, skinSize)));
 
             ClientProxy.actorPack.reload();
             ((ClientProxy) Blockbuster.proxy).loadActorModels();
@@ -46,6 +65,9 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
         }
     }
 
+    /**
+     * Write given string to file
+     */
     private void stringToFile(String file, String output) throws IOException
     {
         PrintWriter writer = new PrintWriter(file);
@@ -54,6 +76,9 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
         writer.close();
     }
 
+    /**
+     * Write given byte buffer
+     */
     private void bufferToFile(String string, ByteBuf value) throws IOException
     {
         FileOutputStream output = new FileOutputStream(string);

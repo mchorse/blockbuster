@@ -42,13 +42,9 @@ public class ModelHandler
 
         for (String model : pack.getModels())
         {
-            if (model.equals("steve") || model.equals("alex")) continue;
-
-            Map<String, ByteBuf> skinMap = new HashMap<String, ByteBuf>();
-
             try
             {
-                message.models.put(model, this.fileToString(pack.getInputStream(new ResourceLocation(model))));
+                Map<String, ByteBuf> skinMap = new HashMap<String, ByteBuf>();
 
                 for (String skin : pack.getSkins(model))
                 {
@@ -56,6 +52,13 @@ public class ModelHandler
                 }
 
                 message.skins.put(model, skinMap);
+
+                if (model.equals("alex") || model.equals("steve"))
+                {
+                    continue;
+                }
+
+                message.models.put(model, this.fileToString(pack.getInputStream(new ResourceLocation(model))));
             }
             catch (IOException e)
             {
@@ -89,8 +92,6 @@ public class ModelHandler
      */
     private ByteBuf fileToBuffer(InputStream input) throws IOException
     {
-        byte[] bytes = IOUtils.toByteArray(input);
-
-        return Unpooled.wrappedBuffer(bytes);
+        return Unpooled.wrappedBuffer(IOUtils.toByteArray(input));
     }
 }
