@@ -14,6 +14,10 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 
+/**
+ * This handler is responsible for saving received models and skins to
+ * directory where downloaded models and skins should be located.
+ */
 public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
 {
     @Override

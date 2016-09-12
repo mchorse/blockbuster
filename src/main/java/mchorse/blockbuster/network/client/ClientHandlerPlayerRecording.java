@@ -1,6 +1,8 @@
 package mchorse.blockbuster.network.client;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.actor.IMorphing;
+import mchorse.blockbuster.actor.MorphingProvider;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import net.minecraft.client.entity.EntityPlayerSP;
 
@@ -14,7 +16,8 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
 
         if (!message.recording)
         {
-            ClientProxy.playerRender.reset();
+            IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+            capability.reset();
         }
     }
 }

@@ -1,5 +1,8 @@
 package mchorse.blockbuster.network.server;
 
+import mchorse.blockbuster.actor.IMorphing;
+import mchorse.blockbuster.actor.MorphingProvider;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.Mocap;
 import mchorse.blockbuster.recording.RecordThread;
@@ -11,10 +14,22 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
     @Override
     public void run(EntityPlayerMP player, PacketMorph message)
     {
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+
+        if (capability != null)
+        {
+            capability.setModel(message.model);
+            capability.setSkin(message.skin);
+
+            Dispatcher.sendTo(message, player);
+            Dispatcher.updateTrackers(player, message);
+        }
+
         RecordThread record = Mocap.records.get(player);
 
-        if (record == null) return;
-
-        record.eventList.add(new MorphAction(message.model, message.skin));
+        if (record != null)
+        {
+            record.eventList.add(new MorphAction(message.model, message.skin));
+        }
     }
 }

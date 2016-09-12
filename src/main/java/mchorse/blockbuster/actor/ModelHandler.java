@@ -33,11 +33,10 @@ public class ModelHandler
     public void onPlayerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
-        String file = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
         PacketModels message = new PacketModels();
 
         ActorsPack pack = Blockbuster.proxy.getPack();
-        pack.addFolder(file);
+        pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
         pack.reload();
 
         for (String model : pack.getModels())

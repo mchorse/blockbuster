@@ -4,6 +4,8 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.actor.IMorphing;
+import mchorse.blockbuster.actor.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
@@ -28,18 +30,6 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 {
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
-    /**
-     * This thing gonna be responsible for storing the model for player's
-     * rendering
-     */
-    public String model = "";
-
-    /**
-     * This thing is going to be responsible for storing the skin for player's
-     * rendering
-     */
-    public String skin = "";
-
     public RenderPlayer(RenderManager renderManagerIn, float shadowSize)
     {
         super(renderManagerIn, null, shadowSize);
@@ -51,7 +41,8 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     @Override
     protected ResourceLocation getEntityTexture(EntityPlayer entity)
     {
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", this.model + "/" + this.skin);
+        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
+        ResourceLocation location = new ResourceLocation("blockbuster.actors", capability.getModel() + "/" + capability.getSkin());
 
         if (ClientProxy.actorPack.resourceExists(location))
         {
@@ -78,10 +69,11 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     protected void setupModel(EntityPlayer entity)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
+        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
 
         String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");
 
-        ModelCustom model = models.get(this.model);
+        ModelCustom model = models.get(capability.getModel());
 
         model.pose = model.model.poses.get(pose);
         this.mainModel = model;
@@ -128,11 +120,5 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
                 GlStateManager.rotate((float) (Math.signum(d3) * Math.acos(d2)) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
             }
         }
-    }
-
-    public void reset()
-    {
-        this.model = "";
-        this.skin = "";
     }
 }

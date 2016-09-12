@@ -1,7 +1,5 @@
 package mchorse.blockbuster.commands;
 
-import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import net.minecraft.command.CommandBase;
@@ -37,21 +35,17 @@ public class CommandMorph extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        RenderPlayer render = ClientProxy.playerRender;
-
         if (args.length == 0)
         {
-            render.reset();
-
+            Dispatcher.sendToServer(new PacketMorph("", ""));
             sender.addChatMessage(new TextComponentTranslation("blockbuster.morph.disable"));
         }
         else
         {
-            if (args.length > 0) render.model = args[0];
-            if (args.length > 1) render.skin = args[1];
+            if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], ""));
+            if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], args[1]));
 
-            Dispatcher.sendToServer(new PacketMorph(render.model, render.skin));
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph", render.model));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph", args[0]));
         }
     }
 }

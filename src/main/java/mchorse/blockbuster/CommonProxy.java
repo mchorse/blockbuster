@@ -1,7 +1,11 @@
 package mchorse.blockbuster;
 
 import mchorse.blockbuster.actor.ActorsPack;
+import mchorse.blockbuster.actor.CapabilityHandler;
+import mchorse.blockbuster.actor.IMorphing;
 import mchorse.blockbuster.actor.ModelHandler;
+import mchorse.blockbuster.actor.Morphing;
+import mchorse.blockbuster.actor.MorphingStorage;
 import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.block.BlockDirectorMap;
 import mchorse.blockbuster.entity.EntityActor;
@@ -17,6 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -49,6 +54,8 @@ public class CommonProxy
 
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
         GameRegistry.registerTileEntity(TileEntityDirectorMap.class, "blockbuster_director_map_tile_entity");
+
+        CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
     }
 
     /**
@@ -58,6 +65,7 @@ public class CommonProxy
     public void load(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
     }
 
     /**

@@ -1,8 +1,9 @@
 package mchorse.blockbuster.client;
 
+import mchorse.blockbuster.actor.IMorphing;
+import mchorse.blockbuster.actor.MorphingProvider;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderPlayer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -50,16 +51,14 @@ public class RenderingHandler
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent.Pre event)
     {
-        if (this.render.model.isEmpty()) return;
-
-        Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = event.getEntityPlayer();
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
 
-        if (player != mc.thePlayer || mc.gameSettings.thirdPersonView != 0)
-        {
-            event.setCanceled(true);
+        System.out.println(capability.getModel() + " " + capability.getSkin());
 
-            this.render.doRender(player, event.getX(), event.getY(), event.getZ(), player.rotationYaw, event.getPartialRenderTick());
-        }
+        if (capability == null || capability.getModel().isEmpty()) return;
+
+        event.setCanceled(true);
+        this.render.doRender(player, event.getX(), event.getY(), event.getZ(), player.rotationYaw, event.getPartialRenderTick());
     }
 }
