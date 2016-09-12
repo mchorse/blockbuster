@@ -54,8 +54,6 @@ public class RenderingHandler
         EntityPlayer player = event.getEntityPlayer();
         IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
 
-        System.out.println(capability.getModel() + " " + capability.getSkin());
-
         if (capability == null || capability.getModel().isEmpty()) return;
 
         event.setCanceled(true);

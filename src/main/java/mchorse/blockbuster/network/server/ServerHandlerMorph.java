@@ -4,6 +4,7 @@ import mchorse.blockbuster.actor.IMorphing;
 import mchorse.blockbuster.actor.MorphingProvider;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
+import mchorse.blockbuster.network.common.PacketMorphPlayer;
 import mchorse.blockbuster.recording.Mocap;
 import mchorse.blockbuster.recording.RecordThread;
 import mchorse.blockbuster.recording.actions.MorphAction;
@@ -22,7 +23,7 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
             capability.setSkin(message.skin);
 
             Dispatcher.sendTo(message, player);
-            Dispatcher.updateTrackers(player, message);
+            Dispatcher.updateTrackers(player, new PacketMorphPlayer(player.getEntityId(), message.model, message.skin));
         }
 
         RecordThread record = Mocap.records.get(player);
