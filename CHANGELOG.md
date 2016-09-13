@@ -2,6 +2,28 @@
 
 Blockbuster's change log.
 
+## Version 1.3
+
+This is a big update that brings custom models and morphing into the game. This update 
+adds support for custom models and player morphing. Your machinimas will be much 
+interesting, because now you can record not only players, but also mobs, blocks, or even 
+your own custom creatures.
+
+**Tutorial video** for 1.3:
+Coming soon
+
+* Added support for JSON custom models for actors
+* Added support for player morphing
+* Added multiplayer support (models and skins can be saved in world saves, and loaded by clients)
+* Added client-side `morph` command that allows player to morph into custom models in multiplayer
+* Added client-side `export-model` command that allows users to export in-game models into JSON format (basic non-optimal export, better than nothing)
+* Updated actor GUI for using custom models
+* Renamed top-level package from `noname` to `mchorse`
+
+See McME [repository](https://github.com/mchorse/mcme) 
+and [web page](https://mchorse.github.io/mcme/) for more information about the model 
+editor.
+
 ## Version 1.2.1
 
 This is a small patch that enhances existing elements of the mod. Nothing new, just enhancements and fixes.
