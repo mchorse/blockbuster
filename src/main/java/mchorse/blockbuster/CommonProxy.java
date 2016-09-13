@@ -1,13 +1,13 @@
 package mchorse.blockbuster;
 
 import mchorse.blockbuster.actor.ActorsPack;
-import mchorse.blockbuster.actor.CapabilityHandler;
-import mchorse.blockbuster.actor.IMorphing;
 import mchorse.blockbuster.actor.ModelHandler;
-import mchorse.blockbuster.actor.Morphing;
-import mchorse.blockbuster.actor.MorphingStorage;
 import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.block.BlockDirectorMap;
+import mchorse.blockbuster.capabilities.CapabilityHandler;
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
 import mchorse.blockbuster.entity.EntityActor;
 import mchorse.blockbuster.item.ItemActorConfig;
 import mchorse.blockbuster.item.ItemPlayback;
@@ -73,7 +73,7 @@ public class CommonProxy
      */
     public void serverStarted()
     {
-        this.models = new ModelHandler();
+        this.models = new ModelHandler(this.getPack());
 
         MinecraftForge.EVENT_BUS.register(this.models);
     }

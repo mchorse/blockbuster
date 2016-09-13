@@ -4,8 +4,8 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.actor.IMorphing;
-import mchorse.blockbuster.actor.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;

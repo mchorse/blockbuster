@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.client;
 
-import mchorse.blockbuster.actor.IMorphing;
-import mchorse.blockbuster.actor.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;

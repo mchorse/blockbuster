@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client;
 
-import mchorse.blockbuster.actor.IMorphing;
-import mchorse.blockbuster.actor.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderPlayer;
 import net.minecraft.client.gui.ScaledResolution;

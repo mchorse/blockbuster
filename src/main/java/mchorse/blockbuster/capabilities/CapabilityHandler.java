@@ -1,6 +1,8 @@
-package mchorse.blockbuster.actor;
+package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import net.minecraft.entity.player.EntityPlayer;

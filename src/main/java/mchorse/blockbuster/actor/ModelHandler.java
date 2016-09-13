@@ -9,22 +9,33 @@ import org.apache.commons.io.IOUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 /**
- * This class responsible for storing domain custom models and sending and
- * receiving models from player.
+ * This class responsible for storing domain custom models and sending models to
+ * players who are logged in.
  */
 public class ModelHandler
 {
+    /**
+     * Cached models, they're loaded from stuffs
+     */
     public Map<String, Model> models = new HashMap<String, Model>();
+
+    /**
+     * Actors pack from which ModelHandler loads its models
+     */
+    public ActorsPack pack;
+
+    public ModelHandler(ActorsPack pack)
+    {
+        this.pack = pack;
+    }
 
     /**
      * When player is logs in, send him available models and skins
@@ -35,19 +46,15 @@ public class ModelHandler
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         PacketModels message = new PacketModels();
 
-        ActorsPack pack = Blockbuster.proxy.getPack();
-        pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
-        pack.reload();
-
-        for (String model : pack.getModels())
+        for (String model : this.pack.getModels())
         {
             try
             {
                 Map<String, ByteBuf> skinMap = new HashMap<String, ByteBuf>();
 
-                for (String skin : pack.getSkins(model))
+                for (String skin : this.pack.getSkins(model))
                 {
-                    skinMap.put(skin, this.fileToBuffer(pack.getInputStream(new ResourceLocation(model + "/" + skin))));
+                    skinMap.put(skin, this.fileToBuffer(this.pack.getInputStream(new ResourceLocation(model + "/" + skin))));
                 }
 
                 message.skins.put(model, skinMap);
@@ -57,7 +64,7 @@ public class ModelHandler
                     continue;
                 }
 
-                message.models.put(model, this.fileToString(pack.getInputStream(new ResourceLocation(model))));
+                message.models.put(model, this.fileToString(this.pack.getInputStream(new ResourceLocation(model))));
             }
             catch (IOException e)
             {
@@ -69,7 +76,7 @@ public class ModelHandler
     }
 
     /**
-     * Convert file to string
+     * Convert file into string
      */
     private String fileToString(InputStream input) throws IOException
     {

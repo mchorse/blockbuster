@@ -1,4 +1,4 @@
-package mchorse.blockbuster.actor;
+package mchorse.blockbuster.capabilities.morphing;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,8 +22,6 @@ public class MorphingStorage implements IStorage<IMorphing>
         tag.setString("Model", instance.getModel());
         tag.setString("Skin", instance.getSkin());
 
-        System.out.println(instance.getModel() + ", " + instance.getSkin());
-
         return tag;
     }
 
@@ -36,8 +34,6 @@ public class MorphingStorage implements IStorage<IMorphing>
 
             instance.setModel(tag.getString("Model"));
             instance.setSkin(tag.getString("Skin"));
-
-            System.out.println(instance.getModel() + ", " + instance.getSkin());
         }
     }
 }

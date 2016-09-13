@@ -1,4 +1,4 @@
-package mchorse.blockbuster.actor;
+package mchorse.blockbuster.capabilities.morphing;
 
 public class Morphing implements IMorphing
 {
