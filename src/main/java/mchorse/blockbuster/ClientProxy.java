@@ -143,6 +143,19 @@ public class ClientProxy extends CommonProxy
         ClientCommandHandler.instance.registerCommand(new CommandExportModel());
     }
 
+    /**
+     * Get server pack. This method adds another directory where to look up
+     * the models. This method only invoked for intergraded server.
+     */
+    @Override
+    public ActorsPack getPack()
+    {
+        ActorsPack pack = super.getPack();
+        pack.addFolder(config.getAbsolutePath() + "/models");
+
+        return pack;
+    }
+
     protected void registerItemModel(Block block, String path)
     {
         this.registerItemModel(Item.getItemFromBlock(block), path);
@@ -157,14 +170,5 @@ public class ClientProxy extends CommonProxy
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
-    }
-
-    @Override
-    public ActorsPack getPack()
-    {
-        ActorsPack pack = super.getPack();
-        pack.addFolder(config.getAbsolutePath() + "/models");
-
-        return pack;
     }
 }

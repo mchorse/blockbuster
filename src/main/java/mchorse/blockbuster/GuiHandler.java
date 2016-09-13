@@ -35,7 +35,7 @@ public class GuiHandler implements IGuiHandler
      * There's two types of GUI are available right now:
      *
      * - Actor configuration GUI
-     * - Director block management GUI
+     * - Director block management GUIs
      * - Director map block management GUI
      *
      * IGuiHandler is used to centralize GUI invocations
@@ -67,7 +67,7 @@ public class GuiHandler implements IGuiHandler
 
     /**
      * This method is empty, because there's no need for this method to be
-     * filled with code. This block doesn't seem to provide any interaction with
+     * filled with code. This mod doesn't seem to provide any interaction with
      * Containers.
      */
     @Override

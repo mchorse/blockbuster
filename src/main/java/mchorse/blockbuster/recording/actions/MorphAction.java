@@ -35,8 +35,6 @@ public class MorphAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        System.out.println(this.model + ": " + this.skin);
-
         actor.model = this.model;
         actor.skin = this.skin;
         actor.notifyPlayers();

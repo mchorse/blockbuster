@@ -90,6 +90,14 @@ public class CommonProxy
     }
 
     /**
+     * Get an actor pack
+     */
+    public ActorsPack getPack()
+    {
+        return new ActorsPack();
+    }
+
+    /**
      * Register an item with Forge's game registry
      */
     protected void registerItem(Item item)
@@ -122,13 +130,5 @@ public class CommonProxy
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
         EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
-    }
-
-    /**
-     * Get an actor pack
-     */
-    public ActorsPack getPack()
-    {
-        return new ActorsPack();
     }
 }
