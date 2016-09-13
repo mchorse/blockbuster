@@ -1,11 +1,9 @@
 package mchorse.blockbuster.client.model.parsing;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -17,7 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Model parser
  *
- * This class is responsible for parsing JSON models
+ * This class is responsible for converting models into in-game renderable
+ * models (ModelCustom)
  */
 @SideOnly(Side.CLIENT)
 public class ModelParser
@@ -26,38 +25,16 @@ public class ModelParser
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
      */
-    public static void parse(String key, InputStream stream)
-    {
-        try
-        {
-            ModelParser parser = new ModelParser();
-
-            Scanner scanner = new Scanner(stream, "UTF-8");
-
-            ModelCustom model = parser.parseModel(scanner.useDelimiter("\\A").next());
-            ModelCustom.MODELS.put(key, model);
-
-            scanner.close();
-        }
-        catch (Exception e)
-        {
-            System.out.println("JSON model for key '" + key + "' couldn't be loaded!");
-            e.printStackTrace();
-        }
-    }
-
     public static void parse(String key, Model data)
     {
         try
         {
-            ModelParser parser = new ModelParser();
-
-            ModelCustom model = parser.parseModel(data);
+            ModelCustom model = new ModelParser().parseModel(data);
             ModelCustom.MODELS.put(key, model);
         }
         catch (Exception e)
         {
-            System.out.println("JSON model for key '" + key + "' couldn't be loaded!");
+            System.out.println("Model for key '" + key + "' couldn't converted to ModelCustom!");
             e.printStackTrace();
         }
     }
@@ -66,11 +43,6 @@ public class ModelParser
      * Parse and build model out of given JSON string. Throws exception in case
      * if parsed model doesn't have at least one required pose.
      */
-    public ModelCustom parseModel(String json) throws Exception
-    {
-        return this.parseModel(Model.parse(json));
-    }
-
     public ModelCustom parseModel(Model data) throws Exception
     {
         ModelCustom model = new ModelCustom(data);

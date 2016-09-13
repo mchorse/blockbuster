@@ -74,6 +74,7 @@ public class CommonProxy
     public void serverStarted()
     {
         this.models = new ModelHandler(this.getPack());
+        this.models.loadModels(this.models.pack);
 
         MinecraftForge.EVENT_BUS.register(this.models);
     }
@@ -85,7 +86,6 @@ public class CommonProxy
     {
         MinecraftForge.EVENT_BUS.unregister(this.models);
 
-        this.models.models.clear();
         this.models = null;
     }
 

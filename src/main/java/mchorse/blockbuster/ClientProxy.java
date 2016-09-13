@@ -1,11 +1,12 @@
 package mchorse.blockbuster;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import mchorse.blockbuster.actor.ActorsPack;
+import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.ProfileRenderer;
@@ -24,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -84,23 +84,10 @@ public class ClientProxy extends CommonProxy
         ModelCustom.MODELS.clear();
 
         /* Load user supplied models */
-        for (String model : actorPack.getModels())
+        for (Map.Entry<String, Model> model : this.models.models.entrySet())
         {
-            if (model.equals("steve") || model.equals("alex")) continue;
-
-            try
-            {
-                ModelParser.parse(model, actorPack.getInputStream(new ResourceLocation("blockbuster.actors", model)));
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            ModelParser.parse(model.getKey(), model.getValue());
         }
-
-        /* Default models */
-        ModelParser.parse("alex", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json"));
-        ModelParser.parse("steve", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json"));
     }
 
     /**

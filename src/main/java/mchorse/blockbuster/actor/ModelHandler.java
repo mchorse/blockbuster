@@ -35,6 +35,41 @@ public class ModelHandler
     public ModelHandler(ActorsPack pack)
     {
         this.pack = pack;
+        this.pack.reload();
+    }
+
+    /**
+     * Load models into models storage
+     */
+    public void loadModels(ActorsPack pack)
+    {
+        pack.reload();
+
+        for (String model : pack.getModels())
+        {
+            ResourceLocation resource = new ResourceLocation("blockbuster.actors", model);
+
+            try
+            {
+                this.models.put(model, Model.parse(pack.getInputStream(resource)));
+            }
+            catch (Exception e)
+            {
+                System.out.println("Model by key \"" + model + "\" couldn't be parsed and loaded!");
+                e.printStackTrace();
+            }
+        }
+
+        try
+        {
+            this.models.put("alex", Model.parse(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json")));
+            this.models.put("steve", Model.parse(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json")));
+        }
+        catch (Exception e)
+        {
+            System.out.println("Default provided models couldn't be loaded!");
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -115,9 +115,6 @@ public class ActorsPack implements IResourcePack
             this.reloadModels(folder);
             this.reloadSkins(folder);
         }
-
-        this.models.put("alex", null);
-        this.models.put("steve", null);
     }
 
     /**

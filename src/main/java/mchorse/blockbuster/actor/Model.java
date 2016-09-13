@@ -1,9 +1,11 @@
 package mchorse.blockbuster.actor;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import com.google.common.base.Objects;
 import com.google.gson.Gson;
@@ -30,6 +32,20 @@ public class Model
 
     public Map<String, Limb> limbs = new HashMap<String, Limb>();
     public Map<String, Pose> poses = new HashMap<String, Pose>();
+
+    /**
+     * Parse model from input stream
+     * @throws Exception
+     */
+    public static Model parse(InputStream stream) throws Exception
+    {
+        Scanner scanner = new Scanner(stream, "UTF-8");
+
+        Model model = parse(scanner.useDelimiter("\\A").next());
+        scanner.close();
+
+        return model;
+    }
 
     /**
      * This method parses an instance of Model class from provided JSON string.

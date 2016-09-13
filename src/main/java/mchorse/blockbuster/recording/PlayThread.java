@@ -158,7 +158,7 @@ public class PlayThread implements Runnable
      */
     private void resetEntity()
     {
-        this.actor.model = this.skin;
+        this.actor.model = this.model;
         this.actor.skin = this.skin;
         this.actor.notifyPlayers();
 

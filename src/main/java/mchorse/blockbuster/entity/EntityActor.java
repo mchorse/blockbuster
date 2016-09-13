@@ -28,7 +28,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -184,6 +183,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             width = 0.6F;
             height = 1.8F;
 
+            if (this.modelInstance == null) this.updateModel();
+
             if (this.modelInstance != null)
             {
                 float[] pose = this.modelInstance.poses.get("standing").size;
@@ -193,16 +194,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             }
         }
 
-        if (width != this.width || height != this.height)
-        {
-            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
-            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width);
-
-            if (!this.worldObj.collidesWithAnyBlock(axisalignedbb))
-            {
-                this.setSize(width, height);
-            }
-        }
+        this.setSize(width, height);
     }
 
     /**
@@ -472,12 +464,17 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.model = model;
         this.setEntityInvulnerable(invulnerable);
 
+        this.updateModel();
+
+        if (!this.worldObj.isRemote && notify) this.notifyPlayers();
+    }
+
+    private void updateModel()
+    {
         if (Blockbuster.proxy.models.models.containsKey(this.model))
         {
             this.modelInstance = Blockbuster.proxy.models.models.get(this.model);
         }
-
-        if (!this.worldObj.isRemote && notify) this.notifyPlayers();
     }
 
     public void notifyPlayers()
