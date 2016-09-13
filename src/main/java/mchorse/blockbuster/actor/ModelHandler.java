@@ -81,7 +81,8 @@ public class ModelHandler
     }
 
     /**
-     * On player tick, we have to change AABB box
+     * On player tick, we have to change AABB box (total rip-off of
+     * EntityActor#updateSize method)
      */
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
