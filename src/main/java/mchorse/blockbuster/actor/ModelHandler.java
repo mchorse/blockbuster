@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
 /**
  * This class responsible for storing domain custom models and sending models to
@@ -78,6 +79,15 @@ public class ModelHandler
             System.out.println("Default provided models couldn't be loaded!");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Clear models when disconnecting from server
+     */
+    @SubscribeEvent
+    public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
+    {
+        this.models.clear();
     }
 
     /**

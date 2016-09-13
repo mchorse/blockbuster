@@ -64,29 +64,12 @@ public class CommonProxy
      */
     public void load(FMLInitializationEvent event)
     {
-        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
-    }
-
-    /**
-     * Gets called when server has started. This method should load all models
-     */
-    public void serverStarted()
-    {
         this.models = new ModelHandler(this.getPack());
         this.models.loadModels(this.models.pack);
 
         MinecraftForge.EVENT_BUS.register(this.models);
-    }
-
-    /**
-     * Get called when server has stopped. This method should unload all models.
-     */
-    public void serverStopped()
-    {
-        MinecraftForge.EVENT_BUS.unregister(this.models);
-
-        this.models = null;
+        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
     }
 
     /**

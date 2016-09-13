@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.GuiHandler;
 import mchorse.blockbuster.actor.Model;
+import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.item.ItemActorConfig;
 import mchorse.blockbuster.item.ItemPlayback;
 import mchorse.blockbuster.item.ItemRegister;
@@ -471,9 +472,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     private void updateModel()
     {
-        if (Blockbuster.proxy.models.models.containsKey(this.model))
+        ModelHandler models = Blockbuster.proxy.models;
+
+        if (models.models.containsKey(this.model))
         {
-            this.modelInstance = Blockbuster.proxy.models.models.get(this.model);
+            this.modelInstance = models.models.get(this.model);
         }
     }
 

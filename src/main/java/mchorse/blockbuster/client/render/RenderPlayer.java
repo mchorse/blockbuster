@@ -57,6 +57,8 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     {
         this.setupModel(entity);
 
+        if (this.mainModel == null) return;
+
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
