@@ -12,7 +12,7 @@ the recording code is based on the code from the
 (the author of the mod gave me permission to use his code). 
 
 Original [minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) 
-and [planet minecraft post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/).
+and [planet minecraft post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/). See also [McME](https://github.com/mchorse/mcme), the JSON model editor.
 
 ## Install
 
@@ -48,6 +48,10 @@ This playlist consists out of videos that I've created during Blockbuster mod te
 
 This mod provides following features:
 
+#### General
+
+* Player morphing
+
 #### Player's recording
 
 * All stuff in Mocap, but more
@@ -69,10 +73,10 @@ This mod provides following features:
 #### Actors
 
 * Can playback player's actions
-* Customizable skins (simply drop 64x32 skins into the minecraft/config/blockbsuter/skins folder)
-* Mostly look like players
+* Customizable actor models and skins
 * When tied to director block and player starts recording this actor, player 
-  will be able to react to previously recorded actors
+  will be able to react to previously recorded actors, and morphed into actor's model
+  and skin
 * When recording, HUD overlay would be displayed with caption to which file it 
   records actions
 
@@ -97,6 +101,8 @@ This mod provides following features:
 * Director command (`/director <play|stop>`) – allows players to trigger or stop 
   playback in director block specified at XYZ position
 * Camera command (`/camera`) – allows players to customize camera profiles
+* Morph command (`/morph`) – allows players to morph into custom models
+* Export model command (`/export-model`) – allows players to export in-game models (basic limb and poses generation)
 
 ## Manual
 
