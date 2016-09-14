@@ -57,7 +57,7 @@ public class ClientProxy extends CommonProxy
     public static File config;
 
     /**
-     * Register mod items, blocks, tile entites and entities, and load item,
+     * Register mod items, blocks, tile entites and entities, load item,
      * block models and register entity renderer.
      */
     @Override
@@ -65,29 +65,19 @@ public class ClientProxy extends CommonProxy
     {
         super.preLoad(event);
 
+        /* Items */
         this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
         this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
         this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
 
+        /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.directorBlockMap, Blockbuster.path("director_map"));
 
+        /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
+
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
-    }
-
-    /**
-     * Load some actor models
-     */
-    public void loadActorModels()
-    {
-        ModelCustom.MODELS.clear();
-
-        /* Load user supplied models */
-        for (Map.Entry<String, Model> model : this.models.models.entrySet())
-        {
-            ModelParser.parse(model.getKey(), model.getValue());
-        }
     }
 
     /**
@@ -102,7 +92,6 @@ public class ClientProxy extends CommonProxy
     private void injectResourcePack(String path)
     {
         path = path.substring(0, path.length() - 4);
-
         config = new File(path);
 
         try
@@ -134,13 +123,29 @@ public class ClientProxy extends CommonProxy
         recordingOverlay = new GuiRecordingOverlay(Minecraft.getMinecraft());
         playerRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager(), 0.5F);
 
+        /* Event listeners */
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay, playerRender));
         MinecraftForge.EVENT_BUS.register(profileRenderer);
 
+        /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandMorph());
         ClientCommandHandler.instance.registerCommand(new CommandExportModel());
+    }
+
+    /**
+     * Load actor models
+     */
+    public void loadClientModels()
+    {
+        ModelCustom.MODELS.clear();
+
+        /* Load user supplied models */
+        for (Map.Entry<String, Model> model : this.models.models.entrySet())
+        {
+            ModelParser.parse(model.getKey(), model.getValue());
+        }
     }
 
     /**

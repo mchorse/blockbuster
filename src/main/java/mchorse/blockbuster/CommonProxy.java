@@ -32,6 +32,10 @@ public class CommonProxy
 {
     protected static int ID = 0;
 
+    /**
+     * Model manager, this class is responsible for managing domain custom
+     * models for custom actors
+     */
     public ModelHandler models;
 
     /**
@@ -43,18 +47,23 @@ public class CommonProxy
         Dispatcher.register();
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, new GuiHandler());
 
+        /* Items */
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
 
+        /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
         this.registerBlock(Blockbuster.directorBlockMap = new BlockDirectorMap());
 
+        /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 
+        /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
         GameRegistry.registerTileEntity(TileEntityDirectorMap.class, "blockbuster_director_map_tile_entity");
 
+        /* Capabilities */
         CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
     }
 

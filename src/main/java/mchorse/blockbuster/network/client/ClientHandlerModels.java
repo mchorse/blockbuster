@@ -62,7 +62,7 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
 
             ClientProxy.actorPack.reload();
             Blockbuster.proxy.models.loadModels(ClientProxy.actorPack);
-            ((ClientProxy) Blockbuster.proxy).loadActorModels();
+            ((ClientProxy) Blockbuster.proxy).loadClientModels();
         }
         catch (IOException e)
         {

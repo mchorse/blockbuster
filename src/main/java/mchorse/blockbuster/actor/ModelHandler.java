@@ -1,15 +1,18 @@
 package mchorse.blockbuster.actor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.network.Dispatcher;
@@ -81,6 +84,16 @@ public class ModelHandler
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
     {
         this.models.clear();
+
+        try
+        {
+            File models = new File(ClientProxy.config + "/downloads");
+            FileUtils.cleanDirectory(models);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
