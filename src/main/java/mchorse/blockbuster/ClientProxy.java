@@ -5,9 +5,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.actor.ActorsPack;
 import mchorse.blockbuster.actor.Model;
+import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.camera.ProfileRunner;
+import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
@@ -102,8 +103,8 @@ public class ClientProxy extends CommonProxy
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(actorPack = new ActorsPack());
 
-            actorPack.addFolder(path + "/models");
-            actorPack.addFolder(path + "/downloads");
+            actorPack.pack.addFolder(path + "/models");
+            actorPack.pack.addFolder(path + "/downloads");
         }
         catch (Exception e)
         {
@@ -153,9 +154,9 @@ public class ClientProxy extends CommonProxy
      * the models. This method only invoked for intergraded server.
      */
     @Override
-    public ActorsPack getPack()
+    public ModelPack getPack()
     {
-        ActorsPack pack = super.getPack();
+        ModelPack pack = super.getPack();
         pack.addFolder(config.getAbsolutePath() + "/models");
 
         return pack;

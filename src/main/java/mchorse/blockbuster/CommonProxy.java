@@ -1,7 +1,7 @@
 package mchorse.blockbuster;
 
-import mchorse.blockbuster.actor.ActorsPack;
 import mchorse.blockbuster.actor.ModelHandler;
+import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.block.BlockDirectorMap;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
@@ -84,9 +84,9 @@ public class CommonProxy
     /**
      * Get an actor pack
      */
-    public ActorsPack getPack()
+    public ModelPack getPack()
     {
-        return new ActorsPack();
+        return new ModelPack();
     }
 
     /**

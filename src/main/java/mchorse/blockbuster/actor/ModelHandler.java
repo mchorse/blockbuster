@@ -1,6 +1,7 @@
 package mchorse.blockbuster.actor;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -41,12 +42,12 @@ public class ModelHandler
     /**
      * Actors pack from which ModelHandler loads its models
      */
-    public ActorsPack pack;
+    public ModelPack pack;
 
     /**
      * Load user and default provided models into model map
      */
-    public void loadModels(ActorsPack pack)
+    public void loadModels(ModelPack pack)
     {
         pack.reload();
 
@@ -57,7 +58,9 @@ public class ModelHandler
 
             try
             {
-                this.models.put(model, Model.parse(pack.getInputStream(resource)));
+                InputStream modelStream = new FileInputStream(pack.models.get(model));
+
+                this.models.put(model, Model.parse(modelStream));
             }
             catch (Exception e)
             {
@@ -116,8 +119,7 @@ public class ModelHandler
 
                 for (String skin : skins)
                 {
-                    ResourceLocation resource = new ResourceLocation(model + "/" + skin);
-                    InputStream skinStream = this.pack.getInputStream(resource);
+                    InputStream skinStream = new FileInputStream(this.pack.skins.get(model).get(skin));
 
                     output.put(skin, this.fileToBuffer(skinStream));
                 }
@@ -134,8 +136,7 @@ public class ModelHandler
         {
             try
             {
-                ResourceLocation resource = new ResourceLocation(model);
-                InputStream modelStream = this.pack.getInputStream(resource);
+                InputStream modelStream = new FileInputStream(this.pack.models.get(model));
 
                 if (modelStream != null)
                 {

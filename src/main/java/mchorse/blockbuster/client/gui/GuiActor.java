@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.client.gui.elements.GuiChildScreen;
 import mchorse.blockbuster.client.gui.elements.GuiCompleterViewer;
 import mchorse.blockbuster.client.gui.elements.GuiParentScreen;
@@ -45,6 +46,7 @@ public class GuiActor extends GuiChildScreen
     private BlockPos pos;
     private int id;
 
+    private ModelPack pack;
     private List<String> skins;
 
     /* GUI fields */
@@ -77,10 +79,11 @@ public class GuiActor extends GuiChildScreen
     {
         super(parent);
 
-        ClientProxy.actorPack.reload();
+        this.pack = ClientProxy.actorPack.pack;
+        this.pack.reload();
 
         this.actor = actor;
-        this.skins = ClientProxy.actorPack.getSkins(actor.model);
+        this.skins = this.pack.getSkins(actor.model);
     }
 
     /* Actions */
@@ -168,7 +171,7 @@ public class GuiActor extends GuiChildScreen
         /* Populate the tab completer */
         if (!modelUsedFocused && this.model.isFocused())
         {
-            List<String> models = ClientProxy.actorPack.getModels();
+            List<String> models = this.pack.getModels();
 
             models.add(0, "steve");
             models.add(0, "alex");
@@ -179,7 +182,7 @@ public class GuiActor extends GuiChildScreen
         }
         else if (!skinUsedFocused && this.skin.isFocused())
         {
-            this.skins = ClientProxy.actorPack.getSkins(this.model.getText());
+            this.skins = this.pack.getSkins(this.model.getText());
             this.completer.setAllCompletions(this.skins);
             this.completer.setField(this.skin);
             this.skinViewer.updateRect(10, 50 + 60 - 1, 120, 100);
