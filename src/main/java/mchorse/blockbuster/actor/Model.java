@@ -17,7 +17,7 @@ import net.minecraft.client.resources.I18n;
  * Model class
  *
  * This class is a domain object that holds inside all information about the
- * model like its name, texture size, limbs and poses.
+ * model like its name, texture size, limbs and poses and life and stuff.
  */
 public class Model
 {

@@ -3,6 +3,7 @@ package mchorse.blockbuster.actor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -39,12 +40,6 @@ public class ModelHandler
      */
     public ActorsPack pack;
 
-    public ModelHandler(ActorsPack pack)
-    {
-        this.pack = pack;
-        this.pack.reload();
-    }
-
     /**
      * Load user and default provided models into model map
      */
@@ -63,7 +58,6 @@ public class ModelHandler
             }
             catch (Exception e)
             {
-                System.out.println("Model by key \"" + model + "\" couldn't be parsed and loaded!");
                 e.printStackTrace();
             }
         }
@@ -76,7 +70,6 @@ public class ModelHandler
         }
         catch (Exception e)
         {
-            System.out.println("Default provided models couldn't be loaded!");
             e.printStackTrace();
         }
     }
@@ -91,84 +84,45 @@ public class ModelHandler
     }
 
     /**
-     * On player tick, we have to change AABB box (total rip-off of
-     * EntityActor#updateSize method)
-     */
-    @SubscribeEvent
-    public void onPlayerTick(PlayerTickEvent event)
-    {
-        if (event.phase == Phase.START) return;
-
-        EntityPlayer player = event.player;
-        IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
-        Model data = this.models.get(cap.getModel());
-
-        if (data == null) return;
-
-        float width = 0.0F;
-        float height = 0.0F;
-
-        if (player.isElytraFlying())
-        {
-            float[] pose = data.poses.get("flying").size;
-
-            width = pose[0];
-            height = pose[1];
-        }
-        else if (player.isSneaking())
-        {
-            float[] pose = data.poses.get("sneaking").size;
-
-            width = pose[0];
-            height = pose[1];
-        }
-        else
-        {
-            float[] pose = data.poses.get("standing").size;
-
-            width = pose[0];
-            height = pose[1];
-        }
-
-        /* This is a total rip-off of EntityPlayer#setSize method */
-        if (width != player.width || height != player.height)
-        {
-            float f = player.width;
-            player.width = width;
-            player.height = height;
-            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
-            player.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width));
-            player.eyeHeight = height * 0.9F;
-
-            if (player.width > f && !player.worldObj.isRemote)
-            {
-                player.moveEntity(f - player.width, 0.0D, f - player.width);
-            }
-        }
-    }
-
-    /**
-     * When player is logs in, send him available models and skins
+     * When player is logs in, send him all available models and skins
      */
     @SubscribeEvent
     public void onPlayerLogsIn(PlayerLoggedInEvent event)
     {
-        EntityPlayerMP player = (EntityPlayerMP) event.player;
         PacketModels message = new PacketModels();
+
+        this.pack.reload();
+
+        for (String model : this.pack.getAllSkins().keySet())
+        {
+            List<String> skins = this.pack.getSkins(model);
+
+            try
+            {
+                Map<String, ByteBuf> output = new HashMap<String, ByteBuf>();
+
+                for (String skin : skins)
+                {
+                    ResourceLocation resource = new ResourceLocation(model + "/" + skin);
+                    InputStream skinStream = this.pack.getInputStream(resource);
+
+                    output.put(skin, this.fileToBuffer(skinStream));
+                }
+
+                message.skins.put(model, output);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
 
         for (String model : this.pack.getModels())
         {
             try
             {
-                Map<String, ByteBuf> skinMap = new HashMap<String, ByteBuf>();
-                InputStream modelStream = this.pack.getInputStream(new ResourceLocation(model));
-
-                for (String skin : this.pack.getSkins(model))
-                {
-                    skinMap.put(skin, this.fileToBuffer(this.pack.getInputStream(new ResourceLocation(model + "/" + skin))));
-                }
-
-                message.skins.put(model, skinMap);
+                ResourceLocation resource = new ResourceLocation(model);
+                InputStream modelStream = this.pack.getInputStream(resource);
 
                 if (modelStream != null)
                 {
@@ -181,7 +135,7 @@ public class ModelHandler
             }
         }
 
-        Dispatcher.sendTo(message, player);
+        Dispatcher.sendTo(message, (EntityPlayerMP) event.player);
     }
 
     /**
@@ -208,5 +162,44 @@ public class ModelHandler
     private ByteBuf fileToBuffer(InputStream input) throws IOException
     {
         return Unpooled.wrappedBuffer(IOUtils.toByteArray(input));
+    }
+
+    /**
+     * On player tick, we have to change AABB box (total rip-off of
+     * EntityActor#updateSize method)
+     */
+    @SubscribeEvent
+    public void onPlayerTick(PlayerTickEvent event)
+    {
+        if (event.phase == Phase.START) return;
+
+        EntityPlayer player = event.player;
+        IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        Model data = this.models.get(cap.getModel());
+
+        if (data == null) return;
+
+        String key = player.isElytraFlying() ? "flying" : (player.isSneaking() ? "sneaking" : "standing");
+
+        float[] pose = data.poses.get(key).size;
+        float width = pose[0];
+        float height = pose[1];
+
+        /* This is a total rip-off of EntityPlayer#setSize method */
+        if (width != player.width || height != player.height)
+        {
+            float f = player.width;
+            player.width = width;
+            player.height = height;
+            player.eyeHeight = height * 0.9F;
+
+            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
+            player.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width));
+
+            if (player.width > f && !player.worldObj.isRemote)
+            {
+                player.moveEntity(f - player.width, 0.0D, f - player.width);
+            }
+        }
     }
 }

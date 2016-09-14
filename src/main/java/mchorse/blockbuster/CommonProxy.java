@@ -64,8 +64,8 @@ public class CommonProxy
      */
     public void load(FMLInitializationEvent event)
     {
-        this.models = new ModelHandler(this.getPack());
-        this.models.loadModels(this.models.pack);
+        this.models = new ModelHandler();
+        this.models.loadModels(this.getPack());
 
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());

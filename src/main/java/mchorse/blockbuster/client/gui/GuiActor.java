@@ -168,7 +168,12 @@ public class GuiActor extends GuiChildScreen
         /* Populate the tab completer */
         if (!modelUsedFocused && this.model.isFocused())
         {
-            this.completer.setAllCompletions(ClientProxy.actorPack.getModels());
+            List<String> models = ClientProxy.actorPack.getModels();
+
+            models.add(0, "steve");
+            models.add(0, "alex");
+
+            this.completer.setAllCompletions(models);
             this.completer.setField(this.model);
             this.skinViewer.updateRect(10, 50 + 20 - 1, 120, 100);
         }

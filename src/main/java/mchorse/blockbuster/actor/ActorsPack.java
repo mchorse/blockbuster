@@ -22,18 +22,16 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Actors pack
  *
- * This class allows players to customize their actors (by providing a pack
- * that is responsible for loading skins from config/blockbuster/skins and
- * world's save skins folder with resource domain of blockbuster.actors)
+ * This class allows players to customize their actors with custom models and
+ * skins.
+ *
+ * This class is used both on server and on client. I just realized that you
+ * can't use IResourcePack on server...
+ *
+ * @todo make things work on dedicated server
  */
 public class ActorsPack implements IResourcePack
 {
-    /**
-     * Default resource domains, this property is responsible for setting
-     * domain in the ResourceLocation's first argument.
-     */
-    public static final Set<String> defaultResourceDomains = ImmutableSet.<String> of("blockbuster.actors");
-
     /**
      * Cached models
      */
@@ -61,31 +59,22 @@ public class ActorsPack implements IResourcePack
         if (folder.isDirectory()) this.folders.add(folder);
     }
 
-    public int folders()
-    {
-        return this.folders.size();
-    }
-
     /**
-     * Replace last folder with passed one
-     */
-    public void replaceLast(String path)
-    {
-        File folder = new File(path);
-
-        folder.mkdirs();
-
-        if (folder.isDirectory()) this.folders.set(this.folders() - 1, folder);
-    }
-
-    /**
-     * Get available skins
+     * Get available skins for model
      */
     public List<String> getSkins(String model)
     {
         Set<String> keys = this.skins.containsKey(model) ? this.skins.get(model).keySet() : Collections.<String> emptySet();
 
         return new ArrayList<String>(keys);
+    }
+
+    /**
+     * Get all available skins
+     */
+    public Map<String, Map<String, File>> getAllSkins()
+    {
+        return this.skins;
     }
 
     /**
@@ -97,13 +86,14 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * Reload skins
+     * Reload actor resources
      *
      * Damn, that won't be fun to reload the game every time you want to put
      * another skin in the skins folder, so why not just reload it every time
      * the GUI is showed? It's easy to implement and requires no extra code.
      *
-     * This method reloads skins from config/blockbuster/skins.
+     * This method reloads models from config/blockbuster/models/ and skins from
+     * config/blockbuster/models/$model/skins/
      */
     public void reload()
     {
@@ -194,7 +184,10 @@ public class ActorsPack implements IResourcePack
 
     /**
      * Check if model or skin (texture mapped on the model) is existing
-     * in the actor's pack
+     * in the actor's pack. Uses a pretty ugly hack to remap those:
+     *
+     * - $model/model.json -> $model
+     * - $model/skins/$skin.png -> $model/$skin
      */
     @Override
     public boolean resourceExists(ResourceLocation location)
@@ -216,10 +209,18 @@ public class ActorsPack implements IResourcePack
         return false;
     }
 
+    /**
+     * Get resource domains
+     *
+     * Seems like this method is used only once resource packs are getting
+     * reloaded. So no need for a public static field. That's also very strange
+     * that return time is a set, instead of a simple string. Several domains
+     * for one pack, but why?
+     */
     @Override
     public Set<String> getResourceDomains()
     {
-        return defaultResourceDomains;
+        return ImmutableSet.<String> of("blockbuster.actors");
     }
 
     @Override
@@ -228,14 +229,26 @@ public class ActorsPack implements IResourcePack
         return "Blockbuster's Actor Pack";
     }
 
-    /* No metadata and no image */
-
+    /**
+     * Get pack metadata
+     *
+     * This method is returns null, because it isn't an actual resource pack, but
+     * just a way to pass resources into minecraft core.
+     *
+     * Either Jabelar or TheGreyGhost mentioned that returning null in this
+     * method, disable listing of this resource pack in the resource pack menu.
+     * Seems legit to me.
+     */
     @Override
     public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
     {
         return null;
     }
 
+    /**
+     * I don't think that my actor resources pack should have an icon. However
+     * that icon would look really badass/sexy.
+     */
     @Override
     public BufferedImage getPackImage() throws IOException
     {

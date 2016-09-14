@@ -5,6 +5,7 @@ import mchorse.blockbuster.commands.CommandDirector;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  * complaining actors).
  *
  * This mod is possible thanks to the following code/examples/resources:
+ *
  * - Jabelar's and TGG's minecraft modding tutorials
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
@@ -28,7 +30,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  * - diesieben07 for giving idea for actor skins
  * - Choonster for pointing out that processInteract triggers for each hand
  * - Lightwave for porting some of the code to 1.9.4
- * - NlL5 for testing, giving feedback and ideas for Blockbuster mod
+ * - NlL5 for a lot of testing, giving lots of feedback and ideas for Blockbuster mod
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9.4]")
 public class Blockbuster
@@ -88,6 +90,11 @@ public class Blockbuster
     @EventHandler
     public void registerServerCommands(FMLServerStartingEvent event)
     {
+        String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
+
+        proxy.models.pack = proxy.getPack();
+        proxy.models.pack.addFolder(path);
+
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
     }
