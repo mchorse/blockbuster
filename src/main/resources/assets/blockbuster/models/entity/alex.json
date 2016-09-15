@@ -3,7 +3,7 @@
     "name": "Alex",
     "poses": {
         "standing": {
-            "size": [ 1, 2, 1 ],
+            "size": [ 0.6, 1.8, 0.6 ],
             "limbs": {
                 "head": {
                     "translate": [ 0, 24, 0 ]
@@ -30,7 +30,7 @@
             }
         },
         "sneaking": {
-            "size": [ 1, 1.8, 1 ],
+            "size": [ 0.6, 1.65, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 22.5, 2 ],
@@ -59,7 +59,7 @@
             }
         },
         "sleeping": {
-            "size": [ 1, 2, 1 ],
+            "size": [ 0.2, 0.2, 0.2 ],
             "limbs": {
                 "head": {
                     "translate": [ 0, 24, 0 ]
@@ -86,7 +86,7 @@
             }
         },
         "flying": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.6, 0.6 ],
             "limbs": {
                 "head": {
                     "translate": [ 0, 24, 0 ]
