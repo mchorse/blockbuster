@@ -23,8 +23,9 @@ public class LookFixture extends IdleFixture
 {
     protected Entity entity;
 
-    private float lastYaw;
-    private float lastPitch;
+    private float oldYaw = 0;
+    private float oldPitch = 0;
+    private float oldProgress = 0;
 
     public LookFixture(long duration)
     {
@@ -53,28 +54,39 @@ public class LookFixture extends IdleFixture
      * Totally not taken from EntityLookHelper
      */
     @Override
-    public void applyFixture(float progress, Position pos)
+    public void applyFixture(float progress, float partialTicks, Position pos)
     {
-        double dX = this.entity.posX - this.position.point.x;
-        double dY = this.entity.posY - this.position.point.y;
-        double dZ = this.entity.posZ - this.position.point.z;
+        double x = (this.entity.lastTickPosX + (this.entity.posX - this.entity.lastTickPosX) * partialTicks);
+        double y = (this.entity.lastTickPosY + (this.entity.posY - this.entity.lastTickPosY) * partialTicks);
+        double z = (this.entity.lastTickPosZ + (this.entity.posZ - this.entity.lastTickPosZ) * partialTicks);
+
+        double dX = x - this.position.point.x;
+        double dY = y - this.position.point.y;
+        double dZ = z - this.position.point.z;
         double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
 
         float yaw = (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
         float pitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
 
+        if (this.oldProgress > progress || this.oldProgress == 0)
+        {
+            this.oldYaw = yaw;
+            this.oldPitch = pitch;
+        }
+
         /* When progress is close to 1.0, the camera starts jagging, so instead
          * of giving the progress to reach its maximum value of 1.0, I decided
          * to limit its maximum to something like 0.5.
          */
-        yaw = this.interpolateYaw(this.lastYaw, yaw, progress / 2);
-        pitch = this.interpolate(this.lastPitch, pitch, progress / 2);
+        yaw = this.interpolateYaw(this.oldYaw, yaw, progress / 2);
+        pitch = this.interpolate(this.oldPitch, pitch, progress / 2);
 
         pos.copy(this.position);
         pos.angle.set(yaw, pitch);
 
-        this.lastYaw = yaw;
-        this.lastPitch = pitch;
+        this.oldYaw = yaw;
+        this.oldPitch = pitch;
+        this.oldProgress = progress;
     }
 
     /**

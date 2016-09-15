@@ -59,7 +59,7 @@ public class SubCommandCameraGoto extends CommandBase
         Point point = pos.point;
         Angle angle = pos.angle;
 
-        profile.get(index).applyFixture(progress, pos);
+        profile.get(index).applyFixture(progress, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
     }
 }

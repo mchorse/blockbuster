@@ -91,7 +91,7 @@ public class ProfileRunner
         }
         else
         {
-            this.profile.applyProfile(progress, this.position);
+            this.profile.applyProfile(progress, event.renderTickTime, this.position);
 
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             Point point = this.position.point;

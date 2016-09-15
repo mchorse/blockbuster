@@ -122,11 +122,8 @@ public abstract class AbstractFixture
 
     /**
      * Apply fixture onto position
-     *
-     * @todo Add interpolation argument for different types of interpolations,
-     *       if this feature would be requested.
      */
-    public abstract void applyFixture(float progress, Position pos);
+    public abstract void applyFixture(float progress, float partialTick, Position pos);
 
     /**
      * Get the type of this fixture

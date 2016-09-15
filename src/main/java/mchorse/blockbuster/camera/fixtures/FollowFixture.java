@@ -15,6 +15,7 @@ public class FollowFixture extends LookFixture
     private float oldX = 0;
     private float oldY = 0;
     private float oldZ = 0;
+    private float oldProgress = 0;
 
     public FollowFixture(long duration)
     {
@@ -42,11 +43,22 @@ public class FollowFixture extends LookFixture
     }
 
     @Override
-    public void applyFixture(float progress, Position pos)
+    public void applyFixture(float progress, float partialTicks, Position pos)
     {
-        float x = (float) (this.entity.posX + this.position.point.x);
-        float y = (float) (this.entity.posY + this.position.point.y);
-        float z = (float) (this.entity.posZ + this.position.point.z);
+        float x = (float) (this.entity.lastTickPosX + (this.entity.posX - this.entity.lastTickPosX) * partialTicks);
+        float y = (float) (this.entity.lastTickPosY + (this.entity.posY - this.entity.lastTickPosY) * partialTicks);
+        float z = (float) (this.entity.lastTickPosZ + (this.entity.posZ - this.entity.lastTickPosZ) * partialTicks);
+
+        x += this.position.point.x;
+        y += this.position.point.y;
+        z += this.position.point.z;
+
+        if (this.oldProgress > progress || this.oldProgress == 0)
+        {
+            this.oldX = x;
+            this.oldY = y;
+            this.oldZ = z;
+        }
 
         x = this.interpolate(this.oldX, x, 0.25F);
         y = this.interpolate(this.oldY, y, 0.25F);
@@ -58,6 +70,7 @@ public class FollowFixture extends LookFixture
         this.oldX = x;
         this.oldY = y;
         this.oldZ = z;
+        this.oldProgress = progress;
     }
 
     private float interpolate(float a, float b, float position)

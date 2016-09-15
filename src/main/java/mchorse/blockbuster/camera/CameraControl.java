@@ -178,7 +178,7 @@ public class CameraControl
         Point point = pos.point;
         Angle angle = pos.angle;
 
-        fixture.applyFixture(0, pos);
+        fixture.applyFixture(0, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
         player.setVelocity(0, 0, 0);
     }

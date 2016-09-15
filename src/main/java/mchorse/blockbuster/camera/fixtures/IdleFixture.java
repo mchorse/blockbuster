@@ -31,7 +31,7 @@ public class IdleFixture extends AbstractFixture
     }
 
     @Override
-    public void applyFixture(float progress, Position pos)
+    public void applyFixture(float progress, float partialTicks, Position pos)
     {
         pos.copy(this.position);
     }

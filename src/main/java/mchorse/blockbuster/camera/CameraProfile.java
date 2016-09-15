@@ -119,7 +119,7 @@ public class CameraProfile
     /**
      * Apply camera profile transformation at given time on passed position
      */
-    public void applyProfile(long progress, Position position)
+    public void applyProfile(long progress, float partialTicks, Position position)
     {
         int index = 0;
 
@@ -140,7 +140,7 @@ public class CameraProfile
 
         AbstractFixture fixture = this.fixtures.get(index);
 
-        fixture.applyFixture(Math.abs((float) progress / (float) fixture.getDuration()), position);
+        fixture.applyFixture(Math.abs((float) progress / (float) fixture.getDuration()), partialTicks, position);
     }
 
     /**
