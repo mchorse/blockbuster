@@ -7,10 +7,13 @@ import mchorse.blockbuster.network.common.director.PacketDirectorMapCast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerDirectorMapCast extends ClientMessageHandler<PacketDirectorMapCast>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketDirectorMapCast message)
     {
         if (Minecraft.getMinecraft().currentScreen == null)

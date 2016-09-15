@@ -25,8 +25,9 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  * - Jabelar's and TGG's minecraft modding tutorials
  * - AnimalBikes and Mocap mods
  * - MinecraftByExample
- * - Ernio for helping with camera attributes sync + sharing with his own
- *   network abstract layer code
+ * - Ernio for helping with camera attributes sync, sharing with his own
+ *   network abstract layer code, and fixing the code so it would work on
+ *   dedicated server
  * - diesieben07 for giving idea for actor skins
  * - Choonster for pointing out that processInteract triggers for each hand
  * - Lightwave for porting some of the code to 1.9.4

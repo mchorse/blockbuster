@@ -13,6 +13,8 @@ import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This handler is responsible for saving received models and skins to
@@ -21,6 +23,7 @@ import net.minecraft.util.text.TextComponentString;
 public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketModels message)
     {
         String path = ClientProxy.config.getAbsolutePath() + "/downloads";

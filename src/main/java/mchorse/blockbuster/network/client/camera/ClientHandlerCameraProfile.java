@@ -6,10 +6,13 @@ import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCameraProfile>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketCameraProfile message)
     {
         CommandCamera.setProfile(message.profile);
