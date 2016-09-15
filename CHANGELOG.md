@@ -17,6 +17,8 @@ Coming soon
 * Added multiplayer support (models and skins can be saved in world saves, and loaded by clients)
 * Added client-side `morph` command that allows player to morph into custom models in multiplayer
 * Added client-side `export-model` command that allows users to export in-game models into JSON format (basic non-optimal export, better than nothing)
+* Fixed crash on dedicated server (previously known to be fixed)
+* Improved look and follow fixtures
 * Updated actor GUI for using custom models
 * Renamed top-level package from `noname` to `mchorse`
 
