@@ -1,6 +1,6 @@
 package mchorse.blockbuster.commands.camera;
 
-import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

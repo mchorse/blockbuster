@@ -2,7 +2,7 @@ package mchorse.blockbuster.commands;
 
 import java.util.List;
 
-import mchorse.blockbuster.tileentity.AbstractTileEntityDirector;
+import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

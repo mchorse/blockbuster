@@ -1,8 +1,8 @@
 package mchorse.blockbuster.capabilities;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;

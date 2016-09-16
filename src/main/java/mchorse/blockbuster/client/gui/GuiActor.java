@@ -3,7 +3,6 @@ package mchorse.blockbuster.client.gui;
 import java.io.IOException;
 import java.util.List;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.client.gui.elements.GuiChildScreen;
 import mchorse.blockbuster.client.gui.elements.GuiCompleterViewer;
@@ -11,7 +10,8 @@ import mchorse.blockbuster.client.gui.elements.GuiParentScreen;
 import mchorse.blockbuster.client.gui.elements.GuiToggle;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import net.minecraft.client.Minecraft;

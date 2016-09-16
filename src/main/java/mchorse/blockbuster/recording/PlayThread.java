@@ -5,7 +5,7 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;

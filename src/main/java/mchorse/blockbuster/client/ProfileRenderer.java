@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.TimeUtils;
@@ -15,6 +13,8 @@ import mchorse.blockbuster.camera.fixtures.FollowFixture;
 import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;

@@ -1,6 +1,6 @@
-package mchorse.blockbuster.item;
+package mchorse.blockbuster.common.item;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.Blockbuster;
 import net.minecraft.item.Item;
 
 /**

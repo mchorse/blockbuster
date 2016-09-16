@@ -1,12 +1,12 @@
-package mchorse.blockbuster.item;
+package mchorse.blockbuster.common.item;
 
 import java.util.List;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraUtils;
+import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
-import mchorse.blockbuster.tileentity.AbstractTileEntityDirector;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

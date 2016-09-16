@@ -1,8 +1,8 @@
-package mchorse.blockbuster.block;
+package mchorse.blockbuster.common.block;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.GuiHandler;
-import mchorse.blockbuster.item.ItemPlayback;
+import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.GuiHandler;
+import mchorse.blockbuster.common.item.ItemPlayback;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -127,14 +127,14 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     /**
-     * Handle item on block activated.
-     *
-     * Used by children classes.
+     * Display director block's cast
      */
-    protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
-    {
-        return this.handlePlaybackItem(item, world, pos, player);
-    }
+    protected abstract void displayCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
+
+    /**
+     * Handle item on block activated.
+     */
+    protected abstract boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player);
 
     /**
      * Attach recording item to current director block
@@ -151,9 +151,4 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
 
         return true;
     }
-
-    /**
-     * Display director block's cast
-     */
-    protected abstract void displayCast(EntityPlayer playerIn, World worldIn, BlockPos pos);
 }

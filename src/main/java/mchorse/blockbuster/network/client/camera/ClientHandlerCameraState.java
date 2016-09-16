@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.camera;
 
-import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import net.minecraft.client.entity.EntityPlayerSP;

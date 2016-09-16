@@ -1,19 +1,19 @@
-package mchorse.blockbuster;
+package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.actor.ModelPack;
-import mchorse.blockbuster.block.BlockDirector;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
-import mchorse.blockbuster.entity.EntityActor;
-import mchorse.blockbuster.item.ItemActorConfig;
-import mchorse.blockbuster.item.ItemPlayback;
-import mchorse.blockbuster.item.ItemRegister;
+import mchorse.blockbuster.common.block.BlockDirector;
+import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.item.ItemActorConfig;
+import mchorse.blockbuster.common.item.ItemPlayback;
+import mchorse.blockbuster.common.item.ItemRegister;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.PlayerEventHandler;
-import mchorse.blockbuster.tileentity.TileEntityDirector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;

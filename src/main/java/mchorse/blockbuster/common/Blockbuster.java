@@ -1,4 +1,4 @@
-package mchorse.blockbuster;
+package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;

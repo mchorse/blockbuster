@@ -13,9 +13,9 @@ import org.apache.commons.io.IOUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.entity.player.EntityPlayer;

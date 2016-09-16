@@ -6,7 +6,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Random;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;

@@ -1,4 +1,4 @@
-package mchorse.blockbuster.entity;
+package mchorse.blockbuster.common.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,19 +7,19 @@ import java.util.List;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.GuiHandler;
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.actor.ModelHandler;
-import mchorse.blockbuster.item.ItemActorConfig;
-import mchorse.blockbuster.item.ItemPlayback;
-import mchorse.blockbuster.item.ItemRegister;
+import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.GuiHandler;
+import mchorse.blockbuster.common.item.ItemActorConfig;
+import mchorse.blockbuster.common.item.ItemPlayback;
+import mchorse.blockbuster.common.item.ItemRegister;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.Mocap;
 import mchorse.blockbuster.recording.actions.Action;
-import mchorse.blockbuster.tileentity.TileEntityDirector;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

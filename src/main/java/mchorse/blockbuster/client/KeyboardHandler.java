@@ -2,7 +2,6 @@ package mchorse.blockbuster.client;
 
 import org.lwjgl.input.Keyboard;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.fixtures.CircularFixture;
@@ -11,6 +10,7 @@ import mchorse.blockbuster.camera.fixtures.IdleFixture;
 import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import net.minecraft.client.Minecraft;

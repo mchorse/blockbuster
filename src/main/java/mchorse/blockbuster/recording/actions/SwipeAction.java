@@ -1,6 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.util.EnumHand;
 
 /**

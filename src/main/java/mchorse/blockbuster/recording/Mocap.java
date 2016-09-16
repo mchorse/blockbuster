@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;

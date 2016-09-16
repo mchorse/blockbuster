@@ -2,13 +2,13 @@ package mchorse.blockbuster.client.render;
 
 import java.util.Map;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
+import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;

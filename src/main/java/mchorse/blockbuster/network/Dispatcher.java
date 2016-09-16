@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerMorph;

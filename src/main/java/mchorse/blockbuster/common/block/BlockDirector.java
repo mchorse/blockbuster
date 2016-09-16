@@ -1,11 +1,11 @@
-package mchorse.blockbuster.block;
+package mchorse.blockbuster.common.block;
 
 import java.util.List;
 
-import mchorse.blockbuster.item.ItemRegister;
+import mchorse.blockbuster.common.item.ItemRegister;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
-import mchorse.blockbuster.tileentity.TileEntityDirector;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -41,9 +41,6 @@ public class BlockDirector extends AbstractBlockDirector
         return this.handlePlaybackItem(item, world, pos, player) || this.handleRegisterItem(item, world, pos, player);
     }
 
-    /**
-     * Attach an entity (actor) to director block
-     */
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
         if (!(item.getItem() instanceof ItemRegister))
@@ -69,9 +66,6 @@ public class BlockDirector extends AbstractBlockDirector
         Dispatcher.sendTo(new PacketDirectorCast(tile.getPos(), tile.actors), (EntityPlayerMP) player);
     }
 
-    /**
-     * Create tile entity
-     */
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {

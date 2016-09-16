@@ -7,7 +7,7 @@ import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.recording.Mocap;

@@ -10,7 +10,7 @@ import mchorse.blockbuster.recording.Mocap;
  * Chat action
  *
  * Sends chat message with some formatting.
- * See {@link ChatAction#apply(mchorse.blockbuster.entity.EntityActor)} for more
+ * See {@link ChatAction#apply(mchorse.blockbuster.common.entity.EntityActor)} for more
  * information.
  */
 public class ChatAction extends Action
@@ -32,7 +32,7 @@ public class ChatAction extends Action
     }
 
     @Override
-    public void apply(mchorse.blockbuster.entity.EntityActor actor)
+    public void apply(mchorse.blockbuster.common.entity.EntityActor actor)
     {
         Mocap.broadcastMessage(this.message.replace('[', '§'));
     }

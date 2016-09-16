@@ -1,10 +1,10 @@
-package mchorse.blockbuster.tileentity;
+package mchorse.blockbuster.common.tileentity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.Mocap;
 import net.minecraft.entity.Entity;
 

@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.server;
 
-import mchorse.blockbuster.item.ItemPlayback;
+import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.common.PacketPlayback;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

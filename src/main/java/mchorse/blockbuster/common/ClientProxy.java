@@ -1,4 +1,4 @@
-package mchorse.blockbuster;
+package mchorse.blockbuster.common;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -20,7 +20,7 @@ import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandExportModel;
 import mchorse.blockbuster.commands.CommandMorph;
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

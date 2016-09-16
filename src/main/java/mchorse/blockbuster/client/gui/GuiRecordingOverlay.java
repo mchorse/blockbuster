@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.gui;
 
-import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.Blockbuster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;

@@ -1,9 +1,9 @@
-package mchorse.blockbuster;
+package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.GuiPlayback;
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

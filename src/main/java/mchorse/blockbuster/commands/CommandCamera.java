@@ -1,6 +1,5 @@
 package mchorse.blockbuster.commands;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.commands.camera.SubCommandCameraClear;
@@ -16,6 +15,7 @@ import mchorse.blockbuster.commands.fixture.SubCommandFixtureEdit;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureMove;
 import mchorse.blockbuster.commands.fixture.SubCommandFixturePath;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureRemove;
+import mchorse.blockbuster.common.ClientProxy;
 
 /**
  * Camera /command

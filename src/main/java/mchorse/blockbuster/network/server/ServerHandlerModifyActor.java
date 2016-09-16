@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.server;
 
-import mchorse.blockbuster.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
