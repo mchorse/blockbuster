@@ -91,6 +91,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public boolean renderName = true;
 
     /**
+     * This field is needed to make actors invisible. This is helpful for
+     * scenes with different characters, which isn't needed to be seen.
+     */
+    public boolean invisible = false;
+
+    /**
      * Fake player used in some of methods like onBlockActivated to avoid
      * NullPointerException
      */
@@ -512,6 +518,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.model = tag.getString("Model");
         this.filename = tag.getString("Filename");
         this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
+        this.invisible = tag.getBoolean("Invisible");
 
         if ((!skin.equals(this.skin) || !model.equals(this.model)) && !this.worldObj.isRemote)
         {
@@ -543,6 +550,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             ItemPlayback.saveBlockPos("Dir", tag, this.directorBlock);
         }
+
+        tag.setBoolean("Invisible", this.invisible);
     }
 
     /* IEntityAdditionalSpawnData implementation */
@@ -553,6 +562,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         ByteBufUtils.writeUTF8String(buffer, this.filename);
         ByteBufUtils.writeUTF8String(buffer, this.skin);
         ByteBufUtils.writeUTF8String(buffer, this.model);
+        buffer.writeBoolean(this.invisible);
 
         /* What a shame, Mojang, why do I need to synchronize your shit?! */
         buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.anvil));
@@ -564,6 +574,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.filename = ByteBufUtils.readUTF8String(buffer);
         this.skin = ByteBufUtils.readUTF8String(buffer);
         this.model = ByteBufUtils.readUTF8String(buffer);
+        this.invisible = buffer.readBoolean();
 
         this.setEntityInvulnerable(buffer.readBoolean());
     }

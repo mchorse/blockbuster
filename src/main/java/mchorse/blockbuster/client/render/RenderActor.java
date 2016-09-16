@@ -94,6 +94,11 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        if (entity.invisible)
+        {
+            return;
+        }
+
         this.setupModel(entity);
 
         if (!entity.renderName)
