@@ -2,7 +2,6 @@ package mchorse.blockbuster;
 
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
-import mchorse.blockbuster.client.gui.GuiDirectorMap;
 import mchorse.blockbuster.client.gui.GuiPlayback;
 import mchorse.blockbuster.entity.EntityActor;
 import net.minecraft.entity.Entity;
@@ -21,7 +20,6 @@ public class GuiHandler implements IGuiHandler
     public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
-    public static final int DIRECTOR_MAP = 3;
 
     /**
      * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
@@ -56,10 +54,6 @@ public class GuiHandler implements IGuiHandler
         else if (ID == DIRECTOR)
         {
             return new GuiDirector(new BlockPos(x, y, z));
-        }
-        else if (ID == DIRECTOR_MAP)
-        {
-            return new GuiDirectorMap(new BlockPos(x, y, z));
         }
 
         return null;

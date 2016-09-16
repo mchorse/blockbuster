@@ -14,7 +14,6 @@ import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -123,12 +122,6 @@ public class GuiActor extends GuiChildScreen
         if (this.pos == null)
         {
             Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, model, invulnerability));
-        }
-        else
-        {
-            this.actor.modify(filename, name, skin, model, invulnerability, false);
-
-            Dispatcher.sendToServer(new PacketDirectorMapEdit(this.pos, this.id, this.actor.toReplayString()));
         }
 
         this.close();

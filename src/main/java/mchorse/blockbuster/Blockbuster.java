@@ -48,7 +48,6 @@ public class Blockbuster
 
     /* Blocks */
     public static Block directorBlock;
-    public static Block directorBlockMap;
 
     /* Creative tabs */
     public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbuster")

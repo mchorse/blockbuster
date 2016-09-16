@@ -7,7 +7,6 @@ blockbuster.no=No
 # Item tool tips
 
 blockbuster.info.director=Use it for §omachinimas
-blockbuster.info.director_map=Use it for §oadventure maps
 
 blockbuster.info.playback_director=Attached to (§r%d§7, §r%d§7, §r%d§7)
 blockbuster.info.playback_profile=Plays profile "§f§o%s§r§7"
@@ -18,7 +17,6 @@ blockbuster.info.playback_play=Plays camera
 itemGroup.blockbuster=Blockbuster
 
 tile.blockbuster.director.name=Director block
-tile.blockbuster.director_map.name=Director map block
 
 item.blockbuster.playback.name=Playback button
 item.blockbuster.register.name=Registering device
@@ -110,11 +108,6 @@ blockbuster.director.was_registered=This actor was successfully attached to dire
 
 blockbuster.director.attached_device=This registering device was successfully attached to director block!
 blockbuster.director.missing=The director block, that was attached to this device at (%s, %s, %s), was destroyed or moved. Attach this device to another director block!
-
-# Director map block
-
-blockbuster.director_map.title=Director Map Block's Cast
-blockbuster.director_map.no_cast=No registered replays!
 
 # Actor
 

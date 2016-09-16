@@ -3,7 +3,6 @@ package mchorse.blockbuster;
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.block.BlockDirector;
-import mchorse.blockbuster.block.BlockDirectorMap;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
@@ -15,7 +14,6 @@ import mchorse.blockbuster.item.ItemRegister;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.PlayerEventHandler;
 import mchorse.blockbuster.tileentity.TileEntityDirector;
-import mchorse.blockbuster.tileentity.TileEntityDirectorMap;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -54,14 +52,12 @@ public class CommonProxy
 
         /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
-        this.registerBlock(Blockbuster.directorBlockMap = new BlockDirectorMap());
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
-        GameRegistry.registerTileEntity(TileEntityDirectorMap.class, "blockbuster_director_map_tile_entity");
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);

@@ -10,7 +10,6 @@ import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraState;
 import mchorse.blockbuster.network.client.camera.ClientHandlerListCameraProfiles;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
-import mchorse.blockbuster.network.client.director.ClientHandlerDirectorMapCast;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -24,11 +23,6 @@ import mchorse.blockbuster.network.common.camera.PacketListCameraProfiles;
 import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketRequestCameraProfiles;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapAdd;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapCast;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapEdit;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapRemove;
-import mchorse.blockbuster.network.common.director.PacketDirectorMapReset;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
@@ -39,10 +33,6 @@ import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
 import mchorse.blockbuster.network.server.camera.ServerHandlerLoadCameraProfile;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorMapAdd;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorMapEdit;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorMapRemove;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorMapReset;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorReset;
@@ -110,14 +100,6 @@ public class Dispatcher
         register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
         register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
-
-        /* Director block map management messages */
-        register(PacketDirectorMapCast.class, ClientHandlerDirectorMapCast.class, Side.CLIENT);
-
-        register(PacketDirectorMapAdd.class, ServerHandlerDirectorMapAdd.class, Side.SERVER);
-        register(PacketDirectorMapEdit.class, ServerHandlerDirectorMapEdit.class, Side.SERVER);
-        register(PacketDirectorMapReset.class, ServerHandlerDirectorMapReset.class, Side.SERVER);
-        register(PacketDirectorMapRemove.class, ServerHandlerDirectorMapRemove.class, Side.SERVER);
 
         /* Camera management */
         register(PacketCameraProfile.class, ClientHandlerCameraProfile.class, Side.CLIENT);
