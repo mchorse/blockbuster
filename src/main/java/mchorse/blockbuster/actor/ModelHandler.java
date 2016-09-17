@@ -191,7 +191,12 @@ public class ModelHandler
         IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
         Model data = this.models.get(cap.getModel());
 
-        if (data == null) return;
+        if (data == null)
+        {
+            /* Restore default eye height */
+            player.eyeHeight = player.getDefaultEyeHeight();
+            return;
+        }
 
         String key = player.isElytraFlying() ? "flying" : (player.isSneaking() ? "sneaking" : "standing");
 
