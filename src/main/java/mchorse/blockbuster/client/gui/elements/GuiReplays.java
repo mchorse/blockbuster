@@ -86,11 +86,12 @@ public class GuiReplays extends GuiScrollPane
 
         if (!this.entries.isEmpty() && index >= 0 && index < this.entries.size())
         {
-            this.parent.setSelected(this.entries.get(index).replay);
+            this.parent.setSelected(this.entries.get(index).replay, index);
             this.selected = index;
         }
         else
         {
+            this.parent.setSelected(null, -1);
             this.selected = -1;
         }
     }
@@ -106,7 +107,7 @@ public class GuiReplays extends GuiScrollPane
     {
         if (this.entries.size() == 0)
         {
-            this.drawCenteredString(this.fontRendererObj, this.noCast, this.w / 2, this.y + 8, 0xffffffff);
+            this.fontRendererObj.drawStringWithShadow(this.noCast, this.x + 2, this.y + 8, 0xffcccccc);
             return;
         }
 

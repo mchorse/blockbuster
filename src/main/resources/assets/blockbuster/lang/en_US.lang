@@ -83,7 +83,8 @@ blockbuster.gui.actor.name=Name
 blockbuster.gui.actor.model=Custom Model
 blockbuster.gui.actor.filename=Recording ID
 blockbuster.gui.actor.skin=Skin
-blockbuster.gui.actor.invulnerability=Can be killed?
+blockbuster.gui.actor.invincible=Can be killed?
+blockbuster.gui.actor.invisible=Is visible?
 
 # Playback GUI
 

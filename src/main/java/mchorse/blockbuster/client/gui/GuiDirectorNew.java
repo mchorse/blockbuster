@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import mchorse.blockbuster.client.gui.elements.GuiReplay;
 import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
@@ -33,15 +34,22 @@ public class GuiDirectorNew extends GuiScreen
     private GuiButton done;
     private GuiButton reset;
 
-    private GuiTextField replay;
+    private GuiTextField replayName;
     private GuiReplays replays;
+    private GuiReplay replay;
+
+    private Replay previous;
 
     public GuiDirectorNew(BlockPos pos)
     {
         this.pos = pos;
         this.replays = new GuiReplays(this);
+        this.replay = new GuiReplay(pos);
     }
 
+    /**
+     * This method is invoked by one of the client handlers, I guess
+     */
     public void setCast(List<Replay> replays)
     {
         this.replays.setCast(replays);
@@ -54,11 +62,19 @@ public class GuiDirectorNew extends GuiScreen
     {
         if (button.id == 0)
         {
+            if (this.previous != null)
+            {
+                this.replay.save();
+            }
+
             Minecraft.getMinecraft().displayGuiScreen(null);
         }
         else if (button.id == 1)
         {
             Dispatcher.sendToServer(new PacketDirectorReset(this.pos));
+
+            this.previous = null;
+            this.replay.select(null, -1);
         }
     }
 
@@ -68,6 +84,15 @@ public class GuiDirectorNew extends GuiScreen
         super.handleMouseInput();
 
         this.replays.handleMouseInput();
+        this.replay.handleMouseInput();
+    }
+
+    @Override
+    public void handleKeyboardInput() throws IOException
+    {
+        super.handleKeyboardInput();
+
+        this.replay.handleKeyboardInput();
     }
 
     @Override
@@ -75,7 +100,7 @@ public class GuiDirectorNew extends GuiScreen
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        this.replay.mouseClicked(mouseX, mouseY, mouseButton);
+        this.replayName.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -83,9 +108,9 @@ public class GuiDirectorNew extends GuiScreen
     {
         super.keyTyped(typedChar, keyCode);
 
-        this.replay.textboxKeyTyped(typedChar, keyCode);
+        this.replayName.textboxKeyTyped(typedChar, keyCode);
 
-        if (keyCode == Keyboard.KEY_RETURN && this.replay.isFocused())
+        if (keyCode == Keyboard.KEY_RETURN && this.replayName.isFocused())
         {
             this.addReplay();
         }
@@ -93,9 +118,8 @@ public class GuiDirectorNew extends GuiScreen
 
     private void addReplay()
     {
-        Dispatcher.sendToServer(new PacketDirectorAdd(this.pos, this.replay.getText()));
-
-        this.replay.setText("");
+        Dispatcher.sendToServer(new PacketDirectorAdd(this.pos, this.replayName.getText()));
+        this.replayName.setText("");
     }
 
     /* Initiate GUI */
@@ -103,8 +127,8 @@ public class GuiDirectorNew extends GuiScreen
     @Override
     public void initGui()
     {
-        int x = 6;
-        int y = 6;
+        int x = 8;
+        int y = 8;
         int w = 120 - x * 2;
         int h = 20;
 
@@ -112,20 +136,23 @@ public class GuiDirectorNew extends GuiScreen
         this.done = new GuiButton(0, this.width - 80 - x, this.height - y - h, 80, h, "Done");
         this.reset = new GuiButton(1, x, this.height - y - h, w, h, "Reset");
 
-        this.replay = new GuiTextField(20, this.fontRendererObj, x + 1, y + 21, w - 2, h - 2);
+        this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
 
         /* Adding GUI elements */
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.replays.updateRect(x, y + 40, w, (this.height - y * 2 - h - 40));
+        this.replays.updateRect(x, y + 35, w, (this.height - y * 2 - h - 35));
+        this.replay.initGui();
     }
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc, width, height);
+
         this.replays.setWorldAndResolution(mc, width, height);
+        this.replay.setWorldAndResolution(mc, width, height);
     }
 
     /* Drawing */
@@ -139,18 +166,24 @@ public class GuiDirectorNew extends GuiScreen
         this.drawGradientRect(0, 0, 120, this.height, -1072689136, -804253680);
 
         /* Title */
-        this.fontRendererObj.drawString("Director Block", 6, 6, 0xffffffff);
+        this.fontRendererObj.drawString("Director Block", 8, 8, 0xffffffff);
 
         /* Draw GUI fields */
-        this.replay.drawTextBox();
+        this.replayName.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.replays.drawScreen(mouseX, mouseY, partialTicks);
+        this.replay.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    public void setSelected(Replay replay)
+    public void setSelected(Replay replay, int index)
     {
-        /* Sup! */
-        System.out.println(replay);
+        if (this.previous != null)
+        {
+            this.replay.save();
+        }
+
+        this.replay.select(replay, index);
+        this.previous = replay;
     }
 }
