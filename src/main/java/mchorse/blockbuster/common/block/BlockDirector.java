@@ -63,7 +63,7 @@ public class BlockDirector extends AbstractBlockDirector
     protected void displayCast(EntityPlayer player, World worldIn, BlockPos pos)
     {
         TileEntityDirector tile = (TileEntityDirector) worldIn.getTileEntity(pos);
-        Dispatcher.sendTo(new PacketDirectorCast(tile.getPos(), tile.actors), (EntityPlayerMP) player);
+        Dispatcher.sendTo(new PacketDirectorCast(tile.getPos(), tile.replays), (EntityPlayerMP) player);
     }
 
     @Override

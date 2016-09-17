@@ -5,11 +5,10 @@ import java.util.List;
 
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.recording.Mocap;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +23,7 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
-    public List<String> actors = new ArrayList<String>();
+    public List<Replay> replays = new ArrayList<Replay>();
 
     /**
      * This tick used for checking if actors still playing
@@ -43,14 +42,16 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        this.readListFromNBT(compound, "Actors", this.actors);
+        this.readListFromNBT(compound, "Actors", this.replays);
+
+        System.out.println(this.replays);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        this.saveListToNBT(compound, "Actors", this.actors);
+        this.saveListToNBT(compound, "Actors", this.replays);
 
         return compound;
     }
@@ -58,29 +59,35 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     /* NBT list utils */
 
     /**
-     * Read string typed list from NBT
+     * Read replay typed list from NBT
      */
-    protected void readListFromNBT(NBTTagCompound compound, String key, List<String> list)
+    protected void readListFromNBT(NBTTagCompound compound, String key, List<Replay> list)
     {
-        NBTTagList tagList = compound.getTagList(key, 8);
+        NBTTagList tagList = compound.getTagList(key, 10);
         list.clear();
 
         for (int i = 0; i < tagList.tagCount(); i++)
         {
-            list.add(tagList.getStringTagAt(i));
+            Replay replay = new Replay();
+
+            replay.fromNBT(tagList.getCompoundTagAt(i));
+            list.add(replay);
         }
     }
 
     /**
-     * Write string typed list from NBT
+     * Write replay typed list from NBT
      */
-    protected void saveListToNBT(NBTTagCompound compound, String key, List<String> list)
+    protected void saveListToNBT(NBTTagCompound compound, String key, List<Replay> list)
     {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < list.size(); i++)
         {
-            tagList.appendTag(new NBTTagString(list.get(i)));
+            NBTTagCompound tag = new NBTTagCompound();
+
+            list.get(i).toNBT(tag);
+            tagList.appendTag(tag);
         }
 
         compound.setTag(key, tagList);
@@ -93,16 +100,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public void reset()
     {
-        this.actors = new ArrayList<String>();
-        this.markDirty();
-    }
-
-    /**
-     * Remove an actor by id.
-     */
-    public void remove(int id)
-    {
-        this.actors.remove(id);
+        this.replays = new ArrayList<Replay>();
         this.markDirty();
     }
 
@@ -114,11 +112,13 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         String id = actor.getUniqueID().toString();
 
-        if (!this.actors.contains(id))
+        if (!this.replays.contains(id))
         {
+            Replay replay = new Replay(actor);
+
             actor.directorBlock = this.getPos();
 
-            this.actors.add(id);
+            this.replays.add(replay);
             this.markDirty();
 
             return true;
@@ -128,13 +128,32 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     /**
+     * Edit a replay, find similar from given old replay and change it to a
+     * new value.
+     */
+    public void edit(int index, Replay replay)
+    {
+        this.replays.set(index, replay);
+        this.markDirty();
+    }
+
+    /**
+     * Remove an actor by id.
+     */
+    public void remove(int id)
+    {
+        this.replays.remove(id);
+        this.markDirty();
+    }
+
+    /**
      * Get the cast
      *
      * Basically, return all entities/entity ids for display
      */
-    public List<String> getCast()
+    public List<Replay> getCast()
     {
-        return this.actors;
+        return this.replays;
     }
 
     /**
@@ -184,25 +203,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      * Does what it says to do – checking if the actors still playing their
      * roles (not finished playback).
      */
-    protected void areActorsStillPlaying()
-    {
-        int count = 0;
-
-        for (String id : this.actors)
-        {
-            EntityActor actor = (EntityActor) Mocap.entityByUUID(this.worldObj, id);
-
-            if (!Mocap.playbacks.containsKey(actor))
-            {
-                count++;
-            }
-        }
-
-        if (count == this.actors.size())
-        {
-            this.playBlock(false);
-        }
-    }
+    protected abstract void areActorsStillPlaying();
 
     /**
      * Set the state of the block playing (needed to update redstone thingy-stuff)

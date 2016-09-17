@@ -17,13 +17,11 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.Mocap;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -391,7 +389,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
-    public void startPlaying()
+    public void startPlaying(String filename)
     {
         if (Mocap.playbacks.containsKey(this))
         {
@@ -399,13 +397,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        if (this.filename.isEmpty())
+        if (filename.isEmpty())
         {
             Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
         }
         else
         {
-            Mocap.startPlayback(this.filename, this, false);
+            Mocap.startPlayback(filename, this, false);
         }
     }
 
@@ -428,33 +426,25 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     private void startRecording(EntityPlayer player)
     {
-        if (this.filename.isEmpty())
-        {
-            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
-            return;
-        }
+        if (this.directorBlock == null) return;
 
-        if (this.directorBlock != null)
-        {
-            TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
+        TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
 
-            if (tile != null && tile instanceof TileEntityDirector)
+        if (tile != null && tile instanceof TileEntityDirector)
+        {
+            TileEntityDirector director = (TileEntityDirector) tile;
+
+            if (!Mocap.records.containsKey(player))
             {
-                TileEntityDirector director = (TileEntityDirector) tile;
-
-                if (!Mocap.records.containsKey(player))
-                {
-                    director.startPlayback(this);
-                }
-                else
-                {
-                    director.stopPlayback(this);
-                }
+                director.startPlayback(this);
             }
-        }
+            else
+            {
+                director.stopPlayback(this);
+            }
 
-        Dispatcher.sendTo(new PacketMorph(this.model, this.skin), (EntityPlayerMP) player);
-        Mocap.startRecording(this.filename, player);
+            director.startRecording(this, player);
+        }
     }
 
     /**

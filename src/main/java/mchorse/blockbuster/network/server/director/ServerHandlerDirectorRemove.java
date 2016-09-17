@@ -18,6 +18,6 @@ public class ServerHandlerDirectorRemove extends ServerMessageHandler<PacketDire
         TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
 
         tile.remove(message.id);
-        Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.actors), player);
+        Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);
     }
 }

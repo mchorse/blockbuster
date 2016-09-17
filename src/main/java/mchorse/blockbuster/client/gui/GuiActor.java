@@ -12,8 +12,10 @@ import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -42,8 +44,9 @@ public class GuiActor extends GuiChildScreen
 
     /* Domain objects, they're provide data */
     private EntityActor actor;
+    private Replay replay;
     private BlockPos pos;
-    private int id;
+    private int index;
 
     private ModelPack pack;
     private List<String> skins;
@@ -64,11 +67,13 @@ public class GuiActor extends GuiChildScreen
     /**
      * Constructor for director map block
      */
-    public GuiActor(GuiParentScreen parent, EntityActor actor, BlockPos pos, int id)
+    public GuiActor(GuiParentScreen parent, Replay replay, BlockPos pos, int index)
     {
-        this(parent, actor);
+        this(parent, new EntityActor(Minecraft.getMinecraft().theWorld));
+
+        this.replay = replay;
         this.pos = pos;
-        this.id = id;
+        this.index = index;
     }
 
     /**
@@ -96,6 +101,7 @@ public class GuiActor extends GuiChildScreen
         }
         else if (button.id == 3)
         {
+            this.model.setText("");
             this.skin.setText("");
         }
         else if (button.id == 4)
@@ -123,6 +129,21 @@ public class GuiActor extends GuiChildScreen
         {
             Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, model, invulnerability));
         }
+        else
+        {
+            Replay value = new Replay();
+            value.id = filename;
+            value.name = name;
+            value.invincible = invulnerability;
+
+            value.model = model;
+            value.skin = skin;
+            value.invisible = this.replay.invisible;
+
+            value.actor = this.replay.actor;
+
+            Dispatcher.sendToServer(new PacketDirectorEdit(this.pos, value, this.index));
+        }
 
         this.close();
     }
@@ -133,7 +154,6 @@ public class GuiActor extends GuiChildScreen
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc, width, height);
-
         this.skinViewer.setWorldAndResolution(mc, width, height);
     }
 
@@ -237,14 +257,7 @@ public class GuiActor extends GuiChildScreen
         this.restore = new GuiButton(3, x, y2, w, 20, I18n.format("blockbuster.gui.restore"));
 
         /* And then, we're configuring them and injecting input data */
-        this.model.setText(this.actor.model);
-        this.skin.setText(this.actor.skin);
-
-        this.name.setText(this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "");
-        this.name.setMaxStringLength(30);
-        this.filename.setText(this.actor.filename);
-        this.filename.setMaxStringLength(40);
-        this.invincibility.setValue(this.actor.isEntityInvulnerable(DamageSource.anvil));
+        this.fillData();
 
         this.buttonList.add(this.done);
         this.buttonList.add(this.restore);
@@ -257,6 +270,21 @@ public class GuiActor extends GuiChildScreen
         this.skinViewer = new GuiCompleterViewer(this.completer);
         this.skinViewer.updateRect(x, y + 60 - 1, w, 100);
         this.skinViewer.setHidden(true);
+    }
+
+    private void fillData()
+    {
+        boolean flag = this.replay == null;
+
+        this.model.setText(flag ? this.actor.model : this.replay.model);
+        this.skin.setText(flag ? this.actor.skin : this.replay.skin);
+
+        this.name.setText(flag ? (this.actor.hasCustomName() ? this.actor.getCustomNameTag() : "") : this.replay.name);
+        this.filename.setText(flag ? this.actor.filename : this.replay.id);
+        this.invincibility.setValue(flag ? this.actor.isEntityInvulnerable(DamageSource.anvil) : this.replay.invincible);
+
+        this.name.setMaxStringLength(30);
+        this.filename.setMaxStringLength(40);
     }
 
     @Override

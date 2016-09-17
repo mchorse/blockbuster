@@ -5,6 +5,7 @@ import java.util.List;
 
 import mchorse.blockbuster.client.gui.elements.GuiCast;
 import mchorse.blockbuster.client.gui.elements.GuiParentScreen;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
@@ -39,7 +40,7 @@ public class GuiDirector extends GuiParentScreen
         this.cast = new GuiCast(this, pos);
     }
 
-    public void setCast(List<String> actors)
+    public void setCast(List<Replay> actors)
     {
         this.cast.setCast(actors);
     }

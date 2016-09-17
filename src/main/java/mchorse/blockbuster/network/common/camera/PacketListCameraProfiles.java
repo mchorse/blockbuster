@@ -22,12 +22,12 @@ public class PacketListCameraProfiles implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        PacketDirector.listFromBytes(buf, this.profiles);
+        PacketDirector.replaysFromBytes(buf, this.profiles);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        PacketDirector.listToBytes(buf, this.profiles);
+        PacketDirector.replaysToBytes(buf, this.profiles);
     }
 }

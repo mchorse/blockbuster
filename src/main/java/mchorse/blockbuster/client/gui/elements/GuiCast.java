@@ -7,18 +7,14 @@ import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
-import mchorse.blockbuster.recording.Mocap;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -68,16 +64,14 @@ public class GuiCast extends GuiScrollPane
     /**
      * Compile entries out of passed actors UUIDs
      */
-    public void setCast(List<String> actors)
+    public void setCast(List<Replay> actors)
     {
-        World world = Minecraft.getMinecraft().theWorld;
-
         this.scrollY = 0;
         this.scrollHeight = actors.size() * 24;
         this.entries.clear();
 
         for (int i = 0; i < actors.size(); i++)
-            this.addEntry(i, Mocap.entityByUUID(world, actors.get(i)));
+            this.addEntry(i, actors.get(i));
 
         this.entries.sort(ALPHA);
         this.buttonList.clear();
@@ -87,12 +81,9 @@ public class GuiCast extends GuiScrollPane
     /**
      * Add entry to the entry list
      */
-    private void addEntry(int index, Entity entity)
+    private void addEntry(int index, Replay replay)
     {
-        int id = entity != null ? entity.getEntityId() : -1;
-        String name = entity != null ? entity.getName() : "Actor";
-
-        this.entries.add(new Entry(id, index, name, entity == null));
+        this.entries.add(new Entry(index, replay));
     }
 
     /* Handling */
@@ -118,11 +109,9 @@ public class GuiCast extends GuiScrollPane
         {
             Dispatcher.sendToServer(new PacketDirectorRemove(this.pos, entry.index));
         }
-        else if (buttonIn.id == 1 && !entry.outOfReach)
+        else if (buttonIn.id == 1)
         {
-            Entity entity = this.mc.theWorld.getEntityByID(entry.id);
-
-            this.mc.displayGuiScreen(new GuiActor(this.parent, (EntityActor) entity));
+            this.mc.displayGuiScreen(new GuiActor(this.parent, entry.replay, this.pos, entry.index));
         }
     }
 
@@ -175,13 +164,6 @@ public class GuiCast extends GuiScrollPane
 
             /* Icon of the entry */
             this.drawTexturedModalRect(x - 20, y + 4, 16, 0, 16, 16);
-
-            /* X over the actor icon */
-            if (entry.outOfReach)
-            {
-                this.drawTexturedModalRect(x - 20, y + 4, 48, 0, 16, 16);
-            }
-
             this.fontRendererObj.drawStringWithShadow(entry.name, x, y + 8, 0xffffffff);
 
             /* Border under the row */
@@ -199,17 +181,27 @@ public class GuiCast extends GuiScrollPane
      */
     static class Entry
     {
-        public int id;
         public int index;
         public String name;
-        public boolean outOfReach;
+        public Replay replay;
 
-        public Entry(int id, int index, String name, boolean outOfReach)
+        public Entry(int index, Replay replay)
         {
-            this.id = id;
             this.index = index;
-            this.name = name;
-            this.outOfReach = outOfReach;
+            this.replay = replay;
+
+            if (!replay.name.isEmpty())
+            {
+                this.name = replay.name;
+            }
+            else if (!replay.id.isEmpty())
+            {
+                this.name = replay.id;
+            }
+            else
+            {
+                this.name = "Actor";
+            }
         }
     }
 }

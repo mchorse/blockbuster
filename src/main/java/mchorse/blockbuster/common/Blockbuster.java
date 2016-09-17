@@ -63,7 +63,7 @@ public class Blockbuster
     @Mod.Instance
     public static Blockbuster instance;
 
-    @SidedProxy(clientSide = "mchorse.blockbuster.ClientProxy", serverSide = "mchorse.blockbuster.CommonProxy")
+    @SidedProxy(clientSide = "mchorse.blockbuster.common.ClientProxy", serverSide = "mchorse.blockbuster.common.CommonProxy")
     public static CommonProxy proxy;
 
     /**

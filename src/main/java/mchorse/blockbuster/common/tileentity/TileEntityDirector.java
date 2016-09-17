@@ -1,12 +1,15 @@
 package mchorse.blockbuster.common.tileentity;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.Mocap;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Director tile entity
@@ -17,6 +20,8 @@ import net.minecraft.entity.Entity;
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
+    private Map<Replay, EntityActor> actors = new HashMap<Replay, EntityActor>();
+
     /* Public API */
 
     /**
@@ -39,14 +44,45 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             return;
         }
 
-        this.removeUnusedEntities(this.actors);
+        this.collectActors();
 
-        for (EntityActor actor : this.getActors(exception))
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
-            actor.startPlaying();
+            Replay replay = entry.getKey();
+            EntityActor actor = entry.getValue();
+
+            if (actor == exception) continue;
+
+            actor.startPlaying(replay.id);
         }
 
         this.playBlock(true);
+    }
+
+    private void collectActors()
+    {
+        this.actors.clear();
+
+        for (Replay replay : this.replays)
+        {
+            EntityActor actor;
+
+            if (replay.actor != null)
+            {
+                actor = (EntityActor) Mocap.entityByUUID(this.worldObj, replay.actor);
+            }
+            else
+            {
+                actor = new EntityActor(this.worldObj);
+                this.worldObj.spawnEntityInWorld(actor);
+            }
+
+            if (actor == null) continue;
+
+            replay.apply(actor);
+            actor.notifyPlayers();
+            this.actors.put(replay, actor);
+        }
     }
 
     /**
@@ -68,52 +104,55 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             return;
         }
 
-        for (EntityActor actor : this.getActors(exception))
+        for (EntityActor actor : this.actors.values())
         {
+            if (actor == exception) continue;
+
             actor.stopPlaying();
         }
 
+        this.actors.clear();
         this.playBlock(false);
     }
 
     /**
-     * Remove unused entitites
+     * Checks if are actors are still playing. This method gets invoked from
+     * abstract parent in the tick method.
      */
-    protected void removeUnusedEntities(List<String> list)
+    @Override
+    protected void areActorsStillPlaying()
     {
-        Iterator<String> iterator = list.iterator();
+        int count = 0;
 
-        while (iterator.hasNext())
+        for (EntityActor actor : this.actors.values())
         {
-            String id = iterator.next();
-            Entity entity = Mocap.entityByUUID(this.worldObj, id);
+            if (!Mocap.playbacks.containsKey(actor)) count++;
+        }
 
-            if (entity == null)
-            {
-                iterator.remove();
-            }
+        if (count == this.replays.size())
+        {
+            this.playBlock(false);
         }
     }
 
-    /**
-     * Get all actors
-     */
-    public List<EntityActor> getActors(EntityActor exception)
+    public void startRecording(EntityActor actor, EntityPlayer player)
     {
-        List<EntityActor> actors = new ArrayList<EntityActor>();
+        Replay replay = this.byActor(actor);
 
-        for (String id : this.actors)
+        if (replay != null)
         {
-            EntityActor actor = (EntityActor) Mocap.entityByUUID(this.worldObj, id);
+            Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
+            Mocap.startRecording(replay.id, player);
+        }
+    }
 
-            if (actor == null || actor == exception)
-            {
-                continue;
-            }
-
-            actors.add(actor);
+    private Replay byActor(EntityActor actor)
+    {
+        for (Replay replay : this.replays)
+        {
+            if (replay.actor.equals(actor.getUniqueID())) return replay;
         }
 
-        return actors;
+        return null;
     }
 }
