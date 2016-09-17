@@ -22,6 +22,14 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 {
     private Map<Replay, EntityActor> actors = new HashMap<Replay, EntityActor>();
 
+    public void add(String id)
+    {
+        Replay replay = new Replay();
+        replay.id = id;
+
+        this.replays.add(replay);
+    }
+
     /* Public API */
 
     /**

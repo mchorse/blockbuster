@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.client.director;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
+import mchorse.blockbuster.client.gui.GuiDirectorNew;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
@@ -30,6 +31,10 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
         if (screen instanceof GuiDirector)
         {
             ((GuiDirector) screen).setCast(message.actors);
+        }
+        else if (screen instanceof GuiDirectorNew)
+        {
+            ((GuiDirectorNew) screen).setCast(message.actors);
         }
     }
 }
