@@ -33,7 +33,7 @@ public abstract class PacketDirector implements IMessage
         buf.writeInt(this.pos.getZ());
     }
 
-    public static void replaysFromBytes(ByteBuf buf, List<String> list)
+    public static void listFromBytes(ByteBuf buf, List<String> list)
     {
         int count = buf.readInt();
 
@@ -43,7 +43,7 @@ public abstract class PacketDirector implements IMessage
         }
     }
 
-    public static void replaysToBytes(ByteBuf buf, List<String> list)
+    public static void listToBytes(ByteBuf buf, List<String> list)
     {
         buf.writeInt(list.size());
 
