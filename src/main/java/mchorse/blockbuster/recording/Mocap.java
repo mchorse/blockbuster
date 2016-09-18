@@ -168,14 +168,15 @@ public class Mocap
     {
         EntityActor actor = null;
 
-        String filename = args.length >= 1 ? args[0] : "";
         String name = args.length >= 2 ? args[1] : "";
         String skin = args.length >= 3 ? args[2] : "";
         String model = args.length >= 4 ? args[3] : "alex";
-        boolean isInvulnerable = args.length >= 5 && args[4].equals("1");
+        boolean invincible = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(filename, name, skin, model, isInvulnerable, true);
+        actor.modify(model, skin, true, true);
+        actor.setEntityInvulnerable(invincible);
+        actor.setCustomNameTag(name);
 
         return actor;
     }
@@ -187,7 +188,7 @@ public class Mocap
     {
         EntityActor actor = actorFromArgs(args, world);
 
-        startPlayback(actor.filename, actor, killOnDead);
+        startPlayback(args[0], actor, killOnDead);
         world.spawnEntityInWorld(actor);
 
         return actor;

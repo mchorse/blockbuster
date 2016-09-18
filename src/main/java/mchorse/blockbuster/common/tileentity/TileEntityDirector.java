@@ -54,6 +54,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         this.collectActors();
 
+        System.out.println(this.actors);
+
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
@@ -62,6 +64,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (actor == exception) continue;
 
             actor.startPlaying(replay.id);
+
+            if (!replay.actor.equals(actor.getUniqueID()))
+            {
+                this.worldObj.spawnEntityInWorld(actor);
+            }
         }
 
         this.playBlock(true);
@@ -73,19 +80,17 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         for (Replay replay : this.replays)
         {
-            EntityActor actor;
+            EntityActor actor = null;
 
             if (replay.actor != null)
             {
                 actor = (EntityActor) Mocap.entityByUUID(this.worldObj, replay.actor);
             }
-            else
+
+            if (actor == null)
             {
                 actor = new EntityActor(this.worldObj);
-                this.worldObj.spawnEntityInWorld(actor);
             }
-
-            if (actor == null) continue;
 
             replay.apply(actor);
             actor.notifyPlayers();
@@ -112,11 +117,19 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             return;
         }
 
-        for (EntityActor actor : this.actors.values())
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
+            Replay replay = entry.getKey();
+            EntityActor actor = entry.getValue();
+
             if (actor == exception) continue;
 
             actor.stopPlaying();
+
+            if (!replay.actor.equals(actor.getUniqueID()))
+            {
+                actor.setDead();
+            }
         }
 
         this.actors.clear();
@@ -139,6 +152,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         if (count == this.replays.size())
         {
+            this.stopPlayback();
             this.playBlock(false);
         }
     }

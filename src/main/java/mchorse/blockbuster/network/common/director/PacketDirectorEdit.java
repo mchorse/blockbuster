@@ -8,16 +8,18 @@ public class PacketDirectorEdit extends PacketDirector
 {
     public Replay replay;
     public int index;
+    public boolean update;
 
     public PacketDirectorEdit()
     {}
 
-    public PacketDirectorEdit(BlockPos pos, Replay replay, int index)
+    public PacketDirectorEdit(BlockPos pos, Replay replay, int index, boolean update)
     {
         super(pos);
 
         this.replay = replay;
         this.index = index;
+        this.update = update;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class PacketDirectorEdit extends PacketDirector
 
         this.replay.toBuf(buf);
         buf.writeInt(this.index);
+        buf.writeBoolean(this.update);
     }
 
     @Override
@@ -40,5 +43,6 @@ public class PacketDirectorEdit extends PacketDirector
 
         this.replay = replay;
         this.index = buf.readInt();
+        this.update = buf.readBoolean();
     }
 }

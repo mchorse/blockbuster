@@ -68,7 +68,7 @@ public class GuiDirectorNew extends GuiScreen
         {
             if (this.previous != null)
             {
-                this.replay.save();
+                this.replay.save(false);
             }
 
             Minecraft.getMinecraft().displayGuiScreen(null);
@@ -174,7 +174,7 @@ public class GuiDirectorNew extends GuiScreen
         this.drawGradientRect(0, y + 45, 120, this.height - y * 2 - 20, 0xff000000, 0xff000000);
 
         /* Title */
-        this.fontRendererObj.drawString(this.stringTitle, 8, 8, 0xffffffff);
+        this.fontRendererObj.drawStringWithShadow(this.stringTitle, 8, 8, 0xffffffff);
 
         /* Draw GUI fields */
         this.replayName.drawTextBox();
@@ -188,7 +188,7 @@ public class GuiDirectorNew extends GuiScreen
     {
         if (this.previous != null)
         {
-            this.replay.save();
+            this.replay.save(true);
         }
 
         this.replay.select(replay, index);

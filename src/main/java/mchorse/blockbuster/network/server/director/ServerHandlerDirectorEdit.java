@@ -15,6 +15,10 @@ public class ServerHandlerDirectorEdit extends ServerMessageHandler<PacketDirect
         TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
 
         tile.edit(message.index, message.replay);
-        Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);
+
+        if (message.update)
+        {
+            Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);
+        }
     }
 }

@@ -73,11 +73,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     private Model modelInstance;
 
     /**
-     * File name that will be used by recording code
-     */
-    public String filename = "";
-
-    /**
      * Position of director's block (needed to start the playback of other
      * actors while recording this actor).
      */
@@ -414,7 +409,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.not_playing"));
             return;
         }
 
@@ -453,13 +447,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(String filename, String name, String skin, String model, boolean invulnerable, boolean notify)
+    public void modify(String model, String skin, boolean invisible, boolean notify)
     {
-        this.filename = filename;
-        this.setCustomNameTag(name);
-        this.skin = skin;
         this.model = model;
-        this.setEntityInvulnerable(invulnerable);
+        this.skin = skin;
+        this.invisible = invisible;
 
         this.updateModel();
 
@@ -478,20 +470,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     public void notifyPlayers()
     {
-        Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), this.filename, this.getCustomNameTag(), this.skin, this.model, this.isEntityInvulnerable(DamageSource.anvil)));
-    }
-
-    /**
-     * Get formatted string for director map block's storage
-     */
-    public String toReplayString()
-    {
-        String name = this.hasCustomName() ? ":" + this.getCustomNameTag() : ":";
-        String skin = !this.skin.isEmpty() ? ":" + this.skin : ":";
-        String model = !this.model.isEmpty() ? ":" + this.model : ":";
-        String invulnerable = this.isEntityInvulnerable(DamageSource.anvil) ? ":1" : ":0";
-
-        return this.filename + name + skin + model + invulnerable;
+        Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), this.model, this.skin, this.invisible));
     }
 
     /* Reading/writing to disk */
@@ -504,15 +483,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         String skin = this.skin;
         String model = this.model;
 
-        this.skin = tag.getString("Skin");
         this.model = tag.getString("Model");
-        this.filename = tag.getString("Filename");
-        this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
+        this.skin = tag.getString("Skin");
         this.invisible = tag.getBoolean("Invisible");
+
+        this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
 
         if ((!skin.equals(this.skin) || !model.equals(this.model)) && !this.worldObj.isRemote)
         {
-            this.modify(this.filename, this.getCustomNameTag(), this.skin, this.model, this.isEntityInvulnerable(DamageSource.anvil), true);
+            this.notifyPlayers();
         }
     }
 
@@ -531,11 +510,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             tag.setString("Model", this.model);
         }
 
-        if (!this.filename.isEmpty())
-        {
-            tag.setString("Filename", this.filename);
-        }
-
         if (this.directorBlock != null)
         {
             ItemPlayback.saveBlockPos("Dir", tag, this.directorBlock);
@@ -549,7 +523,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
-        ByteBufUtils.writeUTF8String(buffer, this.filename);
         ByteBufUtils.writeUTF8String(buffer, this.skin);
         ByteBufUtils.writeUTF8String(buffer, this.model);
         buffer.writeBoolean(this.invisible);
@@ -561,7 +534,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
-        this.filename = ByteBufUtils.readUTF8String(buffer);
         this.skin = ByteBufUtils.readUTF8String(buffer);
         this.model = ByteBufUtils.readUTF8String(buffer);
         this.invisible = buffer.readBoolean();

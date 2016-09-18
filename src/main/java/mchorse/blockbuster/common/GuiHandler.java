@@ -49,7 +49,7 @@ public class GuiHandler implements IGuiHandler
         }
         if (ID == ACTOR)
         {
-            return new GuiActor(null, (EntityActor) entity);
+            return new GuiActor((EntityActor) entity);
         }
         else if (ID == DIRECTOR)
         {

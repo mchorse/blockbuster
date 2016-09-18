@@ -11,7 +11,6 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -121,34 +120,27 @@ public class GuiReplay extends GuiScreen
      * modify actor packet, which modifies entity's properties directly, or
      * sends edit action to director map block
      */
-    public void save()
+    public void save(boolean update)
     {
         String filename = this.filename.getText();
         String name = this.name.getText();
-        String skin = this.skin.getText();
         String model = this.model.getText();
+        String skin = this.skin.getText();
         boolean invincible = this.invincible.getValue();
         boolean invisible = this.invisible.getValue();
 
-        if (this.pos == null)
-        {
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), filename, name, skin, model, invincible));
-        }
-        else
-        {
-            Replay value = new Replay();
-            value.id = filename;
-            value.name = name;
-            value.invincible = invincible;
+        Replay value = new Replay();
+        value.id = filename;
+        value.name = name;
+        value.invincible = invincible;
 
-            value.model = model;
-            value.skin = skin;
-            value.invisible = invisible;
+        value.model = model;
+        value.skin = skin;
+        value.invisible = invisible;
 
-            value.actor = this.replay.actor;
+        value.actor = this.replay.actor;
 
-            Dispatcher.sendToServer(new PacketDirectorEdit(this.pos, value, this.index));
-        }
+        Dispatcher.sendToServer(new PacketDirectorEdit(this.pos, value, this.index, update));
     }
 
     /* Setting up child GUI screens */
@@ -244,7 +236,7 @@ public class GuiReplay extends GuiScreen
         int margin = 8;
 
         int x = 120 + margin;
-        int w = 120;
+        int w = 100;
         int y = 20;
         int x2 = this.width - margin - w;
         int y2 = this.height - y - margin;
@@ -252,7 +244,7 @@ public class GuiReplay extends GuiScreen
         /* Initializing all GUI fields first */
         this.model = new GuiTextField(-1, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
         this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
-        this.invisible = new GuiToggle(5, x, y + 80, w, 20, I18n.format("blockbuster.yes"), I18n.format("blockbuster.no"));
+        this.invisible = new GuiToggle(5, x, y + 80, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         this.name = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 79, w - 2, 18);
         this.filename = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 39, w - 2, 18);
@@ -303,7 +295,6 @@ public class GuiReplay extends GuiScreen
         int x = 128;
         int y = 8;
 
-        int x2 = this.width - 10 - (this.width - 30 - 120) / 2;
         int y2 = this.height - 40;
 
         /* Draw labels for visual properties */
@@ -316,22 +307,30 @@ public class GuiReplay extends GuiScreen
         this.drawString(this.fontRendererObj, this.stringFilename, x, y2 - 40, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringInvincible, x, y2, 0xffcccccc);
 
+        if (this.replay.actor != null)
+        {
+            this.drawCenteredString(this.fontRendererObj, "Attached to Actor", 120 + (this.width - 120) / 2, y2 + 16, 0xffffffff);
+        }
+
         /* Draw entity in the center of the screen */
         int size = this.height / 4;
 
         y = this.height / 2 + size;
         x = x + (this.width - x) / 2;
 
-        String skin = this.actor.skin;
         String model = this.actor.model;
+        String skin = this.actor.skin;
+        boolean invisible = this.actor.invisible;
 
-        this.actor.skin = this.skin.getText();
         this.actor.model = this.model.getText();
+        this.actor.skin = this.skin.getText();
+        this.actor.invisible = this.invisible.getValue();
         this.actor.renderName = false;
-        GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, y - size - mouseY, this.actor);
+        GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
         this.actor.renderName = true;
         this.actor.model = model;
         this.actor.skin = skin;
+        this.actor.invisible = invisible;
 
         /* Draw GUI elements */
         this.name.drawTextBox();
