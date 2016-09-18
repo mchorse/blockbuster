@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.client.gui.elements.GuiCirculate;
-import mchorse.blockbuster.client.gui.elements.GuiCompleterViewer;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
+import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayback;
 import mchorse.blockbuster.network.common.camera.PacketRequestCameraProfiles;

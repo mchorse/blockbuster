@@ -8,6 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Model pack class
+ *
+ * Previously was known to be part of ActorsPack, but was decomposed since
+ * this code is also required to be on the server side, because the newer
+ * code has to collect information about models and skin in save's "blockbuster"
+ * folder.
+ *
+ * This class is responsible for collecting information about models and skins
+ * in the given folders. You add which folders to check upon by using
+ * {@link #addFolder(String)} method.
+ */
 public class ModelPack
 {
     /**
@@ -21,7 +33,7 @@ public class ModelPack
     public Map<String, Map<String, File>> skins = new HashMap<String, Map<String, File>>();
 
     /**
-     * Folders which to check when collecting all models and skins
+     * Folders which to check when reloading models and skins
      */
     public List<File> folders = new ArrayList<File>();
 
@@ -64,14 +76,14 @@ public class ModelPack
     }
 
     /**
-     * Reload actor resources
+     * Reload actor resources.
      *
      * Damn, that won't be fun to reload the game every time you want to put
      * another skin in the skins folder, so why not just reload it every time
      * the GUI is showed? It's easy to implement and requires no extra code.
      *
      * This method reloads models from config/blockbuster/models/ and skins from
-     * config/blockbuster/models/$model/skins/
+     * config/blockbuster/models/$model/skins/.
      */
     public void reload()
     {
@@ -88,7 +100,7 @@ public class ModelPack
     /**
      * Reload models
      *
-     * Simply caches file instances in the map for retrieval in actor GUI
+     * Simply caches files in the map for retrieval in actor GUI
      */
     protected void reloadModels(File folder)
     {

@@ -16,8 +16,8 @@ import net.minecraft.client.resources.I18n;
 /**
  * Model class
  *
- * This class is a domain object that holds inside all information about the
- * model like its name, texture size, limbs and poses and life and stuff.
+ * This class is a domain object that holds all information about the model like
+ * its name, texture size, limbs, poses, interests and stuff.
  */
 public class Model
 {
@@ -26,8 +26,20 @@ public class Model
      */
     protected static final List<String> REQUIRED_POSES = Arrays.<String> asList("standing", "sneaking", "sleeping", "flying");
 
+    /**
+     * Scheme version. Would be used in future versions for extracting and
+     * exporting purposes.
+     */
     public String scheme = "1.3";
+
+    /**
+     * Not really sure what to do with this one.
+     */
     public String name = "";
+
+    /**
+     * Texture size. First element is width, second is height.
+     */
     public int[] texture = new int[] {64, 32};
 
     public Map<String, Limb> limbs = new HashMap<String, Limb>();

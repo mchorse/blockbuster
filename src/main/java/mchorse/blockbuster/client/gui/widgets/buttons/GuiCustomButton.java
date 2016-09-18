@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.elements;
+package mchorse.blockbuster.client.gui.widgets.buttons;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.relauncher.Side;

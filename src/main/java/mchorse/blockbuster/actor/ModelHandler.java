@@ -20,7 +20,6 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -54,8 +53,6 @@ public class ModelHandler
         /* Load user provided models */
         for (String model : pack.getModels())
         {
-            ResourceLocation resource = new ResourceLocation("blockbuster.actors", model);
-
             try
             {
                 InputStream modelStream = new FileInputStream(pack.models.get(model));
@@ -71,8 +68,11 @@ public class ModelHandler
         /* Load default provided models */
         try
         {
-            this.models.put("alex", Model.parse(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/alex.json")));
-            this.models.put("steve", Model.parse(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/steve.json")));
+            String path = "assets/blockbuster/models/entity/";
+            ClassLoader loader = this.getClass().getClassLoader();
+
+            this.models.put("alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
+            this.models.put("steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
         }
         catch (Exception e)
         {
@@ -208,11 +208,11 @@ public class ModelHandler
         if (width != player.width || height != player.height)
         {
             float f = player.width;
+            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
+
             player.width = width;
             player.height = height;
             player.eyeHeight = height * 0.9F;
-
-            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
             player.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width));
 
             if (player.width > f && !player.worldObj.isRemote)

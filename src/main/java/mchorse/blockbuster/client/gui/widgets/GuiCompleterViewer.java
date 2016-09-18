@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.elements;
+package mchorse.blockbuster.client.gui.widgets;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +12,8 @@ import net.minecraft.client.gui.Gui;
  * This class is responsible for viewing the completions from
  * {@link net.minecraft.util.TabCompleter} and allowing to insert the value from
  * TabCompleter by clicking on one of the elements
+ *
+ * @author mchorse
  */
 public class GuiCompleterViewer extends GuiScrollPane
 {

@@ -36,6 +36,9 @@ public class CapabilityHandler
         event.addCapability(MORPHING_CAP, new MorphingProvider());
     }
 
+    /**
+     * When player logs in, sent him his server counter partner's values.
+     */
     @SubscribeEvent
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
@@ -49,8 +52,8 @@ public class CapabilityHandler
     }
 
     /**
-     * When player starts tracking another player, server has to send the
-     * morphing values
+     * When player starts tracking another player, server has to send its
+     * morphing values.
      */
     @SubscribeEvent
     public void playerStartsTracking(StartTracking event)

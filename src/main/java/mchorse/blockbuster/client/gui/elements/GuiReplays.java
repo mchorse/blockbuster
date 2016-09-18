@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
+import mchorse.blockbuster.client.gui.widgets.GuiScrollPane;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Director block's cast GUI
+ * Director block's replays GUI
  *
  * This class is responsible for rendering scroll list with director block's
- * cast and execute different actions (edit, remove) when player hits the
- * button.
+ * replays and upon selection, notify the parent screen with which replay was
+ * chosen by the user.
  */
 @SideOnly(Side.CLIENT)
 public class GuiReplays extends GuiScrollPane
@@ -117,7 +118,7 @@ public class GuiReplays extends GuiScrollPane
     /**
      * Entry class
      *
-     * Basically this represents a slot in the scroll pane
+     * Basically this represents a slot in the scroll list
      */
     static class Entry
     {

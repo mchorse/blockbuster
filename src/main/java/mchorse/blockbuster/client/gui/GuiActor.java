@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import mchorse.blockbuster.actor.ModelPack;
-import mchorse.blockbuster.client.gui.elements.GuiCompleterViewer;
-import mchorse.blockbuster.client.gui.elements.GuiToggle;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
+import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;

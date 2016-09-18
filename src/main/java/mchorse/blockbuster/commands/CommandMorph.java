@@ -11,8 +11,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 /**
  * Command /morph
  *
- * Morphs player into given model with given skin in third person. Works only
- * in single player.
+ * Morphs player into given model with given skin in third person. Works in
+ * multiplayer.
  *
  * However, when you're recording an action, you can use this command to morph
  * the actor into whatever you want it to be morphed into, and then when you're

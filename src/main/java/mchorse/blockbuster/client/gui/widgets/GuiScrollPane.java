@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.elements;
+package mchorse.blockbuster.client.gui.widgets;
 
 import java.io.IOException;
 

@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * Graphic User Interface utilities
+ * GUI utilities
  */
 public class GuiUtils
 {
     /**
-     * Draw an entity on the screen
+     * Draw an entity on the screen.
      *
-     * Taken from minecraft's class GuiInventory
+     * Taken <s>stolen</s> from minecraft's class GuiInventory. I wonder what's
+     * the license of minecraft's decompiled code?
      */
     public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
     {

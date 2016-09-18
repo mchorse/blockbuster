@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.elements;
+package mchorse.blockbuster.client.gui.widgets.buttons;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,6 +9,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * Boolean implementation of GuiButton. On button press (i.e. action performed),
  * you should toggle this button.
+ *
+ * @author mchorse
  */
 @SideOnly(Side.CLIENT)
 public class GuiToggle extends GuiButton

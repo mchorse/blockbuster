@@ -1,5 +1,11 @@
 package mchorse.blockbuster.capabilities.morphing;
 
+/**
+ * Default implementation of {@link IMorphing} interface.
+ *
+ * This class is responsible for storing current morphing, setting and retrieval
+ * of current morphing.
+ */
 public class Morphing implements IMorphing
 {
     private String model = "";

@@ -7,6 +7,8 @@ import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
+import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -22,15 +24,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Actor configuration GUI
+ * Subview in director block GUI
  *
- * This GUI is opened via player.openGui and has an id of 1. Most of the code
- * below is easy to understand, so no comments are needed.
+ * This GUI is dependent on {@link GuiDirector} UI. This method is responsible
+ * for manipulating the selected {@link Replay} from {@link GuiReplays}.
  */
 @SideOnly(Side.CLIENT)
 public class GuiReplay extends GuiScreen
 {
-    /* Cached localization strings */
+    /* Cached localization strings used in drawScreen method */
     private String stringName = I18n.format("blockbuster.gui.actor.name");
     private String stringModel = I18n.format("blockbuster.gui.actor.model");
     private String stringFilename = I18n.format("blockbuster.gui.actor.filename");
@@ -38,12 +40,13 @@ public class GuiReplay extends GuiScreen
     private String stringInvincible = I18n.format("blockbuster.gui.actor.invincible");
     private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
 
-    /* Domain objects, they're provide data */
+    /* Domain objects, they provide data */
     private EntityActor actor;
     private Replay replay;
     private BlockPos pos;
     private int index;
 
+    /* More cached stuff */
     private ModelPack pack;
     private List<String> skins;
 
@@ -52,15 +55,17 @@ public class GuiReplay extends GuiScreen
     private GuiTextField model;
     private GuiTextField filename;
     private GuiTextField skin;
-    private GuiCompleterViewer skinViewer;
 
+    /* Buttons */
     private GuiButton restore;
     private GuiButton remove;
     private GuiToggle invincible;
     private GuiToggle invisible;
 
+    /* Widgets and stuff */
     private TabCompleter completer;
     private GuiDirector parent;
+    private GuiCompleterViewer skinViewer;
 
     /**
      * Constructor for director map block
@@ -77,6 +82,10 @@ public class GuiReplay extends GuiScreen
         this.pos = pos;
     }
 
+    /**
+     * Select the given replay with index. If replay is null (i.e. replay was
+     * deselected). If replay isn't null, then fill the data in GUI fields.
+     */
     public void select(Replay replay, int index)
     {
         this.replay = replay;
@@ -114,29 +123,21 @@ public class GuiReplay extends GuiScreen
     }
 
     /**
-     * Save and quit this screen
+     * Save the replay
      *
-     * Depends on the fact where does this GUI was opened from, it either sends
-     * modify actor packet, which modifies entity's properties directly, or
-     * sends edit action to director map block
+     * Saves the replay, by sending the replay over to the server. Given
+     * argument determines if the cast is going to be updated.
      */
     public void save(boolean update)
     {
-        String filename = this.filename.getText();
-        String name = this.name.getText();
-        String model = this.model.getText();
-        String skin = this.skin.getText();
-        boolean invincible = this.invincible.getValue();
-        boolean invisible = this.invisible.getValue();
-
         Replay value = new Replay();
-        value.id = filename;
-        value.name = name;
-        value.invincible = invincible;
+        value.id = this.filename.getText();
+        value.name = this.name.getText();
+        value.invincible = this.invincible.getValue();
 
-        value.model = model;
-        value.skin = skin;
-        value.invisible = invisible;
+        value.model = this.model.getText();
+        value.skin = this.skin.getText();
+        value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
 
@@ -238,7 +239,6 @@ public class GuiReplay extends GuiScreen
         int x = 120 + margin;
         int w = 100;
         int y = 20;
-        int x2 = this.width - margin - w;
         int y2 = this.height - y - margin;
 
         /* Initializing all GUI fields first */
