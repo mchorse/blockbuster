@@ -1,7 +1,7 @@
 package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.client.gui.GuiActor;
-import mchorse.blockbuster.client.gui.GuiDirectorNew;
+import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.GuiPlayback;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
@@ -53,7 +53,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == DIRECTOR)
         {
-            return new GuiDirectorNew(new BlockPos(x, y, z));
+            return new GuiDirector(new BlockPos(x, y, z));
         }
 
         return null;

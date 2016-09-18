@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mchorse.blockbuster.actor.ModelPack;
-import mchorse.blockbuster.client.gui.GuiDirectorNew;
+import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.common.ClientProxy;
@@ -60,12 +60,12 @@ public class GuiReplay extends GuiScreen
     private GuiToggle invisible;
 
     private TabCompleter completer;
-    private GuiDirectorNew parent;
+    private GuiDirector parent;
 
     /**
      * Constructor for director map block
      */
-    public GuiReplay(GuiDirectorNew parent, BlockPos pos)
+    public GuiReplay(GuiDirector parent, BlockPos pos)
     {
         this.pack = ClientProxy.actorPack.pack;
         this.pack.reload();

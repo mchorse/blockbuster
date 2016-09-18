@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.director;
 
-import mchorse.blockbuster.client.gui.GuiDirectorNew;
+import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
@@ -27,9 +27,9 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
 
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GuiDirectorNew)
+        if (screen instanceof GuiDirector)
         {
-            ((GuiDirectorNew) screen).setCast(message.actors);
+            ((GuiDirector) screen).setCast(message.actors);
         }
     }
 }

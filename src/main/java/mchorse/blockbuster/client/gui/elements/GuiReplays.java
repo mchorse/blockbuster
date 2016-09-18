@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.client.gui.GuiDirectorNew;
+import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +26,7 @@ public class GuiReplays extends GuiScrollPane
     private String stringNoCast = I18n.format("blockbuster.director.no_cast");
 
     /* Input data */
-    private GuiDirectorNew parent;
+    private GuiDirector parent;
 
     /**
      * List of entries
@@ -37,7 +37,7 @@ public class GuiReplays extends GuiScrollPane
      */
     public List<Entry> entries = new ArrayList<Entry>();
 
-    public GuiReplays(GuiDirectorNew parent)
+    public GuiReplays(GuiDirector parent)
     {
         this.parent = parent;
     }

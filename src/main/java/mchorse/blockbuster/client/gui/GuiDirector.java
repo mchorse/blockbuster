@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This GUI is responsible for managing director block's replays.
  */
 @SideOnly(Side.CLIENT)
-public class GuiDirectorNew extends GuiScreen
+public class GuiDirector extends GuiScreen
 {
     private String stringTitle = I18n.format("blockbuster.director.title");
 
@@ -44,7 +44,7 @@ public class GuiDirectorNew extends GuiScreen
 
     private Replay previous;
 
-    public GuiDirectorNew(BlockPos pos)
+    public GuiDirector(BlockPos pos)
     {
         this.pos = pos;
         this.replays = new GuiReplays(this);
