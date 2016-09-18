@@ -2,7 +2,6 @@ package mchorse.blockbuster.client.gui.elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiDirectorNew;
@@ -24,19 +23,7 @@ public class GuiReplays extends GuiScrollPane
     private final int span = 20;
     private int selected = -1;
 
-    /**
-     * Comparator, sorts by alphabet in ascending order
-     */
-    public static final Comparator<Entry> ALPHA = new Comparator<Entry>()
-    {
-        @Override
-        public int compare(Entry a, Entry b)
-        {
-            return a.name.compareTo(b.name);
-        }
-    };
-
-    private String noCast = I18n.format("blockbuster.director.no_cast");
+    private String stringNoCast = I18n.format("blockbuster.director.no_cast");
 
     /* Input data */
     private GuiDirectorNew parent;
@@ -66,8 +53,6 @@ public class GuiReplays extends GuiScrollPane
 
         for (int i = 0; i < replays.size(); i++)
             this.entries.add(new Entry(i, replays.get(i)));
-
-        this.entries.sort(ALPHA);
     }
 
     /* Handling */
@@ -107,7 +92,7 @@ public class GuiReplays extends GuiScrollPane
     {
         if (this.entries.size() == 0)
         {
-            this.fontRendererObj.drawStringWithShadow(this.noCast, this.x + 2, this.y + 8, 0xffcccccc);
+            this.fontRendererObj.drawStringWithShadow(this.stringNoCast, this.x + 2, this.y + 8, 0xffcccccc);
             return;
         }
 
@@ -122,6 +107,11 @@ public class GuiReplays extends GuiScrollPane
 
             this.fontRendererObj.drawStringWithShadow(name, x, y + 8, flag ? 0xffcccccc : 0xffffffff);
         }
+    }
+
+    public void reset()
+    {
+        this.selected = -1;
     }
 
     /**

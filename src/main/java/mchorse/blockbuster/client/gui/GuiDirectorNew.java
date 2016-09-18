@@ -10,11 +10,13 @@ import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
+import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,6 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDirectorNew extends GuiScreen
 {
+    private String stringTitle = I18n.format("blockbuster.director.title");
+
     /* Input */
     private BlockPos pos;
 
@@ -44,7 +48,7 @@ public class GuiDirectorNew extends GuiScreen
     {
         this.pos = pos;
         this.replays = new GuiReplays(this);
-        this.replay = new GuiReplay(pos);
+        this.replay = new GuiReplay(this, pos);
     }
 
     /**
@@ -75,6 +79,7 @@ public class GuiDirectorNew extends GuiScreen
 
             this.previous = null;
             this.replay.select(null, -1);
+            this.replays.reset();
         }
     }
 
@@ -133,8 +138,8 @@ public class GuiDirectorNew extends GuiScreen
         int h = 20;
 
         /* Initiate fields */
-        this.done = new GuiButton(0, this.width - 80 - x, this.height - y - h, 80, h, "Done");
-        this.reset = new GuiButton(1, x, this.height - y - h, w, h, "Reset");
+        this.done = new GuiButton(0, this.width - 100 - x, this.height - y - h, 100, h, I18n.format("blockbuster.gui.done"));
+        this.reset = new GuiButton(1, x, this.height - y - h, w, h, I18n.format("blockbuster.gui.reset"));
 
         this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
 
@@ -142,7 +147,7 @@ public class GuiDirectorNew extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.replays.updateRect(x, y + 35, w, (this.height - y * 2 - h - 35));
+        this.replays.updateRect(x, y + 45, w, (this.height - y * 3 - h - 45));
         this.replay.initGui();
     }
 
@@ -160,13 +165,16 @@ public class GuiDirectorNew extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        int y = 8;
+
         super.drawDefaultBackground();
 
         /* Vertical line that separates scroll list and actor editing */
-        this.drawGradientRect(0, 0, 120, this.height, -1072689136, -804253680);
+        this.drawGradientRect(0, 0, 120, this.height, 0x44000000, 0x44000000);
+        this.drawGradientRect(0, y + 45, 120, this.height - y * 2 - 20, 0xff000000, 0xff000000);
 
         /* Title */
-        this.fontRendererObj.drawString("Director Block", 8, 8, 0xffffffff);
+        this.fontRendererObj.drawString(this.stringTitle, 8, 8, 0xffffffff);
 
         /* Draw GUI fields */
         this.replayName.drawTextBox();
@@ -185,5 +193,14 @@ public class GuiDirectorNew extends GuiScreen
 
         this.replay.select(replay, index);
         this.previous = replay;
+    }
+
+    public void remove(int index)
+    {
+        Dispatcher.sendToServer(new PacketDirectorRemove(this.pos, index));
+
+        this.replay.select(null, -1);
+        this.previous = null;
+        this.replays.reset();
     }
 }

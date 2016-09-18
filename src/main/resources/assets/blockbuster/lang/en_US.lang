@@ -98,7 +98,7 @@ blockbuster.gui.playback.load_profile=Load and play
 
 # Director block
 
-blockbuster.director.title=Director Block's Cast
+blockbuster.director.title=Director Block
 blockbuster.director.no_cast=No replays!
 
 blockbuster.director.play=Director block at (%s, %s, %s) has started playing!

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mchorse.blockbuster.actor.ModelPack;
+import mchorse.blockbuster.client.gui.GuiDirectorNew;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.common.ClientProxy;
@@ -55,15 +56,17 @@ public class GuiReplay extends GuiScreen
     private GuiCompleterViewer skinViewer;
 
     private GuiButton restore;
+    private GuiButton remove;
     private GuiToggle invincible;
     private GuiToggle invisible;
 
     private TabCompleter completer;
+    private GuiDirectorNew parent;
 
     /**
      * Constructor for director map block
      */
-    public GuiReplay(BlockPos pos)
+    public GuiReplay(GuiDirectorNew parent, BlockPos pos)
     {
         this.pack = ClientProxy.actorPack.pack;
         this.pack.reload();
@@ -71,6 +74,7 @@ public class GuiReplay extends GuiScreen
         this.actor = new EntityActor(Minecraft.getMinecraft().theWorld);
         this.skins = this.pack.getSkins(this.actor.model);
 
+        this.parent = parent;
         this.pos = pos;
     }
 
@@ -90,9 +94,9 @@ public class GuiReplay extends GuiScreen
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        if (button.id == 0)
+        if (button.id == 2)
         {
-            this.save();
+            this.parent.remove(this.index);
         }
         else if (button.id == 3)
         {
@@ -240,7 +244,7 @@ public class GuiReplay extends GuiScreen
         int margin = 8;
 
         int x = 120 + margin;
-        int w = (this.width - 120 - margin * 3) / 2;
+        int w = 120;
         int y = 20;
         int x2 = this.width - margin - w;
         int y2 = this.height - y - margin;
@@ -250,16 +254,18 @@ public class GuiReplay extends GuiScreen
         this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
         this.invisible = new GuiToggle(5, x, y + 80, w, 20, I18n.format("blockbuster.yes"), I18n.format("blockbuster.no"));
 
-        this.name = new GuiTextField(-1, this.fontRendererObj, x2 + 1, y + 1, w - 2, 18);
-        this.filename = new GuiTextField(-1, this.fontRendererObj, x2 + 1, y + 41, w - 2, 18);
-        this.invincible = new GuiToggle(4, x2, y + 80, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+        this.name = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 79, w - 2, 18);
+        this.filename = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 39, w - 2, 18);
+        this.invincible = new GuiToggle(4, x, y2, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         /* Buttons */
-        this.restore = new GuiButton(3, x, y2, 100, 20, I18n.format("blockbuster.gui.restore"));
+        this.restore = new GuiButton(3, this.width - margin - 100, margin, 100, 20, I18n.format("blockbuster.gui.restore"));
+        this.remove = new GuiButton(2, this.width - margin - 100, margin + 25, 100, 20, I18n.format("blockbuster.gui.remove"));
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
+        this.buttonList.add(this.remove);
         this.buttonList.add(this.restore);
         this.buttonList.add(this.invincible);
         this.buttonList.add(this.invisible);
@@ -298,6 +304,7 @@ public class GuiReplay extends GuiScreen
         int y = 8;
 
         int x2 = this.width - 10 - (this.width - 30 - 120) / 2;
+        int y2 = this.height - 40;
 
         /* Draw labels for visual properties */
         this.drawString(this.fontRendererObj, this.stringModel, x, y, 0xffcccccc);
@@ -305,14 +312,14 @@ public class GuiReplay extends GuiScreen
         this.drawString(this.fontRendererObj, this.stringInvisible, x, y + 80, 0xffcccccc);
 
         /* Draw labels for meta properties */
-        this.drawString(this.fontRendererObj, this.stringName, x2, y, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringFilename, x2, y + 40, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringInvincible, x2, y + 80, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringName, x, y2 - 80, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringFilename, x, y2 - 40, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringInvincible, x, y2, 0xffcccccc);
 
         /* Draw entity in the center of the screen */
         int size = this.height / 4;
 
-        y = this.height - 20;
+        y = this.height / 2 + size;
         x = x + (this.width - x) / 2;
 
         String skin = this.actor.skin;
@@ -321,7 +328,7 @@ public class GuiReplay extends GuiScreen
         this.actor.skin = this.skin.getText();
         this.actor.model = this.model.getText();
         this.actor.renderName = false;
-        GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);
+        GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, y - size - mouseY, this.actor);
         this.actor.renderName = true;
         this.actor.model = model;
         this.actor.skin = skin;
