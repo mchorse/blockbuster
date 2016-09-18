@@ -110,15 +110,33 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public boolean add(EntityActor actor)
     {
-        String id = actor.getUniqueID().toString();
+        boolean exist = false;
+        Replay result = new Replay(actor);
 
-        if (!this.replays.contains(id))
+        for (Replay replay : this.replays)
         {
-            Replay replay = new Replay(actor);
+            boolean hasActor = replay.actor != null && replay.actor.equals(actor.getUniqueID());
+            boolean hasName = replay.name.equals(actor.getCustomNameTag());
 
+            if (hasActor)
+            {
+                exist = true;
+                break;
+            }
+
+            if (hasName)
+            {
+                replay.copy(actor);
+
+                return true;
+            }
+        }
+
+        if (!exist)
+        {
             actor.directorBlock = this.getPos();
 
-            this.replays.add(replay);
+            this.replays.add(result);
             this.markDirty();
 
             return true;

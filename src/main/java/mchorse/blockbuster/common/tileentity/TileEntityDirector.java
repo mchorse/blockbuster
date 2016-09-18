@@ -54,8 +54,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         this.collectActors();
 
-        System.out.println(this.actors);
-
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();

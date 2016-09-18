@@ -36,14 +36,7 @@ public class Replay
 
     public Replay(EntityActor actor)
     {
-        this.name = actor.getCustomNameTag();
-        this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
-
-        this.model = actor.model;
-        this.skin = actor.skin;
-        this.invisible = actor.invisible;
-
-        this.actor = actor.getUniqueID();
+        this.copy(actor);
     }
 
     /**
@@ -57,6 +50,21 @@ public class Replay
         actor.model = this.model;
         actor.skin = this.skin;
         actor.invisible = this.invincible;
+    }
+
+    /**
+     * Copy possible properties from entity actor
+     */
+    public void copy(EntityActor actor)
+    {
+        this.name = actor.getCustomNameTag();
+        this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
+
+        this.model = actor.model;
+        this.skin = actor.skin;
+        this.invisible = actor.invisible;
+
+        this.actor = actor.getUniqueID();
     }
 
     /* to / from NBT */
