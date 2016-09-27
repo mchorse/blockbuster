@@ -142,14 +142,14 @@ public class GuiActor extends GuiScreen
 
             this.completer.setAllCompletions(models);
             this.completer.setField(this.model);
-            this.skinViewer.updateRect(10, 50 + 20 - 1, 120, 100);
+            this.skinViewer.updateRect(10, 30 + 20 - 1, 120, 100);
         }
         else if (!skinUsedFocused && this.skin.isFocused())
         {
             this.skins = this.pack.getSkins(this.model.getText());
             this.completer.setAllCompletions(this.skins);
             this.completer.setField(this.skin);
-            this.skinViewer.updateRect(10, 50 + 60 - 1, 120, 100);
+            this.skinViewer.updateRect(10, 30 + 60 - 1, 120, 100);
         }
     }
 
