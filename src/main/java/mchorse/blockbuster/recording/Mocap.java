@@ -172,12 +172,12 @@ public class Mocap
         EntityActor actor = null;
 
         String name = args.length >= 2 ? args[1] : "";
-        String model = args.length >= 4 ? args[3] : "alex";
+        String model = args.length >= 4 ? args[3] : "";
         String skin = args.length >= 3 ? args[2] : "";
         boolean invincible = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(model, skin, true, true);
+        actor.modify(model, skin, false, true);
         actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 

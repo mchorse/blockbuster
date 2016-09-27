@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -29,6 +30,7 @@ import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -90,6 +92,29 @@ public class PlayerEventHandler
             Block block = state.getBlock();
 
             this.placeBlock(events, event.getPos(), block, state);
+        }
+    }
+
+    /**
+     * Another event listener for Action.PLACE_BLOCK
+     */
+    @SubscribeEvent
+    public void onPlayerPlacesMultiBlock(MultiPlaceEvent event)
+    {
+        EntityPlayer player = event.getPlayer();
+        List<Action> events = Mocap.getActionListForPlayer(player);
+
+        if (!player.worldObj.isRemote && events != null)
+        {
+            List<BlockSnapshot> blocks = event.getReplacedBlockSnapshots();
+
+            for (BlockSnapshot snapshot : blocks)
+            {
+                IBlockState state = snapshot.getCurrentBlock();
+                Block block = state.getBlock();
+
+                this.placeBlock(events, snapshot.getPos(), block, state);
+            }
         }
     }
 
