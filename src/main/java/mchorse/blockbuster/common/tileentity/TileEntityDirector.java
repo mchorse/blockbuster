@@ -22,14 +22,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 {
     private Map<Replay, EntityActor> actors = new HashMap<Replay, EntityActor>();
 
-    public void add(String id)
-    {
-        Replay replay = new Replay();
-        replay.id = id;
-
-        this.replays.add(replay);
-    }
-
     /* Public API */
 
     /**
@@ -72,6 +64,13 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         this.playBlock(true);
     }
 
+    /**
+     * Collect actors.
+     *
+     * This method is responsible for collecting actors the ones that in the
+     * world and also the ones that doesn't exist (they will be created and
+     * spawned later on).
+     */
     private void collectActors()
     {
         this.actors.clear();
@@ -155,6 +154,9 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
     }
 
+    /**
+     * Start recording player
+     */
     public void startRecording(EntityActor actor, EntityPlayer player)
     {
         Replay replay = this.byActor(actor);
@@ -166,6 +168,9 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
     }
 
+    /**
+     * Get a replay by actor. Comparison is based on actor's UUID.
+     */
     private Replay byActor(EntityActor actor)
     {
         for (Replay replay : this.replays)

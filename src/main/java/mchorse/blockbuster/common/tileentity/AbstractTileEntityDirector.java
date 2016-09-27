@@ -105,6 +105,17 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     /**
+     * Add a replay with given recording id
+     */
+    public void add(String id)
+    {
+        Replay replay = new Replay();
+        replay.id = id;
+
+        this.replays.add(replay);
+    }
+
+    /**
      * Add an actor to this director block (dah, TE is part of the director
      * block)
      */
@@ -124,7 +135,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
                 break;
             }
 
-            if (hasName)
+            if (hasName && replay.actor == null)
             {
                 replay.copy(actor);
 
