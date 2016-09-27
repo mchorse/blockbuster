@@ -122,16 +122,17 @@ public class Mocap
     /**
      * Start recording player's actions
      */
-    public static void startRecording(String filename, EntityPlayer player)
+    public static boolean startRecording(String filename, EntityPlayer player)
     {
-        if (stopRecording(player)) return;
+        if (stopRecording(player)) return false;
 
         for (RecordThread registeredRecorder : records.values())
         {
             if (registeredRecorder.filename.equals(filename))
             {
                 broadcastMessage(I18n.format("blockbuster.mocap.already_recording", filename));
-                return;
+
+                return false;
             }
         }
 
@@ -139,6 +140,8 @@ public class Mocap
         records.put(player, recorder);
 
         Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+
+        return true;
     }
 
     /**
@@ -169,8 +172,8 @@ public class Mocap
         EntityActor actor = null;
 
         String name = args.length >= 2 ? args[1] : "";
-        String skin = args.length >= 3 ? args[2] : "";
         String model = args.length >= 4 ? args[3] : "alex";
+        String skin = args.length >= 3 ? args[2] : "";
         boolean invincible = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);

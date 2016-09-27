@@ -30,7 +30,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     @Override
     public void startPlayback()
     {
-        this.startPlayback(null);
+        this.startPlayback((EntityActor) null);
     }
 
     /**
@@ -53,6 +53,38 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             boolean notAttached = replay.actor == null;
 
             if (actor == exception) continue;
+
+            actor.startPlaying(replay.id, notAttached);
+
+            if (notAttached)
+            {
+                this.worldObj.spawnEntityInWorld(actor);
+            }
+        }
+
+        this.playBlock(true);
+    }
+
+    /**
+     * The same thing as startPlayback, but don't play the replay that is
+     * passed in the arguments (because he might be recorded by the player)
+     */
+    public void startPlayback(String exception)
+    {
+        if (this.worldObj.isRemote || this.isPlaying())
+        {
+            return;
+        }
+
+        this.collectActors();
+
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        {
+            Replay replay = entry.getKey();
+            EntityActor actor = entry.getValue();
+            boolean notAttached = replay.actor == null;
+
+            if (replay.id.equals(exception)) continue;
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -159,19 +191,42 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         if (replay != null)
         {
-            Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
+            this.applyReplay(replay, player);
             Mocap.startRecording(replay.id, player);
         }
     }
 
     /**
+     * Start recording player
+     */
+    public void applyReplay(Replay replay, EntityPlayer player)
+    {
+        if (replay == null) return;
+
+        Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
+    }
+
+    /**
      * Get a replay by actor. Comparison is based on actor's UUID.
      */
-    private Replay byActor(EntityActor actor)
+    public Replay byActor(EntityActor actor)
     {
         for (Replay replay : this.replays)
         {
             if (replay.actor.equals(actor.getUniqueID())) return replay;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a replay by actor. Comparison is based on actor's UUID.
+     */
+    public Replay byFile(String filename)
+    {
+        for (Replay replay : this.replays)
+        {
+            if (replay.id.equals(filename)) return replay;
         }
 
         return null;

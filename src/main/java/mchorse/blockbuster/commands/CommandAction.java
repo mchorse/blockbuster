@@ -2,12 +2,15 @@ package mchorse.blockbuster.commands;
 
 import java.util.List;
 
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.Mocap;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -52,7 +55,22 @@ public class CommandAction extends CommandBase
 
         if (action.equals("record") && args.length >= 2)
         {
-            Mocap.startRecording(args[1], getCommandSenderAsPlayer(sender));
+            EntityPlayer player = getCommandSenderAsPlayer(sender);
+            boolean recording = Mocap.startRecording(args[1], player);
+
+            if (recording && args.length >= 5)
+            {
+                BlockPos pos = CommandBase.parseBlockPos(sender, args, 2, false);
+                TileEntity tile = sender.getEntityWorld().getTileEntity(pos);
+
+                if (tile instanceof TileEntityDirector)
+                {
+                    TileEntityDirector director = (TileEntityDirector) tile;
+
+                    director.applyReplay(director.byFile(args[1]), player);
+                    director.startPlayback(args[1]);
+                }
+            }
         }
         else if (action.equals("play") && args.length >= 2)
         {

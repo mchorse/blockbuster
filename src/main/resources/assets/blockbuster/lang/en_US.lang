@@ -120,7 +120,7 @@ blockbuster.actor.not_attached=This registering item isn't attached to a directo
 
 # Commands
 
-blockbuster.commands.action=/action <record|play|stop> [file_name] [entity_name] [skin_name] [invulnerable]\n\nExamples:\n/action record MeDoingTricks\n/action stop\n/action play MeDoingTricks TonyHawk TonysSkin 1\n\nNote: optional arguments [entity_name] [skin_name] [is_invulnerable] are only for "play" action.\nSide note: <file_name>, [entity_name] [skin_name] can't contain spaces.   
+blockbuster.commands.action=Action command is responsible for recording and playing recorded player actions. There's three syntaxes of this command:\n\n/action record <filename> [x] [y] [z] - records player's actions to <filename> with optionally specified director block's coordinates for playback.\n/action play <filename> [name_tag] [model] [skin] [invulnerable] - play recorded player recording with specified [name_tag], [model], [skin] and [invulnerable] flag.\n/action stop - stops current player's action recording.\n\nNote: <filename>, [name_tag] [model] [skin] can't contain spaces.   
 blockbuster.commands.director=/director <play|stop> <x> <y> <z> where <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 blockbuster.commands.morph=/morph <model> <skin>\n\nMorphs current player into given <model> with skin named <skin>
