@@ -50,12 +50,13 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         {
             Replay replay = entry.getKey();
             EntityActor actor = entry.getValue();
+            boolean notAttached = replay.actor == null;
 
             if (actor == exception) continue;
 
-            actor.startPlaying(replay.id);
+            actor.startPlaying(replay.id, notAttached);
 
-            if (!replay.actor.equals(actor.getUniqueID()))
+            if (notAttached)
             {
                 this.worldObj.spawnEntityInWorld(actor);
             }
@@ -122,11 +123,6 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (actor == exception) continue;
 
             actor.stopPlaying();
-
-            if (!replay.actor.equals(actor.getUniqueID()))
-            {
-                actor.setDead();
-            }
         }
 
         this.actors.clear();

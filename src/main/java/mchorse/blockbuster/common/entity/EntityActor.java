@@ -384,7 +384,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
-    public void startPlaying(String filename)
+    public void startPlaying(String filename, boolean setDead)
     {
         if (Mocap.playbacks.containsKey(this))
         {
@@ -398,7 +398,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            Mocap.startPlayback(filename, this, false);
+            Mocap.startPlayback(filename, this, setDead);
         }
     }
 

@@ -74,6 +74,7 @@ blockbuster.gui.reset=Reset
 blockbuster.gui.add=Add
 blockbuster.gui.edit=Edit
 blockbuster.gui.remove=Remove
+blockbuster.gui.detach=Detach
 
 # Actor configuration strings
 

@@ -108,9 +108,7 @@ public class GuiReplay extends GuiScreen
         }
         else if (button.id == 3)
         {
-            this.model.setText("");
-            this.skin.setText("");
-            this.invisible.setValue(false);
+            this.replay.actor = null;
         }
         else if (button.id == 4)
         {
@@ -251,7 +249,7 @@ public class GuiReplay extends GuiScreen
         this.invincible = new GuiToggle(4, x, y2, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         /* Buttons */
-        this.restore = new GuiButton(3, this.width - margin - 100, margin, 100, 20, I18n.format("blockbuster.gui.restore"));
+        this.restore = new GuiButton(3, this.width - margin - 100, margin, 100, 20, I18n.format("blockbuster.gui.detach"));
         this.remove = new GuiButton(2, this.width - margin - 100, margin + 25, 100, 20, I18n.format("blockbuster.gui.remove"));
 
         /* And then, we're configuring them and injecting input data */
