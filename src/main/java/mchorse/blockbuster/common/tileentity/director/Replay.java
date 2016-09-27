@@ -49,7 +49,7 @@ public class Replay
 
         actor.model = this.model;
         actor.skin = this.skin;
-        actor.invisible = this.invincible;
+        actor.invisible = this.invisible;
     }
 
     /**
