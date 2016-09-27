@@ -4,27 +4,28 @@ Blockbuster's change log.
 
 ## Version 1.3
 
-This is a big update that brings custom models and morphing into the game. This update 
-adds support for custom models and player morphing. Your machinimas will be much 
-interesting, because now you can record not only players, but also mobs, blocks, or even 
-your own custom creatures.
+This is a big update that brings custom models and morphing into the game. This update adds support for custom models and player morphing. Your machinimas will be much interesting, because now you can record not only players, but also `mobs`, `blocks`, or even your own custom creatures. All thanks to custom models!
 
 **Tutorial video** for 1.3:
 Coming soon
 
 * Added support for JSON custom models for actors
-* Added support for player morphing
+* Added support for player morphing based on JSON custom models
 * Added multiplayer support (models and skins can be saved in world saves, and loaded by clients)
 * Added client-side `morph` command that allows player to morph into custom models in multiplayer
 * Added client-side `export-model` command that allows users to export in-game models into JSON format (basic non-optimal export, better than nothing)
 * Fixed crash on dedicated server (previously known to be fixed)
-* Improved look and follow fixtures
-* Updated actor GUI for using custom models
+* Improved a little bit look and follow fixtures
+* Merged functionality of director map block with director block
 * Renamed top-level package from `noname` to `mchorse`
+* Removed director map block
+* Updated actor GUI for using custom models
 
 See McME [repository](https://github.com/mchorse/mcme) 
 and [web page](https://mchorse.github.io/mcme/) for more information about the model 
 editor.
+
+**Important**: This update breaks save data compatability with previous versions. So if you're going to use this update with previously created worlds, all director blocks are going to be cleared (unintentionally), and actors will lose their `Filename` fields.
 
 ## Version 1.2.1
 
