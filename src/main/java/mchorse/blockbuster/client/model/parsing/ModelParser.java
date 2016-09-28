@@ -82,7 +82,7 @@ public class ModelParser
             float az = limb.anchor[2];
 
             renderer.mirror = limb.mirror;
-            renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d, (transform.scale[0] * w - w) / 2);
+            renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d);
             renderer.applyTransform(transform);
 
             if (limb.holding.equals("left")) left.add(renderer);
