@@ -13,7 +13,6 @@ There's some ideas that I want to implement in next Blockbuster mod:
 * Rewrite recording code (pixel -> vector, I'll get what I mean)
 * Custom actor actions (like dancing, waving with hands like crazy person, or making a blow kiss)
 * Animating actor skins (basically to create illusion of lip syncing or eyes blinking)  
-* Mention role plays in README.md
 
 ## Things needed to be done before update
 
@@ -23,8 +22,7 @@ This is my list for what I should do before releasing an update:
 - Make sure that version number is everywhere correct
     - In `Blockbuster.java`
     - In `build.gradle`
-    - In `mcmod.info`
-- Make sure that `README.md` and `CHANGELOG.md` have correct links
+- Make sure that `README.md` and `CHANGELOG.md` have correct links and stuff
 - Make a github release (tag)
 - Post update message and update original post on minecraftforum.net
 - Post update message and update original post on minecraftforge.net

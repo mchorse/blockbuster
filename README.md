@@ -9,16 +9,16 @@ crowd of actors and cameras) and simple cinematics in adventure maps.
 Blockbuster mod is built on top of Forge 12.17.0.1976 for Minecraft 1.9.4, and 
 the recording code is based on the code from the 
 [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
-(the author of the mod gave me permission to use his code). 
+(the author of the mod gave me [permission](http://i.imgur.com/lc1lJB5.png) to use his code). 
 
 Original [minecraft forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) 
-and [planet minecraft post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/). See also [McME](https://github.com/mchorse/mcme), the JSON model editor.
+and [planet minecraft post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/). See also [McME](https://github.com/mchorse/mcme), the JSON custom model editor for Blockbuster mod.
 
 ## Install
 
 Install [Minecraft Forge](http://files.minecraftforge.net/), then go to 
 [releases](https://github.com/mchorse/blockbuster/releases) and download the 
-latest version jar file. Put it in minecraft's `mods` folder, and launch the game. 
+latest stable version (not a pre-release) of jar file. Put it in minecraft's `mods` folder, and launch the game. 
 
 After that, Blockbuster mod should be installed and will appear in Minecraft's 
 mods menu. If Blockbuster didn't appear in the mods menu, then something went 
@@ -28,9 +28,7 @@ wrong.
 
 ### Tutorial video
 
-Tutorial for version 1.2. This tutorial covers all items, blocks, and commands 
-that this mod adds into the game. It's also covers the concepts it introduces, 
-and shows how to use this mod. Machinima intro included.
+Tutorial videos for 1.2.1. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
 
 <a href="https://youtu.be/mDCYX1oRKYk?list=PL6UPd2Tj65nHvEH-_F_brz6LQDdlsCIXJ">
     <img src="https://img.youtube.com/vi/mDCYX1oRKYk/0.jpg">
@@ -40,47 +38,40 @@ and shows how to use this mod. Machinima intro included.
 
 This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
 
-<a href="https://youtu.be/PyAO7DOdL00?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF">
-    <img src="https://img.youtube.com/vi/PyAO7DOdL00/0.jpg">
+<a href="https://www.youtube.com/watch?v=Q-IdY4VsMFk&index=1&list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF">
+    <img src="https://img.youtube.com/vi/Q-IdY4VsMFk/0.jpg">
 </a>
 
 ## Features
 
-This mod provides following features:
-
-#### General
-
-* Player morphing
-
-#### Player's recording
+### Player's recording
 
 * All stuff in Mocap, but more
 * Text formatting in chat using the `[` character instead of `§`
 * Interacting with blocks (opening doors, toggling levers, pushing buttons, etc.)
 * Breaking blocks
-* Mounting entities like pigs (tested with AnimalBikes, works well, but keep 
+* Mounting entities (tested with AnimalBikes, works good enough, but keep 
   animals in fences)
-* Flying the elytra
+* Flying using elytra
 
-#### Director blocks
+### Director block
 
-* Has two variations: for machinimas and for adventure maps
-* Ties actors into an organizable scene (with lots of benefits)
-* Can be playbacked by using the playback button or the `/director play` command
-* Both of the block have their own GUIs for managing the cast (view, add, edit, 
-  remove, reset)
+* Manages actors and replays
+* Can playback actors and replays using playback button or `/director` command
+* Provides GUI for managing the cast
+* Camera profile can be attached to the playback button while attaching it to director block
 
-#### Actors
+### Actors
 
 * Can playback player's actions
 * Customizable actor models and skins
 * When tied to director block and player starts recording this actor, player 
-  will be able to react to previously recorded actors, and morphed into actor's model
+  will be able to react to previously recorded actors and morphed into actor's model
   and skin
 * When recording, HUD overlay would be displayed with caption to which file it 
-  records actions
+  records player's actions
 
-#### Cameras
+### Cameras
 
 * Flexible and complex customizations of cameras
 * Camera profiles – saveable and loadable list of camera fixtures
@@ -92,24 +83,24 @@ This mod provides following features:
     * Follow fixture – GoPro fixture
     * Circular fixture – fixture that rotates around the given point with 
       specified offset and distance
-* Keyboard bindings that allows almost full control of camera profile
+* Keyboard bindings that allows *almost* full control of camera profile
 
-#### Commands
+### Commands
 
-* Action command (`/action <play|record|stop>`) – allows players to record their 
+* Action command (`/action`) – allows players to record their 
   actions to a file and playback recorded actions
-* Director command (`/director <play|stop>`) – allows players to trigger or stop 
+* Director command (`/director`) – allows players to trigger or stop 
   playback in director block specified at XYZ position
 * Camera command (`/camera`) – allows players to customize camera profiles
 * Morph command (`/morph`) – allows players to morph into custom models
 * Export model command (`/export-model`) – allows players to export in-game models (basic limb and poses generation)
 
-## Manual
+## Role Plays
 
-Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki).
+Technically, you can use this mod also for role playing. In 1.3 and up, Blockbuster has a feature called player morphing, which allows players to morph into different "creatures." 
 
-## License
+So in theory, you could use this mod for role playing a chicken, or cat, or other creater other than human (model).
 
-See the file `LICENSE.md`. Most of the code is licensed under MIT license, but 
-recording code from Mocap mod is actually licensed under GPL license 
-(`mchorse.blockbuster.recording` package).
+## License and Manual
+
+Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). See file [LICENSE.md](./LICENSE.md) for more information about the license.

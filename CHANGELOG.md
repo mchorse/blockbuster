@@ -13,13 +13,16 @@ Coming soon
 * Added support for player morphing based on JSON custom models
 * Added multiplayer support (models and skins can be saved in world saves, and loaded by clients)
 * Added client-side `morph` command that allows player to morph into custom models in multiplayer
-* Added client-side `export-model` command that allows users to export in-game models into JSON format (basic non-optimal export, better than nothing)
+* Added client-side `export-model` command that allows users to export in-game models into JSON format (basic non-optimal export, better than nothing, though)
+* Added three optional arguments to `/action record`
+* Added support for placing multiblock blocks (like bed or door)
 * Fixed crash on dedicated server (previously known to be fixed)
-* Improved a little bit look and follow fixtures
+* Improved a little bit `look` and `follow` camera fixtures
 * Merged functionality of director map block with director block
 * Renamed top-level package from `noname` to `mchorse`
 * Removed director map block
 * Updated actor GUI for using custom models
+* Updated director block GUI for manipulating replays
 
 See McME [repository](https://github.com/mchorse/mcme) 
 and [web page](https://mchorse.github.io/mcme/) for more information about the model 
