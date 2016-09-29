@@ -213,7 +213,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     {
         for (Replay replay : this.replays)
         {
-            if (replay.actor.equals(actor.getUniqueID())) return replay;
+            if (replay.actor != null && replay.actor.equals(actor.getUniqueID())) return replay;
         }
 
         return null;
