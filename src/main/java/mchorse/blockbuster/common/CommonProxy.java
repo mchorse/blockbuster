@@ -26,9 +26,19 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+/**
+ * Common proxy
+ *
+ * This class is responsible for registering items, blocks, entities,
+ * capabilities and event listeners on both sides (that's why it's a common
+ * proxy).
+ */
 public class CommonProxy
 {
-    protected static int ID = 0;
+    /**
+     * Incremented ID for entities
+     */
+    protected int ID = 0;
 
     /**
      * Model manager, this class is responsible for managing domain custom
@@ -112,11 +122,11 @@ public class CommonProxy
      */
     protected void registerEntity(Class<? extends Entity> entity, String name)
     {
-        EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false);
+        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 64, 3, false);
     }
 
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 64, 3, false, primary, secondary);
     }
 }

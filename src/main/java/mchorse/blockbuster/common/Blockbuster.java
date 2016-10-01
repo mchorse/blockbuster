@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  * - Lightwave for porting some of the code to 1.9.4
  * - NlL5 for a lot of testing, giving lots of feedback and ideas for Blockbuster mod
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, acceptedMinecraftVersions = "[1.9.4]")
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION)
 public class Blockbuster
 {
     /* Mod info */

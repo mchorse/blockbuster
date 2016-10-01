@@ -117,6 +117,12 @@ public class Model
     public static class Limb
     {
         /* Meta data */
+
+        /**
+         * Currently not used. Provide the name for your models still, it's
+         * going to be used later when I going to implement GUI for managing
+         * models and skins between server and client.
+         */
         public String name = "";
         public String parent = "";
 
