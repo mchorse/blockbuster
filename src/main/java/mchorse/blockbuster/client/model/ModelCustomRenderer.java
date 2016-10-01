@@ -54,7 +54,7 @@ public class ModelCustomRenderer extends ModelRenderer
 
         this.rotateAngleX = transform.rotate[0] * (float) Math.PI / 180;
         this.rotateAngleY = transform.rotate[1] * (float) Math.PI / 180;
-        this.rotateAngleZ = transform.rotate[2] * (float) Math.PI / 180;
+        this.rotateAngleZ = -transform.rotate[2] * (float) Math.PI / 180;
 
         this.scaleX = transform.scale[0];
         this.scaleY = transform.scale[1];
