@@ -200,9 +200,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public boolean togglePlayback()
     {
-        boolean playing = this.isPlaying();
-
-        if (playing)
+        if (this.isPlaying())
         {
             this.stopPlayback();
         }
@@ -211,7 +209,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
             this.startPlayback();
         }
 
-        return playing;
+        return this.isPlaying();
     }
 
     /**
