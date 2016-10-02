@@ -6,7 +6,7 @@ Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple
 Minecraft machinimas in single player (without having to recruit and organize a 
 crowd of actors and cameras) and simple cinematics in adventure maps.
 
-Blockbuster mod is built on top of Forge 12.17.0.1976 for Minecraft 1.9.4, and 
+Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2, and 
 the recording code is based on the code from the 
 [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
 (the author of the mod gave me [permission](http://i.imgur.com/lc1lJB5.png) to use his code). 
@@ -28,10 +28,10 @@ wrong.
 
 ### Tutorial video
 
-Tutorial videos for 1.2.1. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
+Tutorial videos for 1.3. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
 
-<a href="https://youtu.be/mDCYX1oRKYk?list=PL6UPd2Tj65nHvEH-_F_brz6LQDdlsCIXJ">
-    <img src="https://img.youtube.com/vi/mDCYX1oRKYk/0.jpg">
+<a href="https://youtube.com/playlist?list=PL6UPd2Tj65nGxteZIdEE_fIga7_HoZJ9w">
+    <img src="https://img.youtube.com/vi/WXrBEQZrQ7Q/0.jpg">
 </a>
 
 ### Machinima Examples
@@ -95,7 +95,7 @@ This playlist consists out of videos that I've created during Blockbuster mod te
 * Morph command (`/morph`) – allows players to morph into custom models
 * Export model command (`/export-model`) – allows players to export in-game models (basic limb and poses generation)
 
-## Role Plays
+## Role Playing
 
 Technically, you can use this mod also for role playing. In 1.3 and up, Blockbuster has a feature called player morphing, which allows players to morph into different "creatures." 
 
