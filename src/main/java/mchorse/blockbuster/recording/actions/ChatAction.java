@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import mchorse.blockbuster.recording.Mocap;
+import mchorse.blockbuster.recording.Utils;
 
 /**
  * Chat action
@@ -34,7 +34,7 @@ public class ChatAction extends Action
     @Override
     public void apply(mchorse.blockbuster.common.entity.EntityActor actor)
     {
-        Mocap.broadcastMessage(this.message.replace('[', '§'));
+        Utils.broadcastMessage(this.message.replace('[', '§'));
     }
 
     @Override

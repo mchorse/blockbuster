@@ -17,7 +17,7 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.recording.Mocap;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -94,6 +94,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * NullPointerException
      */
     public EntityPlayer fakePlayer;
+
+    /**
+     * Plays the actor
+     */
+    public PlayThread playback;
 
     public EntityActor(World worldIn)
     {
@@ -208,18 +213,14 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.updateSize();
         this.pickUpNearByItems();
 
+        if (this.playback != null)
+        {
+            this.playback.next();
+        }
+
         if (this.eventsList.size() > 0)
         {
             this.eventsList.remove(0).apply(this);
-        }
-
-        if (!this.worldObj.isRemote)
-        {
-            this.fakePlayer.posX = this.posX;
-            this.fakePlayer.posY = this.posY;
-            this.fakePlayer.posZ = this.posZ;
-            this.fakePlayer.rotationYaw = this.rotationYaw;
-            this.fakePlayer.rotationPitch = this.rotationPitch;
         }
 
         this.updateArmSwingProgress();
@@ -235,9 +236,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
-            double d2 = MathHelper.wrapDegrees(this.interpTargetYaw - this.rotationYaw);
 
-            this.rotationYaw = 360 + (float) (this.rotationYaw + d2 / this.newPosRotationIncrements);
+            this.rotationYaw = (float) (this.rotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
             this.rotationPitch = (float) (this.rotationPitch + (this.interpTargetPitch - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
 
@@ -388,13 +388,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (Mocap.playbacks.containsKey(this))
         {
-            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.playing"));
+            Utils.broadcastMessage(new TextComponentTranslation("blockbuster.actor.playing"));
             return;
         }
 
         if (filename.isEmpty())
         {
-            Mocap.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
+            Utils.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
         }
         else
         {
@@ -412,7 +412,10 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        Mocap.playbacks.get(this).playing = false;
+        this.playback.playing = false;
+        this.playback.reset();
+        this.playback = null;
+        Mocap.playbacks.remove(this);
     }
 
     /**

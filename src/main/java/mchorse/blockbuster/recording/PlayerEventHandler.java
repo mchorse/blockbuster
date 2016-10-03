@@ -34,6 +34,8 @@ import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 /**
  * Event handler for recording purposes.
@@ -53,7 +55,7 @@ public class PlayerEventHandler
     public void onPlayerBreaksBlock(BreakEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -69,7 +71,7 @@ public class PlayerEventHandler
     public void onPlayerRightClickBlock(RightClickBlock event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -84,7 +86,7 @@ public class PlayerEventHandler
     public void onPlayerPlacesBlock(PlaceEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -102,7 +104,7 @@ public class PlayerEventHandler
     public void onPlayerPlacesMultiBlock(MultiPlaceEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -129,7 +131,7 @@ public class PlayerEventHandler
     public void onPlayerUseBucket(FillBucketEvent event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
         RayTraceResult target = event.getTarget();
 
         if (!player.worldObj.isRemote && events != null && target != null && target.typeOfHit == Type.BLOCK)
@@ -172,7 +174,7 @@ public class PlayerEventHandler
         if (event.getEntityMounting() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntityMounting();
-            List<Action> events = Mocap.getActionListForPlayer(player);
+            List<Action> events = Mocap.getActionsForPlayer(player);
 
             if (!player.worldObj.isRemote && events != null)
             {
@@ -188,7 +190,7 @@ public class PlayerEventHandler
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
     {
         EntityPlayer player = event.player;
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -203,7 +205,7 @@ public class PlayerEventHandler
     public void onArrowLooseEvent(ArrowLooseEvent event) throws IOException
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -219,7 +221,7 @@ public class PlayerEventHandler
     public void onItemTossEvent(ItemTossEvent event) throws IOException
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -235,11 +237,27 @@ public class PlayerEventHandler
     public void onServerChatEvent(ServerChatEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionListForPlayer(player);
+        List<Action> events = Mocap.getActionsForPlayer(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
             events.add(new ChatAction(event.getMessage()));
         }
+    }
+
+    /**
+     * This is going to record the player actions
+     */
+    @SubscribeEvent
+    public void onPlayerTick(PlayerTickEvent event)
+    {
+        EntityPlayer player = event.player;
+
+        if (event.phase == Phase.START || player.worldObj.isRemote || !Mocap.records.containsKey(player))
+        {
+            return;
+        }
+
+        Mocap.records.get(player).record();
     }
 }

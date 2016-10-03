@@ -28,8 +28,6 @@ public class RenderActor extends RenderLiving<EntityActor>
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
     private static final String defaultModel = "steve";
 
-    private float previousYaw;
-
     /**
      * Initiate render actor with set of layers.
      *
@@ -101,29 +99,7 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         this.setupModel(entity);
 
-        if (!entity.renderName)
-        {
-            super.doRender(entity, x, y, z, entityYaw, partialTicks);
-        }
-        else
-        {
-            float lastYaw = entity.rotationYawHead;
-            float lastPrevYaw = entity.prevRotationYawHead;
-
-            if (this.previousYaw != entityYaw)
-            {
-                this.previousYaw = entityYaw;
-            }
-
-            entity.prevRotationYawHead = entityYaw;
-            entityYaw = this.interpolateRotation(entityYaw, this.previousYaw, partialTicks);
-            entity.rotationYawHead = entityYaw;
-
-            super.doRender(entity, x, y, z, entityYaw, partialTicks * 0.5F);
-
-            entity.rotationYawHead = lastYaw;
-            entity.prevRotationYawHead = lastPrevYaw;
-        }
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     /**

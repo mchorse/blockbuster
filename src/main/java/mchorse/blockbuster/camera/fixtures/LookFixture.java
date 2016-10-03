@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.camera.Position;
-import mchorse.blockbuster.recording.Mocap;
+import mchorse.blockbuster.recording.Utils;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -129,7 +129,7 @@ public class LookFixture extends IdleFixture
     {
         super.read(in);
 
-        this.entity = Mocap.entityByUUID(DimensionManager.getWorld(0), in.readUTF());
+        this.entity = Utils.entityByUUID(DimensionManager.getWorld(0), in.readUTF());
     }
 
     @Override

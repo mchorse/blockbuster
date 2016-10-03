@@ -51,8 +51,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.replays);
 
-        System.out.println(this.replays);
-
         return compound;
     }
 

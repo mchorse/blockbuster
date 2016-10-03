@@ -42,6 +42,12 @@ public class InteractBlockAction extends Action
     {
         IBlockState state = actor.worldObj.getBlockState(this.pos);
 
+        actor.fakePlayer.posX = actor.posX;
+        actor.fakePlayer.posY = actor.posY;
+        actor.fakePlayer.posZ = actor.posZ;
+        actor.fakePlayer.rotationYaw = actor.rotationYaw;
+        actor.fakePlayer.rotationPitch = actor.rotationPitch;
+
         state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
