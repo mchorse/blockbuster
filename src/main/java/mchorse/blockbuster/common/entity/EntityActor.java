@@ -1,9 +1,5 @@
 package mchorse.blockbuster.common.entity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
@@ -17,8 +13,8 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
-import mchorse.blockbuster.recording.actions.Action;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,12 +44,6 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  */
 public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData
 {
-    /**
-     * Event list. Each tick there's might be added an event action which should
-     * be performed by this actor. The events are injected by PlayThread.
-     */
-    public List<Action> eventsList = Collections.synchronizedList(new ArrayList<Action>());
-
     /**
      * Skin used by the actor. If empty - means default skin provided with this
      * mod.
@@ -98,7 +88,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     /**
      * Plays the actor
      */
-    public PlayThread playback;
+    public RecordPlayer playback;
 
     public EntityActor(World worldIn)
     {
@@ -215,12 +205,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.playback != null)
         {
-            this.playback.next();
-        }
-
-        if (this.eventsList.size() > 0)
-        {
-            this.eventsList.remove(0).apply(this);
+            this.playback.next(this);
         }
 
         this.updateArmSwingProgress();
@@ -412,8 +397,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             return;
         }
 
-        this.playback.playing = false;
-        this.playback.reset();
         this.playback = null;
         Mocap.playbacks.remove(this);
     }

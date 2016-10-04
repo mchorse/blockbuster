@@ -1,5 +1,9 @@
 package mchorse.blockbuster.recording;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -77,5 +81,53 @@ public class Frame
         actor.setSprinting(this.isSprinting);
         actor.onGround = this.onGround;
         actor.setElytraFlying(this.flyingElytra);
+    }
+
+    /* Save/load frame instance */
+
+    public void toBytes(DataOutput out) throws IOException
+    {
+        out.writeFloat((float) this.x);
+        out.writeFloat((float) this.y);
+        out.writeFloat((float) this.z);
+
+        out.writeFloat(this.yaw);
+        out.writeFloat(this.yawHead);
+        out.writeFloat(this.pitch);
+
+        out.writeFloat((float) this.motionX);
+        out.writeFloat((float) this.motionY);
+        out.writeFloat((float) this.motionZ);
+
+        out.writeFloat(this.fallDistance);
+
+        out.writeBoolean(this.isAirBorne);
+        out.writeBoolean(this.isSneaking);
+        out.writeBoolean(this.isSprinting);
+        out.writeBoolean(this.onGround);
+        out.writeBoolean(this.flyingElytra);
+    }
+
+    public void fromBytes(DataInput in) throws IOException
+    {
+        this.x = in.readFloat();
+        this.y = in.readFloat();
+        this.z = in.readFloat();
+
+        this.yaw = in.readFloat();
+        this.yawHead = in.readFloat();
+        this.pitch = in.readFloat();
+
+        this.motionX = in.readFloat();
+        this.motionY = in.readFloat();
+        this.motionZ = in.readFloat();
+
+        this.fallDistance = in.readFloat();
+
+        this.isAirBorne = in.readBoolean();
+        this.isSneaking = in.readBoolean();
+        this.isSprinting = in.readBoolean();
+        this.onGround = in.readBoolean();
+        this.flyingElytra = in.readBoolean();
     }
 }

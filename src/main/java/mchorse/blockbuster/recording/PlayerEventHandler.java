@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording;
 import java.io.IOException;
 import java.util.List;
 
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
@@ -55,7 +56,7 @@ public class PlayerEventHandler
     public void onPlayerBreaksBlock(BreakEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -71,7 +72,7 @@ public class PlayerEventHandler
     public void onPlayerRightClickBlock(RightClickBlock event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -86,7 +87,7 @@ public class PlayerEventHandler
     public void onPlayerPlacesBlock(PlaceEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -104,7 +105,7 @@ public class PlayerEventHandler
     public void onPlayerPlacesMultiBlock(MultiPlaceEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -131,7 +132,7 @@ public class PlayerEventHandler
     public void onPlayerUseBucket(FillBucketEvent event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
         RayTraceResult target = event.getTarget();
 
         if (!player.worldObj.isRemote && events != null && target != null && target.typeOfHit == Type.BLOCK)
@@ -174,7 +175,7 @@ public class PlayerEventHandler
         if (event.getEntityMounting() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntityMounting();
-            List<Action> events = Mocap.getActionsForPlayer(player);
+            List<Action> events = CommonProxy.manager.getActions(player);
 
             if (!player.worldObj.isRemote && events != null)
             {
@@ -190,7 +191,7 @@ public class PlayerEventHandler
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
     {
         EntityPlayer player = event.player;
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -205,7 +206,7 @@ public class PlayerEventHandler
     public void onArrowLooseEvent(ArrowLooseEvent event) throws IOException
     {
         EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -221,7 +222,7 @@ public class PlayerEventHandler
     public void onItemTossEvent(ItemTossEvent event) throws IOException
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -237,7 +238,7 @@ public class PlayerEventHandler
     public void onServerChatEvent(ServerChatEvent event)
     {
         EntityPlayer player = event.getPlayer();
-        List<Action> events = Mocap.getActionsForPlayer(player);
+        List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
@@ -253,11 +254,11 @@ public class PlayerEventHandler
     {
         EntityPlayer player = event.player;
 
-        if (event.phase == Phase.START || player.worldObj.isRemote || !Mocap.records.containsKey(player))
+        if (event.phase == Phase.START || player.worldObj.isRemote || !CommonProxy.manager.recorders.containsKey(player))
         {
             return;
         }
 
-        Mocap.records.get(player).record();
+        CommonProxy.manager.recorders.get(player).record(player);
     }
 }

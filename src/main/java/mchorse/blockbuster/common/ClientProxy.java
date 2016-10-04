@@ -21,6 +21,7 @@ import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandExportModel;
 import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -42,8 +43,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * This class is responsible for registering item models, block models, entity
  * renders and injecting actor skin resource pack.
- *
- * This class als provides GUIs.
  */
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -54,6 +53,8 @@ public class ClientProxy extends CommonProxy
 
     public static ProfileRunner profileRunner = new ProfileRunner();
     public static ProfileRenderer profileRenderer = new ProfileRenderer();
+
+    public static RecordManager manager = new RecordManager();
 
     public static File config;
 

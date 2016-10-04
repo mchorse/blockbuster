@@ -14,6 +14,7 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.PlayerEventHandler;
+import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -45,6 +46,11 @@ public class CommonProxy
      * models for custom actors
      */
     public ModelHandler models;
+
+    /**
+     * Record manager for server side
+     */
+    public static RecordManager manager = new RecordManager();
 
     /**
      * Registers network messages (and their handlers), items, blocks, director

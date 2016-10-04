@@ -14,6 +14,7 @@ public class RecordPlayer
 
     public Mode mode;
     public int ticks = 0;
+    public boolean kill = false;
 
     public RecordPlayer(Record record, Mode mode)
     {
