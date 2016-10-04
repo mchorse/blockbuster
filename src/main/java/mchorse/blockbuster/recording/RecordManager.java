@@ -9,6 +9,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -98,6 +99,7 @@ public class RecordManager
 
             RecordPlayer player = new RecordPlayer(record, RecordPlayer.Mode.BOTH);
 
+            actor.playback = player;
             this.players.put(actor, player);
 
             return true;
@@ -114,7 +116,7 @@ public class RecordManager
      */
     public void stopPlayback(EntityActor actor)
     {
-
+        this.players.remove(actor);
     }
 
     /**

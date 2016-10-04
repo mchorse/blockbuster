@@ -7,7 +7,6 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
-import mchorse.blockbuster.recording.Mocap;
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -173,7 +172,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         for (EntityActor actor : this.actors.values())
         {
-            if (!Mocap.playbacks.containsKey(actor)) count++;
+            if (actor.playback == null) count++;
         }
 
         if (count == this.replays.size())

@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.data.Record;
 
 /**
  * Record player class

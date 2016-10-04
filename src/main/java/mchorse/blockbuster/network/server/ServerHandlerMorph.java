@@ -1,12 +1,14 @@
 package mchorse.blockbuster.network.server;
 
+import java.util.List;
+
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
-import mchorse.blockbuster.recording.Mocap;
-import mchorse.blockbuster.recording.RecordThread;
+import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -26,11 +28,11 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
             Dispatcher.updateTrackers(player, new PacketMorphPlayer(player.getEntityId(), message.model, message.skin));
         }
 
-        RecordThread record = Mocap.records.get(player);
+        List<Action> actions = CommonProxy.manager.getActions(player);
 
-        if (record != null)
+        if (actions != null)
         {
-            record.eventList.add(new MorphAction(message.model, message.skin));
+            actions.add(new MorphAction(message.model, message.skin));
         }
     }
 }

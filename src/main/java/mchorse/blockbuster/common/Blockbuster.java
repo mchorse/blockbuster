@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  * This mod is possible thanks to the following code/examples/resources:
  *
  * - Jabelar's and TGG's minecraft modding tutorials
- * - AnimalBikes and Mocap mods
+ * - AnimalBikes and Mocap mods (EchebKeso)
  * - MinecraftByExample
  * - Ernio for helping with camera attributes sync, sharing with his own
  *   network abstract layer code, and fixing the code so it would work on

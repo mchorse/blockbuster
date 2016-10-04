@@ -206,6 +206,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         if (this.playback != null)
         {
             this.playback.next(this);
+
+            if (this.playback.isFinished())
+            {
+                this.playback = null;
+            }
         }
 
         this.updateArmSwingProgress();

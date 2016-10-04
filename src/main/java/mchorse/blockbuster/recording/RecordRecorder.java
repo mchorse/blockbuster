@@ -1,6 +1,8 @@
 package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.recording.RecordPlayer.Mode;
+import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

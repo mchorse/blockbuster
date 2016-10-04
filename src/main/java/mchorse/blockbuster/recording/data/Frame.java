@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.data;
 
 import java.io.DataInput;
 import java.io.DataOutput;
