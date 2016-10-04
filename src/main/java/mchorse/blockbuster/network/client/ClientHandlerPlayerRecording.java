@@ -1,9 +1,12 @@
 package mchorse.blockbuster.network.client;
 
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
+import mchorse.blockbuster.network.common.recording.PacketFramesSave;
+import mchorse.blockbuster.recording.RecordPlayer.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,10 +20,18 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         ClientProxy.recordingOverlay.setVisible(message.recording);
         ClientProxy.recordingOverlay.setCaption(message.filename);
 
-        if (!message.recording)
+        if (message.recording)
         {
-            IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
-            capability.reset();
+            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false);
+        }
+        else
+        {
+            player.getCapability(MorphingProvider.MORPHING_CAP, null).reset();
+
+            Record record = ClientProxy.manager.recorders.get(player).record;
+
+            Dispatcher.sendToServer(new PacketFramesSave(record.filename, record.frames));
+            ClientProxy.manager.stopRecording(player, false);
         }
     }
 }

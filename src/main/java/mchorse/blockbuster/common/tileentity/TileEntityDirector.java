@@ -3,10 +3,12 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
+import mchorse.blockbuster.recording.RecordPlayer.Mode;
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -192,7 +194,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         if (replay != null)
         {
             this.applyReplay(replay, player);
-            Mocap.startRecording(replay.id, player);
+            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true);
         }
     }
 

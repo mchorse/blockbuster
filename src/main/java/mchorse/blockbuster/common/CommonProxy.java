@@ -13,7 +13,7 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.recording.PlayerEventHandler;
+import mchorse.blockbuster.recording.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -89,7 +89,7 @@ public class CommonProxy
         this.models.loadModels(this.getPack());
 
         MinecraftForge.EVENT_BUS.register(this.models);
-        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
     }
 

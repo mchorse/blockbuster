@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.network.client.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerMorph;
@@ -28,7 +29,10 @@ import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.network.common.recording.PacketFramesSave;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
+import mchorse.blockbuster.network.server.ServerHandlerFrames;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerMorph;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
@@ -97,6 +101,10 @@ public class Dispatcher
 
         /* Show up recording label when player starts recording */
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
+
+        /* Recording frames */
+        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

@@ -3,7 +3,6 @@ package mchorse.blockbuster.recording;
 import java.io.IOException;
 import java.util.List;
 
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
@@ -48,7 +47,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
  *
  * Taken from Mocap mod and rewritten.
  */
-public class PlayerEventHandler
+public class ActionHandler
 {
     /**
      * Event listener for Action.BREAK_BLOCK
@@ -263,11 +262,6 @@ public class PlayerEventHandler
         if (!player.worldObj.isRemote && CommonProxy.manager.recorders.containsKey(player))
         {
             CommonProxy.manager.recorders.get(player).record(player);
-        }
-        else if (player.worldObj.isRemote && ClientProxy.manager.recorders.containsKey(player))
-        {
-            /* TODO: rewrite this code so it worked on dedicated server (ClassNotFound ClientProxy) */
-            ClientProxy.manager.recorders.get(player).record(player);
         }
     }
 }

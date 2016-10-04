@@ -1,6 +1,10 @@
 package mchorse.blockbuster.recording;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mchorse.blockbuster.recording.RecordPlayer.Mode;
+import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +17,15 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class RecordRecorder
 {
+    /**
+     * Record
+     */
     public Record record;
+
+    /**
+     * List of actions which will be saved every time
+     */
+    public List<Action> actions = new ArrayList<Action>();
 
     public Mode mode;
     public int ticks = 0;
@@ -41,12 +53,19 @@ public class RecordRecorder
             return;
         }
 
-        if (this.mode == Mode.FRAMES || this.mode == Mode.BOTH)
+        boolean both = this.mode == Mode.BOTH;
+
+        if (this.mode == Mode.FRAMES || both)
         {
             Frame frame = new Frame();
 
             frame.fromPlayer(player);
             this.record.frames.add(frame);
+        }
+
+        if (this.mode == Mode.ACTIONS || both)
+        {
+            this.record.actions.set(this.ticks, this.actions.isEmpty() ? null : this.actions.remove(0));
         }
 
         this.ticks++;

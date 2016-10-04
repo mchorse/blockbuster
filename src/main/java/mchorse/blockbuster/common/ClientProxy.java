@@ -21,6 +21,7 @@ import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandExportModel;
 import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -121,10 +122,13 @@ public class ClientProxy extends CommonProxy
     {
         super.load(event);
 
-        recordingOverlay = new GuiRecordingOverlay(Minecraft.getMinecraft());
-        playerRender = new RenderPlayer(Minecraft.getMinecraft().getRenderManager(), 0.5F);
+        Minecraft mc = Minecraft.getMinecraft();
+
+        recordingOverlay = new GuiRecordingOverlay(mc);
+        playerRender = new RenderPlayer(mc.getRenderManager(), 0.5F);
 
         /* Event listeners */
+        MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay, playerRender));
         MinecraftForge.EVENT_BUS.register(profileRenderer);

@@ -6,6 +6,7 @@ import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.recording.RecordPlayer.Mode;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -60,7 +61,7 @@ public class CommandAction extends CommandBase
         if (action.equals("record") && args.length >= 2)
         {
             EntityPlayer player = getCommandSenderAsPlayer(sender);
-            boolean recording = manager.startRecording(args[1], player);
+            boolean recording = manager.startRecording(args[1], player, Mode.ACTIONS, true);
 
             if (recording && args.length >= 5)
             {
@@ -81,13 +82,13 @@ public class CommandAction extends CommandBase
             World world = sender.getEntityWorld();
             EntityActor actor = actorFromArgs(SubCommandBase.dropFirstArgument(args), world);
 
-            manager.startPlayback(args[1], actor, true);
+            manager.startPlayback(args[1], actor, Mode.BOTH, true, true);
 
             world.spawnEntityInWorld(actor);
         }
         else if (action.equals("stop"))
         {
-            manager.stopRecording(getCommandSenderAsPlayer(sender));
+            manager.stopRecording(getCommandSenderAsPlayer(sender), true);
         }
         else
         {

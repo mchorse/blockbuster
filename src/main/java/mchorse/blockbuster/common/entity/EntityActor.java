@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemPlayback;
@@ -14,6 +15,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.blockbuster.recording.RecordPlayer.Mode;
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
@@ -376,7 +378,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void startPlaying(String filename, boolean setDead)
     {
-        if (Mocap.playbacks.containsKey(this))
+        if (CommonProxy.manager.players.containsKey(this))
         {
             Utils.broadcastMessage(new TextComponentTranslation("blockbuster.actor.playing"));
             return;
@@ -388,7 +390,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            Mocap.startPlayback(filename, this, setDead);
+            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, setDead, true);
         }
     }
 
@@ -397,13 +399,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void stopPlaying()
     {
-        if (!Mocap.playbacks.containsKey(this))
+        if (!CommonProxy.manager.players.containsKey(this))
         {
             return;
         }
 
-        this.playback = null;
-        Mocap.playbacks.remove(this);
+        CommonProxy.manager.stopPlayback(this);
     }
 
     /**
@@ -419,7 +420,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             TileEntityDirector director = (TileEntityDirector) tile;
 
-            if (!Mocap.records.containsKey(player))
+            if (!CommonProxy.manager.recorders.containsKey(player))
             {
                 director.startPlayback(this);
             }

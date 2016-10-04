@@ -8,6 +8,7 @@ import java.util.Map;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,8 @@ import net.minecraftforge.common.DimensionManager;
  */
 public class RecordManager
 {
+    public Map<String, Record> save = new HashMap<String, Record>();
+
     public Map<EntityPlayer, RecordRecorder> recorders = new HashMap<EntityPlayer, RecordRecorder>();
     public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
 
@@ -33,15 +36,15 @@ public class RecordManager
     {
         RecordRecorder recorder = this.recorders.get(player);
 
-        return recorder == null ? null : recorder.record.actions;
+        return recorder == null ? null : recorder.actions;
     }
 
     /**
      * Start recording given player to record with given filename
      */
-    public boolean startRecording(String filename, EntityPlayer player)
+    public boolean startRecording(String filename, EntityPlayer player, RecordPlayer.Mode mode, boolean notify)
     {
-        if (this.stopRecording(player)) return false;
+        if (this.stopRecording(player, notify)) return false;
 
         for (RecordRecorder recorder : this.recorders.values())
         {
@@ -53,8 +56,12 @@ public class RecordManager
             }
         }
 
-        this.recorders.put(player, new RecordRecorder(new Record(filename), RecordPlayer.Mode.BOTH));
-        Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+        this.recorders.put(player, new RecordRecorder(new Record(filename), mode));
+
+        if (notify)
+        {
+            Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+        }
 
         return true;
     }
@@ -62,14 +69,19 @@ public class RecordManager
     /**
      * Stop recording given player
      */
-    public boolean stopRecording(EntityPlayer player)
+    public boolean stopRecording(EntityPlayer player, boolean notify)
     {
         RecordRecorder recorder = this.recorders.get(player);
 
         if (recorder != null)
         {
+            this.save.put(recorder.record.filename, recorder.record);
             this.recorders.remove(player);
-            Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.record.filename), (EntityPlayerMP) player);
+
+            if (notify)
+            {
+                Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.record.filename), (EntityPlayerMP) player);
+            }
 
             return true;
         }
@@ -80,7 +92,7 @@ public class RecordManager
     /**
      * Start playback from given filename and given actor
      */
-    public boolean startPlayback(String filename, EntityActor actor, boolean kill)
+    public boolean startPlayback(String filename, EntityActor actor, RecordPlayer.Mode mode, boolean kill, boolean notify)
     {
         if (this.players.containsKey(actor)) return false;
 
@@ -97,9 +109,15 @@ public class RecordManager
             Record record = new Record(filename);
             record.fromBytes(file);
 
-            RecordPlayer player = new RecordPlayer(record, RecordPlayer.Mode.BOTH);
+            RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
+
+            if (notify)
+            {
+                Dispatcher.updateTrackers(actor, new PacketFramesLoad(actor.getEntityId(), filename, record.frames));
+            }
+
             this.players.put(actor, player);
 
             return true;
@@ -116,6 +134,7 @@ public class RecordManager
      */
     public void stopPlayback(EntityActor actor)
     {
+        actor.playback = null;
         this.players.remove(actor);
     }
 
