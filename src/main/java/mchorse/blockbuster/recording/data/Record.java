@@ -1,6 +1,8 @@
 package mchorse.blockbuster.recording.data;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -117,7 +119,7 @@ public class Record
      */
     public void fromBytes(File file) throws IOException, Exception
     {
-        RandomAccessFile buffer = new RandomAccessFile(file, "rw");
+        DataInputStream buffer = new DataInputStream(new FileInputStream(file));
 
         short signature = buffer.readShort();
 

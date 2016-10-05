@@ -29,11 +29,17 @@ public class RecordRecorder
 
     public Mode mode;
     public int ticks = 0;
+    public PlayerTracker tracker;
 
     public RecordRecorder(Record record, Mode mode)
     {
         this.record = record;
         this.mode = mode;
+
+        if (mode == Mode.ACTIONS || mode == Mode.BOTH)
+        {
+            this.tracker = new PlayerTracker(this);
+        }
     }
 
     /**
@@ -53,6 +59,7 @@ public class RecordRecorder
 
         if (this.mode == Mode.ACTIONS || both)
         {
+            this.tracker.track(player);
             this.record.actions.add(this.actions.isEmpty() ? null : this.actions.remove(0));
         }
 

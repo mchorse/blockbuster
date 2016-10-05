@@ -243,11 +243,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
         if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
-        if (!this.isServerWorld())
-        {
-            this.rotationYawHead = this.rotationYaw;
-        }
-
         /* Taken from the EntityOtherPlayerMP, I think */
         this.prevLimbSwingAmount = this.limbSwingAmount;
 

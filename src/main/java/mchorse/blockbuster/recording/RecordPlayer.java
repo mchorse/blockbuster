@@ -42,8 +42,6 @@ public class RecordPlayer
             return;
         }
 
-        System.out.println(Thread.currentThread().getName() + " " + this.ticks);
-
         boolean both = this.mode == Mode.BOTH;
 
         if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.ticks, actor);
