@@ -6,11 +6,11 @@ import mchorse.blockbuster.recording.data.Record;
 /**
  * Record player class
  *
- * This thing is responsible for playing given record.
+ * This thing is responsible for playing given record. It applies frames and
+ * actions from the record instance on the given actor.
  */
 public class RecordPlayer
 {
-    /* Source of playing */
     public Record record;
 
     public Mode mode;
@@ -48,11 +48,6 @@ public class RecordPlayer
         if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.ticks, actor);
 
         this.ticks++;
-    }
-
-    public void rewind()
-    {
-        this.ticks = 0;
     }
 
     /**

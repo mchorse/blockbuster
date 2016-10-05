@@ -22,27 +22,34 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public abstract class AbstractFixture
 {
+    /* Types of camera fixtures */
     public static final byte IDLE = 1;
     public static final byte PATH = 2;
     public static final byte LOOK = 3;
     public static final byte FOLLOW = 4;
     public static final byte CIRCULAR = 5;
 
+    /**
+     * A mapping between string named to byte type of the fixture
+     */
     public static final Map<String, Byte> STRING_TO_TYPE;
 
     static
     {
         Map<String, Byte> map = new HashMap<String, Byte>();
 
-        map.put("idle", Byte.valueOf(IDLE));
-        map.put("path", Byte.valueOf(PATH));
-        map.put("look", Byte.valueOf(LOOK));
-        map.put("follow", Byte.valueOf(FOLLOW));
-        map.put("circular", Byte.valueOf(CIRCULAR));
+        map.put("idle", IDLE);
+        map.put("path", PATH);
+        map.put("look", LOOK);
+        map.put("follow", FOLLOW);
+        map.put("circular", CIRCULAR);
 
         STRING_TO_TYPE = map;
     }
 
+    /**
+     * Duration of this fixture. Represented in milliseconds. 1 seconds = 1000L
+     */
     protected long duration;
 
     /**
@@ -94,8 +101,6 @@ public abstract class AbstractFixture
 
         return fixture;
     }
-
-    /* Instance stuff */
 
     public AbstractFixture(long duration)
     {

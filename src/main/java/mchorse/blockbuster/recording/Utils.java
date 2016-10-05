@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
  * Utilities methods mostly to be used with recording code.
  *
  * @author mchorse
- * @author EchebKeso
  */
 public class Utils
 {

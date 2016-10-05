@@ -45,7 +45,10 @@ public class RecordManager
      */
     public boolean startRecording(String filename, EntityPlayer player, RecordPlayer.Mode mode, boolean notify)
     {
-        if (this.stopRecording(player, notify)) return false;
+        if (filename.isEmpty() || this.stopRecording(player, notify))
+        {
+            return false;
+        }
 
         for (RecordRecorder recorder : this.recorders.values())
         {
@@ -91,13 +94,17 @@ public class RecordManager
     }
 
     /**
-     * Start playback from given filename and given actor
+     * Start playback from given filename and given actor. You also have to
+     * specify the mode of playback.
      */
     public boolean startPlayback(String filename, EntityActor actor, RecordPlayer.Mode mode, boolean kill, boolean notify)
     {
-        if (this.players.containsKey(actor)) return false;
+        if (this.players.containsKey(actor))
+        {
+            return false;
+        }
 
-        File file = new File(this.replayFile(filename));
+        File file = this.replayFile(filename);
 
         if (!file.exists())
         {
@@ -131,13 +138,20 @@ public class RecordManager
     }
 
     /**
-     * Stop playback for given actor
+     * Stop playback for the given actor. If the actor doesn't exist in players,
+     * it simply does nothing.
      */
     public void stopPlayback(EntityActor actor)
     {
-        actor.playback.rewind();
+        if (!this.players.containsKey(actor))
+        {
+            return;
+        }
+
+        actor.playback.ticks = 0;
         actor.playback.next(actor);
         actor.playback = null;
+
         this.players.remove(actor);
         Dispatcher.updateTrackers(actor, new PacketPlayback(actor.getEntityId(), false));
     }
@@ -145,7 +159,7 @@ public class RecordManager
     /**
      * Get path to replay file (located in current world save's folder)
      */
-    public String replayFile(String filename)
+    public File replayFile(String filename)
     {
         File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
 
@@ -154,6 +168,6 @@ public class RecordManager
             file.mkdirs();
         }
 
-        return file.getAbsolutePath() + "/" + filename;
+        return new File(file.getAbsolutePath() + "/" + filename);
     }
 }

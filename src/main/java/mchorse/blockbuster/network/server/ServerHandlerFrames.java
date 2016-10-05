@@ -1,6 +1,5 @@
 package mchorse.blockbuster.network.server;
 
-import java.io.File;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.CommonProxy;
@@ -22,13 +21,16 @@ public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesSave>
 
         if (serverRecord.getLength() != message.frames.size())
         {
-            System.out.println(serverRecord.getLength() + " :server - client: " + message.frames.size());
+            int server = serverRecord.getLength();
+            int client = message.frames.size();
+
+            System.out.println("Difference (s:" + server + ", c:" + client + ")");
         }
 
         try
         {
             serverRecord.frames = message.frames;
-            serverRecord.toBytes(new File(CommonProxy.manager.replayFile(message.filename)));
+            serverRecord.toBytes(CommonProxy.manager.replayFile(message.filename));
         }
         catch (IOException e)
         {

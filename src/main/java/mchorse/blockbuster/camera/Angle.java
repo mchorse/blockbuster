@@ -3,6 +3,7 @@ package mchorse.blockbuster.camera;
 import com.google.common.base.Objects;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Angle class
@@ -25,6 +26,9 @@ public class Angle
         /* Fix yaw */
         yaw = yaw % 360;
         yaw = yaw > 180 ? -(360 - yaw) : yaw;
+
+        /* Clamp pitch */
+        pitch = MathHelper.clamp_float(pitch, -90, 90);
 
         this.yaw = yaw;
         this.pitch = pitch;

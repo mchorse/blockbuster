@@ -12,18 +12,18 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Record recorder class
  *
- * This thing is responsible for recording a record. Yeah, kinda funky naming,
- * but it is the <s>not</s> best naming, eva!
+ * This thing is responsible for recording a record. It can record actions and
+ * frames to the given recorder.
+ *
+ * Yeah, kinda funky naming, but it is the <s>not</s> best naming, eva!
  */
 public class RecordRecorder
 {
-    /**
-     * Record
-     */
     public Record record;
 
     /**
-     * List of actions which will be saved every time
+     * List of actions which will be saved every time {@link #record(EntityPlayer)}
+     * method is invoked.
      */
     public List<Action> actions = new ArrayList<Action>();
 
@@ -64,13 +64,5 @@ public class RecordRecorder
         }
 
         this.ticks++;
-    }
-
-    /**
-     * Checks if this recorder recording actions
-     */
-    public boolean isRecordingActions()
-    {
-        return this.mode == Mode.ACTIONS || this.mode == Mode.BOTH;
     }
 }
