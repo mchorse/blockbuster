@@ -1,7 +1,9 @@
 package mchorse.blockbuster.network.client;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,8 +20,9 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
         Record record = new Record(message.filename);
         record.frames = message.frames;
 
-        System.out.println(record.frames.size());
+        Dispatcher.sendToServer(new PacketPlayback(message.id, true));
 
         actor.playback = new RecordPlayer(record, RecordPlayer.Mode.FRAMES);
+        actor.playback.playing = true;
     }
 }

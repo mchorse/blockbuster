@@ -6,6 +6,7 @@ import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerMorph;
 import mchorse.blockbuster.network.client.ClientHandlerMorphPlayer;
+import mchorse.blockbuster.network.client.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.ClientHandlerPlayerRecording;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraState;
@@ -16,7 +17,7 @@ import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
-import mchorse.blockbuster.network.common.PacketPlayback;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
@@ -31,10 +32,12 @@ import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketFramesSave;
+import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
 import mchorse.blockbuster.network.server.ServerHandlerFrames;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerMorph;
+import mchorse.blockbuster.network.server.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
@@ -99,8 +102,14 @@ public class Dispatcher
         register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
         register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
 
-        /* Show up recording label when player starts recording */
+        /* Recording */
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
+
+        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
+
+        register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
+        register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
@@ -120,7 +129,7 @@ public class Dispatcher
         register(PacketRequestCameraProfiles.class, ServerHandlerListCameraProfiles.class, Side.SERVER);
         register(PacketListCameraProfiles.class, ClientHandlerListCameraProfiles.class, Side.CLIENT);
 
-        register(PacketPlayback.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+        register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
 
         /* So undocumented!!! */
         register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
@@ -132,10 +141,6 @@ public class Dispatcher
 
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
-
-        /* Recording frames */
-        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

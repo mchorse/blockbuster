@@ -1,15 +1,15 @@
 package mchorse.blockbuster.network.server;
 
 import mchorse.blockbuster.common.item.ItemPlayback;
-import mchorse.blockbuster.network.common.PacketPlayback;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlayback>
+public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlaybackButton>
 {
     @Override
-    public void run(EntityPlayerMP player, PacketPlayback message)
+    public void run(EntityPlayerMP player, PacketPlaybackButton message)
     {
         ItemStack stack = player.getHeldItemMainhand();
         NBTTagCompound compound = stack.getTagCompound();

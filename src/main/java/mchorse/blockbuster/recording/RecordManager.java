@@ -9,6 +9,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
@@ -134,8 +135,11 @@ public class RecordManager
      */
     public void stopPlayback(EntityActor actor)
     {
+        actor.playback.rewind();
+        actor.playback.next(actor);
         actor.playback = null;
         this.players.remove(actor);
+        Dispatcher.updateTrackers(actor, new PacketPlayback(actor.getEntityId(), false));
     }
 
     /**

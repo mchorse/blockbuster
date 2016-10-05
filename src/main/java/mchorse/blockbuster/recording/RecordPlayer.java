@@ -16,6 +16,7 @@ public class RecordPlayer
     public Mode mode;
     public int ticks = 0;
     public boolean kill = false;
+    public boolean playing = false;
 
     public RecordPlayer(Record record, Mode mode)
     {
@@ -40,6 +41,8 @@ public class RecordPlayer
         {
             return;
         }
+
+        System.out.println(Thread.currentThread().getName() + " " + this.ticks);
 
         boolean both = this.mode == Mode.BOTH;
 

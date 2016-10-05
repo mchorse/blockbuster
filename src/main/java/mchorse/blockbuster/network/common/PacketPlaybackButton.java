@@ -4,15 +4,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketPlayback implements IMessage
+public class PacketPlaybackButton implements IMessage
 {
     public int mode;
     public String profile;
 
-    public PacketPlayback()
+    public PacketPlaybackButton()
     {}
 
-    public PacketPlayback(int mode, String profile)
+    public PacketPlaybackButton(int mode, String profile)
     {
         this.mode = mode;
         this.profile = profile;

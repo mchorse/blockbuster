@@ -8,7 +8,7 @@ import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketPlayback;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.camera.PacketRequestCameraProfiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -100,7 +100,7 @@ public class GuiPlayback extends GuiScreen
 
     private void saveAndQuit()
     {
-        Dispatcher.sendToServer(new PacketPlayback(this.cameraMode.getValue(), this.profileField.getText()));
+        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.getValue(), this.profileField.getText()));
 
         this.mc.displayGuiScreen(null);
     }

@@ -205,7 +205,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.updateSize();
         this.pickUpNearByItems();
 
-        if (this.playback != null)
+        if (this.playback != null && this.playback.playing)
         {
             this.playback.next(this);
 
@@ -229,13 +229,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
             double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
 
-            this.rotationYaw = (float) (this.rotationYaw + (this.interpTargetYaw - this.rotationYaw) / this.newPosRotationIncrements);
-            this.rotationPitch = (float) (this.rotationPitch + (this.interpTargetPitch - this.rotationPitch) / this.newPosRotationIncrements);
             this.newPosRotationIncrements -= 1;
-
             this.setPosition(d5, d0, d1);
-            this.setRotation(this.rotationYaw, this.rotationPitch);
-            this.prevRotationYaw = this.rotationYaw;
         }
         else if (!this.isServerWorld())
         {
@@ -390,7 +385,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            CommonProxy.manager.startPlayback(filename, this, Mode.ACTIONS, setDead, true);
+            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, setDead, true);
         }
     }
 

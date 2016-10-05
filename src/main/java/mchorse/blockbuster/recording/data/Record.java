@@ -85,6 +85,8 @@ public class Record
         int c = this.frames.size();
         int d = this.actions.size() - this.frames.size();
 
+        if (d < 0) d = 0;
+
         /* Version of the recording */
         buffer.writeShort(SIGNATURE);
         buffer.writeInt(c);
