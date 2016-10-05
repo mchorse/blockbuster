@@ -209,9 +209,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             this.playback.next(this);
 
-            if (this.playback.isFinished())
+            if (this.playback.isFinished() && !this.worldObj.isRemote)
             {
-                this.playback = null;
+                CommonProxy.manager.stopPlayback(this);
             }
         }
 
@@ -390,7 +390,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, setDead, true);
+            CommonProxy.manager.startPlayback(filename, this, Mode.ACTIONS, setDead, true);
         }
     }
 

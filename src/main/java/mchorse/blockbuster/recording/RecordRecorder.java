@@ -32,15 +32,8 @@ public class RecordRecorder
 
     public RecordRecorder(Record record, Mode mode)
     {
+        this.record = record;
         this.mode = mode;
-    }
-
-    /**
-     * Check if the record player is finished
-     */
-    public boolean isFinished()
-    {
-        return this.ticks >= this.record.getLength();
     }
 
     /**
@@ -48,11 +41,6 @@ public class RecordRecorder
      */
     public void record(EntityPlayer player)
     {
-        if (this.isFinished())
-        {
-            return;
-        }
-
         boolean both = this.mode == Mode.BOTH;
 
         if (this.mode == Mode.FRAMES || both)
@@ -65,7 +53,7 @@ public class RecordRecorder
 
         if (this.mode == Mode.ACTIONS || both)
         {
-            this.record.actions.set(this.ticks, this.actions.isEmpty() ? null : this.actions.remove(0));
+            this.record.actions.add(this.actions.isEmpty() ? null : this.actions.remove(0));
         }
 
         this.ticks++;

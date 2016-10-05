@@ -82,7 +82,7 @@ public class CommandAction extends CommandBase
             World world = sender.getEntityWorld();
             EntityActor actor = actorFromArgs(SubCommandBase.dropFirstArgument(args), world);
 
-            manager.startPlayback(args[1], actor, Mode.BOTH, true, true);
+            manager.startPlayback(args[1], actor, Mode.ACTIONS, true, true);
 
             world.spawnEntityInWorld(actor);
         }

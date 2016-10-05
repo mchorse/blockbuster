@@ -18,6 +18,8 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
         Record record = new Record(message.filename);
         record.frames = message.frames;
 
+        System.out.println(record.frames.size());
+
         actor.playback = new RecordPlayer(record, RecordPlayer.Mode.FRAMES);
     }
 }

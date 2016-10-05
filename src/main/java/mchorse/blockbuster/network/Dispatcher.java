@@ -102,10 +102,6 @@ public class Dispatcher
         /* Show up recording label when player starts recording */
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
 
-        /* Recording frames */
-        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
-
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
 
@@ -136,6 +132,10 @@ public class Dispatcher
 
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
+
+        /* Recording frames */
+        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

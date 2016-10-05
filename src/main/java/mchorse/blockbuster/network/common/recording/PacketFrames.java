@@ -51,6 +51,8 @@ public abstract class PacketFrames implements IMessage
         {
             e.printStackTrace();
         }
+
+        this.frames = frames;
     }
 
     @Override
@@ -67,8 +69,6 @@ public abstract class PacketFrames implements IMessage
             {
                 frame.toBytes(output);
             }
-
-            output.close();
         }
         catch (IOException e)
         {

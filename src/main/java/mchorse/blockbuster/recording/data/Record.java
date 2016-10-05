@@ -82,7 +82,8 @@ public class Record
     public void toBytes(File file) throws IOException
     {
         RandomAccessFile buffer = new RandomAccessFile(file, "rw");
-        int c = this.getLength();
+        int c = this.frames.size();
+        int d = this.actions.size() - this.frames.size();
 
         /* Version of the recording */
         buffer.writeShort(SIGNATURE);
@@ -91,7 +92,7 @@ public class Record
         for (int i = 0; i < c; i++)
         {
             Frame frame = this.frames.get(i);
-            Action action = this.actions.get(i);
+            Action action = this.actions.get(d + i);
 
             frame.toBytes(buffer);
             buffer.writeBoolean(action != null);

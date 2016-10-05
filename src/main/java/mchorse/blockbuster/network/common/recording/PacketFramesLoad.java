@@ -22,7 +22,7 @@ public class PacketFramesLoad extends PacketFrames
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        buf.writeInt(this.id);
+        this.id = buf.readInt();
 
         super.fromBytes(buf);
     }
@@ -30,7 +30,7 @@ public class PacketFramesLoad extends PacketFrames
     @Override
     public void toBytes(ByteBuf buf)
     {
-        this.id = buf.readInt();
+        buf.writeInt(this.id);
 
         super.toBytes(buf);
     }
