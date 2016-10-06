@@ -62,17 +62,25 @@ public class Frame
 
     public void applyOnActor(EntityActor actor)
     {
+        /* This is most important part of the code that makes the recording
+         * super smooth.
+         *
+         * By the way, this code is useful only on the client side, for more
+         * reference see renderer classes (they use prev* and lastTick* stuff
+         * for interpolation).
+         */
         actor.prevPosX = actor.lastTickPosX = actor.posX;
         actor.prevPosY = actor.lastTickPosY = actor.posY;
         actor.prevPosZ = actor.lastTickPosZ = actor.posZ;
 
-        actor.posX = this.x;
-        actor.posY = this.y;
-        actor.posZ = this.z;
-
         actor.prevRotationYaw = actor.rotationYaw;
         actor.prevRotationYawHead = actor.rotationYawHead;
         actor.prevRotationPitch = actor.rotationPitch;
+
+        /* Inject frame's values into actor */
+        actor.posX = this.x;
+        actor.posY = this.y;
+        actor.posZ = this.z;
 
         actor.rotationYaw = this.yaw;
         actor.rotationYawHead = this.yawHead;

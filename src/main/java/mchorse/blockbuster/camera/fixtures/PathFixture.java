@@ -1,12 +1,10 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.camera.CameraUtils;
+import com.google.gson.annotations.Expose;
+
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -19,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class PathFixture extends AbstractFixture
 {
+    @Expose
     protected List<Position> points = new ArrayList<Position>();
 
     public PathFixture(long duration)
@@ -115,25 +114,5 @@ public class PathFixture extends AbstractFixture
     public byte getType()
     {
         return AbstractFixture.PATH;
-    }
-
-    @Override
-    public void read(DataInput in) throws IOException
-    {
-        for (int i = 0, count = in.readInt(); i < count; i++)
-        {
-            this.addPoint(CameraUtils.readPosition(in));
-        }
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException
-    {
-        out.writeInt(this.points.size());
-
-        for (Position point : this.points)
-        {
-            CameraUtils.writePosition(out, point);
-        }
     }
 }

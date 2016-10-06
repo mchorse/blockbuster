@@ -1,10 +1,9 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.TimeUtils;
@@ -50,6 +49,7 @@ public abstract class AbstractFixture
     /**
      * Duration of this fixture. Represented in milliseconds. 1 seconds = 1000L
      */
+    @Expose
     protected long duration;
 
     /**
@@ -134,14 +134,4 @@ public abstract class AbstractFixture
      * Get the type of this fixture
      */
     public abstract byte getType();
-
-    /**
-     * Create camera fixture from input
-     */
-    public abstract void read(DataInput in) throws IOException;
-
-    /**
-     * Save camera fixture to output
-     */
-    public abstract void write(DataOutput out) throws IOException;
 }

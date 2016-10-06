@@ -1,6 +1,7 @@
 package mchorse.blockbuster.camera;
 
 import com.google.common.base.Objects;
+import com.google.gson.annotations.Expose;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
@@ -13,7 +14,9 @@ import net.minecraft.util.math.MathHelper;
  */
 public class Angle
 {
+    @Expose
     public float yaw;
+    @Expose
     public float pitch;
 
     public Angle(float yaw, float pitch)

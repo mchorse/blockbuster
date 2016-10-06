@@ -1,10 +1,9 @@
 package mchorse.blockbuster.camera;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.network.Dispatcher;
@@ -19,6 +18,7 @@ import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
  */
 public class CameraProfile
 {
+    @Expose
     protected List<AbstractFixture> fixtures = new ArrayList<AbstractFixture>();
     protected String filename = "";
 
@@ -144,42 +144,13 @@ public class CameraProfile
     }
 
     /**
-     * Read camera profile into data input interface
-     */
-    public void read(DataInput in) throws Exception
-    {
-        for (int i = 0, count = in.readInt(); i < count; i++)
-        {
-            AbstractFixture fixture = AbstractFixture.fromType(in.readByte(), in.readLong());
-
-            fixture.read(in);
-            this.add(fixture);
-        }
-    }
-
-    /**
-     * Write camera profile to data output interface
-     */
-    public void write(DataOutput out) throws IOException
-    {
-        out.writeInt(this.fixtures.size());
-
-        for (AbstractFixture fixture : this.fixtures)
-        {
-            out.writeByte(fixture.getType());
-            out.writeLong(fixture.getDuration());
-            fixture.write(out);
-        }
-    }
-
-    /**
      * Save camera profile on the server
      */
     public void save()
     {
         if (this.fixtures.size() != 0)
         {
-            Dispatcher.sendToServer(new PacketCameraProfile(this.filename, this));
+            Dispatcher.sendToServer(new PacketCameraProfile(this.filename, CameraUtils.cameraJSONBuilder(true).toJson(this)));
         }
     }
 }

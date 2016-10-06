@@ -1,6 +1,7 @@
 package mchorse.blockbuster.camera;
 
 import com.google.common.base.Objects;
+import com.google.gson.annotations.Expose;
 
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -12,8 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class Point
 {
+    @Expose
     public float x;
+    @Expose
     public float y;
+    @Expose
     public float z;
 
     public Point(float x, float y, float z)

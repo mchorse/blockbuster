@@ -1,10 +1,7 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import com.google.gson.annotations.Expose;
 
-import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.camera.Point;
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
@@ -23,9 +20,13 @@ import net.minecraft.util.math.MathHelper;
  */
 public class CircularFixture extends AbstractFixture
 {
+    @Expose
     protected Point start = new Point(0, 0, 0);
+    @Expose
     protected float offset = 0;
+    @Expose
     protected float distance = 5;
+    @Expose
     protected float circles = 360;
 
     public CircularFixture(long duration)
@@ -84,23 +85,5 @@ public class CircularFixture extends AbstractFixture
     public byte getType()
     {
         return AbstractFixture.CIRCULAR;
-    }
-
-    @Override
-    public void read(DataInput in) throws IOException
-    {
-        this.distance = in.readFloat();
-        this.circles = in.readFloat();
-        this.offset = in.readFloat();
-        this.start = CameraUtils.readPoint(in);
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException
-    {
-        out.writeFloat(this.distance);
-        out.writeFloat(this.circles);
-        out.writeFloat(this.offset);
-        CameraUtils.writePoint(out, this.start);
     }
 }

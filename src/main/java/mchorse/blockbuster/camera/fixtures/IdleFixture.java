@@ -1,10 +1,7 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import com.google.gson.annotations.Expose;
 
-import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class IdleFixture extends AbstractFixture
 {
+    @Expose
     protected Position position = new Position(0, 0, 0, 0, 0);
 
     public IdleFixture(long duration)
@@ -42,17 +40,5 @@ public class IdleFixture extends AbstractFixture
     public byte getType()
     {
         return AbstractFixture.IDLE;
-    }
-
-    @Override
-    public void read(DataInput in) throws IOException
-    {
-        this.position = CameraUtils.readPosition(in);
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException
-    {
-        CameraUtils.writePosition(out, this.position);
     }
 }

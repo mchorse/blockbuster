@@ -1,20 +1,28 @@
 package mchorse.blockbuster.camera;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import mchorse.blockbuster.camera.fixtures.AbstractFixture;
+import mchorse.blockbuster.camera.fixtures.CircularFixture;
+import mchorse.blockbuster.camera.fixtures.FollowFixture;
+import mchorse.blockbuster.camera.fixtures.IdleFixture;
+import mchorse.blockbuster.camera.fixtures.LookFixture;
+import mchorse.blockbuster.camera.fixtures.PathFixture;
+import mchorse.blockbuster.camera.json.AbstractFixtureAdapter;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import net.minecraft.client.Minecraft;
@@ -39,7 +47,7 @@ public class CameraUtils
      * Get the entity at which given player is looking at.
      * Taken from EntityRenderer class.
      *
-     * That's a big method...
+     * That's a big method... Why Minecraft has lots of these big methods?
      */
     public static Entity getTargetEntity(Entity input)
     {
@@ -122,84 +130,61 @@ public class CameraUtils
             file.mkdirs();
         }
 
-        return file.getAbsolutePath() + "/" + filename;
+        return file.getAbsolutePath() + "/" + filename + ".json";
+    }
+
+    /**
+     * Get a camera JSON builder. This will include custom serializers for some
+     * of the camera fixture classes. Also custom serializers.
+     */
+    public static Gson cameraJSONBuilder(boolean pretty)
+    {
+        GsonBuilder builder = new GsonBuilder();
+
+        if (pretty)
+        {
+            builder.setPrettyPrinting();
+        }
+
+        builder.excludeFieldsWithoutExposeAnnotation();
+
+        /* Serializers and deserializers */
+        AbstractFixtureAdapter fixtureAdapter = new AbstractFixtureAdapter();
+
+        builder.registerTypeAdapter(AbstractFixture.class, fixtureAdapter);
+        builder.registerTypeAdapter(IdleFixture.class, fixtureAdapter);
+        builder.registerTypeAdapter(PathFixture.class, fixtureAdapter);
+        builder.registerTypeAdapter(LookFixture.class, fixtureAdapter);
+        builder.registerTypeAdapter(FollowFixture.class, fixtureAdapter);
+        builder.registerTypeAdapter(CircularFixture.class, fixtureAdapter);
+
+        return builder.create();
     }
 
     /**
      * Read CameraProfile instance from given file
      */
-    public static CameraProfile readCameraProfile(String filename) throws Exception
+    public static String readCameraProfile(String filename) throws Exception
     {
         String path = cameraFile(filename);
-        DataInputStream file = new DataInputStream(new FileInputStream(path));
-        CameraProfile profile = new CameraProfile(filename);
+        DataInputStream stream = new DataInputStream(new FileInputStream(path));
+        Scanner scanner = new Scanner(stream, "UTF-8");
+        String content = scanner.useDelimiter("\\A").next();
 
-        profile.read(file);
+        scanner.close();
 
-        return profile;
+        return content;
     }
 
     /**
      * Write CameraProfile instance to given file
      */
-    public static void writeCameraProfile(String filename, CameraProfile profile) throws IOException
+    public static void writeCameraProfile(String filename, String profile) throws IOException
     {
-        RandomAccessFile file = new RandomAccessFile(cameraFile(filename), "rw");
+        PrintWriter printer = new PrintWriter(cameraFile(filename));
 
-        profile.write(file);
-        file.close();
-    }
-
-    /**
-     * Read Position instance from input stream
-     */
-    public static Position readPosition(DataInput in) throws IOException
-    {
-        return new Position(readPoint(in), readAngle(in));
-    }
-
-    /**
-     * Write Position instance to output stream
-     */
-    public static void writePosition(DataOutput out, Position position) throws IOException
-    {
-        writePoint(out, position.point);
-        writeAngle(out, position.angle);
-    }
-
-    /**
-     * Read Point instance from input stream
-     */
-    public static Point readPoint(DataInput in) throws IOException
-    {
-        return new Point(in.readFloat(), in.readFloat(), in.readFloat());
-    }
-
-    /**
-     * Write Point instance to output stream
-     */
-    public static void writePoint(DataOutput out, Point point) throws IOException
-    {
-        out.writeFloat(point.x);
-        out.writeFloat(point.y);
-        out.writeFloat(point.z);
-    }
-
-    /**
-     * Read Angle instance from input stream
-     */
-    public static Angle readAngle(DataInput in) throws IOException
-    {
-        return new Angle(in.readFloat(), in.readFloat());
-    }
-
-    /**
-     * Write Angle instance to output stream
-     */
-    public static void writeAngle(DataOutput out, Angle angle) throws IOException
-    {
-        out.writeFloat(angle.yaw);
-        out.writeFloat(angle.pitch);
+        printer.print(profile);
+        printer.close();
     }
 
     /* Commands */
@@ -211,8 +196,7 @@ public class CameraUtils
     {
         try
         {
-            CameraProfile profile = readCameraProfile(filename);
-            Dispatcher.sendTo(new PacketCameraProfile(filename, profile, play), player);
+            Dispatcher.sendTo(new PacketCameraProfile(filename, readCameraProfile(filename), play), player);
         }
         catch (Exception e)
         {
@@ -225,11 +209,11 @@ public class CameraUtils
      * Save given camera profile to file. Inform user about the problem, if the
      * camera profile couldn't be saved.
      */
-    public static boolean saveCameraProfile(String filename, CameraProfile profile, EntityPlayerMP player)
+    public static boolean saveCameraProfile(String filename, String profile, EntityPlayerMP player)
     {
         try
         {
-            CameraUtils.writeCameraProfile(filename, profile);
+            writeCameraProfile(filename, profile);
         }
         catch (IOException e)
         {
@@ -243,7 +227,8 @@ public class CameraUtils
     }
 
     /**
-     * Gets all camera profiles names and ignore invisible files
+     * Gets all camera profiles names. This is used for playback GUI's
+     * tab completion thingy.
      */
     public static List<String> listProfiles()
     {
@@ -254,9 +239,9 @@ public class CameraUtils
 
         for (String filename : file.list())
         {
-            if (!filename.startsWith("."))
+            if (filename.endsWith(".json"))
             {
-                files.add(filename);
+                files.add(filename.substring(0, filename.lastIndexOf(".json")));
             }
         }
 

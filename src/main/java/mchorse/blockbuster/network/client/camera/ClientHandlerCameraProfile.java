@@ -1,5 +1,7 @@
 package mchorse.blockbuster.network.client.camera;
 
+import mchorse.blockbuster.camera.CameraProfile;
+import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -15,7 +17,8 @@ public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCamer
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketCameraProfile message)
     {
-        CommandCamera.setProfile(message.profile);
+        CameraProfile profile = CameraUtils.cameraJSONBuilder(false).fromJson(message.profile, CameraProfile.class);
+        CommandCamera.setProfile(profile);
 
         if (message.play)
         {

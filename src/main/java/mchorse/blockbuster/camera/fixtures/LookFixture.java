@@ -1,17 +1,13 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.recording.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.DimensionManager;
 
 /**
  * Look camera fixture
@@ -30,6 +26,16 @@ public class LookFixture extends IdleFixture
     public LookFixture(long duration)
     {
         super(duration);
+    }
+
+    public Entity getTarget()
+    {
+        return this.entity;
+    }
+
+    public void setTarget(String target)
+    {
+        this.entity = Utils.entityByUUID(Minecraft.getMinecraft().theWorld, target);
     }
 
     @Override
@@ -122,21 +128,5 @@ public class LookFixture extends IdleFixture
     public byte getType()
     {
         return AbstractFixture.LOOK;
-    }
-
-    @Override
-    public void read(DataInput in) throws IOException
-    {
-        super.read(in);
-
-        this.entity = Utils.entityByUUID(DimensionManager.getWorld(0), in.readUTF());
-    }
-
-    @Override
-    public void write(DataOutput out) throws IOException
-    {
-        super.write(out);
-
-        out.writeUTF(this.entity.getUniqueID().toString());
     }
 }
