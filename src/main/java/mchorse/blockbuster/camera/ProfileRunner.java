@@ -1,5 +1,6 @@
 package mchorse.blockbuster.camera;
 
+import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,6 +19,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ProfileRunner
 {
+    private Minecraft mc = Minecraft.getMinecraft();
+    private float fov = -1;
+
     protected boolean isRunning = false;
     protected long startTime;
     protected long duration;
@@ -60,6 +64,8 @@ public class ProfileRunner
         this.isRunning = true;
         this.duration = this.profile.getDuration();
         this.startTime = System.currentTimeMillis();
+
+        this.fov = this.mc.gameSettings.fovSetting;
     }
 
     public void stop()
@@ -71,6 +77,9 @@ public class ProfileRunner
         }
 
         this.isRunning = false;
+
+        this.mc.gameSettings.fovSetting = this.fov;
+        CommandCamera.getControl().resetRoll();
     }
 
     /**
@@ -96,6 +105,9 @@ public class ProfileRunner
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             Point point = this.position.point;
             Angle angle = this.position.angle;
+
+            this.mc.gameSettings.fovSetting = angle.fov;
+            CommandCamera.getControl().roll = angle.roll;
 
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);

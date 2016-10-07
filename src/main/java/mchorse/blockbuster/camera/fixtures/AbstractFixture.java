@@ -109,11 +109,17 @@ public abstract class AbstractFixture
 
     /* Duration management */
 
+    /**
+     * Set duration (duration is in milliseconds)
+     */
     public void setDuration(long duration)
     {
         this.duration = duration;
     }
 
+    /**
+     * Get duration
+     */
     public long getDuration()
     {
         return this.duration;

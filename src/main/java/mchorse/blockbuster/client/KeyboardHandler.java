@@ -67,6 +67,10 @@ public class KeyboardHandler
     /* Undocumented feature!!! */
     private KeyBinding featureUndocumented;
 
+    private KeyBinding addRoll;
+    private KeyBinding reduceRoll;
+    private KeyBinding resetRoll;
+
     /**
      * Create and register key bindings for mod
      */
@@ -106,6 +110,10 @@ public class KeyboardHandler
         /* Undocumented */
         this.featureUndocumented = new KeyBinding("key.blockbuster.feature", Keyboard.KEY_V, general);
 
+        this.addRoll = new KeyBinding("key.blockbuster.roll.add", Keyboard.KEY_NONE, general);
+        this.reduceRoll = new KeyBinding("key.blockbuster.roll.reduce", Keyboard.KEY_NONE, general);
+        this.resetRoll = new KeyBinding("key.blockbuster.roll.reset", Keyboard.KEY_NONE, general);
+
         /* Add all key bindings to client registry */
         ClientRegistry.registerKeyBinding(this.profileAddIdleFixture);
         ClientRegistry.registerKeyBinding(this.profileAddPathFixture);
@@ -136,6 +144,10 @@ public class KeyboardHandler
 
         /* Wow, so undocumented!!! */
         ClientRegistry.registerKeyBinding(this.featureUndocumented);
+
+        ClientRegistry.registerKeyBinding(this.addRoll);
+        ClientRegistry.registerKeyBinding(this.reduceRoll);
+        ClientRegistry.registerKeyBinding(this.resetRoll);
     }
 
     @SubscribeEvent
@@ -268,6 +280,19 @@ public class KeyboardHandler
         if (this.featureUndocumented.isPressed())
         {
             Dispatcher.sendToServer(new PacketCameraMarker());
+        }
+
+        if (this.addRoll.isPressed())
+        {
+            control.addRoll(1.0F);
+        }
+        else if (this.reduceRoll.isPressed())
+        {
+            control.addRoll(-1.0F);
+        }
+        else if (this.resetRoll.isPressed())
+        {
+            control.resetRoll();
         }
     }
 }

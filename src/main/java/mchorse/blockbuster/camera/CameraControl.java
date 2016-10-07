@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class CameraControl
 {
+    public float roll = 0;
     public int index = 0;
     public CameraProfile profile;
 
@@ -181,5 +182,15 @@ public class CameraControl
         fixture.applyFixture(0, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
         player.setVelocity(0, 0, 0);
+    }
+
+    public void addRoll(float value)
+    {
+        this.roll += value;
+    }
+
+    public void resetRoll()
+    {
+        this.roll = 0;
     }
 }

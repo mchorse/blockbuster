@@ -76,9 +76,11 @@ public class PathFixture extends AbstractFixture
 
         float yaw = this.interpolateYaw(prevPos.angle.yaw, nextPos.angle.yaw, progress);
         float pitch = this.interpolate(prevPos.angle.pitch, nextPos.angle.pitch, progress);
+        float roll = this.interpolate(prevPos.angle.roll, nextPos.angle.roll, progress);
+        float fov = this.interpolate(prevPos.angle.fov, nextPos.angle.fov, progress);
 
         pos.point.set(x, y, z);
-        pos.angle.set(yaw, pitch);
+        pos.angle.set(yaw, pitch, roll, fov);
     }
 
     private float interpolate(float a, float b, float position)

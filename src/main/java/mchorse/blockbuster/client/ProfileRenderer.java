@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,6 +57,19 @@ public class ProfileRenderer
     public void toggleRender()
     {
         this.render = !this.render;
+    }
+
+    @SubscribeEvent
+    public void onCameraOrient(EntityViewRenderEvent.CameraSetup event)
+    {
+        float roll = CommandCamera.getControl().roll;
+
+        if (roll == 0)
+        {
+            return;
+        }
+
+        event.setRoll(roll);
     }
 
     @SubscribeEvent

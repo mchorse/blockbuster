@@ -3,6 +3,8 @@ package mchorse.blockbuster.camera;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 
+import mchorse.blockbuster.commands.CommandCamera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 
@@ -18,10 +20,21 @@ public class Angle
     public float yaw;
     @Expose
     public float pitch;
+    @Expose
+    public float roll;
+    @Expose
+    public float fov = 70.0F;
 
     public Angle(float yaw, float pitch)
     {
         this.set(yaw, pitch);
+    }
+
+    public void set(float yaw, float pitch, float roll, float fov)
+    {
+        this.set(yaw, pitch);
+        this.roll = roll;
+        this.fov = fov;
     }
 
     public void set(float yaw, float pitch)
@@ -39,12 +52,14 @@ public class Angle
 
     public void set(EntityPlayer player)
     {
-        this.set(player.rotationYaw, player.rotationPitch);
+        float fov = Minecraft.getMinecraft().gameSettings.fovSetting;
+
+        this.set(player.rotationYaw, player.rotationPitch, CommandCamera.getControl().roll, fov);
     }
 
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).addValue(this.yaw).addValue(this.pitch).toString();
+        return Objects.toStringHelper(this).addValue(this.yaw).addValue(this.pitch).addValue(this.roll).addValue(this.fov).toString();
     }
 }

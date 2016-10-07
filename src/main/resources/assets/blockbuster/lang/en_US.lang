@@ -141,6 +141,9 @@ blockbuster.commands.camera.save=/camera save [filename]\n\nSave camera profile 
 blockbuster.commands.camera.clear=/camera clear\n\nClears the camera profile (removes all fixtures)
 blockbuster.commands.camera.goto=/camera goto <index> [progress]\n\nTeleports you to the camera fixture at <index> index. Optionally you might specify [progress] (from 0.0 to 1.0) argument which will allow you to teleport in the middle of the path or circular fixture
 
+blockbuster.commands.camera.fov=/camera fov [fov]\n\nSet or get client's camera Field-Of-View setting
+blockbuster.commands.camera.roll=/camera roll [roll]\n\nSet or get client's camera roll (rotation across Z axis) setting
+
 blockbuster.commands.camera.fixture.add=/camera add <idle|path|follow|look|circular> <duration>\n\nCreates a new camera fixture at the end of the current camera profile with given <duration>
 blockbuster.commands.camera.fixture.edit=/camera edit <index> <values...>\n\nEdit fixture's values at <index> in currently selected camera profile
 blockbuster.commands.camera.fixture.remove=/camera remove <index>\n\nRemove camera fixture from currently used camera profile at <index>

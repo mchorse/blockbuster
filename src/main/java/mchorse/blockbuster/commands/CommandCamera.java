@@ -3,9 +3,11 @@ package mchorse.blockbuster.commands;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.commands.camera.SubCommandCameraClear;
+import mchorse.blockbuster.commands.camera.SubCommandCameraFOV;
 import mchorse.blockbuster.commands.camera.SubCommandCameraGoto;
 import mchorse.blockbuster.commands.camera.SubCommandCameraLoad;
 import mchorse.blockbuster.commands.camera.SubCommandCameraNew;
+import mchorse.blockbuster.commands.camera.SubCommandCameraRoll;
 import mchorse.blockbuster.commands.camera.SubCommandCameraSave;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStart;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStop;
@@ -78,6 +80,10 @@ public class CommandCamera extends SubCommandBase
         /* Profile */
         this.add(new SubCommandCameraClear());
         this.add(new SubCommandCameraGoto());
+
+        /* Camera control */
+        this.add(new SubCommandCameraRoll());
+        this.add(new SubCommandCameraFOV());
 
         /* Fixture editing */
         this.add(new SubCommandFixtureAdd());

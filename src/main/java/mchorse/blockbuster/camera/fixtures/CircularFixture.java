@@ -16,18 +16,39 @@ import net.minecraft.util.math.MathHelper;
  * round in circles relatively given point in space.
  *
  * You know, like one of these rotating thingies on car expos that rotate cars
- * round and round and around...
+ * round and round and round...
  */
 public class CircularFixture extends AbstractFixture
 {
+    /**
+     * Center point of circular fixture
+     */
     @Expose
     protected Point start = new Point(0, 0, 0);
+
+    /**
+     * Start angle offset (in degrees)
+     */
     @Expose
     protected float offset = 0;
+
+    /**
+     * Distance (in blocks units) from center point
+     */
     @Expose
     protected float distance = 5;
+
+    /**
+     * How much degrees to perform during running
+     */
     @Expose
     protected float circles = 360;
+
+    /**
+     * Pitch of the
+     */
+    @Expose
+    protected float pitch = 0;
 
     public CircularFixture(long duration)
     {
@@ -42,13 +63,6 @@ public class CircularFixture extends AbstractFixture
     @Override
     public void edit(String[] args, EntityPlayer player) throws CommandException
     {
-        this.start.x = (float) player.posX;
-        this.start.y = (float) player.posY;
-        this.start.z = (float) player.posZ;
-
-        this.offset = player.rotationYaw < 0 ? 360 + player.rotationYaw : player.rotationYaw;
-        this.offset = (this.offset + 90) % 360;
-
         if (args.length > 0)
         {
             this.distance = (float) CommandBase.parseDouble(args[0]);
@@ -58,6 +72,23 @@ public class CircularFixture extends AbstractFixture
         {
             this.circles = (float) CommandBase.parseDouble(args[1]);
         }
+
+        if (args.length > 2)
+        {
+            this.pitch = (float) CommandBase.parseDouble(args[2]);
+        }
+
+        this.offset = player.rotationYaw < 0 ? 360 + player.rotationYaw : player.rotationYaw;
+        this.offset = (this.offset + 90) % 360;
+
+        this.pitch = player.rotationPitch;
+
+        float cos = (float) Math.cos(Math.toRadians(this.offset));
+        float sin = (float) Math.sin(Math.toRadians(this.offset));
+
+        this.start.x = (float) player.posX + cos * this.distance;
+        this.start.y = (float) player.posY;
+        this.start.z = (float) player.posZ + sin * this.distance;
     }
 
     @Override
@@ -76,10 +107,8 @@ public class CircularFixture extends AbstractFixture
         float yaw = (float) (MathHelper.atan2(sin, cos) * (180D / Math.PI)) - 90.0F;
 
         pos.point.set(x - 0.5F, y, z - 0.5F);
-        pos.angle.set(MathHelper.wrapDegrees(yaw - 180.0F), 0);
+        pos.angle.set(MathHelper.wrapDegrees(yaw - 180.0F), this.pitch);
     }
-
-    /* Save/load methods */
 
     @Override
     public byte getType()
