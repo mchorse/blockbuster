@@ -32,6 +32,10 @@ key.blockbuster.duration=Blockbuster Fixture Duration
 key.blockbuster.path=Blockbuster Path Fixture
 key.blockbuster.feature=Undocumented feature!!!
 
+key.blockbuster.roll.add=Roll clockwise
+key.blockbuster.roll.reduce=Roll counter-clockwise
+key.blockbuster.roll.reset=Reset roll
+
 key.blockbuster.profile.add_idle=Add Idle Camera Fixture
 key.blockbuster.profile.add_path=Add Path Camera Fixture
 key.blockbuster.profile.add_look=Add Look Camera Fixture
