@@ -48,6 +48,7 @@ public class ModelHandler
      */
     public void loadModels(ModelPack pack)
     {
+        this.models.clear();
         pack.reload();
 
         /* Load user provided models */
@@ -100,7 +101,8 @@ public class ModelHandler
     }
 
     /**
-     * When player is logs in, send him all available models and skins
+     * When player is logs in, send him all available models and skins. I think
+     * this should go to a separate server handler
      */
     @SubscribeEvent
     public void onPlayerLogsIn(PlayerLoggedInEvent event)

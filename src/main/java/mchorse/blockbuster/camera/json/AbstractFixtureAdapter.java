@@ -1,6 +1,7 @@
 package mchorse.blockbuster.camera.json;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -28,52 +29,55 @@ import mchorse.blockbuster.camera.fixtures.PathFixture;
  */
 public class AbstractFixtureAdapter implements JsonSerializer<AbstractFixture>, JsonDeserializer<AbstractFixture>
 {
+    /**
+     * Gson instance for building up
+     */
     private Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
+    /**
+     * Hash map of fixtures types mapped to corresponding class. I think this
+     * code should be moved to the AbstractFixture class.
+     */
+    private Map<String, Class<? extends AbstractFixture>> types = new HashMap<String, Class<? extends AbstractFixture>>();
+
+    public AbstractFixtureAdapter()
+    {
+        this.types.put("idle", IdleFixture.class);
+        this.types.put("path", PathFixture.class);
+        this.types.put("look", LookFixture.class);
+        this.types.put("follow", FollowFixture.class);
+        this.types.put("circular", CircularFixture.class);
+    }
+
+    /**
+     * Deserialize an abstract fixture from JsonElement.
+     *
+     * This method extracts type from the JSON map, and creates a fixture
+     * from the type (which is mapped to a class). It also responsible for
+     * setting the target for follow and look fixtures.
+     */
     @Override
     public AbstractFixture deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
         JsonObject map = json.getAsJsonObject();
         String type = map.get("type").getAsString();
+        AbstractFixture fixture = this.gson.fromJson(json, this.types.get(type));
 
-        try
+        if (fixture instanceof LookFixture)
         {
-            AbstractFixture fixture = null;
-
-            if (type.equals("idle"))
-            {
-                fixture = this.gson.fromJson(json, IdleFixture.class);
-            }
-            else if (type.equals("path"))
-            {
-                fixture = this.gson.fromJson(json, PathFixture.class);
-            }
-            else if (type.equals("look"))
-            {
-                fixture = this.gson.fromJson(json, LookFixture.class);
-            }
-            else if (type.equals("follow"))
-            {
-                fixture = this.gson.fromJson(json, FollowFixture.class);
-            }
-            else if (type.equals("circular"))
-            {
-                fixture = this.gson.fromJson(json, CircularFixture.class);
-            }
-
-            if (type.equals("follow") || type.equals("look"))
-            {
-                ((LookFixture) fixture).setTarget(map.get("target").getAsString());
-            }
-
-            return fixture;
+            ((LookFixture) fixture).setTarget(map.get("target").getAsString());
         }
-        catch (Exception e)
-        {
-            return null;
-        }
+
+        return fixture;
     }
 
+    /**
+     * Serialize an abstract fixture into JsonElement.
+     *
+     * This method also responsible for giving the serialized abstract fixture
+     * a type key (for later ability to deserialize exact type of the JSON
+     * element) and target key for look and follow fixtures.
+     */
     @Override
     public JsonElement serialize(AbstractFixture src, Type typeOfSrc, JsonSerializationContext context)
     {

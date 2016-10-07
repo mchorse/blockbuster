@@ -2,6 +2,7 @@ package mchorse.blockbuster.camera;
 
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
+import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
 import net.minecraft.command.CommandException;
@@ -15,8 +16,20 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class CameraControl
 {
+    /**
+     * Roll of the camera
+     */
     public float roll = 0;
+
+    /**
+     * Selected camera fixture
+     */
     public int index = 0;
+
+    /**
+     * Camera profile to edit. This field populated by
+     * {@link CommandCamera#setProfile(CameraProfile)}
+     */
     public CameraProfile profile;
 
     /**
@@ -58,7 +71,11 @@ public class CameraControl
         if (!this.profile.has(this.index)) return;
 
         this.profile.remove(this.index);
-        this.index--;
+
+        if (this.profile.getCount() != 0)
+        {
+            this.index--;
+        }
     }
 
     /**
