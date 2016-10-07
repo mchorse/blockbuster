@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.camera.Position;
-import mchorse.blockbuster.camera.TimeUtils;
 import mchorse.blockbuster.commands.SubCommandBase;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -47,7 +47,7 @@ public abstract class AbstractFixture
     }
 
     /**
-     * Duration of this fixture. Represented in milliseconds. 1 seconds = 1000L
+     * Duration of this fixture. Represented in frames. 1 frame = ~1/20 seconds
      */
     @Expose
     protected long duration;
@@ -85,7 +85,7 @@ public abstract class AbstractFixture
         }
 
         String type = args[0];
-        long duration = TimeUtils.getDuration(args[1]);
+        long duration = CommandBase.parseLong(args[1]);
         AbstractFixture fixture;
 
         try

@@ -152,8 +152,8 @@ blockbuster.commands.camera.fixture.path=/camera path <fixture_index> [point_ind
 blockbuster.commands.camera.fixture.move=/camera move <from> <to>\n\nMove camera fixture at <from> index to <to> index in the camera profile
 
 blockbuster.commands.camera.fixture.empty=This camera profile is empty!
-blockbuster.duration.fixture=Camera fixture at index %d runs for %s.
-blockbuster.duration.profile=Camera profile runs for %s.
+blockbuster.duration.fixture=Camera fixture at index %d runs for %d ticks.
+blockbuster.duration.profile=Camera profile runs for %d ticks.
 blockbuster.duration.wrong=%s is wrong formatted duration.
 
 # Camera fixtures

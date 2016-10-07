@@ -1,7 +1,6 @@
 package mchorse.blockbuster.commands.fixture;
 
 import mchorse.blockbuster.camera.CameraProfile;
-import mchorse.blockbuster.camera.TimeUtils;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.resources.I18n;
@@ -38,7 +37,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 0)
         {
-            String duration = TimeUtils.formatMillis(profile.getDuration());
+            long duration = profile.getDuration();
 
             sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.profile", duration)));
             return;
@@ -55,12 +54,12 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 1)
         {
-            String duration = TimeUtils.formatMillis(fixture.getDuration());
+            long duration = fixture.getDuration();
 
             sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.fixture", index, duration)));
             return;
         }
 
-        fixture.setDuration(TimeUtils.getDuration(args[1]));
+        fixture.setDuration(CommandBase.parseLong(args[1]));
     }
 }

@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.Position;
-import mchorse.blockbuster.camera.TimeUtils;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.CircularFixture;
 import mchorse.blockbuster.camera.fixtures.FollowFixture;
@@ -217,7 +216,7 @@ public class ProfileRenderer
         GlStateManager.disableBlend();
 
         String indexString = String.valueOf(index);
-        String durationString = TimeUtils.formatMillis(duration);
+        String durationString = duration + "t";
         int indexWidth = this.mc.fontRendererObj.getStringWidth(indexString) / 2;
         int durationWidth = this.mc.fontRendererObj.getStringWidth(durationString) / 2;
 

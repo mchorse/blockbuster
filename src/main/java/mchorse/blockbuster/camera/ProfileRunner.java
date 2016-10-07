@@ -23,7 +23,7 @@ public class ProfileRunner
     private float fov = -1;
 
     protected boolean isRunning = false;
-    protected long startTime;
+    protected long ticks;
     protected long duration;
 
     protected CameraProfile profile;
@@ -51,19 +51,24 @@ public class ProfileRunner
     /**
      * Start the profile runner. This method also responsible for setting
      * important values before starting the run (like setting duration, and
-     * setting the start time).
+     * reseting ticks).
      */
     public void start()
     {
+        if (this.profile.getCount() == 0)
+        {
+            return;
+        }
+
         if (!this.isRunning)
         {
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode 3");
+            this.mc.thePlayer.sendChatMessage("/gamemode 3");
             MinecraftForge.EVENT_BUS.register(this);
         }
 
         this.isRunning = true;
         this.duration = this.profile.getDuration();
-        this.startTime = System.currentTimeMillis();
+        this.ticks = 0;
 
         this.fov = this.mc.gameSettings.fovSetting;
     }
@@ -72,7 +77,7 @@ public class ProfileRunner
     {
         if (this.isRunning)
         {
-            Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode 1");
+            this.mc.thePlayer.sendChatMessage("/gamemode 1");
             MinecraftForge.EVENT_BUS.unregister(this);
         }
 
@@ -92,7 +97,7 @@ public class ProfileRunner
     {
         if (event.phase == Phase.START) return;
 
-        long progress = Math.min(System.currentTimeMillis() - this.startTime, this.duration);
+        long progress = Math.min(this.ticks, this.duration);
 
         if (progress >= this.duration)
         {
@@ -102,7 +107,7 @@ public class ProfileRunner
         {
             this.profile.applyProfile(progress, event.renderTickTime, this.position);
 
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayer player = this.mc.thePlayer;
             Point point = this.position.point;
             Angle angle = this.position.angle;
 
@@ -112,6 +117,8 @@ public class ProfileRunner
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.motionX = player.motionY = player.motionZ = 0;
+
+            this.ticks++;
         }
     }
 }
