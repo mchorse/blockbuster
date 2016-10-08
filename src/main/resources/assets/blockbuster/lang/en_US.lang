@@ -63,6 +63,13 @@ key.blockbuster.profile.prev=Previous Camera Fixture
 key.blockbuster.profile.start=Start Camera Profile
 key.blockbuster.profile.stop=Stop Camera Profile
 
+# Config
+
+blockbuster.config.general=General
+
+blockbuster.config.general.load_models_on_login=Send models
+blockbuster.config.general.recording_delay=Recording frame skip
+
 # Morphing
 
 blockbuster.morph=You morphed into "%s" model.

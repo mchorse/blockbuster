@@ -1,11 +1,14 @@
 package mchorse.blockbuster.common;
 
+import java.io.File;
+
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
+import mchorse.blockbuster.client.config.BlockbusterConfig;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
@@ -21,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -48,6 +52,16 @@ public class CommonProxy
     public ModelHandler models;
 
     /**
+     * Config
+     */
+    public BlockbusterConfig config;
+
+    /**
+     * Forge config
+     */
+    public Configuration forge;
+
+    /**
      * Record manager for server side
      */
     public static RecordManager manager = new RecordManager();
@@ -60,6 +74,14 @@ public class CommonProxy
     {
         Dispatcher.register();
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, new GuiHandler());
+
+        /* Configuration */
+        File config = new File(event.getModConfigurationDirectory(), "blockbuster/config.cfg");
+
+        this.forge = new Configuration(config);
+        this.config = new BlockbusterConfig(this.forge);
+
+        MinecraftForge.EVENT_BUS.register(this.config);
 
         /* Items */
         this.registerItem(Blockbuster.registerItem = new ItemRegister());

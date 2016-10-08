@@ -29,17 +29,22 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
  *   network abstract layer code, and fixing the code so it would work on
  *   dedicated server
  * - diesieben07 for giving idea for actor skins
- * - Choonster for pointing out that processInteract triggers for each hand
+ * - Choonster for pointing out that processInteract triggers for each hand +
+ *   TestMod3 config example
  * - Lightwave for porting some of the code to 1.9.4
  * - NlL5 for a lot of testing, giving lots of feedback and ideas for Blockbuster mod
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION)
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
 public class Blockbuster
 {
     /* Mod info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "1.3.1";
+    public static final String GUI_FACTORY = "mchorse.blockbuster.common.GuiFactory";
+
+    public static final String CLIENT_PROXY = "mchorse.blockbuster.common.ClientProxy";
+    public static final String SERVER_PROXY = "mchorse.blockbuster.common.CommonProxy";
 
     /* Items */
     public static Item playbackItem;
@@ -63,7 +68,7 @@ public class Blockbuster
     @Mod.Instance
     public static Blockbuster instance;
 
-    @SidedProxy(clientSide = "mchorse.blockbuster.common.ClientProxy", serverSide = "mchorse.blockbuster.common.CommonProxy")
+    @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
     public static CommonProxy proxy;
 
     /**
