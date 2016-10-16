@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
@@ -25,7 +26,7 @@ public class Replay
 
     /* Visual data */
     public String model = "";
-    public String skin = "";
+    public ResourceLocation skin;
     public boolean invisible = false;
 
     /* UUID */
@@ -76,7 +77,7 @@ public class Replay
         tag.setBoolean("Invincible", this.invincible);
 
         tag.setString("Model", this.model);
-        tag.setString("Skin", this.skin);
+        tag.setString("Skin", this.skin == null ? "" : this.skin.toString());
         tag.setBoolean("Invisible", this.invisible);
 
         if (this.actor != null)
@@ -92,7 +93,7 @@ public class Replay
         this.invincible = tag.getBoolean("Invincible");
 
         this.model = tag.getString("Model");
-        this.skin = tag.getString("Skin");
+        this.skin = EntityActor.fromString(tag.getString("Skin"), this.model);
         this.invisible = tag.getBoolean("Invisible");
 
         String uuid = tag.getString("UUID");
@@ -112,7 +113,7 @@ public class Replay
         buf.writeBoolean(this.invincible);
 
         ByteBufUtils.writeUTF8String(buf, this.model);
-        ByteBufUtils.writeUTF8String(buf, this.skin);
+        ByteBufUtils.writeUTF8String(buf, this.skin == null ? "" : this.skin.toString());
         buf.writeBoolean(this.invisible);
 
         buf.writeBoolean(this.actor != null);
@@ -130,7 +131,7 @@ public class Replay
         this.invincible = buf.readBoolean();
 
         this.model = ByteBufUtils.readUTF8String(buf);
-        this.skin = ByteBufUtils.readUTF8String(buf);
+        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buf), this.model);
         this.invisible = buf.readBoolean();
 
         if (buf.readBoolean())

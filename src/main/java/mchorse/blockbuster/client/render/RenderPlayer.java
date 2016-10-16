@@ -9,7 +9,6 @@ import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -21,13 +20,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * player renderer
+ * Player renderer
  *
  * Renders player entities with swag
  */
 @SideOnly(Side.CLIENT)
 public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 {
+    /**
+     * Default texture of the renderer
+     */
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
     public RenderPlayer(RenderManager renderManagerIn, float shadowSize)
@@ -42,11 +44,18 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     protected ResourceLocation getEntityTexture(EntityPlayer entity)
     {
         IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", capability.getModel() + "/" + capability.getSkin());
+        ResourceLocation skin = capability.getSkin();
 
-        if (ClientProxy.actorPack.resourceExists(location))
+        if (skin != null)
         {
-            return location;
+            if (skin.getResourceDomain().equals("blockbuster.actors") && ClientProxy.actorPack.resourceExists(skin))
+            {
+                return skin;
+            }
+            else
+            {
+                return skin;
+            }
         }
 
         return defaultTexture;
@@ -86,9 +95,10 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
      * Make player a little bit smaller (so he looked like steve, and not like a
      * overgrown rodent).
      */
-    protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
+    @Override
+    protected void preRenderCallback(EntityPlayer player, float partialTickTime)
     {
-        float f = 0.920F;
+        float f = 0.935F;
         GlStateManager.scale(f, f, f);
     }
 

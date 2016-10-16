@@ -1,6 +1,8 @@
 package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -8,12 +10,12 @@ public class PacketMorphPlayer implements IMessage
 {
     public int id;
     public String model = "";
-    public String skin = "";
+    public ResourceLocation skin;
 
     public PacketMorphPlayer()
     {}
 
-    public PacketMorphPlayer(int id, String model, String skin)
+    public PacketMorphPlayer(int id, String model, ResourceLocation skin)
     {
         this.id = id;
         this.model = model;
@@ -25,7 +27,7 @@ public class PacketMorphPlayer implements IMessage
     {
         this.id = buf.readInt();
         this.model = ByteBufUtils.readUTF8String(buf);
-        this.skin = ByteBufUtils.readUTF8String(buf);
+        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buf), this.model);
     }
 
     @Override
@@ -33,6 +35,6 @@ public class PacketMorphPlayer implements IMessage
     {
         buf.writeInt(this.id);
         ByteBufUtils.writeUTF8String(buf, this.model);
-        ByteBufUtils.writeUTF8String(buf, this.skin);
+        ByteBufUtils.writeUTF8String(buf, this.skin == null ? "" : this.skin.toString());
     }
 }

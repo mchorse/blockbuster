@@ -1,8 +1,10 @@
 package mchorse.blockbuster.capabilities.morphing;
 
+import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 
@@ -21,9 +23,10 @@ public class MorphingStorage implements IStorage<IMorphing>
     public NBTBase writeNBT(Capability<IMorphing> capability, IMorphing instance, EnumFacing side)
     {
         NBTTagCompound tag = new NBTTagCompound();
+        ResourceLocation skin = instance.getSkin();
 
         tag.setString("Model", instance.getModel());
-        tag.setString("Skin", instance.getSkin());
+        tag.setString("Skin", skin == null ? "" : skin.toString());
 
         return tag;
     }
@@ -36,7 +39,7 @@ public class MorphingStorage implements IStorage<IMorphing>
             NBTTagCompound tag = (NBTTagCompound) nbt;
 
             instance.setModel(tag.getString("Model"));
-            instance.setSkin(tag.getString("Skin"));
+            instance.setSkin(EntityActor.fromString(tag.getString("Skin"), tag.getString("Model")));
         }
     }
 }

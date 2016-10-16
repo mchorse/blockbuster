@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -134,7 +135,7 @@ public class GuiReplay extends GuiScreen
         value.invincible = this.invincible.getValue();
 
         value.model = this.model.getText();
-        value.skin = this.skin.getText();
+        value.skin = EntityActor.fromString(this.skin.getText(), value.model);
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
@@ -273,16 +274,18 @@ public class GuiReplay extends GuiScreen
     {
         if (this.replay == null) return;
 
+        this.skin.setMaxStringLength(120);
+
+        this.name.setMaxStringLength(30);
+        this.filename.setMaxStringLength(40);
+
         this.model.setText(this.replay.model);
-        this.skin.setText(this.replay.skin);
+        this.skin.setText(EntityActor.fromResource(this.replay.skin));
         this.invisible.setValue(this.replay.invisible);
 
         this.name.setText(this.replay.name);
         this.filename.setText(this.replay.id);
         this.invincible.setValue(this.replay.invincible);
-
-        this.name.setMaxStringLength(30);
-        this.filename.setMaxStringLength(40);
     }
 
     @Override
@@ -317,11 +320,11 @@ public class GuiReplay extends GuiScreen
         x = x + (this.width - x) / 2;
 
         String model = this.actor.model;
-        String skin = this.actor.skin;
+        ResourceLocation skin = this.actor.skin;
         boolean invisible = this.actor.invisible;
 
         this.actor.model = this.model.getText();
-        this.actor.skin = this.skin.getText();
+        this.actor.skin = EntityActor.fromString(this.skin.getText(), this.actor.model);
         this.actor.invisible = this.invisible.getValue();
         this.actor.renderName = false;
         GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);

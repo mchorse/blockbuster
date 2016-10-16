@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -94,7 +95,7 @@ public class GuiActor extends GuiScreen
     private void saveAndQuit()
     {
         String model = this.model.getText();
-        String skin = this.skin.getText();
+        ResourceLocation skin = EntityActor.fromString(this.skin.getText(), model);
         boolean invisible = this.invisible.getValue();
 
         Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), model, skin, invisible));
@@ -219,8 +220,10 @@ public class GuiActor extends GuiScreen
 
     private void fillData()
     {
+        this.skin.setMaxStringLength(120);
+
         this.model.setText(this.actor.model);
-        this.skin.setText(this.actor.skin);
+        this.skin.setText(EntityActor.fromResource(this.actor.skin));
         this.invisible.setValue(this.actor.invisible);
     }
 
@@ -248,11 +251,11 @@ public class GuiActor extends GuiScreen
         x = this.width / 2;
 
         String model = this.actor.model;
-        String skin = this.actor.skin;
+        ResourceLocation skin = this.actor.skin;
         boolean invisible = this.actor.invisible;
 
         this.actor.model = this.model.getText();
-        this.actor.skin = this.skin.getText();
+        this.actor.skin = EntityActor.fromString(this.skin.getText(), this.actor.model);
         this.actor.invisible = this.invisible.getValue();
         this.actor.renderName = false;
         GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);

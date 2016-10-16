@@ -25,6 +25,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -50,7 +51,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Skin used by the actor. If empty - means default skin provided with this
      * mod.
      */
-    public String skin = "";
+    public ResourceLocation skin;
 
     /**
      * Model which is used to display. If empty - means default model (steve)
@@ -429,7 +430,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(String model, String skin, boolean invisible, boolean notify)
+    public void modify(String model, ResourceLocation skin, boolean invisible, boolean notify)
     {
         this.model = model;
         this.skin = skin;
@@ -462,16 +463,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.readEntityFromNBT(tag);
 
-        String skin = this.skin;
+        ResourceLocation skin = this.skin;
         String model = this.model;
 
         this.model = tag.getString("Model");
-        this.skin = tag.getString("Skin");
+        this.skin = EntityActor.fromString(tag.getString("Skin"), this.model);
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
 
-        if ((!skin.equals(this.skin) || !model.equals(this.model)) && !this.worldObj.isRemote)
+        if (((skin != null && !skin.equals(this.skin)) || !model.equals(this.model)) && !this.worldObj.isRemote)
         {
             this.notifyPlayers();
         }
@@ -482,9 +483,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.writeEntityToNBT(tag);
 
-        if (!this.skin.isEmpty())
+        if (this.skin != null)
         {
-            tag.setString("Skin", this.skin);
+            tag.setString("Skin", this.skin.toString());
         }
 
         if (!this.model.isEmpty())
@@ -505,8 +506,8 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
-        ByteBufUtils.writeUTF8String(buffer, this.skin);
         ByteBufUtils.writeUTF8String(buffer, this.model);
+        ByteBufUtils.writeUTF8String(buffer, this.skin == null ? "" : this.skin.toString());
         buffer.writeBoolean(this.invisible);
 
         /* What a shame, Mojang, why do I need to synchronize your shit?! */
@@ -516,10 +517,44 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
-        this.skin = ByteBufUtils.readUTF8String(buffer);
         this.model = ByteBufUtils.readUTF8String(buffer);
+        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buffer), this.model);
         this.invisible = buffer.readBoolean();
 
         this.setEntityInvulnerable(buffer.readBoolean());
+    }
+
+    public static ResourceLocation fromString(String skin, String model)
+    {
+        if (skin.isEmpty())
+        {
+            return null;
+        }
+
+        if (skin.indexOf(":") == -1)
+        {
+            String suffix = (skin.indexOf("/") == -1 ? model + "/" : "");
+
+            return new ResourceLocation("blockbuster.actors", suffix + skin);
+        }
+
+        return new ResourceLocation(skin);
+    }
+
+    public static String fromResource(ResourceLocation skin)
+    {
+        if (skin == null)
+        {
+            return "";
+        }
+
+        if (skin.getResourceDomain().equals("blockbuster.actors"))
+        {
+            String[] splits = skin.getResourcePath().split("/");
+
+            return splits[splits.length - 1];
+        }
+
+        return skin.toString();
     }
 }

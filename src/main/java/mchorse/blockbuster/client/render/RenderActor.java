@@ -8,7 +8,6 @@ import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -25,6 +24,9 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
  */
 public class RenderActor extends RenderLiving<EntityActor>
 {
+    /**
+     * Default texture of the renderer
+     */
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
     private static final String defaultModel = "steve";
 
@@ -55,14 +57,18 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
-        String model = !entity.model.isEmpty() ? entity.model : "";
-        String path = model + "/" + entity.skin;
+        ResourceLocation skin = entity.skin;
 
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", path);
-
-        if (ClientProxy.actorPack.resourceExists(location))
+        if (skin != null)
         {
-            return location;
+            if (skin.getResourceDomain().equals("blockbuster.actors") && ClientProxy.actorPack.resourceExists(skin))
+            {
+                return skin;
+            }
+            else
+            {
+                return skin;
+            }
         }
 
         return defaultTexture;
@@ -125,9 +131,10 @@ public class RenderActor extends RenderLiving<EntityActor>
      * Make actor a little bit smaller (so he looked like steve, and not like a
      * overgrown rodent).
      */
-    protected void preRenderCallback(AbstractClientPlayer entitylivingbaseIn, float partialTickTime)
+    @Override
+    protected void preRenderCallback(EntityActor actor, float partialTickTime)
     {
-        float f = 0.920F;
+        float f = 0.935F;
         GlStateManager.scale(f, f, f);
     }
 

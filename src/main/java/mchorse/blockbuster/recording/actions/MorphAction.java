@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Morph action
@@ -15,12 +16,12 @@ import mchorse.blockbuster.common.entity.EntityActor;
 public class MorphAction extends Action
 {
     public String model;
-    public String skin;
+    public ResourceLocation skin;
 
     public MorphAction()
     {}
 
-    public MorphAction(String model, String skin)
+    public MorphAction(String model, ResourceLocation skin)
     {
         this.model = model;
         this.skin = skin;
@@ -44,13 +45,13 @@ public class MorphAction extends Action
     public void fromBytes(DataInput in) throws IOException
     {
         this.model = in.readUTF();
-        this.skin = in.readUTF();
+        this.skin = EntityActor.fromString(in.readUTF(), this.model);
     }
 
     @Override
     public void toBytes(DataOutput out) throws IOException
     {
         out.writeUTF(this.model);
-        out.writeUTF(this.skin);
+        out.writeUTF(this.skin == null ? "" : this.skin.toString());
     }
 }

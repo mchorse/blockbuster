@@ -1,5 +1,7 @@
 package mchorse.blockbuster.capabilities.morphing;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Default implementation of {@link IMorphing} interface.
  *
@@ -9,7 +11,7 @@ package mchorse.blockbuster.capabilities.morphing;
 public class Morphing implements IMorphing
 {
     private String model = "";
-    private String skin = "";
+    private ResourceLocation skin;
 
     @Override
     public String getModel()
@@ -18,7 +20,7 @@ public class Morphing implements IMorphing
     }
 
     @Override
-    public String getSkin()
+    public ResourceLocation getSkin()
     {
         return this.skin;
     }
@@ -27,7 +29,7 @@ public class Morphing implements IMorphing
     public void reset()
     {
         this.setModel("");
-        this.setSkin("");
+        this.setSkin(null);
     }
 
     @Override
@@ -37,7 +39,7 @@ public class Morphing implements IMorphing
     }
 
     @Override
-    public void setSkin(String newSkin)
+    public void setSkin(ResourceLocation newSkin)
     {
         this.skin = newSkin;
     }

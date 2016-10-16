@@ -120,7 +120,7 @@ public class CommandAction extends CommandBase
         boolean invincible = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(model, skin, false, true);
+        actor.modify(model, EntityActor.fromString(skin, model), false, true);
         actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 

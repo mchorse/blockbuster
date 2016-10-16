@@ -1,5 +1,7 @@
 package mchorse.blockbuster.capabilities.morphing;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Morphing interface
  *
@@ -16,7 +18,7 @@ public interface IMorphing
     /**
      * Get id of model's skin
      */
-    public String getSkin();
+    public ResourceLocation getSkin();
 
     /**
      * Reset model and skin (i.e. turn off morphing)
@@ -31,5 +33,5 @@ public interface IMorphing
     /**
      * Set current skin
      */
-    public void setSkin(String newSkin);
+    public void setSkin(ResourceLocation newSkin);
 }
