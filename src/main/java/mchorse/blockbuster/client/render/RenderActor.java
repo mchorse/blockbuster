@@ -100,9 +100,12 @@ public class RenderActor extends RenderLiving<EntityActor>
     {
         if (entity.invisible)
         {
+            this.shadowOpaque = 0.0F;
+
             return;
         }
 
+        this.shadowOpaque = 1.0F;
         this.setupModel(entity);
 
         super.doRender(entity, x, y, z, entityYaw, partialTicks);
