@@ -6,8 +6,6 @@ blockbuster.no=No
 
 # Item tool tips
 
-blockbuster.info.director=Use it for §omachinimas
-
 blockbuster.info.playback_director=Attached to (§r%d§7, §r%d§7, §r%d§7)
 blockbuster.info.playback_profile=Plays profile "§f§o%s§r§7"
 blockbuster.info.playback_play=Plays camera
