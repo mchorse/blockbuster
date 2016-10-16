@@ -72,6 +72,7 @@ blockbuster.config.general.recording_delay=Recording frame skip
 
 blockbuster.morph=You morphed into "%s" model.
 blockbuster.morph.disable=You've been demorphed.
+blockbuster.morph.wrong=Morph by name "%s" doesn't exist!
 
 # GUI
 

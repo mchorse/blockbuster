@@ -3,6 +3,7 @@ package mchorse.blockbuster.commands;
 import java.util.Collections;
 import java.util.List;
 
+import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -48,6 +49,11 @@ public class CommandMorph extends CommandBase
         }
         else
         {
+            if (!Blockbuster.proxy.models.models.containsKey(args[0]))
+            {
+                throw new CommandException("blockbuster.morph.wrong", args[0]);
+            }
+
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
             if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], EntityActor.fromString(args[1], args[0])));
 
