@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -41,6 +42,12 @@ public class InteractBlockAction extends Action
     public void apply(EntityActor actor)
     {
         IBlockState state = actor.worldObj.getBlockState(this.pos);
+
+        /* Black listed block */
+        if (state.getBlock() instanceof BlockDirector)
+        {
+            return;
+        }
 
         actor.fakePlayer.posX = actor.posX;
         actor.fakePlayer.posY = actor.posY;
