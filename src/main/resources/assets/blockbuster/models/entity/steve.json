@@ -138,7 +138,8 @@
             "anchor": [ 0.5, 0, 0.5 ],
             "mirror": true,
             "holding": "left",
-            "swinging": true
+            "swinging": true,
+            "idle": true
         },
         "right_arm": {
             "size": [ 4, 12, 4 ],
@@ -146,7 +147,8 @@
             "anchor": [ 0.5, 0, 0.5 ],
             "holding": "right",
             "swiping": true,
-            "swinging": true
+            "swinging": true,
+            "idle": true
         },
         "left_leg": {
             "size": [ 4, 12, 4 ],
