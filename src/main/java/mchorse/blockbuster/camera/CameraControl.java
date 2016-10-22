@@ -7,6 +7,8 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Camera control class
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * This class is responsible for controlling the camera profile. The actions
  * are delegated from keyboard handler.
  */
+@SideOnly(Side.CLIENT)
 public class CameraControl
 {
     /**
