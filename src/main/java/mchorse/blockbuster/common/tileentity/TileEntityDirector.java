@@ -62,6 +62,10 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             {
                 this.worldObj.spawnEntityInWorld(actor);
             }
+            else
+            {
+                actor.directorBlock = this.getPos();
+            }
         }
 
         this.playBlock(true);
