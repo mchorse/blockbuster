@@ -3,6 +3,8 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -207,6 +209,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     public void applyReplay(Replay replay, EntityPlayer player)
     {
         if (replay == null) return;
+
+        IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+
+        cap.setModel(replay.model);
+        cap.setSkin(replay.skin);
 
         Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
     }
