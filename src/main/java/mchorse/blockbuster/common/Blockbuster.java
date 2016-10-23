@@ -4,7 +4,10 @@ import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,6 +15,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Blockbuster's main entry
@@ -61,6 +66,18 @@ public class Blockbuster
         public Item getTabIconItem()
         {
             return Item.getItemFromBlock(Blockbuster.directorBlock);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void displayAllRelevantItems(java.util.List<net.minecraft.item.ItemStack> items)
+        {
+            super.displayAllRelevantItems(items);
+
+            ItemStack stack = new ItemStack(Items.SPAWN_EGG);
+            ItemMonsterPlacer.applyEntityIdToItemStack(stack, "blockbuster.Actor");
+
+            items.add(stack);
         }
     };
 
