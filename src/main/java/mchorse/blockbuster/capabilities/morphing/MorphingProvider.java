@@ -14,31 +14,31 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 public class MorphingProvider implements ICapabilitySerializable<NBTBase>
 {
     @CapabilityInject(IMorphing.class)
-    public static final Capability<IMorphing> MORPHING_CAP = null;
+    public static final Capability<IMorphing> MORPHING = null;
 
-    private IMorphing instance = MORPHING_CAP.getDefaultInstance();
+    private IMorphing instance = MORPHING.getDefaultInstance();
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
-        return capability == MORPHING_CAP;
+        return capability == MORPHING;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
-        return capability == MORPHING_CAP ? MORPHING_CAP.<T> cast(this.instance) : null;
+        return capability == MORPHING ? MORPHING.<T> cast(this.instance) : null;
     }
 
     @Override
     public NBTBase serializeNBT()
     {
-        return MORPHING_CAP.getStorage().writeNBT(MORPHING_CAP, this.instance, null);
+        return MORPHING.getStorage().writeNBT(MORPHING, this.instance, null);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        MORPHING_CAP.getStorage().readNBT(MORPHING_CAP, this.instance, null, nbt);
+        MORPHING.getStorage().readNBT(MORPHING, this.instance, null, nbt);
     }
 }

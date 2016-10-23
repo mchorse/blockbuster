@@ -1,6 +1,6 @@
 package mchorse.blockbuster.common.block;
 
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import net.minecraft.block.Block;

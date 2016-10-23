@@ -13,7 +13,7 @@ public class ClientHandlerMorph extends ClientMessageHandler<PacketMorph>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketMorph message)
     {
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
 
         if (capability != null)
         {

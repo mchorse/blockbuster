@@ -3,7 +3,7 @@ package mchorse.blockbuster.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.IConfigElement;

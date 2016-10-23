@@ -17,7 +17,7 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
     @Override
     public void run(EntityPlayerMP player, PacketMorph message)
     {
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
 
         if (capability != null)
         {

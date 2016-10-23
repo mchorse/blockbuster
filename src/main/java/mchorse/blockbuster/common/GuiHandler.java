@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.GuiPlayback;

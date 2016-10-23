@@ -83,7 +83,6 @@ public class CommandAction extends CommandBase
             EntityActor actor = actorFromArgs(SubCommandBase.dropFirstArgument(args), world);
 
             manager.startPlayback(args[1], actor, Mode.BOTH, true, true);
-
             world.spawnEntityInWorld(actor);
         }
         else if (action.equals("stop"))

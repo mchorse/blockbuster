@@ -1,8 +1,11 @@
 package mchorse.blockbuster.capabilities;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
@@ -24,6 +27,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 public class CapabilityHandler
 {
     public static final ResourceLocation MORPHING_CAP = new ResourceLocation(Blockbuster.MODID, "morphing_capability");
+    public static final ResourceLocation RECORDING_CAP = new ResourceLocation(Blockbuster.MODID, "recording_capability");
 
     /**
      * Attach capabilities (well, only one, right now)
@@ -34,6 +38,7 @@ public class CapabilityHandler
         if (!(event.getEntity() instanceof EntityPlayer)) return;
 
         event.addCapability(MORPHING_CAP, new MorphingProvider());
+        event.addCapability(RECORDING_CAP, new RecordingProvider());
     }
 
     /**
@@ -43,11 +48,17 @@ public class CapabilityHandler
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayer player = event.player;
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
+        IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
 
         if (capability != null)
         {
             Dispatcher.sendTo(new PacketMorph(capability.getModel(), capability.getSkin()), (EntityPlayerMP) player);
+        }
+
+        if (recording != null && recording.hasProfile())
+        {
+            CameraUtils.sendProfileToPlayer(recording.currentProfile(), (EntityPlayerMP) player, false);
         }
     }
 
@@ -62,7 +73,7 @@ public class CapabilityHandler
         {
             Entity target = event.getTarget();
             EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
-            IMorphing cap = target.getCapability(MorphingProvider.MORPHING_CAP, null);
+            IMorphing cap = target.getCapability(MorphingProvider.MORPHING, null);
 
             Dispatcher.sendTo(new PacketMorphPlayer(target.getEntityId(), cap.getModel(), cap.getSkin()), player);
         }

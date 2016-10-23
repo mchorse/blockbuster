@@ -1,6 +1,6 @@
-package mchorse.blockbuster.client.config;
+package mchorse.blockbuster.config;
 
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -18,6 +18,8 @@ public class BlockbusterConfig
 {
     public boolean load_models_on_login = false;
     public int recording_delay = 1;
+    public int camera_duration_step = 10;
+    public int camera_duration = 30;
 
     private Configuration config;
 
@@ -34,6 +36,8 @@ public class BlockbusterConfig
 
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", category, false, "Send models and skins when player is logging in", prefix + "load_models_on_login");
         this.recording_delay = this.config.getInt("recording_delay", category, 1, 1, 10, "Frames to skip before record or play from record", prefix + "recording_delay");
+        this.camera_duration_step = this.config.getInt("camera_duration_step", category, 10, 1, 100, "Which step to use when adding or reducing duration of the camera fixture");
+        this.camera_duration = this.config.getInt("camera_duration", category, 30, 1, 1000, "What is default duration of the camera fixture");
 
         if (this.config.hasChanged())
         {

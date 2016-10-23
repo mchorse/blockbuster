@@ -204,11 +204,17 @@ public class CameraControl
         player.setVelocity(0, 0, 0);
     }
 
+    /**
+     * Add roll (it can be negative too)
+     */
     public void addRoll(float value)
     {
         this.roll += value;
     }
 
+    /**
+     * Reset roll (set it back to 0)
+     */
     public void resetRoll()
     {
         this.roll = 0;

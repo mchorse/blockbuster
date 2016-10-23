@@ -52,7 +52,7 @@ public class RenderingHandler
     public void onPlayerRender(RenderPlayerEvent.Pre event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
 
         if (capability == null || capability.getModel().isEmpty()) return;
 

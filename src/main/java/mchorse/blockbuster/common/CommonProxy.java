@@ -2,19 +2,23 @@ package mchorse.blockbuster.common;
 
 import java.io.File;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.actor.ModelHandler;
 import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
-import mchorse.blockbuster.client.config.BlockbusterConfig;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
@@ -83,6 +87,9 @@ public class CommonProxy
 
         MinecraftForge.EVENT_BUS.register(this.config);
 
+        /* Creative tab */
+        Blockbuster.blockbusterTab = new BlockbusterTab();
+
         /* Items */
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
@@ -99,6 +106,7 @@ public class CommonProxy
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
+        CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
     }
 
     /**

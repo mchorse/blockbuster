@@ -63,14 +63,13 @@ public class ProfileRunner
         if (!this.isRunning)
         {
             this.mc.thePlayer.sendChatMessage("/gamemode 3");
+            this.fov = this.mc.gameSettings.fovSetting;
             MinecraftForge.EVENT_BUS.register(this);
         }
 
         this.isRunning = true;
         this.duration = this.profile.getDuration();
         this.ticks = 0;
-
-        this.fov = this.mc.gameSettings.fovSetting;
     }
 
     public void stop()
@@ -78,12 +77,12 @@ public class ProfileRunner
         if (this.isRunning)
         {
             this.mc.thePlayer.sendChatMessage("/gamemode 1");
+            this.mc.gameSettings.fovSetting = this.fov;
             MinecraftForge.EVENT_BUS.unregister(this);
         }
 
         this.isRunning = false;
 
-        this.mc.gameSettings.fovSetting = this.fov;
         CommandCamera.getControl().resetRoll();
     }
 

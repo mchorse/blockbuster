@@ -8,6 +8,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 
@@ -21,16 +22,36 @@ import mchorse.blockbuster.recording.actions.Action;
  */
 public class Record
 {
+    /**
+     * Signature of the recording. If the first short of the record file isn't
+     * this file, then the
+     */
     public static final short SIGNATURE = 131;
 
+    /**
+     * Filename of this record
+     */
     public String filename = "";
 
+    /**
+     * Delay between recording frames
+     */
+    public int delay = 1;
+
+    /**
+     * Recorded actions
+     */
     public List<Action> actions = new ArrayList<Action>();
+
+    /**
+     * Recorded frames
+     */
     public List<Frame> frames = new ArrayList<Frame>();
 
     public Record(String filename)
     {
         this.filename = filename;
+        this.delay = Blockbuster.proxy.config.recording_delay;
     }
 
     /**
@@ -38,7 +59,7 @@ public class Record
      */
     public int getLength()
     {
-        return Math.max(this.actions.size(), this.frames.size());
+        return Math.min(this.actions.size(), this.frames.size());
     }
 
     /**
@@ -91,6 +112,7 @@ public class Record
 
         /* Version of the recording */
         buffer.writeShort(SIGNATURE);
+        buffer.writeByte(this.delay);
         buffer.writeInt(c);
 
         for (int i = 0; i < c; i++)
@@ -130,6 +152,7 @@ public class Record
             throw new Exception("Given file doesn't have appropriate signature!");
         }
 
+        this.delay = buffer.readByte();
         int frames = buffer.readInt();
 
         for (int i = 0; i < frames; i++)

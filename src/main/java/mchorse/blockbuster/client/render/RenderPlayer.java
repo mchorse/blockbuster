@@ -2,12 +2,12 @@ package mchorse.blockbuster.client.render;
 
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
-import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -43,7 +43,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     @Override
     protected ResourceLocation getEntityTexture(EntityPlayer entity)
     {
-        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING, null);
         ResourceLocation skin = capability.getSkin();
 
         if (skin != null)
@@ -80,7 +80,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     protected void setupModel(EntityPlayer entity)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
-        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING, null);
 
         String key = models.containsKey(capability.getModel()) ? capability.getModel() : "steve";
         String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");

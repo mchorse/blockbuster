@@ -12,7 +12,7 @@ public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesSave>
     @Override
     public void run(EntityPlayerMP player, PacketFramesSave message)
     {
-        Record serverRecord = CommonProxy.manager.save.get(message.filename);
+        Record serverRecord = CommonProxy.manager.records.get(message.filename);
 
         if (serverRecord == null)
         {

@@ -29,6 +29,7 @@ public class RecordRecorder
 
     public Mode mode;
     public int ticks = 0;
+    public int delay = 1;
     public PlayerTracker tracker;
 
     public RecordRecorder(Record record, Mode mode)
@@ -49,6 +50,11 @@ public class RecordRecorder
     {
         boolean both = this.mode == Mode.BOTH;
 
+        if (this.delay-- > 0)
+        {
+            return;
+        }
+
         if (this.mode == Mode.FRAMES || both)
         {
             Frame frame = new Frame();
@@ -64,5 +70,6 @@ public class RecordRecorder
         }
 
         this.ticks++;
+        this.delay = this.record.delay;
     }
 }

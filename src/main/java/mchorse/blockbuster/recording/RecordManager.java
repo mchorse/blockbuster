@@ -25,7 +25,7 @@ import net.minecraftforge.common.DimensionManager;
  */
 public class RecordManager
 {
-    public Map<String, Record> save = new HashMap<String, Record>();
+    public Map<String, Record> records = new HashMap<String, Record>();
 
     public Map<EntityPlayer, RecordRecorder> recorders = new HashMap<EntityPlayer, RecordRecorder>();
     public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
@@ -79,7 +79,7 @@ public class RecordManager
 
         if (recorder != null)
         {
-            this.save.put(recorder.record.filename, recorder.record);
+            this.records.put(recorder.record.filename, recorder.record);
             this.recorders.remove(player);
 
             if (notify)
@@ -120,6 +120,9 @@ public class RecordManager
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
+            actor.playback.record.applyFrame(0, actor);
+            actor.playback.playing = true;
+            actor.playback.kill = true;
 
             if (notify)
             {
@@ -148,8 +151,13 @@ public class RecordManager
             return;
         }
 
-        actor.playback.ticks = 0;
-        actor.playback.next(actor);
+        actor.playback.record.applyFrame(0, actor);
+
+        if (actor.playback.kill)
+        {
+            actor.setDead();
+        }
+
         actor.playback = null;
 
         this.players.remove(actor);

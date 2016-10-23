@@ -5,19 +5,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketModels;
+import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -107,77 +106,26 @@ public class ModelHandler
     @SubscribeEvent
     public void onPlayerLogsIn(PlayerLoggedInEvent event)
     {
-        PacketModels message = new PacketModels();
+        EntityPlayerMP player = (EntityPlayerMP) event.player;
 
-        this.pack.reload();
-
-        for (String model : this.pack.getAllSkins().keySet())
+        if (Blockbuster.proxy.config.load_models_on_login)
         {
-            List<String> skins = this.pack.getSkins(model);
-
-            try
-            {
-                Map<String, ByteBuf> output = new HashMap<String, ByteBuf>();
-
-                for (String skin : skins)
-                {
-                    InputStream skinStream = new FileInputStream(this.pack.skins.get(model).get(skin));
-
-                    output.put(skin, this.fileToBuffer(skinStream));
-                }
-
-                message.skins.put(model, output);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            ServerHandlerRequestModels.sendModels(this, player);
         }
 
-        for (String model : this.pack.getModels())
+        try
         {
-            try
-            {
-                InputStream modelStream = new FileInputStream(this.pack.models.get(model));
+            IRecording recording = event.player.getCapability(RecordingProvider.RECORDING, null);
 
-                if (modelStream != null)
-                {
-                    message.models.put(model, this.fileToString(modelStream));
-                }
-            }
-            catch (IOException e)
+            if (recording.hasProfile())
             {
-                e.printStackTrace();
+                CameraUtils.sendProfileToPlayer(recording.currentProfile(), player, false);
             }
         }
-
-        Dispatcher.sendTo(message, (EntityPlayerMP) event.player);
-    }
-
-    /**
-     * Convert file into string
-     */
-    private String fileToString(InputStream input) throws IOException
-    {
-        StringBuilder builder = new StringBuilder();
-        int letter;
-
-        while ((letter = input.read()) != -1)
+        catch (Exception e)
         {
-            builder.append((char) letter);
+            e.printStackTrace();
         }
-
-        input.close();
-
-        return builder.toString();
-    }
-
-    /**
-     * Convert file to netty's byte buffer
-     */
-    private ByteBuf fileToBuffer(InputStream input) throws IOException
-    {
-        return Unpooled.wrappedBuffer(IOUtils.toByteArray(input));
     }
 
     /**
@@ -190,7 +138,7 @@ public class ModelHandler
         if (event.phase == Phase.START) return;
 
         EntityPlayer player = event.player;
-        IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing cap = player.getCapability(MorphingProvider.MORPHING, null);
         Model data = this.models.get(cap.getModel());
 
         if (data == null)

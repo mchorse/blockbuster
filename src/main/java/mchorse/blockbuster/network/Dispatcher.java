@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network;
 
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
@@ -19,6 +19,7 @@ import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
+import mchorse.blockbuster.network.common.PacketRequestModels;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import mchorse.blockbuster.network.common.camera.PacketListCameraProfiles;
@@ -39,6 +40,7 @@ import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerMorph;
 import mchorse.blockbuster.network.server.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
 import mchorse.blockbuster.network.server.camera.ServerHandlerLoadCameraProfile;
@@ -141,6 +143,7 @@ public class Dispatcher
 
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
+        register(PacketRequestModels.class, ServerHandlerRequestModels.class, Side.SERVER);
     }
 
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)

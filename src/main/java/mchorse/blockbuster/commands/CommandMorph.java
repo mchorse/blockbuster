@@ -3,7 +3,7 @@ package mchorse.blockbuster.commands;
 import java.util.Collections;
 import java.util.List;
 
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;

@@ -8,6 +8,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Frame handler
+ *
+ * This class is responsible for recording frames on the client side.
+ */
 @SideOnly(Side.CLIENT)
 public class FrameHandler
 {

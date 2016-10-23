@@ -15,7 +15,7 @@ public class ClientHandlerMorphPlayer extends ClientMessageHandler<PacketMorphPl
     public void run(EntityPlayerSP player, PacketMorphPlayer message)
     {
         Entity entity = player.worldObj.getEntityByID(message.id);
-        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING, null);
 
         if (capability != null)
         {

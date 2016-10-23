@@ -1,13 +1,11 @@
-package mchorse.blockbuster.common;
+package mchorse.blockbuster;
 
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
+import mchorse.blockbuster.common.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemMonsterPlacer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -15,8 +13,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Blockbuster's main entry
@@ -51,6 +47,9 @@ public class Blockbuster
     public static final String CLIENT_PROXY = "mchorse.blockbuster.common.ClientProxy";
     public static final String SERVER_PROXY = "mchorse.blockbuster.common.CommonProxy";
 
+    /* Creative tab */
+    public static CreativeTabs blockbusterTab;
+
     /* Items */
     public static Item playbackItem;
     public static Item registerItem;
@@ -58,28 +57,6 @@ public class Blockbuster
 
     /* Blocks */
     public static Block directorBlock;
-
-    /* Creative tabs */
-    public static final CreativeTabs blockbusterTab = new CreativeTabs("blockbuster")
-    {
-        @Override
-        public Item getTabIconItem()
-        {
-            return Item.getItemFromBlock(Blockbuster.directorBlock);
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public void displayAllRelevantItems(java.util.List<net.minecraft.item.ItemStack> items)
-        {
-            super.displayAllRelevantItems(items);
-
-            ItemStack stack = new ItemStack(Items.SPAWN_EGG);
-            ItemMonsterPlacer.applyEntityIdToItemStack(stack, "blockbuster.Actor");
-
-            items.add(stack);
-        }
-    };
 
     /* Forge stuff */
     @Mod.Instance
@@ -98,13 +75,13 @@ public class Blockbuster
     }
 
     @EventHandler
-    public void registerAllItemsBlocksAndEntities(FMLPreInitializationEvent event)
+    public void preLoad(FMLPreInitializationEvent event)
     {
         proxy.preLoad(event);
     }
 
     @EventHandler
-    public void registerEventHandlerAndInjectActorPack(FMLInitializationEvent event)
+    public void load(FMLInitializationEvent event)
     {
         proxy.load(event);
     }

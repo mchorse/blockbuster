@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.actor.ModelPack;
 import mchorse.blockbuster.camera.ProfileRunner;

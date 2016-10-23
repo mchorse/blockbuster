@@ -3,9 +3,9 @@ package mchorse.blockbuster.common.entity;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.actor.ModelHandler;
-import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;

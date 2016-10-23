@@ -2,10 +2,10 @@ package mchorse.blockbuster.client.render;
 
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
-import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.client.renderer.GlStateManager;

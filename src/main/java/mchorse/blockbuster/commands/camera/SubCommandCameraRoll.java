@@ -24,7 +24,7 @@ public class SubCommandCameraRoll extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.camera.fov";
+        return "blockbuster.commands.camera.roll";
     }
 
     @Override

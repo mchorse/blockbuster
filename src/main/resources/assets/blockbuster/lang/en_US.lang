@@ -67,6 +67,8 @@ blockbuster.config.general=General
 
 blockbuster.config.general.load_models_on_login=Send models
 blockbuster.config.general.recording_delay=Recording frame skip
+blockbuster.config.general.camera_duration_step=Duration step
+blockbuster.config.general.camera_duration=Default fixture duration
 
 # Morphing
 

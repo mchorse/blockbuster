@@ -26,7 +26,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         }
         else
         {
-            player.getCapability(MorphingProvider.MORPHING_CAP, null).reset();
+            player.getCapability(MorphingProvider.MORPHING, null).reset();
 
             Record record = ClientProxy.manager.recorders.get(player).record;
 

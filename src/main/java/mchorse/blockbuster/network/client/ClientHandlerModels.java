@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.common.Blockbuster;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.PacketModels;
 import net.minecraft.client.entity.EntityPlayerSP;

@@ -210,7 +210,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     {
         if (replay == null) return;
 
-        IMorphing cap = player.getCapability(MorphingProvider.MORPHING_CAP, null);
+        IMorphing cap = player.getCapability(MorphingProvider.MORPHING, null);
 
         cap.setModel(replay.model);
         cap.setSkin(replay.skin);

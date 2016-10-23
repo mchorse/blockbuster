@@ -15,6 +15,7 @@ public class RecordPlayer
 
     public Mode mode;
     public int ticks = 0;
+    public int delay = 1;
     public boolean kill = false;
     public boolean playing = false;
 
@@ -42,12 +43,18 @@ public class RecordPlayer
             return;
         }
 
+        if (this.delay-- > 0)
+        {
+            return;
+        }
+
         boolean both = this.mode == Mode.BOTH;
 
         if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.ticks, actor);
         if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.ticks, actor);
 
         this.ticks++;
+        this.delay = this.record.delay;
     }
 
     /**

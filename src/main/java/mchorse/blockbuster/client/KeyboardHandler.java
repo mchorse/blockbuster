@@ -2,6 +2,7 @@ package mchorse.blockbuster.client;
 
 import org.lwjgl.input.Keyboard;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.fixtures.CircularFixture;
@@ -184,21 +185,23 @@ public class KeyboardHandler
         CameraControl control = CommandCamera.getControl();
 
         /* Adding fixture */
+        int duration = Blockbuster.proxy.config.camera_duration;
+
         if (this.profileAddIdleFixture.isPressed())
         {
-            control.add(player, new IdleFixture(1000));
+            control.add(player, new IdleFixture(duration));
         }
         else if (this.profileAddPathFixture.isPressed())
         {
-            control.add(player, new PathFixture(1000));
+            control.add(player, new PathFixture(duration));
         }
         else if (this.profileAddLookFixture.isPressed())
         {
-            control.add(player, new LookFixture(1000));
+            control.add(player, new LookFixture(duration));
         }
         else if (this.profileAddFollowFixture.isPressed())
         {
-            control.add(player, new FollowFixture(1000));
+            control.add(player, new FollowFixture(duration));
         }
         else if (this.profileAddCircularFixture.isPressed())
         {
@@ -217,13 +220,15 @@ public class KeyboardHandler
         }
 
         /* Duration management */
+        int step = Blockbuster.proxy.config.camera_duration_step;
+
         if (this.profileAddDuration.isPressed())
         {
-            control.addDuration(100);
+            control.addDuration(step);
         }
         else if (this.profileReduceDuration.isPressed())
         {
-            control.addDuration(-100);
+            control.addDuration(-step);
         }
 
         /* Path fixture management */

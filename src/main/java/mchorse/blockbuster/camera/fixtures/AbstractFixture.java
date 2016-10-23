@@ -47,7 +47,8 @@ public abstract class AbstractFixture
     }
 
     /**
-     * Duration of this fixture. Represented in frames. 1 frame = ~1/20 seconds
+     * Duration of this fixture. Represented in frames.
+     * 1 frame = 1/limit_frame_in_mc_settings seconds
      */
     @Expose
     protected long duration;
