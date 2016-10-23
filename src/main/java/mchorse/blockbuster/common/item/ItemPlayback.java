@@ -7,6 +7,7 @@ import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
+import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,7 +30,7 @@ import net.minecraft.world.World;
  */
 public class ItemPlayback extends Item
 {
-    /* NBTTag + BlockPos helpers */
+    /* BlockPos helpers */
 
     /**
      * Save given {@link BlockPos} into ItemStack's {@link NBTTagCompound} tag
@@ -41,34 +42,7 @@ public class ItemPlayback extends Item
             stack.setTagCompound(new NBTTagCompound());
         }
 
-        saveBlockPos(key, stack.getTagCompound(), pos);
-    }
-
-    /**
-     * Save given {@link BlockPos} into {@link NBTTagCompound} tag
-     */
-    public static void saveBlockPos(String key, NBTTagCompound tag, BlockPos pos)
-    {
-        tag.setInteger(key + "X", pos.getX());
-        tag.setInteger(key + "Y", pos.getY());
-        tag.setInteger(key + "Z", pos.getZ());
-    }
-
-    /**
-     * Get {@link BlockPos} position from {@link NBTTagCompound} tag
-     */
-    public static BlockPos getBlockPos(String key, NBTTagCompound tag)
-    {
-        String x = key + "X";
-        String y = key + "Y";
-        String z = key + "Z";
-
-        if (tag == null || !tag.hasKey(x) || !tag.hasKey(y) || !tag.hasKey(z))
-        {
-            return null;
-        }
-
-        return new BlockPos(tag.getInteger(x), tag.getInteger(y), tag.getInteger(z));
+        NBTUtils.saveBlockPos(key, stack.getTagCompound(), pos);
     }
 
     /**
@@ -76,7 +50,7 @@ public class ItemPlayback extends Item
      */
     public static BlockPos getBlockPos(String key, ItemStack stack)
     {
-        return getBlockPos(key, stack.getTagCompound());
+        return NBTUtils.getBlockPos(key, stack.getTagCompound());
     }
 
     /* ItemPlayback */

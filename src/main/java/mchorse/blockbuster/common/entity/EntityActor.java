@@ -9,7 +9,6 @@ import mchorse.blockbuster.common.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
-import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
@@ -17,6 +16,7 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordPlayer.Mode;
 import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,12 +84,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     /**
      * Fake player used in some of methods like onBlockActivated to avoid
-     * NullPointerException
+     * NullPointerException (and some math like the direction in which to open
+     * the fence or something).
      */
     public EntityPlayer fakePlayer;
 
     /**
-     * Plays the actor
+     * In Soviet Russia, playback plays you
      */
     public RecordPlayer playback;
 
@@ -219,7 +220,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.updateArmSwingProgress();
 
         /*
-         * Taken from the EntityDragon, IDK what it does, but the same code was
+         * Taken from the EntityLivingBase, IDK what it does, but the same code was
          * in Mocap's EntityMocap (which is serves like an actor in Mocap mod)
          *
          * It looks like position and rotation interpolation, though
@@ -470,7 +471,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.skin = EntityActor.fromString(tag.getString("Skin"), this.model);
         this.invisible = tag.getBoolean("Invisible");
 
-        this.directorBlock = ItemPlayback.getBlockPos("Dir", tag);
+        this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
 
         if (((skin != null && !skin.equals(this.skin)) || !model.equals(this.model)) && !this.worldObj.isRemote)
         {
@@ -495,7 +496,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.directorBlock != null)
         {
-            ItemPlayback.saveBlockPos("Dir", tag, this.directorBlock);
+            NBTUtils.saveBlockPos("Dir", tag, this.directorBlock);
         }
 
         tag.setBoolean("Invisible", this.invisible);
