@@ -11,6 +11,7 @@ import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,9 +25,20 @@ import net.minecraftforge.common.DimensionManager;
  */
 public class RecordManager
 {
+    /**
+     * Loaded records
+     */
     public Map<String, Record> records = new HashMap<String, Record>();
 
+    /**
+     * Currently running record recorders (I have something to do about the
+     * name)
+     */
     public Map<EntityPlayer, RecordRecorder> recorders = new HashMap<EntityPlayer, RecordRecorder>();
+
+    /**
+     * No, not {@link EntityPlayer}s, say record pla-yers, pla-yers...
+     */
     public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
 
     /**
@@ -42,7 +54,7 @@ public class RecordManager
     /**
      * Start recording given player to record with given filename
      */
-    public boolean startRecording(String filename, EntityPlayer player, RecordPlayer.Mode mode, boolean notify)
+    public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify)
     {
         if (filename.isEmpty() || this.stopRecording(player, notify))
         {
@@ -96,7 +108,7 @@ public class RecordManager
      * Start playback from given filename and given actor. You also have to
      * specify the mode of playback.
      */
-    public boolean startPlayback(String filename, EntityActor actor, RecordPlayer.Mode mode, boolean kill, boolean notify)
+    public boolean startPlayback(String filename, EntityActor actor, Mode mode, boolean kill, boolean notify)
     {
         if (this.players.containsKey(actor))
         {
@@ -108,6 +120,7 @@ public class RecordManager
         if (!file.exists())
         {
             Utils.broadcastMessage("blockbuster.mocap.cant_find_file", filename);
+
             return false;
         }
 

@@ -5,6 +5,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,7 +23,7 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
 
         Dispatcher.sendToServer(new PacketPlayback(message.id, true));
 
-        actor.playback = new RecordPlayer(record, RecordPlayer.Mode.FRAMES);
+        actor.playback = new RecordPlayer(record, Mode.FRAMES);
         actor.playback.playing = true;
     }
 }

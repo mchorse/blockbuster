@@ -3,9 +3,9 @@ package mchorse.blockbuster.recording;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.recording.RecordPlayer.Mode;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 

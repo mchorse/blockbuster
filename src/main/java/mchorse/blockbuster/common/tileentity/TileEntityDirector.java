@@ -10,7 +10,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
-import mchorse.blockbuster.recording.RecordPlayer.Mode;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

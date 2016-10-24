@@ -5,7 +5,7 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketFramesSave;
-import mchorse.blockbuster.recording.RecordPlayer.Mode;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

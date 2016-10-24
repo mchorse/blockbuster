@@ -50,7 +50,8 @@ public class CommandDirector extends CommandBase
         }
 
         String action = args[0];
-        AbstractTileEntityDirector director = this.getDirector(server, args[1], args[2], args[3]);
+        BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
+        AbstractTileEntityDirector director = this.getDirector(server, pos);
 
         if (action.equals("play"))
         {
@@ -65,15 +66,10 @@ public class CommandDirector extends CommandBase
     }
 
     /**
-     * Get abstract director from argument strings
+     * Get abstract director from block pos
      */
-    protected AbstractTileEntityDirector getDirector(MinecraftServer server, String x, String y, String z) throws CommandException
+    protected AbstractTileEntityDirector getDirector(MinecraftServer server, BlockPos pos) throws CommandException
     {
-        CommandBase.CoordinateArg cX = CommandBase.parseCoordinate(0, x, false);
-        CommandBase.CoordinateArg cY = CommandBase.parseCoordinate(0, y, false);
-        CommandBase.CoordinateArg cZ = CommandBase.parseCoordinate(0, z, false);
-
-        BlockPos pos = new BlockPos(cX.getResult(), cY.getResult(), cZ.getResult());
         TileEntity entity = server.getEntityWorld().getTileEntity(pos);
 
         if (entity instanceof AbstractTileEntityDirector)
@@ -81,7 +77,7 @@ public class CommandDirector extends CommandBase
             return (AbstractTileEntityDirector) entity;
         }
 
-        throw new CommandException("blockbuster.commands.no_director", x, y, z);
+        throw new CommandException("blockbuster.commands.no_director", pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override
