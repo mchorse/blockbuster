@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 
 /**
@@ -39,7 +39,7 @@ public class MountingAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        Entity mount = Utils.entityByUUID(actor.worldObj, this.target);
+        Entity mount = EntityUtils.entityByUUID(actor.worldObj, this.target);
 
         if (mount == null)
         {

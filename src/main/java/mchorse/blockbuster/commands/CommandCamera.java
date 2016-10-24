@@ -20,7 +20,7 @@ import mchorse.blockbuster.commands.fixture.SubCommandFixtureRemove;
 import mchorse.blockbuster.common.ClientProxy;
 
 /**
- * Camera /command
+ * Command /camera
  *
  * This command is an interface to work with camera, in general, but specifically
  * this commands provides sub-commands for manipulating camera fixtures and

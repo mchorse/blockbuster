@@ -1,4 +1,4 @@
-package mchorse.blockbuster.commands;
+package mchorse.blockbuster.commands.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +29,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
- * Command /export-model
+ * Command /model export
  *
  * This command is responsible for converting (i.e. exporting) in-game Minecraft
  * models (ModelBase or his children) to JSON scheme that supports my custom
@@ -37,18 +37,18 @@ import net.minecraft.util.text.event.ClickEvent;
  *
  * This is attempt number two, and it's a successful attempt!
  */
-public class CommandExportModel extends CommandBase
+public class SubCommandModelExport extends CommandBase
 {
     @Override
     public String getCommandName()
     {
-        return "export-model";
+        return "export";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.export_model";
+        return "blockbuster.commands.model.export";
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CommandExportModel extends CommandBase
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))
         {
-            throw new CommandException("blockbuster.commands.export_model.wrong_type", type);
+            throw new CommandException("blockbuster.commands.model.export.wrong_type", type);
         }
 
         /* Export the model */
@@ -90,11 +90,11 @@ public class CommandExportModel extends CommandBase
             file.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, destination.getAbsolutePath()));
             file.getStyle().setUnderlined(Boolean.valueOf(true));
 
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.commands.export_model.saved", type, file));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.commands.model.export.saved", type, file));
         }
         catch (FileNotFoundException e)
         {
-            throw new CommandException("blockbuster.commands.export_model.error_save");
+            throw new CommandException("blockbuster.commands.model.export.error_save");
         }
     }
 

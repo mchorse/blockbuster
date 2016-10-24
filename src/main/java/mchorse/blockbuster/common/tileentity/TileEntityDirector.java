@@ -11,7 +11,7 @@ import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.RecordPlayer.Mode;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -122,7 +122,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
             if (replay.actor != null)
             {
-                actor = (EntityActor) Utils.entityByUUID(this.worldObj, replay.actor);
+                actor = (EntityActor) EntityUtils.entityByUUID(this.worldObj, replay.actor);
             }
 
             if (actor == null)

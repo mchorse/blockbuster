@@ -14,7 +14,6 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 
 /**
@@ -54,7 +53,7 @@ public class RecordManager
         {
             if (recorder.record.filename.equals(filename))
             {
-                Utils.broadcastMessage(new TextComponentTranslation("blockbuster.mocap.already_recording", filename));
+                Utils.broadcastMessage("blockbuster.mocap.already_recording", filename);
 
                 return false;
             }
@@ -108,7 +107,7 @@ public class RecordManager
 
         if (!file.exists())
         {
-            Utils.broadcastMessage(new TextComponentTranslation("blockbuster.mocap.cant_find_file", filename));
+            Utils.broadcastMessage("blockbuster.mocap.cant_find_file", filename);
             return false;
         }
 

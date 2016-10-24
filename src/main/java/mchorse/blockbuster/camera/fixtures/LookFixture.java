@@ -1,8 +1,7 @@
 package mchorse.blockbuster.camera.fixtures;
 
-import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.camera.Position;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
@@ -35,7 +34,7 @@ public class LookFixture extends IdleFixture
 
     public void setTarget(String target)
     {
-        this.entity = Utils.entityByUUID(Minecraft.getMinecraft().theWorld, target);
+        this.entity = EntityUtils.entityByUUID(Minecraft.getMinecraft().theWorld, target);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class LookFixture extends IdleFixture
     {
         super.edit(args, player);
 
-        Entity target = CameraUtils.getTargetEntity(player);
+        Entity target = EntityUtils.getTargetEntity(player);
 
         if (this.entity == null && target == null)
         {

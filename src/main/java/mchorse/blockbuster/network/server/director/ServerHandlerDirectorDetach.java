@@ -4,7 +4,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerDirectorDetach extends ServerMessageHandler<PacketDirectorDetach>
@@ -13,7 +13,7 @@ public class ServerHandlerDirectorDetach extends ServerMessageHandler<PacketDire
     public void run(EntityPlayerMP player, PacketDirectorDetach message)
     {
         TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
-        EntityActor actor = (EntityActor) Utils.entityByUUID(player.worldObj, tile.replays.get(message.index).actor);
+        EntityActor actor = (EntityActor) EntityUtils.entityByUUID(player.worldObj, tile.replays.get(message.index).actor);
 
         actor.directorBlock = null;
     }

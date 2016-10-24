@@ -1,11 +1,12 @@
 package mchorse.blockbuster.commands.camera;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * Camera's sub-command /camera fov
@@ -33,7 +34,7 @@ public class SubCommandCameraFOV extends CommandBase
 
         if (args.length == 0)
         {
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.camera.fov", mc.gameSettings.fovSetting));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.camera.fov", mc.gameSettings.fovSetting)));
         }
         else
         {

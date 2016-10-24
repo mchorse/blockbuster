@@ -372,7 +372,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
-            Utils.broadcastMessage(new TextComponentTranslation("blockbuster.actor.playing"));
+            Utils.broadcastMessage("blockbuster.actor.playing", new Object[] {});
             return;
         }
 

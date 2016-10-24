@@ -19,7 +19,7 @@ import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
-import mchorse.blockbuster.commands.CommandExportModel;
+import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.FrameHandler;
@@ -137,8 +137,8 @@ public class ClientProxy extends CommonProxy
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
+        ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandMorph());
-        ClientCommandHandler.instance.registerCommand(new CommandExportModel());
     }
 
     /**
