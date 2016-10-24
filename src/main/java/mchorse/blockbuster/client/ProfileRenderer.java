@@ -117,6 +117,7 @@ public class ProfileRenderer
 
         GlStateManager.disableBlend();
         GlStateManager.popAttrib();
+        GL11.glLineWidth(2);
     }
 
     /**

@@ -45,6 +45,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy
 {
     /**
+     * Record manager for server side
+     */
+    public static RecordManager manager = new RecordManager();
+
+    /**
      * Incremented ID for entities
      */
     protected int ID = 0;
@@ -64,11 +69,6 @@ public class CommonProxy
      * Forge config
      */
     public Configuration forge;
-
-    /**
-     * Record manager for server side
-     */
-    public static RecordManager manager = new RecordManager();
 
     /**
      * Registers network messages (and their handlers), items, blocks, director
@@ -116,11 +116,23 @@ public class CommonProxy
     public void load(FMLInitializationEvent event)
     {
         this.models = new ModelHandler();
-        this.models.loadModels(this.getPack());
+        this.loadModels(this.getPack());
 
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+    }
+
+    /**
+     * Load models from given model pack
+     *
+     * This method is responsible only for loading domain models (in form of
+     * data). For client models, you should look up {@link ClientProxy}'s
+     * {@link #loadModels(ModelPack)} method.
+     */
+    public void loadModels(ModelPack pack)
+    {
+        this.models.loadModels(pack);
     }
 
     /**
@@ -156,11 +168,6 @@ public class CommonProxy
      *
      * Or go to minecraft(forge/forum) and ask people to help you #smartass
      */
-    protected void registerEntity(Class<? extends Entity> entity, String name)
-    {
-        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 64, 3, false);
-    }
-
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
         EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 64, 3, false, primary, secondary);

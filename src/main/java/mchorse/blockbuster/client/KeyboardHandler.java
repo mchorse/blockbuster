@@ -24,7 +24,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -152,7 +152,7 @@ public class KeyboardHandler
     }
 
     @SubscribeEvent
-    public void onUserLogIn(ClientConnectedToServerEvent event)
+    public void onUserLogOut(ClientDisconnectionFromServerEvent event)
     {
         CommandCamera.reset();
     }

@@ -61,11 +61,9 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         if (skin != null)
         {
-            if (skin.getResourceDomain().equals("blockbuster.actors") && ClientProxy.actorPack.resourceExists(skin))
-            {
-                return skin;
-            }
-            else
+            boolean actors = skin.getResourceDomain().equals("blockbuster.actors");
+
+            if (!actors || (actors && ClientProxy.actorPack.resourceExists(skin)))
             {
                 return skin;
             }
@@ -98,17 +96,19 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        this.shadowOpaque = entity.invisible ? 0.0F : 1.0F;
+
         if (entity.invisible)
         {
-            this.shadowOpaque = 0.0F;
-
             return;
         }
 
-        this.shadowOpaque = 1.0F;
         this.setupModel(entity);
 
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        if (this.mainModel != null)
+        {
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        }
     }
 
     /**
@@ -126,8 +126,12 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         ModelCustom model = models.get(key);
 
-        model.pose = model.model.poses.get(pose);
-        this.mainModel = model;
+        if (model != null)
+        {
+            model.pose = model.model.poses.get(pose);
+
+            this.mainModel = model;
+        }
     }
 
     /**

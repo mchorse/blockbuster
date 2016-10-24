@@ -18,6 +18,8 @@ public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCamer
     public void run(EntityPlayerSP player, PacketCameraProfile message)
     {
         CameraProfile profile = CameraUtils.cameraJSONBuilder(false).fromJson(message.profile, CameraProfile.class);
+
+        profile.setFilename(message.filename);
         CommandCamera.setProfile(profile);
 
         if (message.play)

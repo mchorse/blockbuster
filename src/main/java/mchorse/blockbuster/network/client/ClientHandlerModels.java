@@ -64,8 +64,7 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
             player.addChatMessage(new TextComponentString(I18n.format("blockbuster.models.loaded", modelSize, skinSize)));
 
             ClientProxy.actorPack.pack.reload();
-            Blockbuster.proxy.models.loadModels(ClientProxy.actorPack.pack);
-            ((ClientProxy) Blockbuster.proxy).loadClientModels();
+            Blockbuster.proxy.loadModels(ClientProxy.actorPack.pack);
         }
         catch (IOException e)
         {

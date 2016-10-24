@@ -16,8 +16,6 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketFramesLoad message)
     {
-        System.out.println("Hello?");
-
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
         Record record = new Record(message.filename);
         record.frames = message.frames;

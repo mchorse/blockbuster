@@ -29,6 +29,9 @@ public class BlockbusterConfig
         this.reload();
     }
 
+    /**
+     * Reload config values
+     */
     public void reload()
     {
         String category = Configuration.CATEGORY_GENERAL;

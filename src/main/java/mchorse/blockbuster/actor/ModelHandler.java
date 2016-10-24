@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
 /**
@@ -100,6 +101,15 @@ public class ModelHandler
     }
 
     /**
+     * Loads local models when connecting to server
+     */
+    @SubscribeEvent
+    public void onClientConnect(ClientConnectedToServerEvent event)
+    {
+        Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack());
+    }
+
+    /**
      * When player is logs in, send him all available models and skins. I think
      * this should go to a separate server handler
      */
@@ -111,20 +121,6 @@ public class ModelHandler
         if (Blockbuster.proxy.config.load_models_on_login)
         {
             ServerHandlerRequestModels.sendModels(this, player);
-        }
-
-        try
-        {
-            IRecording recording = event.player.getCapability(RecordingProvider.RECORDING, null);
-
-            if (recording.hasProfile())
-            {
-                CameraUtils.sendProfileToPlayer(recording.currentProfile(), player, false);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 

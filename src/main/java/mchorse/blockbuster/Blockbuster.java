@@ -44,6 +44,7 @@ public class Blockbuster
     public static final String VERSION = "1.3.1";
     public static final String GUI_FACTORY = "mchorse.blockbuster.common.GuiFactory";
 
+    /* Proxies */
     public static final String CLIENT_PROXY = "mchorse.blockbuster.common.ClientProxy";
     public static final String SERVER_PROXY = "mchorse.blockbuster.common.CommonProxy";
 
@@ -93,6 +94,7 @@ public class Blockbuster
 
         proxy.models.pack = proxy.getPack();
         proxy.models.pack.addFolder(path);
+        proxy.loadModels(proxy.models.pack);
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());

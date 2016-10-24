@@ -23,8 +23,11 @@ import mchorse.blockbuster.camera.fixtures.IdleFixture;
 import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.camera.json.AbstractFixtureAdapter;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
+import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -191,11 +194,31 @@ public class CameraUtils
 
     /**
      * Send a camera profile that was read from given file to player.
+     *
+     * This method also checks if player has same named camera profile, and if
+     * it's expired (server has newer version), send him new one.
      */
     public static void sendProfileToPlayer(String filename, EntityPlayerMP player, boolean play)
     {
         try
         {
+            IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
+
+            if (recording.currentProfile().equals(filename))
+            {
+                File profile = new File(cameraFile(filename));
+
+                if (recording.currentProfileTimestamp() > profile.lastModified())
+                {
+                    if (play)
+                    {
+                        Dispatcher.sendTo(new PacketCameraState(true), player);
+                    }
+
+                    return;
+                }
+            }
+
             Dispatcher.sendTo(new PacketCameraProfile(filename, readCameraProfile(filename), play), player);
         }
         catch (Exception e)

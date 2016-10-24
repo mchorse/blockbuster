@@ -48,11 +48,9 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 
         if (skin != null)
         {
-            if (skin.getResourceDomain().equals("blockbuster.actors") && ClientProxy.actorPack.resourceExists(skin))
-            {
-                return skin;
-            }
-            else
+            boolean actors = skin.getResourceDomain().equals("blockbuster.actors");
+
+            if (!actors || (actors && ClientProxy.actorPack.resourceExists(skin)))
             {
                 return skin;
             }
@@ -87,8 +85,12 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 
         ModelCustom model = models.get(key);
 
-        model.pose = model.model.poses.get(pose);
-        this.mainModel = model;
+        if (model != null)
+        {
+            model.pose = model.model.poses.get(pose);
+
+            this.mainModel = model;
+        }
     }
 
     /**

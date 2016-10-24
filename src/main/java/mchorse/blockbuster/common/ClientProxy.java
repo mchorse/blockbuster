@@ -107,6 +107,7 @@ public class ClientProxy extends CommonProxy
 
             actorPack.pack.addFolder(path + "/models");
             actorPack.pack.addFolder(path + "/downloads");
+            actorPack.pack.reload();
         }
         catch (Exception e)
         {
@@ -141,13 +142,17 @@ public class ClientProxy extends CommonProxy
     }
 
     /**
-     * Load actor models
+     * Load models into the game
+     *
+     * This method is responsible for loading models on the client.
      */
-    public void loadClientModels()
+    @Override
+    public void loadModels(ModelPack pack)
     {
+        super.loadModels(pack);
+
         ModelCustom.MODELS.clear();
 
-        /* Load user supplied models */
         for (Map.Entry<String, Model> model : this.models.models.entrySet())
         {
             ModelParser.parse(model.getKey(), model.getValue());

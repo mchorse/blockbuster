@@ -15,6 +15,8 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actors pack
@@ -25,6 +27,7 @@ import net.minecraft.util.ResourceLocation;
  * This class is used both on server and on client. I just realized that you
  * can't use IResourcePack on server...
  */
+@SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
     public ModelPack pack = new ModelPack();
