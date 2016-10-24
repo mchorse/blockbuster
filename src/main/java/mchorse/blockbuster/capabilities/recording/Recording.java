@@ -79,7 +79,7 @@ public class Recording implements IRecording
      *
      * Instance of this class is responsible for storing information about a
      * file item like camera profile or recording with timestamp of when
-     * it was changed
+     * it was changed.
      */
     public static class ItemInfo
     {

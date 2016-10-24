@@ -30,6 +30,9 @@ public class BlockbusterTab extends CreativeTabs
         return Item.getItemFromBlock(Blockbuster.directorBlock);
     }
 
+    /**
+     * Display all items and also an actor egg
+     */
     @Override
     @SideOnly(Side.CLIENT)
     public void displayAllRelevantItems(java.util.List<net.minecraft.item.ItemStack> items)

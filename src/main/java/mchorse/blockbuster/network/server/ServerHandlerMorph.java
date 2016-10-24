@@ -25,7 +25,7 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
             capability.setSkin(message.skin);
 
             Dispatcher.sendTo(message, player);
-            Dispatcher.updateTrackers(player, new PacketMorphPlayer(player.getEntityId(), message.model, message.skin));
+            Dispatcher.sendToTracked(player, new PacketMorphPlayer(player.getEntityId(), message.model, message.skin));
         }
 
         List<Action> actions = CommonProxy.manager.getActions(player);

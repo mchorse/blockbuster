@@ -11,7 +11,7 @@ import net.minecraftforge.fml.client.IModGuiFactory;
  * Config GUI factory
  *
  * It looks like the only important method here is {@link #mainConfigGuiClass()},
- * others are rare used and depreciated methods.
+ * others are rare used and/or depreciated methods.
  */
 public class GuiFactory implements IModGuiFactory
 {

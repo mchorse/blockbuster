@@ -75,21 +75,30 @@ public class Dispatcher
         return DISPATCHER;
     }
 
-    public static void updateTrackers(Entity entity, IMessage message)
+    /**
+     * Send message to players who are tracking given entity
+     */
+    public static void sendToTracked(Entity entity, IMessage message)
     {
-        EntityTracker et = ((WorldServer) entity.worldObj).getEntityTracker();
+        EntityTracker tracker = ((WorldServer) entity.worldObj).getEntityTracker();
 
-        for (EntityPlayer player : et.getTrackingPlayers(entity))
+        for (EntityPlayer player : tracker.getTrackingPlayers(entity))
         {
             DISPATCHER.sendTo(message, (EntityPlayerMP) player);
         }
     }
 
+    /**
+     * Send message to given player
+     */
     public static void sendTo(IMessage message, EntityPlayerMP player)
     {
         DISPATCHER.sendTo(message, player);
     }
 
+    /**
+     * Send message to the server
+     */
     public static void sendToServer(IMessage message)
     {
         DISPATCHER.sendToServer(message);
@@ -146,6 +155,9 @@ public class Dispatcher
         register(PacketRequestModels.class, ServerHandlerRequestModels.class, Side.SERVER);
     }
 
+    /**
+     * Register given message with given message handler on a given side
+     */
     private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
     {
         DISPATCHER.registerMessage(handler, message, PACKET_ID++, side);

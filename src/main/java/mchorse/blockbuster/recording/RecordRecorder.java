@@ -27,9 +27,25 @@ public class RecordRecorder
      */
     public List<Action> actions = new ArrayList<Action>();
 
+    /**
+     * Recording mode (record actions, frames or both)
+     */
     public Mode mode;
-    public int ticks = 0;
+
+    /**
+     * Current recording tick
+     */
+    public int tick = 0;
+
+    /**
+     * Delay between recording ticks
+     */
     public int delay = 1;
+
+    /**
+     * Player tracker, this dude is responsible for tracking inventory slots,
+     * swing progress and elytra flying updates
+     */
     public PlayerTracker tracker;
 
     public RecordRecorder(Record record, Mode mode)
@@ -48,12 +64,12 @@ public class RecordRecorder
      */
     public void record(EntityPlayer player)
     {
-        boolean both = this.mode == Mode.BOTH;
-
         if (this.delay-- > 0)
         {
             return;
         }
+
+        boolean both = this.mode == Mode.BOTH;
 
         if (this.mode == Mode.FRAMES || both)
         {
@@ -69,7 +85,7 @@ public class RecordRecorder
             this.record.actions.add(this.actions.isEmpty() ? null : this.actions.remove(0));
         }
 
-        this.ticks++;
+        this.tick++;
         this.delay = this.record.delay;
     }
 }

@@ -138,7 +138,7 @@ public class RecordManager
 
             if (notify)
             {
-                Dispatcher.updateTrackers(actor, new PacketFramesLoad(actor.getEntityId(), filename, record.frames));
+                Dispatcher.sendToTracked(actor, new PacketFramesLoad(actor.getEntityId(), filename, record.frames));
             }
 
             this.players.put(actor, player);
@@ -173,7 +173,7 @@ public class RecordManager
         actor.playback = null;
 
         this.players.remove(actor);
-        Dispatcher.updateTrackers(actor, new PacketPlayback(actor.getEntityId(), false));
+        Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false));
     }
 
     /**

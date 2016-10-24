@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
  */
 public class GuiHandler implements IGuiHandler
 {
+    /* GUI ids */
     public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;

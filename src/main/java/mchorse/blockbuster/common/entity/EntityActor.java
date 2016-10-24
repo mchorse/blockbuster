@@ -454,7 +454,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     public void notifyPlayers()
     {
-        Dispatcher.updateTrackers(this, new PacketModifyActor(this.getEntityId(), this.model, this.skin, this.invisible));
+        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.model, this.skin, this.invisible));
     }
 
     /* Reading/writing to disk */
