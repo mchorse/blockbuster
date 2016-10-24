@@ -189,6 +189,7 @@ blockbuster.profile.save=Current camera profile was saved in file %s.
 blockbuster.profile.load=Camera profile was loaded from file %s.
 blockbuster.profile.not_exists=There's no camera fixture at %d index in current camera profile!
 blockbuster.profile.not_path=Fixture at index %s isn't a path fixture!
+blockbuster.profile.loaded=Camera profile by name §7%s§r is already loaded!
 
 blockbuster.profile.empty_filename=This camera profile has empty filename! In current situation, specify the [filename] argument, please.
 blockbuster.profile.cant_save=Can't save camera profile by file name %s

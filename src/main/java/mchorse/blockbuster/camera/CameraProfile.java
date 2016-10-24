@@ -18,8 +18,15 @@ import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
  */
 public class CameraProfile
 {
+    /**
+     * List of profile's camera fixtures
+     */
     @Expose
     protected List<AbstractFixture> fixtures = new ArrayList<AbstractFixture>();
+
+    /**
+     * Filename of this camera profile (if empty, means new or unsaved)
+     */
     protected String filename = "";
 
     public CameraProfile(String filename)
@@ -148,9 +155,11 @@ public class CameraProfile
      */
     public void save()
     {
-        if (this.fixtures.size() != 0)
+        if (this.fixtures.size() == 0)
         {
-            Dispatcher.sendToServer(new PacketCameraProfile(this.filename, CameraUtils.cameraJSONBuilder(true).toJson(this)));
+            return;
         }
+
+        Dispatcher.sendToServer(new PacketCameraProfile(this.filename, CameraUtils.cameraJSONBuilder(true).toJson(this)));
     }
 }

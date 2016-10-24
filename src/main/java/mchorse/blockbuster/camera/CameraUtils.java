@@ -31,8 +31,8 @@ import net.minecraftforge.common.DimensionManager;
 /**
  * Utilities for camera classes
  *
- * Includes methods for writing/reading camera profile, position, point, angle
- * to the file, and finding entity via ray tracing.
+ * Includes methods for writing/reading camera profile, getting camera JSON
+ * builder and stuff like sending camera profile to the client.
  */
 public class CameraUtils
 {
@@ -117,21 +117,9 @@ public class CameraUtils
     {
         try
         {
-            IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
-
-            if (recording.currentProfile().equals(filename))
+            if (playerHasProfile(player, filename, play))
             {
-                File profile = new File(cameraFile(filename));
-
-                if (recording.currentProfileTimestamp() > profile.lastModified())
-                {
-                    if (play)
-                    {
-                        Dispatcher.sendTo(new PacketCameraState(true), player);
-                    }
-
-                    return;
-                }
+                return;
             }
 
             Dispatcher.sendTo(new PacketCameraProfile(filename, readCameraProfile(filename), play), player);
@@ -141,6 +129,34 @@ public class CameraUtils
             e.printStackTrace();
             player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_load", filename));
         }
+    }
+
+    /**
+     * Checks whether player has older camera profile
+     */
+    private static boolean playerHasProfile(EntityPlayerMP player, String filename, boolean play)
+    {
+        IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
+        File profile = new File(cameraFile(filename));
+
+        boolean hasSame = recording.currentProfile().equals(filename);
+        boolean isNewer = recording.currentProfileTimestamp() >= profile.lastModified();
+
+        if (hasSame && isNewer)
+        {
+            if (play)
+            {
+                Dispatcher.sendTo(new PacketCameraState(true), player);
+            }
+            else
+            {
+                player.addChatMessage(new TextComponentTranslation("blockbuster.profile.loaded", filename));
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

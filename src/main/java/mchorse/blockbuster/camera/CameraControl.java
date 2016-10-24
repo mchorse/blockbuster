@@ -25,7 +25,7 @@ public class CameraControl
     public float roll = 0;
 
     /**
-     * Selected camera fixture
+     * Index of selected camera fixture
      */
     public int index = 0;
 

@@ -98,7 +98,7 @@ public class ModelHandler
     }
 
     /**
-     * Loads local models when connecting to server
+     * Loads local models when connecting to the server
      */
     @SubscribeEvent
     public void onClientConnect(ClientConnectedToServerEvent event)
@@ -122,8 +122,8 @@ public class ModelHandler
     }
 
     /**
-     * On player tick, we have to change AABB box (total rip-off of
-     * EntityActor#updateSize method)
+     * On player tick, we have to change AABB box based on the size current's
+     * morph pose
      */
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
@@ -142,12 +142,18 @@ public class ModelHandler
         }
 
         String key = player.isElytraFlying() ? "flying" : (player.isSneaking() ? "sneaking" : "standing");
-
         float[] pose = data.poses.get(key).size;
-        float width = pose[0];
-        float height = pose[1];
 
-        /* This is a total rip-off of EntityPlayer#setSize method */
+        this.updateSize(player, pose[0], pose[1]);
+    }
+
+    /**
+     * Update size of the player with given widht and height
+     *
+     * Taken from {@link EntityPlayer}
+     */
+    private void updateSize(EntityPlayer player, float width, float height)
+    {
         if (width != player.width || height != player.height)
         {
             float f = player.width;
