@@ -92,7 +92,7 @@ public class CapabilityHandler
             {
                 Record record = actor.playback.record;
 
-                Dispatcher.sendTo(new PacketFramesLoad(actor.getEntityId(), record.filename, record.frames), player);
+                Dispatcher.sendTo(new PacketFramesLoad(record.filename, record.frames), player);
             }
         }
     }

@@ -5,8 +5,11 @@ import java.util.List;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -65,7 +68,11 @@ public class CommandAction extends CommandBase
         String action = args[0];
         RecordManager manager = CommonProxy.manager;
 
-        if (action.equals("record") && args.length >= 2)
+        if (action.equals("request") && args.length >= 1)
+        {
+            this.request(sender, args[1], manager);
+        }
+        else if (action.equals("record") && args.length >= 2)
         {
             this.record(sender, args, manager);
         }
@@ -80,6 +87,36 @@ public class CommandAction extends CommandBase
         else
         {
             throw new WrongUsageException(this.getCommandUsage(sender));
+        }
+    }
+
+    /**
+     * Request an action record from the server (it's me, Server!)
+     */
+    private void request(ICommandSender sender, String filename, RecordManager manager) throws CommandException
+    {
+        Record record = null;
+
+        if (manager.records.containsKey(filename))
+        {
+            record = manager.records.get(filename);
+        }
+        else
+        {
+            try
+            {
+                record = new Record(filename);
+                record.fromBytes(manager.replayFile(filename));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if (record != null)
+        {
+            Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), getCommandSenderAsPlayer(sender));
         }
     }
 
@@ -161,7 +198,7 @@ public class CommandAction extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "record", "play", "stop");
+            return getListOfStringsMatchingLastWord(args, "request", "record", "play", "stop");
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

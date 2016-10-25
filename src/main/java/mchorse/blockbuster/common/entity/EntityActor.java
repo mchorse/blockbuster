@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.actor.Model;
 import mchorse.blockbuster.actor.ModelHandler;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
@@ -495,6 +496,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             buffer.writeInt(this.playback.tick);
             buffer.writeByte(this.playback.delay);
+            ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
         }
 
         /* What a shame, Mojang, why do I need to synchronize your shit?! */
@@ -512,6 +514,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         {
             int tick = buffer.readInt();
             int delay = buffer.readByte();
+            String filename = ByteBufUtils.readUTF8String(buffer);
+
+            if (this.playback == null && ClientProxy.manager.records.containsKey(filename))
+            {
+                this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES);
+            }
+            else
+            {
+                /* TODO: request a record from server */
+            }
 
             if (this.playback != null)
             {

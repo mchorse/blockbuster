@@ -1,9 +1,13 @@
 package mchorse.blockbuster.client;
 
+import java.util.List;
+
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderPlayer;
+import mchorse.blockbuster.common.ClientProxy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -42,6 +46,20 @@ public class RenderingHandler
         {
             this.overlay.draw(resolution.getScaledWidth(), resolution.getScaledHeight());
         }
+    }
+
+    @SubscribeEvent
+    public void onHUDRender(RenderGameOverlayEvent.Text event)
+    {
+        if (!Minecraft.getMinecraft().gameSettings.showDebugInfo)
+        {
+            return;
+        }
+
+        List<String> list = event.getLeft();
+
+        list.add("");
+        list.add("[Blockbuster]: " + ClientProxy.manager.records.size() + " records");
     }
 
     /**

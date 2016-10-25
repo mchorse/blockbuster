@@ -155,6 +155,7 @@ public class KeyboardHandler
     public void onUserLogOut(ClientDisconnectionFromServerEvent event)
     {
         CommandCamera.reset();
+        ClientProxy.manager.reset();
     }
 
     /**
