@@ -6,9 +6,12 @@ import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -71,13 +74,26 @@ public class CapabilityHandler
     @SubscribeEvent
     public void playerStartsTracking(StartTracking event)
     {
-        if (event.getTarget() instanceof EntityPlayer)
+        Entity target = event.getTarget();
+        EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+
+        if (target instanceof EntityPlayer)
         {
-            Entity target = event.getTarget();
-            EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
             IMorphing cap = target.getCapability(MorphingProvider.MORPHING, null);
 
             Dispatcher.sendTo(new PacketMorphPlayer(target.getEntityId(), cap.getModel(), cap.getSkin()), player);
+        }
+
+        if (target instanceof EntityActor)
+        {
+            EntityActor actor = (EntityActor) target;
+
+            if (actor.isPlaying())
+            {
+                Record record = actor.playback.record;
+
+                Dispatcher.sendTo(new PacketFramesLoad(actor.getEntityId(), record.filename, record.frames), player);
+            }
         }
     }
 }

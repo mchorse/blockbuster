@@ -59,7 +59,7 @@ public class Record
      */
     public int getLength()
     {
-        return Math.min(this.actions.size(), this.frames.size());
+        return Math.max(this.actions.size(), this.frames.size());
     }
 
     /**

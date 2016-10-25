@@ -11,9 +11,9 @@ public class ServerHandlerPlayback extends ServerMessageHandler<PacketPlayback>
     {
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
 
-        if (message.state)
+        if (actor.playback != null)
         {
-            actor.playback.playing = true;
+            actor.playback.playing = message.state;
         }
     }
 }

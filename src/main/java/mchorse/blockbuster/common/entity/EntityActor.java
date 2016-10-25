@@ -259,6 +259,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     }
 
     /**
+     * Don't update my renderYawOffset, punk!
+     */
+    @Override
+    protected float updateDistance(float f2, float f3)
+    {
+        return f3;
+    }
+
+    /**
      * Destroy near by items
      *
      * Taken from super implementation of onLivingUpdate. You can't use
@@ -368,7 +377,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
-    public void startPlaying(String filename, boolean setDead)
+    public void startPlaying(String filename, boolean kill)
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
@@ -382,7 +391,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
         else
         {
-            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, setDead, true);
+            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, kill, true);
         }
     }
 
@@ -510,6 +519,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         ByteBufUtils.writeUTF8String(buffer, this.model);
         ByteBufUtils.writeUTF8String(buffer, this.skin == null ? "" : this.skin.toString());
         buffer.writeBoolean(this.invisible);
+        buffer.writeBoolean(this.isPlaying());
+
+        if (this.isPlaying())
+        {
+            buffer.writeInt(this.playback.tick);
+            buffer.writeByte(this.playback.delay);
+        }
 
         /* What a shame, Mojang, why do I need to synchronize your shit?! */
         buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.anvil));
@@ -521,6 +537,20 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         this.model = ByteBufUtils.readUTF8String(buffer);
         this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buffer), this.model);
         this.invisible = buffer.readBoolean();
+
+        if (buffer.readBoolean())
+        {
+            int tick = buffer.readInt();
+            int delay = buffer.readByte();
+
+            if (this.playback != null)
+            {
+                this.playback.tick = tick;
+                this.playback.delay = delay;
+
+                System.out.println(this.playback.record.filename);
+            }
+        }
 
         this.setEntityInvulnerable(buffer.readBoolean());
     }
@@ -557,5 +587,10 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         return skin.toString();
+    }
+
+    public boolean isPlaying()
+    {
+        return this.playback != null && !this.playback.isFinished();
     }
 }

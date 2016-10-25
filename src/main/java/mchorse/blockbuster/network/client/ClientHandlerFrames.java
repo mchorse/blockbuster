@@ -21,9 +21,8 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
         Record record = new Record(message.filename);
         record.frames = message.frames;
 
-        Dispatcher.sendToServer(new PacketPlayback(message.id, true));
+        Dispatcher.sendToServer(new PacketPlayback(message.id, true, message.filename));
 
         actor.playback = new RecordPlayer(record, Mode.FRAMES);
-        actor.playback.playing = true;
     }
 }

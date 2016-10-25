@@ -8,7 +8,6 @@ import java.util.Map;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlayerRecording;
-import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Mode;
@@ -95,7 +94,7 @@ public class RecordManager
 
             if (notify)
             {
-                Dispatcher.sendTo(new PacketPlayerRecording(false, recorder.record.filename), (EntityPlayerMP) player);
+                Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
 
             return true;
@@ -128,17 +127,15 @@ public class RecordManager
         {
             Record record = new Record(filename);
             record.fromBytes(file);
-
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
             actor.playback.record.applyFrame(0, actor);
-            actor.playback.playing = true;
-            actor.playback.kill = true;
+            actor.playback.kill = kill;
 
             if (notify)
             {
-                Dispatcher.sendToTracked(actor, new PacketFramesLoad(actor.getEntityId(), filename, record.frames));
+                Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
             }
 
             this.players.put(actor, player);
@@ -169,11 +166,23 @@ public class RecordManager
         {
             actor.setDead();
         }
+        else
+        {
+            Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false, ""));
+        }
 
         actor.playback = null;
-
         this.players.remove(actor);
-        Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false));
+    }
+
+    /**
+     * Reset the tracking manager data
+     */
+    public void reset()
+    {
+        this.records.clear();
+        this.recorders.clear();
+        this.players.clear();
     }
 
     /**

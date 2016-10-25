@@ -76,8 +76,10 @@ public class CommandAction extends CommandBase
         {
             manager.stopRecording(getCommandSenderAsPlayer(sender), true);
         }
-
-        throw new WrongUsageException(this.getCommandUsage(sender));
+        else
+        {
+            throw new WrongUsageException(this.getCommandUsage(sender));
+        }
     }
 
     /**

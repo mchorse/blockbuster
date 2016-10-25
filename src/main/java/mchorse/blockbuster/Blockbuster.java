@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 /**
  * Blockbuster's main entry
@@ -88,7 +89,7 @@ public class Blockbuster
     }
 
     @EventHandler
-    public void registerServerCommands(FMLServerStartingEvent event)
+    public void serverStarting(FMLServerStartingEvent event)
     {
         String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
 
@@ -98,5 +99,11 @@ public class Blockbuster
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
+    }
+
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+        CommonProxy.manager.reset();
     }
 }

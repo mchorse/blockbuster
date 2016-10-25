@@ -21,6 +21,7 @@ public class Frame
 
     public float yaw;
     public float yawHead;
+    public float yawOffset;
     public float pitch;
 
     public double motionX;
@@ -45,6 +46,7 @@ public class Frame
 
         this.yaw = player.rotationYaw;
         this.yawHead = player.rotationYawHead;
+        this.yawOffset = player.renderYawOffset;
         this.pitch = player.rotationPitch;
 
         this.motionX = player.motionX;
@@ -62,6 +64,8 @@ public class Frame
 
     public void applyOnActor(EntityActor actor)
     {
+        boolean isRemote = actor.worldObj.isRemote;
+
         /* This is most important part of the code that makes the recording
          * super smooth.
          *
@@ -69,22 +73,33 @@ public class Frame
          * reference see renderer classes (they use prev* and lastTick* stuff
          * for interpolation).
          */
-        actor.prevPosX = actor.lastTickPosX = actor.posX;
-        actor.prevPosY = actor.lastTickPosY = actor.posY;
-        actor.prevPosZ = actor.lastTickPosZ = actor.posZ;
+        if (isRemote)
+        {
+            actor.prevPosX = actor.lastTickPosX = actor.posX;
+            actor.prevPosY = actor.lastTickPosY = actor.posY;
+            actor.prevPosZ = actor.lastTickPosZ = actor.posZ;
+        }
 
         actor.prevRotationYaw = actor.rotationYaw;
         actor.prevRotationYawHead = actor.rotationYawHead;
+        actor.prevRenderYawOffset = actor.renderYawOffset;
         actor.prevRotationPitch = actor.rotationPitch;
 
         /* Inject frame's values into actor */
-        actor.posX = this.x;
-        actor.posY = this.y;
-        actor.posZ = this.z;
+        if (!isRemote)
+        {
+            actor.posX = this.x;
+            actor.posY = this.y;
+            actor.posZ = this.z;
+        }
 
-        actor.rotationYaw = this.yaw;
-        actor.rotationYawHead = this.yawHead;
-        actor.rotationPitch = this.pitch;
+        if (isRemote)
+        {
+            actor.rotationYaw = this.yaw;
+            actor.rotationYawHead = this.yawHead;
+            actor.renderYawOffset = this.yawOffset;
+            actor.rotationPitch = this.pitch;
+        }
 
         actor.motionX = this.motionX;
         actor.motionY = this.motionY;
@@ -109,6 +124,7 @@ public class Frame
 
         out.writeFloat(this.yaw);
         out.writeFloat(this.yawHead);
+        out.writeFloat(this.yawOffset);
         out.writeFloat(this.pitch);
 
         out.writeFloat((float) this.motionX);
@@ -132,6 +148,7 @@ public class Frame
 
         this.yaw = in.readFloat();
         this.yawHead = in.readFloat();
+        this.yawOffset = in.readFloat();
         this.pitch = in.readFloat();
 
         this.motionX = in.readFloat();

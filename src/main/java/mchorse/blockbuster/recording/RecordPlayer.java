@@ -40,7 +40,7 @@ public class RecordPlayer
     /**
      * Is this player is playing
      */
-    public boolean playing = false;
+    public boolean playing = true;
 
     public RecordPlayer(Record record, Mode mode)
     {
