@@ -33,6 +33,11 @@ public class RecordPlayer
     public int delay = 1;
 
     /**
+     * Temporary speed of playback. This is used only when record is absent
+     */
+    public int recordDelay = 1;
+
+    /**
      * Whether to kill an actor when player finished playing
      */
     public boolean kill = false;
@@ -53,7 +58,7 @@ public class RecordPlayer
      */
     public boolean isFinished()
     {
-        return this.tick >= this.record.getLength();
+        return this.record != null && this.tick >= this.record.getLength();
     }
 
     /**
@@ -66,12 +71,20 @@ public class RecordPlayer
             return;
         }
 
-        boolean both = this.mode == Mode.BOTH;
+        if (this.record != null)
+        {
+            boolean both = this.mode == Mode.BOTH;
 
-        if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick, actor);
-        if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor);
+            if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick, actor);
+            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor);
+
+            this.delay = this.record.delay;
+        }
+        else
+        {
+            this.delay = this.recordDelay;
+        }
 
         this.tick++;
-        this.delay = this.record.delay;
     }
 }

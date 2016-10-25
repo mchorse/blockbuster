@@ -138,6 +138,7 @@ public class RecordManager
                 Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
             }
 
+            this.records.put(filename, record);
             this.players.put(actor, player);
 
             return true;

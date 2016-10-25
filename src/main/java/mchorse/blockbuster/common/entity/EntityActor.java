@@ -14,6 +14,7 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -516,13 +517,18 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             int delay = buffer.readByte();
             String filename = ByteBufUtils.readUTF8String(buffer);
 
-            if (this.playback == null && ClientProxy.manager.records.containsKey(filename))
+            if (this.playback == null)
             {
-                this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES);
-            }
-            else
-            {
-                /* TODO: request a record from server */
+                if (ClientProxy.manager.records.containsKey(filename))
+                {
+                    this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES);
+                }
+                else
+                {
+                    this.playback = new RecordPlayer(null, Mode.FRAMES);
+
+                    Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
+                }
             }
 
             if (this.playback != null)

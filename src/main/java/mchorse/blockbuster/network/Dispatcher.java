@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
+import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -34,6 +35,8 @@ import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketFramesSave;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
+import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
+import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerMorph;
@@ -49,6 +52,7 @@ import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestC
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorReset;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFrames;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
+import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -121,6 +125,9 @@ public class Dispatcher
 
         register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
         register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);
+
+        register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
+        register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

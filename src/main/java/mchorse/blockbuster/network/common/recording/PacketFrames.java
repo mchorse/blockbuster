@@ -11,8 +11,8 @@ import mchorse.blockbuster.recording.data.Frame;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
- * Packet that responsible for delivering recorded frames either to server
- * or to client for playback or saving.
+ * Packet that responsible for delivering recorded frames either to server for
+ * saving or to client for playback.
  */
 public abstract class PacketFrames implements IMessage
 {
@@ -72,7 +72,6 @@ public abstract class PacketFrames implements IMessage
         }
         catch (IOException e)
         {
-            System.out.println("Couldn't convert frames to ByteBuf!");
             e.printStackTrace();
         }
     }
