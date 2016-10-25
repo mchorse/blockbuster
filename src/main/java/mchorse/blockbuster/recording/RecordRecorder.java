@@ -19,6 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class RecordRecorder
 {
+    /**
+     * Initial record
+     */
     public Record record;
 
     /**

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording;
 
+import mchorse.blockbuster.recording.actions.ElytraFlyingAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,9 +15,18 @@ import net.minecraft.item.ItemStack;
  */
 public class PlayerTracker
 {
+    /**
+     * Record recorder to which tracked stuff are going to be added
+     */
     public RecordRecorder recorder;
 
+    /* Swipe tracker */
     private boolean swiped = false;
+
+    /* Elytra tracker */
+    private boolean elytra = false;
+
+    /* Items to track */
     private int[] items = new int[6];
 
     public PlayerTracker(RecordRecorder recorder)
@@ -30,8 +40,21 @@ public class PlayerTracker
     public void track(EntityPlayer player)
     {
         this.trackSwing(player);
+        this.trackElytra(player);
         this.trackHeldItem(player);
         this.trackArmor(player);
+    }
+
+    /**
+     * Track elytra flying flag
+     */
+    private void trackElytra(EntityPlayer player)
+    {
+        if (this.elytra != player.isElytraFlying())
+        {
+            this.elytra = player.isElytraFlying();
+            this.recorder.record.actions.add(new ElytraFlyingAction(this.elytra));
+        }
     }
 
     /**
