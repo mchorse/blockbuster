@@ -1,10 +1,11 @@
-package mchorse.blockbuster.network.client;
+package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketPlayerRecording;
+import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketFramesSave;
+import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;

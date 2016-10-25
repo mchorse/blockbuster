@@ -1,7 +1,8 @@
-package mchorse.blockbuster.network.server;
+package mchorse.blockbuster.network.server.recording;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
+import mchorse.blockbuster.network.server.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerPlayback extends ServerMessageHandler<PacketPlayback>

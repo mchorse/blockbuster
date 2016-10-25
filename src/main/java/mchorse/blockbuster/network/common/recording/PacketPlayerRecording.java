@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common;
+package mchorse.blockbuster.network.common.recording;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
