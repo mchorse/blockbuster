@@ -9,7 +9,6 @@ import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
-import mchorse.blockbuster.recording.actions.LogoutAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
@@ -34,7 +33,6 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -181,21 +179,6 @@ public class ActionHandler
             {
                 events.add(new MountingAction(event.getEntityBeingMounted().getUniqueID(), event.isMounting()));
             }
-        }
-    }
-
-    /**
-     * Event listener for Action.LOGOUT (that's obvious)
-     */
-    @SubscribeEvent
-    public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event)
-    {
-        EntityPlayer player = event.player;
-        List<Action> events = CommonProxy.manager.getActions(player);
-
-        if (!player.worldObj.isRemote && events != null)
-        {
-            events.add(new LogoutAction());
         }
     }
 

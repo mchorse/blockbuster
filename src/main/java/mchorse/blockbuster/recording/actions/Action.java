@@ -20,7 +20,7 @@ public abstract class Action
     public static final byte DROP = 3;
     public static final byte EQUIP = 4;
     public static final byte SHOOT_ARROW = 5;
-    public static final byte LOGOUT = 6;
+    /* public static final byte LOGOUT = 6; */
     public static final byte PLACE_BLOCK = 7;
     public static final byte MOUNTING = 8;
     public static final byte INTERACT_BLOCK = 9;
@@ -40,7 +40,6 @@ public abstract class Action
         if (type == DROP) return new DropAction();
         if (type == EQUIP) return new EquipAction();
         if (type == SHOOT_ARROW) return new ShootArrowAction();
-        if (type == LOGOUT) return new LogoutAction();
         if (type == PLACE_BLOCK) return new PlaceBlockAction();
         if (type == MOUNTING) return new MountingAction();
         if (type == INTERACT_BLOCK) return new InteractBlockAction();
