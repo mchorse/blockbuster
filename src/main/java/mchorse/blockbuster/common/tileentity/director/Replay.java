@@ -6,6 +6,7 @@ import com.google.common.base.Objects;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -93,7 +94,7 @@ public class Replay
         this.invincible = tag.getBoolean("Invincible");
 
         this.model = tag.getString("Model");
-        this.skin = EntityActor.fromString(tag.getString("Skin"), this.model);
+        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model);
         this.invisible = tag.getBoolean("Invisible");
 
         String uuid = tag.getString("UUID");
@@ -131,7 +132,7 @@ public class Replay
         this.invincible = buf.readBoolean();
 
         this.model = ByteBufUtils.readUTF8String(buf);
-        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buf), this.model);
+        this.skin = RLUtils.fromString(ByteBufUtils.readUTF8String(buf), this.model);
         this.invisible = buf.readBoolean();
 
         if (buf.readBoolean())

@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -24,7 +24,7 @@ public class PacketMorph implements IMessage
     public void fromBytes(ByteBuf buf)
     {
         this.model = ByteBufUtils.readUTF8String(buf);
-        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buf), this.model);
+        this.skin = RLUtils.fromString(ByteBufUtils.readUTF8String(buf), this.model);
     }
 
     @Override

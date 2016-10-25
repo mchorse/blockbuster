@@ -7,6 +7,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -148,7 +149,7 @@ public class CommandAction extends CommandBase
         boolean invincible = args.length >= 5 && args[4].equals("1");
 
         actor = new EntityActor(world);
-        actor.modify(model, EntityActor.fromString(skin, model), false, true);
+        actor.modify(model, RLUtils.fromString(skin, model), false, true);
         actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 

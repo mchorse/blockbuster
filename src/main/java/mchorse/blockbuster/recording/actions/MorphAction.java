@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -45,7 +46,7 @@ public class MorphAction extends Action
     public void fromBytes(DataInput in) throws IOException
     {
         this.model = in.readUTF();
-        this.skin = EntityActor.fromString(in.readUTF(), this.model);
+        this.skin = RLUtils.fromString(in.readUTF(), this.model);
     }
 
     @Override

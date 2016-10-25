@@ -14,6 +14,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -136,7 +137,7 @@ public class GuiReplay extends GuiScreen
         value.invincible = this.invincible.getValue();
 
         value.model = this.model.getText();
-        value.skin = EntityActor.fromString(this.skin.getText(), value.model);
+        value.skin = RLUtils.fromString(this.skin.getText(), value.model);
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
@@ -281,7 +282,7 @@ public class GuiReplay extends GuiScreen
         this.filename.setMaxStringLength(40);
 
         this.model.setText(this.replay.model);
-        this.skin.setText(EntityActor.fromResource(this.replay.skin));
+        this.skin.setText(RLUtils.fromResource(this.replay.skin));
         this.invisible.setValue(this.replay.invisible);
 
         this.name.setText(this.replay.name);
@@ -325,7 +326,7 @@ public class GuiReplay extends GuiScreen
         boolean invisible = this.actor.invisible;
 
         this.actor.model = this.model.getText();
-        this.actor.skin = EntityActor.fromString(this.skin.getText(), this.actor.model);
+        this.actor.skin = RLUtils.fromString(this.skin.getText(), this.actor.model);
         this.actor.invisible = this.invisible.getValue();
         this.actor.renderName = false;
         GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);

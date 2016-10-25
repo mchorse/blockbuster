@@ -17,6 +17,7 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.NBTUtils;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -94,6 +95,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public RecordPlayer playback;
 
+    /* Default pose sizes */
+    private float[] flying = {0.6F, 0.6F};
+    private float[] sneaking = {0.6F, 1.65F};
+    private float[] standing = {0.6F, 1.80F};
+
     public EntityActor(World worldIn)
     {
         super(worldIn);
@@ -112,6 +118,14 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                 return false;
             }
         };
+    }
+
+    /**
+     * Check whether this actor is playing
+     */
+    public boolean isPlaying()
+    {
+        return this.playback != null && !this.playback.isFinished();
     }
 
     /**
@@ -148,52 +162,19 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     protected void updateSize()
     {
-        float width = this.width;
-        float height = this.height;
+        float[] pose;
 
-        if (this.isElytraFlying())
+        if (this.modelInstance != null)
         {
-            width = 0.6F;
-            height = 0.6F;
-
-            if (this.modelInstance != null)
-            {
-                float[] pose = this.modelInstance.poses.get("flying").size;
-
-                width = pose[0];
-                height = pose[1];
-            }
-        }
-        else if (this.isSneaking())
-        {
-            width = 0.6F;
-            height = 1.65F;
-
-            if (this.modelInstance != null)
-            {
-                float[] pose = this.modelInstance.poses.get("sneaking").size;
-
-                width = pose[0];
-                height = pose[1];
-            }
+            String key = this.isElytraFlying() ? "flying" : (this.isSneaking() ? "sneaking" : "standing");
+            pose = this.modelInstance.poses.get(key).size;
         }
         else
         {
-            width = 0.6F;
-            height = 1.8F;
-
-            if (this.modelInstance == null) this.updateModel();
-
-            if (this.modelInstance != null)
-            {
-                float[] pose = this.modelInstance.poses.get("standing").size;
-
-                width = pose[0];
-                height = pose[1];
-            }
+            pose = this.isElytraFlying() ? this.flying : (this.isSneaking() ? this.sneaking : this.standing);
         }
 
-        this.setSize(width, height);
+        this.setSize(pose[0], pose[1]);
     }
 
     /**
@@ -217,14 +198,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             }
         }
 
+        /* Copy paste of onLivingUpdate from EntityLivingBase, I believe */
         this.updateArmSwingProgress();
 
-        /*
-         * Taken from the EntityLivingBase, IDK what it does, but the same code was
-         * in Mocap's EntityMocap (which is serves like an actor in Mocap mod)
-         *
-         * It looks like position and rotation interpolation, though
-         */
         if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
         {
             double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
@@ -245,7 +221,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
         if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
-        /* Taken from the EntityOtherPlayerMP, I think */
         this.prevLimbSwingAmount = this.limbSwingAmount;
 
         double d0 = this.posX - this.prevPosX;
@@ -382,17 +357,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         if (CommonProxy.manager.players.containsKey(this))
         {
             Utils.broadcastMessage("blockbuster.actor.playing", new Object[] {});
+
             return;
         }
 
-        if (filename.isEmpty())
-        {
-            Utils.broadcastMessage(new TextComponentTranslation("blockbuster.actor.no_name"));
-        }
-        else
-        {
-            CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, kill, true);
-        }
+        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, kill, true);
     }
 
     /**
@@ -400,11 +369,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void stopPlaying()
     {
-        if (!CommonProxy.manager.players.containsKey(this))
-        {
-            return;
-        }
-
         CommonProxy.manager.stopPlayback(this);
     }
 
@@ -448,9 +412,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         this.updateModel();
 
-        if (!this.worldObj.isRemote && notify) this.notifyPlayers();
+        if (!this.worldObj.isRemote && notify)
+        {
+            this.notifyPlayers();
+        }
     }
 
+    /**
+     * Update the data model
+     */
     private void updateModel()
     {
         ModelHandler models = Blockbuster.proxy.models;
@@ -461,6 +431,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
     }
 
+    /**
+     * Notify trackers of data changes happened in this actor
+     */
     public void notifyPlayers()
     {
         Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.model, this.skin, this.invisible));
@@ -473,16 +446,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.readEntityFromNBT(tag);
 
-        ResourceLocation skin = this.skin;
-        String model = this.model;
-
         this.model = tag.getString("Model");
-        this.skin = EntityActor.fromString(tag.getString("Skin"), this.model);
+        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model);
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
 
-        if (((skin != null && !skin.equals(this.skin)) || !model.equals(this.model)) && !this.worldObj.isRemote)
+        if (!this.worldObj.isRemote)
         {
             this.notifyPlayers();
         }
@@ -535,7 +505,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     public void readSpawnData(ByteBuf buffer)
     {
         this.model = ByteBufUtils.readUTF8String(buffer);
-        this.skin = EntityActor.fromString(ByteBufUtils.readUTF8String(buffer), this.model);
+        this.skin = RLUtils.fromString(ByteBufUtils.readUTF8String(buffer), this.model);
         this.invisible = buffer.readBoolean();
 
         if (buffer.readBoolean())
@@ -547,50 +517,9 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             {
                 this.playback.tick = tick;
                 this.playback.delay = delay;
-
-                System.out.println(this.playback.record.filename);
             }
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
-    }
-
-    public static ResourceLocation fromString(String skin, String model)
-    {
-        if (skin.isEmpty())
-        {
-            return null;
-        }
-
-        if (skin.indexOf(":") == -1)
-        {
-            String suffix = (skin.indexOf("/") == -1 ? model + "/" : "");
-
-            return new ResourceLocation("blockbuster.actors", suffix + skin);
-        }
-
-        return new ResourceLocation(skin);
-    }
-
-    public static String fromResource(ResourceLocation skin)
-    {
-        if (skin == null)
-        {
-            return "";
-        }
-
-        if (skin.getResourceDomain().equals("blockbuster.actors"))
-        {
-            String[] splits = skin.getResourcePath().split("/");
-
-            return splits[splits.length - 1];
-        }
-
-        return skin.toString();
-    }
-
-    public boolean isPlaying()
-    {
-        return this.playback != null && !this.playback.isFinished();
     }
 }

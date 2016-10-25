@@ -138,6 +138,7 @@ public class ModelHandler
         {
             /* Restore default eye height */
             player.eyeHeight = player.getDefaultEyeHeight();
+
             return;
         }
 

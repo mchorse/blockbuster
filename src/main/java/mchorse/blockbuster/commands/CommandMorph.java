@@ -5,9 +5,9 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -55,7 +55,7 @@ public class CommandMorph extends CommandBase
             }
 
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
-            if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], EntityActor.fromString(args[1], args[0])));
+            if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], RLUtils.fromString(args[1], args[0])));
 
             sender.addChatMessage(new TextComponentTranslation("blockbuster.morph", args[0]));
         }

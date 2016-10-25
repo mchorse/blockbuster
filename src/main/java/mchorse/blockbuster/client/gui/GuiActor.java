@@ -12,6 +12,7 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -95,7 +96,7 @@ public class GuiActor extends GuiScreen
     private void saveAndQuit()
     {
         String model = this.model.getText();
-        ResourceLocation skin = EntityActor.fromString(this.skin.getText(), model);
+        ResourceLocation skin = RLUtils.fromString(this.skin.getText(), model);
         boolean invisible = this.invisible.getValue();
 
         Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), model, skin, invisible));
@@ -223,7 +224,7 @@ public class GuiActor extends GuiScreen
         this.skin.setMaxStringLength(120);
 
         this.model.setText(this.actor.model);
-        this.skin.setText(EntityActor.fromResource(this.actor.skin));
+        this.skin.setText(RLUtils.fromResource(this.actor.skin));
         this.invisible.setValue(this.actor.invisible);
     }
 
@@ -255,7 +256,7 @@ public class GuiActor extends GuiScreen
         boolean invisible = this.actor.invisible;
 
         this.actor.model = this.model.getText();
-        this.actor.skin = EntityActor.fromString(this.skin.getText(), this.actor.model);
+        this.actor.skin = RLUtils.fromString(this.skin.getText(), this.actor.model);
         this.actor.invisible = this.invisible.getValue();
         this.actor.renderName = false;
         GuiUtils.drawEntityOnScreen(x, y, size, x - mouseX, (y - size) - mouseY, this.actor);

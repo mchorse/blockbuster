@@ -1,6 +1,6 @@
 package mchorse.blockbuster.capabilities.morphing;
 
-import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -39,7 +39,7 @@ public class MorphingStorage implements IStorage<IMorphing>
             NBTTagCompound tag = (NBTTagCompound) nbt;
 
             instance.setModel(tag.getString("Model"));
-            instance.setSkin(EntityActor.fromString(tag.getString("Skin"), tag.getString("Model")));
+            instance.setSkin(RLUtils.fromString(tag.getString("Skin"), tag.getString("Model")));
         }
     }
 }
