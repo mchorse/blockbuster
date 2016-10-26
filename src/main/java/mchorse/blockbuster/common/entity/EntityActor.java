@@ -20,7 +20,9 @@ import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.RLUtils;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityBodyHelper;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -48,7 +50,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  * scenes (like one from Van Helsing in beginning with big crowd with torches,
  * fire and stuff).
  */
-public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData
+public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData
 {
     /**
      * Skin used by the actor. If empty - means default skin provided with this
@@ -205,12 +207,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
         {
-            double d5 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
-            double d0 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
-            double d1 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+            double d0 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
+            double d1 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
+            double d2 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
 
-            this.newPosRotationIncrements -= 1;
-            this.setPosition(d5, d0, d1);
+            this.newPosRotationIncrements--;
+            this.setPosition(d0, d1, d2);
         }
         else if (!this.isServerWorld())
         {
@@ -229,19 +231,13 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         double d1 = this.posZ - this.prevPosZ;
         float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
 
-        if (f > 1.0F) f = 1.0F;
+        if (f > 1.0F)
+        {
+            f = 1.0F;
+        }
 
         this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
         this.limbSwing += this.limbSwingAmount;
-    }
-
-    /**
-     * Don't update my renderYawOffset, punk!
-     */
-    @Override
-    protected float updateDistance(float f2, float f3)
-    {
-        return f3;
     }
 
     /**
@@ -263,6 +259,46 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                 }
             }
         }
+    }
+
+    /**
+     * Roll back to {@link EntityLivingBase}'s updateDistance methods.
+     *
+     * Its implementation supports much superior renderYawOffset animation.
+     * Well, at least that's what I think. I should check out
+     * {@link EntityBodyHelper} before making final decision.
+    */
+    @Override
+    protected float updateDistance(float f2, float f3)
+    {
+        float f = MathHelper.wrapDegrees(f2 - this.renderYawOffset);
+        this.renderYawOffset += f * 0.3F;
+        float f1 = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
+        boolean flag = f1 < -90.0F || f1 >= 90.0F;
+
+        if (f1 < -75.0F)
+        {
+            f1 = -75.0F;
+        }
+
+        if (f1 >= 75.0F)
+        {
+            f1 = 75.0F;
+        }
+
+        this.renderYawOffset = this.rotationYaw - f1;
+
+        if (f1 * f1 > 2500.0F)
+        {
+            this.renderYawOffset += f1 * 0.2F;
+        }
+
+        if (flag)
+        {
+            f3 *= -1.0F;
+        }
+
+        return f3;
     }
 
     /* Processing interaction with player */

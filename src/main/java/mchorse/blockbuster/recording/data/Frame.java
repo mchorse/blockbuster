@@ -21,7 +21,6 @@ public class Frame
 
     public float yaw;
     public float yawHead;
-    public float yawOffset;
     public float pitch;
 
     public double motionX;
@@ -46,7 +45,6 @@ public class Frame
 
         this.yaw = player.rotationYaw;
         this.yawHead = player.rotationYawHead;
-        this.yawOffset = player.renderYawOffset;
         this.pitch = player.rotationPitch;
 
         this.motionX = player.motionX;
@@ -82,7 +80,6 @@ public class Frame
 
         actor.prevRotationYaw = actor.rotationYaw;
         actor.prevRotationYawHead = actor.rotationYawHead;
-        actor.prevRenderYawOffset = actor.renderYawOffset;
         actor.prevRotationPitch = actor.rotationPitch;
 
         /* Inject frame's values into actor */
@@ -97,7 +94,6 @@ public class Frame
         {
             actor.rotationYaw = this.yaw;
             actor.rotationYawHead = this.yawHead;
-            actor.renderYawOffset = this.yawOffset;
             actor.rotationPitch = this.pitch;
         }
 
@@ -124,7 +120,6 @@ public class Frame
 
         out.writeFloat(this.yaw);
         out.writeFloat(this.yawHead);
-        out.writeFloat(this.yawOffset);
         out.writeFloat(this.pitch);
 
         out.writeFloat((float) this.motionX);
@@ -148,7 +143,6 @@ public class Frame
 
         this.yaw = in.readFloat();
         this.yawHead = in.readFloat();
-        this.yawOffset = in.readFloat();
         this.pitch = in.readFloat();
 
         this.motionX = in.readFloat();
