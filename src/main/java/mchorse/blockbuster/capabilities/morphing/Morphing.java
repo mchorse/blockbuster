@@ -1,5 +1,6 @@
 package mchorse.blockbuster.capabilities.morphing;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -12,6 +13,11 @@ public class Morphing implements IMorphing
 {
     private String model = "";
     private ResourceLocation skin;
+
+    public static IMorphing get(EntityPlayer player)
+    {
+        return player.getCapability(MorphingProvider.MORPHING, null);
+    }
 
     @Override
     public String getModel()

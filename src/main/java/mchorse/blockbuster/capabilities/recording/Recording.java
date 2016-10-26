@@ -3,6 +3,8 @@ package mchorse.blockbuster.capabilities.recording;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 /**
  * Default implementation of {@link IRecording}
  */
@@ -10,6 +12,11 @@ public class Recording implements IRecording
 {
     public ItemInfo camera = new ItemInfo();
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
+
+    public static IRecording get(EntityPlayer player)
+    {
+        return player.getCapability(RecordingProvider.RECORDING, null);
+    }
 
     @Override
     public String currentProfile()

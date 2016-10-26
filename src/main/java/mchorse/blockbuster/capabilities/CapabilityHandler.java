@@ -3,8 +3,10 @@ package mchorse.blockbuster.capabilities;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -51,8 +53,8 @@ public class CapabilityHandler
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayer player = event.player;
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
-        IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
+        IMorphing capability = Morphing.get(player);
+        IRecording recording = Recording.get(player);
 
         if (capability != null)
         {
@@ -79,7 +81,7 @@ public class CapabilityHandler
 
         if (target instanceof EntityPlayer)
         {
-            IMorphing cap = target.getCapability(MorphingProvider.MORPHING, null);
+            IMorphing cap = Morphing.get((EntityPlayer) target);
 
             Dispatcher.sendTo(new PacketMorphPlayer(target.getEntityId(), cap.getModel(), cap.getSkin()), player);
         }

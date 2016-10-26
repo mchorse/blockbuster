@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import net.minecraft.entity.player.EntityPlayer;
@@ -131,7 +131,7 @@ public class ModelHandler
         if (event.phase == Phase.START) return;
 
         EntityPlayer player = event.player;
-        IMorphing cap = player.getCapability(MorphingProvider.MORPHING, null);
+        IMorphing cap = Morphing.get(player);
         Model data = this.models.get(cap.getModel());
 
         if (data == null)

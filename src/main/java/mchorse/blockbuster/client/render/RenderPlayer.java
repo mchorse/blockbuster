@@ -4,6 +4,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
@@ -78,7 +79,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     protected void setupModel(EntityPlayer entity)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
-        IMorphing capability = entity.getCapability(MorphingProvider.MORPHING, null);
+        IMorphing capability = Morphing.get(entity);
 
         String key = models.containsKey(capability.getModel()) ? capability.getModel() : "steve";
         String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");

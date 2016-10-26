@@ -3,7 +3,7 @@ package mchorse.blockbuster.network.server;
 import java.util.List;
 
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
@@ -17,7 +17,7 @@ public class ServerHandlerMorph extends ServerMessageHandler<PacketMorph>
     @Override
     public void run(EntityPlayerMP player, PacketMorph message)
     {
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
+        IMorphing capability = Morphing.get(player);
 
         if (capability != null)
         {

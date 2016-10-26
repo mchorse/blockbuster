@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.recording;
 
-import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -33,7 +33,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         }
         else
         {
-            player.getCapability(MorphingProvider.MORPHING, null).reset();
+            Morphing.get(player).reset();
 
             Record record = ClientProxy.manager.recorders.get(player).record;
 

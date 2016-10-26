@@ -20,7 +20,7 @@ import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.camera.json.AbstractFixtureAdapter;
 import mchorse.blockbuster.capabilities.recording.IRecording;
-import mchorse.blockbuster.capabilities.recording.RecordingProvider;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
@@ -136,7 +136,7 @@ public class CameraUtils
      */
     private static boolean playerHasProfile(EntityPlayerMP player, String filename, boolean play)
     {
-        IRecording recording = player.getCapability(RecordingProvider.RECORDING, null);
+        IRecording recording = Recording.get(player);
         File profile = new File(cameraFile(filename));
 
         boolean hasSame = recording.currentProfile().equals(filename);

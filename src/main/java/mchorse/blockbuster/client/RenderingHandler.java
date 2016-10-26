@@ -3,7 +3,7 @@ package mchorse.blockbuster.client;
 import java.util.List;
 
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
+import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.common.ClientProxy;
@@ -70,7 +70,7 @@ public class RenderingHandler
     public void onPlayerRender(RenderPlayerEvent.Pre event)
     {
         EntityPlayer player = event.getEntityPlayer();
-        IMorphing capability = player.getCapability(MorphingProvider.MORPHING, null);
+        IMorphing capability = Morphing.get(player);
 
         if (capability == null || capability.getModel().isEmpty()) return;
 
