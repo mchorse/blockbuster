@@ -49,7 +49,7 @@ public class LookFixture extends IdleFixture
             throw new CommandException("blockbuster.fixtures.no_entity");
         }
 
-        if (this.entity == null && target != null)
+        if ((this.entity == null || this.entity.isDead) && target != null)
         {
             this.entity = target;
         }
