@@ -8,6 +8,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client handler frames
+ *
+ * This client handler is responsible for inserting a record received from the
+ * server into client's record repository (record manager).
+ */
 public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
 {
     @Override

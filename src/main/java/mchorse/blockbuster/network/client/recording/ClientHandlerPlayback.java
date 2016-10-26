@@ -2,8 +2,10 @@ package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
+import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -11,6 +13,19 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client handler actor playback
+ *
+ * This client handler is responsible for starting actor playback. There are
+ * few cases to consider.
+ *
+ * If the message says to stop playback, it is quite simple, but for start
+ * playback there are few checks required to be made.
+ *
+ * If record exists on the client, we'll simply create new record player and
+ * request tick and delay, just in case, for synchronization purpose, but if
+ * client doesn't have a record, it should request the server to provide one.
+ */
 public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
 {
     @Override
@@ -21,18 +36,17 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
 
         if (message.state)
         {
-            if (ClientProxy.manager.records.containsKey(message.filename))
-            {
-                Record record = ClientProxy.manager.records.get(message.filename);
-                RecordPlayer recordPlayer = new RecordPlayer(record, Mode.FRAMES);
+            Record record = ClientProxy.manager.records.get(message.filename);
 
-                actor.playback = recordPlayer;
+            if (record != null)
+            {
+                actor.playback = new RecordPlayer(record, Mode.FRAMES);
 
                 /* TODO: sync tick and delay */
             }
             else
             {
-                /* TODO: request frames from the server */
+                Dispatcher.sendToServer(new PacketRequestFrames(message.id, message.filename));
             }
         }
         else

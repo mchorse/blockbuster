@@ -9,6 +9,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client handler list camera profiles
+ *
+ * This client handler is responsible for getting requested list of available
+ * camera profiles to the {@link GuiPlayback} (it's needed for tab completion).
+ */
 public class ClientHandlerListCameraProfiles extends ClientMessageHandler<PacketListCameraProfiles>
 {
     @Override

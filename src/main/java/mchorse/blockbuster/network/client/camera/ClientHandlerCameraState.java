@@ -7,6 +7,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client handler camera state
+ *
+ * This client handler is responsible for running or stopping the camera. It
+ * is pretty simple handler.
+ */
 public class ClientHandlerCameraState extends ClientMessageHandler<PacketCameraState>
 {
     @Override

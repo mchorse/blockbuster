@@ -6,6 +6,12 @@ import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.recording.data.Record;
 
+/**
+ * Client handler requested frames
+ *
+ * This client handler is responsible for saving received frames into the client
+ * record manager and also injecting received record into the provided actor.
+ */
 public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketRequestedFrames>
 {
     @Override
@@ -15,10 +21,9 @@ public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketReq
         record.frames = message.frames;
 
         ClientProxy.manager.records.put(record.filename, record);
-
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
 
-        if (actor.playback != null)
+        if (actor != null && actor.playback != null)
         {
             actor.playback.record = record;
         }

@@ -10,6 +10,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client handler director cast
+ *
+ * This client handler is responsible for transferring requested director block
+ * cast to current {@link GuiDirector}.
+ */
 public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirectorCast>
 {
     @Override

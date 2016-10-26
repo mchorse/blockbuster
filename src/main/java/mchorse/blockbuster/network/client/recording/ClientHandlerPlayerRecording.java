@@ -12,6 +12,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Client hanlder player recording
+ *
+ * This client handler is responsible for updating recording overlay status and
+ * starting or stopping the recording based on the state given from packet.
+ */
 public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPlayerRecording>
 {
     @Override
