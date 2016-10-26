@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.server.recording;
 
 import java.io.IOException;
 
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.common.recording.PacketFramesSave;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
@@ -30,6 +31,8 @@ public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesSave>
 
         try
         {
+            Recording.get(player).addRecording(message.filename, System.currentTimeMillis());
+
             serverRecord.frames = message.frames;
             serverRecord.toBytes(CommonProxy.manager.replayFile(message.filename));
         }

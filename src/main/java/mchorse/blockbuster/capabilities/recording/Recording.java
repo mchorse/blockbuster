@@ -63,7 +63,14 @@ public class Recording implements IRecording
     @Override
     public void addRecording(String filename, long timestamp)
     {
-        this.recordings.put(filename, new ItemInfo(filename, timestamp));
+        if (this.hasRecording(filename))
+        {
+            this.updateRecordingTimestamp(filename, timestamp);
+        }
+        else
+        {
+            this.recordings.put(filename, new ItemInfo(filename, timestamp));
+        }
     }
 
     @Override

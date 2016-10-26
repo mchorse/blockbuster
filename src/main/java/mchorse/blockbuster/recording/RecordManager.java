@@ -81,7 +81,7 @@ public class RecordManager
     }
 
     /**
-     * Stop recording given player
+     * Stop recording for given player
      */
     public boolean stopRecording(EntityPlayer player, boolean notify)
     {
@@ -89,7 +89,9 @@ public class RecordManager
 
         if (recorder != null)
         {
-            this.records.put(recorder.record.filename, recorder.record);
+            String filename = recorder.record.filename;
+
+            this.records.put(filename, recorder.record);
             this.recorders.remove(player);
 
             if (notify)

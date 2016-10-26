@@ -5,11 +5,9 @@ import java.util.List;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
-import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -95,29 +93,7 @@ public class CommandAction extends CommandBase
      */
     private void request(ICommandSender sender, String filename, RecordManager manager) throws CommandException
     {
-        Record record = null;
-
-        if (manager.records.containsKey(filename))
-        {
-            record = manager.records.get(filename);
-        }
-        else
-        {
-            try
-            {
-                record = new Record(filename);
-                record.fromBytes(manager.replayFile(filename));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        if (record != null)
-        {
-            Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), getCommandSenderAsPlayer(sender));
-        }
+        Utils.sendRecord(filename, getCommandSenderAsPlayer(sender));
     }
 
     /**

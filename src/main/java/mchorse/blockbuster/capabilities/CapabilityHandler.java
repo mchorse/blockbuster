@@ -12,8 +12,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.network.common.PacketMorphPlayer;
-import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
-import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -92,9 +91,7 @@ public class CapabilityHandler
 
             if (actor.isPlaying())
             {
-                Record record = actor.playback.record;
-
-                Dispatcher.sendTo(new PacketFramesLoad(record.filename, record.frames), player);
+                Utils.sendRecord(actor.playback.record.filename, player);
             }
         }
     }

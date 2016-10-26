@@ -54,7 +54,9 @@ public class GuiRecordingOverlay extends Gui
     public void draw(int width, int height)
     {
         if (!this.isVisible)
+        {
             return;
+        }
 
         FontRenderer font = this.mc.fontRendererObj;
 

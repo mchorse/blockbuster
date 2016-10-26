@@ -37,11 +37,10 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
         if (message.state)
         {
             Record record = ClientProxy.manager.records.get(message.filename);
+            actor.playback = new RecordPlayer(record, Mode.FRAMES);
 
             if (record != null)
             {
-                actor.playback = new RecordPlayer(record, Mode.FRAMES);
-
                 /* TODO: sync tick and delay */
             }
             else
