@@ -1,9 +1,12 @@
 package mchorse.blockbuster.common.block;
 
+import java.util.List;
+
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -24,6 +27,12 @@ public class BlockDirector extends AbstractBlockDirector
         super();
         this.setRegistryName("director");
         this.setUnlocalizedName("blockbuster.director");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    {
+        tooltip.add(I18n.format("blockbuster.info.director_block"));
     }
 
     @Override

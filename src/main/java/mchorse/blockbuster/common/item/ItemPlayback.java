@@ -70,9 +70,14 @@ public class ItemPlayback extends Item
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
+        tooltip.add(I18n.format("blockbuster.info.playback_button"));
+
         NBTTagCompound tag = stack.getTagCompound();
 
-        if (tag == null) return;
+        if (tag == null)
+        {
+            return;
+        }
 
         if (tag.hasKey("CameraProfile"))
         {

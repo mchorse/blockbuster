@@ -6,9 +6,14 @@ blockbuster.no=No
 
 # Item tool tips
 
+blockbuster.info.playback_button=Toggles director block
 blockbuster.info.playback_director=Attached to (§r%d§7, §r%d§7, §r%d§7)
 blockbuster.info.playback_profile=Plays profile "§f§o%s§r§7"
 blockbuster.info.playback_play=Plays camera
+
+blockbuster.info.actor_config=Use on actor
+blockbuster.info.register=Ties actors to director block
+blockbuster.info.director_block=Manages actors and replays
 
 # Vanilla strings
 
