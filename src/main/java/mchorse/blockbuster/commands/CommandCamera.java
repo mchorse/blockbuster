@@ -108,6 +108,6 @@ public class CommandCamera extends SubCommandBase
     @Override
     protected String getHelp()
     {
-        return "blockbuster.commands.camera";
+        return "blockbuster.commands.camera.main";
     }
 }

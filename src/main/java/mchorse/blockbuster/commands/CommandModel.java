@@ -30,6 +30,6 @@ public class CommandModel extends SubCommandBase
     @Override
     protected String getHelp()
     {
-        return "blockbuster.commands.model";
+        return "blockbuster.commands.model.main";
     }
 }

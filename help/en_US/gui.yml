@@ -1,0 +1,34 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: Done
+    next: Next
+    previous: Previous
+    restore: Restore Default
+    reset: Reset
+    add: Add
+    edit: Edit
+    remove: Remove
+    detach: Detach
+
+    # Actor configuration strings
+    actor:
+        title: Actor Configuration
+        default: Default
+        name: Name
+        model: Custom Model
+        filename: Recording ID
+        skin: Skin
+        invincible: Can be killed?
+        invisible: Is visible?
+
+    # Playback GUI
+    playback:
+        title: Playback configuration
+        camera_mode: Camera mode
+        profile: Profile filename
+
+        nothing: Do nothing
+        play: Play only
+        load_profile: Load and play

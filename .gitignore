@@ -21,4 +21,8 @@ build
 eclipse
 run
 .DS_Store
-Makefile
+src/main/resources/assets/blockbuster/lang/*.lang
+
+# PHP
+php/vendor
+php/composer.lock

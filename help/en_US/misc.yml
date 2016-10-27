@@ -1,0 +1,17 @@
+# Recording
+blockbuster:
+    mocap:
+        stopped_dead: Stopped recording %s, because player's dead.
+        stopped_logout: Stopped recording %s. Bye!
+        already_recording: %s is already being recorded to?
+        wrong_signature: %s isn't a record file (or is an old version?)
+        cant_find_file: Can't find %s replay file!
+        error_file: Error loading record file, either not a record file or recorded by an older version.
+
+    # Parsing
+    parsing.lacks_pose: Parsed model with name "%s" doesn't have "%s" pose!
+    models.loaded: Received {7}%d{r} custom models and {7}%d{r} skins from server.
+    
+    recording: Recording to {c}%s{r}
+    yes: Yes
+    no: No

@@ -1,0 +1,171 @@
+# Commands
+blockbuster:
+    commands:
+        # General commands (no SubCommandBase commands)
+        director: {l}{6}/{r}director {8}<play|stop>{r} {7}<x> <y> <z>{r}\n\nStart or stop playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
+        no_director: No director block exists at (%s, %s, %s)
+        morph: 
+            >
+                {l}{6}/{r}morph {7}<model> <skin>{r}
+                
+                {r}Morphs current player into given {7}<model>{r} with skin named {7}<skin>{r}.
+
+        # Model's commands
+        model:
+            main: {r}{o}Model command{r}. This command provides sub-commands for managing custom models.
+            
+            export:
+                main: 
+                    |
+                        {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
+                        
+                        {r}Exports model from {7}<entity_name>{r} mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder.
+                        
+                        {r}{l}Attention{r}: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
+                error_save: Can't save exported model!
+                wrong_type: Can't export model for "%s" type (because it has no renderer, or it's not a living entity renderer).
+                saved: Entity model "%s" was saved to %s.
+            
+            request: {l}{6}/{r}model {8}request{r}\n\nRequests models from the server (including host's models in LAN game).
+
+        # Action's commands
+        action:
+            main: {r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions.
+            play: 
+                |
+                    {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
+                    
+                    {r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[name]{r} of the actor, his {7}[model]{r} and {7}[skin]{r} and {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values).
+            record: 
+                |
+                    {l}{6}/{r}action {8}record{r} {7}<filename>{r}
+                    
+                    {r}Records an action from current player into given {7}<filename>{r}.
+            request: 
+                |
+                    {l}{6}/{r}action {8}request{r} {7}<filename>{r}
+                    
+                    {r}Requests an action, named {7}<filename>{r}, to be loaded from server to current client.
+            stop: 
+                |
+                    {l}{6}/{r}action {8}stop{r}
+                    
+                    {r}Stops the recording of action. If the player didn't record anything, nothing will happen.
+
+        # Camera's commands
+        camera:
+            main: {r}{o}Camera command{r}. Provides sub-commands for managing camera profile and its camera fixtures.
+            start: 
+                |
+                    {l}{6}/{r}camera {8}start{r}
+                    
+                    {r}Starts a camera profile
+            stop: 
+                |
+                    {l}{6}/{r}camera {8}stop{r}
+            
+                    {r}Stops currently running camera profile
+            new: 
+                |
+                    {l}{6}/{r}camera {8}new{r} {7}<filename>{r}
+                    
+                    {r}Creates a new camera profile in current session with given <filename>
+            load: 
+                |
+                    {l}{6}/{r}camera {8}load{r} {7}<filename>{r}
+                    
+                    {r}Load camera profile
+            save: 
+                |
+                    {l}{6}/{r}camera {8}save{r} {7}[filename]{r}
+                    
+                    {r}Save camera profile to a file. If the file isn't specified, then this camera profile will be saved to the file that previously was saved or loaded
+            clear: 
+                |
+                    {l}{6}/{r}camera {8}clear{r}
+                    
+                    {r}Clears the camera profile (removes all fixtures)
+            goto: 
+                |
+                    {l}{6}/{r}camera {8}goto{r} {7}<index> [progress]{r}
+                    
+                    {r}Teleports you to the camera fixture at {7}<index>{r} index. Optionally you might specify {7}[progress]{r} (from {7}0.0{r} to {7}1.0{r}) argument which will allow you to teleport in the middle of the path or circular fixture.
+
+            fov: 
+                |
+                    {l}{6}/{r}camera {8}fov{r} {7}[fov]{r}
+                    
+                    Set or get client's camera Field-Of-View setting
+            roll: 
+                |
+                    {l}{6}/{r}camera {8}roll{r} {7}[roll]{r}
+                    
+                    {r}Set or get client's camera roll (rotation across Z axis) setting
+
+            fixture:
+                add: 
+                    |
+                        {l}{6}/{r}camera {8}add{r} {7}<idle|path|follow|look|circular> <duration>{r}
+                        
+                        {r}Creates a new camera fixture at the end of the current camera profile with given type and {7}<duration>{r}.
+                edit: 
+                    |
+                        {l}{6}/{r}camera {8}edit{r} {7}<index> <values...>{r}
+                        
+                        {r}Edit fixture's values at {7}<index>{r} in currently selected camera profile
+                remove: 
+                    |
+                        {l}{6}/{r}camera {8}remove{r} {7}<index>{r}
+                        
+                        {r}Remove camera fixture from currently used camera profile at {7}<index>{r}
+                duration: 
+                    |
+                    
+                        {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
+                        
+                        {r}Set duration in milliseconds to given fixture at given {7}<index>{r}
+                path: 
+                    >
+                        {l}{6}/{r}camera {8}path{r} {7}<fixture_index> [point_index]{r}
+                        
+                        {r}Add a point to path fixture (if {7}[point_index]{r} isn't specified), or remove path point in fixture at index {7}[point_index]{r}.
+                move: 
+                    |
+                        {l}{6}/{r}camera {8}move{r} {7}<from> <to>{r}
+                        
+                        {r}Move camera fixture at {7}<from>{r} index to {7}<to>{r} index in the camera profile
+
+                empty: This camera profile is {o}empty{r}!
+
+    # Camera duration
+    duration:
+        fixture: Camera fixture at index {7}%d{r} runs for {7}%d{r} ticks.
+        profile: Camera profile runs for {7}%d{r} ticks.
+
+    # Camera fixtures
+    fixtures:
+        few_args: You passed not enough arguments for this command!
+        wrong_type: Camera fixture by type {7}%s{r} doesn't exist!
+        no_entity: You should look at any entity to add this fixture!
+        
+    # Camera roll and fov
+    camera:
+        fov: Your field-of-view is {7}%s{r} degrees
+        roll: Your roll is {7}%s{r} degrees
+
+    # Camera profile
+    profile:
+        clear: Currently used camera profile was cleared.
+        new: Created new camera profile with filename {7}%s{r}.
+
+        start: Current camera profile was started.
+        stop: Currently running camera profile was stopped.
+        save: Current camera profile was saved in file {7}%s{r}.
+        load: Camera profile was loaded from file {7}%s{r}.
+        not_exists: There's no camera fixture at {7}%d{r} index in current camera profile!
+        not_path: Fixture at index {7}%s{r} isn't a path fixture!
+        loaded: Camera profile by name {7}%s{r} is already loaded!
+
+        empty_filename: This camera profile has empty filename! In current situation, specify the {7}[filename]{r} argument, please.
+        cant_save: Can't save camera profile by file name {7}%s{r}
+        cant_load: Can't load camera profile by file name {7}%s{r}

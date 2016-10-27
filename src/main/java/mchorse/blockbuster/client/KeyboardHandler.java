@@ -78,7 +78,7 @@ public class KeyboardHandler
     public KeyboardHandler()
     {
         String general = "key.blockbuster.general";
-        String profile = "key.blockbuster.profile";
+        String profile = "key.blockbuster.profile.title";
         String duration = "key.blockbuster.duration";
         String path = "key.blockbuster.path";
 

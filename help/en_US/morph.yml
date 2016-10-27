@@ -1,0 +1,5 @@
+# Morph strings
+blockbuster.morph:
+    main: You morphed into {7}"%s"{r} model.
+    disable: You've been demorphed.
+    wrong: Morph by name {7}"%s"{r} doesn't exist!

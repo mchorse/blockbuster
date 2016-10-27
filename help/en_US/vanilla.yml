@@ -1,0 +1,27 @@
+# Item tooltips
+blockbuster:
+    info:
+        playback_button: Toggles director block
+        playback_director: Attached to ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_profile: Plays profile "{f}{o}%s{r}{7}"
+        playback_play: Plays camera
+
+        actor_config: Use on actor
+        register: Ties actors to director block
+        director_block: Manages actors and replays
+
+# Creative tabs
+itemGroup.blockbuster: Blockbuster
+
+# Block name
+tile.blockbuster.director.name: Director block
+
+# Item names
+item:
+    blockbuster:
+        playback.name: Playback button
+        register.name: Registering device
+        actor_config.name: Actor configuration device
+
+# Entity names
+entity.blockbuster.Actor.name: Actor

@@ -1,0 +1,45 @@
+# Keys localization
+key:
+    blockbuster:
+        # Categories
+        general: Blockbuster General
+        duration: Blockbuster Fixture Duration
+        path: Blockbuster Path Fixture
+        feature: Undocumented feature!!!
+
+        # Roll controlling keys
+        roll:
+            add: Roll clockwise
+            reduce: Roll counter-clockwise
+            reset: Reset roll
+
+        # Profile management keys
+        profile:
+            title: Blockbuster Profile Management
+            
+            add_idle: Add Idle Camera Fixture
+            add_path: Add Path Camera Fixture
+            add_look: Add Look Camera Fixture
+            add_follow: Add Follow Camera Fixture
+            add_circular: Add Circular Camera Fixture
+
+            edit: Edit Camera Fixture
+            remove: Remove Camera Fixture
+
+            add_duration: Add Duration
+            reduce_duration: Reduce Duration
+
+            add_path_point: Add Path Point
+            remove_path_point: Remove Last Path Point
+
+            goto: Go to Camera Fixture
+            toggle: Toggle Camera Profile Rendering
+
+            save: Save Camera Profile
+            load: Reload Current Camera Profile
+
+            next: Next Camera Fixture
+            prev: Previous Camera Fixture
+
+            start: Start Camera Profile
+            stop: Stop Camera Profile

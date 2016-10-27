@@ -8,11 +8,13 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.utils.RLUtils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
@@ -51,13 +53,15 @@ public class CommandMorph extends CommandBase
         {
             if (!Blockbuster.proxy.models.models.containsKey(args[0]))
             {
-                throw new CommandException("blockbuster.morph.wrong", args[0]);
+                sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.morph.wrong", args[0])));
+
+                return;
             }
 
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
             if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], RLUtils.fromString(args[1], args[0])));
 
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph", args[0]));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.morph.main", args[0])));
         }
     }
 

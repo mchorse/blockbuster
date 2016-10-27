@@ -22,8 +22,17 @@ $regex = '/"(?:[\w\d_]+\.)?(?<!mchorse\.)blockbuster(?:\.[\w\d_]+)+"/i';
 $strings = [];
 $inserts = [];
 
+/**
+ * String blacklist. Following strings are blacklisted and shouldn't be 
+ * displayed if are found missing.
+ */
 $blacklist = [
-    'blockbuster.actors'
+    'blockbuster.actors',
+    'blockbuster.Actor',
+    'blockbuster.director',
+    'blockbuster.actor_config',
+    'blockbuster.playback',
+    'blockbuster.register'
 ];
 
 /** Starting output */
@@ -46,7 +55,7 @@ foreach ($files as $file)
         {
             $match = str_replace('"', '', $match);
             
-            if (!strpos($lang_content, $match) !== false || in_array($match, $strings))
+            if (!strpos($lang_content, $match . '=') !== false || in_array($match, $strings))
             {
                 array_push($strings, $match);
                 array_push($inserts, $path);

@@ -48,7 +48,7 @@ public class SubCommandModelExport extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.model.export";
+        return "blockbuster.commands.model.export.main";
     }
 
     @Override
