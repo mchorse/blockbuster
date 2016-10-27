@@ -88,6 +88,7 @@ public class Utils
             }
             catch (FileNotFoundException e)
             {
+                player.addChatMessage(new TextComponentTranslation("blockbuster.mocap.cant_find_file", filename));
                 record = null;
             }
             catch (Exception e)

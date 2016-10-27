@@ -61,6 +61,11 @@ public class CommandCamera extends SubCommandBase
         setProfile(new CameraProfile(""));
     }
 
+    static
+    {
+        reset();
+    }
+
     /**
      * Camera's command constructor
      *

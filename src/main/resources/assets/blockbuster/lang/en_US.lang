@@ -132,7 +132,7 @@ blockbuster.actor.not_attached=This registering item isn't attached to a directo
 
 # Commands
 
-blockbuster.commands.action=Action command is responsible for recording and playing recorded player actions. There's three syntaxes of this command:\n\n/action record <filename> [x] [y] [z] - records player's actions to <filename> with optionally specified director block's coordinates for playback.\n/action play <filename> [name_tag] [model] [skin] [invulnerable] - play recorded player recording with specified [name_tag], [model], [skin] and [invulnerable] flag.\n/action stop - stops current player's action recording.\n\nNote: <filename>, [name_tag] [model] [skin] can't contain spaces.   
+blockbuster.commands.action=Action command. This command provides few sub-commands for managing player recording actions.   
 blockbuster.commands.director=/director <play|stop> <x> <y> <z> where <x>, <y>, and <z> are coordinates of director block's position (use F3 to determine coordinates)
 blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
 blockbuster.commands.morph=/morph <model> <skin>\n\nMorphs current player into given <model> with skin named <skin>
@@ -143,6 +143,13 @@ blockbuster.commands.model.export.wrong_type=Can't export model for "%s" type (b
 blockbuster.commands.model.export.saved=Entity model "%s" was saved to %s.
 
 blockbuster.commands.model.request=/model request\n\nRequests models from the server (including host's models in LAN game).
+
+# Action's commands
+
+blockbuster.commands.action.play=/action play <filename> [name_tag] [model] [skin] [invincibility]\n\nPlaybacks an action from given <filename>. This sub-command also can receive optional arguments [name] of the actor, his [model] and [skin] and [invincibility] flag (1, 0, true or false values).
+blockbuster.commands.action.record=/action record <filename>\n\nRecords an action from current player into given <filename>.
+blockbuster.commands.action.request=/action request <filename>\n\nRequests an action, named <filename>, to be loaded from server to current client.
+blockbuster.commands.action.stop=/action stop\n\nStops the recording of action. If the player didn't record anything, nothing will happen.
 
 # Camera's commands
 
