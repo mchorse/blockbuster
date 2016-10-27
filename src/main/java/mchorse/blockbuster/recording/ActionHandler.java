@@ -33,6 +33,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -226,6 +227,22 @@ public class ActionHandler
         if (!player.worldObj.isRemote && events != null)
         {
             events.add(new ChatAction(event.getMessage()));
+        }
+    }
+
+    /**
+     * Event listener when player logs out. This listener aborts the recording
+     * for given player (well, if he records, but that {@link RecordManager}'s
+     * job to find out).
+     */
+    @SubscribeEvent
+    public void onPlayerLogOut(PlayerLoggedOutEvent event)
+    {
+        EntityPlayer player = event.player;
+
+        if (!player.worldObj.isRemote)
+        {
+            CommonProxy.manager.abortRecording(player);
         }
     }
 

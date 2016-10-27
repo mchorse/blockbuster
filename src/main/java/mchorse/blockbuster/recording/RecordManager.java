@@ -202,4 +202,15 @@ public class RecordManager
 
         return new File(file.getAbsolutePath() + "/" + filename);
     }
+
+    /**
+     * Abort the recording of action for given player
+     */
+    public void abortRecording(EntityPlayer player)
+    {
+        if (this.recorders.containsKey(player))
+        {
+            this.recorders.remove(player);
+        }
+    }
 }
