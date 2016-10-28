@@ -9,6 +9,7 @@ install: build_mod
 	cp ./build/libs/blockbuster-${VERSION}.jar ${MODS_DIR}
 
 build_lang:
+	mkdir -p src/main/resources/assets/blockbuster/lang
 	php php/help.php
 
 check: build_lang
