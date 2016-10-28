@@ -20,7 +20,7 @@ public class ServerHandlerCameraProfile extends ServerMessageHandler<PacketCamer
             recording.setCurrentProfile(message.filename);
             recording.setCurrentProfileTimestamp(System.currentTimeMillis());
 
-            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.save", message.filename));
+            player.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.save", message.filename));
         }
     }
 }

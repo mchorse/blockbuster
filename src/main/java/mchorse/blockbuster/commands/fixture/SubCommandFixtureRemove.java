@@ -39,7 +39,7 @@ public class SubCommandFixtureRemove extends CommandBase
 
         if (!CommandCamera.getProfile().has(index))
         {
-            throw new CommandException("blockbuster.profile.not_exists", index);
+            throw new CommandException("blockbuster.error.profile.not_exists", index);
         }
 
         CommandCamera.getProfile().remove(index);

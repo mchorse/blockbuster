@@ -56,12 +56,12 @@ public class CommandDirector extends CommandBase
         if (action.equals("play"))
         {
             director.startPlayback();
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.director.play", args[1], args[2], args[3]));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.director.play", args[1], args[2], args[3]));
         }
         else if (action.equals("stop"))
         {
             director.stopPlayback();
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.director.stop", args[1], args[2], args[3]));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.director.stop", args[1], args[2], args[3]));
         }
     }
 
@@ -77,7 +77,7 @@ public class CommandDirector extends CommandBase
             return (AbstractTileEntityDirector) entity;
         }
 
-        throw new CommandException("blockbuster.commands.no_director", pos.getX(), pos.getY(), pos.getZ());
+        throw new CommandException("blockbuster.error.director.no_director", pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override

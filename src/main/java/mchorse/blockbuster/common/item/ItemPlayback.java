@@ -124,7 +124,7 @@ public class ItemPlayback extends Item
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", pos.getX(), pos.getY(), pos.getZ()));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ()));
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }

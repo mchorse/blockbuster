@@ -45,7 +45,7 @@ public class CameraControl
             return this.profile.get(this.index);
         }
 
-        throw new CommandException("blockbuster.profile.not_exists", this.index);
+        throw new CommandException("blockbuster.error.profile.not_exists", this.index);
     }
 
     /**
@@ -125,7 +125,7 @@ public class CameraControl
             return (PathFixture) fixture;
         }
 
-        throw new CommandException("blockbuster.profile.not_path", this.index);
+        throw new CommandException("blockbuster.error.profile.not_path", this.index);
     }
 
     /**

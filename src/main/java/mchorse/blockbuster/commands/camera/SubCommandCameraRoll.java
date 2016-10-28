@@ -35,7 +35,7 @@ public class SubCommandCameraRoll extends CommandBase
 
         if (args.length == 0)
         {
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.camera.roll", control.roll)));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.info.camera.roll", control.roll)));
         }
         else
         {

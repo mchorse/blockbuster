@@ -30,6 +30,6 @@ public class SubCommandCameraStart extends CommandBase
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         ClientProxy.profileRunner.start();
-        sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.start"));
+        sender.addChatMessage(new TextComponentTranslation("blockbuster.info.profile.start"));
     }
 }

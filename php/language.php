@@ -55,7 +55,7 @@ foreach ($files as $file)
         {
             $match = str_replace('"', '', $match);
             
-            if (!strpos($lang_content, $match . '=') !== false || in_array($match, $strings))
+            if (!strpos($lang_content, "\n" . $match . '=') !== false || in_array($match, $strings))
             {
                 array_push($strings, $match);
                 array_push($inserts, $path);

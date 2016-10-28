@@ -24,7 +24,7 @@ public class GuiReplays extends GuiScrollPane
     private final int span = 20;
     private int selected = -1;
 
-    private String stringNoCast = I18n.format("blockbuster.director.no_cast");
+    private String stringNoCast = I18n.format("blockbuster.gui.director.no_cast");
 
     /* Input data */
     private GuiDirector parent;

@@ -1,15 +1,7 @@
 #PARSE_ESCAPES
 
-# actor.yml
-blockbuster.actor.no_name=This actor doesn't have a recording ID!
-blockbuster.actor.not_attached=This registering item isn't attached to a director block!
-blockbuster.actor.not_playing=This actor doesn't play!
-blockbuster.actor.playing=This actor already plays!
-
 # commands.yml
-blockbuster.camera.fov=Your field-of-view is §7%s§r degrees
-blockbuster.camera.roll=Your roll is §7%s§r degrees
-blockbuster.commands.action.main=§r§oAction command§r. This command provides few sub-commands for managing player recording actions.
+blockbuster.commands.action.help=§r§oAction command§r. This command provides few sub-commands for managing player recording actions.
 blockbuster.commands.action.play=§l§6/§raction §8play§r §7<filename> [name_tag] [model] [skin] [invincibility]§r\n\n§rPlaybacks an action from given §7<filename>§r. This sub-command also can receive optional arguments §7[name]§r of the actor, his §7[model]§r and §7[skin]§r and §7[invincibility]§r flag (§71§r, §70§r, §7true§r or §7false§r values).
 blockbuster.commands.action.record=§l§6/§raction §8record§r §7<filename>§r\n\n§rRecords an action from current player into given §7<filename>§r.
 blockbuster.commands.action.request=§l§6/§raction §8request§r §7<filename>§r\n\n§rRequests an action, named §7<filename>§r, to be loaded from server to current client.
@@ -18,45 +10,23 @@ blockbuster.commands.camera.clear=§l§6/§rcamera §8clear§r\n\n§rClears the 
 blockbuster.commands.camera.fixture.add=§l§6/§rcamera §8add§r §7<idle|path|follow|look|circular> <duration>§r\n\n§rCreates a new camera fixture at the end of the current camera profile with given type and §7<duration>§r.
 blockbuster.commands.camera.fixture.duration=\n    §l§6/§rcamera §8duration§r §7[index] [duration]§r\n\n    §rSet duration in milliseconds to given fixture at given §7<index>§r
 blockbuster.commands.camera.fixture.edit=§l§6/§rcamera §8edit§r §7<index> <values...>§r\n\n§rEdit fixture's values at §7<index>§r in currently selected camera profile
-blockbuster.commands.camera.fixture.empty=This camera profile is §oempty§r!
 blockbuster.commands.camera.fixture.move=§l§6/§rcamera §8move§r §7<from> <to>§r\n\n§rMove camera fixture at §7<from>§r index to §7<to>§r index in the camera profile
-blockbuster.commands.camera.fixture.path=§l§6/§rcamera §8path§r §7<fixture_index> [point_index]§r\n§rAdd a point to path fixture (if §7[point_index]§r isn't specified), or remove path point in fixture at index §7[point_index]§r.
+blockbuster.commands.camera.fixture.path=§l§6/§rcamera §8path§r §7<fixture_index> [point_index]§r\n\n§rAdd a point to path fixture (if §7[point_index]§r isn't specified), or remove path point in fixture at index §7[point_index]§r.
 blockbuster.commands.camera.fixture.remove=§l§6/§rcamera §8remove§r §7<index>§r\n\n§rRemove camera fixture from currently used camera profile at §7<index>§r
 blockbuster.commands.camera.fov=§l§6/§rcamera §8fov§r §7[fov]§r\n\nSet or get client's camera Field-Of-View setting
 blockbuster.commands.camera.goto=§l§6/§rcamera §8goto§r §7<index> [progress]§r\n\n§rTeleports you to the camera fixture at §7<index>§r index. Optionally you might specify §7[progress]§r (from §70.0§r to §71.0§r) argument which will allow you to teleport in the middle of the path or circular fixture.
+blockbuster.commands.camera.help=§r§oCamera command§r. Provides sub-commands for managing camera profile and its camera fixtures.
 blockbuster.commands.camera.load=§l§6/§rcamera §8load§r §7<filename>§r\n\n§rLoad camera profile
-blockbuster.commands.camera.main=§r§oCamera command§r. Provides sub-commands for managing camera profile and its camera fixtures.
 blockbuster.commands.camera.new=§l§6/§rcamera §8new§r §7<filename>§r\n\n§rCreates a new camera profile in current session with given <filename>
 blockbuster.commands.camera.roll=§l§6/§rcamera §8roll§r §7[roll]§r\n\n§rSet or get client's camera roll (rotation across Z axis) setting
 blockbuster.commands.camera.save=§l§6/§rcamera §8save§r §7[filename]§r\n\n§rSave camera profile to a file. If the file isn't specified, then this camera profile will be saved to the file that previously was saved or loaded
 blockbuster.commands.camera.start=§l§6/§rcamera §8start§r\n\n§rStarts a camera profile
 blockbuster.commands.camera.stop=§l§6/§rcamera §8stop§r\n\n§rStops currently running camera profile
-blockbuster.commands.director=§l§6/§rdirector §8<play|stop>§r §7<x> <y> <z>§r\n\nStart or stop playback of director block located at §7<x>§r, §7<y>§r, and §7<z>§r (you could use F3 to determine coordinates).
-blockbuster.commands.model.export.error_save=Can't save exported model!
-blockbuster.commands.model.export.main=§l§6/§rmodel §8export§r §7<entity_name>§r\n\n§rExports model from §7<entity_name>§r mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder.\n\n§r§lAttention§r: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
-blockbuster.commands.model.export.saved=Entity model "%s" was saved to %s.
-blockbuster.commands.model.export.wrong_type=Can't export model for "%s" type (because it has no renderer, or it's not a living entity renderer).
-blockbuster.commands.model.main=§r§oModel command§r. This command provides sub-commands for managing custom models.
-blockbuster.commands.model.request=§l§6/§rmodel §8request§r\n\nRequests models from the server (including host's models in LAN game).
-blockbuster.commands.morph=§l§6/§rmorph §7<model> <skin>§r\n§rMorphs current player into given §7<model>§r with skin named §7<skin>§r.
-blockbuster.commands.no_director=No director block exists at (%s, %s, %s)
-blockbuster.duration.fixture=Camera fixture at index §7%d§r runs for §7%d§r ticks.
-blockbuster.duration.profile=Camera profile runs for §7%d§r ticks.
-blockbuster.fixtures.few_args=You passed not enough arguments for this command!
-blockbuster.fixtures.no_entity=You should look at any entity to add this fixture!
-blockbuster.fixtures.wrong_type=Camera fixture by type §7%s§r doesn't exist!
-blockbuster.profile.cant_load=Can't load camera profile by file name §7%s§r
-blockbuster.profile.cant_save=Can't save camera profile by file name §7%s§r
-blockbuster.profile.clear=Currently used camera profile was cleared.
-blockbuster.profile.empty_filename=This camera profile has empty filename! In current situation, specify the §7[filename]§r argument, please.
-blockbuster.profile.load=Camera profile was loaded from file §7%s§r.
-blockbuster.profile.loaded=Camera profile by name §7%s§r is already loaded!
-blockbuster.profile.new=Created new camera profile with filename §7%s§r.
-blockbuster.profile.not_exists=There's no camera fixture at §7%d§r index in current camera profile!
-blockbuster.profile.not_path=Fixture at index §7%s§r isn't a path fixture!
-blockbuster.profile.save=Current camera profile was saved in file §7%s§r.
-blockbuster.profile.start=Current camera profile was started.
-blockbuster.profile.stop=Currently running camera profile was stopped.
+blockbuster.commands.director=§l§6/§rdirector §8<play|stop>§r §7<x> <y> <z>§r\n\n§rStart or stop playback of director block located at §7<x>§r, §7<y>§r, and §7<z>§r (you could use F3 to determine coordinates).
+blockbuster.commands.model.export=§l§6/§rmodel §8export§r §7<entity_name>§r\n\n§rExports model from §7<entity_name>§r mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder.\n\n§r§lAttention§r: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
+blockbuster.commands.model.help=§r§oModel command§r. This command provides sub-commands for managing custom models.
+blockbuster.commands.model.request=§l§6/§rmodel §8request§r\n\n§rRequests models from the server (including host's models in LAN game).
+blockbuster.commands.morph=§l§6/§rmorph §7<model> <skin>§r\n\n§rMorphs current player into given §7<model>§r with skin named §7<skin>§r.
 
 # config.yml
 blockbuster.config.general.camera_duration=Default fixture duration
@@ -65,17 +35,26 @@ blockbuster.config.general.load_models_on_login=Send models
 blockbuster.config.general.recording_delay=Recording frame skip
 blockbuster.config.general.title=General
 
-# director.yml
-blockbuster.director.already_registered=This actor is already registered by director block!
-blockbuster.director.attached_device=This registering device was successfully attached to director block!
-blockbuster.director.missing=The director block, that was attached to this device at (%s, %s, %s), was destroyed or moved. Attach this device to another director block!
-blockbuster.director.no_cast=No replays!
-blockbuster.director.play=Director block at (%s, %s, %s) has started playing!
-blockbuster.director.stop=Director block at (%s, %s, %s) has stopped!
-blockbuster.director.title=Director Block
-blockbuster.director.was_registered=This actor was successfully attached to director block!
+# error.yml
+blockbuster.error.actor.no_name=This actor doesn't have a recording ID!
+blockbuster.error.actor.not_attached=This registering item isn't attached to a director block!
+blockbuster.error.director.missing=The director block, that was attached to this device at (%s, %s, %s), was destroyed or moved. Attach this device to another director block!
+blockbuster.error.director.no_director=No director block exists at (%s, %s, %s).
+blockbuster.error.fixtures.empty=This camera profile is §oempty§r!
+blockbuster.error.fixtures.few_args=You passed not enough arguments for this command!
+blockbuster.error.fixtures.no_entity=You should look at any entity to add this fixture!
+blockbuster.error.fixtures.wrong_type=Camera fixture by type §7%s§r doesn't exist!
+blockbuster.error.model.export.error_save=Can't save exported model!
+blockbuster.error.model.export.wrong_type=Can't export model for "%s" type (because it has no renderer, or it's not a living entity renderer).
+blockbuster.error.morph.wrong=Morph by name §7"%s"§r doesn't exist!
+blockbuster.error.profile.cant_load=Can't load camera profile by file name §7%s§r
+blockbuster.error.profile.cant_save=Can't save camera profile by file name §7%s§r
+blockbuster.error.profile.empty_filename=This camera profile has empty filename! In current situation, specify the §7[filename]§r argument, please.
+blockbuster.error.profile.not_exists=There's no camera fixture at §7%d§r index in current camera profile!
+blockbuster.error.profile.not_path=Fixture at index §7%s§r isn't a path fixture!
 
 # gui.yml
+blockbuster.gui.actor.attached=Attached to actor
 blockbuster.gui.actor.default=Default
 blockbuster.gui.actor.filename=Recording ID
 blockbuster.gui.actor.invincible=Can be killed?
@@ -86,6 +65,8 @@ blockbuster.gui.actor.skin=Skin
 blockbuster.gui.actor.title=Actor Configuration
 blockbuster.gui.add=Add
 blockbuster.gui.detach=Detach
+blockbuster.gui.director.no_cast=No replays!
+blockbuster.gui.director.title=Director Block
 blockbuster.gui.done=Done
 blockbuster.gui.edit=Edit
 blockbuster.gui.next=Next
@@ -99,6 +80,18 @@ blockbuster.gui.previous=Previous
 blockbuster.gui.remove=Remove
 blockbuster.gui.reset=Reset
 blockbuster.gui.restore=Restore Default
+
+# info.yml
+blockbuster.info.actor.playing=This actor already plays!
+blockbuster.info.camera.duration.fixture=Camera fixture at index §7%d§r runs for §7%d§r ticks.
+blockbuster.info.camera.duration.profile=Camera profile runs for §7%d§r ticks.
+blockbuster.info.camera.fov=Your field-of-view is §7%s§r degrees
+blockbuster.info.camera.roll=Your roll is §7%s§r degrees
+blockbuster.info.director.already_registered=This actor is already registered by director block!
+blockbuster.info.profile.loaded=Camera profile by name §7%s§r is already loaded!
+blockbuster.info.profile.new=Created new camera profile with filename §7%s§r.
+blockbuster.info.profile.start=Current camera profile was started.
+blockbuster.info.profile.stop=Currently running camera profile was stopped.
 
 # keys.yml
 key.blockbuster.duration=Blockbuster Fixture Duration
@@ -137,15 +130,22 @@ blockbuster.mocap.stopped_dead=Stopped recording %s, because player's dead.
 blockbuster.mocap.stopped_logout=Stopped recording %s. Bye!
 blockbuster.mocap.wrong_signature=%s isn't a record file (or is an old version?)
 blockbuster.models.loaded=Received §7%d§r custom models and §7%d§r skins from server.
-blockbuster.no=
+blockbuster.no=No
 blockbuster.parsing.lacks_pose=Parsed model with name "%s" doesn't have "%s" pose!
 blockbuster.recording=Recording to §c%s§r
-blockbuster.yes=1
+blockbuster.yes=Yes
 
-# morph.yml
-blockbuster.morph.disable=You've been demorphed.
-blockbuster.morph.main=You morphed into §7"%s"§r model.
-blockbuster.morph.wrong=Morph by name §7"%s"§r doesn't exist!
+# success.yml
+blockbuster.success.director.attached_device=This registering device was successfully attached to director block!
+blockbuster.success.director.play=Director block at (%s, %s, %s) has started playing!
+blockbuster.success.director.stop=Director block at (%s, %s, %s) has stopped!
+blockbuster.success.director.was_registered=This actor was successfully attached to director block!
+blockbuster.success.model.export.saved=Entity model "%s" was saved to %s.
+blockbuster.success.morph.disable=You've been demorphed.
+blockbuster.success.morph.enable=You morphed into §7"%s"§r model.
+blockbuster.success.profile.clear=Currently used camera profile was cleared.
+blockbuster.success.profile.load=Camera profile was loaded from file §7%s§r.
+blockbuster.success.profile.save=Current camera profile was saved in file §7%s§r.
 
 # vanilla.yml
 blockbuster.info.actor_config=Use on actor

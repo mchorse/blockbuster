@@ -47,13 +47,13 @@ public class CommandMorph extends CommandBase
         if (args.length == 0)
         {
             Dispatcher.sendToServer(new PacketMorph("", null));
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.morph.disable"));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.morph.disable"));
         }
         else
         {
             if (!Blockbuster.proxy.models.models.containsKey(args[0]))
             {
-                sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.morph.wrong", args[0])));
+                sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.error.morph.wrong", args[0])));
 
                 return;
             }
@@ -61,7 +61,7 @@ public class CommandMorph extends CommandBase
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
             if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], RLUtils.fromString(args[1], args[0])));
 
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.morph.main", args[0])));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.success.morph.enable", args[0])));
         }
     }
 

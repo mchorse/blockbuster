@@ -54,7 +54,7 @@ public class BlockDirector extends AbstractBlockDirector
         }
 
         ((ItemRegister) item.getItem()).registerStack(item, pos);
-        player.addChatMessage(new TextComponentTranslation("blockbuster.director.attached_device"));
+        player.addChatMessage(new TextComponentTranslation("blockbuster.success.director.attached_device"));
 
         return true;
     }

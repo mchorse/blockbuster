@@ -32,6 +32,6 @@ public class SubCommandCameraClear extends CommandBase
     {
         CommandCamera.getProfile().reset();
 
-        sender.addChatMessage(new TextComponentTranslation("blockbuster.profile.clear"));
+        sender.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.clear"));
     }
 }

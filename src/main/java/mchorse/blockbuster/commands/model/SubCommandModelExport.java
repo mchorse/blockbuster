@@ -48,7 +48,7 @@ public class SubCommandModelExport extends CommandBase
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.model.export.main";
+        return "blockbuster.commands.model.export";
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SubCommandModelExport extends CommandBase
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))
         {
-            throw new CommandException("blockbuster.commands.model.export.wrong_type", type);
+            throw new CommandException("blockbuster.error.model.export.wrong_type", type);
         }
 
         /* Export the model */
@@ -90,11 +90,11 @@ public class SubCommandModelExport extends CommandBase
             file.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, destination.getAbsolutePath()));
             file.getStyle().setUnderlined(Boolean.valueOf(true));
 
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.commands.model.export.saved", type, file));
+            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.model.export.saved", type, file));
         }
         catch (FileNotFoundException e)
         {
-            throw new CommandException("blockbuster.commands.model.export.error_save");
+            throw new CommandException("blockbuster.error.model.export.error_save");
         }
     }
 

@@ -39,7 +39,7 @@ public class SubCommandFixtureDuration extends CommandBase
         {
             long duration = profile.getDuration();
 
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.profile", duration)));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.info.camera.duration.profile", duration)));
             return;
         }
 
@@ -47,7 +47,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (!profile.has(index))
         {
-            throw new CommandException("blockbuster.profile.not_exists", index);
+            throw new CommandException("blockbuster.error.profile.not_exists", index);
         }
 
         AbstractFixture fixture = profile.get(index);
@@ -56,7 +56,7 @@ public class SubCommandFixtureDuration extends CommandBase
         {
             long duration = fixture.getDuration();
 
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.duration.fixture", index, duration)));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.info.camera.duration.fixture", index, duration)));
             return;
         }
 

@@ -1,0 +1,19 @@
+blockbuster.success:
+    morph:
+        enable: You morphed into {7}"%s"{r} model.
+        disable: You've been demorphed.
+    
+    director:
+        play: Director block at (%s, %s, %s) has started playing!
+        stop: Director block at (%s, %s, %s) has stopped!
+        
+        was_registered: This actor was successfully attached to director block!
+        attached_device: This registering device was successfully attached to director block!
+    
+    model.export:
+        saved: Entity model "%s" was saved to %s.
+    
+    profile:
+        clear: Currently used camera profile was cleared.
+        save: Current camera profile was saved in file {7}%s{r}.
+        load: Camera profile was loaded from file {7}%s{r}.

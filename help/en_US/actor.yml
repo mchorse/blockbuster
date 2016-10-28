@@ -1,6 +1,0 @@
-# Actor strings
-blockbuster.actor:
-    not_playing: This actor doesn't play!
-    playing: This actor already plays!
-    no_name: This actor doesn't have a recording ID!
-    not_attached: This registering item isn't attached to a director block!

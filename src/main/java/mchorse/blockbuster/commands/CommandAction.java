@@ -42,7 +42,7 @@ public class CommandAction extends SubCommandBase
     @Override
     protected String getHelp()
     {
-        return "blockbuster.commands.action.main";
+        return "blockbuster.commands.action.help";
     }
 
     @Override

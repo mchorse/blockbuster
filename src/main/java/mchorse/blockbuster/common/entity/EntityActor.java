@@ -342,7 +342,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
             if (pos == null)
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.actor.not_attached"));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.error.actor.not_attached"));
+
+                return false;
             }
 
             TileEntity tile = this.worldObj.getTileEntity(pos);
@@ -353,16 +355,16 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
                 if (!director.add(this))
                 {
-                    player.addChatMessage(new TextComponentTranslation("blockbuster.director.already_registered"));
+                    player.addChatMessage(new TextComponentTranslation("blockbuster.info.director.already_registered"));
                 }
                 else
                 {
-                    player.addChatMessage(new TextComponentTranslation("blockbuster.director.was_registered"));
+                    player.addChatMessage(new TextComponentTranslation("blockbuster.success.director.was_registered"));
                 }
             }
             else
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.director.missing", pos.getX(), pos.getY(), pos.getZ()));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ()));
             }
         }
 
@@ -394,7 +396,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
-            Utils.broadcastMessage("blockbuster.actor.playing", new Object[] {});
+            Utils.broadcastMessage("blockbuster.info.actor.playing", new Object[] {});
 
             return;
         }

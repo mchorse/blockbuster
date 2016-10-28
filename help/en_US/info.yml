@@ -1,0 +1,23 @@
+blockbuster.info:
+    actor:
+        playing: This actor already plays!
+    
+    director:
+        already_registered: This actor is already registered by director block!
+    
+    # Camera duration
+    camera:
+        duration:
+            fixture: Camera fixture at index {7}%d{r} runs for {7}%d{r} ticks.
+            profile: Camera profile runs for {7}%d{r} ticks.
+        
+        # Camera roll and fov
+        fov: Your field-of-view is {7}%s{r} degrees
+        roll: Your roll is {7}%s{r} degrees
+    
+    # Camera profile
+    profile:
+        new: Created new camera profile with filename {7}%s{r}.
+        loaded: Camera profile by name {7}%s{r} is already loaded!
+        start: Current camera profile was started.
+        stop: Currently running camera profile was stopped.

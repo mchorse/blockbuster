@@ -34,7 +34,7 @@ public class SubCommandCameraFOV extends CommandBase
 
         if (args.length == 0)
         {
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.camera.fov", mc.gameSettings.fovSetting)));
+            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.info.camera.fov", mc.gameSettings.fovSetting)));
         }
         else
         {

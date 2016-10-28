@@ -127,7 +127,7 @@ public class CameraUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_load", filename));
+            player.addChatMessage(new TextComponentTranslation("blockbuster.error.profile.cant_load", filename));
         }
     }
 
@@ -150,7 +150,7 @@ public class CameraUtils
             }
             else
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.profile.loaded", filename));
+                player.addChatMessage(new TextComponentTranslation("blockbuster.info.profile.loaded", filename));
             }
 
             return true;
@@ -172,7 +172,7 @@ public class CameraUtils
         catch (IOException e)
         {
             e.printStackTrace();
-            player.addChatMessage(new TextComponentTranslation("blockbuster.profile.cant_save", filename));
+            player.addChatMessage(new TextComponentTranslation("blockbuster.error.profile.cant_save", filename));
 
             return false;
         }

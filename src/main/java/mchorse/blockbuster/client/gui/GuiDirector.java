@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDirector extends GuiScreen
 {
-    private String stringTitle = I18n.format("blockbuster.director.title");
+    private String stringTitle = I18n.format("blockbuster.gui.director.title");
 
     /* Input */
     private BlockPos pos;

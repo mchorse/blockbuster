@@ -13,5 +13,5 @@ blockbuster:
     models.loaded: Received {7}%d{r} custom models and {7}%d{r} skins from server.
     
     recording: Recording to {c}%s{r}
-    yes: Yes
-    no: No
+    yes: "Yes"
+    no: "No"

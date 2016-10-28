@@ -45,7 +45,7 @@ public class SubCommandFixturePath extends CommandBase
 
         if (!(fixture instanceof PathFixture))
         {
-            throw new CommandException("blockbuster.profile.not_path", index);
+            throw new CommandException("blockbuster.error.profile.not_path", index);
         }
 
         PathFixture path = (PathFixture) fixture;

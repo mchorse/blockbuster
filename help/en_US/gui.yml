@@ -11,8 +11,13 @@ blockbuster.gui:
     edit: Edit
     remove: Remove
     detach: Detach
-
-    # Actor configuration strings
+    
+    # Director block GUI strings
+    director:
+        title: Director Block
+        no_cast: No replays!
+    
+    # Actor configuration GUI strings
     actor:
         title: Actor Configuration
         default: Default
@@ -22,6 +27,7 @@ blockbuster.gui:
         skin: Skin
         invincible: Can be killed?
         invisible: Is visible?
+        attached: Attached to actor
 
     # Playback GUI
     playback:

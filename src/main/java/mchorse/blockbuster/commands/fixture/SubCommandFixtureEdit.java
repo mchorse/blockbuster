@@ -46,7 +46,7 @@ public class SubCommandFixtureEdit extends CommandBase
 
         if (!profile.has(index))
         {
-            throw new CommandException("blockbuster.profile.not_exists", index);
+            throw new CommandException("blockbuster.error.profile.not_exists", index);
         }
 
         profile.get(index).edit(SubCommandBase.dropFirstArgument(args), (EntityPlayer) sender);

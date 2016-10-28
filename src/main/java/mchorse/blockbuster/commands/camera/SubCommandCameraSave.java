@@ -36,7 +36,7 @@ public class SubCommandCameraSave extends CommandBase
 
         if (filename.isEmpty())
         {
-            throw new CommandException("blockbuster.profile.empty_filename");
+            throw new CommandException("blockbuster.error.profile.empty_filename");
         }
 
         profile.setFilename(filename);

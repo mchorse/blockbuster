@@ -41,6 +41,7 @@ public class GuiReplay extends GuiScreen
     private String stringSkin = I18n.format("blockbuster.gui.actor.skin");
     private String stringInvincible = I18n.format("blockbuster.gui.actor.invincible");
     private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
+    private String stringAttached = I18n.format("blockbuster.gui.actor.attached");
 
     /* Domain objects, they provide data */
     private EntityActor actor;
@@ -312,7 +313,7 @@ public class GuiReplay extends GuiScreen
 
         if (this.replay.actor != null)
         {
-            this.drawCenteredString(this.fontRendererObj, "Attached to Actor", 120 + (this.width - 120) / 2, y2 + 16, 0xffffffff);
+            this.drawCenteredString(this.fontRendererObj, this.stringAttached, 120 + (this.width - 120) / 2, y2 + 16, 0xffffffff);
         }
 
         /* Draw entity in the center of the screen */

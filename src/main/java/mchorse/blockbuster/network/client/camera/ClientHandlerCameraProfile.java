@@ -35,6 +35,6 @@ public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCamer
             ClientProxy.profileRunner.start();
         }
 
-        player.addChatMessage(new TextComponentTranslation("blockbuster.profile.load", message.filename));
+        player.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.load", message.filename));
     }
 }
