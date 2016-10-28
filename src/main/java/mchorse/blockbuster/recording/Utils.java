@@ -21,9 +21,8 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
- * Utilities methods mostly to be used with recording code.
- *
- * @author mchorse
+ * Utilities methods mostly to be used with recording code. Stuff like
+ * broadcasting a message and sending records to players are located here.
  */
 public class Utils
 {
