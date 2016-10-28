@@ -1,4 +1,6 @@
-<img src="./logo.png" align="center">
+<div style="text-align: center">
+<img src="./logo.png">
+</div>
 
 # Blockbuster
 
