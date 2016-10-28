@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import mchorse.blockbuster.capabilities.recording.IRecording;
@@ -16,6 +17,7 @@ import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
@@ -83,7 +85,7 @@ public class Utils
             try
             {
                 record = new Record(filename);
-                record.fromBytes(manager.replayFile(filename));
+                record.fromBytes(replayFile(filename));
 
                 manager.records.put(filename, record);
             }
@@ -103,6 +105,21 @@ public class Utils
         {
             Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), player);
         }
+    }
+
+    /**
+     * Get path to replay file (located in current world save's folder)
+     */
+    public static File replayFile(String filename)
+    {
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
+
+        if (!file.exists())
+        {
+            file.mkdirs();
+        }
+
+        return new File(file.getAbsolutePath() + "/" + filename);
     }
 
     /**
@@ -131,7 +148,7 @@ public class Utils
         IRecording recording = Recording.get(player);
 
         boolean has = recording.hasRecording(filename);
-        long time = CommonProxy.manager.replayFile(filename).lastModified();
+        long time = replayFile(filename).lastModified();
 
         if (has && time > recording.recordingTimestamp(filename))
         {

@@ -14,7 +14,6 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.DimensionManager;
 
 /**
  * Record manager
@@ -116,7 +115,7 @@ public class RecordManager
             return false;
         }
 
-        File file = this.replayFile(filename);
+        File file = Utils.replayFile(filename);
 
         if (!file.exists())
         {
@@ -186,21 +185,6 @@ public class RecordManager
         this.records.clear();
         this.recorders.clear();
         this.players.clear();
-    }
-
-    /**
-     * Get path to replay file (located in current world save's folder)
-     */
-    public File replayFile(String filename)
-    {
-        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
-
-        if (!file.exists())
-        {
-            file.mkdirs();
-        }
-
-        return new File(file.getAbsolutePath() + "/" + filename);
     }
 
     /**
