@@ -10,9 +10,8 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.PacketModels;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,7 +60,7 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
                 modelSize++;
             }
 
-            player.addChatMessage(new TextComponentString(I18n.format("blockbuster.models.loaded", modelSize, skinSize)));
+            L10n.sendClient(player, "blockbuster.models.loaded", modelSize, skinSize);
 
             ClientProxy.actorPack.pack.reload();
             Blockbuster.proxy.loadModels(ClientProxy.actorPack.pack);

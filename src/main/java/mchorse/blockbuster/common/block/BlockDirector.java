@@ -6,13 +6,13 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -54,7 +54,7 @@ public class BlockDirector extends AbstractBlockDirector
         }
 
         ((ItemRegister) item.getItem()).registerStack(item, pos);
-        player.addChatMessage(new TextComponentTranslation("blockbuster.success.director.attached_device"));
+        L10n.send(player, "blockbuster.success.director.attached_device");
 
         return true;
     }

@@ -9,6 +9,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.management.PlayerList;
@@ -88,7 +89,7 @@ public class Utils
             }
             catch (FileNotFoundException e)
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.mocap.cant_find_file", filename));
+                L10n.send(player, "blockbuster.mocap.cant_find_file", filename);
                 record = null;
             }
             catch (Exception e)

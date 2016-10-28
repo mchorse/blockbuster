@@ -6,8 +6,8 @@ import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,6 +35,6 @@ public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCamer
             ClientProxy.profileRunner.start();
         }
 
-        player.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.load", message.filename));
+        L10n.send(player, "blockbuster.success.profile.load", message.filename);
     }
 }

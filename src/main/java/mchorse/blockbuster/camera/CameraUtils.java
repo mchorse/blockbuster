@@ -24,8 +24,8 @@ import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.DimensionManager;
 
 /**
@@ -127,7 +127,7 @@ public class CameraUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            player.addChatMessage(new TextComponentTranslation("blockbuster.error.profile.cant_load", filename));
+            L10n.send(player, "blockbuster.error.profile.cant_load", filename);
         }
     }
 
@@ -150,7 +150,7 @@ public class CameraUtils
             }
             else
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.info.profile.loaded", filename));
+                L10n.send(player, "blockbuster.info.profile.loaded", filename);
             }
 
             return true;
@@ -172,7 +172,7 @@ public class CameraUtils
         catch (IOException e)
         {
             e.printStackTrace();
-            player.addChatMessage(new TextComponentTranslation("blockbuster.error.profile.cant_save", filename));
+            L10n.send(player, "blockbuster.error.profile.cant_save", filename);
 
             return false;
         }

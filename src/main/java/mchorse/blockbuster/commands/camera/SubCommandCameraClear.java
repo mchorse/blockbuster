@@ -1,11 +1,11 @@
 package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Camera's sub-command /camera clear
@@ -32,6 +32,6 @@ public class SubCommandCameraClear extends CommandBase
     {
         CommandCamera.getProfile().reset();
 
-        sender.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.clear"));
+        L10n.sendClient(sender, "blockbuster.success.profile.clear");
     }
 }

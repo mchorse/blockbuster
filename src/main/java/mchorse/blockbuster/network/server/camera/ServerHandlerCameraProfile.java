@@ -5,8 +5,8 @@ import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentTranslation;
 
 public class ServerHandlerCameraProfile extends ServerMessageHandler<PacketCameraProfile>
 {
@@ -20,7 +20,7 @@ public class ServerHandlerCameraProfile extends ServerMessageHandler<PacketCamer
             recording.setCurrentProfile(message.filename);
             recording.setCurrentProfileTimestamp(System.currentTimeMillis());
 
-            player.addChatMessage(new TextComponentTranslation("blockbuster.success.profile.save", message.filename));
+            L10n.send(player, "blockbuster.success.profile.save", message.filename);
         }
     }
 }

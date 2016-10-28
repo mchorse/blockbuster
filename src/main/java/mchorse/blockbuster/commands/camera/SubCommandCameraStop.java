@@ -1,11 +1,11 @@
 package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Camera's sub-command /camera stop
@@ -30,6 +30,6 @@ public class SubCommandCameraStop extends CommandBase
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         ClientProxy.profileRunner.stop();
-        sender.addChatMessage(new TextComponentTranslation("blockbuster.info.profile.stop"));
+        L10n.sendClient(sender, "blockbuster.info.profile.stop");
     }
 }

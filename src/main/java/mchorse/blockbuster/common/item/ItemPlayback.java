@@ -7,6 +7,7 @@ import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
+import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -124,7 +124,7 @@ public class ItemPlayback extends Item
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                player.addChatMessage(new TextComponentTranslation("blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ()));
+                L10n.send(player, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }

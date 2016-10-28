@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -25,7 +26,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
@@ -90,7 +90,7 @@ public class SubCommandModelExport extends CommandBase
             file.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, destination.getAbsolutePath()));
             file.getStyle().setUnderlined(Boolean.valueOf(true));
 
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.model.export.saved", type, file));
+            L10n.sendClient(sender, "blockbuster.success.model.export.saved", type, file);
         }
         catch (FileNotFoundException e)
         {

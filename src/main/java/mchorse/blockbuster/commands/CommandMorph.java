@@ -7,15 +7,13 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketMorph;
+import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.RLUtils;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Command /morph
@@ -47,13 +45,13 @@ public class CommandMorph extends CommandBase
         if (args.length == 0)
         {
             Dispatcher.sendToServer(new PacketMorph("", null));
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.morph.disable"));
+            L10n.sendClient(sender, "blockbuster.success.morph.disable");
         }
         else
         {
             if (!Blockbuster.proxy.models.models.containsKey(args[0]))
             {
-                sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.error.morph.wrong", args[0])));
+                L10n.sendClient(sender, "blockbuster.error.morph.wrong", args[0]);
 
                 return;
             }
@@ -61,7 +59,7 @@ public class CommandMorph extends CommandBase
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
             if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], RLUtils.fromString(args[1], args[0])));
 
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.success.morph.enable", args[0])));
+            L10n.sendClient(sender, "blockbuster.success.morph.enable", args[0]);
         }
     }
 

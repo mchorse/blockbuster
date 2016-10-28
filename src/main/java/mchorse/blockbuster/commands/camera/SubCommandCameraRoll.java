@@ -2,12 +2,11 @@ package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.commands.CommandCamera;
-import net.minecraft.client.resources.I18n;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * Camera's sub-command /camera roll
@@ -35,7 +34,7 @@ public class SubCommandCameraRoll extends CommandBase
 
         if (args.length == 0)
         {
-            sender.addChatMessage(new TextComponentString(I18n.format("blockbuster.info.camera.roll", control.roll)));
+            L10n.sendClient(sender, "blockbuster.info.camera.roll", control.roll);
         }
         else
         {

@@ -3,6 +3,7 @@ package mchorse.blockbuster.commands;
 import java.util.List;
 
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -10,7 +11,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Command /director
@@ -56,12 +56,12 @@ public class CommandDirector extends CommandBase
         if (action.equals("play"))
         {
             director.startPlayback();
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.director.play", args[1], args[2], args[3]));
+            L10n.send(sender, "blockbuster.success.director.play", args[1], args[2], args[3]);
         }
         else if (action.equals("stop"))
         {
             director.stopPlayback();
-            sender.addChatMessage(new TextComponentTranslation("blockbuster.success.director.stop", args[1], args[2], args[3]));
+            L10n.send(sender, "blockbuster.success.director.stop", args[1], args[2], args[3]);
         }
     }
 
