@@ -36,22 +36,22 @@ blockbuster.config.general.recording_delay=Recording frame skip
 blockbuster.config.general.title=General
 
 # error.yml
-blockbuster.error.actor.no_name=This actor doesn't have a recording ID!
-blockbuster.error.actor.not_attached=This registering item isn't attached to a director block!
-blockbuster.error.director.missing=The director block, that was attached to this device at (%s, %s, %s), was destroyed or moved. Attach this device to another director block!
-blockbuster.error.director.no_director=No director block exists at (%s, %s, %s).
-blockbuster.error.fixtures.empty=This camera profile is §oempty§r!
-blockbuster.error.fixtures.few_args=You passed not enough arguments for this command!
-blockbuster.error.fixtures.no_entity=You should look at any entity to add this fixture!
-blockbuster.error.fixtures.wrong_type=Camera fixture by type §7%s§r doesn't exist!
-blockbuster.error.model.export.error_save=Can't save exported model!
-blockbuster.error.model.export.wrong_type=Can't export model for "%s" type (because it has no renderer, or it's not a living entity renderer).
-blockbuster.error.morph.wrong=Morph by name §7"%s"§r doesn't exist!
-blockbuster.error.profile.cant_load=Can't load camera profile by file name §7%s§r
-blockbuster.error.profile.cant_save=Can't save camera profile by file name §7%s§r
-blockbuster.error.profile.empty_filename=This camera profile has empty filename! In current situation, specify the §7[filename]§r argument, please.
-blockbuster.error.profile.not_exists=There's no camera fixture at §7%d§r index in current camera profile!
-blockbuster.error.profile.not_path=Fixture at index §7%s§r isn't a path fixture!
+blockbuster.error.actor.no_name=§cThis actor doesn't have a §4Recording ID§c!
+blockbuster.error.actor.not_attached=§cThis §oregistering item§r§c isn't attached to a §odirector block§r§c!
+blockbuster.error.director.missing=§cThe director block, that was attached to this device at (§4%s§c, §4%s§c, §4%s§c), was destroyed or moved. Attach this device to another director block!
+blockbuster.error.director.no_director=§cNo director block exists at (§4%s§c, §4%s§c, §4%s§c).
+blockbuster.error.fixtures.empty=§cThis camera profile is §oempty§c!
+blockbuster.error.fixtures.few_args=§cYou passed not enough arguments for this command!
+blockbuster.error.fixtures.no_entity=§cYou should look at any entity to add this fixture!
+blockbuster.error.fixtures.wrong_type=§cCamera fixture by type §4%s§c doesn't exist!
+blockbuster.error.model.export.error_save=§cCan't save exported model!
+blockbuster.error.model.export.wrong_type=§cCan't export model for §4"%s"§c type (because it has no renderer, or it's not a living entity renderer).
+blockbuster.error.morph.wrong=§cMorph by name §4"%s"§c doesn't exist!
+blockbuster.error.profile.cant_load=§cCan't load camera profile by file name §4%s
+blockbuster.error.profile.cant_save=§cCan't save camera profile by file name §4%s
+blockbuster.error.profile.empty_filename=§cThis camera profile has empty filename! In current situation, specify the §4[filename]§c argument, please.
+blockbuster.error.profile.not_exists=§cThere's no camera fixture at §4%d§c index in current camera profile!
+blockbuster.error.profile.not_path=§cFixture at index §4%s§c isn't a path fixture!
 
 # gui.yml
 blockbuster.gui.actor.attached=Attached to actor
@@ -82,16 +82,16 @@ blockbuster.gui.reset=Reset
 blockbuster.gui.restore=Restore Default
 
 # info.yml
-blockbuster.info.actor.playing=This actor already plays!
-blockbuster.info.camera.duration.fixture=Camera fixture at index §7%d§r runs for §7%d§r ticks.
-blockbuster.info.camera.duration.profile=Camera profile runs for §7%d§r ticks.
-blockbuster.info.camera.fov=Your field-of-view is §7%s§r degrees
-blockbuster.info.camera.roll=Your roll is §7%s§r degrees
-blockbuster.info.director.already_registered=This actor is already registered by director block!
-blockbuster.info.profile.loaded=Camera profile by name §7%s§r is already loaded!
-blockbuster.info.profile.new=Created new camera profile with filename §7%s§r.
-blockbuster.info.profile.start=Current camera profile was started.
-blockbuster.info.profile.stop=Currently running camera profile was stopped.
+blockbuster.info.actor.playing=§bThis actor already plays!
+blockbuster.info.camera.duration.fixture=§bCamera fixture at index §3%d§b runs for §3%d§b ticks.
+blockbuster.info.camera.duration.profile=§bCamera profile runs for §3%d§b ticks.
+blockbuster.info.camera.fov=§aYour field-of-view is §3%s§a degrees
+blockbuster.info.camera.roll=§aYour roll is §3%s§a degrees
+blockbuster.info.director.already_registered=§bThis actor is already registered by director block!
+blockbuster.info.profile.loaded=§aCamera profile by name §3%s§a is already loaded!
+blockbuster.info.profile.new=§aCreated new camera profile with filename §3%s§a.
+blockbuster.info.profile.start=§aCurrent camera profile was started.
+blockbuster.info.profile.stop=§aCurrently running camera profile was stopped.
 
 # keys.yml
 key.blockbuster.duration=Blockbuster Fixture Duration
@@ -136,16 +136,16 @@ blockbuster.recording=Recording to §c%s§r
 blockbuster.yes=Yes
 
 # success.yml
-blockbuster.success.director.attached_device=This registering device was successfully attached to director block!
-blockbuster.success.director.play=Director block at (%s, %s, %s) has started playing!
-blockbuster.success.director.stop=Director block at (%s, %s, %s) has stopped!
-blockbuster.success.director.was_registered=This actor was successfully attached to director block!
-blockbuster.success.model.export.saved=Entity model "%s" was saved to %s.
-blockbuster.success.morph.disable=You've been demorphed.
-blockbuster.success.morph.enable=You morphed into §7"%s"§r model.
-blockbuster.success.profile.clear=Currently used camera profile was cleared.
-blockbuster.success.profile.load=Camera profile was loaded from file §7%s§r.
-blockbuster.success.profile.save=Current camera profile was saved in file §7%s§r.
+blockbuster.success.director.attached_device=§aThis registering device was successfully attached to director block!
+blockbuster.success.director.play=§aDirector block at (%s, %s, %s) has started playing!
+blockbuster.success.director.stop=§aDirector block at (%s, %s, %s) has stopped!
+blockbuster.success.director.was_registered=§aThis actor was successfully attached to director block!
+blockbuster.success.model.export.saved=§aEntity model §2"%s"§a was saved to §2%s§a.
+blockbuster.success.morph.disable=§aYou've been demorphed.
+blockbuster.success.morph.enable=§aYou morphed into §2"%s"§a model.
+blockbuster.success.profile.clear=§aCurrently used camera profile was cleared.
+blockbuster.success.profile.load=§aCamera profile was loaded from file §2%s§a.
+blockbuster.success.profile.save=§aCurrent camera profile was saved in file §2%s§a.
 
 # vanilla.yml
 blockbuster.info.actor_config=Use on actor

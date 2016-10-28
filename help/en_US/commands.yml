@@ -100,12 +100,12 @@ blockbuster:
                 |
                     {l}{6}/{r}camera {8}fov{r} {7}[fov]{r}
                     
-                    Set or get client's camera Field-Of-View setting
+                    Set or get client's camera {l}Field Of View{r} ({8}fov{r}) setting.
             roll: 
                 |
                     {l}{6}/{r}camera {8}roll{r} {7}[roll]{r}
                     
-                    {r}Set or get client's camera roll (rotation across Z axis) setting
+                    {r}Set or get client's camera {7}[roll]{r} (rotation across {7}Z-axis{r}).
 
             fixture:
                 add: 
