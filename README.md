@@ -1,4 +1,4 @@
-![Blockbuster](./logo.png) 
+<img src="./logo.png" align="center">
 
 # Blockbuster
 
