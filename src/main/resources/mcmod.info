@@ -2,11 +2,11 @@
     {
         "modid": "blockbuster",
         "name": "Blockbuster",
-        "description": "Create simple machinimas and adventure map cinematics",
+        "description": "The Machinima Studio",
         "version": "${version}",
         "mcversion": "${mcversion}",
         "url": "https://github.com/mchorse/blockbuster",
         "authorList": ["mchorse"],
-        "credits": "This mod is available thanks to Minecraft Forge, Minecraft Forge forum, Ernio, Animal Bikes mod, and Mocap mod"
+        "credits": "This mod is available thanks to Minecraft Forge, Minecraft Forge forum, Ernio, Animal Bikes mod and Mocap mod"
     }
 ]
