@@ -1,6 +1,4 @@
-<div style="text-align: center">
-<img src="./logo.png">
-</div>
+![Blockbuster](./logo.png) 
 
 # Blockbuster
 
