@@ -2,10 +2,12 @@ package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera save
@@ -36,7 +38,8 @@ public class SubCommandCameraSave extends CommandBase
 
         if (filename.isEmpty())
         {
-            throw new CommandException("blockbuster.error.profile.empty_filename");
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.empty_filename");
+            return;
         }
 
         profile.setFilename(filename);

@@ -45,7 +45,7 @@ public class CameraControl
             return this.profile.get(this.index);
         }
 
-        throw new CommandException("blockbuster.error.fixture.not_exists", this.index);
+        throw new CommandException("blockbuster.error.profile.not_exists", this.index);
     }
 
     /**

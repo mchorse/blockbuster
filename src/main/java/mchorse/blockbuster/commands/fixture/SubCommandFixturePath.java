@@ -4,12 +4,14 @@ import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera path
@@ -45,7 +47,8 @@ public class SubCommandFixturePath extends CommandBase
 
         if (!(fixture instanceof PathFixture))
         {
-            throw new CommandException("blockbuster.error.profile.not_path", index);
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.not_path", index);
+            return;
         }
 
         PathFixture path = (PathFixture) fixture;

@@ -14,13 +14,12 @@ import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -172,9 +171,7 @@ public class KeyboardHandler
         }
         catch (CommandException e)
         {
-            ITextComponent message = new TextComponentString(I18n.format(e.getMessage(), e.getErrorObjects()));
-
-            player.addChatMessage(message);
+            L10n.sendColoredClient(player, TextFormatting.DARK_RED, e.getMessage(), e.getErrorObjects());
         }
     }
 

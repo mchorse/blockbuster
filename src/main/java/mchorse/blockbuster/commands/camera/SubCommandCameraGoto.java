@@ -5,12 +5,14 @@ import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.Point;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera goto
@@ -53,7 +55,8 @@ public class SubCommandCameraGoto extends CommandBase
 
         if (!profile.has(index))
         {
-            throw new CommandException("blockbuster.error.profile.not_exists", index);
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.not_exists", index);
+            return;
         }
 
         Point point = pos.point;

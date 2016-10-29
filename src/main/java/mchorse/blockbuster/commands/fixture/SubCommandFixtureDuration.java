@@ -8,6 +8,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera duration
@@ -46,7 +47,8 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (!profile.has(index))
         {
-            throw new CommandException("blockbuster.error.profile.not_exists", index);
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.not_exists", index);
+            return;
         }
 
         AbstractFixture fixture = profile.get(index);

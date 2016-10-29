@@ -26,6 +26,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
@@ -66,7 +67,8 @@ public class SubCommandModelExport extends CommandBase
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))
         {
-            throw new CommandException("blockbuster.error.model.export.wrong_type", type);
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.model.export.wrong_type", type);
+            return;
         }
 
         /* Export the model */
@@ -90,11 +92,11 @@ public class SubCommandModelExport extends CommandBase
             file.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, destination.getAbsolutePath()));
             file.getStyle().setUnderlined(Boolean.valueOf(true));
 
-            L10n.sendClient(sender, "blockbuster.success.model.export.saved", type, file);
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, "blockbuster.success.model.export.saved", type, file);
         }
         catch (FileNotFoundException e)
         {
-            throw new CommandException("blockbuster.error.model.export.error_save");
+            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.model.export.error_save");
         }
     }
 
