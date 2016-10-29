@@ -2,7 +2,7 @@ package mchorse.blockbuster.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.actor.Model;
+import mchorse.blockbuster.api.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 

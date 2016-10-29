@@ -1,4 +1,4 @@
-package mchorse.blockbuster.actor;
+package mchorse.blockbuster.api;
 
 import java.io.File;
 import java.util.ArrayList;

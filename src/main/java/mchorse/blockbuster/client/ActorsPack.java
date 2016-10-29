@@ -10,7 +10,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
-import mchorse.blockbuster.actor.ModelPack;
+import mchorse.blockbuster.api.ModelPack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.actor.Model;
-import mchorse.blockbuster.actor.ModelPack;
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;

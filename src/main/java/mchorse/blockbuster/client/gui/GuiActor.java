@@ -3,7 +3,7 @@ package mchorse.blockbuster.client.gui;
 import java.io.IOException;
 import java.util.List;
 
-import mchorse.blockbuster.actor.ModelPack;
+import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;

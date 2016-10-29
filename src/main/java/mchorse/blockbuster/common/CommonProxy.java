@@ -3,8 +3,8 @@ package mchorse.blockbuster.common;
 import java.io.File;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.actor.ModelHandler;
-import mchorse.blockbuster.actor.ModelPack;
+import mchorse.blockbuster.api.ModelHandler;
+import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
