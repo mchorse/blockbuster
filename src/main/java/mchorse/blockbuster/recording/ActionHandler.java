@@ -12,6 +12,7 @@ import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
+import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,6 +37,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Event handler for recording purposes.
@@ -243,6 +246,33 @@ public class ActionHandler
         if (!player.worldObj.isRemote)
         {
             CommonProxy.manager.abortRecording(player);
+        }
+    }
+
+    /**
+     * Event listener for world tick event.
+     *
+     * This is probably not the optimal solution, but I'm not really sure how
+     * to schedule things in Minecraft other way than timers and ticks.
+     *
+     * This method is responsible for scheduling record unloading.
+     */
+    @SubscribeEvent
+    public void onWorldTick(ServerTickEvent event)
+    {
+        if (event.side == Side.CLIENT || CommonProxy.manager.records.isEmpty())
+        {
+            return;
+        }
+
+        for (Record record : CommonProxy.manager.records.values())
+        {
+            record.unload--;
+
+            if (record.unload <= 0)
+            {
+                Utils.unloadRecord(record);
+            }
         }
     }
 

@@ -48,10 +48,16 @@ public class Record
      */
     public List<Frame> frames = new ArrayList<Frame>();
 
+    /**
+     * Unload timer. Used only on server side.
+     */
+    public int unload;
+
     public Record(String filename)
     {
         this.filename = filename;
         this.delay = Blockbuster.proxy.config.recording_delay;
+        this.unload = Blockbuster.proxy.config.record_unload_time;
     }
 
     /**
@@ -60,6 +66,14 @@ public class Record
     public int getLength()
     {
         return Math.max(this.actions.size(), this.frames.size());
+    }
+
+    /**
+     * Reset unloading timer
+     */
+    public void resetUnload()
+    {
+        this.unload = Blockbuster.proxy.config.record_unload_time;
     }
 
     /**

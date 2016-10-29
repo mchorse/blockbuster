@@ -79,6 +79,7 @@ public class RecordPlayer
             if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor);
 
             this.delay = this.record.delay;
+            this.record.resetUnload();
         }
         else
         {

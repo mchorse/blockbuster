@@ -9,6 +9,7 @@ import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
+import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,6 +64,21 @@ public class Utils
     }
 
     /**
+     * Get path to replay file (located in current world save's folder)
+     */
+    public static File replayFile(String filename)
+    {
+        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
+
+        if (!file.exists())
+        {
+            file.mkdirs();
+        }
+
+        return new File(file.getAbsolutePath() + "/" + filename);
+    }
+
+    /**
      * Send record frames to given player (from the server)
      */
     public static void sendRecord(String filename, EntityPlayerMP player)
@@ -102,23 +118,10 @@ public class Utils
 
         if (record != null)
         {
+            record.resetUnload();
+
             Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), player);
         }
-    }
-
-    /**
-     * Get path to replay file (located in current world save's folder)
-     */
-    public static File replayFile(String filename)
-    {
-        File file = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
-
-        if (!file.exists())
-        {
-            file.mkdirs();
-        }
-
-        return new File(file.getAbsolutePath() + "/" + filename);
     }
 
     /**
@@ -130,6 +133,8 @@ public class Utils
 
         if (playerNeedsAction(filename, player) && record != null)
         {
+            record.resetUnload();
+
             Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.frames), player);
         }
         else
@@ -157,5 +162,25 @@ public class Utils
         }
 
         return !has;
+    }
+
+    /**
+     * Unload given record. It will send to all players a packet to unload a
+     * record.
+     */
+    public static void unloadRecord(Record record)
+    {
+        CommonProxy.manager.records.remove(record.filename);
+        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+        for (String username : players.getAllUsernames())
+        {
+            EntityPlayerMP player = players.getPlayerByUsername(username);
+
+            if (player != null)
+            {
+                Dispatcher.sendTo(new PacketUnloadFrames(record.filename), player);
+            }
+        }
     }
 }

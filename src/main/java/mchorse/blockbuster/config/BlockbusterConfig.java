@@ -20,6 +20,7 @@ public class BlockbusterConfig
     public int recording_delay = 1;
     public int camera_duration_step = 10;
     public int camera_duration = 30;
+    public int record_unload_time = 2400;
 
     private Configuration config;
 
@@ -41,6 +42,7 @@ public class BlockbusterConfig
         this.recording_delay = this.config.getInt("recording_delay", category, 1, 1, 10, "Frames to skip before record or play from record", prefix + "recording_delay");
         this.camera_duration_step = this.config.getInt("camera_duration_step", category, 10, 1, 100, "Which step to use when adding or reducing duration of the camera fixture");
         this.camera_duration = this.config.getInt("camera_duration", category, 30, 1, 1000, "What is default duration of the camera fixture");
+        this.record_unload_time = this.config.getInt("record_unload_time", category, 2400, 1200, 72000, "How long is it takes to unload a record");
 
         if (this.config.hasChanged())
         {

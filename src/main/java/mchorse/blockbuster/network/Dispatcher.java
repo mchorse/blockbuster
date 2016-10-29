@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
 import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames;
+import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -37,6 +38,7 @@ import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
+import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerMorph;
@@ -128,6 +130,8 @@ public class Dispatcher
 
         register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
         register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
+
+        register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
