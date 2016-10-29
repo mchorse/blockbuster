@@ -7,6 +7,8 @@
  * @author mchorse
  */
 
+require 'color.php';
+
 /** Variables */
 $here = __DIR__;
 $target = "$here/../src/main/java/mchorse/blockbuster/";
@@ -36,7 +38,9 @@ $blacklist = [
 ];
 
 /** Starting output */
-echo "\n\e[2;37mLooking up for files...\e[0m\n\n";
+echo "\n";
+echo colorify('{7}Looking up for files...{r}');
+echo "\n\n";
 
 /** Collect data */
 foreach ($files as $file)
@@ -80,11 +84,14 @@ foreach ($strings as $i => $string)
 /** Finally output */
 foreach ($ordered as $file => $strings)
 {
-    echo "File \e[0;33m\"$file\"\e[0m has:\n";
+    printf(colorify('File {e}"%s"{r} has:'), $file);
+    echo "\n";
     
     foreach ($strings as $string)
-        echo " - \e[1;37m$string\e[0m\n";
-    
+    {
+        echo colorify(sprintf(' - {f}%s{r}', $string)); 
+        echo "\n";
+    }
     
     echo "\n";
 }

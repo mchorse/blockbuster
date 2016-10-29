@@ -6,6 +6,7 @@
  */
 
 require 'vendor/autoload.php';
+require 'color.php';
 
 /**
  * From StackOverflow. This function checks if given array is an associative 
@@ -109,7 +110,9 @@ function compile($files, $output)
     file_put_contents($output, trim($content));
 }
 
-echo "\n\e[2;37mStarting language compilation...\e[0m\n\n";
+echo "\n";
+echo colorify('{7}Starting language compilation...{r}');
+echo "\n\n";
 
 /** Starting the script */
 $here = __DIR__;
@@ -138,12 +141,14 @@ foreach ($files as $file)
         
         compile($lang_files, $output);
         
-        echo "\e[0;32m-\e[0m Compiled \e[0;33m\"$original\"\e[0m to \e[0;33m\"$original.lang\"\e[0m from \e[2;37m$count\e[0m files\n";
+        echo colorify(sprintf('{a}-{r} Compiled {e}"%s"{r} to {e}"%s.lang"{r} from {7}%i{r} files', $original, $original, $count));
     }
     else
     {
-        echo "\e[0;31m-\e[0m Skipping file \e[0;33m\"$original\"\e[0m, since it's not a directory...\n";
+        echo colorify(sprintf('{c}-{r} Skipping file {e}"%s"{r}, since it\'s not a directory...', $original));
     }
+    
+    echo "\n";
 }
 
 echo "\n";
