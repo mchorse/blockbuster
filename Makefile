@@ -1,4 +1,4 @@
-VERSION=1.3
+VERSION=1.3-pre
 MODS_DIR=~/Library/Application\ Support/minecraft/mods/
 
 build_mod: build_lang
