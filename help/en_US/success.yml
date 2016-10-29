@@ -1,17 +1,17 @@
 blockbuster.success:
     morph:
-        enable: {a}You morphed into {2}"%s"{a} model.
+        enable: {a}You morphed into {2}%s{a} model.
         disable: {a}You've been demorphed.
     
     director:
-        play: {a}Director block at ({2}%s{a}, {2}%s{a}, {2}%s{a}) has started playing!
-        stop: {a}Director block at ({2}%s{a}, {2}%s{a}, {2}%s{a}) has stopped!
+        play: {a}Director block at (%s{a}, %s{a}, %s{a}) has started playing!
+        stop: {a}Director block at (%s{a}, %s{a}, %s{a}) has stopped!
         
         was_registered: {a}This actor was successfully attached to director block!
         attached_device: {a}This registering device was successfully attached to director block!
     
     model.export:
-        saved: {a}Entity model {2}"%s"{a} was saved to {2}%s{a}.
+        saved: {a}Entity model {2}%s{a} was saved to %s{a}.
     
     profile:
         clear: {a}Currently used camera profile was cleared.

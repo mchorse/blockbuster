@@ -18,6 +18,7 @@ import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -106,7 +107,7 @@ public class Utils
             }
             catch (FileNotFoundException e)
             {
-                L10n.send(player, "blockbuster.mocap.cant_find_file", filename);
+                L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.mocap.cant_find_file", filename);
                 record = null;
             }
             catch (Exception e)

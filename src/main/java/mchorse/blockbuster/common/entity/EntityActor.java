@@ -34,6 +34,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -364,7 +365,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             }
             else
             {
-                L10n.send(player, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
+                L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
             }
         }
 

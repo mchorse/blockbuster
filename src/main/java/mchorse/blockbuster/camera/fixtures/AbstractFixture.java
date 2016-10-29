@@ -82,7 +82,7 @@ public abstract class AbstractFixture
     {
         if (args.length < 2 || player == null)
         {
-            throw new CommandException("blockbuster.error.fixtures.few_args");
+            throw new CommandException("blockbuster.error.fixture.few_args");
         }
 
         String type = args[0];
@@ -95,7 +95,7 @@ public abstract class AbstractFixture
         }
         catch (Exception e)
         {
-            throw new CommandException("blockbuster.error.fixtures.wrong_type", type);
+            throw new CommandException("blockbuster.error.fixture.wrong_type", type);
         }
 
         fixture.edit(SubCommandBase.dropFirstArguments(args, 2), player);
