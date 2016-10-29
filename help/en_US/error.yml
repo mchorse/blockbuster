@@ -29,6 +29,7 @@ blockbuster.error:
         no_entity: {c}You should look at any entity to add this fixture!
         
         empty: {c}This camera profile is {o}empty{c}!
+        not_exists: {c}There's no camera fixture at {4}%d{c} index in current camera profile!
     
     # Camera profile errors
     profile:
@@ -36,5 +37,4 @@ blockbuster.error:
         cant_save: {c}Can't save camera profile by file name {4}%s{c}.
         cant_load: {c}Can't load camera profile by file name {4}%s{c}.
         
-        not_exists: {c}There's no camera fixture at {4}%d{c} index in current camera profile!
         not_path: {c}Fixture at index {4}%s{c} isn't a path fixture!
