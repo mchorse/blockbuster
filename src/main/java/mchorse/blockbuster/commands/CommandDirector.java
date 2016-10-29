@@ -11,6 +11,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Command /director
@@ -56,12 +57,12 @@ public class CommandDirector extends CommandBase
         if (action.equals("play"))
         {
             director.startPlayback();
-            L10n.send(sender, "blockbuster.success.director.play", args[1], args[2], args[3]);
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, "blockbuster.success.director.play", args[1], args[2], args[3]);
         }
         else if (action.equals("stop"))
         {
             director.stopPlayback();
-            L10n.send(sender, "blockbuster.success.director.stop", args[1], args[2], args[3]);
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, "blockbuster.success.director.stop", args[1], args[2], args[3]);
         }
     }
 
