@@ -35,6 +35,8 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *   TestMod3 config example
  * - Lightwave for porting some of the code to 1.9.4
  * - NlL5 for a lot of testing, giving lots of feedback and ideas for Blockbuster mod
+ * - daipenger for giving me consultation on how to make everything (cameras and 
+ *   actors) frame-based
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
 public class Blockbuster
