@@ -20,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 /**
@@ -124,7 +125,7 @@ public class ItemPlayback extends Item
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
-                L10n.send(player, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
+                L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }

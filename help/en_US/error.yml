@@ -6,36 +6,35 @@
 blockbuster.error:
     # Actor error strings
     actor:
-        no_name: {c}This actor doesn't have a {4}Recording ID{c}!
-        not_attached: {c}This {o}registering item{r}{c} isn't attached to a {o}director block{r}{c}!
+        not_attached: {c}This {4}registering item{c} isn't attached to a {4}director block{c}!
     
     # Morph error strings
     morph:
-        wrong: {c}Morph by name {4}"%s"{c} doesn't exist!
+        wrong: {c}Morph by name {4}%s{c} doesn't exist!
     
     # Director block error strings
     director:
-        missing: {c}The director block, that was attached to this device at ({4}%s{c}, {4}%s{c}, {4}%s{c}), was destroyed or moved. Attach this device to another director block!
-        no_director: {c}No director block exists at ({4}%s{c}, {4}%s{c}, {4}%s{c}).
+        missing: {c}The director block, that was attached to this device at (%s{c}, %s{c}, %s{c}), was destroyed or moved. Attach this device to another {4}director block{c}!
+        no_director: {c}No director block exists at (%s{c}, %s{c}, %s{c}).
     
     # Errors for /model export
     model.export:
         error_save: {c}Can't save exported model!
-        wrong_type: {c}Can't export model for {4}"%s"{c} type (because it has no renderer, or it's not a living entity renderer).
+        wrong_type: {c}Can't export model for {4}%s{c} type (because it has no renderer, or it's not a living entity renderer).
     
     # Camera fixtures errors
-    fixtures:
+    fixture:
         few_args: {c}You passed not enough arguments for this command!
         wrong_type: {c}Camera fixture by type {4}%s{c} doesn't exist!
         no_entity: {c}You should look at any entity to add this fixture!
         
         empty: {c}This camera profile is {o}empty{c}!
+        not_exists: {c}There's no camera fixture at {4}%d{c} index in current camera profile!
     
     # Camera profile errors
     profile:
-        empty_filename: {c}This camera profile has empty filename! In current situation, specify the {4}[filename]{c} argument, please.
-        cant_save: {c}Can't save camera profile by file name {4}%s
-        cant_load: {c}Can't load camera profile by file name {4}%s
+        empty_filename: {c}This camera profile has empty filename! In current situation, specify the {7}[filename]{c} argument, please.
+        cant_save: {c}Can't save camera profile by file name {4}%s{c}.
+        cant_load: {c}Can't load camera profile by file name {4}%s{c}.
         
-        not_exists: {c}There's no camera fixture at {4}%d{c} index in current camera profile!
         not_path: {c}Fixture at index {4}%s{c} isn't a path fixture!
