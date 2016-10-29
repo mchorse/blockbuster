@@ -1,7 +1,9 @@
 package mchorse.blockbuster.recording;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
@@ -38,7 +40,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Event handler for recording purposes.
@@ -260,17 +261,22 @@ public class ActionHandler
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
-        if (event.side == Side.CLIENT || CommonProxy.manager.records.isEmpty())
+        if (CommonProxy.manager.records.isEmpty())
         {
             return;
         }
 
-        for (Record record : CommonProxy.manager.records.values())
+        Iterator<Map.Entry<String, Record>> iterator = CommonProxy.manager.records.entrySet().iterator();
+
+        while (iterator.hasNext())
         {
+            Record record = iterator.next().getValue();
+
             record.unload--;
 
             if (record.unload <= 0)
             {
+                iterator.remove();
                 Utils.unloadRecord(record);
             }
         }

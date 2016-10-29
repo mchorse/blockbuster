@@ -171,7 +171,6 @@ public class Utils
      */
     public static void unloadRecord(Record record)
     {
-        CommonProxy.manager.records.remove(record.filename);
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
         for (String username : players.getAllUsernames())
@@ -180,6 +179,7 @@ public class Utils
 
             if (player != null)
             {
+                Recording.get(player).removeRecording(username);
                 Dispatcher.sendTo(new PacketUnloadFrames(record.filename), player);
             }
         }
