@@ -83,7 +83,7 @@ public class Frame
         actor.prevRotationPitch = actor.rotationPitch;
 
         /* Inject frame's values into actor */
-        if (!isRemote)
+        if (!isRemote || force)
         {
             actor.posX = this.x;
             actor.posY = this.y;

@@ -17,6 +17,7 @@ import net.minecraft.util.math.MathHelper;
 public class LookFixture extends IdleFixture
 {
     protected Entity entity;
+    protected String target;
 
     private float oldYaw = 0;
     private float oldPitch = 0;
@@ -35,6 +36,7 @@ public class LookFixture extends IdleFixture
     public void setTarget(String target)
     {
         this.entity = EntityUtils.entityByUUID(Minecraft.getMinecraft().theWorld, target);
+        this.target = target;
     }
 
     @Override
@@ -52,6 +54,7 @@ public class LookFixture extends IdleFixture
         if ((this.entity == null || this.entity.isDead) && target != null)
         {
             this.entity = target;
+            this.target = target.getUniqueID().toString();
         }
     }
 
@@ -61,6 +64,13 @@ public class LookFixture extends IdleFixture
     @Override
     public void applyFixture(float progress, float partialTicks, Position pos)
     {
+        if (this.entity == null)
+        {
+            this.tryFindingEntity();
+
+            return;
+        }
+
         double x = (this.entity.lastTickPosX + (this.entity.posX - this.entity.lastTickPosX) * partialTicks);
         double y = (this.entity.lastTickPosY + (this.entity.posY - this.entity.lastTickPosY) * partialTicks);
         double z = (this.entity.lastTickPosZ + (this.entity.posZ - this.entity.lastTickPosZ) * partialTicks);
@@ -92,6 +102,11 @@ public class LookFixture extends IdleFixture
         this.oldYaw = yaw;
         this.oldPitch = pitch;
         this.oldProgress = progress;
+    }
+
+    protected void tryFindingEntity()
+    {
+        this.entity = EntityUtils.entityByUUID(Minecraft.getMinecraft().theWorld, this.target);
     }
 
     /**
