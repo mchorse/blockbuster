@@ -57,6 +57,11 @@ public interface IRecording
     public void removeRecording(String filename);
 
     /**
+     * Remove all recordings
+     */
+    public void removeRecordings();
+
+    /**
      * Update given recording's timestamp
      */
     public void updateRecordingTimestamp(String filename, long timestamp);

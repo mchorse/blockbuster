@@ -80,6 +80,12 @@ public class Recording implements IRecording
     }
 
     @Override
+    public void removeRecordings()
+    {
+        this.recordings.clear();
+    }
+
+    @Override
     public void updateRecordingTimestamp(String filename, long timestamp)
     {
         if (this.hasRecording(filename))

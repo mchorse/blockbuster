@@ -35,6 +35,11 @@ blockbuster:
         action:
             help: {r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions.
             
+            clear:
+                |
+                    {l}{6}/{r}action {8}clear{r}
+                    
+                    {r}Removes all records on the client (used to force unload client-side records).
             play: 
                 |
                     {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
