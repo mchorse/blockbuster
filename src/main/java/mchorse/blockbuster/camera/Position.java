@@ -43,7 +43,7 @@ public class Position
     public void copy(Position position)
     {
         this.point.set(position.point.x, position.point.y, position.point.z);
-        this.angle.set(position.angle.yaw, position.angle.pitch);
+        this.angle.set(position.angle.yaw, position.angle.pitch, position.angle.roll, position.angle.fov);
     }
 
     @Override
