@@ -60,7 +60,7 @@ public class Frame
         this.flyingElytra = player.isElytraFlying();
     }
 
-    public void applyOnActor(EntityActor actor)
+    public void applyOnActor(EntityActor actor, boolean force)
     {
         boolean isRemote = actor.worldObj.isRemote;
 
@@ -90,7 +90,7 @@ public class Frame
             actor.posZ = this.z;
         }
 
-        if (isRemote)
+        if (isRemote || force)
         {
             actor.rotationYaw = this.yaw;
             actor.rotationYawHead = this.yawHead;

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -45,16 +46,19 @@ public class DropAction extends Action
     {
         final float PI = 3.1415927F;
 
+        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
         ItemStack items = ItemStack.loadItemStackFromNBT(this.itemData);
 
         EntityItem item = new EntityItem(actor.worldObj, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);
         Random rand = new Random();
 
         float f = 0.3F;
+        float yaw = frame.yaw;
+        float pitch = frame.pitch;
 
-        item.motionX = (-MathHelper.sin(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
-        item.motionZ = (MathHelper.cos(actor.rotationYaw / 180.0F * PI) * MathHelper.cos(actor.rotationPitch / 180.0F * PI) * f);
-        item.motionY = (-MathHelper.sin(actor.rotationPitch / 180.0F * PI) * f + 0.1F);
+        item.motionX = (-MathHelper.sin(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
+        item.motionZ = (MathHelper.cos(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
+        item.motionY = (-MathHelper.sin(pitch / 180.0F * PI) * f + 0.1F);
         item.setDefaultPickupDelay();
 
         f = 0.02F;

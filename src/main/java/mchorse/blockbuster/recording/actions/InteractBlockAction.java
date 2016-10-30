@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -49,11 +50,13 @@ public class InteractBlockAction extends Action
             return;
         }
 
+        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+
         actor.fakePlayer.posX = actor.posX;
         actor.fakePlayer.posY = actor.posY;
         actor.fakePlayer.posZ = actor.posZ;
-        actor.fakePlayer.rotationYaw = actor.rotationYaw;
-        actor.fakePlayer.rotationPitch = actor.rotationPitch;
+        actor.fakePlayer.rotationYaw = frame.yaw;
+        actor.fakePlayer.rotationPitch = frame.pitch;
 
         state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }

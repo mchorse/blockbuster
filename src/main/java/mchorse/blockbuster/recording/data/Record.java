@@ -81,14 +81,14 @@ public class Record
      * less than 0, otherwise you might experience <s>tranquility</s> game
      * crash.
      */
-    public void applyFrame(int tick, EntityActor actor)
+    public void applyFrame(int tick, EntityActor actor, boolean force)
     {
         if (tick > this.frames.size())
         {
             return;
         }
 
-        this.frames.get(tick).applyOnActor(actor);
+        this.frames.get(tick).applyOnActor(actor, force);
     }
 
     /**

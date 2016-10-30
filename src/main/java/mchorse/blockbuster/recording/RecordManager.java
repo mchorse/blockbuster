@@ -131,7 +131,7 @@ public class RecordManager
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
-            actor.playback.record.applyFrame(0, actor);
+            actor.playback.record.applyFrame(0, actor, true);
             actor.playback.kill = kill;
 
             if (notify)
@@ -162,7 +162,7 @@ public class RecordManager
             return;
         }
 
-        actor.playback.record.applyFrame(0, actor);
+        actor.playback.record.applyFrame(0, actor, true);
 
         if (actor.playback.kill)
         {

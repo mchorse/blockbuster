@@ -76,7 +76,7 @@ public class RecordPlayer
             boolean both = this.mode == Mode.BOTH;
 
             if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick, actor);
-            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor);
+            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor, false);
 
             this.delay = this.record.delay;
             this.record.resetUnload();
