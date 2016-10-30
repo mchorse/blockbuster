@@ -41,6 +41,11 @@ public class RecordRecorder
     public int tick = 0;
 
     /**
+     * Used by camera marker
+     */
+    public int previousTick = 0;
+
+    /**
      * Delay between recording ticks
      */
     public int delay = 1;

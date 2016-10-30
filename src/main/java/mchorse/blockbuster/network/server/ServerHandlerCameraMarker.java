@@ -16,9 +16,12 @@ public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCamera
 
         if (record == null) return;
 
-        String string = String.format("§c---§r Marker by §4%s§r: §2%s ticks§r", record.record.filename, Integer.toString(record.tick));
+        String difference = Integer.toString(record.tick - record.previousTick);
+        String tick = Integer.toString(record.tick);
+        String string = String.format("§6§l|§r Record §7%s§r, §7%s§6t§r §8(§rdifference §7%s§6t§r§8)§r.", record.record.filename, tick, difference);
 
         CommonProxy.manager.getActions(player).add(new ChatAction(string));
         player.addChatMessage(new TextComponentString(string));
+        record.previousTick = record.tick;
     }
 }
