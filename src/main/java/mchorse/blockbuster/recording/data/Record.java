@@ -57,7 +57,7 @@ public class Record
     {
         this.filename = filename;
         this.delay = Blockbuster.proxy.config.recording_delay;
-        this.unload = Blockbuster.proxy.config.record_unload_time;
+        this.resetUnload();
     }
 
     /**

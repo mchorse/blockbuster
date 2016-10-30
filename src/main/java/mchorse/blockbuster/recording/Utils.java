@@ -147,6 +147,9 @@ public class Utils
     /**
      * Checks whether given player needs a new action, meaning, he has an older
      * version of given named action or he doesn't have this action at all.
+     *
+     * DON'T ever use this as API since it may mess up with the recording
+     * tracking.
      */
     public static boolean playerNeedsAction(String filename, EntityPlayer player)
     {
@@ -162,6 +165,11 @@ public class Utils
             return true;
         }
 
+        if (!has)
+        {
+            recording.addRecording(filename, time);
+        }
+
         return !has;
     }
 
@@ -172,6 +180,7 @@ public class Utils
     public static void unloadRecord(Record record)
     {
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+        String filename = record.filename;
 
         for (String username : players.getAllUsernames())
         {
@@ -179,8 +188,14 @@ public class Utils
 
             if (player != null)
             {
-                Recording.get(player).removeRecording(username);
-                Dispatcher.sendTo(new PacketUnloadFrames(record.filename), player);
+                IRecording recording = Recording.get(player);
+
+                if (recording.hasRecording(filename))
+                {
+                    recording.removeRecording(filename);
+
+                    Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
+                }
             }
         }
     }
