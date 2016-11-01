@@ -6,7 +6,7 @@ Blockbuster's change log.
 
 This is a big patch update that improves the quality of recording. Now you can use [Minema mod](https://github.com/daipenger/minema/releases) to record high quality videos of your machinimas.
 
-The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, yey, you can capture smooth high-quality machinimas (with shaders)!
+The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, yey, you can capture smooth high-quality machinimas (with shaders) and !
 
 **Tutorial video** for 1.3.1:  
 Nope yet
@@ -46,7 +46,7 @@ Nope yet
 
 This is a big update that brings custom models and morphing into the game. This update adds support for custom models and player morphing. Your machinimas will be much interesting, because now you can record not only players, but also `mobs`, `blocks`, or even your own custom creatures. All thanks to custom models!
 
-**Tutorial video** for 1.3:
+**Tutorial video** for 1.3:  
 <a href="https://youtu.be/WXrBEQZrQ7Q?list=PL6UPd2Tj65nGxteZIdEE_fIga7_HoZJ9w">
     <img src="https://img.youtube.com/vi/WXrBEQZrQ7Q/0.jpg">
 </a>
