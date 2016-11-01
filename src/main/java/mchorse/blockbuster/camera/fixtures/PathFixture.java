@@ -9,6 +9,7 @@ import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Path camera fixture
@@ -60,7 +61,8 @@ public class PathFixture extends AbstractFixture
     {
         if (this.points.isEmpty()) return;
 
-        progress = progress * (this.points.size() - 1);
+        progress += ((float) 1 / this.duration) * partialTicks;
+        progress = MathHelper.clamp_float(progress * (this.points.size() - 1), 0, 1);
 
         int prev = (int) Math.floor(progress);
         int next = (int) Math.ceil(progress);

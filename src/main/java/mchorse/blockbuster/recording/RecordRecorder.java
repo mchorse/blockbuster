@@ -72,7 +72,7 @@ public class RecordRecorder
      */
     public void record(EntityPlayer player)
     {
-        if (this.delay-- > 0)
+        if (--this.delay > 0)
         {
             return;
         }

@@ -66,7 +66,7 @@ public class RecordPlayer
      */
     public void next(EntityActor actor)
     {
-        if (this.isFinished() || this.delay-- > 0)
+        if (this.isFinished() || --this.delay > 0)
         {
             return;
         }

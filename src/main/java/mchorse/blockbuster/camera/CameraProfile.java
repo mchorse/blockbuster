@@ -147,7 +147,7 @@ public class CameraProfile
 
         AbstractFixture fixture = this.fixtures.get(index);
 
-        fixture.applyFixture(Math.abs((float) progress / (float) fixture.getDuration()), partialTicks, position);
+        fixture.applyFixture((float) progress / fixture.getDuration(), partialTicks, position);
     }
 
     /**

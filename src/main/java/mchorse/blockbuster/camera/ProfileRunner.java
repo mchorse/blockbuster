@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -110,13 +111,24 @@ public class ProfileRunner
             Point point = this.position.point;
             Angle angle = this.position.angle;
 
+            /* Setting up the camera */
             this.mc.gameSettings.fovSetting = angle.fov;
             CommandCamera.getControl().roll = angle.roll;
 
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
             player.motionX = player.motionY = player.motionZ = 0;
+        }
+    }
 
+    /**
+     * This is going to count ticks (used for camera synchronization)
+     */
+    @SubscribeEvent
+    public void onPlayerTick(PlayerTickEvent event)
+    {
+        if (event.side == Side.CLIENT && event.phase == Phase.START && event.player == this.mc.thePlayer)
+        {
             this.ticks++;
         }
     }

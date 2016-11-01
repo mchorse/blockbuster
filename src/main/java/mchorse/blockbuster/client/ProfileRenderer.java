@@ -98,8 +98,8 @@ public class ProfileRenderer
 
         for (AbstractFixture fixture : this.profile.getAll())
         {
-            fixture.applyFixture(0, ticks, prev);
-            fixture.applyFixture(1, ticks, next);
+            fixture.applyFixture(0, 0.0F, prev);
+            fixture.applyFixture(1, 0.0F, next);
 
             long duration = fixture.getDuration();
 
@@ -112,7 +112,7 @@ public class ProfileRenderer
             if (distX + distY + distZ >= 0.5) this.drawCard(color, i, duration, next);
 
             this.drawCard(color, i++, duration, prev);
-            this.drawFixture(ticks, color, fixture, prev, next);
+            this.drawFixture(0.0F, color, fixture, prev, next);
         }
 
         GlStateManager.disableBlend();
