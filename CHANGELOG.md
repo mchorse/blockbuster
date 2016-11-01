@@ -2,6 +2,46 @@
 
 Blockbuster's change log.
 
+## Version 1.3.1 (Slow-Mo update)
+
+This is a big patch update that improves the quality of recording. Now you can use [Minema mod](https://github.com/daipenger/minema/releases) to record high quality videos of your machinimas.
+
+The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, yey, you can capture smooth high-quality machinimas (with shaders)!
+
+**Tutorial video** for 1.3.1:  
+Nope yet
+
+* Added actor spawn egg to Blockbuster tab
+* Added camera tracking (server will remember which camera profile you had)
+* Added command `/model` with two sub-commands:
+    * `/model export` – previously known as `/export-model`
+    * `/model request` – request models and skins from server
+* Added configuration (see Mod Options in main/in game menu)
+    * Recording delay (recording FPS)
+    * Camera default duration and duration step
+    * Send models and skins on log in
+* Added more detailed tooltips to items and blocks
+* Added support for camera's *Field-Of-View* (`fov`) and *roll* (rotation across Z-axis) parameters
+* Added sub-commands for `/camera`:
+    * `/camera default` – reset camera's roll and FOV
+    * `/camera fov` – set FOV of the camera
+    * `/camera roll` – set roll of the camera
+* Added sub-commands for `/action`:
+    * `/action clear` – clears cached records on the client
+    * `/action request` – requests server to send a record to current client
+* Added support for `ResourceLocation` skins (you can reference Minecraft or other mod resources using `domain:path` format)
+* Changed default scale of the actors to correspond to real players (@NlL5)
+* Converted camera profile format to JSON
+* Fixed actor detaching (@NlL5)
+* Improved player recording (smooth as silk)
+* Improved camera playback (synchronized with actor playback)
+* Improved formatting of commands (colors)
+* Switched camera duration to tick units (`20` ticks per second)
+* Removed shadows for invisible actors (@NlL5)
+* Removed camera duration formatting
+
+**Important**: camera and recording files from previous versions not supported by this update (I'm sorry, I'm really really bad at supporting formats...). 
+
 ## Version 1.3
 
 This is a big update that brings custom models and morphing into the game. This update adds support for custom models and player morphing. Your machinimas will be much interesting, because now you can record not only players, but also `mobs`, `blocks`, or even your own custom creatures. All thanks to custom models!
