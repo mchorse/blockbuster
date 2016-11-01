@@ -101,6 +101,11 @@ blockbuster:
                     
                     {r}Teleports you to the camera fixture at {7}<index>{r} index. Optionally you might specify {7}[progress]{r} (from {7}0.0{r} to {7}1.0{r}) argument which will allow you to teleport in the middle of the path or circular fixture.
 
+            default:
+                |
+                    {l}{6}/{r}camera {8}default{r}
+                    
+                    {r}Resets camera's {7}Field-Of-View{r} and {7}roll{r} to default values ({7}70.0{r} and {7}0.0{r} degrees).
             fov: 
                 |
                     {l}{6}/{r}camera {8}fov{r} {7}[fov]{r}
