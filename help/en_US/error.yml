@@ -14,6 +14,9 @@ blockbuster.error:
     
     # Director block error strings
     director:
+        playing: {c}Director block at (%s{c}, %s{c}, %s{c}) is playing!
+        stopped: {c}Director block at (%s{c}, %s{c}, %s{c}) is stopped!
+        
         missing: {c}The director block, that was attached to this device at (%s{c}, %s{c}, %s{c}), was destroyed or moved. Attach this device to another {4}director block{c}!
         no_director: {c}No director block exists at (%s{c}, %s{c}, %s{c}).
     

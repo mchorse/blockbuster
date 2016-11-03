@@ -243,7 +243,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     /**
      * Checks if block's state isPlaying is true
      */
-    protected boolean isPlaying()
+    public boolean isPlaying()
     {
         return this.worldObj.getBlockState(this.pos).getValue(AbstractBlockDirector.PLAYING);
     }

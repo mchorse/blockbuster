@@ -4,9 +4,9 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|stop>{r} {7}<x> <y> <z>{r}
+                {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
                 
-                {r}Start or stop playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
         morph: 
             |
                 {l}{6}/{r}morph {7}<model> <skin>{r}

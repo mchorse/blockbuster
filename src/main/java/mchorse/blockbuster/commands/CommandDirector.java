@@ -54,15 +54,35 @@ public class CommandDirector extends CommandBase
         BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
         AbstractTileEntityDirector director = this.getDirector(server, pos);
 
+        String play = "blockbuster.success.director.play";
+        String stop = "blockbuster.success.director.stop";
+
         if (action.equals("play"))
         {
+            if (director.isPlaying())
+            {
+                L10n.sendColored(sender, TextFormatting.DARK_RED, "blockbuster.error.director.playing", args[1], args[2], args[3]);
+                return;
+            }
+
             director.startPlayback();
-            L10n.sendColored(sender, TextFormatting.DARK_GREEN, "blockbuster.success.director.play", args[1], args[2], args[3]);
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, play, args[1], args[2], args[3]);
         }
         else if (action.equals("stop"))
         {
+            if (!director.isPlaying())
+            {
+                L10n.sendColored(sender, TextFormatting.DARK_RED, "blockbuster.error.director.stopped", args[1], args[2], args[3]);
+                return;
+            }
+
             director.stopPlayback();
-            L10n.sendColored(sender, TextFormatting.DARK_GREEN, "blockbuster.success.director.stop", args[1], args[2], args[3]);
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, stop, args[1], args[2], args[3]);
+        }
+        else if (action.equals("toggle"))
+        {
+            boolean isPlaying = director.togglePlayback();
+            L10n.sendColored(sender, TextFormatting.DARK_GREEN, isPlaying ? play : stop, args[1], args[2], args[3]);
         }
     }
 
@@ -86,7 +106,7 @@ public class CommandDirector extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "play", "stop");
+            return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle");
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
