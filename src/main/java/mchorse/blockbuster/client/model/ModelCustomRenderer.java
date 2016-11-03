@@ -72,12 +72,19 @@ public class ModelCustomRenderer extends ModelRenderer
     @Override
     public void render(float scale)
     {
-        float y = this.limb.size[1];
-        float ay = this.limb.anchor[1];
-
         GL11.glPushMatrix();
-        GL11.glTranslatef(0, -(y - this.scaleY * y) * ay * scale, 0);
+
+        if (this.scaleY != 1)
+        {
+            GL11.glTranslatef(0.0F, this.rotationPointY * scale, 0.0F);
+        }
+
         GL11.glScalef(this.scaleX, this.scaleY, this.scaleZ);
+
+        if (this.scaleY != 1)
+        {
+            GL11.glTranslatef(0.0F, -this.rotationPointY * scale, 0.0F);
+        }
 
         super.render(scale);
         GL11.glPopMatrix();
@@ -94,7 +101,7 @@ public class ModelCustomRenderer extends ModelRenderer
         float y = this.limb.size[1];
         float ay = this.limb.anchor[1];
 
-        GL11.glTranslatef(0, -(y - this.scaleY * y) * ay * scale, 0);
+        // GL11.glTranslatef(0, -(y - this.scaleY * y) * ay * scale, 0);
         GL11.glScalef(this.scaleX, this.scaleY, this.scaleZ);
 
         super.postRender(scale);
