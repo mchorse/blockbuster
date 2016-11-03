@@ -12,6 +12,7 @@ blockbuster:
     parsing.lacks_pose: Parsed model with name "%s" doesn't have "%s" pose!
     models.loaded: Received {7}%d{r} custom models and {7}%d{r} skins from server.
     
-    recording: Recording to {c}%s{r}
+    marker: {6}{l}|{r} Record {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}difference is {7}%s{6}t{8}){r}.
+    recording: Recording to {7}%s{r}
     yes: "Yes"
     no: "No"
