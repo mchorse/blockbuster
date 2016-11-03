@@ -65,8 +65,7 @@ public class KeyboardHandler
     private KeyBinding profileStartRunner;
     private KeyBinding profileStopRunner;
 
-    /* Undocumented feature!!! */
-    private KeyBinding featureUndocumented;
+    private KeyBinding cameraMarker;
 
     private KeyBinding addRoll;
     private KeyBinding reduceRoll;
@@ -108,8 +107,7 @@ public class KeyboardHandler
         this.profileStartRunner = new KeyBinding("key.blockbuster.profile.start", Keyboard.KEY_Z, general);
         this.profileStopRunner = new KeyBinding("key.blockbuster.profile.stop", Keyboard.KEY_X, general);
 
-        /* Undocumented */
-        this.featureUndocumented = new KeyBinding("key.blockbuster.feature", Keyboard.KEY_V, general);
+        this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, general);
 
         this.addRoll = new KeyBinding("key.blockbuster.roll.add", Keyboard.KEY_NONE, general);
         this.reduceRoll = new KeyBinding("key.blockbuster.roll.reduce", Keyboard.KEY_NONE, general);
@@ -143,8 +141,7 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.profileStartRunner);
         ClientRegistry.registerKeyBinding(this.profileStopRunner);
 
-        /* Wow, so undocumented!!! */
-        ClientRegistry.registerKeyBinding(this.featureUndocumented);
+        ClientRegistry.registerKeyBinding(this.cameraMarker);
 
         ClientRegistry.registerKeyBinding(this.addRoll);
         ClientRegistry.registerKeyBinding(this.reduceRoll);
@@ -281,7 +278,7 @@ public class KeyboardHandler
             ClientProxy.profileRunner.stop();
         }
 
-        if (this.featureUndocumented.isPressed())
+        if (this.cameraMarker.isPressed())
         {
             Dispatcher.sendToServer(new PacketCameraMarker());
         }

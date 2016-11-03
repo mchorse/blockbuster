@@ -156,7 +156,6 @@ public class Dispatcher
 
         register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
 
-        /* So undocumented!!! */
         register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
 
         /* Morphing */

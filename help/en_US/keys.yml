@@ -5,7 +5,7 @@ key:
         general: Blockbuster General
         duration: Blockbuster Fixture Duration
         path: Blockbuster Path Fixture
-        feature: Undocumented feature!!!
+        marker: Camera marker
 
         # Roll controlling keys
         roll:
