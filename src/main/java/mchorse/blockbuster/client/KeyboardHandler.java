@@ -23,6 +23,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -285,17 +286,27 @@ public class KeyboardHandler
             Dispatcher.sendToServer(new PacketCameraMarker());
         }
 
-        if (this.addRoll.isPressed())
+        if (this.resetRoll.isPressed())
+        {
+            control.resetRoll();
+        }
+    }
+
+    /**
+     * Client tick event is used for doing stuff like
+     */
+    @SubscribeEvent
+    public void onClientTick(ClientTickEvent event)
+    {
+        CameraControl control = CommandCamera.getControl();
+
+        if (this.addRoll.isKeyDown())
         {
             control.addRoll(1.0F);
         }
-        else if (this.reduceRoll.isPressed())
+        else if (this.reduceRoll.isKeyDown())
         {
             control.addRoll(-1.0F);
-        }
-        else if (this.resetRoll.isPressed())
-        {
-            control.resetRoll();
         }
     }
 }
