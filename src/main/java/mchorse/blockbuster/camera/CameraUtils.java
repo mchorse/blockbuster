@@ -123,7 +123,13 @@ public class CameraUtils
                 return;
             }
 
-            Dispatcher.sendTo(new PacketCameraProfile(filename, readCameraProfile(filename), play), player);
+            String profile = readCameraProfile(filename);
+            IRecording recording = Recording.get(player);
+
+            recording.setCurrentProfile(filename);
+            recording.setCurrentProfileTimestamp(System.currentTimeMillis());
+
+            Dispatcher.sendTo(new PacketCameraProfile(filename, profile, play), player);
         }
         catch (Exception e)
         {
