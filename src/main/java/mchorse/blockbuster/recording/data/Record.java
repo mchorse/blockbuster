@@ -112,6 +112,56 @@ public class Record
     }
 
     /**
+     * Reset the actor based on this record
+     */
+    public void reset(EntityActor actor)
+    {
+        if (actor.isRiding())
+        {
+            this.resetMount(actor);
+        }
+
+        this.applyFrame(0, actor, true);
+    }
+
+    /**
+     * Reset actor's mount
+     */
+    protected void resetMount(EntityActor actor)
+    {
+        int index = -1;
+
+        /* Find at which tick player has mounted a vehicle */
+        for (int i = 0, c = this.actions.size(); i < c; i++)
+        {
+            Action action = this.actions.get(i);
+
+            if (action instanceof MountingAction)
+            {
+                MountingAction act = (MountingAction) action;
+
+                if (act.isMounting)
+                {
+                    index = i + 1;
+                    break;
+                }
+            }
+        }
+
+        if (index != -1)
+        {
+            Frame frame = this.frames.get(index);
+
+            if (frame != null)
+            {
+                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+            }
+        }
+
+        actor.dismountRidingEntity();
+    }
+
+    /**
      * Save a recording to given file.
      *
      * This method basically writes the signature of the current version,
@@ -192,55 +242,5 @@ public class Record
         }
 
         buffer.close();
-    }
-
-    /**
-     * Reset the actor based on this record
-     */
-    public void reset(EntityActor actor)
-    {
-        if (actor.isRiding())
-        {
-            this.resetMount(actor);
-        }
-
-        this.applyFrame(0, actor, true);
-    }
-
-    /**
-     * Reset actor's mount
-     */
-    protected void resetMount(EntityActor actor)
-    {
-        int index = -1;
-
-        /* Find at which tick player has mounted a vehicle */
-        for (int i = 0, c = this.actions.size(); i < c; i++)
-        {
-            Action action = this.actions.get(i);
-
-            if (action instanceof MountingAction)
-            {
-                MountingAction act = (MountingAction) action;
-
-                if (act.isMounting)
-                {
-                    index = i + 1;
-                    break;
-                }
-            }
-        }
-
-        if (index != -1)
-        {
-            Frame frame = this.frames.get(index);
-
-            if (frame != null)
-            {
-                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
-            }
-        }
-
-        actor.dismountRidingEntity();
     }
 }

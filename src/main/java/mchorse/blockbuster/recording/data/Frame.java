@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -23,6 +24,11 @@ public class Frame
     public float yawHead;
     public float pitch;
 
+    public float mountYaw;
+    public float mountPitch;
+
+    public boolean isMounted;
+
     public double motionX;
     public double motionY;
     public double motionZ;
@@ -39,29 +45,46 @@ public class Frame
 
     public void fromPlayer(EntityPlayer player)
     {
-        this.x = player.posX;
-        this.y = player.posY;
-        this.z = player.posZ;
+        Entity mount = player.isRiding() ? player.getRidingEntity() : player;
+
+        /* Position and rotation */
+        this.x = mount.posX;
+        this.y = mount.posY;
+        this.z = mount.posZ;
 
         this.yaw = player.rotationYaw;
         this.yawHead = player.rotationYawHead;
         this.pitch = player.rotationPitch;
 
-        this.motionX = player.motionX;
-        this.motionY = player.motionY;
-        this.motionZ = player.motionZ;
+        /* Mount information */
+        this.isMounted = mount != player;
 
-        this.fallDistance = player.fallDistance;
+        if (this.isMounted)
+        {
+            this.mountYaw = mount.rotationYaw;
+            this.mountPitch = mount.rotationPitch;
+        }
 
-        this.isAirBorne = player.isAirBorne;
+        /* Motion and fall distance */
+        this.motionX = mount.motionX;
+        this.motionY = mount.motionY;
+        this.motionZ = mount.motionZ;
+
+        this.fallDistance = mount.fallDistance;
+
+        /* States */
+        this.isSprinting = mount.isSprinting();
         this.isSneaking = player.isSneaking();
-        this.isSprinting = player.isSprinting();
-        this.onGround = player.onGround;
         this.flyingElytra = player.isElytraFlying();
+
+        this.isAirBorne = mount.isAirBorne;
+        this.onGround = mount.onGround;
     }
 
     public void applyOnActor(EntityActor actor, boolean force)
     {
+        Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
+
         boolean isRemote = actor.worldObj.isRemote;
 
         /* This is most important part of the code that makes the recording
@@ -73,43 +96,58 @@ public class Frame
          */
         if (isRemote)
         {
-            actor.prevPosX = actor.lastTickPosX = actor.posX;
-            actor.prevPosY = actor.lastTickPosY = actor.posY;
-            actor.prevPosZ = actor.lastTickPosZ = actor.posZ;
+            mount.prevPosX = mount.posX;
+            mount.prevPosY = mount.posY;
+            mount.prevPosZ = mount.posZ;
+        }
+
+        if (this.isMounted)
+        {
+            mount.prevRotationYaw = mount.rotationYaw;
+            mount.prevRotationPitch = mount.rotationPitch;
         }
 
         actor.prevRotationYaw = actor.rotationYaw;
-        actor.prevRotationYawHead = actor.rotationYawHead;
         actor.prevRotationPitch = actor.rotationPitch;
+        actor.prevRotationYawHead = actor.rotationYawHead;
 
         /* Inject frame's values into actor */
         if (!isRemote || force)
         {
-            actor.setPosition(this.x, this.y, this.z);
+            mount.setPosition(this.x, this.y, this.z);
         }
 
+        /* Rotation */
         if (isRemote || force)
         {
+            if (this.isMounted)
+            {
+                mount.rotationYaw = this.mountYaw;
+                mount.rotationPitch = this.mountPitch;
+            }
+
             actor.rotationYaw = this.yaw;
-            actor.rotationYawHead = this.yawHead;
             actor.rotationPitch = this.pitch;
+            actor.rotationYawHead = this.yawHead;
         }
 
-        actor.motionX = this.motionX;
-        actor.motionY = this.motionY;
-        actor.motionZ = this.motionZ;
+        /* Motion and fall distance */
+        mount.motionX = this.motionX;
+        mount.motionY = this.motionY;
+        mount.motionZ = this.motionZ;
 
-        actor.fallDistance = this.fallDistance;
+        mount.fallDistance = this.fallDistance;
 
+        /* Booleans */
         if (!isRemote || force)
         {
+            mount.setSprinting(this.isSprinting);
             actor.setSneaking(this.isSneaking);
             actor.setElytraFlying(this.flyingElytra);
-            actor.setSprinting(this.isSprinting);
         }
 
-        actor.isAirBorne = this.isAirBorne;
-        actor.onGround = this.onGround;
+        mount.isAirBorne = this.isAirBorne;
+        mount.onGround = this.onGround;
     }
 
     /* Save/load frame instance */
@@ -123,6 +161,14 @@ public class Frame
         out.writeFloat(this.yaw);
         out.writeFloat(this.yawHead);
         out.writeFloat(this.pitch);
+
+        out.writeBoolean(this.isMounted);
+
+        if (this.isMounted)
+        {
+            out.writeFloat(this.mountYaw);
+            out.writeFloat(this.mountPitch);
+        }
 
         out.writeFloat((float) this.motionX);
         out.writeFloat((float) this.motionY);
@@ -146,6 +192,14 @@ public class Frame
         this.yaw = in.readFloat();
         this.yawHead = in.readFloat();
         this.pitch = in.readFloat();
+
+        this.isMounted = in.readBoolean();
+
+        if (this.isMounted)
+        {
+            this.mountYaw = in.readFloat();
+            this.mountPitch = in.readFloat();
+        }
 
         this.motionX = in.readFloat();
         this.motionY = in.readFloat();
