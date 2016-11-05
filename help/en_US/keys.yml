@@ -3,40 +3,57 @@ key:
     blockbuster:
         # Categories
         general: Blockbuster General
-        duration: Blockbuster Fixture Duration
-        path: Blockbuster Path Fixture
         marker: Camera marker
-
+        misc: Blockbuster Misc.
+        camera: Blockbuster Camera
+        
+        # Camera fixtures
+        fixtures:
+            title: Blockbuster Fixtures
+            
+            idle: Add Idle Camera Fixture
+            path: Add Path Camera Fixture
+            look: Add Look Camera Fixture
+            follow: Add Follow Camera Fixture
+            circular: Add Circular Camera Fixture
+            
+            edit: Edit Camera Fixture
+            remove: Remove Camera Fixture
+        
+        path:
+            title: Blockbuster Path Fixture
+            
+            add: Add Path Point
+            remove: Remove Last Path Point
+        
         # Roll controlling keys
         roll:
             add: Roll clockwise
             reduce: Roll counter-clockwise
             reset: Reset roll
+        
+        # Roll controlling keys
+        fov:
+            add: Increase FOV
+            reduce: Reduce FOV
+            reset: Reset FOV
+        
+        # Duration
+        duration: 
+            title: Blockbuster Fixture Duration
+            
+            increase: Increase Duration
+            reduce: Reduce Duration
 
         # Profile management keys
         profile:
-            title: Blockbuster Profile Management
-            
-            add_idle: Add Idle Camera Fixture
-            add_path: Add Path Camera Fixture
-            add_look: Add Look Camera Fixture
-            add_follow: Add Follow Camera Fixture
-            add_circular: Add Circular Camera Fixture
-
-            edit: Edit Camera Fixture
-            remove: Remove Camera Fixture
-
-            add_duration: Add Duration
-            reduce_duration: Reduce Duration
-
-            add_path_point: Add Path Point
-            remove_path_point: Remove Last Path Point
+            title: Blockbuster Camera Profile
 
             goto: Go to Camera Fixture
             toggle: Toggle Camera Profile Rendering
 
             save: Save Camera Profile
-            load: Reload Current Camera Profile
+            load: Reload Camera Profile
 
             next: Next Camera Fixture
             prev: Previous Camera Fixture

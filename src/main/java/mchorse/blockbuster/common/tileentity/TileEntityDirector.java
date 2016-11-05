@@ -114,6 +114,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      */
     private void collectActors()
     {
+        boolean dirty = false;
+
         this.actors.clear();
 
         for (Replay replay : this.replays)
@@ -123,7 +125,12 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (replay.actor != null)
             {
                 actor = (EntityActor) EntityUtils.entityByUUID(this.worldObj, replay.actor);
-                replay.actor = null;
+
+                if (actor == null)
+                {
+                    replay.actor = null;
+                    dirty = true;
+                }
             }
 
             if (actor == null)
@@ -136,7 +143,10 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             this.actors.put(replay, actor);
         }
 
-        this.markDirty();
+        if (dirty)
+        {
+            this.markDirty();
+        }
     }
 
     /**

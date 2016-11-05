@@ -38,32 +38,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class KeyboardHandler
 {
     /* Camera profile keys */
-    private KeyBinding profileAddIdleFixture;
-    private KeyBinding profileAddPathFixture;
-    private KeyBinding profileAddLookFixture;
-    private KeyBinding profileAddFollowFixture;
-    private KeyBinding profileAddCircularFixture;
+    private KeyBinding addIdleFixture;
+    private KeyBinding addPathFixture;
+    private KeyBinding addLookFixture;
+    private KeyBinding addFollowFixture;
+    private KeyBinding addCircularFixture;
 
-    private KeyBinding profileEditFixture;
-    private KeyBinding profileRemoveFixture;
+    private KeyBinding editFixture;
+    private KeyBinding removeFixture;
 
-    private KeyBinding profileAddDuration;
-    private KeyBinding profileReduceDuration;
+    private KeyBinding increaseDuration;
+    private KeyBinding reduceDuration;
 
-    private KeyBinding profileAddPathPoint;
-    private KeyBinding profileRemovePathPoint;
+    private KeyBinding addPathPoint;
+    private KeyBinding removePathPoint;
 
-    private KeyBinding profileGoToFixture;
-    private KeyBinding profileToggleRender;
+    private KeyBinding loadProfile;
+    private KeyBinding saveProfile;
 
-    private KeyBinding profileLoadProfile;
-    private KeyBinding profileSaveProfile;
+    private KeyBinding gotoFixture;
+    private KeyBinding toggleRender;
 
-    private KeyBinding profileNextFixture;
-    private KeyBinding profilePrevFixture;
+    private KeyBinding nextFixture;
+    private KeyBinding prevFixture;
 
-    private KeyBinding profileStartRunner;
-    private KeyBinding profileStopRunner;
+    private KeyBinding startRunning;
+    private KeyBinding stopRunning;
 
     private KeyBinding cameraMarker;
 
@@ -71,81 +71,101 @@ public class KeyboardHandler
     private KeyBinding reduceRoll;
     private KeyBinding resetRoll;
 
+    private KeyBinding addFov;
+    private KeyBinding reduceFov;
+    private KeyBinding resetFov;
+
     /**
      * Create and register key bindings for mod
      */
     public KeyboardHandler()
     {
+        /* Key categories */
         String general = "key.blockbuster.general";
-        String profile = "key.blockbuster.profile.title";
-        String duration = "key.blockbuster.duration";
-        String path = "key.blockbuster.path";
+        String fixtures = "key.blockbuster.fixtures.title";
+        String camera = "key.blockbuster.camera";
+        String duration = "key.blockbuster.duration.title";
+        String path = "key.blockbuster.path.title";
+        String misc = "key.blockbuster.misc";
 
-        /* Camera key bindings */
-        this.profileAddIdleFixture = new KeyBinding("key.blockbuster.profile.add_idle", Keyboard.KEY_NONE, profile);
-        this.profileAddPathFixture = new KeyBinding("key.blockbuster.profile.add_path", Keyboard.KEY_NONE, profile);
-        this.profileAddLookFixture = new KeyBinding("key.blockbuster.profile.add_look", Keyboard.KEY_NONE, profile);
-        this.profileAddFollowFixture = new KeyBinding("key.blockbuster.profile.add_follow", Keyboard.KEY_NONE, profile);
-        this.profileAddCircularFixture = new KeyBinding("key.blockbuster.profile.add_circular", Keyboard.KEY_NONE, profile);
+        /* Camera fixtures key bindings */
+        this.addIdleFixture = new KeyBinding("key.blockbuster.fixtures.idle", Keyboard.KEY_NONE, fixtures);
+        this.addPathFixture = new KeyBinding("key.blockbuster.fixtures.path", Keyboard.KEY_NONE, fixtures);
+        this.addLookFixture = new KeyBinding("key.blockbuster.fixtures.look", Keyboard.KEY_NONE, fixtures);
+        this.addFollowFixture = new KeyBinding("key.blockbuster.fixtures.follow", Keyboard.KEY_NONE, fixtures);
+        this.addCircularFixture = new KeyBinding("key.blockbuster.fixtures.circular", Keyboard.KEY_NONE, fixtures);
 
-        this.profileEditFixture = new KeyBinding("key.blockbuster.profile.edit", Keyboard.KEY_NONE, profile);
-        this.profileRemoveFixture = new KeyBinding("key.blockbuster.profile.remove", Keyboard.KEY_NONE, profile);
+        ClientRegistry.registerKeyBinding(this.addIdleFixture);
+        ClientRegistry.registerKeyBinding(this.addPathFixture);
+        ClientRegistry.registerKeyBinding(this.addLookFixture);
+        ClientRegistry.registerKeyBinding(this.addFollowFixture);
+        ClientRegistry.registerKeyBinding(this.addCircularFixture);
 
-        this.profileAddDuration = new KeyBinding("key.blockbuster.profile.add_duration", Keyboard.KEY_NONE, duration);
-        this.profileReduceDuration = new KeyBinding("key.blockbuster.profile.reduce_duration", Keyboard.KEY_NONE, duration);
+        this.editFixture = new KeyBinding("key.blockbuster.fixtures.edit", Keyboard.KEY_NONE, fixtures);
+        this.removeFixture = new KeyBinding("key.blockbuster.fixtures.remove", Keyboard.KEY_NONE, fixtures);
 
-        this.profileAddPathPoint = new KeyBinding("key.blockbuster.profile.add_path_point", Keyboard.KEY_NONE, path);
-        this.profileRemovePathPoint = new KeyBinding("key.blockbuster.profile.remove_path_point", Keyboard.KEY_NONE, path);
+        ClientRegistry.registerKeyBinding(this.editFixture);
+        ClientRegistry.registerKeyBinding(this.removeFixture);
 
-        this.profileSaveProfile = new KeyBinding("key.blockbuster.profile.save", Keyboard.KEY_NONE, profile);
-        this.profileLoadProfile = new KeyBinding("key.blockbuster.profile.load", Keyboard.KEY_NONE, profile);
+        /* Path key bindings */
+        this.addPathPoint = new KeyBinding("key.blockbuster.path.add", Keyboard.KEY_NONE, path);
+        this.removePathPoint = new KeyBinding("key.blockbuster.path.remove", Keyboard.KEY_NONE, path);
 
-        this.profileGoToFixture = new KeyBinding("key.blockbuster.profile.goto", Keyboard.KEY_G, general);
-        this.profileToggleRender = new KeyBinding("key.blockbuster.profile.toggle", Keyboard.KEY_P, general);
-        this.profileNextFixture = new KeyBinding("key.blockbuster.profile.next", Keyboard.KEY_RBRACKET, general);
-        this.profilePrevFixture = new KeyBinding("key.blockbuster.profile.prev", Keyboard.KEY_LBRACKET, general);
-        this.profileStartRunner = new KeyBinding("key.blockbuster.profile.start", Keyboard.KEY_Z, general);
-        this.profileStopRunner = new KeyBinding("key.blockbuster.profile.stop", Keyboard.KEY_X, general);
+        ClientRegistry.registerKeyBinding(this.addPathPoint);
+        ClientRegistry.registerKeyBinding(this.removePathPoint);
 
-        this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, general);
+        /* General key bindings */
+        this.saveProfile = new KeyBinding("key.blockbuster.profile.save", Keyboard.KEY_NONE, general);
+        this.loadProfile = new KeyBinding("key.blockbuster.profile.load", Keyboard.KEY_NONE, general);
 
-        this.addRoll = new KeyBinding("key.blockbuster.roll.add", Keyboard.KEY_NONE, general);
-        this.reduceRoll = new KeyBinding("key.blockbuster.roll.reduce", Keyboard.KEY_NONE, general);
-        this.resetRoll = new KeyBinding("key.blockbuster.roll.reset", Keyboard.KEY_NONE, general);
+        ClientRegistry.registerKeyBinding(this.saveProfile);
+        ClientRegistry.registerKeyBinding(this.loadProfile);
 
-        /* Add all key bindings to client registry */
-        ClientRegistry.registerKeyBinding(this.profileAddIdleFixture);
-        ClientRegistry.registerKeyBinding(this.profileAddPathFixture);
-        ClientRegistry.registerKeyBinding(this.profileAddLookFixture);
-        ClientRegistry.registerKeyBinding(this.profileAddFollowFixture);
-        ClientRegistry.registerKeyBinding(this.profileAddCircularFixture);
+        this.gotoFixture = new KeyBinding("key.blockbuster.profile.goto", Keyboard.KEY_G, general);
+        this.toggleRender = new KeyBinding("key.blockbuster.profile.toggle", Keyboard.KEY_P, general);
 
-        ClientRegistry.registerKeyBinding(this.profileEditFixture);
-        ClientRegistry.registerKeyBinding(this.profileRemoveFixture);
+        ClientRegistry.registerKeyBinding(this.gotoFixture);
+        ClientRegistry.registerKeyBinding(this.toggleRender);
 
-        ClientRegistry.registerKeyBinding(this.profileAddDuration);
-        ClientRegistry.registerKeyBinding(this.profileReduceDuration);
+        this.nextFixture = new KeyBinding("key.blockbuster.profile.next", Keyboard.KEY_RBRACKET, general);
+        this.prevFixture = new KeyBinding("key.blockbuster.profile.prev", Keyboard.KEY_LBRACKET, general);
 
-        ClientRegistry.registerKeyBinding(this.profileAddPathPoint);
-        ClientRegistry.registerKeyBinding(this.profileRemovePathPoint);
+        ClientRegistry.registerKeyBinding(this.nextFixture);
+        ClientRegistry.registerKeyBinding(this.prevFixture);
 
-        ClientRegistry.registerKeyBinding(this.profileGoToFixture);
-        ClientRegistry.registerKeyBinding(this.profileToggleRender);
+        this.startRunning = new KeyBinding("key.blockbuster.profile.start", Keyboard.KEY_Z, general);
+        this.stopRunning = new KeyBinding("key.blockbuster.profile.stop", Keyboard.KEY_X, general);
 
-        ClientRegistry.registerKeyBinding(this.profileSaveProfile);
-        ClientRegistry.registerKeyBinding(this.profileLoadProfile);
+        ClientRegistry.registerKeyBinding(this.startRunning);
+        ClientRegistry.registerKeyBinding(this.stopRunning);
 
-        ClientRegistry.registerKeyBinding(this.profileNextFixture);
-        ClientRegistry.registerKeyBinding(this.profilePrevFixture);
-
-        ClientRegistry.registerKeyBinding(this.profileStartRunner);
-        ClientRegistry.registerKeyBinding(this.profileStopRunner);
+        /* Misc */
+        this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, misc);
 
         ClientRegistry.registerKeyBinding(this.cameraMarker);
+
+        /* Camera key bindings */
+        this.increaseDuration = new KeyBinding("key.blockbuster.duration.increase", Keyboard.KEY_NONE, duration);
+        this.reduceDuration = new KeyBinding("key.blockbuster.duration.reduce", Keyboard.KEY_NONE, duration);
+
+        ClientRegistry.registerKeyBinding(this.increaseDuration);
+        ClientRegistry.registerKeyBinding(this.reduceDuration);
+
+        this.addRoll = new KeyBinding("key.blockbuster.roll.add", Keyboard.KEY_NONE, camera);
+        this.reduceRoll = new KeyBinding("key.blockbuster.roll.reduce", Keyboard.KEY_NONE, camera);
+        this.resetRoll = new KeyBinding("key.blockbuster.roll.reset", Keyboard.KEY_NONE, camera);
 
         ClientRegistry.registerKeyBinding(this.addRoll);
         ClientRegistry.registerKeyBinding(this.reduceRoll);
         ClientRegistry.registerKeyBinding(this.resetRoll);
+
+        this.addFov = new KeyBinding("key.blockbuster.fov.add", Keyboard.KEY_NONE, camera);
+        this.reduceFov = new KeyBinding("key.blockbuster.fov.reduce", Keyboard.KEY_NONE, camera);
+        this.resetFov = new KeyBinding("key.blockbuster.fov.reset", Keyboard.KEY_NONE, camera);
+
+        ClientRegistry.registerKeyBinding(this.addFov);
+        ClientRegistry.registerKeyBinding(this.reduceFov);
+        ClientRegistry.registerKeyBinding(this.resetFov);
     }
 
     @SubscribeEvent
@@ -183,34 +203,34 @@ public class KeyboardHandler
         /* Adding fixture */
         int duration = Blockbuster.proxy.config.camera_duration;
 
-        if (this.profileAddIdleFixture.isPressed())
+        if (this.addIdleFixture.isPressed())
         {
             control.add(player, new IdleFixture(duration));
         }
-        else if (this.profileAddPathFixture.isPressed())
+        else if (this.addPathFixture.isPressed())
         {
             control.add(player, new PathFixture(duration));
         }
-        else if (this.profileAddLookFixture.isPressed())
+        else if (this.addLookFixture.isPressed())
         {
             control.add(player, new LookFixture(duration));
         }
-        else if (this.profileAddFollowFixture.isPressed())
+        else if (this.addFollowFixture.isPressed())
         {
             control.add(player, new FollowFixture(duration));
         }
-        else if (this.profileAddCircularFixture.isPressed())
+        else if (this.addCircularFixture.isPressed())
         {
             control.add(player, new CircularFixture(1000));
         }
 
         /* More management */
-        if (this.profileEditFixture.isPressed())
+        if (this.editFixture.isPressed())
         {
             control.edit(player);
         }
 
-        if (this.profileRemoveFixture.isPressed())
+        if (this.removeFixture.isPressed())
         {
             control.remove();
         }
@@ -218,62 +238,62 @@ public class KeyboardHandler
         /* Duration management */
         int step = Blockbuster.proxy.config.camera_duration_step;
 
-        if (this.profileAddDuration.isPressed())
+        if (this.increaseDuration.isKeyDown())
         {
             control.addDuration(step);
         }
-        else if (this.profileReduceDuration.isPressed())
+        else if (this.reduceDuration.isKeyDown())
         {
             control.addDuration(-step);
         }
 
         /* Path fixture management */
-        if (this.profileAddPathPoint.isPressed())
+        if (this.addPathPoint.isPressed())
         {
             control.addPoint(new Position(player));
         }
-        else if (this.profileRemovePathPoint.isPressed())
+        else if (this.removePathPoint.isPressed())
         {
             control.removePoint();
         }
 
         /* Utilities */
-        if (this.profileGoToFixture.isPressed())
+        if (this.gotoFixture.isPressed())
         {
             control.goTo(player);
         }
 
-        if (this.profileToggleRender.isPressed())
+        if (this.toggleRender.isPressed())
         {
             ClientProxy.profileRenderer.toggleRender();
         }
 
         /* Save and reload */
-        if (this.profileSaveProfile.isPressed())
+        if (this.saveProfile.isPressed())
         {
             control.save();
         }
-        else if (this.profileLoadProfile.isPressed())
+        else if (this.loadProfile.isPressed())
         {
             control.load();
         }
 
         /* Navigation */
-        if (this.profileNextFixture.isPressed())
+        if (this.nextFixture.isPressed())
         {
             control.next();
         }
-        else if (this.profilePrevFixture.isPressed())
+        else if (this.prevFixture.isPressed())
         {
             control.prev();
         }
 
         /* Starting stopping */
-        if (this.profileStartRunner.isPressed())
+        if (this.startRunning.isPressed())
         {
             ClientProxy.profileRunner.start();
         }
-        else if (this.profileStopRunner.isPressed())
+        else if (this.stopRunning.isPressed())
         {
             ClientProxy.profileRunner.stop();
         }
@@ -286,6 +306,11 @@ public class KeyboardHandler
         if (this.resetRoll.isPressed())
         {
             control.resetRoll();
+        }
+
+        if (this.resetFov.isPressed())
+        {
+            Minecraft.getMinecraft().gameSettings.fovSetting = 70.0F;
         }
     }
 
@@ -304,6 +329,15 @@ public class KeyboardHandler
         else if (this.reduceRoll.isKeyDown())
         {
             control.addRoll(-1.0F);
+        }
+
+        if (this.addFov.isKeyDown())
+        {
+            Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
+        }
+        else if (this.reduceFov.isKeyDown())
+        {
+            Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
         }
     }
 }
