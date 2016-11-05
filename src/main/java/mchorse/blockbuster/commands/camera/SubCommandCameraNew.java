@@ -2,6 +2,8 @@ package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.camera.PacketCameraReset;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -41,6 +43,7 @@ public class SubCommandCameraNew extends CommandBase
 
         profile.reset();
         profile.setFilename(args[0]);
+        Dispatcher.sendToServer(new PacketCameraReset());
         L10n.sendClient(sender, "blockbuster.info.profile.new", args[0]);
     }
 }

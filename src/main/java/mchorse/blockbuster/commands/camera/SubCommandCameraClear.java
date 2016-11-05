@@ -1,6 +1,8 @@
 package mchorse.blockbuster.commands.camera;
 
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.camera.PacketCameraReset;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -32,6 +34,7 @@ public class SubCommandCameraClear extends CommandBase
     {
         CommandCamera.getProfile().reset();
 
+        Dispatcher.sendToServer(new PacketCameraReset());
         L10n.sendClient(sender, "blockbuster.success.profile.clear");
     }
 }
