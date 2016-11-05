@@ -85,9 +85,7 @@ public class Frame
         /* Inject frame's values into actor */
         if (!isRemote || force)
         {
-            actor.posX = this.x;
-            actor.posY = this.y;
-            actor.posZ = this.z;
+            actor.setPosition(this.x, this.y, this.z);
         }
 
         if (isRemote || force)
@@ -103,11 +101,15 @@ public class Frame
 
         actor.fallDistance = this.fallDistance;
 
+        if (!isRemote)
+        {
+            actor.setSneaking(this.isSneaking);
+            actor.setElytraFlying(this.flyingElytra);
+        }
+
         actor.isAirBorne = this.isAirBorne;
-        actor.setSneaking(this.isSneaking);
         actor.setSprinting(this.isSprinting);
         actor.onGround = this.onGround;
-        actor.setElytraFlying(this.flyingElytra);
     }
 
     /* Save/load frame instance */
