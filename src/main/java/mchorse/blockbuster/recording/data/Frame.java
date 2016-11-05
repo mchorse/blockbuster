@@ -101,14 +101,14 @@ public class Frame
 
         actor.fallDistance = this.fallDistance;
 
-        if (!isRemote)
+        if (!isRemote || force)
         {
             actor.setSneaking(this.isSneaking);
             actor.setElytraFlying(this.flyingElytra);
+            actor.setSprinting(this.isSprinting);
         }
 
         actor.isAirBorne = this.isAirBorne;
-        actor.setSprinting(this.isSprinting);
         actor.onGround = this.onGround;
     }
 

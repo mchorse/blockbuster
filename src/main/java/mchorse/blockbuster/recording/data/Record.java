@@ -11,6 +11,7 @@ import java.util.List;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.MountingAction;
 
 /**
  * This class stores actions and frames states for a recording (to be playbacked
@@ -191,5 +192,55 @@ public class Record
         }
 
         buffer.close();
+    }
+
+    /**
+     * Reset the actor based on this record
+     */
+    public void reset(EntityActor actor)
+    {
+        if (actor.isRiding())
+        {
+            this.resetMount(actor);
+        }
+
+        this.applyFrame(0, actor, true);
+    }
+
+    /**
+     * Reset actor's mount
+     */
+    protected void resetMount(EntityActor actor)
+    {
+        int index = -1;
+
+        /* Find at which tick player has mounted a vehicle */
+        for (int i = 0, c = this.actions.size(); i < c; i++)
+        {
+            Action action = this.actions.get(i);
+
+            if (action instanceof MountingAction)
+            {
+                MountingAction act = (MountingAction) action;
+
+                if (act.isMounting)
+                {
+                    index = i + 1;
+                    break;
+                }
+            }
+        }
+
+        if (index != -1)
+        {
+            Frame frame = this.frames.get(index);
+
+            if (frame != null)
+            {
+                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+            }
+        }
+
+        actor.dismountRidingEntity();
     }
 }

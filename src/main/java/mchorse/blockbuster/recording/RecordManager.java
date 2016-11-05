@@ -164,7 +164,7 @@ public class RecordManager
             return;
         }
 
-        actor.playback.record.applyFrame(0, actor, true);
+        actor.playback.record.reset(actor);
 
         if (actor.playback.kill)
         {
