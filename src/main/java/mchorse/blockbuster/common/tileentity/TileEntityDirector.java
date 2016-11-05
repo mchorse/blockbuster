@@ -123,6 +123,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (replay.actor != null)
             {
                 actor = (EntityActor) EntityUtils.entityByUUID(this.worldObj, replay.actor);
+                replay.actor = null;
             }
 
             if (actor == null)
@@ -134,6 +135,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             actor.notifyPlayers();
             this.actors.put(replay, actor);
         }
+
+        this.markDirty();
     }
 
     /**
