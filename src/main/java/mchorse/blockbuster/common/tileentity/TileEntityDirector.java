@@ -182,7 +182,10 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         for (EntityActor actor : this.actors.values())
         {
-            if (actor.playback == null) count++;
+            if (actor.playback == null || actor.isDead)
+            {
+                count++;
+            }
         }
 
         if (count == this.replays.size())
