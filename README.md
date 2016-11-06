@@ -3,13 +3,23 @@
 [Downloads](https://github.com/mchorse/blockbuster/releases) – [PMC post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum post](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) – [McME](https://github.com/mchorse/mcme) (model editor)
 
 Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
-Minecraft machinimas in single player (without having to recruit and organize a 
-crowd of actors and cameras).
+Minecraft machinimas in single player, without having to recruit and organize a 
+crowd of body actors and cameras.
 
 Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2, and 
 the recording code is based on the code from the 
 [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
-(the author of the mod gave me [permission](http://i.imgur.com/lc1lJB5.png) to use his code). 
+(the author of the mod gave me [permission](http://i.imgur.com/lc1lJB5.png) to use his code).
+
+## Features
+
+Blockbuster mod provides you with lots of features to make cool machinimas:
+
+* **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. 
+* **Director blocks** – one actor is good, a crowd of them is better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It has also outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
+* **Camera support** – camera is how you present your machinima. Blockbuster mod has a support for different camera features starting from simple idle camera to complex camera moves like paths (with FOV animation), following and looking at the actor.
+* **Custom models** – recording only player-like entities isn't fun. Blockbuster mod has support for custom models created in McME model editor (link above). Unleash your creativity with custom actor models!
+* **[Minema](https://github.com/daipenger/minema) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to high-quality video output.
 
 ## Install
 
