@@ -25,7 +25,7 @@ public abstract class Action
     public static final byte MOUNTING = 8;
     public static final byte INTERACT_BLOCK = 9;
     public static final byte BREAK_BLOCK = 10;
-    public static final byte ELYTRA_FLYING = 11;
+    /* public static final byte ELYTRA_FLYING = 11; */
     public static final byte MORPH = 12;
 
     /**
@@ -44,7 +44,6 @@ public abstract class Action
         if (type == MOUNTING) return new MountingAction();
         if (type == INTERACT_BLOCK) return new InteractBlockAction();
         if (type == BREAK_BLOCK) return new BreakBlockAction();
-        if (type == ELYTRA_FLYING) return new ElytraFlyingAction();
         if (type == MORPH) return new MorphAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
