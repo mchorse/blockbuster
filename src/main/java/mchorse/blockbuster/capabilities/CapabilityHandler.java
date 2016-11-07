@@ -91,7 +91,7 @@ public class CapabilityHandler
 
             if (actor.isPlaying())
             {
-                Utils.sendRecord(actor.playback.record.filename, player);
+                Utils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
             }
         }
     }

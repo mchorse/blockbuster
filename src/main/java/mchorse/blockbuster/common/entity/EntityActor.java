@@ -14,7 +14,6 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -564,8 +563,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 else
                 {
                     this.playback = new RecordPlayer(null, Mode.FRAMES);
-
-                    Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
                 }
             }
 
