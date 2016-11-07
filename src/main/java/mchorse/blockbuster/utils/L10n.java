@@ -1,11 +1,11 @@
 package mchorse.blockbuster.utils;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * Localization utils
@@ -37,39 +37,43 @@ public class L10n
     }
 
     /**
-     * Send a translated message to player, from client (not necessarily, but
-     * I'm unsure if it's allowed to use {@link I18n#format(String, Object...)}).
+     * Send error message to the sender
      */
-    public static void sendClient(ICommandSender sender, String key, Object... objects)
+    public static void error(ICommandSender sender, String key, Object... objects)
     {
-        sender.addChatMessage(new TextComponentString(I18n.format(key, objects)));
+        sendWithMarker(sender, "§4(§cX§4)§r ", "blockbuster.error." + key, objects);
     }
 
     /**
-     * Send a translated message to player
+     * Send success message to the sender
      */
-    public static void sendColoredClient(ICommandSender sender, TextFormatting color, String key, Object... objects)
+    public static void success(ICommandSender sender, String key, Object... objects)
     {
-        ITextComponent text = new TextComponentString(I18n.format(key, objects));
-        text.getStyle().setColor(color);
-
-        sender.addChatMessage(text);
+        sendWithMarker(sender, "§2(§aV§2)§r ", "blockbuster.success." + key, objects);
     }
 
     /**
-     * Wrap given arguments into {@link TextComponentString} and give them
-     * desired color formatting.
+     * Send informing message to the sender
      */
-    public static ITextComponent[] wrapArguments(TextFormatting color, String... strings)
+    public static void info(ICommandSender sender, String key, Object... objects)
     {
-        ITextComponent[] text = new ITextComponent[strings.length];
+        sendWithMarker(sender, "§9(§bi§9)§r ", "blockbuster.info." + key, objects);
+    }
 
-        for (int i = 0; i < strings.length; i++)
-        {
-            text[i] = new TextComponentString(strings[i]);
-            text[i].getStyle().setColor(color);
-        }
+    /**
+     * Send a message with given marker
+     */
+    public static void sendWithMarker(ICommandSender sender, String marker, String key, Object... objects)
+    {
+        ITextComponent message = new TextComponentString(marker);
+        ITextComponent string = new TextComponentTranslation(key, objects);
 
-        return text;
+        string.getStyle().setColor(TextFormatting.GRAY);
+
+        System.out.println(String.format(I18n.translateToLocal(key), objects));
+        System.out.println(string.getFormattedText());
+
+        message.appendSibling(string);
+        sender.addChatMessage(message);
     }
 }

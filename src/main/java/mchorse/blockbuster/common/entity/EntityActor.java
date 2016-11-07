@@ -34,7 +34,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -343,7 +342,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
             if (pos == null)
             {
-                L10n.send(player, "blockbuster.error.actor.not_attached");
+                L10n.error(player, "actor.not_attached");
 
                 return false;
             }
@@ -356,16 +355,16 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
                 if (!director.add(this))
                 {
-                    L10n.send(player, "blockbuster.info.director.already_registered");
+                    L10n.info(player, "director.already_registered");
                 }
                 else
                 {
-                    L10n.send(player, "blockbuster.success.director.was_registered");
+                    L10n.success(player, "director.was_registered");
                 }
             }
             else
             {
-                L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ());
+                L10n.error(player, "director.missing", pos.getX(), pos.getY(), pos.getZ());
             }
         }
 

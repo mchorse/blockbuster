@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -189,7 +188,7 @@ public class KeyboardHandler
         }
         catch (CommandException e)
         {
-            L10n.sendColoredClient(player, TextFormatting.DARK_RED, e.getMessage(), e.getErrorObjects());
+            L10n.error(player, e.getMessage(), e.getErrorObjects());
         }
     }
 

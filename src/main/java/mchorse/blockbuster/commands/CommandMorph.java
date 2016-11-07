@@ -45,13 +45,13 @@ public class CommandMorph extends CommandBase
         if (args.length == 0)
         {
             Dispatcher.sendToServer(new PacketMorph("", null));
-            L10n.sendClient(sender, "blockbuster.success.morph.disable");
+            L10n.success(sender, "morph.disable");
         }
         else
         {
             if (!Blockbuster.proxy.models.models.containsKey(args[0]))
             {
-                L10n.sendClient(sender, "blockbuster.error.morph.wrong", args[0]);
+                L10n.error(sender, "morph.wrong", args[0]);
 
                 return;
             }
@@ -59,7 +59,7 @@ public class CommandMorph extends CommandBase
             if (args.length == 1) Dispatcher.sendToServer(new PacketMorph(args[0], null));
             if (args.length >= 2) Dispatcher.sendToServer(new PacketMorph(args[0], RLUtils.fromString(args[1], args[0])));
 
-            L10n.sendClient(sender, "blockbuster.success.morph.enable", args[0]);
+            L10n.success(sender, "morph.enable", args[0]);
         }
     }
 

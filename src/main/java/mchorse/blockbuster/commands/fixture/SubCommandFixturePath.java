@@ -11,7 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera path
@@ -47,7 +46,7 @@ public class SubCommandFixturePath extends CommandBase
 
         if (!(fixture instanceof PathFixture))
         {
-            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.not_path", index);
+            L10n.error(sender, "profile.not_path", index);
             return;
         }
 

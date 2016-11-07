@@ -60,10 +60,10 @@ public class ClientHandlerModels extends ClientMessageHandler<PacketModels>
                 modelSize++;
             }
 
-            L10n.sendClient(player, "blockbuster.models.loaded", modelSize, skinSize);
-
             ClientProxy.actorPack.pack.reload();
             Blockbuster.proxy.loadModels(ClientProxy.actorPack.pack);
+
+            L10n.info(player, "models.loaded", modelSize, skinSize);
         }
         catch (IOException e)
         {

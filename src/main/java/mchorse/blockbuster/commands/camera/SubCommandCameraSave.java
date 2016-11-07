@@ -7,7 +7,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera save
@@ -38,11 +37,12 @@ public class SubCommandCameraSave extends CommandBase
 
         if (filename.isEmpty())
         {
-            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.empty_filename");
-            return;
+            L10n.error(sender, "profile.empty_filename");
         }
-
-        profile.setFilename(filename);
-        profile.save();
+        else
+        {
+            profile.setFilename(filename);
+            profile.save();
+        }
     }
 }

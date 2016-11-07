@@ -1,23 +1,25 @@
 blockbuster.info:
     actor:
-        playing: {b}This actor already plays!
+        playing: {f}This actor already plays!
     
     director:
-        already_registered: {b}This actor is already registered by director block!
+        already_registered: {f}This actor is already registered by this director block!
     
     # Camera duration
     camera:
         duration:
-            fixture: {b}Camera fixture at index {3}%d{b} runs for {3}%d{b} ticks.
-            profile: {b}Camera profile runs for {3}%d{b} ticks.
+            fixture: {f}Camera fixture at index %s{f} runs for %s{f} ticks.
+            profile: {f}Camera profile runs for %s{f} ticks.
         
         # Camera roll and fov
-        fov: {b}Your field-of-view is {3}%s{b} degrees.
-        roll: {b}Your roll is {3}%s{b} degrees.
+        fov: {f}Your field-of-view is %s{f} degrees.
+        roll: {f}Your roll is %s{f} degrees.
+    
+    models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
     
     # Camera profile
     profile:
-        new: {b}Created new camera profile with filename {3}%s{b}.
-        loaded: {b}Camera profile by name {3}%s{b} is already loaded!
-        start: {b}Current camera profile was started.
-        stop: {b}Currently running camera profile was stopped.
+        new: {f}Created new camera profile with filename %s{f}.
+        loaded: {f}Camera profile by name %s{f} is already loaded!
+        start: {f}Current camera profile was started.
+        stop: {f}Currently running camera profile was stopped.

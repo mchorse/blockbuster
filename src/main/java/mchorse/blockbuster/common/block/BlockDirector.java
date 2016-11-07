@@ -54,7 +54,7 @@ public class BlockDirector extends AbstractBlockDirector
         }
 
         ((ItemRegister) item.getItem()).registerStack(item, pos);
-        L10n.send(player, "blockbuster.success.director.attached_device");
+        L10n.success(player, "director.attached_device");
 
         return true;
     }

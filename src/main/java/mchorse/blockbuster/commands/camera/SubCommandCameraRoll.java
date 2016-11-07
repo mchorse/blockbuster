@@ -34,7 +34,7 @@ public class SubCommandCameraRoll extends CommandBase
 
         if (args.length == 0)
         {
-            L10n.sendClient(sender, "blockbuster.info.camera.roll", control.roll);
+            L10n.info(sender, "camera.roll", control.roll);
         }
         else
         {

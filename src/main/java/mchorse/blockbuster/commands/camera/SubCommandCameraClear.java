@@ -35,6 +35,6 @@ public class SubCommandCameraClear extends CommandBase
         CommandCamera.getProfile().reset();
 
         Dispatcher.sendToServer(new PacketCameraReset());
-        L10n.sendClient(sender, "blockbuster.success.profile.clear");
+        L10n.success(sender, "profile.clear");
     }
 }

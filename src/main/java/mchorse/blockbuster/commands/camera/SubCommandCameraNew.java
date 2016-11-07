@@ -44,6 +44,6 @@ public class SubCommandCameraNew extends CommandBase
         profile.reset();
         profile.setFilename(args[0]);
         Dispatcher.sendToServer(new PacketCameraReset());
-        L10n.sendClient(sender, "blockbuster.info.profile.new", args[0]);
+        L10n.info(sender, "profile.new", args[0]);
     }
 }

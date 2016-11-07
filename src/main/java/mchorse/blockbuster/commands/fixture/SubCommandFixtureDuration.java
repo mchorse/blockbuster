@@ -8,7 +8,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Camera's sub-command /camera duration
@@ -37,9 +36,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 0)
         {
-            long duration = profile.getDuration();
-
-            L10n.sendClient(sender, "blockbuster.info.camera.duration.profile", duration);
+            L10n.info(sender, "camera.duration.profile", profile.getDuration());
             return;
         }
 
@@ -47,7 +44,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (!profile.has(index))
         {
-            L10n.sendColoredClient(sender, TextFormatting.DARK_RED, "blockbuster.error.profile.not_exists", index);
+            L10n.error(sender, "profile.not_exists", index);
             return;
         }
 
@@ -55,9 +52,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 1)
         {
-            long duration = fixture.getDuration();
-
-            L10n.sendClient(sender, "blockbuster.info.camera.duration.fixture", index, duration);
+            L10n.info(sender, "camera.duration.fixture", index, fixture.getDuration());
             return;
         }
 

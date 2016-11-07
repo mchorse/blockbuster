@@ -138,7 +138,7 @@ public class Utils
 
             Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.frames), player);
         }
-        else
+        else if (record == null)
         {
             System.out.println("Record '" + filename + "' couldn't be loaded, because it doesn't exist!");
         }

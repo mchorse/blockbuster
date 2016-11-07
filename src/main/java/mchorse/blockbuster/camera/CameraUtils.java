@@ -26,7 +26,6 @@ import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 
 /**
@@ -134,7 +133,7 @@ public class CameraUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.error.profile.cant_load", filename);
+            L10n.error(player, "profile.cant_load", filename);
         }
     }
 
@@ -157,7 +156,7 @@ public class CameraUtils
             }
             else
             {
-                L10n.sendColored(player, TextFormatting.DARK_AQUA, "blockbuster.info.profile.loaded", filename);
+                L10n.info(player, "profile.loaded", filename);
             }
 
             return true;
@@ -179,7 +178,7 @@ public class CameraUtils
         catch (IOException e)
         {
             e.printStackTrace();
-            L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.error.profile.cant_save", filename);
+            L10n.error(player, "profile.cant_save", filename);
 
             return false;
         }

@@ -8,7 +8,6 @@ import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,6 +35,6 @@ public class ClientHandlerCameraProfile extends ClientMessageHandler<PacketCamer
             ClientProxy.profileRunner.start();
         }
 
-        L10n.sendColored(player, TextFormatting.DARK_GREEN, "blockbuster.success.profile.load", message.filename);
+        L10n.success(player, "profile.load", message.filename);
     }
 }

@@ -11,7 +11,6 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 
 /**
  * Command /director
@@ -54,42 +53,48 @@ public class CommandDirector extends CommandBase
         BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
         AbstractTileEntityDirector director = this.getDirector(server, pos);
 
-        String play = "blockbuster.success.director.play";
-        String stop = "blockbuster.success.director.stop";
+        if (director == null)
+        {
+            L10n.error(sender, "director.no_director", pos.getX(), pos.getY(), pos.getZ());
+            return;
+        }
+
+        String play = "director.play";
+        String stop = "director.stop";
 
         if (action.equals("play"))
         {
             if (director.isPlaying())
             {
-                L10n.sendColored(sender, TextFormatting.DARK_RED, "blockbuster.error.director.playing", args[1], args[2], args[3]);
+                L10n.error(sender, "director.playing", args[1], args[2], args[3]);
                 return;
             }
 
             director.startPlayback();
-            L10n.sendColored(sender, TextFormatting.DARK_GREEN, play, args[1], args[2], args[3]);
+            L10n.success(sender, play, args[1], args[2], args[3]);
         }
         else if (action.equals("stop"))
         {
             if (!director.isPlaying())
             {
-                L10n.sendColored(sender, TextFormatting.DARK_RED, "blockbuster.error.director.stopped", args[1], args[2], args[3]);
+                L10n.error(sender, "director.stopped", args[1], args[2], args[3]);
                 return;
             }
 
             director.stopPlayback();
-            L10n.sendColored(sender, TextFormatting.DARK_GREEN, stop, args[1], args[2], args[3]);
+            L10n.success(sender, stop, args[1], args[2], args[3]);
         }
         else if (action.equals("toggle"))
         {
             boolean isPlaying = director.togglePlayback();
-            L10n.sendColored(sender, TextFormatting.DARK_GREEN, isPlaying ? play : stop, args[1], args[2], args[3]);
+            L10n.success(sender, isPlaying ? play : stop, args[1], args[2], args[3]);
         }
     }
 
     /**
      * Get abstract director from block pos
      */
-    protected AbstractTileEntityDirector getDirector(MinecraftServer server, BlockPos pos) throws CommandException
+    protected AbstractTileEntityDirector getDirector(MinecraftServer server, BlockPos pos)
     {
         TileEntity entity = server.getEntityWorld().getTileEntity(pos);
 
@@ -98,7 +103,7 @@ public class CommandDirector extends CommandBase
             return (AbstractTileEntityDirector) entity;
         }
 
-        throw new CommandException("blockbuster.error.director.no_director", pos.getX(), pos.getY(), pos.getZ());
+        return null;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class SubCommandCameraFOV extends CommandBase
 
         if (args.length == 0)
         {
-            L10n.sendClient(sender, "blockbuster.info.camera.fov", mc.gameSettings.fovSetting);
+            L10n.info(sender, "camera.fov", mc.gameSettings.fovSetting);
         }
         else
         {
