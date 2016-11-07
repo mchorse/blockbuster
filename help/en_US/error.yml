@@ -25,8 +25,11 @@ blockbuster.error:
         error_save: {f}Can't save exported model!
         wrong_type: {f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer).
     
+    # Recording errors
     recording:
-        read: {f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f} or {7}corrupted{f}).
+        read: {f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f}).
+        logout: {f}Stopped recording %s{f}, because the player is logged out!
+        not_found: {f}Can't find %s{f} recording file!
     
     # Camera fixtures errors
     fixture:

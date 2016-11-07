@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class RecordManager
         {
             if (recorder.record.filename.equals(filename))
             {
-                Utils.broadcastMessage("blockbuster.mocap.already_recording", filename);
+                Utils.broadcastInfo("recording.recording", filename);
 
                 return false;
             }
@@ -117,17 +118,10 @@ public class RecordManager
             return false;
         }
 
-        File file = Utils.replayFile(filename);
-
-        if (!file.exists())
-        {
-            Utils.broadcastMessage("blockbuster.mocap.cant_find_file", filename);
-
-            return false;
-        }
-
         try
         {
+            File file = Utils.replayFile(filename);
+
             Record record = new Record(filename);
             record.fromBytes(file);
             RecordPlayer player = new RecordPlayer(record, mode);
@@ -146,11 +140,17 @@ public class RecordManager
 
             return true;
         }
+        catch (FileNotFoundException e)
+        {
+            Utils.broadcastError("recording.not_found", filename);
+        }
         catch (Exception e)
         {
+            Utils.broadcastError("recording.read", filename);
             e.printStackTrace();
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -196,7 +196,9 @@ public class RecordManager
     {
         if (this.recorders.containsKey(player))
         {
-            this.recorders.remove(player);
+            RecordRecorder recorder = this.recorders.remove(player);
+
+            Utils.broadcastError("recording.logout", recorder.record.filename);
         }
     }
 }

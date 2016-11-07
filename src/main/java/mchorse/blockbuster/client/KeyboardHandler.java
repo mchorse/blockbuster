@@ -172,6 +172,7 @@ public class KeyboardHandler
     {
         CommandCamera.reset();
         ClientProxy.manager.reset();
+        ClientProxy.recordingOverlay.setVisible(false);
     }
 
     /**

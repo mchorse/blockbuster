@@ -297,7 +297,17 @@ public class ActionHandler
 
         if (!player.worldObj.isRemote && CommonProxy.manager.recorders.containsKey(player))
         {
-            CommonProxy.manager.recorders.get(player).record(player);
+            RecordRecorder recorder = CommonProxy.manager.recorders.get(player);
+
+            if (player.isDead)
+            {
+                CommonProxy.manager.stopRecording(player, true);
+                Utils.broadcastInfo("recording.dead", recorder.record.filename);
+
+                return;
+            }
+
+            recorder.record(player);
         }
     }
 }

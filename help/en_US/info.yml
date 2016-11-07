@@ -17,6 +17,11 @@ blockbuster.info:
     
     models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
     
+    # Recording strings
+    recording:
+        recording: %s{f} is already being recorded to.
+        dead: {f}Stopped recording %s{f}, because player's dead.
+    
     # Camera profile
     profile:
         new: {f}Created new camera profile with filename %s{f}.

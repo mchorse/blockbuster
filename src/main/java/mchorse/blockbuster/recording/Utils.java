@@ -18,7 +18,6 @@ import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -60,6 +59,46 @@ public class Utils
             if (player != null)
             {
                 player.addChatMessage(message);
+            }
+        }
+    }
+
+    /**
+     * Send given error to everyone on the server, to everyone.
+     *
+     * Invoke this method only on the server side.
+     */
+    public static void broadcastError(String string, Object... objects)
+    {
+        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+        for (String username : players.getAllUsernames())
+        {
+            EntityPlayerMP player = players.getPlayerByUsername(username);
+
+            if (player != null)
+            {
+                L10n.error(player, string, objects);
+            }
+        }
+    }
+
+    /**
+     * Send given error to everyone on the server, to everyone.
+     *
+     * Invoke this method only on the server side.
+     */
+    public static void broadcastInfo(String string, Object... objects)
+    {
+        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+        for (String username : players.getAllUsernames())
+        {
+            EntityPlayerMP player = players.getPlayerByUsername(username);
+
+            if (player != null)
+            {
+                L10n.info(player, string, objects);
             }
         }
     }
@@ -107,11 +146,12 @@ public class Utils
             }
             catch (FileNotFoundException e)
             {
-                L10n.sendColored(player, TextFormatting.DARK_RED, "blockbuster.mocap.cant_find_file", filename);
+                L10n.error(player, "recording.not_found", filename);
                 record = null;
             }
             catch (Exception e)
             {
+                L10n.error(player, "recording.read", filename);
                 e.printStackTrace();
                 record = null;
             }
@@ -140,7 +180,7 @@ public class Utils
         }
         else if (record == null)
         {
-            System.out.println("Record '" + filename + "' couldn't be loaded, because it doesn't exist!");
+            L10n.error(player, "recording.not_exist", filename);
         }
     }
 
