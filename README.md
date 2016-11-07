@@ -1,15 +1,15 @@
 ![Blockbuster](./logo.png) 
 
-[Downloads](https://github.com/mchorse/blockbuster/releases) – [PMC post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum post](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) – [McME](https://github.com/mchorse/mcme) (model editor)
+[Downloads](https://github.com/mchorse/blockbuster/releases) – [PMC post](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum post](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-create-simple-machinimas-and-adventure) – [McME](https://github.com/mchorse/mcme) (model editor)  
+[EchebKeso](https://twitter.com/EchebKeso) – [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap's source code](https://github.com/EchebKeso/Mocap)
 
 Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple 
 Minecraft machinimas in single player, without having to recruit and organize a 
 crowd of body actors and cameras.
 
-Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2, and 
-the recording code is based on the code from the 
-[Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) 
-(the author of the mod gave me [permission](http://i.imgur.com/lc1lJB5.png) to use his code).
+Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2. Blockbuster mod is also provides build for 1.9.4, if it's possible, without changing the code.
+
+Recording code is based and refined on recording code from Mocap mod by @EchebKeso.
 
 ## Features
 
@@ -51,4 +51,6 @@ This playlist consists out of videos that I've created during Blockbuster mod te
 
 ## License and Manual
 
-Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). See file [LICENSE.md](./LICENSE.md) for more information about the license.
+Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md) for more information about the license.
+
+Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). 
