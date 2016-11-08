@@ -16,26 +16,36 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 /**
+ * <p>
  * Blockbuster's main entry
+ * </p>
  *
+ * <p>
  * This mod allows you to create machinimas in minecraft. Blockbuster provides
  * you with the most needed tools to create machinimas alone (without bunch of
- * complaining actors).
+ * complaining body actors).
+ * </p>
  *
- * This mod is possible thanks to the following code/examples/resources:
+ * <p>
+ * This mod is possible thanks to the following code/examples/resources/people:
+ * </p>
  *
- * - Jabelar's and TGG's minecraft modding tutorials
- * - AnimalBikes and Mocap mods (EchebKeso)
- * - MinecraftByExample
- * - Ernio for helping with camera attributes sync, sharing with his own
- *   network abstract layer code, and fixing the code so it would work on
- *   dedicated server
- * - diesieben07 for giving idea for actor skins
- * - Choonster for pointing out that processInteract triggers for each hand +
- *   TestMod3 config example
- * - Lightwave for porting some of the code to 1.9.4
- * - NlL5 for a lot of testing, giving lots of feedback and ideas for Blockbuster mod
- * - daipenger for giving me consultation on how to make cameras and actors frame-based
+ * <ul>
+ *     <li>Jabelar's and TGG's minecraft modding tutorials</li>
+ *     <li>AnimalBikes and Mocap mods (EchebKeso)</li>
+ *     <li>MinecraftByExample</li>
+ *     <li>Ernio for helping with camera attributes sync, sharing with his own
+ *         network abstract layer code, and fixing the code so it would work on
+ *         dedicated server</li>
+ *     <li>diesieben07 for giving idea for actor skins</li>
+ *     <li>Choonster for pointing out that processInteract triggers for each
+ *         hand + TestMod3 config example</li>
+ *     <li>Lightwave for porting some of the code to 1.9.4</li>
+ *     <li>NlL5 for a lot of testing, giving lots of feedback and ideas for
+ *         Blockbuster mod</li>
+ *     <li>daipenger for giving me consultation on how to make cameras and
+ *         actors frame-based</li>
+ * </ul
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
 public class Blockbuster
