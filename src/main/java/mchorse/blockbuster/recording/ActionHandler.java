@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
@@ -261,7 +262,7 @@ public class ActionHandler
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
-        if (CommonProxy.manager.records.isEmpty())
+        if (CommonProxy.manager.records.isEmpty() || !Blockbuster.proxy.config.record_unload)
         {
             return;
         }

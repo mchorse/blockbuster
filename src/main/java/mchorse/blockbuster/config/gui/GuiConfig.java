@@ -1,15 +1,23 @@
-package mchorse.blockbuster.client.gui;
+package mchorse.blockbuster.config.gui;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Config GUI
+ *
+ * This config GUI is responsible for managing Blockbuster's config. Most of
+ * the code that implements config features is located in the parent of the
+ * class.
+ */
 @SideOnly(Side.CLIENT)
 public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig
 {
@@ -24,7 +32,10 @@ public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig
 
         for (String name : Blockbuster.proxy.forge.getCategoryNames())
         {
-            elements.add(new ConfigElement(Blockbuster.proxy.forge.getCategory(name).setLanguageKey("blockbuster.config.general.title")));
+            ConfigCategory category = Blockbuster.proxy.forge.getCategory(name);
+
+            category.setLanguageKey("blockbuster.config." + name + ".title");
+            elements.add(new ConfigElement(category));
         }
 
         return elements;

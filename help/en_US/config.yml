@@ -2,8 +2,18 @@
 blockbuster.config:
     general:
         title: General
-
+        
         load_models_on_login: Send models
+    
+    recording:
+        title: Recording
+
         recording_delay: Recording frame skip
+        record_unload_time: Automatic Record Unload Time
+        record_unload: Automatic Record Unloading
+    
+    camera:
+        title: Camera
+        
+        camera_duration: Default fixture duration        
         camera_duration_step: Duration step
-        camera_duration: Default fixture duration
