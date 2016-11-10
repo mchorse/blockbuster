@@ -29,6 +29,37 @@
                 }
             }
         },
+        "riding": {
+            "size": [ 0.6, 1.8, 0.6 ],
+            "limbs": {
+                "head": {
+                    "translate": [ 0, 24, 0 ]
+                },
+                "outer": {
+                    "translate": [ 0, 4, 0 ],
+                    "scale": [ 1.1, 1.1, 1.1 ]
+                },
+                "body": {
+                    "translate": [ 0, 24, 0 ]
+                },
+                "left_arm": {
+                    "translate": [ 6, 24, 0 ],
+                    "rotate": [ -36, 0, 0 ]
+                },
+                "right_arm": {
+                    "translate": [ -6, 24, 0 ],
+                    "rotate": [ -36, 0, 0 ]
+                },
+                "left_leg": {
+                    "translate": [ 2, 12, 0 ],
+                    "rotate": [ -81, -18, -4.5 ]
+                },
+                "right_leg": {
+                    "translate": [ -2, 12, 0 ],
+                    "rotate": [ -81, 18, 4.5 ]
+                }
+            }
+        },
         "sneaking": {
             "size": [ 0.6, 1.65, 0.6 ],
             "limbs": {
