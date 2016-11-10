@@ -86,14 +86,17 @@ public class ModelHandler
     {
         this.models.clear();
 
-        try
+        if (Blockbuster.proxy.config.clean_model_downloads)
         {
-            File models = new File(ClientProxy.config + "/downloads");
-            FileUtils.cleanDirectory(models);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            try
+            {
+                File models = new File(ClientProxy.config + "/downloads");
+                FileUtils.cleanDirectory(models);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 

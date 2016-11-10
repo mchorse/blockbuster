@@ -22,6 +22,11 @@ public class BlockbusterConfig
     public boolean load_models_on_login;
 
     /**
+     * Clean downloaded models after exiting a server?
+     */
+    public boolean clean_model_downloads;
+
+    /**
      * Recording frame skip
      */
     public int recording_delay;
@@ -68,6 +73,7 @@ public class BlockbusterConfig
         String camPrefix = "blockbuster.config.camera.";
 
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
+        this.clean_model_downloads = this.config.getBoolean("clean_model_downloads", general, true, "Clean downloaded models upon exiting a server", genPrefix + "clean_model_downloads");
 
         this.camera_duration_step = this.config.getInt("camera_duration_step", camera, 10, 1, 100, "What is default step to use when adding or reducing duration of the camera fixture (in ticks)", camPrefix + "camera_duration_step");
         this.camera_duration = this.config.getInt("camera_duration", camera, 30, 1, 1000, "What is default duration of the camera fixture (in ticks)", camPrefix + "camera_duration");

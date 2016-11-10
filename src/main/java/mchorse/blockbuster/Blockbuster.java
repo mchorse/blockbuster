@@ -16,9 +16,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 /**
- * <p>
- * Blockbuster's main entry
- * </p>
+ * <p>Blockbuster's main entry</p>
  *
  * <p>
  * This mod allows you to create machinimas in minecraft. Blockbuster provides
