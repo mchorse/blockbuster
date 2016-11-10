@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -122,13 +123,13 @@ public class RenderActor extends RenderLiving<EntityActor>
         Map<String, ModelCustom> models = ModelCustom.MODELS;
 
         String key = models.containsKey(entity.model) ? entity.model : defaultModel;
-        String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");
+        String pose = EntityUtils.poseForEntity(entity);
 
         ModelCustom model = models.get(key);
 
         if (model != null)
         {
-            model.pose = model.model.poses.get(pose);
+            model.pose = model.model.getPose(pose);
 
             this.mainModel = model;
         }

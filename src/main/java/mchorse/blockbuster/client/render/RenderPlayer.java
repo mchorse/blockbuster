@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -82,13 +83,13 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
         IMorphing capability = Morphing.get(entity);
 
         String key = models.containsKey(capability.getModel()) ? capability.getModel() : "steve";
-        String pose = entity.isSneaking() ? "sneaking" : (entity.isElytraFlying() ? "flying" : "standing");
+        String pose = EntityUtils.poseForEntity(entity);
 
         ModelCustom model = models.get(key);
 
         if (model != null)
         {
-            model.pose = model.model.poses.get(pose);
+            model.pose = model.model.getPose(pose);
 
             this.mainModel = model;
         }

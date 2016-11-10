@@ -17,6 +17,7 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.RLUtils;
@@ -169,8 +170,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (this.modelInstance != null)
         {
-            String key = this.isElytraFlying() ? "flying" : (this.isSneaking() ? "sneaking" : "standing");
-            pose = this.modelInstance.poses.get(key).size;
+            pose = this.modelInstance.getPose(EntityUtils.poseForEntity(this)).size;
         }
         else
         {

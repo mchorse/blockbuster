@@ -14,6 +14,7 @@ import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -145,8 +146,7 @@ public class ModelHandler
             return;
         }
 
-        String key = player.isElytraFlying() ? "flying" : (player.isSneaking() ? "sneaking" : "standing");
-        float[] pose = data.poses.get(key).size;
+        float[] pose = data.getPose(EntityUtils.poseForEntity(player)).size;
 
         this.updateSize(player, pose[0], pose[1]);
     }

@@ -10,6 +10,7 @@ import com.google.common.base.Predicates;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
@@ -21,6 +22,29 @@ import net.minecraft.world.World;
  */
 public class EntityUtils
 {
+    /**
+     * Get pose for entity states
+     */
+    public static String poseForEntity(EntityLivingBase entity)
+    {
+        if (entity.isRiding())
+        {
+            return "riding";
+        }
+
+        if (entity.isElytraFlying())
+        {
+            return "flying";
+        }
+
+        if (entity.isSneaking())
+        {
+            return "sneaking";
+        }
+
+        return "standing";
+    }
+
     /**
      * Simple method that decreases the need for writing additional
      * UUID.fromString line
