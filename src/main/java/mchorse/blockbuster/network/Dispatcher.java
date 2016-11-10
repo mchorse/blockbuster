@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
 import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames;
+import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
@@ -40,6 +41,7 @@ import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
+import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
@@ -137,6 +139,8 @@ public class Dispatcher
 
         register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
         register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
+
+        register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

@@ -14,6 +14,7 @@ import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -195,9 +196,18 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             this.playback.next(this);
 
-            if (this.playback.isFinished() && !this.worldObj.isRemote)
+            if (!this.worldObj.isRemote)
             {
-                CommonProxy.manager.stopPlayback(this);
+                int tick = this.playback.tick;
+
+                if (this.playback.isFinished())
+                {
+                    CommonProxy.manager.stopPlayback(this);
+                }
+                else if (tick != 0 && tick % 6 == 0)
+                {
+                    Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
+                }
             }
         }
 
