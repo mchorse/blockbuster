@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class BlockbusterConfig
 {
+    /* General */
+
     /**
      * Send models and skins to the player which is about to log in?
      */
@@ -26,10 +28,7 @@ public class BlockbusterConfig
      */
     public boolean clean_model_downloads;
 
-    /**
-     * Recording frame skip
-     */
-    public int recording_delay;
+    /* Camera */
 
     /**
      * Camera duration step (used by keyboard duration bindings)
@@ -41,6 +40,13 @@ public class BlockbusterConfig
      */
     public int camera_duration;
 
+    /* Recording */
+
+    /**
+     * Recording frame skip
+     */
+    public int recording_delay;
+
     /**
      * How long it takes (in ticks) to unload a record
      */
@@ -50,6 +56,11 @@ public class BlockbusterConfig
      * Enable automatic record unloading?
      */
     public boolean record_unload;
+
+    /**
+     * How often a record going to synchronize with the server
+     */
+    public int record_sync_rate;
 
     private Configuration config;
 
@@ -81,6 +92,7 @@ public class BlockbusterConfig
         this.recording_delay = this.config.getInt("recording_delay", recording, 1, 1, 10, "Frame delay for recording", recPrefix + "recording_delay");
         this.record_unload_time = this.config.getInt("record_unload_time", recording, 2400, 600, 72000, "How long is it takes to unload a record (in ticks)", recPrefix + "record_unload_time");
         this.record_unload = this.config.getBoolean("record_unload", recording, true, "Enable automatic record unloading?", recPrefix + "record_unload");
+        this.record_sync_rate = this.config.getInt("record_sync_rate", recording, 6, 1, 30, "How often a record going to synchronize with the server", recPrefix + "record_sync_rate");
 
         if (this.config.hasChanged())
         {

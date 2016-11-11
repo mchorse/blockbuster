@@ -10,11 +10,12 @@ blockbuster.config:
         title: Recording
 
         recording_delay: Recording frame skip
-        record_unload_time: Automatic Record Unload Time
-        record_unload: Automatic Record Unloading
+        record_unload_time: Automatic record unload time
+        record_unload: Automatic record unloading
+        record_sync_rate: Record tick synchronization rate
     
     camera:
         title: Camera
         
-        camera_duration: Default fixture duration        
+        camera_duration: Default fixture duration
         camera_duration_step: Duration step

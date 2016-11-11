@@ -204,7 +204,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 {
                     CommonProxy.manager.stopPlayback(this);
                 }
-                else if (tick != 0 && tick % 6 == 0)
+                else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
                 {
                     Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
                 }
