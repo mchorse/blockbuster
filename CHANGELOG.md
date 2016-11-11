@@ -2,13 +2,13 @@
 
 Blockbuster's change log.
 
-## Version 1.3.1 (Slow-Mo update)
+## Version 1.4 (Slow-Mo update)
 
-This is a big patch update that improves the quality of recording. Now you can use [Minema mod](https://github.com/daipenger/minema/releases) to record high quality videos of your machinimas.
+This is a big update that improves the quality of recording. Now you can use [Minema mod](https://github.com/daipenger/minema/releases) to record high quality videos of your machinimas (with shaders... **HYPE mode activated**).
 
-The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, yey, you can capture smooth high-quality machinimas (with shaders) and !
+The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, now you can capture smooth high-quality machinimas with Minema!
 
-**Tutorial video** for 1.3.1:  
+**Tutorial video** for 1.4:  
 Nope yet
 
 * Added actor spawn egg to Blockbuster tab
@@ -32,15 +32,16 @@ Nope yet
 * Added support for `ResourceLocation` skins (you can reference Minecraft or other mod resources using `domain:path` format)
 * Changed default scale of the actors to correspond to real players (@NlL5)
 * Converted camera profile format to JSON
+* Converted player recording format to NBT
 * Fixed actor detaching (@NlL5)
 * Improved player recording (smooth as silk)
-* Improved camera playback (synchronized with actor playback)
-* Improved formatting of commands (colors)
+* Improved camera playback (synchronized with actors ticks)
+* Improved formatting of commands
 * Switched camera duration to tick units (`20` ticks per second)
 * Removed shadows for invisible actors (@NlL5)
-* Removed camera duration formatting
+* Removed camera duration formatting (`s`, `m` and `h` suffixes are gone)
 
-**Important**: camera and recording files from previous versions not supported by this update (I'm sorry, I'm really really bad at supporting formats...). 
+**Important**: camera and recording files from previous versions not supported by this update (I'm sorry, I'm really really bad at supporting formats). Next version will be less likely to break the format. Sorry... 
 
 ## Version 1.3
 
@@ -138,7 +139,7 @@ how many times you want.
 
 Second version of Blockbuster mod. This release removes the "Name Tag" mechanism 
 (redundant running here and there with intention to register/give recording name 
-to the actor/director map block) and substituted this with _nice looking_ GUIs.
+to the actor/director map block) and substituted this with *nice looking* GUIs.
 
 Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 
@@ -167,7 +168,7 @@ Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 * Reduced the amount of console messages
 * Recording format was broken, so old recordings won't work
 
-P.S.: where "_nice looking_ GUIs" is a subjective statement
+P.S.: where "*nice looking* GUIs" is a subjective statement
 
 ## Version 1.0
 
