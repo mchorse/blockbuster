@@ -7,6 +7,7 @@ import java.io.IOException;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
@@ -59,5 +60,21 @@ public class PlaceBlockAction extends InteractBlockAction
         super.toBytes(out);
         out.writeByte(this.metadata);
         out.writeUTF(this.block);
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        super.fromNBT(tag);
+        this.metadata = tag.getByte("Meta");
+        this.block = tag.getString("Block");
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        super.toNBT(tag);
+        tag.setByte("Meta", this.metadata);
+        tag.setString("Block", this.block);
     }
 }

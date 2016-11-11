@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.item.ItemBow;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
@@ -61,5 +62,17 @@ public class ShootArrowAction extends Action
     public void toBytes(DataOutput out) throws IOException
     {
         out.writeInt(this.charge);
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.charge = tag.getByte("Charge");
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setByte("Charge", (byte) this.charge);
     }
 }

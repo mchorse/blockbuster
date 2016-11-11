@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -64,18 +65,28 @@ public class InteractBlockAction extends Action
     @Override
     public void fromBytes(DataInput in) throws IOException
     {
-        super.fromBytes(in);
-
         this.pos = new BlockPos(in.readInt(), in.readInt(), in.readInt());
     }
 
     @Override
     public void toBytes(DataOutput out) throws IOException
     {
-        super.toBytes(out);
-
         out.writeInt(this.pos.getX());
         out.writeInt(this.pos.getY());
         out.writeInt(this.pos.getZ());
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.pos = new BlockPos(tag.getInteger("X"), tag.getInteger("Y"), tag.getInteger("Z"));
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setInteger("X", this.pos.getX());
+        tag.setInteger("Y", this.pos.getY());
+        tag.setInteger("Z", this.pos.getZ());
     }
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.RLUtils;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -54,5 +55,19 @@ public class MorphAction extends Action
     {
         out.writeUTF(this.model);
         out.writeUTF(this.skin == null ? "" : this.skin.toString());
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.model = tag.getString("Model");
+        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model);
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setString("Model", this.model);
+        tag.setString("Skin", this.skin == null ? "" : this.skin.toString());
     }
 }

@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.recording.Utils;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Chat action
@@ -47,5 +48,17 @@ public class ChatAction extends Action
     public void toBytes(DataOutput out) throws IOException
     {
         out.writeUTF(this.message);
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.message = tag.getString("Message");
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setString("Message", this.message);
     }
 }

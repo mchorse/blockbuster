@@ -8,6 +8,7 @@ import java.util.UUID;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Mounting action
@@ -59,8 +60,6 @@ public class MountingAction extends Action
     @Override
     public void fromBytes(DataInput in) throws IOException
     {
-        super.fromBytes(in);
-
         this.target = new UUID(in.readLong(), in.readLong());
         this.isMounting = in.readBoolean();
     }
@@ -68,10 +67,23 @@ public class MountingAction extends Action
     @Override
     public void toBytes(DataOutput out) throws IOException
     {
-        super.toBytes(out);
-
         out.writeLong(this.target.getMostSignificantBits());
         out.writeLong(this.target.getLeastSignificantBits());
         out.writeBoolean(this.isMounting);
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.target = new UUID(tag.getLong("Most"), tag.getLong("Least"));
+        this.isMounting = tag.getBoolean("Mounting");
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setLong("Most", this.target.getMostSignificantBits());
+        tag.setLong("Least", this.target.getLeastSignificantBits());
+        tag.setBoolean("Mounting", this.isMounting);
     }
 }

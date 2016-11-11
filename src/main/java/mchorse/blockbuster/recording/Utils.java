@@ -115,7 +115,7 @@ public class Utils
             file.mkdirs();
         }
 
-        return new File(file.getAbsolutePath() + "/" + filename);
+        return new File(file.getAbsolutePath() + "/" + filename + ".dat");
     }
 
     /**

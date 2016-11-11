@@ -97,4 +97,28 @@ public class EquipAction extends Action
             CompressedStreamTools.write(this.itemData, out);
         }
     }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.armorSlot = tag.getByte("Slot");
+        this.armorId = tag.getShort("Id");
+
+        if (this.armorId != -1)
+        {
+            this.itemData = tag.getCompoundTag("Data");
+        }
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setByte("Slot", this.armorSlot);
+        tag.setShort("Id", this.armorId);
+
+        if (this.armorId != -1)
+        {
+            tag.setTag("Data", this.itemData);
+        }
+    }
 }

@@ -1,10 +1,9 @@
 package mchorse.blockbuster.recording.data;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,9 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 /**
  * This class stores actions and frames states for a recording (to be playbacked
@@ -169,33 +171,43 @@ public class Record
      */
     public void toBytes(File file) throws IOException
     {
-        RandomAccessFile buffer = new RandomAccessFile(file, "rw");
+        NBTTagCompound compound = new NBTTagCompound();
+        NBTTagList frames = new NBTTagList();
+
+        /* Version of the recording */
+        compound.setShort("Version", SIGNATURE);
+        compound.setByte("Delay", (byte) this.delay);
+
         int c = this.frames.size();
         int d = this.actions.size() - this.frames.size();
 
         if (d < 0) d = 0;
 
-        /* Version of the recording */
-        buffer.writeShort(SIGNATURE);
-        buffer.writeByte(this.delay);
-        buffer.writeInt(c);
-
         for (int i = 0; i < c; i++)
         {
+            NBTTagCompound frameTag = new NBTTagCompound();
+
             Frame frame = this.frames.get(i);
             Action action = this.actions.get(d + i);
 
-            frame.toBytes(buffer);
-            buffer.writeBoolean(action != null);
+            frame.toNBT(frameTag);
 
             if (action != null)
             {
-                buffer.writeByte(action.getType());
-                action.toBytes(buffer);
+                NBTTagCompound actionTag = new NBTTagCompound();
+
+                action.toNBT(actionTag);
+                actionTag.setByte("Type", action.getType());
+
+                frameTag.setTag("Action", actionTag);
             }
+
+            frames.appendTag(frameTag);
         }
 
-        buffer.close();
+        compound.setTag("Frames", frames);
+
+        CompressedStreamTools.writeCompressed(compound, new FileOutputStream(file));
     }
 
     /**
@@ -206,31 +218,31 @@ public class Record
      */
     public void fromBytes(File file) throws IOException, Exception
     {
-        DataInputStream buffer = new DataInputStream(new FileInputStream(file));
+        NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
+        short version = compound.getShort("Version");
 
-        short signature = buffer.readShort();
-
-        if (signature != SIGNATURE)
+        if (version != SIGNATURE)
         {
-            buffer.close();
-
             throw new Exception("Given file doesn't have appropriate signature!");
         }
 
-        this.delay = buffer.readByte();
-        int frames = buffer.readInt();
+        this.delay = compound.getByte("Delay");
 
-        for (int i = 0; i < frames; i++)
+        NBTTagList frames = (NBTTagList) compound.getTag("Frames");
+
+        for (int i = 0, c = frames.tagCount(); i < c; i++)
         {
+            NBTTagCompound frameTag = frames.getCompoundTagAt(i);
+            NBTTagCompound actionTag = (NBTTagCompound) frameTag.getTag("Action");
             Frame frame = new Frame();
 
-            frame.fromBytes(buffer);
+            frame.fromNBT(frameTag);
 
-            if (buffer.readBoolean())
+            if (actionTag != null)
             {
-                Action action = Action.fromType(buffer.readByte());
+                Action action = Action.fromType(actionTag.getByte("Type"));
+                action.fromNBT(actionTag);
 
-                action.fromBytes(buffer);
                 this.actions.add(action);
             }
             else
@@ -240,7 +252,5 @@ public class Record
 
             this.frames.add(frame);
         }
-
-        buffer.close();
     }
 }

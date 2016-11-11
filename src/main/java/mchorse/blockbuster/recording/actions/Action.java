@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Parent of all recording actions
@@ -73,5 +74,17 @@ public abstract class Action
      * Persist action to data output stream (to file)
      */
     public void toBytes(DataOutput out) throws IOException
+    {}
+
+    /**
+     * Persist action from NBT tag
+     */
+    public void fromNBT(NBTTagCompound tag)
+    {}
+
+    /**
+     * Persist action to NBT tag
+     */
+    public void toNBT(NBTTagCompound tag)
     {}
 }

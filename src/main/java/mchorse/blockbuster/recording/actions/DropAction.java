@@ -82,4 +82,16 @@ public class DropAction extends Action
     {
         CompressedStreamTools.write(this.itemData, out);
     }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.itemData = tag.getCompoundTag("Data");
+    }
+
+    @Override
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setTag("Data", this.itemData);
+    }
 }

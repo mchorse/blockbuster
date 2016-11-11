@@ -7,6 +7,7 @@ import java.io.IOException;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Recording frame class
@@ -212,5 +213,64 @@ public class Frame
         this.isSprinting = in.readBoolean();
         this.onGround = in.readBoolean();
         this.flyingElytra = in.readBoolean();
+    }
+
+    public void toNBT(NBTTagCompound tag)
+    {
+        tag.setFloat("X", (float) this.x);
+        tag.setFloat("Y", (float) this.y);
+        tag.setFloat("Z", (float) this.z);
+
+        tag.setFloat("MX", (float) this.motionX);
+        tag.setFloat("MY", (float) this.motionX);
+        tag.setFloat("MZ", (float) this.motionX);
+
+        tag.setFloat("RX", this.yaw);
+        tag.setFloat("RY", this.pitch);
+        tag.setFloat("RZ", this.yawHead);
+
+        if (this.isMounted)
+        {
+            tag.setFloat("MRX", this.mountYaw);
+            tag.setFloat("MRY", this.mountPitch);
+        }
+
+        tag.setFloat("Fall", this.fallDistance);
+
+        tag.setBoolean("Airborne", this.isAirBorne);
+        tag.setBoolean("Elytra", this.flyingElytra);
+        tag.setBoolean("Sneaking", this.isSneaking);
+        tag.setBoolean("Sprinting", this.isSprinting);
+        tag.setBoolean("Ground", this.onGround);
+    }
+
+    public void fromNBT(NBTTagCompound tag)
+    {
+        this.x = tag.getFloat("X");
+        this.y = tag.getFloat("Y");
+        this.z = tag.getFloat("Z");
+
+        this.motionX = tag.getFloat("MX");
+        this.motionY = tag.getFloat("MY");
+        this.motionZ = tag.getFloat("MZ");
+
+        this.yaw = tag.getFloat("RX");
+        this.pitch = tag.getFloat("RY");
+        this.yawHead = tag.getFloat("RZ");
+
+        if (tag.hasKey("MRX") && tag.hasKey("MRY"))
+        {
+            this.isMounted = true;
+            this.mountYaw = tag.getFloat("MRX");
+            this.mountPitch = tag.getFloat("MRY");
+        }
+
+        this.fallDistance = tag.getFloat("Fall");
+
+        this.isAirBorne = tag.getBoolean("Airborne");
+        this.flyingElytra = tag.getBoolean("Elytra");
+        this.isSneaking = tag.getBoolean("Sneaking");
+        this.isSprinting = tag.getBoolean("Sprinting");
+        this.onGround = tag.getBoolean("Ground");
     }
 }
