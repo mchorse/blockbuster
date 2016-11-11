@@ -1,5 +1,6 @@
 package mchorse.blockbuster.camera.fixtures;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.Minecraft;
@@ -89,12 +90,10 @@ public class LookFixture extends IdleFixture
             this.oldPitch = pitch;
         }
 
-        /* When progress is close to 1.0, the camera starts jagging, so instead
-         * of giving the progress to reach its maximum value of 1.0, I decided
-         * to limit its maximum to something like 0.5.
-         */
-        yaw = this.interpolateYaw(this.oldYaw, yaw, progress / 2);
-        pitch = this.interpolate(this.oldPitch, pitch, progress / 2);
+        float value = Blockbuster.proxy.config.camera_interpolate_target ? Blockbuster.proxy.config.camera_interpolate_target_value : 1.0F;
+
+        yaw = this.interpolateYaw(this.oldYaw, yaw, value);
+        pitch = this.interpolate(this.oldPitch, pitch, value);
 
         pos.copy(this.position);
         pos.angle.set(yaw, pitch);

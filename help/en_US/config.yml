@@ -19,3 +19,5 @@ blockbuster.config:
         
         camera_duration: Default fixture duration
         camera_duration_step: Duration step
+        camera_interpolate_target: Interpolate target fixtures
+        camera_interpolate_target_value: Target interpolation value
