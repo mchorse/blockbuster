@@ -9,7 +9,7 @@ crowd of body actors and cameras.
 
 Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2. Blockbuster mod is also provides build for 1.9.4, if it's possible, without changing the code.
 
-Recording code is based and refined on recording code from Mocap mod by @EchebKeso.
+Recording code is based and refined on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
 ## Features
 
@@ -45,8 +45,8 @@ Tutorial videos for 1.3. This playlist shows how to use the mod features. Every 
 
 This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
 
-<a href="https://www.youtube.com/watch?v=Q-IdY4VsMFk&index=1&list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF">
-    <img src="https://img.youtube.com/vi/Q-IdY4VsMFk/0.jpg">
+<a href="https://youtu.be/NMtTmRoLKJQ?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF">
+    <img src="https://img.youtube.com/vi/NMtTmRoLKJQ/0.jpg">
 </a>
 
 ## License and Manual
