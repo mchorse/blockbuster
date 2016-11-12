@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.CommonProxy;
-import mchorse.blockbuster.network.common.recording.PacketFramesSave;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesSave>
+public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesLoad>
 {
     @Override
-    public void run(EntityPlayerMP player, PacketFramesSave message)
+    public void run(EntityPlayerMP player, PacketFramesLoad message)
     {
         Record serverRecord = CommonProxy.manager.records.get(message.filename);
 
@@ -35,7 +35,7 @@ public class ServerHandlerFrames extends ServerMessageHandler<PacketFramesSave>
             Recording.get(player).addRecording(message.filename, System.currentTimeMillis());
 
             serverRecord.frames = message.frames;
-            serverRecord.toBytes(Utils.replayFile(message.filename));
+            serverRecord.save(Utils.replayFile(message.filename));
         }
         catch (IOException e)
         {

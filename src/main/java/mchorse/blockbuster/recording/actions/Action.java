@@ -65,25 +65,25 @@ public abstract class Action
     {}
 
     /**
-     * Construct action from data input stream (from file)
+     * Construct action from data input stream. Used to send over the network.
      */
     public void fromBytes(DataInput in) throws IOException
     {}
 
     /**
-     * Persist action to data output stream (to file)
+     * Persist action to data output stream. Used to send over the network.
      */
     public void toBytes(DataOutput out) throws IOException
     {}
 
     /**
-     * Persist action from NBT tag
+     * Persist action from NBT tag. Used for loading from the disk.
      */
     public void fromNBT(NBTTagCompound tag)
     {}
 
     /**
-     * Persist action to NBT tag
+     * Persist action to NBT tag. Used for saving to the disk.
      */
     public void toNBT(NBTTagCompound tag)
     {}

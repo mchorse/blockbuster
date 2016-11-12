@@ -4,7 +4,7 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
-import mchorse.blockbuster.network.common.recording.PacketFramesSave;
+import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -37,7 +37,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
 
             Record record = ClientProxy.manager.recorders.get(player).record;
 
-            Dispatcher.sendToServer(new PacketFramesSave(record.filename, record.frames));
+            Dispatcher.sendToServer(new PacketFramesLoad(record.filename, record.frames));
             ClientProxy.manager.stopRecording(player, false);
         }
     }

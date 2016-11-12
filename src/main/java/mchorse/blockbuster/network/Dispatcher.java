@@ -36,7 +36,6 @@ import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
-import mchorse.blockbuster.network.common.recording.PacketFramesSave;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
@@ -129,7 +128,7 @@ public class Dispatcher
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
 
         register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesSave.class, ServerHandlerFrames.class, Side.SERVER);
+        register(PacketFramesLoad.class, ServerHandlerFrames.class, Side.SERVER);
 
         register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
         register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);

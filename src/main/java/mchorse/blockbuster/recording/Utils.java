@@ -140,7 +140,7 @@ public class Utils
             try
             {
                 record = new Record(filename);
-                record.fromBytes(replayFile(filename));
+                record.load(replayFile(filename));
 
                 manager.records.put(filename, record);
             }

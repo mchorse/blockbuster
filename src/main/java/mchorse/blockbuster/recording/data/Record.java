@@ -169,7 +169,7 @@ public class Record
      * This method basically writes the signature of the current version,
      * and then saves all available frames and actions.
      */
-    public void toBytes(File file) throws IOException
+    public void save(File file) throws IOException
     {
         NBTTagCompound compound = new NBTTagCompound();
         NBTTagList frames = new NBTTagList();
@@ -216,7 +216,7 @@ public class Record
      * This method basically checks if the given file has appropriate short
      * signature, and reads all frames and actions from the file.
      */
-    public void fromBytes(File file) throws IOException, Exception
+    public void load(File file) throws IOException, Exception
     {
         NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
         short version = compound.getShort("Version");

@@ -7,6 +7,7 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +60,14 @@ public class RenderingHandler
         List<String> list = event.getLeft();
 
         list.add("");
-        list.add("[Blockbuster]: " + ClientProxy.manager.records.size() + " records");
+        list.add(ClientProxy.manager.records.size() + " client records");
+
+        RecordRecorder recorder = ClientProxy.manager.recorders.get(Minecraft.getMinecraft().thePlayer);
+
+        if (recorder != null)
+        {
+            list.add("Recording frame " + recorder.tick + " (delay: " + recorder.delay + ")");
+        }
     }
 
     /**
