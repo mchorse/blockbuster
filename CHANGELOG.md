@@ -16,10 +16,20 @@ Nope yet
 * Added command `/model` with two sub-commands:
     * `/model export` – previously known as `/export-model`
     * `/model request` – request models and skins from server
-* Added configuration (see Mod Options in main/in game menu)
-    * Recording delay (recording FPS)
-    * Camera default duration and duration step
-    * Send models and skins on log in
+* Added configuration (see Mod Options in main/in-game menu)
+    * General
+        * Send models and skins when player logs in?
+        * Clean downloads folder when exiting from server
+    * Recording
+        * Recording frame delay
+        * Automatic record unload time
+        * Turn on automatic record unloading?
+        * Record tick synchronization rate
+    * Camera
+        * Default fixture duration
+        * Duration increase/decrease step
+        * Interpolate target fixtures?
+        * Target interpolation value
 * Added more detailed tooltips to items and blocks
 * Added support for camera's *Field-Of-View* (`fov`) and *roll* (rotation across Z-axis) parameters
 * Added sub-commands for `/camera`:
