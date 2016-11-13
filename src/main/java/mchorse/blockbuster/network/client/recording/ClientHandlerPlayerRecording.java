@@ -52,7 +52,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
     @SideOnly(Side.CLIENT)
     private void sendFrames(Record record)
     {
-        int cap = 100;
+        int cap = 400;
         int length = record.getLength();
 
         /* Send only one message if it's below 500 frames */
