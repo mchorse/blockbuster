@@ -58,7 +58,6 @@ import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorReset;
-import mchorse.blockbuster.network.server.recording.ServerHandlerFrames;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
@@ -130,8 +129,6 @@ public class Dispatcher
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
 
         register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesLoad.class, ServerHandlerFrames.class, Side.SERVER);
-
         register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
 
         register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);

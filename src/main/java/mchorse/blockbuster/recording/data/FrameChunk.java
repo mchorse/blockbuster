@@ -7,11 +7,18 @@ import java.util.List;
  * Frame chunk class
  *
  * This class is responsible for storing unfinished loading frames with
- * records.
+ * records from the client.
  */
 public class FrameChunk
 {
+    /**
+     * List of frame lists. The list to store them all...
+     */
     public List<List<Frame>> frames;
+
+    /**
+     * How much chunks this chunk should store.
+     */
     public int count;
 
     public FrameChunk(int count)
