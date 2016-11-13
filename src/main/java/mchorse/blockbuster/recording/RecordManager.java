@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +30,11 @@ public class RecordManager
      * Loaded records
      */
     public Map<String, Record> records = new HashMap<String, Record>();
+
+    /**
+     * Incomplete chunk frame only records (for recording big records)
+     */
+    public Map<String, FrameChunk> chunks = new HashMap<String, FrameChunk>();
 
     /**
      * Currently running record recorders (I have something to do about the
@@ -123,7 +129,7 @@ public class RecordManager
             File file = Utils.replayFile(filename);
 
             Record record = new Record(filename);
-            record.fromBytes(file);
+            record.load(file);
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
@@ -185,6 +191,7 @@ public class RecordManager
     public void reset()
     {
         this.records.clear();
+        this.chunks.clear();
         this.recorders.clear();
         this.players.clear();
     }

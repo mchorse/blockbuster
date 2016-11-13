@@ -35,6 +35,7 @@ import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
+import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
@@ -58,6 +59,7 @@ import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorReset;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFrames;
+import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
 import net.minecraft.entity.Entity;
@@ -129,6 +131,8 @@ public class Dispatcher
 
         register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
         register(PacketFramesLoad.class, ServerHandlerFrames.class, Side.SERVER);
+
+        register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
 
         register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
         register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);

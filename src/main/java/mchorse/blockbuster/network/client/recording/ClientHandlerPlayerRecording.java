@@ -1,11 +1,15 @@
 package mchorse.blockbuster.network.client.recording;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
-import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
+import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -35,10 +39,41 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         {
             Morphing.get(player).reset();
 
-            Record record = ClientProxy.manager.recorders.get(player).record;
-
-            Dispatcher.sendToServer(new PacketFramesLoad(record.filename, record.frames));
+            this.sendFrames(ClientProxy.manager.recorders.get(player).record);
             ClientProxy.manager.stopRecording(player, false);
+        }
+    }
+
+    /**
+     * Send frames to the server
+     *
+     * Send chunked frames to the server.
+     */
+    @SideOnly(Side.CLIENT)
+    private void sendFrames(Record record)
+    {
+        int cap = 100;
+        int length = record.getLength();
+
+        /* Send only one message if it's below 500 frames */
+        if (length < cap)
+        {
+            Dispatcher.sendToServer(new PacketFramesChunk(0, 1, record.filename, record.frames));
+
+            return;
+        }
+
+        /* Send chunked frames to the server */
+        for (int i = 0, c = (length / cap) + 1; i < c; i++)
+        {
+            List<Frame> frames = new ArrayList<Frame>();
+
+            for (int j = 0, d = length - i * cap > cap ? cap : (length % cap); j < d; j++)
+            {
+                frames.add(record.frames.get(j + i * cap));
+            }
+
+            Dispatcher.sendToServer(new PacketFramesChunk(i, c, record.filename, frames));
         }
     }
 }
