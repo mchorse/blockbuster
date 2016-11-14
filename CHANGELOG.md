@@ -50,6 +50,7 @@ Nope yet
 * Switched camera duration to tick units (`20` ticks per second)
 * Removed shadows for invisible actors (@NlL5)
 * Removed camera duration formatting (`s`, `m` and `h` suffixes are gone)
+* Renamed the "Undocumented Feature" to "Camera Marker."
 
 **Important**: camera and recording files from previous versions not supported by this update (I'm sorry, I'm really really bad at supporting formats). Next version will be less likely to break the format. Sorry... 
 
