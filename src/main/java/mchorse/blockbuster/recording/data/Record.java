@@ -16,8 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 /**
- * This class stores actions and frames states for a recording (to be playbacked
- * or while recording).
+ * This class stores actions and frames states for a recording (to be played
+ * back or while recording).
  *
  * There's two list arrays in this class, index in both of these arrays
  * represents the frame position (0 is first frame). Frames list is always
@@ -150,6 +150,8 @@ public class Record
             }
         }
 
+        actor.dismountRidingEntity();
+
         if (index != -1)
         {
             Frame frame = this.frames.get(index);
@@ -159,8 +161,6 @@ public class Record
                 actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
             }
         }
-
-        actor.dismountRidingEntity();
     }
 
     /**

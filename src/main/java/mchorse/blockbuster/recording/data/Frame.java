@@ -17,25 +17,31 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class Frame
 {
+    /* Position */
     public double x;
     public double y;
     public double z;
 
+    /* Rotation */
     public float yaw;
     public float yawHead;
     public float pitch;
 
+    /* Mount's data */
     public float mountYaw;
     public float mountPitch;
 
     public boolean isMounted;
 
+    /* Motion */
     public double motionX;
     public double motionY;
     public double motionZ;
 
+    /* Fall distance */
     public float fallDistance;
 
+    /* Entity flags */
     public boolean isAirBorne;
     public boolean isSneaking;
     public boolean isSprinting;
@@ -44,6 +50,9 @@ public class Frame
 
     /* Methods for retrieving/applying state data */
 
+    /**
+     * Set frame fields from player entity.
+     */
     public void fromPlayer(EntityPlayer player)
     {
         Entity mount = player.isRiding() ? player.getRidingEntity() : player;
@@ -82,6 +91,12 @@ public class Frame
         this.onGround = mount.onGround;
     }
 
+    /**
+     * Apply frame properties on actor. Different actions will be made
+     * depending on which side this method was invoked.
+     *
+     * Use second argument to force things to be .
+     */
     public void applyOnActor(EntityActor actor, boolean force)
     {
         Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
@@ -153,6 +168,10 @@ public class Frame
 
     /* Save/load frame instance */
 
+    /**
+     * Write frame data to an output stream. Used purely for data
+     * transportation over the network.
+     */
     public void toBytes(DataOutput out) throws IOException
     {
         out.writeFloat((float) this.x);
@@ -184,6 +203,10 @@ public class Frame
         out.writeBoolean(this.flyingElytra);
     }
 
+    /**
+     * Read frame data from input stream. Used purely for data transportation
+     * over the network.
+     */
     public void fromBytes(DataInput in) throws IOException
     {
         this.x = in.readFloat();
@@ -215,6 +238,13 @@ public class Frame
         this.flyingElytra = in.readBoolean();
     }
 
+    /**
+     * Write frame data to NBT tag. Used for saving the frame on the disk.
+     *
+     * This is probably going to be extracted in the future to support
+     * compatibility, but I don't really know since writing the data happens
+     * in one format, while reading is in different versions.
+     */
     public void toNBT(NBTTagCompound tag)
     {
         tag.setFloat("X", (float) this.x);
@@ -244,6 +274,11 @@ public class Frame
         tag.setBoolean("Ground", this.onGround);
     }
 
+    /**
+     * Read frame data from NBT tag. Used for loading frame from disk.
+     *
+     * This is going to be extracted in the future to support compatibility.
+     */
     public void fromNBT(NBTTagCompound tag)
     {
         this.x = tag.getFloat("X");
