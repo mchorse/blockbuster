@@ -5,6 +5,7 @@ import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -202,6 +203,9 @@ public class CameraControl
         fixture.applyFixture(0, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
         player.setVelocity(0, 0, 0);
+
+        CommandCamera.getControl().roll = angle.roll;
+        Minecraft.getMinecraft().gameSettings.fovSetting = angle.fov;
     }
 
     /**

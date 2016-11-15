@@ -6,6 +6,7 @@ import mchorse.blockbuster.camera.Point;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -63,5 +64,8 @@ public class SubCommandCameraGoto extends CommandBase
 
         profile.get(index).applyFixture(progress, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+
+        CommandCamera.getControl().roll = angle.roll;
+        Minecraft.getMinecraft().gameSettings.fovSetting = angle.fov;
     }
 }
