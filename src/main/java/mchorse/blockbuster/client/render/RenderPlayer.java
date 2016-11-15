@@ -7,10 +7,12 @@ import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -77,7 +79,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
      * This method is responsible for picking the right model and pose based
      * on player properties.
      */
-    protected void setupModel(EntityPlayer entity)
+    public void setupModel(EntityPlayer entity)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
         IMorphing capability = Morphing.get(entity);
@@ -137,5 +139,53 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
                 GlStateManager.rotate((float) (Math.signum(d3) * Math.acos(d2)) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
             }
         }
+    }
+
+    /**
+     * Render right hand
+     */
+    public void renderRightArm(EntityPlayer player)
+    {
+        Minecraft.getMinecraft().renderEngine.bindTexture(this.getEntityTexture(player));
+        this.mainModel.swingProgress = 0.0F;
+        this.mainModel.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
+
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+
+        for (ModelCustomRenderer arm : ((ModelCustom) this.mainModel).right)
+        {
+            arm.rotateAngleX = 0;
+            arm.rotationPointX = -6;
+            arm.rotationPointY = 13.8F - (arm.limb.size[1] > 8 ? arm.limb.size[1] : arm.limb.size[1] + 2);
+            arm.rotationPointZ = 0;
+            arm.render(0.0625F);
+        }
+
+        GlStateManager.disableBlend();
+    }
+
+    /**
+     * Render left hand
+     */
+    public void renderLeftArm(EntityPlayer player)
+    {
+        Minecraft.getMinecraft().renderEngine.bindTexture(this.getEntityTexture(player));
+        this.mainModel.swingProgress = 0.0F;
+        this.mainModel.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
+
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        GlStateManager.enableBlend();
+
+        for (ModelCustomRenderer arm : ((ModelCustom) this.mainModel).left)
+        {
+            arm.rotateAngleX = 0;
+            arm.rotationPointX = 6;
+            arm.rotationPointY = 13.8F - (arm.limb.size[1] > 8 ? arm.limb.size[1] : arm.limb.size[1] + 2F);
+            arm.rotationPointZ = 0;
+            arm.render(0.0625F);
+        }
+
+        GlStateManager.disableBlend();
     }
 }

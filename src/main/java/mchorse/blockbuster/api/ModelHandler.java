@@ -158,6 +158,8 @@ public class ModelHandler
      */
     private void updateSize(EntityPlayer player, float width, float height)
     {
+        player.eyeHeight = height * 0.9F;
+
         if (width != player.width || height != player.height)
         {
             float f = player.width;
@@ -165,7 +167,6 @@ public class ModelHandler
 
             player.width = width;
             player.height = height;
-            player.eyeHeight = height * 0.9F;
             player.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width));
 
             if (player.width > f && !player.worldObj.isRemote)
