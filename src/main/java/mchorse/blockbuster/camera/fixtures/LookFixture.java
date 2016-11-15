@@ -65,11 +65,14 @@ public class LookFixture extends IdleFixture
     @Override
     public void applyFixture(float progress, float partialTicks, Position pos)
     {
-        if (this.entity == null)
+        if (this.entity == null || this.entity.isDead)
         {
             this.tryFindingEntity();
 
-            return;
+            if (this.entity == null)
+            {
+                return;
+            }
         }
 
         double x = (this.entity.lastTickPosX + (this.entity.posX - this.entity.lastTickPosX) * partialTicks);

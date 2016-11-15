@@ -46,11 +46,14 @@ public class FollowFixture extends LookFixture
     @Override
     public void applyFixture(float progress, float partialTicks, Position pos)
     {
-        if (this.entity == null)
+        if (this.entity == null || this.entity.isDead)
         {
             this.tryFindingEntity();
 
-            return;
+            if (this.entity == null)
+            {
+                return;
+            }
         }
 
         float x = (float) (this.entity.lastTickPosX + (this.entity.posX - this.entity.lastTickPosX) * partialTicks);
