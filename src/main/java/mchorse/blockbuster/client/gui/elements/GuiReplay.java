@@ -14,14 +14,22 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
+import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,6 +70,7 @@ public class GuiReplay extends GuiScreen
     /* Buttons */
     private GuiButton detach;
     private GuiButton remove;
+    private GuiButton record;
     private GuiToggle invincible;
     private GuiToggle invisible;
 
@@ -122,6 +131,26 @@ public class GuiReplay extends GuiScreen
         {
             this.invisible.toggle();
         }
+        else if (button.id == 8)
+        {
+            this.sendRecordMessage();
+        }
+    }
+
+    /**
+     * Send record message to the player
+     */
+    private void sendRecordMessage()
+    {
+        EntityPlayer player = this.mc.thePlayer;
+        String command = "/action record " + this.filename.getText() + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
+
+        ITextComponent component = new TextComponentString("click here");
+        component.getStyle().setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
+        component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
+        component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
+
+        L10n.info(player, "recording.message", component);
     }
 
     /**
@@ -255,12 +284,14 @@ public class GuiReplay extends GuiScreen
         /* Buttons */
         this.remove = new GuiButton(2, this.width - margin - 100, margin + 25, 100, 20, I18n.format("blockbuster.gui.remove"));
         this.detach = new GuiButton(3, this.width - margin - 100, margin, 100, 20, I18n.format("blockbuster.gui.detach"));
+        this.record = new GuiButton(8, this.width - margin - 100, margin + 50, 100, 20, I18n.format("blockbuster.gui.record"));
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
         this.buttonList.add(this.remove);
         this.buttonList.add(this.detach);
+        this.buttonList.add(this.record);
         this.buttonList.add(this.invincible);
         this.buttonList.add(this.invisible);
 

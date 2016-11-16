@@ -11,6 +11,7 @@ blockbuster.gui:
     edit: Edit
     remove: Remove
     detach: Detach
+    record: Record
     
     # Director block GUI strings
     director:
