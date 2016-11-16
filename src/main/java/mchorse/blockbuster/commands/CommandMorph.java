@@ -68,7 +68,12 @@ public class CommandMorph extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, ClientProxy.actorPack.pack.getModels());
+            List<String> models = ClientProxy.actorPack.pack.getModels();
+
+            models.add(0, "alex");
+            models.add(0, "steve");
+
+            return getListOfStringsMatchingLastWord(args, models);
         }
         else if (args.length == 2)
         {
