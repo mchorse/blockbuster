@@ -18,6 +18,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderPlayer;
+import mchorse.blockbuster.client.render.RenderSubPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.commands.CommandMorph;
@@ -27,6 +28,7 @@ import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -139,6 +141,57 @@ public class ClientProxy extends CommonProxy
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandMorph());
+
+        this.substitutePlayerRenderers();
+    }
+
+    /**
+     * Substitute default player renders to get the ability to render the
+     * hand.
+     *
+     * Please, kids, don't do that at home. This was made by an expert in
+     * this field, so please, don't override skinMap the way I did. Don't break
+     * the compatibility with this mod.
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void substitutePlayerRenderers()
+    {
+        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+        Map<String, net.minecraft.client.renderer.entity.RenderPlayer> skins = null;
+
+        /* Iterate over all render manager fields and get access to skinMap */
+        for (Field field : manager.getClass().getDeclaredFields())
+        {
+            if (field.getType().equals(Map.class))
+            {
+                field.setAccessible(true);
+
+                try
+                {
+                    Map map = (Map) field.get(manager);
+
+                    if (map.get("default") instanceof net.minecraft.client.renderer.entity.RenderPlayer)
+                    {
+                        skins = map;
+
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        /* Replace player renderers with Blockbuster substitutes */
+        if (skins != null)
+        {
+            skins.put("slim", new RenderSubPlayer(manager, playerRender, true));
+            skins.put("default", new RenderSubPlayer(manager, playerRender, false));
+
+            System.out.println("Skin map renderers were successfully replaced with Blockbuster RenderSubPlayer substitutes!");
+        }
     }
 
     /**
