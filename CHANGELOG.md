@@ -12,6 +12,7 @@ The player recording code was almost rewritten from scratch and camera code was 
 Nope yet
 
 * Added actor spawn egg to Blockbuster tab
+* Added button "Record" which simplifies recording of ghost actors
 * Added camera tracking (server will remember which camera profile you had)
 * Added command `/model` with two sub-commands:
     * `/model export` – previously known as `/export-model`
