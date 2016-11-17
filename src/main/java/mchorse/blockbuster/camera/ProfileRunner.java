@@ -115,8 +115,11 @@ public class ProfileRunner
             this.mc.gameSettings.fovSetting = angle.fov;
             CommandCamera.getControl().roll = angle.roll;
 
+            /* Fighting with Optifine disappearing entities bug */
+            double y = point.y + Math.sin(progress) * 0.000000001 + 0.000000001;
+
             player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
-            player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+            player.setPositionAndRotation(point.x, y, point.z, angle.yaw, angle.pitch);
             player.motionX = player.motionY = player.motionZ = 0;
         }
     }
