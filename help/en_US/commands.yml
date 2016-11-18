@@ -47,9 +47,9 @@ blockbuster:
                     {r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[name]{r} of the actor, his {7}[model]{r} and {7}[skin]{r} and {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values).
             record: 
                 |
-                    {l}{6}/{r}action {8}record{r} {7}<filename>{r}
+                    {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
                     
-                    {r}Records an action from current player into given {7}<filename>{r}.
+                    {r}Records an action from current player into given {7}<filename>{r}. You can also optionally specify {7}[x]{f}, {7}[y]{f} and {7}[z]{f} coordinates of director block for which you want to record this recording. Supplying director block coordinates, helps out with synchronizing the actors.
             request: 
                 |
                     {l}{6}/{r}action {8}request{r} {7}<filename>{r}
