@@ -19,11 +19,13 @@ import net.minecraft.world.World;
 
 /**
  * Entity utilities
+ *
+ * Has some methods that relates to Minecraft entities.
  */
 public class EntityUtils
 {
     /**
-     * Get pose for entity states
+     * Get string pose key for entity state.
      */
     public static String poseForEntity(EntityLivingBase entity)
     {
