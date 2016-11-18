@@ -54,3 +54,23 @@ This playlist consists out of videos that I've created during Blockbuster mod te
 Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md) for more information about the license.
 
 Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). 
+
+## For Devs
+
+Language files have to be compiled from YML to INI format using PHP. You need to have PHP 5 and [composer installed](https://getcomposer.org/download/). Once when you have PHP and composer, run:
+
+```sh
+# Go to "php" folder
+cd php
+
+# Install PHP dependencies (I assumed you installed composer in the root of repository)
+../composer.phar install
+
+# Go back
+cd ..
+
+# Or "make check"
+make build_lang
+```
+
+This should compile YML files into language files. Also, you'll have to refresh Eclipse or your IDE to get the changed file get into the app. Simply open `en_US.lang` in IDE and build the project again.
