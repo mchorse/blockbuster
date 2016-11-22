@@ -21,7 +21,7 @@ import net.minecraft.world.World;
  * were removed in 1.1). These commands were merged together, because they had
  * similar signature and work with player recordings.
  *
- * In 1.3.1, this command was refactored into {@link SubCommandBase} command.
+ * In 1.4, this command was refactored into {@link SubCommandBase} command.
  */
 public class CommandAction extends SubCommandBase
 {

@@ -8,8 +8,10 @@ This is a big update that improves the quality of recording. Now you can use [Mi
 
 The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, now you can capture smooth high-quality machinimas with Minema!
 
-**Tutorial video** for 1.4:  
-Nope yet
+**Tutorial video** for 1.4: 
+<a href="https://youtu.be/EiNlOLCzc_s?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"> 
+    <img src="https://img.youtube.com/vi/EiNlOLCzc_s/0.jpg">
+</a>
 
 * Added actor spawn egg to Blockbuster tab
 * Added button "Record" which simplifies recording of ghost actors

@@ -9,7 +9,7 @@ crowd of body actors and cameras.
 
 Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2. Blockbuster mod is also provides build for 1.9.4, if it's possible, without changing the code.
 
-Recording code is based and refined on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
+Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
 ## Features
 
@@ -18,7 +18,7 @@ Blockbuster mod provides you with lots of features to make cool machinimas:
 * **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. 
 * **Director blocks** – one actor is good, a crowd of them is better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It has also outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
 * **Camera support** – camera is how you present your machinima. Blockbuster mod has a support for different camera features starting from simple idle camera to complex camera moves like paths (with FOV animation), following and looking at the actor.
-* **Custom models** – recording only player-like entities isn't fun. Blockbuster mod has support for custom models created in McME model editor (link above). Unleash your creativity with custom actor models!
+* **Custom models** – recording only player-like entities isn't very fun. Blockbuster mod has support for custom models created in McME model editor (link above). Unleash your creativity with custom models!
 * **[Minema](https://github.com/daipenger/minema) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to high-quality video output.
 
 ## Install
@@ -35,10 +35,10 @@ wrong.
 
 ### Tutorial video
 
-Tutorial videos for 1.3. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
+Tutorial videos for 1.4. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
 
-<a href="https://youtube.com/playlist?list=PL6UPd2Tj65nGxteZIdEE_fIga7_HoZJ9w">
-    <img src="https://img.youtube.com/vi/WXrBEQZrQ7Q/0.jpg">
+<a href="https://youtu.be/EiNlOLCzc_s?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"> 
+    <img src="https://img.youtube.com/vi/EiNlOLCzc_s/0.jpg">
 </a>
 
 ### Machinima Examples
@@ -51,9 +51,7 @@ This playlist consists out of videos that I've created during Blockbuster mod te
 
 ## License and Manual
 
-Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md) for more information about the license.
-
-Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). 
+Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md) for more information about the license. Manual is located in repository's [wiki](https://github.com/mchorse/blockbuster/wiki). 
 
 ## For Devs
 

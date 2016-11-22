@@ -1,13 +1,13 @@
 /**
  * <p>
  * This package used to be just a little bit refactored version of Mocap mod's
- * recording code, but since 1.3.1 update, this is no longer the same code it
+ * recording code, but since 1.4 update, this is no longer the same code it
  * used to be.
  * </p>
  *
  * <p>
  * Since I made enough changes to the source code, I think, I can count this
- * code fully as my own. In 1.3.1, I started from almost scratch: I removed
+ * code fully as my own. In 1.4, I started from almost scratch: I removed
  * record and play threads and rewrote the recording and playback code from
  * scratch. That's what I remember, git history might disagree with me.
  * </p>

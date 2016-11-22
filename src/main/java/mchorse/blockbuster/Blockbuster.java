@@ -43,7 +43,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *         Blockbuster mod</li>
  *     <li>daipenger for giving me consultation on how to make cameras and
  *         actors frame-based</li>
- * </ul
+ * </ul>
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
 public class Blockbuster
