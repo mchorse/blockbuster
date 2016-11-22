@@ -1,3 +1,5 @@
+
+// For those who want the bleeding edge
 buildscript {
     repositories {
         jcenter()
@@ -10,20 +12,14 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.4"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
-sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.6"
-}
-
 minecraft {
-    version = "1.10.2-12.18.1.2073"
+    version = "1.9.4-12.17.0.1976"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -56,6 +52,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
 }
 
 processResources
@@ -70,7 +67,7 @@ processResources
         include 'LICENSE.md'
         include 'CHANGELOG.md'
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
