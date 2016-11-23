@@ -47,7 +47,7 @@ public class DropAction extends Action
         final float PI = 3.1415927F;
 
         Frame frame = actor.playback.record.frames.get(actor.playback.tick);
-        ItemStack items = ItemStack.loadItemStackFromNBT(this.itemData);
+        ItemStack items = new ItemStack(this.itemData);
 
         EntityItem item = new EntityItem(actor.worldObj, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);
         Random rand = new Random();

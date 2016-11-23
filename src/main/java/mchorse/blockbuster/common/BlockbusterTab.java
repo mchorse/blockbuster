@@ -6,6 +6,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,9 +27,9 @@ public class BlockbusterTab extends CreativeTabs
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Item getTabIconItem()
+    public ItemStack getTabIconItem()
     {
-        return Item.getItemFromBlock(Blockbuster.directorBlock);
+        return new ItemStack(Item.getItemFromBlock(Blockbuster.directorBlock));
     }
 
     /**
@@ -35,12 +37,12 @@ public class BlockbusterTab extends CreativeTabs
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(java.util.List<net.minecraft.item.ItemStack> items)
+    public void displayAllRelevantItems(NonNullList<ItemStack> items)
     {
         super.displayAllRelevantItems(items);
 
         ItemStack stack = new ItemStack(Items.SPAWN_EGG);
-        ItemMonsterPlacer.applyEntityIdToItemStack(stack, "blockbuster.Actor");
+        ItemMonsterPlacer.applyEntityIdToItemStack(stack, new ResourceLocation("blockbuster", "Actor"));
 
         items.add(stack);
     }

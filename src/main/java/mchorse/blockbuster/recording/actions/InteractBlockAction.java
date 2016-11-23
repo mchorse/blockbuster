@@ -9,7 +9,6 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
@@ -59,7 +58,7 @@ public class InteractBlockAction extends Action
         actor.fakePlayer.rotationYaw = frame.yaw;
         actor.fakePlayer.rotationPitch = frame.pitch;
 
-        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

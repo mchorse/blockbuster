@@ -319,17 +319,21 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * skin, or start recording him
      */
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
+    protected boolean processInteract(EntityPlayer player, EnumHand hand)
     {
-        ItemStack item = player.getHeldItemMainhand();
+        ItemStack item = player.getHeldItem(hand);
+        boolean empty = item.func_190926_b();
 
-        if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
+        if (!empty && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
         {
             return true;
         }
-        else if (item == null)
+        else if (empty)
         {
-            if (!this.worldObj.isRemote) this.startRecording(player);
+            if (!this.worldObj.isRemote)
+            {
+                this.startRecording(player);
+            }
 
             return true;
         }

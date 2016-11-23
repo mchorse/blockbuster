@@ -56,11 +56,11 @@ public class EquipAction extends Action
 
         if (this.armorId == -1)
         {
-            actor.setItemStackToSlot(slot, null);
+            actor.setItemStackToSlot(slot, ItemStack.field_190927_a);
         }
         else
         {
-            actor.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(this.itemData));
+            actor.setItemStackToSlot(slot, new ItemStack(this.itemData));
         }
     }
 

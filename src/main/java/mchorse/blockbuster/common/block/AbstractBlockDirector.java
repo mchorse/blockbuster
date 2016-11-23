@@ -109,11 +109,11 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     /* Player interaction */
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY)
     {
-        ItemStack item = playerIn.getHeldItemMainhand();
+        ItemStack item = playerIn.getHeldItem(hand);
 
-        if (item != null && this.handleItem(item, worldIn, pos, playerIn))
+        if (!item.func_190926_b() && this.handleItem(item, worldIn, pos, playerIn))
         {
             return true;
         }

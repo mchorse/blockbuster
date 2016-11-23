@@ -101,8 +101,10 @@ public class ItemPlayback extends Item
      * director block is attached to this item stack).
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand handIn)
     {
+        ItemStack stack = player.getHeldItem(handIn);
+
         if (!worldIn.isRemote)
         {
             BlockPos pos = getBlockPos("Dir", stack);

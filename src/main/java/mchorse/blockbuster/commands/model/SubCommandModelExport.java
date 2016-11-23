@@ -23,6 +23,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -61,7 +62,7 @@ public class SubCommandModelExport extends CommandBase
 
         /* Gather needed elements for exporter class */
         String type = args[0];
-        Entity entity = EntityList.createEntityByName(type, sender.getEntityWorld());
+        Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(type), sender.getEntityWorld());
         Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))

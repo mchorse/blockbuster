@@ -15,6 +15,7 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -171,7 +172,7 @@ public class ModelHandler
 
             if (player.width > f && !player.worldObj.isRemote)
             {
-                player.moveEntity(f - player.width, 0.0D, f - player.width);
+                player.moveEntity(MoverType.SELF, f - player.width, 0.0D, f - player.width);
             }
         }
     }

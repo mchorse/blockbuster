@@ -47,7 +47,7 @@ public class PlayerTracker
     {
         for (int i = 1; i < 5; i++)
         {
-            this.trackItemToSlot(player.inventory.armorInventory[i - 1], i);
+            this.trackItemToSlot(player.inventory.armorInventory.get(i - 1), i);
         }
     }
 
@@ -73,7 +73,7 @@ public class PlayerTracker
      */
     private boolean trackItemToSlot(ItemStack item, int slot)
     {
-        if (item != null)
+        if (!item.func_190926_b())
         {
             int id = Item.getIdFromItem(item.getItem());
 

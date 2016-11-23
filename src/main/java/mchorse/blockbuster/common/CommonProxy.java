@@ -26,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
@@ -96,10 +97,13 @@ public class CommonProxy
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
 
         /* Blocks */
-        this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
+        Block director = new BlockDirector();
+
+        GameRegistry.register(Blockbuster.directorBlock = director);
+        GameRegistry.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         /* Entities */
-        this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
+        this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster", "Actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
@@ -152,15 +156,6 @@ public class CommonProxy
     }
 
     /**
-     * Register block (and also add register an item for the block)
-     */
-    protected void registerBlock(Block block)
-    {
-        GameRegistry.register(block);
-        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-    }
-
-    /**
      * Thanks to animal bikes mod for this wonderful example! Kids, wanna learn
      * how to mod minecraft with forge? That's simple. Find mods for specific
      * minecraft version and decompile the .jar files with JD-GUI. Isn't that
@@ -168,8 +163,8 @@ public class CommonProxy
      *
      * Or go to minecraft(forge/forum) and ask people to help you #smartass
      */
-    protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
+    protected void registerEntityWithEgg(Class<? extends Entity> entity, ResourceLocation id, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 96, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(id, entity, name, this.ID++, Blockbuster.instance, 96, 3, false, primary, secondary);
     }
 }

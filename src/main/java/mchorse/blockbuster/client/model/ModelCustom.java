@@ -132,7 +132,7 @@ public class ModelCustom extends ModelBase
                 EntityLivingBase entity = (EntityLivingBase) entityIn;
                 ItemStack stack = limb.limb.holding.equals("right") ? entity.getHeldItemMainhand() : entity.getHeldItemOffhand();
 
-                if (stack != null)
+                if (!stack.func_190926_b())
                 {
                     limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
                 }
