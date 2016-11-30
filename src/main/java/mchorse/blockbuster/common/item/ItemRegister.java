@@ -3,11 +3,11 @@ package mchorse.blockbuster.common.item;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Register item
@@ -19,7 +19,7 @@ public class ItemRegister extends Item
     public ItemRegister()
     {
         this.setMaxStackSize(1);
-        this.setRegistryName("register");
+        this.setTextureName("blockbuster:register");
         this.setUnlocalizedName("blockbuster.register");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
@@ -41,7 +41,7 @@ public class ItemRegister extends Item
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.register"));
 

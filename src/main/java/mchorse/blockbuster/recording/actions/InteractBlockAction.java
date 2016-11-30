@@ -7,11 +7,9 @@ import java.io.IOException;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
-import net.minecraft.block.state.IBlockState;
+import mchorse.blockbuster.utils.BlockPos;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Interact block action
@@ -43,10 +41,10 @@ public class InteractBlockAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        IBlockState state = actor.worldObj.getBlockState(this.pos);
+        Block state = actor.worldObj.getBlock(this.pos.x, this.pos.y, this.pos.z);
 
         /* Black listed block */
-        if (state.getBlock() instanceof BlockDirector)
+        if (state instanceof BlockDirector)
         {
             return;
         }
@@ -59,7 +57,7 @@ public class InteractBlockAction extends Action
         actor.fakePlayer.rotationYaw = frame.yaw;
         actor.fakePlayer.rotationPitch = frame.pitch;
 
-        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        state.onBlockActivated(actor.worldObj, this.pos.x, this.pos.y, this.pos.z, actor.fakePlayer, 0, 0.0F, 0.0F, 0.0F);
     }
 
     @Override

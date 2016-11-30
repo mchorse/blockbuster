@@ -6,7 +6,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,26 +51,14 @@ public class EquipAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);
-
         if (this.armorId == -1)
         {
-            actor.setItemStackToSlot(slot, null);
+            actor.setCurrentItemOrArmor(this.armorSlot, null);
         }
         else
         {
-            actor.setItemStackToSlot(slot, ItemStack.loadItemStackFromNBT(this.itemData));
+            actor.setCurrentItemOrArmor(this.armorSlot, ItemStack.loadItemStackFromNBT(this.itemData));
         }
-    }
-
-    private EntityEquipmentSlot getSlotByIndex(int index)
-    {
-        for (EntityEquipmentSlot slot : EntityEquipmentSlot.values())
-        {
-            if (slot.getSlotIndex() == index) return slot;
-        }
-
-        return null;
     }
 
     @Override

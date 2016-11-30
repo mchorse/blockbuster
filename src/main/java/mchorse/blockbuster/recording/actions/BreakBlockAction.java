@@ -1,7 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.common.entity.EntityActor;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.utils.BlockPos;
 
 /**
  * Breaking block action
@@ -27,6 +27,6 @@ public class BreakBlockAction extends InteractBlockAction
     @Override
     public void apply(EntityActor actor)
     {
-        actor.worldObj.destroyBlock(this.pos, false);
+        actor.worldObj.setBlock(this.pos.x, this.pos.y, this.pos.z, null);
     }
 }

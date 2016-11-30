@@ -1,14 +1,14 @@
 package mchorse.blockbuster.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.utils.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Recording GUI overlay
@@ -58,7 +58,7 @@ public class GuiRecordingOverlay extends Gui
             return;
         }
 
-        FontRenderer font = this.mc.fontRendererObj;
+        FontRenderer font = this.mc.fontRenderer;
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 

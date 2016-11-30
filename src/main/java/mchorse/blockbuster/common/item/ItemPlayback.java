@@ -7,6 +7,7 @@ import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
+import mchorse.blockbuster.utils.BlockPos;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
@@ -16,10 +17,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -58,17 +55,13 @@ public class ItemPlayback extends Item
     public ItemPlayback()
     {
         this.setMaxStackSize(1);
-        this.setRegistryName("playback");
+        this.setTextureName("blockbuster:playback");
         this.setUnlocalizedName("blockbuster.playback");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
-    /**
-     * Adds information about camera profile and the location of director block
-     * to which it's attached
-     */
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.playback_button"));
 
@@ -101,32 +94,32 @@ public class ItemPlayback extends Item
      * director block is attached to this item stack).
      */
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer player, EnumHand hand)
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        if (!worldIn.isRemote)
+        if (!world.isRemote)
         {
             BlockPos pos = getBlockPos("Dir", stack);
             NBTTagCompound tag = stack.getTagCompound();
 
             if (pos == null || tag == null)
             {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
+                return stack;
             }
 
             if (player.isSneaking())
             {
                 player.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+                return stack;
             }
 
-            TileEntity tile = worldIn.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 
             if (tile == null || !(tile instanceof AbstractTileEntityDirector))
             {
                 L10n.error(player, "director.missing", pos.getX(), pos.getY(), pos.getZ());
 
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
+                return stack;
             }
 
             AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
@@ -144,6 +137,6 @@ public class ItemPlayback extends Item
             }
         }
 
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+        return stack;
     }
 }

@@ -1,7 +1,6 @@
 package mchorse.blockbuster.utils;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * NBT utilities

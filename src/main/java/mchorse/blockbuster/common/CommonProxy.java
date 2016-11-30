@@ -1,17 +1,17 @@
+
 package mchorse.blockbuster.common;
 
 import java.io.File;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.capabilities.CapabilityHandler;
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
-import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
-import mchorse.blockbuster.capabilities.recording.IRecording;
-import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
@@ -25,15 +25,8 @@ import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Common proxy
@@ -91,22 +84,18 @@ public class CommonProxy
         Blockbuster.blockbusterTab = new BlockbusterTab();
 
         /* Items */
-        this.registerItem(Blockbuster.registerItem = new ItemRegister());
-        this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
-        this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
+        this.registerItem(Blockbuster.registerItem = new ItemRegister(), "register");
+        this.registerItem(Blockbuster.playbackItem = new ItemPlayback(), "playback");
+        this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig(), "actor_config");
 
         /* Blocks */
-        this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
+        this.registerBlock(Blockbuster.directorBlock = new BlockDirector(), "director");
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
-
-        /* Capabilities */
-        CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
-        CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
     }
 
     /**
@@ -118,9 +107,11 @@ public class CommonProxy
         this.models = new ModelHandler();
         this.loadModels(this.getPack());
 
+        ActionHandler handler = new ActionHandler();
+
         MinecraftForge.EVENT_BUS.register(this.models);
-        MinecraftForge.EVENT_BUS.register(new ActionHandler());
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+        MinecraftForge.EVENT_BUS.register(handler);
+        FMLCommonHandler.instance().bus().register(handler);
     }
 
     /**
@@ -146,18 +137,17 @@ public class CommonProxy
     /**
      * Register an item with Forge's game registry
      */
-    protected void registerItem(Item item)
+    protected void registerItem(Item item, String name)
     {
-        GameRegistry.register(item);
+        GameRegistry.registerItem(item, name, Blockbuster.MODID);
     }
 
     /**
      * Register block (and also add register an item for the block)
      */
-    protected void registerBlock(Block block)
+    protected void registerBlock(Block block, String name)
     {
-        GameRegistry.register(block);
-        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+        GameRegistry.registerBlock(block, name);
     }
 
     /**
@@ -170,6 +160,7 @@ public class CommonProxy
      */
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 96, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(entity, name, this.ID, Blockbuster.instance, 96, 3, false);
+        EntityRegistry.registerGlobalEntityID(entity, name, this.ID++, primary, secondary);
     }
 }

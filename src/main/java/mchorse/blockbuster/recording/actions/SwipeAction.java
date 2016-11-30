@@ -1,7 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.common.entity.EntityActor;
-import net.minecraft.util.EnumHand;
 
 /**
  * Swipe action
@@ -22,6 +21,6 @@ public class SwipeAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        actor.swingArm(EnumHand.MAIN_HAND);
+        actor.swingItem();
     }
 }

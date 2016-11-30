@@ -56,13 +56,9 @@ public class PlayerTracker
      */
     private void trackHeldItem(EntityPlayer player)
     {
-        ItemStack mainhand = player.getHeldItemMainhand();
-        ItemStack offhand = player.getHeldItemOffhand();
+        ItemStack mainhand = player.getHeldItem();
 
-        if (!this.trackItemToSlot(mainhand, 0))
-        {
-            this.trackItemToSlot(offhand, 5);
-        }
+        this.trackItemToSlot(mainhand, 0);
     }
 
     /**

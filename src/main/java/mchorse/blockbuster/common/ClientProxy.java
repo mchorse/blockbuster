@@ -5,7 +5,13 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.Blockbuster;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.camera.ProfileRunner;
@@ -17,30 +23,17 @@ import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
-import mchorse.blockbuster.client.render.RenderPlayer;
-import mchorse.blockbuster.client.render.RenderSubPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandModel;
-import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.item.Item;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client proxy
@@ -71,16 +64,8 @@ public class ClientProxy extends CommonProxy
     {
         super.preLoad(event);
 
-        /* Items */
-        this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
-        this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
-        this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
-
-        /* Blocks */
-        this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
-
         /* Entities */
-        this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
+        this.registerEntityRender(EntityActor.class, new RenderActor(0.5F));
 
         this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
     }
@@ -129,69 +114,18 @@ public class ClientProxy extends CommonProxy
         Minecraft mc = Minecraft.getMinecraft();
 
         recordingOverlay = new GuiRecordingOverlay(mc);
-        playerRender = new RenderPlayer(mc.getRenderManager(), 0.5F);
 
         /* Event listeners */
-        MinecraftForge.EVENT_BUS.register(new FrameHandler());
+        FMLCommonHandler.instance().bus().register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
-        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay, playerRender));
+        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
         MinecraftForge.EVENT_BUS.register(profileRenderer);
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
-        ClientCommandHandler.instance.registerCommand(new CommandMorph());
 
-        this.substitutePlayerRenderers();
-    }
-
-    /**
-     * Substitute default player renders to get the ability to render the
-     * hand.
-     *
-     * Please, kids, don't do that at home. This was made by an expert in
-     * this field, so please, don't override skinMap the way I did. Don't break
-     * the compatibility with this mod.
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void substitutePlayerRenderers()
-    {
-        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
-        Map<String, net.minecraft.client.renderer.entity.RenderPlayer> skins = null;
-
-        /* Iterate over all render manager fields and get access to skinMap */
-        for (Field field : manager.getClass().getDeclaredFields())
-        {
-            if (field.getType().equals(Map.class))
-            {
-                field.setAccessible(true);
-
-                try
-                {
-                    Map map = (Map) field.get(manager);
-
-                    if (map.get("default") instanceof net.minecraft.client.renderer.entity.RenderPlayer)
-                    {
-                        skins = map;
-
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        /* Replace player renderers with Blockbuster substitutes */
-        if (skins != null)
-        {
-            skins.put("slim", new RenderSubPlayer(manager, playerRender, true));
-            skins.put("default", new RenderSubPlayer(manager, playerRender, false));
-
-            System.out.println("Skin map renderers were successfully replaced with Blockbuster RenderSubPlayer substitutes!");
-        }
+        System.out.println("Hello, ClientProxy!");
     }
 
     /**
@@ -225,19 +159,9 @@ public class ClientProxy extends CommonProxy
         return pack;
     }
 
-    protected void registerItemModel(Block block, String path)
-    {
-        this.registerItemModel(Item.getItemFromBlock(block), path);
-    }
-
-    protected void registerItemModel(Item item, String path)
-    {
-        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(path, "inventory"));
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void registerEntityRender(Class eclass, IRenderFactory factory)
+    protected void registerEntityRender(Class eclass, Render render)
     {
-        RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
+        RenderingRegistry.registerEntityRenderingHandler(eclass, render);
     }
 }

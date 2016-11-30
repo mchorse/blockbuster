@@ -150,7 +150,7 @@ public class Record
             }
         }
 
-        actor.dismountRidingEntity();
+        actor.dismountEntity(actor.ridingEntity);
 
         if (index != -1)
         {
@@ -158,7 +158,7 @@ public class Record
 
             if (frame != null)
             {
-                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+                actor.ridingEntity.setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
             }
         }
     }

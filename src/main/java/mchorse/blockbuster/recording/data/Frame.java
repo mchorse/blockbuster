@@ -55,7 +55,7 @@ public class Frame
      */
     public void fromPlayer(EntityPlayer player)
     {
-        Entity mount = player.isRiding() ? player.getRidingEntity() : player;
+        Entity mount = player.isRiding() ? player.ridingEntity : player;
 
         /* Position and rotation */
         this.x = mount.posX;
@@ -85,7 +85,6 @@ public class Frame
         /* States */
         this.isSprinting = mount.isSprinting();
         this.isSneaking = player.isSneaking();
-        this.flyingElytra = player.isElytraFlying();
 
         this.isAirBorne = mount.isAirBorne;
         this.onGround = mount.onGround;
@@ -99,7 +98,7 @@ public class Frame
      */
     public void applyOnActor(EntityActor actor, boolean force)
     {
-        Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
+        Entity mount = actor.isRiding() ? actor.ridingEntity : actor;
 
         boolean isRemote = actor.worldObj.isRemote;
 

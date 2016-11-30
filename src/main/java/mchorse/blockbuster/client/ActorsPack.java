@@ -10,13 +10,13 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.api.ModelPack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.data.MetadataSerializer;
+import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actors pack
@@ -103,6 +103,16 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
+     * I don't think that my actor resources pack should have an icon. However
+     * that icon would look really badass/sexy.
+     */
+    @Override
+    public BufferedImage getPackImage() throws IOException
+    {
+        return null;
+    }
+
+    /**
      * Get pack metadata
      *
      * This method is returns null, because it isn't an actual resource pack, but
@@ -113,18 +123,9 @@ public class ActorsPack implements IResourcePack
      * Seems legit to me.
      */
     @Override
-    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
+    public IMetadataSection getPackMetadata(IMetadataSerializer p_135058_1_, String p_135058_2_) throws IOException
     {
-        return null;
-    }
-
-    /**
-     * I don't think that my actor resources pack should have an icon. However
-     * that icon would look really badass/sexy.
-     */
-    @Override
-    public BufferedImage getPackImage() throws IOException
-    {
+        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -2,6 +2,8 @@ package mchorse.blockbuster.common.entity;
 
 import com.mojang.authlib.GameProfile;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
@@ -18,26 +20,22 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.utils.BlockPos;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.RLUtils;
-import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 /**
  * Actor entity class
@@ -109,19 +107,23 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super(worldIn);
 
-        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_420_xXx"))
+        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Gamer_420_xXx"))
         {
             @Override
-            public boolean isSpectator()
+            public ChunkCoordinates getPlayerCoordinates()
+            {
+                return null;
+            }
+
+            @Override
+            public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_)
             {
                 return false;
             }
 
             @Override
-            public boolean isCreative()
-            {
-                return false;
-            }
+            public void addChatMessage(IChatComponent p_145747_1_)
+            {}
         };
     }
 
@@ -175,7 +177,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
         else
         {
-            pose = this.isElytraFlying() ? this.flying : (this.isSneaking() ? this.sneaking : this.standing);
+            pose = this.isSneaking() ? this.sneaking : this.standing;
         }
 
         this.setSize(pose[0], pose[1]);
@@ -216,14 +218,20 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
         {
-            double d0 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
-            double d1 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
-            double d2 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+            double d0 = this.posX + (this.newPosX - this.posX) / this.newPosRotationIncrements;
+            double d1 = this.posY + (this.newPosY - this.posY) / this.newPosRotationIncrements;
+            double d2 = this.posZ + (this.newPosZ - this.posZ) / this.newPosRotationIncrements;
+            double d3 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - this.rotationYaw);
 
-            this.newPosRotationIncrements--;
+            this.rotationYaw = (float) (this.rotationYaw + d3 / this.newPosRotationIncrements);
+            this.rotationPitch = (float) (this.rotationPitch + (this.newRotationPitch - this.rotationPitch) / this.newPosRotationIncrements);
+
             this.setPosition(d0, d1, d2);
+            this.setRotation(this.rotationYaw, this.rotationPitch);
+
+            --this.newPosRotationIncrements;
         }
-        else if (!this.isServerWorld())
+        else if (this.worldObj.isRemote)
         {
             this.motionX *= 0.98D;
             this.motionY *= 0.98D;
@@ -260,54 +268,16 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (!this.worldObj.isRemote && !this.dead)
         {
-            for (EntityItem entityitem : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
+            for (Object object : this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D)))
             {
-                if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
+                EntityItem item = (EntityItem) object;
+
+                if (!item.isDead && item.getEntityItem() != null && item.delayBeforeCanPickup == 0)
                 {
-                    entityitem.setDead();
+                    item.setDead();
                 }
             }
         }
-    }
-
-    /**
-     * Roll back to {@link EntityLivingBase}'s updateDistance methods.
-     *
-     * Its implementation supports much superior renderYawOffset animation.
-     * Well, at least that's what I think. I should check out
-     * {@link EntityBodyHelper} before making final decision.
-    */
-    @Override
-    protected float updateDistance(float f2, float f3)
-    {
-        float f = MathHelper.wrapDegrees(f2 - this.renderYawOffset);
-        this.renderYawOffset += f * 0.3F;
-        float f1 = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
-        boolean flag = f1 < -90.0F || f1 >= 90.0F;
-
-        if (f1 < -75.0F)
-        {
-            f1 = -75.0F;
-        }
-
-        if (f1 >= 75.0F)
-        {
-            f1 = 75.0F;
-        }
-
-        this.renderYawOffset = this.rotationYaw - f1;
-
-        if (f1 * f1 > 2500.0F)
-        {
-            this.renderYawOffset += f1 * 0.2F;
-        }
-
-        if (flag)
-        {
-            f3 *= -1.0F;
-        }
-
-        return f3;
     }
 
     /* Processing interaction with player */
@@ -319,9 +289,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * skin, or start recording him
      */
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack)
+    protected boolean interact(EntityPlayer player)
     {
-        ItemStack item = player.getHeldItemMainhand();
+        ItemStack item = player.getHeldItem();
 
         if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
         {
@@ -356,7 +326,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 return false;
             }
 
-            TileEntity tile = this.worldObj.getTileEntity(pos);
+            TileEntity tile = this.worldObj.getTileEntity(pos.x, pos.y, pos.z);
 
             if (tile != null && tile instanceof TileEntityDirector)
             {
@@ -428,7 +398,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (this.directorBlock == null) return;
 
-        TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
+        TileEntity tile = player.worldObj.getTileEntity(this.directorBlock.x, this.directorBlock.y, this.directorBlock.z);
 
         if (tile != null && tile instanceof TileEntityDirector)
         {
@@ -546,9 +516,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             buffer.writeByte(this.playback.recordDelay);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
         }
-
-        /* What a shame, Mojang, why do I need to synchronize your shit?! */
-        buffer.writeBoolean(this.isEntityInvulnerable(DamageSource.anvil));
     }
 
     @Override
@@ -582,7 +549,5 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 this.playback.recordDelay = delay;
             }
         }
-
-        this.setEntityInvulnerable(buffer.readBoolean());
     }
 }

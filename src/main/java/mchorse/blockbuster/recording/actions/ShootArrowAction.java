@@ -6,9 +6,10 @@ import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
-import net.minecraft.entity.projectile.EntityTippedArrow;
-import net.minecraft.item.ItemBow;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -45,11 +46,39 @@ public class ShootArrowAction extends Action
         World world = actor.worldObj;
         Frame frame = actor.playback.record.frames.get(actor.playback.tick);
 
-        EntityTippedArrow arrow = new EntityTippedArrow(world, actor);
-        float f = ItemBow.getArrowVelocity(this.charge);
+        float f = this.getArrowVelocity(this.charge);
+        EntityArrow arrow = new EntityArrow(world, actor, this.charge);
 
-        arrow.setAim(actor, frame.pitch, frame.yaw, 0.0F, f * 3.0F, 1.0F);
+        this.setAim(arrow, actor, frame.pitch, frame.yaw, 0.0F, f * 3.0F, 1.0F);
         world.spawnEntityInWorld(arrow);
+    }
+
+    private void setAim(EntityArrow arrow, Entity entity, float pitch, float yaw, float something, float velocity, float inaccuracy)
+    {
+        float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        float f1 = -MathHelper.sin(pitch * 0.017453292F);
+        float f2 = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+        arrow.setThrowableHeading(f, f1, f2, velocity, inaccuracy);
+        arrow.motionX += entity.motionX;
+        arrow.motionZ += entity.motionZ;
+
+        if (!entity.onGround)
+        {
+            arrow.motionY += entity.motionY;
+        }
+    }
+
+    private float getArrowVelocity(int charge)
+    {
+        float f = charge / 20.0F;
+        f = (f * f + f * 2.0F) / 3.0F;
+
+        if (f > 1.0F)
+        {
+            f = 1.0F;
+        }
+
+        return f;
     }
 
     @Override

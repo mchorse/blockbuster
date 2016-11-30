@@ -1,15 +1,13 @@
 package mchorse.blockbuster.client.gui.widgets;
 
-import java.io.IOException;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
 
 /**
  * Abstract class for scrolling elements.
@@ -84,7 +82,7 @@ public abstract class GuiScrollPane extends GuiScreen
     /* Remapping buttons coordinates */
 
     @Override
-    public void handleMouseInput() throws IOException
+    public void handleMouseInput()
     {
         super.handleMouseInput();
         int i = -Mouse.getEventDWheel();
@@ -96,7 +94,7 @@ public abstract class GuiScrollPane extends GuiScreen
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (mouseY < this.y || mouseY > this.y + this.h) return;
 
@@ -112,13 +110,16 @@ public abstract class GuiScrollPane extends GuiScreen
     }
 
     @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state)
+    protected void mouseMovedOrUp(int mouseX, int mouseY, int which)
     {
-        this.dragging = false;
+        if (which == 0)
+        {
+            this.dragging = false;
 
-        if (mouseY < this.y || mouseY > this.y + this.h) return;
+            if (mouseY < this.y || mouseY > this.y + this.h) return;
+        }
 
-        super.mouseReleased(mouseX, mouseY + this.scrollY, state);
+        super.mouseMovedOrUp(mouseX, mouseY, which);
     }
 
     /* Drawing methods */

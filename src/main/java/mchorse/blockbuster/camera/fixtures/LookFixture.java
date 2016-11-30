@@ -45,7 +45,8 @@ public class LookFixture extends IdleFixture
     {
         super.edit(args, player);
 
-        Entity target = EntityUtils.getTargetEntity(player);
+        /* TODO: implment back */
+        Entity target = null;
 
         if (this.entity == null && target == null)
         {

@@ -11,19 +11,12 @@ import org.apache.commons.io.FileUtils;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
-import mchorse.blockbuster.utils.EntityUtils;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.AxisAlignedBB;
 
 /**
  * This class responsible for storing domain custom models and sending models to
@@ -122,60 +115,6 @@ public class ModelHandler
         if (Blockbuster.proxy.config.load_models_on_login)
         {
             ServerHandlerRequestModels.sendModels(this, player);
-        }
-    }
-
-    /**
-     * On player tick, we have to change AABB box based on the size current's
-     * morph pose
-     */
-    @SubscribeEvent
-    public void onPlayerTick(PlayerTickEvent event)
-    {
-        if (event.phase == Phase.START) return;
-
-        EntityPlayer player = event.player;
-        IMorphing cap = Morphing.get(player);
-        Model data = this.models.get(cap.getModel());
-
-        if (data == null)
-        {
-            /* Restore default eye height */
-            player.eyeHeight = player.getDefaultEyeHeight();
-
-            return;
-        }
-
-        float[] pose = data.getPose(EntityUtils.poseForEntity(player)).size;
-
-        this.updateSize(player, pose[0], pose[1]);
-    }
-
-    /**
-     * Update size of the player with given widht and height
-     *
-     * Taken from {@link EntityPlayer}
-     */
-    private void updateSize(EntityPlayer player, float width, float height)
-    {
-        player.eyeHeight = height * 0.9F;
-
-        if (width != player.width || height != player.height)
-        {
-            float f = player.width;
-            AxisAlignedBB aabb = player.boundingBox;
-
-            player.width = width;
-            player.height = height;
-
-            aabb.maxX = aabb.minX + width;
-            aabb.maxY = aabb.minY + height;
-            aabb.maxZ = aabb.minZ + width;
-
-            if (player.width > f && !player.worldObj.isRemote)
-            {
-                player.moveEntity(f - player.width, 0.0D, f - player.width);
-            }
         }
     }
 }

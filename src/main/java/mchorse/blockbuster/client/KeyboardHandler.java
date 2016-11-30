@@ -2,6 +2,13 @@ package mchorse.blockbuster.client;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.Position;
@@ -19,13 +26,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Separate event handler for keyboard events
@@ -189,7 +189,7 @@ public class KeyboardHandler
         }
         catch (CommandException e)
         {
-            L10n.error(player, e.getMessage(), e.getErrorObjects());
+            L10n.error(player, e.getMessage(), e.getErrorOjbects());
         }
     }
 
@@ -238,11 +238,11 @@ public class KeyboardHandler
         /* Duration management */
         int step = Blockbuster.proxy.config.camera_duration_step;
 
-        if (this.increaseDuration.isKeyDown())
+        if (this.increaseDuration.isPressed())
         {
             control.addDuration(step);
         }
-        else if (this.reduceDuration.isKeyDown())
+        else if (this.reduceDuration.isPressed())
         {
             control.addDuration(-step);
         }
@@ -322,20 +322,11 @@ public class KeyboardHandler
     {
         CameraControl control = CommandCamera.getControl();
 
-        if (this.addRoll.isKeyDown())
-        {
-            control.addRoll(1.0F);
-        }
-        else if (this.reduceRoll.isKeyDown())
-        {
-            control.addRoll(-1.0F);
-        }
-
-        if (this.addFov.isKeyDown())
+        if (Keyboard.isKeyDown(this.addFov.getKeyCode()))
         {
             Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
         }
-        else if (this.reduceFov.isKeyDown())
+        else if (Keyboard.isKeyDown(this.reduceFov.getKeyCode()))
         {
             Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
         }

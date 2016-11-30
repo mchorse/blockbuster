@@ -4,13 +4,12 @@ import java.util.UUID;
 
 import com.google.common.base.Objects;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Replay domain object
@@ -47,7 +46,6 @@ public class Replay
     public void apply(EntityActor actor)
     {
         actor.setCustomNameTag(this.name);
-        actor.setEntityInvulnerable(this.invincible);
 
         actor.model = this.model;
         actor.skin = this.skin;
@@ -60,7 +58,7 @@ public class Replay
     public void copy(EntityActor actor)
     {
         this.name = actor.getCustomNameTag();
-        this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
+        this.invincible = actor.isEntityInvulnerable();
 
         this.model = actor.model;
         this.skin = actor.skin;

@@ -1,8 +1,9 @@
 package mchorse.blockbuster.client.gui.elements;
 
-import java.io.IOException;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
@@ -14,6 +15,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
+import mchorse.blockbuster.utils.BlockPos;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.Minecraft;
@@ -22,16 +24,13 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.ClickEvent.Action;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.ClickEvent.Action;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Subview in director block GUI
@@ -112,7 +111,7 @@ public class GuiReplay extends GuiScreen
     /* Actions */
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
+    protected void actionPerformed(GuiButton button)
     {
         if (button.id == 2)
         {
@@ -145,10 +144,10 @@ public class GuiReplay extends GuiScreen
         EntityPlayer player = this.mc.thePlayer;
         String command = "/action record " + this.filename.getText() + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
 
-        ITextComponent component = new TextComponentString("click here");
-        component.getStyle().setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
-        component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
-        component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
+        IChatComponent component = new ChatComponentText("click here");
+        component.getChatStyle().setChatClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
+        component.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(command)));
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY).setUnderlined(true);
 
         L10n.info(player, "recording.message", component);
     }
@@ -185,7 +184,7 @@ public class GuiReplay extends GuiScreen
     }
 
     @Override
-    public void handleMouseInput() throws IOException
+    public void handleMouseInput()
     {
         super.handleMouseInput();
         this.skinViewer.handleMouseInput();
@@ -194,7 +193,7 @@ public class GuiReplay extends GuiScreen
     /* Handling input */
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.skinViewer.isInside(mouseX, mouseY)) return;
 
@@ -230,7 +229,7 @@ public class GuiReplay extends GuiScreen
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    protected void keyTyped(char typedChar, int keyCode)
     {
         super.keyTyped(typedChar, keyCode);
 
@@ -273,12 +272,12 @@ public class GuiReplay extends GuiScreen
         int y2 = this.height - y - margin;
 
         /* Initializing all GUI fields first */
-        this.model = new GuiTextField(-1, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
-        this.skin = new GuiTextField(1, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
+        this.model = new GuiTextField(this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.skin = new GuiTextField(this.fontRendererObj, x + 1, y + 41, w - 2, 18);
         this.invisible = new GuiToggle(5, x, y + 80, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
-        this.name = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 79, w - 2, 18);
-        this.filename = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 39, w - 2, 18);
+        this.name = new GuiTextField(this.fontRendererObj, x + 1, y2 - 79, w - 2, 18);
+        this.filename = new GuiTextField(this.fontRendererObj, x + 1, y2 - 39, w - 2, 18);
         this.invincible = new GuiToggle(4, x, y2, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         /* Buttons */

@@ -1,15 +1,14 @@
 package mchorse.blockbuster.client.gui.elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.widgets.GuiScrollPane;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Director block's replays GUI
@@ -59,7 +58,7 @@ public class GuiReplays extends GuiScrollPane
     /* Handling */
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 

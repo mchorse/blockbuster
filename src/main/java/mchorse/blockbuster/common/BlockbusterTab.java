@@ -1,13 +1,15 @@
 package mchorse.blockbuster.common;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Blockbuster creative tab
@@ -35,12 +37,19 @@ public class BlockbusterTab extends CreativeTabs
      */
     @Override
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(java.util.List<net.minecraft.item.ItemStack> items)
+    public void displayAllReleventItems(List items)
     {
-        super.displayAllRelevantItems(items);
+        super.displayAllReleventItems(items);
 
-        ItemStack stack = new ItemStack(Items.SPAWN_EGG);
-        ItemMonsterPlacer.applyEntityIdToItemStack(stack, "blockbuster.Actor");
+        ItemStack stack = new ItemStack(Items.spawn_egg);
+
+        NBTTagCompound tag = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
+        NBTTagCompound entity = new NBTTagCompound();
+
+        entity.setString("id", "blockbuster.Actor");
+        tag.setTag("EntityTag", entity);
+
+        stack.setTagCompound(tag);
 
         items.add(stack);
     }

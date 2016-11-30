@@ -1,8 +1,9 @@
 package mchorse.blockbuster.client.gui;
 
-import java.io.IOException;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
@@ -19,8 +20,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actor configuration GUI
@@ -69,7 +68,7 @@ public class GuiActor extends GuiScreen
     /* Actions */
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
+    protected void actionPerformed(GuiButton button)
     {
         if (button.id == 0)
         {
@@ -113,7 +112,7 @@ public class GuiActor extends GuiScreen
     }
 
     @Override
-    public void handleMouseInput() throws IOException
+    public void handleMouseInput()
     {
         super.handleMouseInput();
         this.skinViewer.handleMouseInput();
@@ -122,7 +121,7 @@ public class GuiActor extends GuiScreen
     /* Handling input */
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.skinViewer.isInside(mouseX, mouseY)) return;
 
@@ -156,7 +155,7 @@ public class GuiActor extends GuiScreen
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    protected void keyTyped(char typedChar, int keyCode)
     {
         super.keyTyped(typedChar, keyCode);
 
@@ -195,8 +194,8 @@ public class GuiActor extends GuiScreen
         int y2 = this.height - 30;
 
         /* Initializing all GUI fields first */
-        this.model = new GuiTextField(4, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
-        this.skin = new GuiTextField(3, this.fontRendererObj, x + 1, y + 41, w - 2, 18);
+        this.model = new GuiTextField(this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.skin = new GuiTextField(this.fontRendererObj, x + 1, y + 41, w - 2, 18);
         this.invisible = new GuiToggle(2, x, y + 80, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
         /* Buttons */

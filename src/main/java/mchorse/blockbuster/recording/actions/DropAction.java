@@ -12,7 +12,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
 
 /**
  * Item drop action
@@ -56,10 +55,10 @@ public class DropAction extends Action
         float yaw = frame.yaw;
         float pitch = frame.pitch;
 
-        item.motionX = (-MathHelper.sin(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
-        item.motionZ = (MathHelper.cos(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
-        item.motionY = (-MathHelper.sin(pitch / 180.0F * PI) * f + 0.1F);
-        item.setDefaultPickupDelay();
+        item.motionX = (-Math.sin(yaw / 180.0F * PI) * Math.cos(pitch / 180.0F * PI) * f);
+        item.motionZ = (Math.cos(yaw / 180.0F * PI) * Math.cos(pitch / 180.0F * PI) * f);
+        item.motionY = (-Math.sin(pitch / 180.0F * PI) * f + 0.1F);
+        item.delayBeforeCanPickup = 10;
 
         f = 0.02F;
         float f1 = rand.nextFloat() * PI * 2.0F * rand.nextFloat();

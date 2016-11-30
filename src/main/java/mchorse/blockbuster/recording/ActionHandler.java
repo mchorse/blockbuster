@@ -5,42 +5,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.DropAction;
-import mchorse.blockbuster.recording.actions.InteractBlockAction;
-import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 /**
  * Event handler for recording purposes.
@@ -64,25 +58,13 @@ public class ActionHandler
 
         if (!player.worldObj.isRemote && events != null)
         {
-            events.add(new BreakBlockAction(event.getPos()));
+            events.add(new BreakBlockAction(new BlockPos(event.x, event.y, event.z)));
         }
     }
 
     /**
-     * Event listener for Action.INTERACT_BLOCK (when player right clicks on
-     * a block)
+     * Sorry, no interacting with block
      */
-    @SubscribeEvent
-    public void onPlayerRightClickBlock(RightClickBlock event)
-    {
-        EntityPlayer player = event.getEntityPlayer();
-        List<Action> events = CommonProxy.manager.getActions(player);
-
-        if (!player.worldObj.isRemote && events != null)
-        {
-            events.add(new InteractBlockAction(event.getPos()));
-        }
-    }
 
     /**
      * Event listener for Action.PLACE_BLOCK
@@ -90,15 +72,14 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerPlacesBlock(PlaceEvent event)
     {
-        EntityPlayer player = event.getPlayer();
+        EntityPlayer player = event.player;
         List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
-            IBlockState state = event.getPlacedBlock();
-            Block block = state.getBlock();
+            BlockPos pos = new BlockPos(event.x, event.y, event.z);
 
-            this.placeBlock(events, event.getPos(), block, state);
+            this.placeBlock(events, pos, event.placedBlock, event.blockMetadata);
         }
     }
 
@@ -108,7 +89,7 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerPlacesMultiBlock(MultiPlaceEvent event)
     {
-        EntityPlayer player = event.getPlayer();
+        EntityPlayer player = event.player;
         List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
@@ -117,10 +98,9 @@ public class ActionHandler
 
             for (BlockSnapshot snapshot : blocks)
             {
-                IBlockState state = snapshot.getCurrentBlock();
-                Block block = state.getBlock();
+                BlockPos pos = new BlockPos(snapshot.x, snapshot.y, snapshot.z);
 
-                this.placeBlock(events, snapshot.getPos(), block, state);
+                this.placeBlock(events, pos, snapshot.getCurrentBlock(), snapshot.meta);
             }
         }
     }
@@ -135,29 +115,24 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerUseBucket(FillBucketEvent event)
     {
-        EntityPlayer player = event.getEntityPlayer();
+        EntityPlayer player = event.entityPlayer;
         List<Action> events = CommonProxy.manager.getActions(player);
-        RayTraceResult target = event.getTarget();
+        MovingObjectPosition target = event.target;
 
-        if (!player.worldObj.isRemote && events != null && target != null && target.typeOfHit == Type.BLOCK)
+        if (!player.worldObj.isRemote && events != null && target != null && target.typeOfHit == MovingObjectType.BLOCK)
         {
-            Item bucket = event.getEmptyBucket().getItem();
-            BlockPos pos = target.getBlockPos().offset(target.sideHit);
+            Item bucket = event.current.getItem();
+            BlockPos pos = new BlockPos(target.blockX, target.blockY, target.blockZ).offset(target.sideHit);
 
-            if (bucket == Items.LAVA_BUCKET)
+            if (bucket == Items.lava_bucket)
             {
-                this.placeBlock(events, pos, Blocks.FLOWING_LAVA, 0);
+                this.placeBlock(events, pos, Blocks.flowing_lava, 0);
             }
-            else if (bucket == Items.WATER_BUCKET)
+            else if (bucket == Items.water_bucket)
             {
-                this.placeBlock(events, pos, Blocks.FLOWING_WATER, 0);
+                this.placeBlock(events, pos, Blocks.flowing_water, 0);
             }
         }
-    }
-
-    private void placeBlock(List<Action> events, BlockPos pos, Block block, IBlockState state)
-    {
-        this.placeBlock(events, pos, block, block.getMetaFromState(state));
     }
 
     /**
@@ -165,27 +140,9 @@ public class ActionHandler
      */
     private void placeBlock(List<Action> events, BlockPos pos, Block block, int metadata)
     {
-        ResourceLocation id = block.getRegistryName();
+        String id = Block.blockRegistry.getNameForObject(block);
 
-        events.add(new PlaceBlockAction(pos, (byte) metadata, id.toString()));
-    }
-
-    /**
-     * Event listener for Action.MOUNTING (when player mounts other entity)
-     */
-    @SubscribeEvent
-    public void onPlayerMountsSomething(EntityMountEvent event)
-    {
-        if (event.getEntityMounting() instanceof EntityPlayer)
-        {
-            EntityPlayer player = (EntityPlayer) event.getEntityMounting();
-            List<Action> events = CommonProxy.manager.getActions(player);
-
-            if (!player.worldObj.isRemote && events != null)
-            {
-                events.add(new MountingAction(event.getEntityBeingMounted().getUniqueID(), event.isMounting()));
-            }
-        }
+        events.add(new PlaceBlockAction(pos, (byte) metadata, id));
     }
 
     /**
@@ -194,12 +151,12 @@ public class ActionHandler
     @SubscribeEvent
     public void onArrowLooseEvent(ArrowLooseEvent event) throws IOException
     {
-        EntityPlayer player = event.getEntityPlayer();
+        EntityPlayer player = event.entityPlayer;
         List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
-            events.add(new ShootArrowAction(event.getCharge()));
+            events.add(new ShootArrowAction(event.charge));
         }
     }
 
@@ -210,12 +167,12 @@ public class ActionHandler
     @SubscribeEvent
     public void onItemTossEvent(ItemTossEvent event) throws IOException
     {
-        EntityPlayer player = event.getPlayer();
+        EntityPlayer player = event.player;
         List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
-            events.add(new DropAction(event.getEntityItem().getEntityItem()));
+            events.add(new DropAction(event.entityItem.getEntityItem()));
         }
     }
 
@@ -226,12 +183,12 @@ public class ActionHandler
     @SubscribeEvent
     public void onServerChatEvent(ServerChatEvent event)
     {
-        EntityPlayer player = event.getPlayer();
+        EntityPlayer player = event.player;
         List<Action> events = CommonProxy.manager.getActions(player);
 
         if (!player.worldObj.isRemote && events != null)
         {
-            events.add(new ChatAction(event.getMessage()));
+            events.add(new ChatAction(event.message));
         }
     }
 

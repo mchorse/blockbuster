@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.utils;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -20,11 +20,11 @@ public class GuiUtils
      */
     public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
     {
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, posY, 100.0F);
-        GlStateManager.scale((-scale), scale, scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GL11.glEnable(2903);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(posX, posY, 100.0F);
+        GL11.glScalef((-scale), scale, scale);
+        GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 
         float f = ent.renderYawOffset;
         float f1 = ent.rotationYaw;
@@ -38,13 +38,11 @@ public class GuiUtils
         ent.rotationYawHead = ent.rotationYaw;
         ent.prevRotationYawHead = ent.rotationYaw;
 
-        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        GL11.glTranslatef(0.0F, 0.0F, 0.0F);
 
-        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
+        RenderManager manager = RenderManager.instance;
+        manager.playerViewX = 180.0F;
+        manager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;
@@ -52,9 +50,9 @@ public class GuiUtils
         ent.prevRotationYawHead = f3;
         ent.rotationYawHead = f4;
 
-        GlStateManager.popMatrix();
+        GL11.glPopMatrix();
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
+        GL11.glDisable(32826);
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);

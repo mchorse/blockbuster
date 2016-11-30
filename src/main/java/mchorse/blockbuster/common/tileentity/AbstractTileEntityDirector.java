@@ -3,15 +3,14 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import net.minecraft.block.state.IBlockState;
+import mchorse.blockbuster.utils.BlockPos;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -21,7 +20,7 @@ import net.minecraft.world.World;
  * provides basic methods for changing state of the block, and defines
  * some abstract methods for playback.
  */
-public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
+public abstract class AbstractTileEntityDirector extends TileEntity implements IUpdatePlayerListBox
 {
     public List<Replay> replays = new ArrayList<Replay>();
 
@@ -31,7 +30,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     private int tick = 0;
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z)
     {
         return false;
     }
@@ -46,12 +45,10 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    public void writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.replays);
-
-        return compound;
     }
 
     /* NBT list utils */
@@ -143,7 +140,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
 
         if (!exist)
         {
-            actor.directorBlock = this.getPos();
+            actor.directorBlock = new BlockPos(this.xCoord, this.yCoord, this.zCoord);
 
             this.replays.add(result);
             this.markDirty();
@@ -237,7 +234,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
-        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractBlockDirector.PLAYING, isPlaying));
+        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), isPlaying ? 1 : 0, 3);
     }
 
     /**
@@ -245,6 +242,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public boolean isPlaying()
     {
-        return this.worldObj.getBlockState(this.pos).getValue(AbstractBlockDirector.PLAYING);
+        return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) != 0;
     }
 }

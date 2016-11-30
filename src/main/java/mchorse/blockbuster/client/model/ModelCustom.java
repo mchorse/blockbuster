@@ -3,16 +3,15 @@ package mchorse.blockbuster.client.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.api.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
 
 /**
  * Custom Model class
@@ -28,6 +27,8 @@ public class ModelCustom extends ModelBase
      * Repository of custom models that are available for usage
      */
     public static Map<String, ModelCustom> MODELS = new HashMap<String, ModelCustom>();
+
+    public float swingProgress = 0.0F;
 
     /**
      * Model data
@@ -130,7 +131,7 @@ public class ModelCustom extends ModelBase
             if (!limb.limb.holding.isEmpty())
             {
                 EntityLivingBase entity = (EntityLivingBase) entityIn;
-                ItemStack stack = limb.limb.holding.equals("right") ? entity.getHeldItemMainhand() : entity.getHeldItemOffhand();
+                ItemStack stack = limb.limb.holding.equals("right") ? entity.getHeldItem() : null;
 
                 if (stack != null)
                 {
@@ -151,17 +152,8 @@ public class ModelCustom extends ModelBase
     /**
      * Get renderer for an arm
      */
-    public ModelCustomRenderer[] getRenderForArm(EnumHandSide side)
+    public ModelCustomRenderer[] getRenderForArm()
     {
-        if (side == EnumHandSide.LEFT)
-        {
-            return this.left;
-        }
-        else if (side == EnumHandSide.RIGHT)
-        {
-            return this.right;
-        }
-
-        return null;
+        return this.left;
     }
 }

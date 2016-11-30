@@ -49,11 +49,11 @@ public class MountingAction extends Action
 
         if (this.isMounting)
         {
-            actor.startRiding(mount);
+            actor.ridingEntity = mount;
         }
         else
         {
-            actor.dismountRidingEntity();
+            actor.ridingEntity = null;
         }
     }
 

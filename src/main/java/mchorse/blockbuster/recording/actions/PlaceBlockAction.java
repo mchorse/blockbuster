@@ -5,11 +5,9 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Guess what this action does
@@ -37,13 +35,13 @@ public class PlaceBlockAction extends InteractBlockAction
         return Action.PLACE_BLOCK;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void apply(EntityActor actor)
     {
-        Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
-        IBlockState state = block.getStateFromMeta(this.metadata);
-        actor.worldObj.setBlockState(this.pos, state);
+        Block block = (Block) Block.blockRegistry.getObject(this.block);
+
+        actor.worldObj.setBlock(this.pos.x, this.pos.y, this.pos.z, block);
+        actor.worldObj.setBlockMetadataWithNotify(this.pos.x, this.pos.y, this.pos.z, this.metadata, 3);
     }
 
     @Override

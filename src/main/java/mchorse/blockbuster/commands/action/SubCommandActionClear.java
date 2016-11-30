@@ -1,6 +1,5 @@
 package mchorse.blockbuster.commands.action;
 
-import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import net.minecraft.command.CommandBase;
@@ -35,7 +34,6 @@ public class SubCommandActionClear extends CommandBase
     public void processCommand(ICommandSender sender, String[] args)
     {
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        Recording.get(player).removeRecordings();
 
         Dispatcher.sendTo(new PacketUnloadRecordings(), player);
     }

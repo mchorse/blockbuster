@@ -1,11 +1,9 @@
 package mchorse.blockbuster.utils;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 /**
  * Localization utils
@@ -22,16 +20,16 @@ public class L10n
      */
     public static void send(ICommandSender sender, String key, Object... objects)
     {
-        sender.addChatMessage(new TextComponentTranslation(key, objects));
+        sender.addChatMessage(new ChatComponentTranslation(key, objects));
     }
 
     /**
      * Send a translated message to player
      */
-    public static void sendColored(ICommandSender sender, TextFormatting color, String key, Object... objects)
+    public static void sendColored(ICommandSender sender, EnumChatFormatting color, String key, Object... objects)
     {
-        ITextComponent text = new TextComponentTranslation(key, objects);
-        text.getStyle().setColor(color);
+        IChatComponent text = new ChatComponentTranslation(key, objects);
+        text.getChatStyle().setColor(color);
 
         sender.addChatMessage(text);
     }
@@ -65,13 +63,10 @@ public class L10n
      */
     public static void sendWithMarker(ICommandSender sender, String marker, String key, Object... objects)
     {
-        ITextComponent message = new TextComponentString(marker);
-        ITextComponent string = new TextComponentTranslation(key, objects);
+        IChatComponent message = new ChatComponentTranslation(marker);
+        IChatComponent string = new ChatComponentTranslation(key, objects);
 
-        string.getStyle().setColor(TextFormatting.GRAY);
-
-        System.out.println(String.format(I18n.translateToLocal(key), objects));
-        System.out.println(string.getFormattedText());
+        string.getChatStyle().setColor(EnumChatFormatting.GRAY);
 
         message.appendSibling(string);
         sender.addChatMessage(message);

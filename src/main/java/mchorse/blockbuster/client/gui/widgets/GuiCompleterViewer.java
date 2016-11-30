@@ -1,8 +1,9 @@
 package mchorse.blockbuster.client.gui.widgets;
 
-import java.io.IOException;
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
 import net.minecraft.client.gui.Gui;
 
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.Gui;
  *
  * @author mchorse
  */
+@SideOnly(Side.CLIENT)
 public class GuiCompleterViewer extends GuiScrollPane
 {
     private final int span = 20;
@@ -26,7 +28,7 @@ public class GuiCompleterViewer extends GuiScrollPane
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 

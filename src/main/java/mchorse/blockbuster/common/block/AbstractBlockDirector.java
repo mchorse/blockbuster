@@ -3,18 +3,14 @@ package mchorse.blockbuster.common.block;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
+import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -50,46 +46,55 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractBlockDirector extends Block implements ITileEntityProvider
 {
-    public static final PropertyBool PLAYING = PropertyBool.create("playing");
+    public IIcon[] icons = new IIcon[4];
 
     public AbstractBlockDirector()
     {
-        super(Material.ROCK);
-        this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
+        super(Material.rock);
+        this.setBlockName("director");
+        this.setBlockTextureName("blockbuster:director_block_blank");
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setHardness(8);
     }
 
     @Override
-    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    public void registerBlockIcons(IIconRegister register)
+    {
+        this.icons[0] = register.registerIcon("blockbuster:director_block_blank");
+        this.icons[1] = register.registerIcon("blockbuster:director_block_side");
+        this.icons[2] = register.registerIcon("blockbuster:director_block_start");
+        this.icons[3] = register.registerIcon("blockbuster:director_block_stop");
+    }
+
+    @Override
+    public IIcon getIcon(int side, int meta)
+    {
+        if (side == 3)
+        {
+            return this.icons[2];
+        }
+        else if (side == 2)
+        {
+            return this.icons[3];
+        }
+        else if (side == 4 || side == 5)
+        {
+            return this.icons[1];
+        }
+
+        return this.icons[0];
+    }
+
+    @Override
+    public boolean canHarvestBlock(EntityPlayer player, int meta)
     {
         return true;
-    }
-
-    /* States */
-
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(PLAYING) ? 1 : 0;
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return this.getDefaultState().withProperty(PLAYING, meta == 1);
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {PLAYING});
     }
 
     /* Redstone */
 
     @Override
-    public boolean canProvidePower(IBlockState state)
+    public boolean canProvidePower()
     {
         return true;
     }
@@ -99,28 +104,27 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
      * of the block while isn't playback actors.
      */
     @Override
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int meta)
     {
-        boolean isPlaying = blockState.getValue(PLAYING);
-
-        return (isPlaying && side == EnumFacing.WEST) || (!isPlaying && side == EnumFacing.EAST) ? 15 : 0;
+        return meta == 1 ? 15 : 0;
     }
 
     /* Player interaction */
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int meta, float hitX, float hitY, float hitZ)
     {
-        ItemStack item = playerIn.getHeldItemMainhand();
+        ItemStack item = player.getHeldItem();
+        BlockPos pos = new BlockPos(x, y, z);
 
-        if (item != null && this.handleItem(item, worldIn, pos, playerIn))
+        if (item != null && this.handleItem(item, world, pos, player))
         {
             return true;
         }
 
-        if (!worldIn.isRemote)
+        if (!world.isRemote)
         {
-            this.displayCast(playerIn, worldIn, pos);
+            this.displayCast(player, world, pos);
         }
 
         return true;

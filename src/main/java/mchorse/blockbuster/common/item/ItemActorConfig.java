@@ -18,13 +18,13 @@ public class ItemActorConfig extends Item
     public ItemActorConfig()
     {
         this.setMaxStackSize(1);
-        this.setRegistryName("actor_config");
+        this.setTextureName("blockbuster:actor_config");
         this.setUnlocalizedName("blockbuster.actor_config");
         this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.actor_config"));
     }

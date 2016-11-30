@@ -2,9 +2,9 @@ package mchorse.blockbuster.recording;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
-import mchorse.blockbuster.capabilities.recording.IRecording;
-import mchorse.blockbuster.capabilities.recording.Recording;
+import cpw.mods.fml.common.FMLCommonHandler;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
@@ -14,12 +14,10 @@ import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.management.PlayerList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * Utilities methods mostly to be used with recording code. Stuff like
@@ -32,7 +30,7 @@ public class Utils
      */
     public static void broadcastMessage(String message)
     {
-        broadcastMessage(new TextComponentString(message));
+        broadcastMessage(new ChatComponentText(message));
     }
 
     /**
@@ -40,7 +38,7 @@ public class Utils
      */
     public static void broadcastMessage(String string, Object... args)
     {
-        broadcastMessage(new TextComponentTranslation(string, args));
+        broadcastMessage(new ChatComponentTranslation(string, args));
     }
 
     /**
@@ -48,13 +46,13 @@ public class Utils
      *
      * Invoke this method only on the server side.
      */
-    public static void broadcastMessage(ITextComponent message)
+    public static void broadcastMessage(IChatComponent message)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
 
-        for (String username : players.getAllUsernames())
+        for (Object object : players)
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
+            EntityPlayerMP player = (EntityPlayerMP) object;
 
             if (player != null)
             {
@@ -70,11 +68,11 @@ public class Utils
      */
     public static void broadcastError(String string, Object... objects)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
 
-        for (String username : players.getAllUsernames())
+        for (Object object : players)
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
+            EntityPlayerMP player = (EntityPlayerMP) object;
 
             if (player != null)
             {
@@ -90,11 +88,11 @@ public class Utils
      */
     public static void broadcastInfo(String string, Object... objects)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
 
-        for (String username : players.getAllUsernames())
+        for (Object object : players)
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
+            EntityPlayerMP player = (EntityPlayerMP) object;
 
             if (player != null)
             {
@@ -193,24 +191,7 @@ public class Utils
      */
     public static boolean playerNeedsAction(String filename, EntityPlayer player)
     {
-        IRecording recording = Recording.get(player);
-
-        boolean has = recording.hasRecording(filename);
-        long time = replayFile(filename).lastModified();
-
-        if (has && time > recording.recordingTimestamp(filename))
-        {
-            recording.updateRecordingTimestamp(filename, time);
-
-            return true;
-        }
-
-        if (!has)
-        {
-            recording.addRecording(filename, time);
-        }
-
-        return !has;
+        return true;
     }
 
     /**
@@ -219,23 +200,16 @@ public class Utils
      */
     public static void unloadRecord(Record record)
     {
-        PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
         String filename = record.filename;
+        List players = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList;
 
-        for (String username : players.getAllUsernames())
+        for (Object object : players)
         {
-            EntityPlayerMP player = players.getPlayerByUsername(username);
+            EntityPlayerMP player = (EntityPlayerMP) object;
 
             if (player != null)
             {
-                IRecording recording = Recording.get(player);
-
-                if (recording.hasRecording(filename))
-                {
-                    recording.removeRecording(filename);
-
-                    Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
-                }
+                Dispatcher.sendTo(new PacketUnloadFrames(filename), player);
             }
         }
     }

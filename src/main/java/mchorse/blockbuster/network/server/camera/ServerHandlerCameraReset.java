@@ -1,7 +1,5 @@
 package mchorse.blockbuster.network.server.camera;
 
-import mchorse.blockbuster.capabilities.recording.IRecording;
-import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.common.camera.PacketCameraReset;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,9 +14,6 @@ public class ServerHandlerCameraReset extends ServerMessageHandler<PacketCameraR
     @Override
     public void run(EntityPlayerMP player, PacketCameraReset message)
     {
-        IRecording recording = Recording.get(player);
 
-        recording.setCurrentProfile("");
-        recording.setCurrentProfileTimestamp(-1);
     }
 }

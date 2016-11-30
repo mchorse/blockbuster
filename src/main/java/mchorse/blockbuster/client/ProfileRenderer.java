@@ -1,9 +1,13 @@
+
 package mchorse.blockbuster.client;
 
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.Position;
@@ -12,20 +16,15 @@ import mchorse.blockbuster.camera.fixtures.CircularFixture;
 import mchorse.blockbuster.camera.fixtures.FollowFixture;
 import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
+import mchorse.blockbuster.client.gui.utils.GlStateManager;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Profile path renderer
@@ -59,19 +58,6 @@ public class ProfileRenderer
     }
 
     @SubscribeEvent
-    public void onCameraOrient(EntityViewRenderEvent.CameraSetup event)
-    {
-        float roll = CommandCamera.getControl().roll;
-
-        if (roll == 0)
-        {
-            return;
-        }
-
-        event.setRoll(roll);
-    }
-
-    @SubscribeEvent
     public void onLastRender(RenderWorldLastEvent event)
     {
         boolean badProfile = this.profile == null || this.profile.getCount() < 1;
@@ -84,7 +70,7 @@ public class ProfileRenderer
         Position next = new Position(0, 0, 0, 0, 0);
 
         EntityPlayer player = this.mc.thePlayer;
-        float ticks = event.getPartialTicks();
+        float ticks = event.partialTicks;
 
         this.playerX = player.prevPosX + (player.posX - player.prevPosX) * ticks;
         this.playerY = player.prevPosY + (player.posY - player.prevPosY) * ticks;
@@ -175,10 +161,10 @@ public class ProfileRenderer
     {
         boolean selected = index == CommandCamera.getControl().index;
 
-        GlStateManager.pushMatrix();
+        GL11.glPushMatrix();
         GlStateManager.pushAttrib();
-        GlStateManager.enableBlend();
-        GlStateManager.color(color.red, color.green, color.blue, selected ? 1.0F : 0.75F);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(color.red, color.green, color.blue, selected ? 1.0F : 0.75F);
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 
@@ -187,9 +173,9 @@ public class ProfileRenderer
         double z = pos.point.z - this.playerZ;
 
         GL11.glNormal3f(0, 1, 0);
-        GlStateManager.translate(x, y + this.mc.thePlayer.eyeHeight, z);
-        GlStateManager.rotate(-this.mc.getRenderManager().playerViewY, 0, 1, 0);
-        GlStateManager.rotate(this.mc.getRenderManager().playerViewX, 1, 0, 0);
+        GL11.glTranslated(x, y + this.mc.thePlayer.eyeHeight, z);
+        GL11.glRotatef(-RenderManager.instance.playerViewY, 0, 1, 0);
+        GL11.glRotatef(RenderManager.instance.playerViewX, 1, 0, 0);
 
         float factor = selected ? 0.65F : 0.5F;
 
@@ -205,32 +191,34 @@ public class ProfileRenderer
         float texRX = i * 0.5F + 0.5F;
         float texRY = 1;
 
-        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+        Tessellator vb = Tessellator.instance;
 
-        vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(minX, minY, 0).tex(texRX, texRY).endVertex();
-        vb.pos(minX, maxY, 0).tex(texRX, texY).endVertex();
-        vb.pos(maxX, maxY, 0).tex(texX, texY).endVertex();
-        vb.pos(maxX, minY, 0).tex(texX, texRY).endVertex();
+        vb.startDrawingQuads();
 
-        Tessellator.getInstance().draw();
+        vb.addVertexWithUV(minX, minY, 0, texRX, texRY);
+        vb.addVertexWithUV(minX, maxY, 0, texRX, texY);
+        vb.addVertexWithUV(maxX, maxY, 0, texX, texY);
+        vb.addVertexWithUV(maxX, minY, 0, texX, texRY);
+
+        vb.draw();
+
         GlStateManager.disableBlend();
 
         String indexString = String.valueOf(index);
         String durationString = duration + "t";
-        int indexWidth = this.mc.fontRendererObj.getStringWidth(indexString) / 2;
-        int durationWidth = this.mc.fontRendererObj.getStringWidth(durationString) / 2;
+        int indexWidth = this.mc.fontRenderer.getStringWidth(indexString) / 2;
+        int durationWidth = this.mc.fontRenderer.getStringWidth(durationString) / 2;
 
         GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.scale(0.05f, 0.05f, 0.05f);
         GlStateManager.translate(0, -3.5, -0.1);
 
-        this.mc.fontRendererObj.drawString(indexString, -indexWidth, 0, -1);
+        this.mc.fontRenderer.drawString(indexString, -indexWidth, 0, -1);
 
         GlStateManager.translate(0, -13, 0);
         GlStateManager.scale(0.5f, 0.5f, 0.5f);
 
-        this.mc.fontRendererObj.drawString(durationString, -durationWidth, 0, -1);
+        this.mc.fontRenderer.drawString(durationString, -durationWidth, 0, -1);
 
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
@@ -253,21 +241,20 @@ public class ProfileRenderer
         GlStateManager.disableTexture2D();
         GlStateManager.color(color.red, color.green, color.blue, 0.5F);
 
-        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+        Tessellator vb = Tessellator.instance;
 
+        vb.startDrawing(GL11.GL_LINES);
         vb.setTranslation(x, y + this.mc.thePlayer.eyeHeight, z);
-        vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        vb.pos(next.point.x - prev.point.x, next.point.y - prev.point.y, next.point.z - prev.point.z).endVertex();
-        vb.pos(0, 0, 0).endVertex();
 
-        Tessellator.getInstance().draw();
+        vb.addVertex(next.point.x - prev.point.x, next.point.y - prev.point.y, next.point.z - prev.point.z);
+        vb.addVertex(0, 0, 0);
 
+        vb.draw();
         vb.setTranslation(0, 0, 0);
 
-        GlStateManager.enableTexture2D();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
         GlStateManager.popAttrib();
-        GlStateManager.popMatrix();
-
+        GL11.glPopMatrix();
     }
 
     /**

@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class GuiPlayback extends GuiScreen
     /* Input */
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    protected void keyTyped(char typedChar, int keyCode)
     {
         if (keyCode == 15 && this.profileField.isFocused())
         {
@@ -70,7 +69,7 @@ public class GuiPlayback extends GuiScreen
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (!this.profiles.isInside(mouseX, mouseY))
         {
@@ -83,7 +82,7 @@ public class GuiPlayback extends GuiScreen
     /* Actions */
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
+    protected void actionPerformed(GuiButton button)
     {
         int id = button.id;
 
@@ -116,7 +115,7 @@ public class GuiPlayback extends GuiScreen
     }
 
     @Override
-    public void handleMouseInput() throws IOException
+    public void handleMouseInput()
     {
         super.handleMouseInput();
         this.profiles.handleMouseInput();
@@ -131,7 +130,7 @@ public class GuiPlayback extends GuiScreen
         int y = 45;
         int w = 120;
 
-        this.profileField = new GuiTextField(0, this.fontRendererObj, x + 1, y + 1, w - 2, 18);
+        this.profileField = new GuiTextField(this.fontRendererObj, x + 1, y + 1, w - 2, 18);
         this.cameraMode = new GuiCirculate(1, x, y + 40, w, 20);
         this.done = new GuiButton(2, x, this.height - 30, w, 20, I18n.format("blockbuster.gui.done"));
 
@@ -142,7 +141,7 @@ public class GuiPlayback extends GuiScreen
         this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.play"));
         this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
 
-        NBTTagCompound compound = this.player.getHeldItemMainhand().getTagCompound();
+        NBTTagCompound compound = this.player.getHeldItem().getTagCompound();
 
         if (compound.hasKey("CameraPlay"))
         {

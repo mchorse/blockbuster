@@ -5,7 +5,6 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -37,7 +36,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         }
         else
         {
-            Morphing.get(player).reset();
+            System.out.println(ClientProxy.manager.recorders.get(player).record.frames.size());
 
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
             ClientProxy.manager.stopRecording(player, false);

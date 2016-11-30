@@ -1,10 +1,11 @@
 package mchorse.blockbuster.client.gui;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.client.gui.elements.GuiReplay;
 import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -13,14 +14,12 @@ import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
+import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Director Management Screen
@@ -63,7 +62,7 @@ public class GuiDirector extends GuiScreen
     /* Input handling */
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
+    protected void actionPerformed(GuiButton button)
     {
         if (button.id == 0)
         {
@@ -85,7 +84,7 @@ public class GuiDirector extends GuiScreen
     }
 
     @Override
-    public void handleMouseInput() throws IOException
+    public void handleMouseInput()
     {
         super.handleMouseInput();
 
@@ -94,7 +93,7 @@ public class GuiDirector extends GuiScreen
     }
 
     @Override
-    public void handleKeyboardInput() throws IOException
+    public void handleKeyboardInput()
     {
         super.handleKeyboardInput();
 
@@ -102,7 +101,7 @@ public class GuiDirector extends GuiScreen
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
@@ -110,7 +109,7 @@ public class GuiDirector extends GuiScreen
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    protected void keyTyped(char typedChar, int keyCode)
     {
         super.keyTyped(typedChar, keyCode);
 
@@ -142,7 +141,7 @@ public class GuiDirector extends GuiScreen
         this.done = new GuiButton(0, this.width - 100 - x, this.height - y - h, 100, h, I18n.format("blockbuster.gui.done"));
         this.reset = new GuiButton(1, x, this.height - y - h, w, h, I18n.format("blockbuster.gui.reset"));
 
-        this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
+        this.replayName = new GuiTextField(this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
 
         /* Adding GUI elements */
         this.buttonList.add(this.done);
