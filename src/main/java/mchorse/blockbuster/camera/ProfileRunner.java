@@ -1,5 +1,6 @@
 package mchorse.blockbuster.camera;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,7 +64,11 @@ public class ProfileRunner
 
         if (!this.isRunning)
         {
-            this.mc.thePlayer.sendChatMessage("/gamemode 3");
+            if (Blockbuster.proxy.config.camera_spectator)
+            {
+                this.mc.thePlayer.sendChatMessage("/gamemode 3");
+            }
+
             this.fov = this.mc.gameSettings.fovSetting;
             MinecraftForge.EVENT_BUS.register(this);
         }
@@ -77,7 +82,11 @@ public class ProfileRunner
     {
         if (this.isRunning)
         {
-            this.mc.thePlayer.sendChatMessage("/gamemode 1");
+            if (Blockbuster.proxy.config.camera_spectator)
+            {
+                this.mc.thePlayer.sendChatMessage("/gamemode 1");
+            }
+
             this.mc.gameSettings.fovSetting = this.fov;
             MinecraftForge.EVENT_BUS.unregister(this);
         }
