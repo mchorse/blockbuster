@@ -6,10 +6,8 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraReset;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Camera's sub-command /camera new
@@ -32,7 +30,7 @@ public class SubCommandCameraNew extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1 || args[0].isEmpty())
         {

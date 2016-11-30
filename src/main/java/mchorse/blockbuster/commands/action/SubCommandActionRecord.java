@@ -4,13 +4,10 @@ import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Sub-command /action record
@@ -33,7 +30,7 @@ public class SubCommandActionRecord extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1)
         {
@@ -45,8 +42,11 @@ public class SubCommandActionRecord extends CommandBase
 
         if (recording && args.length >= 4)
         {
-            BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
-            TileEntity tile = sender.getEntityWorld().getTileEntity(pos);
+            int x = CommandBase.parseInt(sender, args[1]);
+            int y = CommandBase.parseInt(sender, args[2]);
+            int z = CommandBase.parseInt(sender, args[3]);
+
+            TileEntity tile = sender.getEntityWorld().getTileEntity(x, y, z);
 
             if (tile instanceof TileEntityDirector)
             {

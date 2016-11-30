@@ -4,9 +4,7 @@ import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Camera's sub-command /camera roll
@@ -28,7 +26,7 @@ public class SubCommandCameraRoll extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         CameraControl control = CommandCamera.getControl();
 
@@ -38,7 +36,7 @@ public class SubCommandCameraRoll extends CommandBase
         }
         else
         {
-            control.roll = (float) CommandBase.parseDouble(args[0]);
+            control.roll = (float) CommandBase.parseDouble(sender, args[0]);
         }
     }
 }

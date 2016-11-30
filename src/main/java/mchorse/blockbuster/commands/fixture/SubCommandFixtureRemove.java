@@ -3,10 +3,8 @@ package mchorse.blockbuster.commands.fixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Camera's sub-command /camera remove
@@ -29,14 +27,14 @@ public class SubCommandFixtureRemove extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1)
         {
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        int index = CommandBase.parseInt(args[0]);
+        int index = CommandBase.parseInt(sender, args[0]);
 
         if (!CommandCamera.getProfile().has(index))
         {

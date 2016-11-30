@@ -73,11 +73,10 @@ public class CommandAction extends SubCommandBase
         String name = args.length >= 2 ? args[1] : "";
         String model = args.length >= 3 ? args[2] : "";
         String skin = args.length >= 4 ? args[3] : "";
-        boolean invincible = args.length >= 5 ? CommandBase.parseBoolean(args[4]) : false;
+        boolean invincible = args.length >= 5 ? CommandBase.parseBoolean(null, args[4]) : false;
 
         actor = new EntityActor(world);
         actor.modify(model, RLUtils.fromString(skin, model), false, true);
-        actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 
         return actor;

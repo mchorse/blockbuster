@@ -1,6 +1,5 @@
 package mchorse.blockbuster.commands;
 
-import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelRequest;
 
 /**
@@ -17,7 +16,6 @@ public class CommandModel extends SubCommandBase
      */
     public CommandModel()
     {
-        this.add(new SubCommandModelExport());
         this.add(new SubCommandModelRequest());
     }
 

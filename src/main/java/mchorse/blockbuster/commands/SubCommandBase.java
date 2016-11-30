@@ -8,11 +8,8 @@ import java.util.Map;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Abstract sub-command base handler command
@@ -82,7 +79,7 @@ public abstract class SubCommandBase extends CommandBase
      * This method basically delegates the execution to the matched sub-command,
      * if the command was found, otherwise it shows usage message. */
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1)
         {
@@ -98,7 +95,7 @@ public abstract class SubCommandBase extends CommandBase
 
         if (command != null)
         {
-            command.execute(server, sender, dropFirstArgument(args));
+            command.processCommand(sender, dropFirstArgument(args));
 
             return;
         }
@@ -113,11 +110,11 @@ public abstract class SubCommandBase extends CommandBase
      * of sub-commands) or completions of sub-command.
      */
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 0)
         {
-            return super.getTabCompletionOptions(server, sender, args, pos);
+            return super.addTabCompletionOptions(sender, args);
         }
 
         Collection<CommandBase> commands = this.subcommands.values();
@@ -131,17 +128,17 @@ public abstract class SubCommandBase extends CommandBase
                 options.add(command.getCommandName());
             }
 
-            return getListOfStringsMatchingLastWord(args, options);
+            return getListOfStringsFromIterableMatchingLastWord(args, options);
         }
 
         for (CommandBase command : commands)
         {
             if (command.getCommandName().equals(args[0]))
             {
-                return command.getTabCompletionOptions(server, sender, dropFirstArgument(args), pos);
+                return command.addTabCompletionOptions(sender, dropFirstArgument(args));
             }
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.addTabCompletionOptions(sender, args);
     }
 }

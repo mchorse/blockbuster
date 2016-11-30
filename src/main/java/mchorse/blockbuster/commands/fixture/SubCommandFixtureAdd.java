@@ -5,12 +5,9 @@ import java.util.List;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Camera's sub-command /camera add
@@ -34,7 +31,7 @@ public class SubCommandFixtureAdd extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 2)
         {
@@ -45,13 +42,13 @@ public class SubCommandFixtureAdd extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, AbstractFixture.STRING_TO_TYPE.keySet());
+            return getListOfStringsFromIterableMatchingLastWord(args, AbstractFixture.STRING_TO_TYPE.keySet());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.addTabCompletionOptions(sender, args);
     }
 }

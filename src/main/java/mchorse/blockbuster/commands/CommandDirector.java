@@ -3,14 +3,13 @@ package mchorse.blockbuster.commands;
 import java.util.List;
 
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
+import mchorse.blockbuster.utils.BlockPos;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Command /director
@@ -42,7 +41,7 @@ public class CommandDirector extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 4)
         {
@@ -50,8 +49,8 @@ public class CommandDirector extends CommandBase
         }
 
         String action = args[0];
-        BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
-        AbstractTileEntityDirector director = this.getDirector(server, pos);
+        BlockPos pos = new BlockPos(CommandBase.parseInt(sender, args[1]), CommandBase.parseInt(sender, args[2]), CommandBase.parseInt(sender, args[3]));
+        AbstractTileEntityDirector director = this.getDirector(sender.getEntityWorld(), pos);
 
         if (director == null)
         {
@@ -94,9 +93,9 @@ public class CommandDirector extends CommandBase
     /**
      * Get abstract director from block pos
      */
-    protected AbstractTileEntityDirector getDirector(MinecraftServer server, BlockPos pos)
+    protected AbstractTileEntityDirector getDirector(World world, BlockPos pos)
     {
-        TileEntity entity = server.getEntityWorld().getTileEntity(pos);
+        TileEntity entity = world.getTileEntity(pos.x, pos.y, pos.z);
 
         if (entity instanceof AbstractTileEntityDirector)
         {
@@ -107,13 +106,13 @@ public class CommandDirector extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle");
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.addTabCompletionOptions(sender, args);
     }
 }

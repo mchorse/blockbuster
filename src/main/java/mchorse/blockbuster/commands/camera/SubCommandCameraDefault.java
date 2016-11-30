@@ -3,9 +3,7 @@ package mchorse.blockbuster.commands.camera;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Sub-command /camera default
@@ -28,7 +26,7 @@ public class SubCommandCameraDefault extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender p_71515_1_, String[] p_71515_2_)
     {
         Minecraft.getMinecraft().gameSettings.fovSetting = 70.0F;
         CommandCamera.getControl().roll = 0.0F;

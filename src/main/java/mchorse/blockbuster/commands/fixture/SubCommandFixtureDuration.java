@@ -5,9 +5,7 @@ import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Camera's sub-command /camera duration
@@ -30,7 +28,7 @@ public class SubCommandFixtureDuration extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         CameraProfile profile = CommandCamera.getProfile();
 
@@ -40,7 +38,7 @@ public class SubCommandFixtureDuration extends CommandBase
             return;
         }
 
-        int index = CommandBase.parseInt(args[0]);
+        int index = CommandBase.parseInt(sender, args[0]);
 
         if (!profile.has(index))
         {
@@ -56,6 +54,6 @@ public class SubCommandFixtureDuration extends CommandBase
             return;
         }
 
-        fixture.setDuration(CommandBase.parseLong(args[1]));
+        fixture.setDuration(CommandBase.parseInt(sender, args[1]));
     }
 }

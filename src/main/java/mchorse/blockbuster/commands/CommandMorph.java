@@ -10,10 +10,7 @@ import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Command /morph
@@ -40,7 +37,7 @@ public class CommandMorph extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length == 0)
         {
@@ -64,7 +61,7 @@ public class CommandMorph extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 1)
         {
@@ -73,11 +70,11 @@ public class CommandMorph extends CommandBase
             models.add(0, "alex");
             models.add(0, "steve");
 
-            return getListOfStringsMatchingLastWord(args, models);
+            return getListOfStringsFromIterableMatchingLastWord(args, models);
         }
         else if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, ClientProxy.actorPack.pack.getSkins(args[0]));
+            return getListOfStringsFromIterableMatchingLastWord(args, ClientProxy.actorPack.pack.getSkins(args[0]));
         }
 
         return Collections.<String> emptyList();

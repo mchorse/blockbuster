@@ -8,11 +8,9 @@ import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 
 /**
  * Camera's sub-command /camera goto
@@ -34,7 +32,7 @@ public class SubCommandCameraGoto extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length < 1)
         {
@@ -45,12 +43,12 @@ public class SubCommandCameraGoto extends CommandBase
         CameraProfile profile = CommandCamera.getProfile();
         Position pos = new Position(player);
 
-        int index = CommandBase.parseInt(args[0]);
+        int index = CommandBase.parseInt(sender, args[0]);
         float progress = 0;
 
         if (args.length > 1)
         {
-            progress = (float) CommandBase.parseDouble(args[1], 0, 1);
+            progress = (float) CommandBase.parseDouble(sender, args[1]);
         }
 
         if (!profile.has(index))
