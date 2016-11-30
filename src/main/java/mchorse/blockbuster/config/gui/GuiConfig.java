@@ -3,13 +3,13 @@ package mchorse.blockbuster.config.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Config GUI
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * class.
  */
 @SideOnly(Side.CLIENT)
-public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig
+public class GuiConfig extends cpw.mods.fml.client.config.GuiConfig
 {
     public GuiConfig(GuiScreen parent)
     {

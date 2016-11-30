@@ -1,9 +1,9 @@
 package mchorse.blockbuster.config;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mchorse.blockbuster.Blockbuster;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Blockbuster config class
@@ -124,7 +124,7 @@ public class BlockbusterConfig
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
     {
-        if (event.getModID().equals(Blockbuster.MODID) && this.config.hasChanged())
+        if (event.modID.equals(Blockbuster.MODID) && this.config.hasChanged())
         {
             this.reload();
         }
