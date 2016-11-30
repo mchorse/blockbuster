@@ -9,6 +9,12 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
@@ -17,13 +23,7 @@ import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraft.util.AxisAlignedBB;
 
 /**
  * This class responsible for storing domain custom models and sending models to
@@ -163,11 +163,14 @@ public class ModelHandler
         if (width != player.width || height != player.height)
         {
             float f = player.width;
-            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
+            AxisAlignedBB aabb = player.boundingBox;
 
             player.width = width;
             player.height = height;
-            player.setEntityBoundingBox(new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + width, axisalignedbb.minY + height, axisalignedbb.minZ + width));
+
+            aabb.maxX = aabb.minX + width;
+            aabb.maxY = aabb.minY + height;
+            aabb.maxZ = aabb.minZ + width;
 
             if (player.width > f && !player.worldObj.isRemote)
             {
