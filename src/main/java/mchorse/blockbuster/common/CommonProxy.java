@@ -24,6 +24,7 @@ import mchorse.blockbuster.recording.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -160,7 +161,10 @@ public class CommonProxy
      */
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, this.ID, Blockbuster.instance, 96, 3, false);
-        EntityRegistry.registerGlobalEntityID(entity, name, this.ID++, primary, secondary);
+        Integer id = Integer.valueOf(500 + this.ID);
+
+        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 96, 3, false);
+        EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id.intValue(), primary, secondary));
+        EntityList.IDtoClassMapping.put(id, entity);
     }
 }

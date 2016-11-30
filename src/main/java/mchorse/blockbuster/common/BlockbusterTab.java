@@ -9,7 +9,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Blockbuster creative tab
@@ -42,14 +41,7 @@ public class BlockbusterTab extends CreativeTabs
         super.displayAllReleventItems(items);
 
         ItemStack stack = new ItemStack(Items.spawn_egg);
-
-        NBTTagCompound tag = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
-        NBTTagCompound entity = new NBTTagCompound();
-
-        entity.setString("id", "blockbuster.Actor");
-        tag.setTag("EntityTag", entity);
-
-        stack.setTagCompound(tag);
+        stack.setItemDamage(500);
 
         items.add(stack);
     }

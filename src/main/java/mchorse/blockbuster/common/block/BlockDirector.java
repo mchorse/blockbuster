@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.block;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
@@ -22,6 +23,7 @@ public class BlockDirector extends AbstractBlockDirector
     public BlockDirector()
     {
         super();
+        this.setCreativeTab(Blockbuster.blockbusterTab);
     }
 
     @Override
@@ -52,6 +54,8 @@ public class BlockDirector extends AbstractBlockDirector
     protected void displayCast(EntityPlayer player, World worldIn, BlockPos pos)
     {
         TileEntityDirector tile = (TileEntityDirector) worldIn.getTileEntity(pos.x, pos.y, pos.z);
+
+        System.out.println(tile.replays);
         Dispatcher.sendTo(new PacketDirectorCast(new BlockPos(tile.xCoord, tile.yCoord, tile.zCoord), tile.replays), (EntityPlayerMP) player);
     }
 

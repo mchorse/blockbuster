@@ -67,6 +67,8 @@ public class ModelCustom extends ModelBase
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
+        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entityIn);
+
         for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
@@ -111,9 +113,9 @@ public class ModelCustom extends ModelBase
                 limb.rotateAngleX += (MathHelper.sin(ageInTicks * 0.067F) * 0.05F) * factor;
             }
 
-            if (limb.limb.swiping && this.swingProgress > 0.0F)
+            if (limb.limb.swiping && this.onGround > 0.0F)
             {
-                float swing = this.swingProgress;
+                float swing = this.onGround;
                 float bodyY = MathHelper.sin(MathHelper.sqrt_float(swing) * PI * 2F) * 0.2F * factor;
 
                 swing = 1.0F - swing;

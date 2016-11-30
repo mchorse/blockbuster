@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -89,24 +88,6 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     public boolean canHarvestBlock(EntityPlayer player, int meta)
     {
         return true;
-    }
-
-    /* Redstone */
-
-    @Override
-    public boolean canProvidePower()
-    {
-        return true;
-    }
-
-    /**
-     * Power west side of the block while block is playing and power east side
-     * of the block while isn't playback actors.
-     */
-    @Override
-    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int meta)
-    {
-        return meta == 1 ? 15 : 0;
     }
 
     /* Player interaction */

@@ -280,6 +280,39 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
     }
 
+    @Override
+    protected float func_110146_f(float p_110146_1_, float p_110146_2_)
+    {
+        float f2 = MathHelper.wrapAngleTo180_float(p_110146_1_ - this.renderYawOffset);
+        this.renderYawOffset += f2 * 0.3F;
+        float f3 = MathHelper.wrapAngleTo180_float(this.rotationYaw - this.renderYawOffset);
+        boolean flag = f3 < -90.0F || f3 >= 90.0F;
+
+        if (f3 < -75.0F)
+        {
+            f3 = -75.0F;
+        }
+
+        if (f3 >= 75.0F)
+        {
+            f3 = 75.0F;
+        }
+
+        this.renderYawOffset = this.rotationYaw - f3;
+
+        if (f3 * f3 > 2500.0F)
+        {
+            this.renderYawOffset += f3 * 0.2F;
+        }
+
+        if (flag)
+        {
+            p_110146_2_ *= -1.0F;
+        }
+
+        return p_110146_2_;
+    }
+
     /* Processing interaction with player */
 
     /**

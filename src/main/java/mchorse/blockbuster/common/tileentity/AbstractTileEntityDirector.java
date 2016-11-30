@@ -214,7 +214,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     @Override
     public void update()
     {
-        if (this.worldObj.isRemote || !this.isPlaying() || this.tick-- > 0)
+        if (this.worldObj.isRemote || this.tick-- > 0 || !this.isPlaying())
         {
             return;
         }
