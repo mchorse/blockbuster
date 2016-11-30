@@ -7,7 +7,7 @@ import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 
 /**
  * Circular camera fixture
@@ -65,17 +65,17 @@ public class CircularFixture extends AbstractFixture
     {
         if (args.length > 0)
         {
-            this.distance = (float) CommandBase.parseDouble(args[0]);
+            this.distance = (float) CommandBase.parseDouble(player, args[0]);
         }
 
         if (args.length > 1)
         {
-            this.circles = (float) CommandBase.parseDouble(args[1]);
+            this.circles = (float) CommandBase.parseDouble(player, args[1]);
         }
 
         if (args.length > 2)
         {
-            this.pitch = (float) CommandBase.parseDouble(args[2]);
+            this.pitch = (float) CommandBase.parseDouble(player, args[2]);
         }
 
         this.offset = player.rotationYaw < 0 ? 360 + player.rotationYaw : player.rotationYaw;
@@ -106,10 +106,10 @@ public class CircularFixture extends AbstractFixture
         float y = this.start.y;
         float z = this.start.z + 0.5F + sin;
 
-        float yaw = (float) (MathHelper.atan2(sin, cos) * (180D / Math.PI)) - 90.0F;
+        float yaw = (float) (Math.atan2(sin, cos) * (180D / Math.PI)) - 90.0F;
 
         pos.point.set(x - 0.5F, y, z - 0.5F);
-        pos.angle.set(MathHelper.wrapDegrees(yaw - 180.0F), this.pitch);
+        pos.angle.set((float) MathHelper.wrapAngleTo180_double(yaw - 180.0F), this.pitch);
     }
 
     @Override

@@ -86,7 +86,7 @@ public abstract class AbstractFixture
         }
 
         String type = args[0];
-        long duration = CommandBase.parseLong(args[1]);
+        long duration = CommandBase.parseInt(player, args[1]);
         AbstractFixture fixture;
 
         try

@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 
 /**
  * Look camera fixture
@@ -84,8 +84,8 @@ public class LookFixture extends IdleFixture
         double dZ = z - this.position.point.z;
         double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
 
-        float yaw = (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
-        float pitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
+        float yaw = (float) (Math.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
+        float pitch = (float) (-(Math.atan2(dY, horizontalDistance) * (180D / Math.PI)));
 
         if (this.oldProgress > progress || this.oldProgress == 0)
         {

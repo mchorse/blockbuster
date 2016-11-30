@@ -1,5 +1,7 @@
 package mchorse.blockbuster.camera;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
@@ -8,8 +10,6 @@ import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Camera control class

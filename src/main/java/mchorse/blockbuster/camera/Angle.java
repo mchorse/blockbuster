@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 
 /**
  * Angle class

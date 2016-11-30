@@ -9,7 +9,7 @@ import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 
 /**
  * Path camera fixture
@@ -52,7 +52,7 @@ public class PathFixture extends AbstractFixture
         {
             int max = this.points.size() - 1;
 
-            this.points.get(CommandBase.parseInt(args[0], 0, max)).set(player);
+            this.points.get(CommandBase.parseInt(player, args[0])).set(player);
         }
     }
 
