@@ -15,7 +15,7 @@ public class ServerHandlerDirectorRemove extends ServerMessageHandler<PacketDire
     @Override
     public void run(EntityPlayerMP player, PacketDirectorRemove message)
     {
-        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
+        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z));
 
         tile.remove(message.id);
         Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);

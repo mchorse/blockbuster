@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.common.director;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.utils.BlockPos;
 
 public class PacketDirectorDetach extends PacketDirector
 {

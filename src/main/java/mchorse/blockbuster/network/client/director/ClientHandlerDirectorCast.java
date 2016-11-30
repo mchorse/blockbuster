@@ -1,5 +1,7 @@
 package mchorse.blockbuster.network.client.director;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -7,8 +9,6 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client handler director cast

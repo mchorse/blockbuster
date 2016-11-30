@@ -1,11 +1,11 @@
 package mchorse.blockbuster.network.client.camera;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client handler camera state

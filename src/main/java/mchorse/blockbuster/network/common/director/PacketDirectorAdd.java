@@ -1,8 +1,8 @@
 package mchorse.blockbuster.network.common.director;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import mchorse.blockbuster.utils.BlockPos;
 
 public class PacketDirectorAdd extends PacketDirector
 {

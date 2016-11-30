@@ -1,10 +1,10 @@
 package mchorse.blockbuster.network.common;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketMorph implements IMessage
 {

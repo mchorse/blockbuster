@@ -2,10 +2,10 @@ package mchorse.blockbuster.network.common.director;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import mchorse.blockbuster.utils.BlockPos;
 
 public abstract class PacketDirector implements IMessage
 {

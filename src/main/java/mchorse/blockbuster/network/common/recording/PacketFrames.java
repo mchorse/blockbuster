@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import mchorse.blockbuster.recording.data.Frame;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Packet that responsible for delivering recorded frames either to server for

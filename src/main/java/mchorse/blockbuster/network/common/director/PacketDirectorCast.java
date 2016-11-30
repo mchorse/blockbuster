@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.utils.BlockPos;
 
 public class PacketDirectorCast extends PacketDirector
 {

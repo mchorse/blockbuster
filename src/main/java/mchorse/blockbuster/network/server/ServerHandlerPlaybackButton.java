@@ -11,7 +11,7 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
     @Override
     public void run(EntityPlayerMP player, PacketPlaybackButton message)
     {
-        ItemStack stack = player.getHeldItemMainhand();
+        ItemStack stack = player.getHeldItem();
         NBTTagCompound compound = stack.getTagCompound();
 
         if (stack == null || !(stack.getItem() instanceof ItemPlayback) || compound == null)

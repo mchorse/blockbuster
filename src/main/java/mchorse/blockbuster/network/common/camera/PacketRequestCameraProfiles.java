@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.common.camera;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Request server to send list of all camera profiles to the client

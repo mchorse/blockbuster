@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This handler is responsible for saving received models and skins to

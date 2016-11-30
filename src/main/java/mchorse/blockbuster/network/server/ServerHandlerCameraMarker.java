@@ -6,7 +6,7 @@ import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ChatComponentText;
 
 public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCameraMarker>
 {
@@ -24,7 +24,7 @@ public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCamera
         String string = I18n.format("blockbuster.marker", record.record.filename, Integer.toString(delay), tick, difference);
 
         CommonProxy.manager.getActions(player).add(new ChatAction(string));
-        player.addChatMessage(new TextComponentString(string));
+        player.addChatMessage(new ChatComponentText(string));
         record.previousTick = record.tick;
     }
 }

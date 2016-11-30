@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.common.director;
 
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.utils.BlockPos;
 
 public class PacketDirectorReset extends PacketDirector
 {

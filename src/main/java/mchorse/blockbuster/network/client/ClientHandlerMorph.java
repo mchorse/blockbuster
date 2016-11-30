@@ -1,11 +1,11 @@
 package mchorse.blockbuster.network.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.capabilities.morphing.IMorphing;
 import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.network.common.PacketMorph;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerMorph extends ClientMessageHandler<PacketMorph>
 {

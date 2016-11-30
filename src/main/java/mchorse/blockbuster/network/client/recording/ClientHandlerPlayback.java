@@ -1,5 +1,7 @@
 package mchorse.blockbuster.network.client.recording;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -10,8 +12,6 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client handler actor playback

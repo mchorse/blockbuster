@@ -3,9 +3,9 @@ package mchorse.blockbuster.network.common.camera;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.network.common.director.PacketDirector;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketListCameraProfiles implements IMessage
 {

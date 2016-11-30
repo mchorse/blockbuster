@@ -18,7 +18,7 @@ public class ServerHandlerDirectorReset extends ServerMessageHandler<PacketDirec
     @Override
     public void run(EntityPlayerMP player, PacketDirectorReset message)
     {
-        TileEntityDirector tile = (TileEntityDirector) player.worldObj.getTileEntity(message.pos);
+        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos.x, message.pos.y, message.pos.z));
 
         tile.reset();
         Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);

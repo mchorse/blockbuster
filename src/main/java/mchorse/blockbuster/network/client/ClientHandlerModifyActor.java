@@ -1,10 +1,10 @@
 package mchorse.blockbuster.network.client;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerModifyActor extends ClientMessageHandler<PacketModifyActor>
 {

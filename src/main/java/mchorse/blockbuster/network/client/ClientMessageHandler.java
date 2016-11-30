@@ -1,12 +1,12 @@
 package mchorse.blockbuster.network.client;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.network.AbstractMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This class passes operation from Netty to Minecraft (Client) Thread. Also
@@ -24,14 +24,7 @@ public abstract class ClientMessageHandler<T extends IMessage> extends AbstractM
     @SideOnly(Side.CLIENT)
     public IMessage handleClientMessage(final T message)
     {
-        Minecraft.getMinecraft().addScheduledTask(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                ClientMessageHandler.this.run(Minecraft.getMinecraft().thePlayer, message);
-            }
-        });
+        this.run(Minecraft.getMinecraft().thePlayer, message);
 
         return null;
     }
