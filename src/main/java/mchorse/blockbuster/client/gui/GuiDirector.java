@@ -84,6 +84,12 @@ public class GuiDirector extends GuiScreen
     }
 
     @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
+    @Override
     public void handleMouseInput()
     {
         super.handleMouseInput();

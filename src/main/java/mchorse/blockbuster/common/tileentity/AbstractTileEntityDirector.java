@@ -9,7 +9,6 @@ import mchorse.blockbuster.utils.BlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -20,7 +19,7 @@ import net.minecraft.world.World;
  * provides basic methods for changing state of the block, and defines
  * some abstract methods for playback.
  */
-public abstract class AbstractTileEntityDirector extends TileEntity implements IUpdatePlayerListBox
+public abstract class AbstractTileEntityDirector extends TileEntity
 {
     public List<Replay> replays = new ArrayList<Replay>();
 
@@ -212,7 +211,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      * still playing their roles.
      */
     @Override
-    public void update()
+    public void updateEntity()
     {
         if (this.worldObj.isRemote || this.tick-- > 0 || !this.isPlaying())
         {
@@ -234,7 +233,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
-        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), isPlaying ? 1 : 0, 3);
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, isPlaying ? 1 : 0, 2);
     }
 
     /**

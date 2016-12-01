@@ -185,6 +185,11 @@ public class Record
 
         for (int i = 0; i < c; i++)
         {
+            if (d + 1 >= this.actions.size())
+            {
+                continue;
+            }
+
             NBTTagCompound frameTag = new NBTTagCompound();
 
             Frame frame = this.frames.get(i);

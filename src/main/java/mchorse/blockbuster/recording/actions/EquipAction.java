@@ -51,14 +51,11 @@ public class EquipAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        if (this.armorId == -1)
-        {
-            actor.setCurrentItemOrArmor(this.armorSlot, null);
-        }
-        else
-        {
-            actor.setCurrentItemOrArmor(this.armorSlot, ItemStack.loadItemStackFromNBT(this.itemData));
-        }
+        ItemStack stack = this.armorId == -1 ? null : ItemStack.loadItemStackFromNBT(this.itemData);
+
+        System.out.println(stack);
+
+        actor.setCurrentItemOrArmor(this.armorSlot, stack);
     }
 
     @Override

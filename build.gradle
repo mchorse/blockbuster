@@ -17,9 +17,9 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+version = "1.4-1.7.10"
+group= "mchorse.blockbuster" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "blockbuster"
 
 minecraft {
     version = "1.7.10-10.13.4.1558-1.7.10"
@@ -51,7 +51,10 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+        include 'README.md'
+        include 'CHANGELOG.md'
+        include 'LICENSE.md'
+        
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }

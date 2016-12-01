@@ -1,5 +1,7 @@
 package mchorse.blockbuster.common.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
@@ -45,6 +47,7 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractBlockDirector extends Block implements ITileEntityProvider
 {
+    @SideOnly(Side.CLIENT)
     public IIcon[] icons = new IIcon[4];
 
     public AbstractBlockDirector()
@@ -57,6 +60,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister register)
     {
         this.icons[0] = register.registerIcon("blockbuster:director_block_blank");
@@ -66,17 +70,18 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
     {
-        if (side == 3)
+        if (side == 4 && meta == 0)
         {
             return this.icons[2];
         }
-        else if (side == 2)
+        else if (side == 5 && meta == 1)
         {
             return this.icons[3];
         }
-        else if (side == 4 || side == 5)
+        else if (side == 2 || side == 3)
         {
             return this.icons[1];
         }
