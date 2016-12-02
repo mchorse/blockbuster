@@ -59,7 +59,7 @@ public class Frame
 
         /* Position and rotation */
         this.x = mount.posX;
-        this.y = mount.posY;
+        this.y = mount.boundingBox.minY;
         this.z = mount.posZ;
 
         this.yaw = player.rotationYaw;

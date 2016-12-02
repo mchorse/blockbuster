@@ -185,7 +185,7 @@ public class Record
 
         for (int i = 0; i < c; i++)
         {
-            if (d + 1 >= this.actions.size())
+            if (d + i >= this.actions.size())
             {
                 continue;
             }
