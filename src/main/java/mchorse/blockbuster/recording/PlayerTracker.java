@@ -106,7 +106,7 @@ public class PlayerTracker
             this.swiped = true;
             this.recorder.actions.add(new SwipeAction());
         }
-        else
+        else if (!player.isSwingInProgress && this.swiped)
         {
             this.swiped = false;
         }
