@@ -61,8 +61,10 @@ public class PathFixture extends AbstractFixture
     {
         if (this.points.isEmpty()) return;
 
+        int length = this.points.size() - 1;
+
         progress += ((float) 1 / this.duration) * partialTicks;
-        progress = MathHelper.clamp_float(progress * (this.points.size() - 1), 0, 1);
+        progress = MathHelper.clamp_float(progress * (length), 0, length);
 
         int prev = (int) Math.floor(progress);
         int next = (int) Math.ceil(progress);

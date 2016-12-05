@@ -188,7 +188,12 @@ public class Record
             NBTTagCompound frameTag = new NBTTagCompound();
 
             Frame frame = this.frames.get(i);
-            Action action = this.actions.get(d + i);
+            Action action = null;
+
+            if (d + i <= this.actions.size() - 1)
+            {
+                action = this.actions.get(d + i);
+            }
 
             frame.toNBT(frameTag);
 
