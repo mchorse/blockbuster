@@ -2,6 +2,14 @@
 
 Blockbuster's change log.
 
+## Version 1.4.1
+
+This is a small patch that fixes several things, and adds one configuration option.
+
+* Added `Switch to Spectator` configuration option in `Camera` category
+* Added creation of `alex` and `steve` skins folders (thanks to badr and to people who didn't knew where to put their skins)
+* Fixed `Error executing task` while saving of player recordings
+
 ## Version 1.4 (Slow-Mo update)
 
 This is a big update that improves the quality of recording. Now you can use [Minema mod](https://github.com/daipenger/minema/releases) to record high quality videos of your machinimas (with shaders... **HYPE mode activated**).

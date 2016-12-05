@@ -50,6 +50,11 @@ public class BlockbusterConfig
      */
     public float camera_interpolate_target_value;
 
+    /**
+     * Switch to spectator mode when starting camera playback
+     */
+    public boolean camera_spectator;
+
     /* Recording */
 
     /**
@@ -102,6 +107,7 @@ public class BlockbusterConfig
         this.camera_duration = this.config.getInt("camera_duration", camera, 30, 1, 1000, "What is default duration of the camera fixture (in ticks)", camPrefix + "camera_duration");
         this.camera_interpolate_target = this.config.getBoolean("camera_interpolate_target", camera, false, "Interpolate target based camera fixtures (follow and look) outcome", camPrefix + "camera_interpolate_target");
         this.camera_interpolate_target_value = this.config.getFloat("camera_interpolate_target_value", camera, 0.5F, 0.0F, 1.0F, "Interpolation value for target based camera fixture interpolation", camPrefix + "camera_interpolate_target_value");
+        this.camera_spectator = this.config.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback", camPrefix + "camera_spectator");
 
         /* Recording */
         this.recording_delay = this.config.getInt("recording_delay", recording, 1, 1, 10, "Frame delay for recording", recPrefix + "recording_delay");
