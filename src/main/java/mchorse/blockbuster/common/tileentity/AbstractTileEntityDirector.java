@@ -1,11 +1,13 @@
 package mchorse.blockbuster.common.tileentity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -23,6 +25,7 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
+    public List<String> _replays = new ArrayList<String>();
     public List<Replay> replays = new ArrayList<Replay>();
 
     /**
@@ -63,6 +66,18 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         NBTTagList tagList = compound.getTagList(key, 10);
         list.clear();
+
+        if (tagList.tagCount() == 0)
+        {
+            NBTTagList ids = compound.getTagList(key, 8);
+
+            for (int i = 0; i < ids.tagCount(); i++)
+            {
+                this._replays.add(ids.getStringTagAt(i));
+            }
+
+            return;
+        }
 
         for (int i = 0; i < tagList.tagCount(); i++)
         {
@@ -217,13 +232,46 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     @Override
     public void update()
     {
-        if (this.worldObj.isRemote || !this.isPlaying() || this.tick-- > 0)
+        boolean isRemote = this.worldObj.isRemote;
+
+        if (!isRemote && !this._replays.isEmpty())
+        {
+            this.convertOldReplays();
+        }
+
+        if (isRemote || !this.isPlaying() || this.tick-- > 0)
         {
             return;
         }
 
         this.areActorsStillPlaying();
         this.tick = 4;
+    }
+
+    /**
+     * Convert old replays to the new format.
+     *
+     * Unfortunately, it's impossible to recover old data without hacks and
+     * workaround.
+     */
+    private void convertOldReplays()
+    {
+        Iterator<String> it = this._replays.iterator();
+
+        while (it.hasNext())
+        {
+            String uuid = it.next();
+            EntityActor actor = (EntityActor) EntityUtils.entityByUUID(this.worldObj, uuid);
+
+            if (actor != null && !actor._filename.isEmpty())
+            {
+                Replay replay = new Replay(actor);
+                replay.id = actor._filename;
+
+                this.replays.add(replay);
+                it.remove();
+            }
+        }
     }
 
     /**
