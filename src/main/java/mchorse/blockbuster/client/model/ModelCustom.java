@@ -5,10 +5,10 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -52,6 +52,10 @@ public class ModelCustom extends ModelBase
 
     public ModelCustomRenderer[] left;
     public ModelCustomRenderer[] right;
+
+    /* Model biped poses */
+    public ModelBiped.ArmPose leftPose = ArmPose.EMPTY;
+    public ModelBiped.ArmPose rightPose = ArmPose.EMPTY;
 
     /**
      * Initiate the model with the size of the texture
@@ -129,12 +133,38 @@ public class ModelCustom extends ModelBase
 
             if (!limb.limb.holding.isEmpty())
             {
-                EntityLivingBase entity = (EntityLivingBase) entityIn;
-                ItemStack stack = limb.limb.holding.equals("right") ? entity.getHeldItemMainhand() : entity.getHeldItemOffhand();
+                boolean right = limb.limb.holding.equals("right");
+                ModelBiped.ArmPose pose = right ? this.rightPose : this.leftPose;
+                ModelBiped.ArmPose opposite = right ? this.leftPose : this.rightPose;
 
-                if (stack != null)
+                switch (pose)
                 {
-                    limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
+                    case BLOCK:
+                        limb.rotateAngleX = limb.rotateAngleX * 0.5F - 0.9424779F;
+                        limb.rotateAngleY = 0.5235988F * (right ? -1 : 1);
+                        break;
+
+                    case ITEM:
+                        limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
+                        break;
+                }
+
+                float rotateAngleX = headPitch * 0.017453292F;
+                float rotateAngleY = netHeadYaw * 0.017453292F;
+
+                if (right && pose == ModelBiped.ArmPose.BOW_AND_ARROW)
+                {
+                    limb.rotateAngleY = -0.1F + rotateAngleY - 0.4F;
+                    limb.rotateAngleY = 0.1F + rotateAngleY;
+                    limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
+                    limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
+                }
+                else if (!right && opposite == ModelBiped.ArmPose.BOW_AND_ARROW)
+                {
+                    limb.rotateAngleY = -0.1F + rotateAngleY;
+                    limb.rotateAngleY = 0.1F + rotateAngleY + 0.4F;
+                    limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
+                    limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
                 }
             }
         }
