@@ -2,6 +2,15 @@
 
 Blockbuster's change log.
 
+## Version 1.4.2
+
+This is a small patch that adds few user requested features. Somebody might be excited for this.
+
+* Added legacy compatibility for pre-`1.3` director blocks (requested by NlL5)
+* Added support for arm postures and item animations (suggested by RedComet2000)
+    * Comes in effect after making a new player recordings (since some new data needs to be recorded)
+* Added `Hands` field in player recording frame data structure
+
 ## Version 1.4.1
 
 This is a small patch that fixes several things, and adds one configuration option.
