@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 
 /**
  * Recording frame class
@@ -47,6 +48,9 @@ public class Frame
     public boolean isSprinting;
     public boolean onGround;
     public boolean flyingElytra;
+
+    /* Active hand */
+    public int activeHands;
 
     /* Methods for retrieving/applying state data */
 
@@ -89,6 +93,9 @@ public class Frame
 
         this.isAirBorne = mount.isAirBorne;
         this.onGround = mount.onGround;
+
+        /* Active hands */
+        this.activeHands = player.isHandActive() ? (player.getActiveHand() == EnumHand.OFF_HAND ? 2 : 1) : 0;
     }
 
     /**
@@ -164,6 +171,18 @@ public class Frame
 
         mount.isAirBorne = this.isAirBorne;
         mount.onGround = this.onGround;
+
+        if (!isRemote)
+        {
+            if (this.activeHands > 0 && !actor.isHandActive())
+            {
+                actor.setActiveHand(this.activeHands == 1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
+            }
+            else if (this.activeHands == 0 && actor.isHandActive())
+            {
+                actor.stopActiveHand();
+            }
+        }
     }
 
     /* Save/load frame instance */
@@ -201,6 +220,8 @@ public class Frame
         out.writeBoolean(this.isSprinting);
         out.writeBoolean(this.onGround);
         out.writeBoolean(this.flyingElytra);
+
+        out.writeByte(this.activeHands);
     }
 
     /**
@@ -236,6 +257,8 @@ public class Frame
         this.isSprinting = in.readBoolean();
         this.onGround = in.readBoolean();
         this.flyingElytra = in.readBoolean();
+
+        this.activeHands = in.readByte();
     }
 
     /**
@@ -272,6 +295,11 @@ public class Frame
         tag.setBoolean("Sneaking", this.isSneaking);
         tag.setBoolean("Sprinting", this.isSprinting);
         tag.setBoolean("Ground", this.onGround);
+
+        if (this.activeHands > 0)
+        {
+            tag.setByte("Hands", (byte) this.activeHands);
+        }
     }
 
     /**
@@ -307,5 +335,10 @@ public class Frame
         this.isSneaking = tag.getBoolean("Sneaking");
         this.isSprinting = tag.getBoolean("Sprinting");
         this.onGround = tag.getBoolean("Ground");
+
+        if (tag.hasKey("Hands"))
+        {
+            this.activeHands = tag.getByte("Hands");
+        }
     }
 }

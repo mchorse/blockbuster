@@ -100,6 +100,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public RecordPlayer playback;
 
+    /**
+     * Backward compatibility filename thing
+     */
+    public String _filename = "";
+
     /* Default pose sizes */
     private float[] flying = {0.6F, 0.6F};
     private float[] sneaking = {0.6F, 1.65F};
@@ -504,6 +509,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
+        this._filename = tag.getString("Filename");
 
         if (!this.worldObj.isRemote)
         {
@@ -588,5 +594,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
+    }
+
+    public void setItemStackInUse(int activeCount)
+    {
+        this.activeItemStackUseCount = activeCount;
     }
 }
