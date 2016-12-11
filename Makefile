@@ -1,4 +1,4 @@
-VERSION=1.4.1-1.10.2
+VERSION=1.4.2-1.10.2
 MODS_DIR=~/Library/Application\ Support/minecraft/mods/
 
 build_mod: build_lang
