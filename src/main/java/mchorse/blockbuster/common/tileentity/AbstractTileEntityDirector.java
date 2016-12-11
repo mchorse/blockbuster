@@ -267,6 +267,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
             {
                 Replay replay = new Replay(actor);
                 replay.id = actor._filename;
+                replay.model = "steve";
 
                 this.replays.add(replay);
                 it.remove();
