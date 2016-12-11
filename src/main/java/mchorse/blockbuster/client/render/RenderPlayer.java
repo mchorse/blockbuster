@@ -71,7 +71,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     {
         this.setupModel(entity);
 
-        if (this.mainModel == null)
+        if (this.mainModel != null)
         {
             this.setHands(entity);
             super.doRender(entity, x, y, z, entityYaw, partialTicks);

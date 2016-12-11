@@ -131,7 +131,7 @@ public class ModelCustom extends ModelBase
                 limb.rotateAngleZ += MathHelper.sin(this.swingProgress * PI) * -0.4F;
             }
 
-            if (!limb.limb.holding.isEmpty())
+            if (!limb.limb.holding.isEmpty() && limb.limb.parent.isEmpty())
             {
                 boolean right = limb.limb.holding.equals("right");
                 ModelBiped.ArmPose pose = right ? this.rightPose : this.leftPose;
