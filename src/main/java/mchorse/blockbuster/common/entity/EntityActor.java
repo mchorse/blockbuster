@@ -501,7 +501,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         super.readEntityFromNBT(tag);
 
         this.model = tag.getString("Model");
-        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model);
+        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model.isEmpty() ? "steve" : "");
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);

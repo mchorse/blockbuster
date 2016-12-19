@@ -8,15 +8,19 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.blockbuster.client.render.layers.LayerActorArmor;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -42,6 +46,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerActorArmor(this));
     }
 
     @Override
@@ -68,9 +73,61 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
     {
         this.setupModel(entity);
 
-        if (this.mainModel == null) return;
+        if (this.mainModel != null)
+        {
+            this.setHands(entity);
+            super.doRender(entity, x, y, z, entityYaw, partialTicks);
+        }
+    }
 
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    /**
+     * Set hands postures
+     */
+    private void setHands(EntityPlayer player)
+    {
+        ItemStack rightItem = player.getHeldItemMainhand();
+        ItemStack leftItem = player.getHeldItemOffhand();
+
+        ModelBiped.ArmPose right = ModelBiped.ArmPose.EMPTY;
+        ModelBiped.ArmPose left = ModelBiped.ArmPose.EMPTY;
+        ModelCustom model = (ModelCustom) this.mainModel;
+
+        if (rightItem != null)
+        {
+            right = ModelBiped.ArmPose.ITEM;
+
+            if (player.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction = rightItem.getItemUseAction();
+
+                if (enumaction == EnumAction.BLOCK)
+                {
+                    right = ModelBiped.ArmPose.BLOCK;
+                }
+                else if (enumaction == EnumAction.BOW)
+                {
+                    right = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }
+            }
+        }
+
+        if (leftItem != null)
+        {
+            left = ModelBiped.ArmPose.ITEM;
+
+            if (player.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction1 = leftItem.getItemUseAction();
+
+                if (enumaction1 == EnumAction.BLOCK)
+                {
+                    left = ModelBiped.ArmPose.BLOCK;
+                }
+            }
+        }
+
+        model.rightPose = right;
+        model.leftPose = left;
     }
 
     /**
