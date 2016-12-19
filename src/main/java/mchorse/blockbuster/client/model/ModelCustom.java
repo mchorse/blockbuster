@@ -9,6 +9,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBiped.ArmPose;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -102,10 +103,25 @@ public class ModelCustom extends ModelBase
 
             if (limb.limb.swinging)
             {
-                float f = 0.8F;
-                float f2 = mirror ^ invert ? 1 : 0;
+                boolean flag = entityIn instanceof EntityLivingBase && ((EntityLivingBase) entityIn).getTicksElytraFlying() > 4;
+                float f = 1.0F;
 
-                limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI * f2) * 2.0F * limbSwingAmount * 0.5F / f;
+                if (flag)
+                {
+                    f = (float) (entityIn.motionX * entityIn.motionX + entityIn.motionY * entityIn.motionY + entityIn.motionZ * entityIn.motionZ);
+                    f = f / 0.2F;
+                    f = f * f * f;
+                }
+
+                if (f < 1.0F)
+                {
+                    f = 1.0F;
+                }
+
+                float f2 = mirror ^ invert ? 1 : 0;
+                float f3 = limb.limb.holding.isEmpty() ? 1.4F : 1.0F;
+
+                limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI * f2) * f3 * limbSwingAmount / f;
             }
 
             if (limb.limb.idle)
@@ -131,7 +147,7 @@ public class ModelCustom extends ModelBase
                 limb.rotateAngleZ += MathHelper.sin(this.swingProgress * PI) * -0.4F;
             }
 
-            if (!limb.limb.holding.isEmpty())
+            if (!limb.limb.holding.isEmpty() && limb.limb.parent.isEmpty())
             {
                 boolean right = limb.limb.holding.equals("right");
                 ModelBiped.ArmPose pose = right ? this.rightPose : this.leftPose;

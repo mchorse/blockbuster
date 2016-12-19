@@ -43,7 +43,7 @@ public class SubCommandActionRecord extends CommandBase
         EntityPlayer player = getCommandSenderAsPlayer(sender);
         boolean recording = CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true);
 
-        if (recording && args.length >= 4)
+        if (args.length >= 4)
         {
             BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
             TileEntity tile = sender.getEntityWorld().getTileEntity(pos);
@@ -52,8 +52,15 @@ public class SubCommandActionRecord extends CommandBase
             {
                 TileEntityDirector director = (TileEntityDirector) tile;
 
-                director.applyReplay(director.byFile(args[0]), player);
-                director.startPlayback(args[0]);
+                if (recording)
+                {
+                    director.applyReplay(director.byFile(args[0]), player);
+                    director.startPlayback(args[0]);
+                }
+                else
+                {
+                    director.stopPlayback();
+                }
             }
         }
     }

@@ -16,10 +16,10 @@
                     "translate": [ 0, 24, 0 ]
                 },
                 "left_arm": {
-                    "translate": [ 5.5, 24, 0 ]
+                    "translate": [ 5.5, 22, 0 ]
                 },
                 "right_arm": {
-                    "translate": [ -5.5, 24, 0 ]
+                    "translate": [ -5.5, 22, 0 ]
                 },
                 "left_leg": {
                     "translate": [ 2, 12, 0 ]
@@ -28,11 +28,11 @@
                     "translate": [ -2, 12, 0 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "right_legwear": {
@@ -63,11 +63,11 @@
                     "translate": [ 0, 24, 0 ]
                 },
                 "left_arm": {
-                    "translate": [ 5.5, 24, 0 ],
+                    "translate": [ 5.5, 22, 0 ],
                     "rotate": [ -36, 0, 0 ]
                 },
                 "right_arm": {
-                    "translate": [ -5.5, 24, 0 ],
+                    "translate": [ -5.5, 22, 0 ],
                     "rotate": [ -36, 0, 0 ]
                 },
                 "left_leg": {
@@ -79,11 +79,11 @@
                     "rotate": [ -81, 18, 4.5 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "right_legwear": {
@@ -115,11 +115,11 @@
                     "scale": [ 1.1, 1.1, 1.1 ]
                 },
                 "left_arm": {
-                    "translate": [ 5.5, 20.8, 0 ],
+                    "translate": [ 5.5, 18.8, 0 ],
                     "rotate": [ 22.9, 0, 0 ]
                 },
                 "right_arm": {
-                    "translate": [ -5.5, 20.8, 0 ],
+                    "translate": [ -5.5, 18.8, 0 ],
                     "rotate": [ 22.9, 0, 0 ]
                 },
                 "left_leg": {
@@ -129,11 +129,11 @@
                     "translate": [ -2, 12, -4 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "right_legwear": {
@@ -164,10 +164,10 @@
                     "translate": [ 0, 24, 0 ]
                 },
                 "left_arm": {
-                    "translate": [ 5.5, 24, 0 ]
+                    "translate": [ 5.5, 22, 0 ]
                 },
                 "right_arm": {
-                    "translate": [ -5.5, 24, 0 ]
+                    "translate": [ -5.5, 22, 0 ]
                 },
                 "left_leg": {
                     "translate": [ 2, 12, 0 ]
@@ -180,11 +180,11 @@
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "right_legwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_legwear": {
@@ -211,10 +211,10 @@
                     "translate": [ 0, 24, 0 ]
                 },
                 "left_arm": {
-                    "translate": [ 5.5, 24, 0 ]
+                    "translate": [ 5.5, 22, 0 ]
                 },
                 "right_arm": {
-                    "translate": [ -5.5, 24, 0 ]
+                    "translate": [ -5.5, 22, 0 ]
                 },
                 "left_leg": {
                     "translate": [ 2, 12, 0 ]
@@ -223,11 +223,11 @@
                     "translate": [ -2, 12, 0 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "left_armwear": {
-                    "translate": [ 0, -6, 0 ],
+                    "translate": [ 0, -4, 0 ],
                     "scale": [ 1.05, 1.05, 1.05 ]
                 },
                 "right_legwear": {
@@ -266,7 +266,7 @@
         "left_arm": {
             "size": [ 3, 12, 4 ],
             "texture": [ 32, 48 ],
-            "anchor": [ 0.5, 0, 0.5 ],
+            "anchor": [ 0.5, 0.1666, 0.5 ],
             "holding": "left",
             "swinging": true,
             "idle": true,
@@ -275,7 +275,7 @@
         "right_arm": {
             "size": [ 3, 12, 4 ],
             "texture": [ 40, 16 ],
-            "anchor": [ 0.5, 0, 0.5 ],
+            "anchor": [ 0.5, 0.1666, 0.5 ],
             "holding": "right",
             "swiping": true,
             "swinging": true,
