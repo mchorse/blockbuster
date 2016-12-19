@@ -2,6 +2,14 @@
 
 Blockbuster's change log.
 
+## Version 1.4.3
+
+Another patch update. This patch is aimed at fixing few things and maybe some enhancements. 
+
+* Change the recording command message to `To record $name, click here.` (for understanding which actor to record)
+* Fix `steve` and `alex` armor desynchronization
+* When invoked `/action record` with director block coordinates and if director block is playing, then stop director block playback
+
 ## Version 1.4.2
 
 This is a small patch that adds few user requested features. Somebody might be excited for this.
