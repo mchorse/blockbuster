@@ -1,8 +1,14 @@
 VERSION=1.4.3-1.11
 MODS_DIR=~/Library/Application\ Support/minecraft/mods/
 
-build_mod: build_lang
+build_mod: copy_assets build_lang
 	./gradlew build
+
+copy_assets:
+	rm -f ./src/main/resources/*.md
+	cp ./README.md ./src/main/resources/README.md
+	cp ./CHANGELOG.md ./src/main/resources/CHANGELOG.md
+	cp ./LICENSE.md ./src/main/resources/LICENSE.md
 
 install: build_mod
 	rm -f ${MODS_DIR}/blockbuster-${VERSION}.jar 2> /dev/null

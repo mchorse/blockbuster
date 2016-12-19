@@ -65,9 +65,6 @@ processResources
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'README.md'
-        include 'LICENSE.md'
-        include 'CHANGELOG.md'
         include 'mcmod.info'
                 
         // replace version and mcversion
