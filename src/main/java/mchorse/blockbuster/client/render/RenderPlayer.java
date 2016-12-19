@@ -8,6 +8,7 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.capabilities.morphing.MorphingProvider;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.blockbuster.client.render.layers.LayerActorArmor;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
@@ -45,6 +46,7 @@ public class RenderPlayer extends RenderLivingBase<EntityPlayer>
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerHeldItem(this));
+        this.addLayer(new LayerActorArmor(this));
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.render.layers.LayerActorArmor;
 import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.client.render.layers.LayerHeldItem;
 import mchorse.blockbuster.common.ClientProxy;
@@ -13,7 +14,6 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -51,7 +51,7 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerHeldItem(this));
-        this.addLayer(new LayerBipedArmor(this));
+        this.addLayer(new LayerActorArmor(this));
     }
 
     /**
