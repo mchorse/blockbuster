@@ -150,7 +150,7 @@ public class GuiReplay extends GuiScreen
         component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
         component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
 
-        L10n.info(player, "recording.message", component);
+        L10n.info(player, "recording.message", this.filename.getText(), component);
     }
 
     /**
