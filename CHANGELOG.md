@@ -2,6 +2,22 @@
 
 Blockbuster's change log.
 
+## Version 1.4.4
+
+Another patch update. Another patch for Blockbuster mod. This patch fixes bugs which were found by users. Those are mostly actor bugs.
+
+* Apply fall damage on actors (reported by AlpesH312)
+* Make actors trigger pressure plates (reported by Tilairgan, long time ago)
+* Fix (for 1.11 version) holding hand status (reported by Juan Lopez on YT)
+
+## Version 1.4.3
+
+Another patch update. This patch is aimed at fixing few things and maybe some enhancements. 
+
+* Change the recording command message to `To record $name, click here.` (for understanding which actor to record)
+* Fix `steve` and `alex` armor desynchronization
+* When invoked `/action record` with director block coordinates and if director block is playing, then stop director block playback
+
 ## Version 1.4.2
 
 This is a small patch that adds few user requested features. Somebody might be excited for this.

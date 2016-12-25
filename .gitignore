@@ -22,6 +22,7 @@ eclipse
 run
 .DS_Store
 src/main/resources/assets/blockbuster/lang/*.lang
+src/main/resources/*.md
 
 # PHP
 php/vendor
