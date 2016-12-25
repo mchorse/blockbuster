@@ -92,6 +92,14 @@ public class Record
         }
 
         this.frames.get(tick).applyOnActor(actor, force);
+
+        if (tick != 0)
+        {
+            /* Override fall distance, apparently fallDistance gets reset
+             * faster than RecordRecorder can record both onGround and
+             * fallDistance being correct for player, so we just hack */
+            actor.fallDistance = this.frames.get(tick - 1).fallDistance;
+        }
     }
 
     /**

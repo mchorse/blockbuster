@@ -19,9 +19,6 @@ public class PlayerTracker
      */
     public RecordRecorder recorder;
 
-    /* Swipe tracker */
-    private boolean swiped = false;
-
     /* Items to track */
     private int[] items = new int[6];
 
@@ -101,14 +98,9 @@ public class PlayerTracker
      */
     private void trackSwing(EntityPlayer player)
     {
-        if (player.isSwingInProgress && !this.swiped)
+        if (player.isSwingInProgress && player.swingProgress == 0)
         {
-            this.swiped = true;
             this.recorder.actions.add(new SwipeAction());
-        }
-        else if (!player.isSwingInProgress && this.swiped)
-        {
-            this.swiped = false;
         }
     }
 }

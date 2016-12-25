@@ -33,12 +33,18 @@ wrong.
 
 ## Videos
 
-### Tutorial video
+### Tutorial videos
 
-Tutorial videos for 1.4. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
+Feature videos for 1.4. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
 
 <a href="https://youtu.be/EiNlOLCzc_s?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"> 
     <img src="https://img.youtube.com/vi/EiNlOLCzc_s/0.jpg">
+</a>
+
+There's also a video that shows how to create a simple machinima with Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
+
+<a href="https://youtu.be/cVTIzKzWtqg"> 
+    <img src="https://img.youtube.com/vi/cVTIzKzWtqg/0.jpg">
 </a>
 
 ### Machinima Examples

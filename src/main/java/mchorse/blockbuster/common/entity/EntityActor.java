@@ -22,6 +22,7 @@ import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.RLUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -239,19 +240,27 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
         if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
-        this.prevLimbSwingAmount = this.limbSwingAmount;
+        /* Trigger pressure playback */
+        this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
+    }
 
-        double d0 = this.posX - this.prevPosX;
-        double d1 = this.posZ - this.prevPosZ;
-        float f = MathHelper.sqrt_double(d0 * d0 + d1 * d1) * 4.0F;
-
-        if (f > 1.0F)
+    /**
+     * Update fall state.
+     *
+     * This override is responsible for applying fall damage on the actor.
+     * {@link #moveEntity(double, double, double)} seem to override onGround
+     * property wrongly on the server, so we have to do this bullshit.
+     */
+    @Override
+    protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
+    {
+        if (!this.worldObj.isRemote && this.playback != null)
         {
-            f = 1.0F;
+            /* Override onGround field */
+            this.onGround = onGroundIn = this.playback.record.frames.get(this.playback.tick).onGround;
         }
 
-        this.limbSwingAmount += (f - this.limbSwingAmount) * 0.4F;
-        this.limbSwing += this.limbSwingAmount;
+        super.updateFallState(y, onGroundIn, state, pos);
     }
 
     /**
