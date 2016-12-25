@@ -128,7 +128,7 @@ public class RenderActor extends RenderLiving<EntityActor>
         ModelBiped.ArmPose left = ModelBiped.ArmPose.EMPTY;
         ModelCustom model = (ModelCustom) this.mainModel;
 
-        if (rightItem != null)
+        if (!rightItem.func_190926_b())
         {
             right = ModelBiped.ArmPose.ITEM;
 
@@ -147,7 +147,7 @@ public class RenderActor extends RenderLiving<EntityActor>
             }
         }
 
-        if (leftItem != null)
+        if (!leftItem.func_190926_b())
         {
             left = ModelBiped.ArmPose.ITEM;
 
