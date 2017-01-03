@@ -8,6 +8,7 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.DropAction;
@@ -31,6 +32,7 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -122,6 +124,21 @@ public class ActionHandler
 
                 this.placeBlock(events, snapshot.getPos(), block, state);
             }
+        }
+    }
+
+    /**
+     * Event listener for Action.ATTACK
+     */
+    @SubscribeEvent
+    public void onPlayerAttack(AttackEntityEvent event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.worldObj.isRemote && events != null)
+        {
+            events.add(new AttackAction());
         }
     }
 
