@@ -22,3 +22,8 @@ blockbuster.config:
         camera_interpolate_target: Interpolate target fixtures
         camera_interpolate_target_value: Target interpolation value
         camera_spectator: Switch to specator
+    
+    actor:
+        title: Actor
+        
+        actor_fall_damage: Actor fall damage
