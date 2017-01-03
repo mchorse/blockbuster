@@ -13,6 +13,7 @@ blockbuster.config:
         record_unload_time: Automatic record unload time
         record_unload: Automatic record unloading
         record_sync_rate: Record tick synchronization rate
+        record_attack_on_swipe: Attack on swipe
     
     camera:
         title: Camera
@@ -22,3 +23,8 @@ blockbuster.config:
         camera_interpolate_target: Interpolate target fixtures
         camera_interpolate_target_value: Target interpolation value
         camera_spectator: Switch to specator
+    
+    actor:
+        title: Actor
+        
+        actor_fall_damage: Actor fall damage

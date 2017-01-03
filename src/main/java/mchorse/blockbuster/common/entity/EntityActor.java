@@ -254,7 +254,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
     {
-        if (!this.worldObj.isRemote && this.playback != null)
+        if (!this.worldObj.isRemote && Blockbuster.proxy.config.actor_fall_damage && this.playback != null)
         {
             /* Override onGround field */
             this.onGround = onGroundIn = this.playback.record.frames.get(this.playback.tick).onGround;

@@ -77,6 +77,18 @@ public class BlockbusterConfig
      */
     public int record_sync_rate;
 
+    /**
+     * Does attack action get recorded with swipe action?
+     */
+    public boolean record_attack_on_swipe;
+
+    /* Actors */
+
+    /**
+     * Does actor receive fall damage?
+     */
+    public boolean actor_fall_damage;
+
     private Configuration config;
 
     public BlockbusterConfig(Configuration config)
@@ -87,16 +99,20 @@ public class BlockbusterConfig
 
     /**
      * Reload config values
+     *
+     * Pretty dense code, am I right?
      */
     public void reload()
     {
         String general = Configuration.CATEGORY_GENERAL;
         String recording = "recording";
         String camera = "camera";
+        String actor = "actor";
 
         String genPrefix = "blockbuster.config.general.";
         String recPrefix = "blockbuster.config.recording.";
         String camPrefix = "blockbuster.config.camera.";
+        String actPrefix = "blockbuster.config.actor.";
 
         /* General */
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
@@ -114,6 +130,10 @@ public class BlockbusterConfig
         this.record_unload_time = this.config.getInt("record_unload_time", recording, 2400, 600, 72000, "How long is it takes to unload a record (in ticks)", recPrefix + "record_unload_time");
         this.record_unload = this.config.getBoolean("record_unload", recording, true, "Enable automatic record unloading?", recPrefix + "record_unload");
         this.record_sync_rate = this.config.getInt("record_sync_rate", recording, 6, 1, 30, "How often a record going to synchronize with the server", recPrefix + "record_sync_rate");
+        this.record_attack_on_swipe = this.config.getBoolean("record_attack_on_swipe", recording, false, "Does attack action get recorded with swipe action?", recPrefix + "record_attack_on_swipe");
+
+        /* Actor */
+        this.actor_fall_damage = this.config.getBoolean("actor_fall_damage", actor, true, "Does actor receive fall damage?", actPrefix + "actor_fall_damage");
 
         if (this.config.hasChanged())
         {

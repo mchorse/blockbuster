@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EntitySelectors;
@@ -80,9 +79,8 @@ public class EntityUtils
      *
      * That's a big method... Why Minecraft has lots of these big methods?
      */
-    public static Entity getTargetEntity(Entity input)
+    public static Entity getTargetEntity(Entity input, double maxReach)
     {
-        double maxReach = 64;
         double blockDistance = maxReach;
         RayTraceResult result = input.rayTrace(maxReach, 1.0F);
 
@@ -99,7 +97,7 @@ public class EntityUtils
 
         float area = 1.0F;
 
-        List<Entity> list = Minecraft.getMinecraft().theWorld.getEntitiesInAABBexcluding(input, input.getEntityBoundingBox().addCoord(look.xCoord * maxReach, look.yCoord * maxReach, look.zCoord * maxReach).expand(area, area, area), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
+        List<Entity> list = input.worldObj.getEntitiesInAABBexcluding(input, input.getEntityBoundingBox().addCoord(look.xCoord * maxReach, look.yCoord * maxReach, look.zCoord * maxReach).expand(area, area, area), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
         {
             @Override
             public boolean apply(@Nullable Entity entity)
@@ -113,6 +111,12 @@ public class EntityUtils
         for (int i = 0; i < list.size(); ++i)
         {
             Entity entity = list.get(i);
+
+            if (entity == input)
+            {
+                continue;
+            }
+
             AxisAlignedBB aabb = entity.getEntityBoundingBox().expandXyz(entity.getCollisionBorderSize());
             RayTraceResult intercept = aabb.calculateIntercept(eyes, max);
 
