@@ -63,8 +63,14 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
             {
                 boolean flag = handSide == EnumHandSide.LEFT;
 
-                float y = arm.limb.size[1] * -0.0625F;
+                float x = 0.0F;
+                float y = arm.limb.size[1] * (arm.limb.size[1] * (1 - arm.limb.anchor[1]) / arm.limb.size[1]) * -0.0625F;
                 float z = arm.limb.size[2] / 2 * 0.0625F;
+
+                if (arm.limb.size[0] > arm.limb.size[1])
+                {
+                    x = arm.limb.size[0] * (10.0F / 12.0F) * 0.0625F;
+                }
 
                 GlStateManager.pushMatrix();
 
@@ -72,7 +78,12 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
                 GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.translate(0.0F, z, y);
+                GlStateManager.translate(x, z, y);
+
+                if (arm.limb.size[0] > arm.limb.size[1])
+                {
+                    GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                }
 
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
 

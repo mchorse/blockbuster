@@ -2,9 +2,20 @@
 
 Blockbuster's change log.
 
+## Version 1.4.5
+
+Another patch update. This patch adds an attack action, fixes hand held items position slightly, and adds two options.
+
+* Added `ATTACK` action (now you can hit entities, yay! Unfortunately, it's always `2.0` damage)
+* Added two mod options:
+    * Apply fall damage (by default is `true`)
+    * Record attack action on hand swipe (by default is `false`)
+* Fixed hand held items positions (they were a little bit off)
+* Fixed X-axis aligned first person display of arms
+
 ## Version 1.4.4
 
-Another patch update. Another patch for Blockbuster mod. This patch fixes bugs which were found by users. Those are mostly actor bugs.
+Another patch update. This patch fixes bugs which were found by users. Those are mostly actor bugs.
 
 * Apply fall damage on actors (reported by AlpesH312)
 * Make actors trigger pressure plates (reported by Tilairgan, long time ago)
