@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.DamageSource;
 
 /**
  * Attack action
@@ -27,7 +28,7 @@ public class AttackAction extends Action
 
         if (target != null)
         {
-            target.attackEntityFrom(EntityActor.actor, 2.0F);
+            target.attackEntityFrom(DamageSource.causeMobDamage(actor), 2.0F);
         }
     }
 }

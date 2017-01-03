@@ -1,5 +1,7 @@
 package mchorse.blockbuster.recording;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import net.minecraft.entity.player.EntityPlayer;
@@ -101,6 +103,11 @@ public class PlayerTracker
         if (player.isSwingInProgress && player.swingProgress == 0)
         {
             this.recorder.actions.add(new SwipeAction());
+
+            if (Blockbuster.proxy.config.record_attack_on_swipe)
+            {
+                this.recorder.actions.add(new AttackAction());
+            }
         }
     }
 }

@@ -136,7 +136,7 @@ public class ActionHandler
         EntityPlayer player = event.getEntityPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.worldObj.isRemote && events != null)
+        if (!player.worldObj.isRemote && events != null && !Blockbuster.proxy.config.record_attack_on_swipe)
         {
             events.add(new AttackAction());
         }

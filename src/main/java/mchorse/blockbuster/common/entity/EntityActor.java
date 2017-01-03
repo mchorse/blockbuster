@@ -55,11 +55,6 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData
 {
     /**
-     * Actor damage source, it's absolute, and not scaled by the difficulty!
-     */
-    public static final DamageSource actor = (new DamageSource("actor")).setDamageIsAbsolute();
-
-    /**
      * Skin used by the actor. If empty - means default skin provided with this
      * mod.
      */
