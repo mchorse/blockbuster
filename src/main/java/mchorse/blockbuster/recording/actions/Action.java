@@ -29,6 +29,7 @@ public abstract class Action
     /* public static final byte ELYTRA_FLYING = 11; */
     public static final byte MORPH = 12;
     public static final byte ATTACK = 13;
+    public static final byte DAMAGE = 14;
 
     /**
      * Factory method
@@ -48,6 +49,7 @@ public abstract class Action
         if (type == BREAK_BLOCK) return new BreakBlockAction();
         if (type == MORPH) return new MorphAction();
         if (type == ATTACK) return new AttackAction();
+        if (type == DAMAGE) return new DamageAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }

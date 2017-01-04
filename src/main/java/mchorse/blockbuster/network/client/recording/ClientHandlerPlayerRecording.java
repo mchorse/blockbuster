@@ -40,7 +40,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
             Morphing.get(player).reset();
 
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
-            ClientProxy.manager.stopRecording(player, false);
+            ClientProxy.manager.stopRecording(player, false, false);
         }
     }
 
