@@ -2,6 +2,15 @@
 
 Blockbuster's change log.
 
+## Version 1.4.6
+
+Another patch update. This patch is quite useful and contains one bug fix and two very useful config options. This patch fixes annoying scrolling in **director block** GUI and adds two config options for controlling render and tracking range of the actors, allowing players to render actors from much further distance (up to 1024 blocks away).
+
+* Added `actor_rendering_range` config option (client related)
+* Added `actor_tracking_range` config option (server related)
+* Added a label on top of text field in **director block** GUI
+* Fixed reset scrolling bug in **director block** GUI
+
 ## Version 1.4.5
 
 Another patch update. This patch adds an attack action, fixes hand held items position slightly, and adds two options.
