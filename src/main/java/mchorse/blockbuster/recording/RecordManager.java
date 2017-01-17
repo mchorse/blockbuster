@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -62,7 +63,7 @@ public class RecordManager
      */
     public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify)
     {
-        if (filename.isEmpty() || this.stopRecording(player, notify))
+        if (filename.isEmpty() || this.stopRecording(player, false, notify))
         {
             return false;
         }
@@ -90,15 +91,21 @@ public class RecordManager
     /**
      * Stop recording for given player
      */
-    public boolean stopRecording(EntityPlayer player, boolean notify)
+    public boolean stopRecording(EntityPlayer player, boolean hasDied, boolean notify)
     {
         RecordRecorder recorder = this.recorders.get(player);
 
         if (recorder != null)
         {
-            String filename = recorder.record.filename;
+            Record record = recorder.record;
+            String filename = record.filename;
 
-            this.records.put(filename, recorder.record);
+            if (hasDied && !record.actions.isEmpty())
+            {
+                record.actions.set(record.actions.size() - 1, new DamageAction(200.0F));
+            }
+
+            this.records.put(filename, record);
             this.recorders.remove(player);
 
             if (notify)
@@ -172,13 +179,16 @@ public class RecordManager
 
         actor.playback.record.reset(actor);
 
-        if (actor.playback.kill)
+        if (actor.getHealth() > 0.0F)
         {
-            actor.setDead();
-        }
-        else
-        {
-            Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false, ""));
+            if (actor.playback.kill)
+            {
+                actor.setDead();
+            }
+            else
+            {
+                Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false, ""));
+            }
         }
 
         actor.playback = null;

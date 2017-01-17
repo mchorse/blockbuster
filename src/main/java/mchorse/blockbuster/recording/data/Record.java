@@ -131,7 +131,10 @@ public class Record
             this.resetMount(actor);
         }
 
-        this.applyFrame(0, actor, true);
+        if (actor.getHealth() > 0.0F)
+        {
+            this.applyFrame(0, actor, true);
+        }
     }
 
     /**

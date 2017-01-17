@@ -48,8 +48,8 @@ public class GuiReplays extends GuiScrollPane
      */
     public void setCast(List<Replay> replays)
     {
-        this.scrollY = 0;
         this.scrollHeight = replays.size() * this.span;
+        this.scrollBy(0);
         this.entries.clear();
 
         for (int i = 0; i < replays.size(); i++)

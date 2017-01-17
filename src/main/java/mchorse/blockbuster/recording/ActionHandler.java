@@ -319,7 +319,7 @@ public class ActionHandler
 
             if (player.isDead)
             {
-                CommonProxy.manager.stopRecording(player, true);
+                CommonProxy.manager.stopRecording(player, true, true);
                 Utils.broadcastInfo("recording.dead", recorder.record.filename);
 
                 return;

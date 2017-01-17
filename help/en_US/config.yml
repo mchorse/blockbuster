@@ -28,3 +28,5 @@ blockbuster.config:
         title: Actor
         
         actor_fall_damage: Actor fall damage
+        actor_tracking_range: Actor tracking range
+        actor_rendering_range: Actor rendering range

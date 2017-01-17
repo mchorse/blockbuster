@@ -39,6 +39,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Actor entity class
@@ -601,8 +603,32 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.setEntityInvulnerable(buffer.readBoolean());
     }
 
+    /**
+     * Used by playback code
+     */
     public void setItemStackInUse(int activeCount)
     {
         this.activeItemStackUseCount = activeCount;
+    }
+
+    /**
+     * Is actor in range in render distance
+     *
+     * This method is responsible for checking if this entity is available for
+     * rendering. Rendering range is configurable.
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean isInRangeToRenderDist(double distance)
+    {
+        double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
+
+        if (Double.isNaN(d0))
+        {
+            d0 = 1.0D;
+        }
+
+        d0 = d0 * Blockbuster.proxy.config.actor_rendering_range;
+        return distance < d0 * d0;
     }
 }

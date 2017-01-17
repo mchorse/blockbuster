@@ -89,6 +89,16 @@ public class BlockbusterConfig
      */
     public boolean actor_fall_damage;
 
+    /**
+     * Actor tracking range. Requires restart
+     */
+    public int actor_tracking_range;
+
+    /**
+     * Actor rendering range
+     */
+    public int actor_rendering_range;
+
     private Configuration config;
 
     public BlockbusterConfig(Configuration config)
@@ -134,6 +144,8 @@ public class BlockbusterConfig
 
         /* Actor */
         this.actor_fall_damage = this.config.getBoolean("actor_fall_damage", actor, true, "Does actor receive fall damage?", actPrefix + "actor_fall_damage");
+        this.actor_tracking_range = this.config.getInt("actor_tracking_range", actor, 96, 64, 1024, "How far actors are tracked? Requires restart of the game.", actPrefix + "actor_tracking_range");
+        this.actor_rendering_range = this.config.getInt("actor_rendering_range", actor, 64, 64, 1024, "How far actors are seen?", actPrefix + "actor_rendering_range");
 
         if (this.config.hasChanged())
         {
