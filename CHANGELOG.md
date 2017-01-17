@@ -9,6 +9,8 @@ Another patch update. This patch is quite useful and contains one bug fix and tw
 * Added `actor_rendering_range` config option (client related)
 * Added `actor_tracking_range` config option (server related)
 * Added a label on top of text field in **director block** GUI
+* Added `DAMAGE` action which does self-damage to the entity actor
+* Added the ability to *commit suicide* during recording
 * Fixed reset scrolling bug in **director block** GUI
 
 ## Version 1.4.5
