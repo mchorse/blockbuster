@@ -170,6 +170,6 @@ public class CommonProxy
      */
     protected void registerEntityWithEgg(Class<? extends Entity> entity, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, 192, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 3, false, primary, secondary);
     }
 }
