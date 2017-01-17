@@ -78,7 +78,14 @@ public abstract class GuiScrollPane extends GuiScreen
 
     public void scrollTo(int y)
     {
-        this.scrollY = MathHelper.clamp_int(y, 0, this.scrollHeight - this.h + 2);
+        if (this.scrollHeight > this.h)
+        {
+            this.scrollY = MathHelper.clamp_int(y, 0, this.scrollHeight - this.h + 2);
+        }
+        else
+        {
+            this.scrollY = 0;
+        }
     }
 
     /* Remapping buttons coordinates */
