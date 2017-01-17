@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiDirector extends GuiScreen
 {
     private String stringTitle = I18n.format("blockbuster.gui.director.title");
+    private String stringAdd = I18n.format("blockbuster.gui.director.add");
 
     /* Input */
     private BlockPos pos;
@@ -179,6 +180,11 @@ public class GuiDirector extends GuiScreen
 
         /* Draw GUI fields */
         this.replayName.drawTextBox();
+
+        if (!this.replayName.isFocused() && this.replayName.getText().isEmpty())
+        {
+            this.fontRendererObj.drawStringWithShadow(this.stringAdd, this.replayName.xPosition + 4, this.replayName.yPosition + 5, 0xff888888);
+        }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.replays.drawScreen(mouseX, mouseY, partialTicks);

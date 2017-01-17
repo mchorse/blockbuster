@@ -603,6 +603,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.setEntityInvulnerable(buffer.readBoolean());
     }
 
+    /**
+     * Used by playback code
+     */
     public void setItemStackInUse(int activeCount)
     {
         this.activeItemStackUseCount = activeCount;

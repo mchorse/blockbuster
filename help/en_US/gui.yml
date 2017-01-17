@@ -16,6 +16,7 @@ blockbuster.gui:
     # Director block GUI strings
     director:
         title: Director Block
+        add: Add a replay...
         no_cast: No replays!
     
     # Actor configuration GUI strings
