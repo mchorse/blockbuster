@@ -141,18 +141,15 @@ public class Frame
         }
 
         /* Rotation */
-        if (isRemote || force)
+        if (this.isMounted)
         {
-            if (this.isMounted)
-            {
-                mount.rotationYaw = this.mountYaw;
-                mount.rotationPitch = this.mountPitch;
-            }
-
-            actor.rotationYaw = this.yaw;
-            actor.rotationPitch = this.pitch;
-            actor.rotationYawHead = this.yawHead;
+            mount.rotationYaw = this.mountYaw;
+            mount.rotationPitch = this.mountPitch;
         }
+
+        actor.rotationYaw = this.yaw;
+        actor.rotationPitch = this.pitch;
+        actor.rotationYawHead = this.yawHead;
 
         /* Motion and fall distance */
         mount.motionX = this.motionX;
