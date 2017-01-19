@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
@@ -22,6 +21,9 @@ import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster.utils.RLUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
+import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
@@ -54,7 +56,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * scenes (like one from Van Helsing in beginning with big crowd with torches,
  * fire and stuff).
  */
-public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData
+public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData, IMorphProvider
 {
     /**
      * Skin used by the actor. If empty - means default skin provided with this
@@ -108,6 +110,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public String _filename = "";
 
+    /**
+     * Metamorph's morph of this player
+     */
+    public AbstractMorph morph;
+
     /* Default pose sizes */
     private float[] flying = {0.6F, 0.6F};
     private float[] sneaking = {0.6F, 1.65F};
@@ -131,6 +138,12 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 return false;
             }
         };
+    }
+
+    @Override
+    public AbstractMorph getMorph()
+    {
+        return this.morph;
     }
 
     /**

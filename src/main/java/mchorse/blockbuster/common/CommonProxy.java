@@ -22,6 +22,8 @@ import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster_pack.BlockbusterFactory;
+import mchorse.metamorph.api.MorphManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -71,6 +73,11 @@ public class CommonProxy
     public Configuration forge;
 
     /**
+     * Blockbuster's morphing factory
+     */
+    public BlockbusterFactory factory;
+
+    /**
      * Registers network messages (and their handlers), items, blocks, director
      * block tile entities and actor entity.
      */
@@ -107,6 +114,13 @@ public class CommonProxy
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
+
+        /* Morphing */
+        MorphManager.INSTANCE.factories.add(this.factory = new BlockbusterFactory());
+
+        /* Load models */
+        this.models = new ModelHandler();
+        this.loadModels(this.getPack());
     }
 
     /**
@@ -115,9 +129,6 @@ public class CommonProxy
      */
     public void load(FMLInitializationEvent event)
     {
-        this.models = new ModelHandler();
-        this.loadModels(this.getPack());
-
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
@@ -133,10 +144,13 @@ public class CommonProxy
     public void loadModels(ModelPack pack)
     {
         this.models.loadModels(pack);
+        this.models.pack = pack;
+        this.factory.models = this.models;
+        this.factory.register(null);
     }
 
     /**
-     * Get an actor pack
+     * Get an model pack
      */
     public ModelPack getPack()
     {

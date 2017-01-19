@@ -1,6 +1,7 @@
 {
     "scheme": "1.3",
     "name": "Steve",
+    "default": "blockbuster:textures/entity/actor.png",
     "poses": {
         "standing": {
             "size": [ 0.6, 1.8, 0.6 ],

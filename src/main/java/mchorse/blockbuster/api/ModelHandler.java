@@ -15,6 +15,7 @@ import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.models.Model;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -56,7 +57,7 @@ public class ModelHandler
             {
                 InputStream modelStream = new FileInputStream(pack.models.get(model));
 
-                this.models.put(model, Model.parse(modelStream));
+                this.models.put("blockbuster." + model, Model.parse(modelStream));
             }
             catch (Exception e)
             {
@@ -70,8 +71,8 @@ public class ModelHandler
             String path = "assets/blockbuster/models/entity/";
             ClassLoader loader = this.getClass().getClassLoader();
 
-            this.models.put("alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
-            this.models.put("steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
+            this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
+            this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
         }
         catch (Exception e)
         {

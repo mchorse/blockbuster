@@ -2,17 +2,12 @@ package mchorse.blockbuster.client;
 
 import java.util.List;
 
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.render.RenderPlayer;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,12 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;
-    private RenderPlayer render;
 
-    public RenderingHandler(GuiRecordingOverlay overlay, RenderPlayer render)
+    public RenderingHandler(GuiRecordingOverlay overlay)
     {
         this.overlay = overlay;
-        this.render = render;
     }
 
     /**
@@ -72,21 +65,5 @@ public class RenderingHandler
         {
             list.add("Recording frame " + recorder.tick + " (delay: " + recorder.delay + ")");
         }
-    }
-
-    /**
-     * Morph (render) player into custom model if player has its variables
-     * related to morphing (model and skin)
-     */
-    @SubscribeEvent
-    public void onPlayerRender(RenderPlayerEvent.Pre event)
-    {
-        EntityPlayer player = event.getEntityPlayer();
-        IMorphing capability = Morphing.get(player);
-
-        if (capability == null || capability.getModel().isEmpty()) return;
-
-        event.setCanceled(true);
-        this.render.doRender(player, event.getX(), event.getY(), event.getZ(), player.rotationYaw, event.getPartialRenderTick());
     }
 }
