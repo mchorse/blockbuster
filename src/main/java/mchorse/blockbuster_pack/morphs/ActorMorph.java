@@ -25,6 +25,12 @@ public class ActorMorph extends CustomMorph
      */
     public ResourceLocation skin;
 
+    /**
+     * Render actor morph on the screen
+     *
+     * This method overrides parent class method to take in account current
+     * morph's skin.
+     */
     @Override
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)

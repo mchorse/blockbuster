@@ -6,9 +6,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
-import mchorse.blockbuster.capabilities.morphing.MorphingStorage;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
@@ -112,7 +109,6 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
 
         /* Capabilities */
-        CapabilityManager.INSTANCE.register(IMorphing.class, new MorphingStorage(), Morphing.class);
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
 
         /* Morphing */

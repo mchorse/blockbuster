@@ -3,7 +3,6 @@ package mchorse.blockbuster.network.client.recording;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -12,6 +11,7 @@ import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +37,7 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
         }
         else
         {
-            Morphing.get(player).reset();
+            MorphAPI.demorph(player);
 
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
             ClientProxy.manager.stopRecording(player, false, false);

@@ -6,7 +6,7 @@ import mchorse.blockbuster.commands.action.SubCommandActionRecord;
 import mchorse.blockbuster.commands.action.SubCommandActionRequest;
 import mchorse.blockbuster.commands.action.SubCommandActionStop;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster_pack.MorphUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.world.World;
@@ -76,7 +76,7 @@ public class CommandAction extends SubCommandBase
         boolean invincible = args.length >= 5 ? CommandBase.parseBoolean(args[4]) : false;
 
         actor = new EntityActor(world);
-        actor.modify(model, RLUtils.fromString(skin, model), false, true);
+        actor.modify(MorphUtils.morphFromModel(model, skin), false, true);
         actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 

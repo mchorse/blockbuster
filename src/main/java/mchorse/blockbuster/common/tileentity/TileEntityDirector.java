@@ -3,17 +3,13 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketMorph;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Director tile entity
@@ -226,12 +222,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     {
         if (replay == null) return;
 
-        IMorphing cap = Morphing.get(player);
-
-        cap.setModel(replay.model);
-        cap.setSkin(replay.skin);
-
-        Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
+        MorphAPI.morph(player, replay.morph, true);
     }
 
     /**

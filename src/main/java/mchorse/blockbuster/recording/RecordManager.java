@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -16,6 +15,7 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -110,7 +110,7 @@ public class RecordManager
 
             if (notify)
             {
-                Morphing.get(player).reset();
+                MorphAPI.demorph(player);
                 Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
 

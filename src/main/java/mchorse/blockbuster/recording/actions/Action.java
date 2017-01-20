@@ -1,9 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -68,17 +64,9 @@ public abstract class Action
     public void apply(EntityActor actor)
     {}
 
-    /**
-     * Construct action from data input stream. Used to send over the network.
+    /* TODO: Action method which were responsible for writing and reading data
+     * from network were removed, but they will come back in 1.5 update.
      */
-    public void fromBytes(DataInput in) throws IOException
-    {}
-
-    /**
-     * Persist action to data output stream. Used to send over the network.
-     */
-    public void toBytes(DataOutput out) throws IOException
-    {}
 
     /**
      * Persist action from NBT tag. Used for loading from the disk.

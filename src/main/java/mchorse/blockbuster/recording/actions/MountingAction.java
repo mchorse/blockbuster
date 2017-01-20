@@ -1,8 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.UUID;
 
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -55,21 +52,6 @@ public class MountingAction extends Action
         {
             actor.dismountRidingEntity();
         }
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.target = new UUID(in.readLong(), in.readLong());
-        this.isMounting = in.readBoolean();
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        out.writeLong(this.target.getMostSignificantBits());
-        out.writeLong(this.target.getLeastSignificantBits());
-        out.writeBoolean(this.isMounting);
     }
 
     @Override

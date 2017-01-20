@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
@@ -17,12 +16,10 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
-import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
-import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityBodyHelper;
@@ -35,7 +32,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -59,33 +55,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData, IMorphProvider
 {
     /**
-     * Skin used by the actor. If empty - means default skin provided with this
-     * mod.
-     */
-    public ResourceLocation skin;
-
-    /**
-     * Model which is used to display. If empty - means default model (steve)
-     * provided with this mod.
-     */
-    public String model = "";
-
-    /**
-     * Model instance, used for setting the size of this entity in updateSize
-     * method
-     */
-    private Model modelInstance;
-
-    /**
      * Position of director's block (needed to start the playback of other
      * actors while recording this actor).
      */
     public BlockPos directorBlock;
-
-    /**
-     * Temporary solution for disallowing rendering of custom name tag in GUI.
-     */
-    public boolean renderName = true;
 
     /**
      * This field is needed to make actors invisible. This is helpful for
@@ -111,14 +84,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public String _filename = "";
 
     /**
-     * Metamorph's morph of this player
+     * Metamorph's morph for this actor
      */
     public AbstractMorph morph;
-
-    /* Default pose sizes */
-    private float[] flying = {0.6F, 0.6F};
-    private float[] sneaking = {0.6F, 1.65F};
-    private float[] standing = {0.6F, 1.80F};
 
     public EntityActor(World worldIn)
     {
@@ -183,26 +151,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * This is also brutally stolen from EntityPlayer class, by the way, I don't
-     * think that changing the height while sneaking can save player's life
-     */
-    protected void updateSize()
-    {
-        float[] pose;
-
-        if (this.modelInstance != null)
-        {
-            pose = this.modelInstance.getPose(EntityUtils.poseForEntity(this)).size;
-        }
-        else
-        {
-            pose = this.isElytraFlying() ? this.flying : (this.isSneaking() ? this.sneaking : this.standing);
-        }
-
-        this.setSize(pose[0], pose[1]);
-    }
-
-    /**
      * Adjust the movement, limb swinging, and process action stuff.
      *
      * See process actions method for more information.
@@ -210,7 +158,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void onLivingUpdate()
     {
-        this.updateSize();
         this.pickUpNearByItems();
 
         if (this.playback != null && this.playback.playing)
@@ -257,6 +204,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         /* Trigger pressure playback */
         this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
+
+        if (this.morph != null)
+        {
+            this.morph.update(this, null);
+        }
     }
 
     /**
@@ -482,13 +434,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(String model, ResourceLocation skin, boolean invisible, boolean notify)
+    public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        this.model = model;
-        this.skin = skin;
+        this.morph = morph;
         this.invisible = invisible;
-
-        this.updateModel();
 
         if (!this.worldObj.isRemote && notify)
         {
@@ -497,24 +446,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Update the data model
-     */
-    private void updateModel()
-    {
-        ModelHandler models = Blockbuster.proxy.models;
-
-        if (models.models.containsKey(this.model))
-        {
-            this.modelInstance = models.models.get(this.model);
-        }
-    }
-
-    /**
      * Notify trackers of data changes happened in this actor
      */
     public void notifyPlayers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.model, this.skin, this.invisible));
+        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
     }
 
     /* Reading/writing to disk */
@@ -524,8 +460,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super.readEntityFromNBT(tag);
 
-        this.model = tag.getString("Model");
-        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model.isEmpty() ? "steve" : "");
+        this.morph = MorphUtils.morphFromNBT(tag);
+
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
@@ -542,15 +478,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super.writeEntityToNBT(tag);
 
-        if (this.skin != null)
-        {
-            tag.setString("Skin", this.skin.toString());
-        }
-
-        if (!this.model.isEmpty())
-        {
-            tag.setString("Model", this.model);
-        }
+        MorphUtils.morphToNBT(tag, this.morph);
 
         if (this.directorBlock != null)
         {
@@ -565,8 +493,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
-        ByteBufUtils.writeUTF8String(buffer, this.model);
-        ByteBufUtils.writeUTF8String(buffer, this.skin == null ? "" : this.skin.toString());
+        MorphUtils.morphToBuf(buffer, this.morph);
+
         buffer.writeBoolean(this.invisible);
         buffer.writeBoolean(this.isPlaying());
 
@@ -584,8 +512,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
-        this.model = ByteBufUtils.readUTF8String(buffer);
-        this.skin = RLUtils.fromString(ByteBufUtils.readUTF8String(buffer), this.model);
+        this.morph = MorphUtils.morphFromBuf(buffer);
+
         this.invisible = buffer.readBoolean();
 
         if (buffer.readBoolean())

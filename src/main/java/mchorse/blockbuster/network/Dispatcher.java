@@ -3,8 +3,6 @@ package mchorse.blockbuster.network;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
-import mchorse.blockbuster.network.client.ClientHandlerMorph;
-import mchorse.blockbuster.network.client.ClientHandlerMorphPlayer;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraState;
 import mchorse.blockbuster.network.client.camera.ClientHandlerListCameraProfiles;
@@ -19,8 +17,6 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecording
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.PacketMorph;
-import mchorse.blockbuster.network.common.PacketMorphPlayer;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketRequestModels;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
@@ -46,7 +42,6 @@ import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
-import mchorse.blockbuster.network.server.ServerHandlerMorph;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
@@ -164,11 +159,6 @@ public class Dispatcher
         register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
 
         register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
-
-        /* Morphing */
-        register(PacketMorph.class, ClientHandlerMorph.class, Side.CLIENT);
-        register(PacketMorph.class, ServerHandlerMorph.class, Side.SERVER);
-        register(PacketMorphPlayer.class, ClientHandlerMorphPlayer.class, Side.CLIENT);
 
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);

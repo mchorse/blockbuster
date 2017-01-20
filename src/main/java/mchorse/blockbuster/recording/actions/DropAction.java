@@ -1,16 +1,11 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Random;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
@@ -69,18 +64,6 @@ public class DropAction extends Action
         item.motionZ += Math.sin(f1) * f;
 
         actor.worldObj.spawnEntityInWorld(item);
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.itemData = CompressedStreamTools.read((DataInputStream) in);
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        CompressedStreamTools.write(this.itemData, out);
     }
 
     @Override

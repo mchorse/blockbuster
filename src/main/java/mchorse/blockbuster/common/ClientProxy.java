@@ -13,16 +13,15 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandModel;
-import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -143,7 +142,6 @@ public class ClientProxy extends CommonProxy
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
-        ClientCommandHandler.instance.registerCommand(new CommandMorph());
     }
 
     /**

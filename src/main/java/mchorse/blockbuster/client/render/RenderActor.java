@@ -21,6 +21,15 @@ public class RenderActor extends RenderLiving<EntityActor>
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
     /**
+     * Render morph's name only if the player is pointed at the entity
+     */
+    @Override
+    protected boolean canRenderName(EntityActor entity)
+    {
+        return super.canRenderName(entity) && entity.hasCustomName() && entity == this.renderManager.pointedEntity;
+    }
+
+    /**
      * Initiate render actor
      */
     public RenderActor(RenderManager manager, float f)
@@ -36,19 +45,6 @@ public class RenderActor extends RenderLiving<EntityActor>
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
         return defaultTexture;
-    }
-
-    /**
-     * Most important extension! Don't render the name in GUI, that looks
-     * irritating. actor.renderName is switched for awhile to false during GUI
-     * rendering.
-     *
-     * See GuiActorSkin for a reference.
-     */
-    @Override
-    protected boolean canRenderName(EntityActor entity)
-    {
-        return super.canRenderName(entity) && entity.renderName;
     }
 
     @Override
