@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
-import mchorse.blockbuster.client.gui.widgets.GuiScrollPane;
 import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -89,7 +89,7 @@ public class GuiReplays extends GuiScrollPane
     {}
 
     @Override
-    protected void drawPane()
+    protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
         if (this.entries.size() == 0)
         {

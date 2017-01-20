@@ -264,6 +264,7 @@ public class GuiReplay extends GuiScreen
         this.name.setText(this.replay.name);
         this.filename.setText(this.replay.id);
         this.invincible.setValue(this.replay.invincible);
+        this.morphs.setSelected(this.replay.morph);
     }
 
     @Override
