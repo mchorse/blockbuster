@@ -9,7 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
  * Morph action
  *
  * This action is responsible for changing the model and skin of actor during
- * the playback. This action is submitted when player executes /morph command.
+ * the playback. This action is submitted when player morphs with Metamorph's
+ * API.
  */
 public class MorphAction extends Action
 {

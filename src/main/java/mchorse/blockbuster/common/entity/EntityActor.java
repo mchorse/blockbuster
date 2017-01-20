@@ -308,6 +308,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             f3 *= -1.0F;
         }
 
+        /* Explanation: Why do we update morph here? Because for some reason
+         *  */
         if (this.morph != null)
         {
             this.morph.update(this, null);

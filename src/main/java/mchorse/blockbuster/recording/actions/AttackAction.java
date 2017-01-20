@@ -40,6 +40,11 @@ public class AttackAction extends Action
         if (target != null)
         {
             target.attackEntityFrom(DamageSource.causeMobDamage(actor), 2.0F);
+
+            if (actor.morph != null)
+            {
+                actor.morph.attack(target, actor);
+            }
         }
     }
 }

@@ -13,10 +13,14 @@ import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.MorphAction;
+import mchorse.blockbuster.recording.actions.MorphActionAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.api.events.MorphActionEvent;
+import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -265,6 +269,42 @@ public class ActionHandler
         if (!player.worldObj.isRemote)
         {
             CommonProxy.manager.abortRecording(player);
+        }
+    }
+
+    /**
+     * Event listener for MORPH
+     *
+     * This is a new event listener for morphing. Before that, there was server
+     * handler which was responsible for recoring MORPH action.
+     */
+    @SubscribeEvent
+    public void onPlayerMorph(MorphEvent event)
+    {
+        EntityPlayer player = event.player;
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.worldObj.isRemote && events != null)
+        {
+            events.add(new MorphAction(event.morph));
+        }
+    }
+
+    /**
+     * Event listener for MORPH_ACTION
+     *
+     * This method will simply submit a {@link MorphActionAction} to the
+     * event list, if action is valid.
+     */
+    @SubscribeEvent
+    public void onPlayerMorphAction(MorphActionEvent event)
+    {
+        EntityPlayer player = event.player;
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.worldObj.isRemote && events != null && event.isValid())
+        {
+            events.add(new MorphActionAction());
         }
     }
 

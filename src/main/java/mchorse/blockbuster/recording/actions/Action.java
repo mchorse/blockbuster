@@ -26,6 +26,7 @@ public abstract class Action
     public static final byte MORPH = 12;
     public static final byte ATTACK = 13;
     public static final byte DAMAGE = 14;
+    public static final byte MORPH_ACTION = 15;
 
     /**
      * Factory method
@@ -46,6 +47,7 @@ public abstract class Action
         if (type == MORPH) return new MorphAction();
         if (type == ATTACK) return new AttackAction();
         if (type == DAMAGE) return new DamageAction();
+        if (type == MORPH_ACTION) return new MorphActionAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }

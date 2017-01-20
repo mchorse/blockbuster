@@ -21,15 +21,6 @@ public class RenderActor extends RenderLiving<EntityActor>
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
 
     /**
-     * Render morph's name only if the player is pointed at the entity
-     */
-    @Override
-    protected boolean canRenderName(EntityActor entity)
-    {
-        return super.canRenderName(entity) && entity.hasCustomName() && entity == this.renderManager.pointedEntity;
-    }
-
-    /**
      * Initiate render actor
      */
     public RenderActor(RenderManager manager, float f)
