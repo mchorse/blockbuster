@@ -207,7 +207,27 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (this.morph != null)
         {
-            this.morph.update(this, null);
+            //            if (this.worldObj.isRemote && this.morph instanceof EntityMorph)
+            //            {
+            //                EntityLivingBase entity = ((EntityMorph) this.morph).getEntity();
+            //
+            //                if (entity != null)
+            //                {
+            //                    System.out.println("Pre: (" + entity.renderYawOffset + ", " + entity.prevRenderYawOffset + ") (" + this.renderYawOffset + ", " + this.prevRenderYawOffset + ")");
+            //                }
+            //            }
+
+            //            this.morph.update(this, null);
+
+            //            if (this.worldObj.isRemote && this.morph instanceof EntityMorph)
+            //            {
+            //                EntityLivingBase entity = ((EntityMorph) this.morph).getEntity();
+            //
+            //                if (entity != null)
+            //                {
+            //                    System.out.println("Post: (" + entity.renderYawOffset + ", " + entity.prevRenderYawOffset + ") (" + this.renderYawOffset + ", " + this.prevRenderYawOffset + ")");
+            //                }
+            //            }
         }
     }
 
@@ -286,6 +306,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (flag)
         {
             f3 *= -1.0F;
+        }
+
+        if (this.morph != null)
+        {
+            this.morph.update(this, null);
         }
 
         return f3;
