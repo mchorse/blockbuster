@@ -140,7 +140,7 @@ public class GuiDirector extends GuiScreen
         int h = 20;
 
         /* Initiate fields */
-        this.done = new GuiButton(0, this.width - 100 - x, this.height - y - h, 100, h, I18n.format("blockbuster.gui.done"));
+        this.done = new GuiButton(0, this.width - 80 - x, this.height - y - h, 80, h, I18n.format("blockbuster.gui.done"));
         this.reset = new GuiButton(1, x, this.height - y - h, w, h, I18n.format("blockbuster.gui.reset"));
 
         this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
@@ -149,7 +149,7 @@ public class GuiDirector extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.replays.updateRect(x, y + 45, w, (this.height - y * 3 - h - 45));
+        this.replays.updateRect(x, y + 45, w + 8, (this.height - y * 3 - h - 45));
         this.replay.initGui();
     }
 

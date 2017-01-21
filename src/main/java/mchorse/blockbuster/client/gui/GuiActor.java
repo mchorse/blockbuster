@@ -2,17 +2,18 @@ package mchorse.blockbuster.client.gui;
 
 import java.io.IOException;
 
+import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,8 +36,9 @@ public class GuiActor extends GuiScreen
 
     /* GUI fields */
     private GuiButton done;
+    private GuiButton pick;
     private GuiToggle invisible;
-    private GuiCreativeMorphs morphs;
+    private GuiMorphsPopup morphs;
 
     /**
      * Constructor for director block and skin manager item
@@ -46,7 +48,7 @@ public class GuiActor extends GuiScreen
         ClientProxy.actorPack.pack.reload();
 
         this.actor = actor;
-        this.morphs = new GuiCreativeMorphs(6, actor.getMorph());
+        this.morphs = new GuiMorphsPopup(6, actor.getMorph());
     }
 
     /* Actions */
@@ -57,6 +59,10 @@ public class GuiActor extends GuiScreen
         if (button.id == 0)
         {
             this.saveAndQuit();
+        }
+        else if (button.id == 1)
+        {
+            this.morphs.morphs.setHidden(false);
         }
         else if (button.id == 2)
         {
@@ -73,7 +79,7 @@ public class GuiActor extends GuiScreen
      */
     private void saveAndQuit()
     {
-        MorphCell morph = this.morphs.getSelected();
+        MorphCell morph = this.morphs.morphs.getSelected();
 
         if (morph != null)
         {
@@ -97,8 +103,15 @@ public class GuiActor extends GuiScreen
     @Override
     public void handleMouseInput() throws IOException
     {
-        super.handleMouseInput();
         this.morphs.handleMouseInput();
+        super.handleMouseInput();
+    }
+
+    @Override
+    public void handleKeyboardInput() throws IOException
+    {
+        this.morphs.handleKeyboardInput();
+        super.handleKeyboardInput();
     }
 
     /* Handling input */
@@ -106,6 +119,11 @@ public class GuiActor extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
+        if (this.morphs.isInside(mouseX, mouseY))
+        {
+            return;
+        }
+
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -128,19 +146,22 @@ public class GuiActor extends GuiScreen
 
         /* Buttons */
         this.done = new GuiButton(0, x, y2, w, 20, I18n.format("blockbuster.gui.done"));
+        this.pick = new GuiButton(1, x, 40, w, 20, I18n.format("blockbuster.gui.pick"));
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
         this.buttonList.add(this.done);
+        this.buttonList.add(this.pick);
         this.buttonList.add(this.invisible);
 
-        this.morphs.updateRect(120, 30, this.width - 120, this.height - 30);
+        this.morphs.updateRect(120, 40, this.width - 128, this.height - 50);
     }
 
     private void fillData()
     {
         this.invisible.setValue(this.actor.invisible);
+        this.morphs.morphs.setSelected(this.actor.getMorph());
     }
 
     @Override
@@ -165,11 +186,18 @@ public class GuiActor extends GuiScreen
         y = this.height / 2 + (int) (size * 1.2);
         x = this.width / 2;
 
-        MorphCell cell = this.morphs.getSelected();
+        MorphCell cell = this.morphs.morphs.getSelected();
 
         if (cell != null)
         {
-            cell.morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, 60, this.height / 2 + 5, 35, 1.0F);
+            int center = this.width / 2;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0, -40);
+            cell.morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            GlStateManager.popMatrix();
+
+            this.drawCenteredString(this.fontRendererObj, cell.name, center, 40, 0xffffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

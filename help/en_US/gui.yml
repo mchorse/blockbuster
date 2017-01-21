@@ -12,6 +12,8 @@ blockbuster.gui:
     remove: Remove
     detach: Detach
     record: Record
+    pick: Pick morph...
+    search: "Search:"
     
     # Director block GUI strings
     director:
