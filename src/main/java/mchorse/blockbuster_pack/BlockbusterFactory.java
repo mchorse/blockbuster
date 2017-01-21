@@ -29,42 +29,15 @@ public class BlockbusterFactory implements IMorphFactory
     public ModelHandler models;
 
     @Override
-    public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
-    {
-        String name = tag.getString("Name");
-        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone();
-
-        morph.fromNBT(tag);
-
-        return morph;
-    }
-
-    @Override
-    public void getMorphs(MorphList morphs, World world)
-    {
-        for (Map.Entry<String, ActorMorph> morph : this.morphs.entrySet())
-        {
-            for (String skin : this.models.pack.getSkins(morph.getKey()))
-            {
-                ActorMorph actor = (ActorMorph) morph.getValue().clone();
-                String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
-
-                actor.skin = new ResourceLocation("blockbuster.actors", path);
-                morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
-            }
-        }
-
-        morphs.morphs.remove("blockbuster.Actor");
-    }
-
-    @Override
-    public boolean hasMorph(String morph)
-    {
-        return this.morphs.containsKey(morph.substring(morph.indexOf(".") + 1));
-    }
-
-    @Override
     public void register(MorphManager manager)
+    {
+        /* Blacklist actors */
+        manager.blacklist.add("blockbuster.Actor");
+
+        this.registerModels();
+    }
+
+    public void registerModels()
     {
         this.morphs.clear();
         this.morphs.put("alex", this.createMorph("alex"));
@@ -94,5 +67,66 @@ public class BlockbusterFactory implements IMorphFactory
         {
             morph.renderer = ClientProxy.actorRenderer;
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String displayNameForMorph(String morphName)
+    {
+        String[] splits = morphName.split("\\.");
+
+        if (splits.length >= 2 && splits[0].equals("blockbuster") && this.morphs.containsKey(splits[1]))
+        {
+            String name = this.morphs.get(splits[1]).model.name;
+
+            return name.isEmpty() ? splits[1] : name;
+        }
+
+        return null;
+    }
+
+    @Override
+    public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
+    {
+        String name = tag.getString("Name");
+        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone();
+
+        morph.fromNBT(tag);
+
+        return morph;
+    }
+
+    @Override
+    public void getMorphs(MorphList morphs, World world)
+    {
+        for (Map.Entry<String, ActorMorph> morph : this.morphs.entrySet())
+        {
+            String key = morph.getKey();
+            ActorMorph original = morph.getValue();
+
+            if (original.model.defaultTexture != null)
+            {
+                ActorMorph actor = (ActorMorph) original.clone();
+
+                morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
+            }
+
+            for (String skin : this.models.pack.getSkins(key))
+            {
+                ActorMorph actor = (ActorMorph) original.clone();
+                String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
+
+                actor.skin = new ResourceLocation("blockbuster.actors", path);
+                morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
+            }
+        }
+
+        morphs.morphs.remove("blockbuster.Actor");
+    }
+
+    @Override
+    public boolean hasMorph(String morph)
+    {
+        return this.morphs.containsKey(morph.substring(morph.indexOf(".") + 1));
     }
 }

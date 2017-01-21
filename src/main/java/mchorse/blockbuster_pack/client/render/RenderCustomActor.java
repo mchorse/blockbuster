@@ -33,7 +33,12 @@ public class RenderCustomActor extends RenderCustomModel
 
         if (morph != null && morph instanceof ActorMorph)
         {
-            return ((ActorMorph) morph).skin;
+            ResourceLocation skin = ((ActorMorph) morph).skin;
+
+            if (skin != null)
+            {
+                return skin;
+            }
         }
 
         return super.getEntityTexture(entity);
