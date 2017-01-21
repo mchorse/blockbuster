@@ -41,7 +41,6 @@ public class SubCommandActionRecord extends CommandBase
         }
 
         EntityPlayer player = getCommandSenderAsPlayer(sender);
-        boolean recording = CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true);
 
         if (args.length >= 4)
         {
@@ -52,7 +51,7 @@ public class SubCommandActionRecord extends CommandBase
             {
                 TileEntityDirector director = (TileEntityDirector) tile;
 
-                if (recording)
+                if (!CommonProxy.manager.recorders.containsKey(player))
                 {
                     director.applyReplay(director.byFile(args[0]), player);
                     director.startPlayback(args[0]);
@@ -63,5 +62,7 @@ public class SubCommandActionRecord extends CommandBase
                 }
             }
         }
+
+        CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true);
     }
 }
