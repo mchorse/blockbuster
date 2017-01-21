@@ -2,6 +2,22 @@
 
 Blockbuster's change log.
 
+## Version 1.4.7 (Metamorph integration)
+
+Another patch update. This patch update is what I waited for a long time! This update integrates Blockbuster with Metamorph. This makes Blockbuster able to perform Metamorph's abilities, attacks and abilities as well as to use Metamorph's morphs for actor morphing. 
+
+From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](https://github.com/mchorse/metamorph).
+
+**Important**: due to integration, the format of custom models and skins was changed, so before trying out this update, make sure to back up your world as it may make all your actors morphless (invisible actors with shadows).
+
+* Adapted `MORPH` action to Metamorph's integration
+* Adapted actor and director GUIs to Metamorph's integration
+* Added `MORPH_ACTION` action (which basically executes morph's action)
+* Corrected `ATTACK` action's direction vector
+* Removed `/morph` command and morphing capability from Blockbuster
+* Replaced `Custom Model` and `Skin` fields with morph picker
+* Works with Metamorph `1.1`
+
 ## Version 1.4.6
 
 Another patch update. This patch is quite useful and contains one bug fix and two very useful config options. This patch fixes annoying scrolling in **director block** GUI and adds two config options for controlling render and tracking range of the actors, allowing players to render actors from much further distance (up to 1024 blocks away).
