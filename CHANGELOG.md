@@ -13,6 +13,7 @@ From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](htt
 * Adapted `MORPH` action to Metamorph's integration
 * Adapted actor and director GUIs to Metamorph's integration
 * Added `MORPH_ACTION` action (which basically executes morph's action)
+* Flipped texture of **actor configuration** item (thanks to [Tom Soel](https://twitter.com/TomSoel))
 * Corrected `ATTACK` action's direction vector
 * Removed `/morph` command and morphing capability from Blockbuster
 * Replaced `Custom Model` and `Skin` fields with morph picker
