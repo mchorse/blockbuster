@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 /**
@@ -159,6 +160,10 @@ public class GuiMorphsPopup extends GuiScreen
         this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.x + 9, this.y + 9, 0xffffffff);
 
         this.search.drawTextBox();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 0, 120);
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        GlStateManager.popMatrix();
     }
 }
