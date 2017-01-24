@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.render.layers.LayerActorArmor;
+import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -26,6 +28,9 @@ public class RenderActor extends RenderLiving<EntityActor>
     public RenderActor(RenderManager manager, float f)
     {
         super(manager, null, f);
+
+        this.addLayer(new LayerElytra(this));
+        this.addLayer(new LayerActorArmor(this));
     }
 
     /**
