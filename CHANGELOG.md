@@ -10,11 +10,16 @@ From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](htt
 
 **Important**: due to integration, the format of custom models and skins was changed, so before trying out this update, make sure to back up your world as it may make all your actors morphless (invisible actors with shadows).
 
+Special thanks to **The Minebox**, **badr**, **Tom Soel** and **Vasily12345** for beta-testing this release!
+
 * Adapted `MORPH` action to Metamorph's integration
 * Adapted actor and director GUIs to Metamorph's integration
 * Added `MORPH_ACTION` action (which basically executes morph's action)
+* Added default `fred` custom model (4px wide arms with overlays)
+* Added error messages and red labels when `Recording ID` field is empty
 * Flipped texture of **actor configuration** item (thanks to [Tom Soel](https://twitter.com/TomSoel))
 * Corrected `ATTACK` action's direction vector
+* Made actors *rideable*!!!
 * Removed `/morph` command and morphing capability from Blockbuster
 * Replaced `Custom Model` and `Skin` fields with morph picker
 * Works with Metamorph `1.1`
