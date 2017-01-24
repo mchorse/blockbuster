@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+
+import com.google.common.collect.ImmutableSet;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
@@ -27,6 +30,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ModelHandler
 {
+    /**
+     * List of ignored models
+     */
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred");
+
     /**
      * Cached models, they're loaded from stuffs
      */
@@ -48,6 +56,11 @@ public class ModelHandler
         /* Load user provided models */
         for (String model : pack.getModels())
         {
+            if (IGNORED_MODELS.contains(model))
+            {
+                continue;
+            }
+
             try
             {
                 InputStream modelStream = new FileInputStream(pack.models.get(model));
@@ -68,6 +81,7 @@ public class ModelHandler
 
             this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
             this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
+            this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));
         }
         catch (Exception e)
         {

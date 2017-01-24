@@ -42,6 +42,7 @@ public class BlockbusterFactory implements IMorphFactory
         this.morphs.clear();
         this.morphs.put("alex", this.createMorph("alex"));
         this.morphs.put("steve", this.createMorph("steve"));
+        this.morphs.put("fred", this.createMorph("fred"));
 
         for (String model : this.models.pack.getModels())
         {

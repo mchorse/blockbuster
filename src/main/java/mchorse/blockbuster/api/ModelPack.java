@@ -106,6 +106,11 @@ public class ModelPack
     {
         for (File file : folder.listFiles())
         {
+            if (ModelHandler.IGNORED_MODELS.contains(file.getName()))
+            {
+                continue;
+            }
+
             File model = new File(file.getAbsolutePath() + "/model.json");
 
             if (file.isDirectory() && model.isFile())

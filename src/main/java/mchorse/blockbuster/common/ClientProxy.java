@@ -109,9 +109,10 @@ public class ClientProxy extends CommonProxy
             actorPack.pack.addFolder(path + "/downloads");
             actorPack.pack.reload();
 
-            /* Create alex and steve skins folders */
-            new File(path + "/models/alex/skins").mkdirs();
+            /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();
+            new File(path + "/models/alex/skins").mkdirs();
+            new File(path + "/models/fred/skins").mkdirs();
         }
         catch (Exception e)
         {
