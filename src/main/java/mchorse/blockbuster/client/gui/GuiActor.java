@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -48,7 +49,7 @@ public class GuiActor extends GuiScreen
         ClientProxy.actorPack.pack.reload();
 
         this.actor = actor;
-        this.morphs = new GuiMorphsPopup(6, actor.getMorph());
+        this.morphs = new GuiMorphsPopup(6, actor.getMorph(), Morphing.get(Minecraft.getMinecraft().thePlayer));
     }
 
     /* Actions */

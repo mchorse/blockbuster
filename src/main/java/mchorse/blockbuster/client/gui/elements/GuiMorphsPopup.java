@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -32,9 +33,9 @@ public class GuiMorphsPopup extends GuiScreen
     protected int w;
     protected int h;
 
-    public GuiMorphsPopup(int perRow, AbstractMorph selected)
+    public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
-        this.morphs = new GuiCreativeMorphs(perRow, selected);
+        this.morphs = new GuiCreativeMorphs(perRow, selected, morphing);
         this.morphs.setScrollSpeed(3);
         this.morphs.setHidden(true);
     }

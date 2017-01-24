@@ -9,6 +9,7 @@ import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -71,7 +72,7 @@ public class GuiReplay extends GuiScreen
     {
         ClientProxy.actorPack.pack.reload();
 
-        this.morphs = new GuiMorphsPopup(6, null);
+        this.morphs = new GuiMorphsPopup(6, null, Morphing.get(Minecraft.getMinecraft().thePlayer));
         this.parent = parent;
         this.pos = pos;
     }
@@ -84,6 +85,8 @@ public class GuiReplay extends GuiScreen
     {
         this.replay = replay;
         this.index = index;
+
+        this.morphs.morphs.setFilter("");
 
         if (replay != null)
         {
