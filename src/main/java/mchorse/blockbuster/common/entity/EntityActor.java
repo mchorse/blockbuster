@@ -1,5 +1,7 @@
 package mchorse.blockbuster.common.entity;
 
+import javax.annotation.Nullable;
+
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
@@ -19,14 +21,18 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.MorphUtils;
+import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSaddle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -34,6 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -143,11 +150,54 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
+     * Yes, this boy can be ridden!
+     */
+    @Override
+    protected boolean canBeRidden(Entity entityIn)
+    {
+        return true;
+    }
+
+    /**
+     * Yes, this boy can be steered!
+     */
+    @Override
+    public boolean canBeSteered()
+    {
+        return true;
+    }
+
+    /**
+     * For vehicles, the first passenger is generally considered the controller and "drives" the vehicle. For example,
+     * Pigs, Horses, and Boats are generally "steered" by the controlling passenger.
+     */
+    @Override
+    @Nullable
+    public Entity getControllingPassenger()
+    {
+        return this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
+    }
+
+    /**
      * Brutally stolen from EntityPlayer class
      */
     public void setElytraFlying(boolean isFlying)
     {
         this.setFlag(7, isFlying);
+    }
+
+    /**
+     * Give default morph to actor
+     */
+    @Override
+    public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setString("Name", "blockbuster.steve");
+        this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+
+        return super.onInitialSpawn(difficulty, livingdata);
     }
 
     /**
@@ -204,31 +254,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         /* Trigger pressure playback */
         this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
-
-        if (this.morph != null)
-        {
-            //            if (this.worldObj.isRemote && this.morph instanceof EntityMorph)
-            //            {
-            //                EntityLivingBase entity = ((EntityMorph) this.morph).getEntity();
-            //
-            //                if (entity != null)
-            //                {
-            //                    System.out.println("Pre: (" + entity.renderYawOffset + ", " + entity.prevRenderYawOffset + ") (" + this.renderYawOffset + ", " + this.prevRenderYawOffset + ")");
-            //                }
-            //            }
-
-            //            this.morph.update(this, null);
-
-            //            if (this.worldObj.isRemote && this.morph instanceof EntityMorph)
-            //            {
-            //                EntityLivingBase entity = ((EntityMorph) this.morph).getEntity();
-            //
-            //                if (entity != null)
-            //                {
-            //                    System.out.println("Post: (" + entity.renderYawOffset + ", " + entity.prevRenderYawOffset + ") (" + this.renderYawOffset + ", " + this.prevRenderYawOffset + ")");
-            //                }
-            //            }
-        }
     }
 
     /**
@@ -309,7 +334,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         /* Explanation: Why do we update morph here? Because for some reason
-         *  */
+         * the EntityMorph morphs don't turn smoothly in onLivingUpdate method */
         if (this.morph != null)
         {
             this.morph.update(this, null);
@@ -331,13 +356,20 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
+        if (item != null && item.getItem() instanceof ItemSaddle && !this.worldObj.isRemote)
+        {
+            player.startRiding(this);
+        }
+        else if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
         {
             return true;
         }
         else if (item == null)
         {
-            if (!this.worldObj.isRemote) this.startRecording(player);
+            if (!this.worldObj.isRemote)
+            {
+                this.startRecording(player);
+            }
 
             return true;
         }

@@ -108,6 +108,11 @@ public class Frame
     {
         Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
 
+        if (mount instanceof EntityActor)
+        {
+            mount = actor;
+        }
+
         boolean isRemote = actor.worldObj.isRemote;
 
         /* This is most important part of the code that makes the recording
@@ -141,8 +146,6 @@ public class Frame
         }
 
         /* Rotation */
-        // if (isRemote || force)
-        //{
         if (this.isMounted)
         {
             mount.rotationYaw = this.mountYaw;
@@ -152,7 +155,6 @@ public class Frame
         actor.rotationYaw = this.yaw;
         actor.rotationPitch = this.pitch;
         actor.rotationYawHead = this.yawHead;
-        //}
 
         /* Motion and fall distance */
         mount.motionX = this.motionX;

@@ -11,6 +11,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -169,7 +170,12 @@ public class Record
 
             if (frame != null)
             {
-                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+                Entity mount = actor.getRidingEntity();
+
+                if (mount != null && !(mount instanceof EntityActor))
+                {
+                    mount.setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+                }
             }
         }
     }
