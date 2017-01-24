@@ -132,6 +132,14 @@ public class GuiReplay extends GuiScreen
     private void sendRecordMessage()
     {
         EntityPlayer player = this.mc.thePlayer;
+
+        if (this.filename.getText().isEmpty())
+        {
+            L10n.error(player, "recording.fill_filename");
+
+            return;
+        }
+
         String command = "/action record " + this.filename.getText() + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
 
         ITextComponent component = new TextComponentString("click here");
@@ -152,17 +160,12 @@ public class GuiReplay extends GuiScreen
     {
         MorphCell cell = this.morphs.morphs.getSelected();
 
-        if (cell == null)
-        {
-            return;
-        }
-
         Replay value = new Replay();
         value.id = this.filename.getText();
         value.name = this.name.getText();
         value.invincible = this.invincible.getValue();
 
-        value.morph = cell.morph.clone();
+        value.morph = cell == null ? null : cell.morph.clone();
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
@@ -301,7 +304,7 @@ public class GuiReplay extends GuiScreen
 
         /* Draw labels for meta properties */
         this.drawString(this.fontRendererObj, this.stringName, x, y - 65, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringFilename, x, y - 30, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringFilename, x, y - 30, this.filename.getText().isEmpty() ? 0xffff3355 : 0xffcccccc);
 
         if (this.replay.actor != null)
         {

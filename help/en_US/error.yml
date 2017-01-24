@@ -19,6 +19,7 @@ blockbuster.error:
         
         missing: {f}The director block, that was attached to this device at (%s{f}, %s{f}, %s{f}), was destroyed or moved. Attach this device to another director block!
         no_director: {f}No director block exists at (%s{f}, %s{f}, %s{f}).
+        empty_filename: {f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}.
     
     # Errors for /model export
     model.export:
@@ -30,6 +31,8 @@ blockbuster.error:
         read: {f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f}).
         logout: {f}Stopped recording %s{f}, because the player is logged out!
         not_found: {f}Can't find %s{f} recording file!
+        fill_filename: {f}Please fill the {7}Recording ID{f} field!
+        empty_filename: {f}Cannot record a player recording with empty {7}Recording ID{f}.
     
     # Camera fixtures errors
     fixture:

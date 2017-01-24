@@ -65,6 +65,11 @@ public class RecordManager
     {
         if (filename.isEmpty() || this.stopRecording(player, false, notify))
         {
+            if (filename.isEmpty())
+            {
+                Utils.broadcastError("recording.empty_filename");
+            }
+
             return false;
         }
 

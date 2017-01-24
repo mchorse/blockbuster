@@ -6,6 +6,7 @@ import java.util.Map;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.metamorph.api.MorphAPI;
@@ -42,6 +43,21 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         if (this.worldObj.isRemote || this.isPlaying())
         {
             return;
+        }
+
+        if (this.replays.isEmpty())
+        {
+            return;
+        }
+
+        for (Replay replay : this.replays)
+        {
+            if (replay.id.isEmpty())
+            {
+                Utils.broadcastError("director.empty_filename");
+
+                return;
+            }
         }
 
         this.collectActors();

@@ -106,7 +106,7 @@ public class GuiReplays extends GuiScrollPane
             Entry entry = this.entries.get(i);
             String name = flag ? "> " + entry.name : entry.name;
 
-            this.fontRendererObj.drawStringWithShadow(name, x, y + 8, flag ? 0xffcccccc : 0xffffffff);
+            this.fontRendererObj.drawStringWithShadow(name, x, y + 8, entry.replay.id.isEmpty() ? 0xffff3355 : (flag ? 0xffcccccc : 0xffffffff));
         }
     }
 
