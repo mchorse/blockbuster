@@ -32,7 +32,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemSaddle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -356,19 +355,19 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && item.getItem() instanceof ItemSaddle && !this.worldObj.isRemote)
-        {
-            player.startRiding(this);
-        }
-        else if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
+        if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
         {
             return true;
         }
-        else if (item == null)
+        else if (item == null && !this.worldObj.isRemote)
         {
-            if (!this.worldObj.isRemote)
+            if (player.isSneaking())
             {
                 this.startRecording(player);
+            }
+            else
+            {
+                player.startRiding(this);
             }
 
             return true;

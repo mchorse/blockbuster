@@ -8,6 +8,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,6 +23,7 @@ public class GuiMorphsPopup extends GuiScreen
 {
     /* GUI fields */
     public GuiTextField search;
+    public GuiButton close;
     public GuiCreativeMorphs morphs;
 
     /* Area rect */
@@ -52,6 +54,15 @@ public class GuiMorphsPopup extends GuiScreen
     }
 
     /* Input */
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException
+    {
+        if (button.id == 1)
+        {
+            this.morphs.setHidden(true);
+        }
+    }
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
@@ -138,7 +149,10 @@ public class GuiMorphsPopup extends GuiScreen
     @Override
     public void initGui()
     {
-        this.search = new GuiTextField(0, this.fontRendererObj, this.x + 61 - 3, this.y + 4, this.w - 62, 18);
+        this.search = new GuiTextField(0, this.fontRendererObj, this.x + 61 - 3, this.y + 4, this.w - 87, 18);
+        this.close = new GuiButton(1, this.x + this.w - 23, this.y + 3, 20, 20, "X");
+
+        this.buttonList.add(this.close);
     }
 
     /* Rendering */
@@ -165,5 +179,7 @@ public class GuiMorphsPopup extends GuiScreen
         GlStateManager.translate(0, 0, 120);
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
         GlStateManager.popMatrix();
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
