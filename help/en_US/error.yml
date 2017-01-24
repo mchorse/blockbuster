@@ -26,6 +26,11 @@ blockbuster.error:
         error_save: {f}Can't save exported model!
         wrong_type: {f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer).
     
+    # Record command errors
+    record:
+        not_exist: {f}Player recording by filename %s{f} doesn't exist!
+        tick_out_range: {f}Action on tick %s{f} doesn't exist!
+    
     # Recording errors
     recording:
         read: {f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f}).

@@ -223,4 +223,32 @@ public class RecordManager
             Utils.broadcastError("recording.logout", recorder.record.filename);
         }
     }
+
+    /**
+     * Get record by the filename
+     *
+     * If a record by the filename doesn't exist, then record manager tries to
+     * load this record
+     */
+    public Record getRecord(String filename)
+    {
+        Record record = this.records.get(filename);
+
+        if (record == null)
+        {
+            try
+            {
+                File file = Utils.replayFile(filename);
+
+                record = new Record(filename);
+                record.load(file);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return record;
+    }
 }

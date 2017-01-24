@@ -57,6 +57,11 @@ public class Record
      */
     public int unload;
 
+    /**
+     * Whether this record has changed elements
+     */
+    public boolean dirty;
+
     public Record(String filename)
     {
         this.filename = filename;

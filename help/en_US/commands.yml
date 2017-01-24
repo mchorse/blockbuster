@@ -13,6 +13,16 @@ blockbuster:
                 
                 {r}Morphs current player into given {7}<model>{r} with skin named {7}<skin>{r}.
 
+        # Record's commands
+        record:
+            help: {r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions.
+            
+            get:
+                |
+                    {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
+                    
+                    {r}Outputs data tag of action found at {7}<tick>{r} in player recording by filename {7}<filename>{r}.
+
         # Model's commands
         model:
             help: {r}{o}Model command{r}. This command provides sub-commands for managing custom models.

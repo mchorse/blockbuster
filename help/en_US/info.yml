@@ -17,6 +17,9 @@ blockbuster.info:
     
     models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
     
+    record:
+        action: {f}Action at %s{f} tick is %s
+    
     # Recording strings
     recording:
         recording: %s{f} is already being recorded to.

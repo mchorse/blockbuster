@@ -336,6 +336,19 @@ public class ActionHandler
             {
                 iterator.remove();
                 Utils.unloadRecord(record);
+
+                try
+                {
+                    if (record.dirty)
+                    {
+                        record.save(Utils.replayFile(record.filename));
+                        record.dirty = false;
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
