@@ -12,6 +12,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -145,6 +146,16 @@ public class Record
         if (actor.getHealth() > 0.0F)
         {
             this.applyFrame(0, actor, true);
+
+            /* Reseting actor's state */
+            actor.setSneaking(false);
+            actor.setSprinting(false);
+            actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.CHEST, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.LEGS, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.FEET, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, null);
         }
     }
 
