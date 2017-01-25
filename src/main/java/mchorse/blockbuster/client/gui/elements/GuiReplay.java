@@ -296,8 +296,6 @@ public class GuiReplay extends GuiScreen
         int x2 = 128 + 80 + 8;
         int y = this.height - 8;
 
-        int y2 = this.height - 40;
-
         /* Draw labels for visual properties */
         this.drawString(this.fontRendererObj, this.stringInvisible, x2, y - 65, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringInvincible, x2, y - 30, 0xffcccccc);
@@ -308,7 +306,7 @@ public class GuiReplay extends GuiScreen
 
         if (this.replay.actor != null)
         {
-            this.drawCenteredString(this.fontRendererObj, this.stringAttached, 120 + (this.width - 120) / 2, y2 + 16, 0xffffffff);
+            this.drawCenteredString(this.fontRendererObj, this.stringAttached, 120 + (this.width - 120) / 2, 24, 0xffaaaaaa);
         }
 
         /* Draw entity in the center of the screen */
