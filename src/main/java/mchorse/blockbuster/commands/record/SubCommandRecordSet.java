@@ -75,8 +75,7 @@ public class SubCommandRecordSet extends McCommandBase
         }
         catch (Exception e)
         {
-            /* This shouldn't */
-            e.printStackTrace();
+            throw new CommandException("record.set", args[2], e.getMessage());
         }
     }
 }

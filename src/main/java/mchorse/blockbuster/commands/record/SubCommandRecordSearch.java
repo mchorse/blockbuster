@@ -1,5 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
+import java.util.List;
+
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
@@ -10,6 +12,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public class SubCommandRecordSearch extends McCommandBase
 {
@@ -34,6 +37,11 @@ public class SubCommandRecordSearch extends McCommandBase
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
+        if (!Action.TYPES.containsKey(args[1]))
+        {
+            throw new CommandException("record.wrong_action", args[1]);
+        }
+
         String filename = args[0];
         byte type = Action.TYPES.get(args[1]).byteValue();
         Record record = CommandRecord.getRecord(filename);
@@ -84,5 +92,11 @@ public class SubCommandRecordSearch extends McCommandBase
 
             i++;
         }
+    }
+
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    {
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }

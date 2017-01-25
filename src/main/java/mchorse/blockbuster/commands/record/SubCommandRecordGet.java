@@ -66,7 +66,7 @@ public class SubCommandRecordGet extends McCommandBase
 
         if (action == null)
         {
-            throw new CommandException("record.no_action", tick);
+            throw new CommandException("record.no_action", filename, tick);
         }
 
         action.toNBT(tag);

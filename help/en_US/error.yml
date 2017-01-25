@@ -28,8 +28,11 @@ blockbuster.error:
     
     # Record command errors
     record:
+        no_action: {f}Player recording by filename %s{f} doesn't have an action at %s{f} tick!
         not_exist: {f}Player recording by filename %s{f} doesn't exist!
         tick_out_range: {f}Action on tick %s{f} doesn't exist!
+        wrong_action: {f}Action of type %s{f} doesn't exist!
+        set: "{f}Action of type %s{f} couldn't be added due to error: %s"
     
     # Recording errors
     recording:
