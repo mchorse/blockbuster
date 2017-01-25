@@ -267,10 +267,20 @@ public class Record
 
             if (actionTag != null)
             {
-                Action action = Action.fromType(actionTag.getByte("Type"));
-                action.fromNBT(actionTag);
+                byte type = actionTag.getByte("Type");
 
-                this.actions.add(action);
+                try
+                {
+                    Action action = Action.fromType(type);
+                    action.fromNBT(actionTag);
+
+                    this.actions.add(action);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("Failed to load an action at frame " + i + " of type " + type);
+                    e.printStackTrace();
+                }
             }
             else
             {

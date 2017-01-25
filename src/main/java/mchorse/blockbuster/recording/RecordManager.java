@@ -138,10 +138,7 @@ public class RecordManager
 
         try
         {
-            File file = Utils.replayFile(filename);
-
-            Record record = new Record(filename);
-            record.load(file);
+            Record record = this.getRecord(filename);
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
@@ -153,7 +150,6 @@ public class RecordManager
                 Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
             }
 
-            this.records.put(filename, record);
             this.players.put(actor, player);
 
             return true;
@@ -205,6 +201,21 @@ public class RecordManager
      */
     public void reset()
     {
+        for (Record record : this.records.values())
+        {
+            if (record.dirty)
+            {
+                try
+                {
+                    record.save(Utils.replayFile(record.filename));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         this.records.clear();
         this.chunks.clear();
         this.recorders.clear();
@@ -229,24 +240,20 @@ public class RecordManager
      *
      * If a record by the filename doesn't exist, then record manager tries to
      * load this record
+     * @throws Exception
      */
-    public Record getRecord(String filename)
+    public Record getRecord(String filename) throws Exception
     {
         Record record = this.records.get(filename);
 
         if (record == null)
         {
-            try
-            {
-                File file = Utils.replayFile(filename);
+            File file = Utils.replayFile(filename);
 
-                record = new Record(filename);
-                record.load(file);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            record = new Record(filename);
+            record.load(file);
+
+            this.records.put(filename, record);
         }
 
         return record;

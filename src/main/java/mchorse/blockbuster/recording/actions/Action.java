@@ -1,5 +1,8 @@
 package mchorse.blockbuster.recording.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -11,6 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public abstract class Action
 {
+    public static Map<String, Integer> TYPES = new HashMap<String, Integer>();
+
     /* Action types */
     public static final byte CHAT = 1;
     public static final byte SWIPE = 2;
@@ -27,6 +32,24 @@ public abstract class Action
     public static final byte ATTACK = 13;
     public static final byte DAMAGE = 14;
     public static final byte MORPH_ACTION = 15;
+
+    /* Register actions */
+    static
+    {
+        TYPES.put("chat", 1);
+        TYPES.put("swipe", 2);
+        TYPES.put("drop", 3);
+        TYPES.put("equip", 4);
+        TYPES.put("shoot_arrow", 5);
+        TYPES.put("place_block", 7);
+        TYPES.put("mounting", 8);
+        TYPES.put("interact_block", 9);
+        TYPES.put("break_block", 10);
+        TYPES.put("morph", 12);
+        TYPES.put("attack", 13);
+        TYPES.put("damage", 14);
+        TYPES.put("morph_action", 15);
+    }
 
     /**
      * Factory method

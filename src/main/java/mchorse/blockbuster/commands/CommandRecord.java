@@ -1,6 +1,7 @@
 package mchorse.blockbuster.commands;
 
 import mchorse.blockbuster.commands.record.SubCommandRecordGet;
+import mchorse.blockbuster.commands.record.SubCommandRecordSet;
 
 /**
  * Command /record
@@ -14,6 +15,7 @@ public class CommandRecord extends SubCommandBase
     {
         /* Register sub-commands */
         this.add(new SubCommandRecordGet());
+        this.add(new SubCommandRecordSet());
     }
 
     @Override
