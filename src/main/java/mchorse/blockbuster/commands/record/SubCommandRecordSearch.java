@@ -1,20 +1,24 @@
 package mchorse.blockbuster.commands.record;
 
-import java.io.FileNotFoundException;
-
-import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
-public class SubCommandRecordSearch extends CommandBase
+public class SubCommandRecordSearch extends McCommandBase
 {
+    @Override
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
     @Override
     public String getCommandName()
     {
@@ -28,32 +32,11 @@ public class SubCommandRecordSearch extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 2)
-        {
-            throw new WrongUsageException(this.getCommandUsage(sender));
-        }
-
         String filename = args[0];
         byte type = Action.TYPES.get(args[1]).byteValue();
-
-        Record record;
-
-        try
-        {
-            record = CommonProxy.manager.getRecord(filename);
-        }
-        catch (FileNotFoundException e)
-        {
-            L10n.error(sender, "record.not_exist", filename);
-            return;
-        }
-        catch (Exception e)
-        {
-            L10n.error(sender, "recording.read", filename);
-            return;
-        }
+        Record record = CommandRecord.getRecord(filename);
 
         int i = 0;
         int tick = -1;
