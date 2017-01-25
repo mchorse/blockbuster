@@ -23,6 +23,12 @@ blockbuster:
                     
                     {r}Outputs data tag of action found at {7}<tick>{r} in player recording by filename {7}<filename>{r}.
             
+            info:
+                |
+                    {l}{6}/{r}record {8}info{r} {7}<filename>{r}
+                    
+                    {r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc.
+            
             set:
                 |
                     {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [data_tag]{r}
