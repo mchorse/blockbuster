@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+
 /**
  * Model pack class
  *
@@ -36,6 +38,11 @@ public class ModelPack
      * Folders which to check when reloading models and skins
      */
     public List<File> folders = new ArrayList<File>();
+
+    /**
+     * List of ignored models
+     */
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred");
 
     /**
      * Add a folder to the list of folders to where to look up models and skins
@@ -106,7 +113,7 @@ public class ModelPack
     {
         for (File file : folder.listFiles())
         {
-            if (ModelHandler.IGNORED_MODELS.contains(file.getName()))
+            if (IGNORED_MODELS.contains(file.getName()))
             {
                 continue;
             }

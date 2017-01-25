@@ -39,6 +39,12 @@ public class CommandRecord extends SubCommandBase
         return "blockbuster.commands.record.help";
     }
 
+    /**
+     * Get record by given filename
+     *
+     * This is a command-friendly method for retrieving a player recording. In
+     * case of error, {@link CommandException} will be thrown.
+     */
     public static Record getRecord(String filename) throws CommandException
     {
         try
