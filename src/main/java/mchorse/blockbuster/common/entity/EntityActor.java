@@ -267,8 +267,13 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (!this.worldObj.isRemote && Blockbuster.proxy.config.actor_fall_damage && this.playback != null)
         {
+            int tick = this.playback.tick;
+
             /* Override onGround field */
-            this.onGround = onGroundIn = this.playback.record.frames.get(this.playback.tick).onGround;
+            if (tick >= 0 && tick < this.playback.record.frames.size())
+            {
+                this.onGround = onGroundIn = this.playback.record.frames.get(tick).onGround;
+            }
         }
 
         super.updateFallState(y, onGroundIn, state, pos);
@@ -359,15 +364,18 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             return true;
         }
-        else if (item == null && !this.worldObj.isRemote)
+        else if (item == null)
         {
-            if (player.isSneaking())
+            if (!this.worldObj.isRemote)
             {
-                this.startRecording(player);
-            }
-            else
-            {
-                player.startRiding(this);
+                if (player.isSneaking())
+                {
+                    this.startRecording(player);
+                }
+                else
+                {
+                    player.startRiding(this);
+                }
             }
 
             return true;
@@ -465,7 +473,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     private void startRecording(EntityPlayer player)
     {
-        if (this.directorBlock == null) return;
+        if (this.directorBlock == null)
+        {
+            return;
+        }
 
         TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
 
