@@ -19,6 +19,10 @@ blockbuster.info:
     
     record:
         action: {f}Action at %s{f} tick is %s
+        
+        search_type: "{f}Search for action with type %s{f}:"
+        search_action: {f}Found action at %s{f} tick.
+        search_action_data: "{f}Found action at %s{f} tick with data: %s"
     
     # Recording strings
     recording:

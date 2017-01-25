@@ -28,6 +28,12 @@ blockbuster:
                     {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [data_tag]{r}
                     
                     {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r}.
+            
+            search:
+                |
+                    {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
+                    
+                    {r}Searches for actions, optionally limited by {7}[limit]{r}, of given {7}<action_type>{r} and outputs the tick and, optionally output data tag, found in player recording by filename {7}<filename>{r}.
 
         # Model's commands
         model:

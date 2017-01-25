@@ -38,6 +38,11 @@ public class Record
     public String filename = "";
 
     /**
+     * Version of this record
+     */
+    public short version = SIGNATURE;
+
+    /**
      * Delay between recording frames
      */
     public int delay = 1;
@@ -243,16 +248,11 @@ public class Record
      * This method basically checks if the given file has appropriate short
      * signature, and reads all frames and actions from the file.
      */
-    public void load(File file) throws IOException, Exception
+    public void load(File file) throws IOException
     {
         NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
-        short version = compound.getShort("Version");
 
-        if (version != SIGNATURE)
-        {
-            throw new Exception("Given file doesn't have appropriate signature!");
-        }
-
+        this.version = compound.getShort("Version");
         this.delay = compound.getByte("Delay");
 
         NBTTagList frames = (NBTTagList) compound.getTag("Frames");
