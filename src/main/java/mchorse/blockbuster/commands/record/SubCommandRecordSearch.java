@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands.record;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
@@ -97,6 +98,15 @@ public class SubCommandRecordSearch extends McCommandBase
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
+        if (args.length == 2)
+        {
+            List<String> types = new ArrayList<String>();
+
+            types.addAll(Action.TYPES.keySet());
+
+            return getListOfStringsMatchingLastWord(args, types);
+        }
+
         return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }

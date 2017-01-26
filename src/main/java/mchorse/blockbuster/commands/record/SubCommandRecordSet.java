@@ -1,5 +1,8 @@
 package mchorse.blockbuster.commands.record;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
@@ -9,6 +12,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Command /record set
@@ -77,5 +81,21 @@ public class SubCommandRecordSet extends McCommandBase
         {
             throw new CommandException("record.set", args[2], e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 3)
+        {
+            List<String> types = new ArrayList<String>();
+
+            types.addAll(Action.TYPES.keySet());
+            types.add("none");
+
+            return getListOfStringsMatchingLastWord(args, types);
+        }
+
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 }
