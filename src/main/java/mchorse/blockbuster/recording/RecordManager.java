@@ -240,7 +240,6 @@ public class RecordManager
      *
      * If a record by the filename doesn't exist, then record manager tries to
      * load this record
-     * @throws Exception
      */
     public Record getRecord(String filename) throws Exception
     {

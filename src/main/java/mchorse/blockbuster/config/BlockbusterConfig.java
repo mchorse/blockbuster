@@ -28,6 +28,11 @@ public class BlockbusterConfig
      */
     public boolean clean_model_downloads;
 
+    /**
+     * Is teleport disabled on sneaking + right click with playback button?
+     */
+    public boolean disable_teleport_playback_button;
+
     /* Camera */
 
     /**
@@ -127,6 +132,7 @@ public class BlockbusterConfig
         /* General */
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
         this.clean_model_downloads = this.config.getBoolean("clean_model_downloads", general, true, "Clean downloaded models upon exiting a server", genPrefix + "clean_model_downloads");
+        this.disable_teleport_playback_button = this.config.getBoolean("disable_teleport_playback_button", general, false, "Is teleport disabled on sneaking + right click with playback button?", genPrefix + "disable_teleport_playback_button");
 
         /* Camera */
         this.camera_duration_step = this.config.getInt("camera_duration_step", camera, 10, 1, 100, "What is default step to use when adding or reducing duration of the camera fixture (in ticks)", camPrefix + "camera_duration_step");
