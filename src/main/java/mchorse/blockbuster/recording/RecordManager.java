@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
@@ -49,6 +51,11 @@ public class RecordManager
     public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
 
     /**
+     * Scheduled recordings
+     */
+    public Map<EntityPlayer, ScheduledRecording> scheduled = new HashMap<EntityPlayer, ScheduledRecording>();
+
+    /**
      * Get action list for given player
      */
     public List<Action> getActions(EntityPlayer player)
@@ -61,7 +68,7 @@ public class RecordManager
     /**
      * Start recording given player to record with given filename
      */
-    public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify)
+    public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify, Runnable runnable)
     {
         if (filename.isEmpty() || this.stopRecording(player, false, notify))
         {
@@ -83,11 +90,26 @@ public class RecordManager
             }
         }
 
-        this.recorders.put(player, new RecordRecorder(new Record(filename), mode));
+        RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
+        int countdown = Blockbuster.proxy.config.recording_countdown;
 
-        if (notify)
+        if (countdown == 0 || player.worldObj.isRemote)
         {
-            Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+            if (runnable != null)
+            {
+                runnable.run();
+            }
+
+            this.recorders.put(player, recorder);
+
+            if (notify)
+            {
+                Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+            }
+        }
+        else if (!player.worldObj.isRemote)
+        {
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, countdown * 20));
         }
 
         return true;
@@ -98,6 +120,18 @@ public class RecordManager
      */
     public boolean stopRecording(EntityPlayer player, boolean hasDied, boolean notify)
     {
+        /* Stop countdown */
+        ScheduledRecording scheduled = this.scheduled.get(player);
+
+        if (scheduled != null)
+        {
+            this.scheduled.remove(player);
+            Dispatcher.sendTo(new PacketCaption(), (EntityPlayerMP) player);
+
+            return true;
+        }
+
+        /* Stop the recording via command or whatever the source is */
         RecordRecorder recorder = this.recorders.get(player);
 
         if (recorder != null)
@@ -139,6 +173,14 @@ public class RecordManager
         try
         {
             Record record = this.getRecord(filename);
+
+            if (record.frames.size() == 0)
+            {
+                Utils.broadcastError("recording.empty_record", filename);
+
+                return false;
+            }
+
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
@@ -239,7 +281,7 @@ public class RecordManager
      * Get record by the filename
      *
      * If a record by the filename doesn't exist, then record manager tries to
-     * load this record
+     * load this record.
      */
     public Record getRecord(String filename) throws Exception
     {
@@ -256,5 +298,32 @@ public class RecordManager
         }
 
         return record;
+    }
+
+    /**
+     * Scheduled recorder class
+     */
+    public static class ScheduledRecording
+    {
+        public RecordRecorder recorder;
+        public EntityPlayer player;
+        public Runnable runnable;
+        public int countdown;
+
+        public ScheduledRecording(RecordRecorder recorder, EntityPlayer player, Runnable runnable, int countdown)
+        {
+            this.recorder = recorder;
+            this.player = player;
+            this.runnable = runnable;
+            this.countdown = countdown;
+        }
+
+        public void run()
+        {
+            if (this.runnable != null)
+            {
+                this.runnable.run();
+            }
+        }
     }
 }

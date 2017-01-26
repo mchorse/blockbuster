@@ -41,6 +41,7 @@ blockbuster.error:
         not_found: {f}Can't find %s{f} recording file!
         fill_filename: {f}Please fill the {7}Recording ID{f} field!
         empty_filename: {f}Cannot record a player recording with empty {7}Recording ID{f}.
+        empty_record: {f}Cannot playback record %s{f}, because it's empty!
     
     # Camera fixtures errors
     fixture:

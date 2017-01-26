@@ -11,7 +11,6 @@ import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,16 +28,14 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
     public void run(EntityPlayerSP player, PacketPlayerRecording message)
     {
         ClientProxy.recordingOverlay.setVisible(message.recording);
-        ClientProxy.recordingOverlay.setCaption(message.filename);
+        ClientProxy.recordingOverlay.setCaption(message.filename, true);
 
         if (message.recording)
         {
-            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false);
+            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false, null);
         }
         else
         {
-            MorphAPI.demorph(player);
-
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
             ClientProxy.manager.stopRecording(player, false, false);
         }

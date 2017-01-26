@@ -122,13 +122,6 @@ public class Frame
          * reference see renderer classes (they use prev* and lastTick* stuff
          * for interpolation).
          */
-        if (isRemote)
-        {
-            mount.prevPosX = mount.posX;
-            mount.prevPosY = mount.posY;
-            mount.prevPosZ = mount.posZ;
-        }
-
         if (this.isMounted)
         {
             mount.prevRotationYaw = mount.rotationYaw;
@@ -140,10 +133,7 @@ public class Frame
         actor.prevRotationYawHead = actor.rotationYawHead;
 
         /* Inject frame's values into actor */
-        if (!isRemote || force)
-        {
-            mount.setPosition(this.x, this.y, this.z);
-        }
+        mount.setPosition(this.x, this.y, this.z);
 
         /* Rotation */
         if (this.isMounted)

@@ -7,6 +7,10 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
+import mchorse.blockbuster.recording.RecordManager.ScheduledRecording;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
@@ -24,6 +28,7 @@ import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -47,6 +52,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Event handler for recording purposes.
@@ -314,16 +320,29 @@ public class ActionHandler
      * This is probably not the optimal solution, but I'm not really sure how
      * to schedule things in Minecraft other way than timers and ticks.
      *
-     * This method is responsible for scheduling record unloading.
+     * This method is responsible for scheduling record unloading and counting
+     * down recording process.
      */
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
-        if (CommonProxy.manager.records.isEmpty() || !Blockbuster.proxy.config.record_unload)
+        if (!CommonProxy.manager.records.isEmpty() && Blockbuster.proxy.config.record_unload)
         {
-            return;
+            this.checkAndUnloadRecords();
         }
 
+        if (!CommonProxy.manager.scheduled.isEmpty())
+        {
+            this.checkScheduled();
+        }
+    }
+
+    /**
+     * Check for any unloaded record and unload it if needed requirements are
+     * met.
+     */
+    private void checkAndUnloadRecords()
+    {
         Iterator<Map.Entry<String, Record>> iterator = CommonProxy.manager.records.entrySet().iterator();
 
         while (iterator.hasNext())
@@ -350,6 +369,38 @@ public class ActionHandler
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Check for scheduled records and countdown them.
+     */
+    private void checkScheduled()
+    {
+        Iterator<ScheduledRecording> it = CommonProxy.manager.scheduled.values().iterator();
+
+        while (it.hasNext())
+        {
+            ScheduledRecording record = it.next();
+
+            if (record.countdown % 20 == 0)
+            {
+                IMessage message = new PacketCaption("Starting in §7" + (record.countdown / 20));
+                Dispatcher.sendTo(message, (EntityPlayerMP) record.player);
+            }
+
+            if (record.countdown <= 0)
+            {
+                record.run();
+                CommonProxy.manager.recorders.put(record.player, record.recorder);
+                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename), (EntityPlayerMP) record.player);
+
+                it.remove();
+
+                continue;
+            }
+
+            record.countdown--;
         }
     }
 

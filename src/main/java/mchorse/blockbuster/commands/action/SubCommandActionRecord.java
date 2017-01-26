@@ -49,20 +49,12 @@ public class SubCommandActionRecord extends CommandBase
 
             if (tile instanceof TileEntityDirector)
             {
-                TileEntityDirector director = (TileEntityDirector) tile;
-
-                if (!CommonProxy.manager.recorders.containsKey(player))
-                {
-                    director.applyReplay(director.byFile(args[0]), player);
-                    director.startPlayback(args[0]);
-                }
-                else
-                {
-                    director.stopPlayback();
-                }
+                ((TileEntityDirector) tile).startRecording(args[0], player);
             }
         }
-
-        CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true);
+        else
+        {
+            CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true, null);
+        }
     }
 }

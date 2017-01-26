@@ -54,7 +54,7 @@ public class DropAction extends Action
         item.motionX = (-MathHelper.sin(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
         item.motionZ = (MathHelper.cos(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
         item.motionY = (-MathHelper.sin(pitch / 180.0F * PI) * f + 0.1F);
-        item.setDefaultPickupDelay();
+        item.setPickupDelay(40);
 
         f = 0.02F;
         float f1 = rand.nextFloat() * PI * 2.0F * rand.nextFloat();

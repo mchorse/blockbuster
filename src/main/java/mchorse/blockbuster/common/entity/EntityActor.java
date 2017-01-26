@@ -238,7 +238,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             double d2 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
 
             this.newPosRotationIncrements--;
-            this.setPosition(d0, d1, d2);
+            // this.setPosition(d0, d1, d2);
         }
         else if (!this.isServerWorld())
         {
@@ -270,9 +270,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             int tick = this.playback.tick;
 
             /* Override onGround field */
-            if (tick >= 0 && tick < this.playback.record.frames.size())
+            if (tick >= 1 && tick < this.playback.record.frames.size())
             {
-                this.onGround = onGroundIn = this.playback.record.frames.get(tick).onGround;
+                this.onGround = onGroundIn = this.playback.record.frames.get(tick - 1).onGround;
             }
         }
 
@@ -294,6 +294,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             {
                 if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
                 {
+                    this.onItemPickup(entityitem, 1);
                     entityitem.setDead();
                 }
             }
@@ -483,15 +484,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (tile != null && tile instanceof TileEntityDirector)
         {
             TileEntityDirector director = (TileEntityDirector) tile;
-
-            if (!CommonProxy.manager.recorders.containsKey(player))
-            {
-                director.startPlayback(this);
-            }
-            else
-            {
-                director.stopPlayback(this);
-            }
 
             director.startRecording(this, player);
         }

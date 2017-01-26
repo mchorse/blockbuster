@@ -63,6 +63,11 @@ public class BlockbusterConfig
     /* Recording */
 
     /**
+     * Recording <s>final</s> countdown
+     */
+    public int recording_countdown;
+
+    /**
      * Recording frame skip
      */
     public int recording_delay;
@@ -142,6 +147,7 @@ public class BlockbusterConfig
         this.camera_spectator = this.config.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback", camPrefix + "camera_spectator");
 
         /* Recording */
+        this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");
         this.recording_delay = this.config.getInt("recording_delay", recording, 1, 1, 10, "Frame delay for recording", recPrefix + "recording_delay");
         this.record_unload_time = this.config.getInt("record_unload_time", recording, 2400, 600, 72000, "How long is it takes to unload a record (in ticks)", recPrefix + "record_unload_time");
         this.record_unload = this.config.getBoolean("record_unload", recording, true, "Enable automatic record unloading?", recPrefix + "record_unload");

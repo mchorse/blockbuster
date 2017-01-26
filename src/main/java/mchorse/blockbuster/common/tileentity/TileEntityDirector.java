@@ -15,9 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Director tile entity
  *
- * Used to store actors and manipulate block isPlaying state. Not really sure
- * if it's the best way to implement activation of the redstone (See update
- * method for more information).
+ * Used to store actors and manipulate block isPlaying state. Not really sure if
+ * it's the best way to implement activation of the redstone (See update method
+ * for more information).
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
@@ -35,8 +35,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     /**
-     * The same thing as startPlayback, but don't play the actor that is
-     * passed in the arguments (because he might be recorded by the player)
+     * The same thing as startPlayback, but don't play the actor that is passed
+     * in the arguments (because he might be recorded by the player)
      */
     public void startPlayback(EntityActor exception)
     {
@@ -86,8 +86,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     /**
-     * The same thing as startPlayback, but don't play the replay that is
-     * passed in the arguments (because he might be recorded by the player)
+     * The same thing as startPlayback, but don't play the replay that is passed
+     * in the arguments (because he might be recorded by the player)
      */
     public void startPlayback(String exception)
     {
@@ -220,14 +220,58 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     /**
      * Start recording player
      */
-    public void startRecording(EntityActor actor, EntityPlayer player)
+    public void startRecording(final EntityActor actor, final EntityPlayer player)
     {
-        Replay replay = this.byActor(actor);
+        final Replay replay = this.byActor(actor);
 
         if (replay != null)
         {
-            this.applyReplay(replay, player);
-            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true);
+            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (!CommonProxy.manager.recorders.containsKey(player))
+                    {
+                        TileEntityDirector.this.startPlayback(actor);
+                    }
+                    else
+                    {
+                        TileEntityDirector.this.stopPlayback(actor);
+                    }
+
+                    TileEntityDirector.this.applyReplay(replay, player);
+                }
+            });
+        }
+    }
+
+    /**
+     * Start recording player
+     */
+    public void startRecording(final String filename, final EntityPlayer player)
+    {
+        final Replay replay = this.byFile(filename);
+
+        if (replay != null)
+        {
+            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (!CommonProxy.manager.recorders.containsKey(player))
+                    {
+                        TileEntityDirector.this.startPlayback(filename);
+                    }
+                    else
+                    {
+                        TileEntityDirector.this.stopPlayback();
+                    }
+
+                    TileEntityDirector.this.applyReplay(replay, player);
+                }
+            });
         }
     }
 

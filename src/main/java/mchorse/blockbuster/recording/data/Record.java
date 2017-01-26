@@ -98,7 +98,7 @@ public class Record
      */
     public void applyFrame(int tick, EntityActor actor, boolean force)
     {
-        if (tick > this.frames.size())
+        if (tick >= this.frames.size())
         {
             return;
         }
@@ -107,10 +107,16 @@ public class Record
 
         if (tick != 0)
         {
+            Frame prev = this.frames.get(tick - 1);
+
             /* Override fall distance, apparently fallDistance gets reset
              * faster than RecordRecorder can record both onGround and
              * fallDistance being correct for player, so we just hack */
-            actor.fallDistance = this.frames.get(tick - 1).fallDistance;
+            actor.fallDistance = prev.fallDistance;
+
+            actor.lastTickPosX = prev.x;
+            actor.lastTickPosY = prev.y;
+            actor.lastTickPosZ = prev.z;
         }
     }
 
@@ -120,7 +126,7 @@ public class Record
      */
     public void applyAction(int tick, EntityActor actor)
     {
-        if (tick > this.actions.size())
+        if (tick >= this.actions.size())
         {
             return;
         }

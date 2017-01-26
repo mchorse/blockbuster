@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
@@ -15,6 +16,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
+import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
@@ -136,6 +138,8 @@ public class Dispatcher
         register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
 
         register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
+
+        register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

@@ -10,6 +10,7 @@ blockbuster.config:
     recording:
         title: Recording
 
+        recording_countdown: Recording countdown
         recording_delay: Recording frame skip
         record_unload_time: Automatic record unload time
         record_unload: Automatic record unloading

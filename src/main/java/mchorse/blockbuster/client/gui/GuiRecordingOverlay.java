@@ -32,9 +32,9 @@ public class GuiRecordingOverlay extends Gui
 
     /* Public API */
 
-    public void setCaption(String caption)
+    public void setCaption(String caption, boolean recording)
     {
-        this.caption = I18n.format("blockbuster.recording", caption);
+        this.caption = recording ? I18n.format("blockbuster.recording", caption) : caption;
     }
 
     public void setVisible(boolean isVisible)
