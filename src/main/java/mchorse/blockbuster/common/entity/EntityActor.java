@@ -228,28 +228,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             }
         }
 
-        /* Copy paste of onLivingUpdate from EntityLivingBase, I believe */
         this.updateArmSwingProgress();
-
-        if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
-        {
-            double d0 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
-            double d1 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
-            double d2 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
-
-            this.newPosRotationIncrements--;
-            // this.setPosition(d0, d1, d2);
-        }
-        else if (!this.isServerWorld())
-        {
-            this.motionX *= 0.98D;
-            this.motionY *= 0.98D;
-            this.motionZ *= 0.98D;
-        }
-
-        if (Math.abs(this.motionX) < 0.005D) this.motionX = 0.0D;
-        if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
-        if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
         /* Trigger pressure playback */
         this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
@@ -260,7 +239,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      *
      * This override is responsible for applying fall damage on the actor.
      * {@link #moveEntity(double, double, double)} seem to override onGround
-     * property wrongly on the server, so we have to do this bullshit.
+     * property wrongly on the server, so we have deal with this bullshit.
      */
     @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
@@ -270,10 +249,12 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             int tick = this.playback.tick;
 
             /* Override onGround field */
-            if (tick >= 1 && tick < this.playback.record.frames.size())
+            if (tick >= 0 && tick < this.playback.record.frames.size())
             {
-                this.onGround = onGroundIn = this.playback.record.frames.get(tick - 1).onGround;
+                this.onGround = onGroundIn = this.playback.record.frames.get(tick).onGround;
             }
+
+            System.out.println(tick + " " + this.posY + " " + pos.getY() + " " + this.onGround + " " + this.fallDistance);
         }
 
         super.updateFallState(y, onGroundIn, state, pos);
@@ -453,7 +434,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
-            Utils.broadcastMessage("blockbuster.info.actor.playing", new Object[] {});
+            Utils.broadcastMessage("blockbuster.info.actor.playing");
 
             return;
         }
@@ -483,9 +464,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (tile != null && tile instanceof TileEntityDirector)
         {
-            TileEntityDirector director = (TileEntityDirector) tile;
-
-            director.startRecording(this, player);
+            ((TileEntityDirector) tile).startRecording(this, player);
         }
     }
 
@@ -606,7 +585,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Used by playback code
+     * Used by playback code to set item animation thingy
      */
     public void setItemStackInUse(int activeCount)
     {

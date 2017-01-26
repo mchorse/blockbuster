@@ -70,6 +70,13 @@ public class RecordManager
      */
     public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify, Runnable runnable)
     {
+        int countdown = Blockbuster.proxy.config.recording_countdown;
+
+        if (runnable != null && (countdown == 0 || this.recorders.containsKey(player)))
+        {
+            runnable.run();
+        }
+
         if (filename.isEmpty() || this.stopRecording(player, false, notify))
         {
             if (filename.isEmpty())
@@ -91,15 +98,9 @@ public class RecordManager
         }
 
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
-        int countdown = Blockbuster.proxy.config.recording_countdown;
 
         if (countdown == 0 || player.worldObj.isRemote)
         {
-            if (runnable != null)
-            {
-                runnable.run();
-            }
-
             this.recorders.put(player, recorder);
 
             if (notify)
