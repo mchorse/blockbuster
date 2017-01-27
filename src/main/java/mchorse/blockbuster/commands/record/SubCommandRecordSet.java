@@ -71,7 +71,14 @@ public class SubCommandRecordSet extends McCommandBase
 
             if (args.length > 3)
             {
-                action.fromNBT(JsonToNBT.getTagFromJson(args[3]));
+                String dataTag = "";
+
+                for (int i = 3; i < args.length; i++)
+                {
+                    dataTag += args[i] + (i == args.length - 1 ? "" : " ");
+                }
+
+                action.fromNBT(JsonToNBT.getTagFromJson(dataTag));
             }
 
             record.actions.set(tick, action);

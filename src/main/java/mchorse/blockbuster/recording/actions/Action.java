@@ -32,6 +32,7 @@ public abstract class Action
     public static final byte ATTACK = 13;
     public static final byte DAMAGE = 14;
     public static final byte MORPH_ACTION = 15;
+    public static final byte COMMAND = 16;
 
     /* Register actions */
     static
@@ -49,6 +50,7 @@ public abstract class Action
         TYPES.put("attack", 13);
         TYPES.put("damage", 14);
         TYPES.put("morph_action", 15);
+        TYPES.put("command", 16);
     }
 
     /**
@@ -71,6 +73,7 @@ public abstract class Action
         if (type == ATTACK) return new AttackAction();
         if (type == DAMAGE) return new DamageAction();
         if (type == MORPH_ACTION) return new MorphActionAction();
+        if (type == COMMAND) return new CommandAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }

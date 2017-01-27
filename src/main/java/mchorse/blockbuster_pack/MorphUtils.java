@@ -107,8 +107,6 @@ public class MorphUtils
         NBTTagCompound morph = new NBTTagCompound();
         ResourceLocation rl = RLUtils.fromString(skin, model.isEmpty() ? "steve" : model);
 
-        System.out.println(rl);
-
         morph.setString("Name", "blockbuster." + model);
 
         if (rl != null)
