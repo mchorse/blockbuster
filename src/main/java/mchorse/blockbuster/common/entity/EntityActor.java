@@ -253,8 +253,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             {
                 this.onGround = onGroundIn = this.playback.record.frames.get(tick).onGround;
             }
-
-            System.out.println(tick + " " + this.posY + " " + pos.getY() + " " + this.onGround + " " + this.fallDistance);
         }
 
         super.updateFallState(y, onGroundIn, state, pos);
