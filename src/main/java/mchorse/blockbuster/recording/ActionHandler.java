@@ -15,6 +15,7 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.ChatAction;
+import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
@@ -27,6 +28,7 @@ import mchorse.metamorph.api.events.MorphActionEvent;
 import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -37,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -259,6 +262,34 @@ public class ActionHandler
         if (!player.worldObj.isRemote && events != null)
         {
             events.add(new ChatAction(event.getMessage()));
+        }
+    }
+
+    /**
+     * Event listener for Action.COMMAND (basically when the player enters
+     * a command in the chat). Adds an action only for server commands.
+     */
+    @SubscribeEvent
+    public void onServerChatEvent(CommandEvent event)
+    {
+        ICommandSender sender = event.getSender();
+
+        if (sender instanceof EntityPlayer)
+        {
+            EntityPlayer player = (EntityPlayer) sender;
+            List<Action> events = CommonProxy.manager.getActions(player);
+
+            if (!player.worldObj.isRemote && events != null)
+            {
+                String command = "/" + event.getCommand().getCommandName();
+
+                for (String value : event.getParameters())
+                {
+                    command += " " + value;
+                }
+
+                events.add(new CommandAction(command));
+            }
         }
     }
 

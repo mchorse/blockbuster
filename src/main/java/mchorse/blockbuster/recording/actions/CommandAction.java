@@ -21,10 +21,18 @@ import net.minecraft.world.World;
  */
 public class CommandAction extends Action
 {
+    /**
+     * Command to be executed
+     */
     public String command = "";
 
     public CommandAction()
     {}
+
+    public CommandAction(String command)
+    {
+        this.command = command;
+    }
 
     @Override
     public byte getType()
