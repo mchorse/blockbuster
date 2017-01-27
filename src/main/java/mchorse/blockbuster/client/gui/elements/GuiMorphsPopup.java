@@ -38,6 +38,7 @@ public class GuiMorphsPopup extends GuiScreen
         this.morphs = new GuiCreativeMorphs(perRow, selected, morphing);
         this.morphs.setScrollSpeed(3);
         this.morphs.setHidden(true);
+        this.morphs.shiftX = 8;
     }
 
     public void updateRect(int x, int y, int w, int h)

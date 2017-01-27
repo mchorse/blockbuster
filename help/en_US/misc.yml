@@ -7,3 +7,6 @@ blockbuster:
     recording: Recording to {7}%s{r}
     yes: "Yes"
     no: "No"
+
+# Metamorph category
+morph.category.blockbuster=Blockbuster models
