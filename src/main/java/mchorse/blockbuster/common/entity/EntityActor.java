@@ -228,6 +228,16 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             }
         }
 
+        if (this.worldObj.isRemote && this.newPosRotationIncrements > 0)
+        {
+            double d0 = this.posX + (this.interpTargetX - this.posX) / this.newPosRotationIncrements;
+            double d1 = this.posY + (this.interpTargetY - this.posY) / this.newPosRotationIncrements;
+            double d2 = this.posZ + (this.interpTargetZ - this.posZ) / this.newPosRotationIncrements;
+
+            this.newPosRotationIncrements--;
+            this.setPosition(d0, d1, d2);
+        }
+
         this.updateArmSwingProgress();
 
         /* Trigger pressure playback */

@@ -113,12 +113,6 @@ public class Record
              * faster than RecordRecorder can record both onGround and
              * fallDistance being correct for player, so we just hack */
             actor.fallDistance = prev.fallDistance;
-
-            /* Override last tick position. This override guarantees that actor
-             * playback will be as smooth as baby's butt */
-            actor.lastTickPosX = prev.x;
-            actor.lastTickPosY = prev.y;
-            actor.lastTickPosZ = prev.z;
         }
     }
 

@@ -133,7 +133,10 @@ public class Frame
         actor.prevRotationYawHead = actor.rotationYawHead;
 
         /* Inject frame's values into actor */
-        mount.setPosition(this.x, this.y, this.z);
+        if (!isRemote || force)
+        {
+            mount.setPosition(this.x, this.y, this.z);
+        }
 
         /* Rotation */
         if (this.isMounted)
