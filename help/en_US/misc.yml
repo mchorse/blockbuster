@@ -9,4 +9,4 @@ blockbuster:
     no: "No"
 
 # Metamorph category
-morph.category.blockbuster=Blockbuster models
+morph.category.blockbuster: Blockbuster models
