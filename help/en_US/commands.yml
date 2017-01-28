@@ -7,11 +7,6 @@ blockbuster:
                 {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
                 
                 {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
-        morph: 
-            |
-                {l}{6}/{r}morph {7}<model> <skin>{r}
-                
-                {r}Morphs current player into given {7}<model>{r} with skin named {7}<skin>{r}.
 
         # Record's commands
         record:

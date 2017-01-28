@@ -259,9 +259,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             int tick = this.playback.tick;
 
             /* Override onGround field */
-            if (tick >= 0 && tick < this.playback.record.frames.size())
+            if (tick >= 1 && tick < this.playback.record.frames.size())
             {
-                this.onGround = onGroundIn = this.playback.record.frames.get(tick).onGround;
+                this.onGround = onGroundIn = this.playback.record.frames.get(tick - 1).onGround;
             }
         }
 

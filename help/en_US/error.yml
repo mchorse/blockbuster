@@ -8,10 +8,6 @@ blockbuster.error:
     actor:
         not_attached: {f}This registering item isn't attached to a director block!
     
-    # Morph error strings
-    morph:
-        wrong: {f}Morph by name %s{f} doesn't exist!
-    
     # Director block error strings
     director:
         playing: {f}Director block at (%s{f}, %s{f}, %s{f}) is playing!

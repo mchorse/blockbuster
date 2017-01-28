@@ -26,9 +26,7 @@ blockbuster.gui:
         title: Actor Configuration
         default: Default
         name: Name
-        model: Custom Model
         filename: Recording ID
-        skin: Skin
         invincible: Can be killed?
         invisible: Is visible?
         attached: Attached to actor
