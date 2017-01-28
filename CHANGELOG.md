@@ -4,25 +4,38 @@ Blockbuster's change log.
 
 ## Version 1.4.7 (Metamorph integration)
 
-Another patch update. This patch update is what I waited for a long time! This update integrates Blockbuster with Metamorph. This makes Blockbuster able to perform Metamorph's abilities, attacks and abilities as well as to use Metamorph's morphs for actor morphing. 
-
-From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](https://github.com/mchorse/metamorph).
+Another patch update. This patch update is what I waited for a long time! This update integrates Blockbuster with Metamorph. This makes Blockbuster able to perform Metamorph's abilities, attacks and abilities as well as to use Metamorph's morphs for actor morphing. From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](https://github.com/mchorse/metamorph).
 
 **Important**: due to integration, the format of custom models and skins was changed, so before trying out this update, make sure to back up your world as it may make all your actors morphless (invisible actors with shadows).
 
-Special thanks to **The Minebox**, **badr**, **Tom Soel** and **Vasily12345** for beta-testing this release!
+Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **[badr](https://twitter.com/TomSoel)**, **[Tom Soel](https://twitter.com/xdthatshit)** and **[Vasily12345](https://www.youtube.com/user/MinecraftLifeSeries)** for beta-testing this update!
 
 * Adapted `MORPH` action to Metamorph's integration
 * Adapted actor and director GUIs to Metamorph's integration
 * Added `MORPH_ACTION` action (which basically executes morph's action)
+* Added `COMMAND` action (which executes command based on actor)
+* Added `/record` command with four sub-commands:
+    * `/record get` – output the data tag of the action in given player recording and tick
+    * `/record set` – set an action in given player recording at given tick
+    * `/record info` – output the information about given player recording
+    * `/record search` – find actions of specified type in given player recording
+* Added config options:
+    * Recording countdown (suggested by The Minebox)
+    * Disable teleport to director block (suggested by badr)
 * Added default `fred` custom model (4px wide arms with overlays)
-* Added error messages and red labels when `Recording ID` field is empty
-* Flipped texture of **actor configuration** item (thanks to [Tom Soel](https://twitter.com/TomSoel))
+* Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
 * Corrected `ATTACK` action's direction vector
-* Made actors *rideable*!!!
+* Flipped texture of **actor configuration** item (thanks to Tom Soel)
+* Fixed NPE crash at the end of playback with mounts (thanks to Tom Soel)
+* Implemented item pick-up animation (item magnet-like animation)
+* Implemented error 
+* Increased item pick-up delay (from `10` to `40`)
+* Made actors rideable (sneak + right click is to start record)
 * Removed `/morph` command and morphing capability from Blockbuster
 * Replaced `Custom Model` and `Skin` fields with morph picker
 * Works with Metamorph `1.1`
+
+There were also few bugs during testing which lead to game crash, but they're not listed here, since they were fixed during the release (thus it will be inappropriate add them since they weren't present in previous update).
 
 ## Version 1.4.6
 
