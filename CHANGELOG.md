@@ -23,12 +23,12 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
     * Recording countdown (suggested by The Minebox)
     * Disable teleport to director block (suggested by badr)
 * Added default `fred` custom model (4px wide arms with overlays)
+* Added duplicate button in **director block** GUI (thanks to badr)
 * Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
 * Corrected `ATTACK` action's direction vector
 * Flipped texture of **actor configuration** item (thanks to Tom Soel)
 * Fixed NPE crash at the end of playback with mounts (thanks to Tom Soel)
 * Implemented item pick-up animation (item magnet-like animation)
-* Implemented error 
 * Increased item pick-up delay (from `10` to `40`)
 * Made actors rideable (sneak + right click is to start record)
 * Removed `/morph` command and morphing capability from Blockbuster
