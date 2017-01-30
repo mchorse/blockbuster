@@ -170,6 +170,14 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     }
 
     /**
+     * Duplicate a replay by given index
+     */
+    public void duplicate(int index)
+    {
+        this.replays.add(this.replays.get(index).clone());
+    }
+
+    /**
      * Edit a replay, find similar from given old replay and change it to a
      * new value.
      */

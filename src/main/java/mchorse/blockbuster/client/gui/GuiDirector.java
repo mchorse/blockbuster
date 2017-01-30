@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.gui.elements.GuiReplay;
 import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
@@ -209,6 +210,11 @@ public class GuiDirector extends GuiScreen
         this.replay.select(null, -1);
         this.previous = null;
         this.replays.reset();
+    }
+
+    public void duplicate(int index)
+    {
+        Dispatcher.sendToServer(new PacketDirectorDuplicate(this.pos, index));
     }
 
     public void detach(int index)

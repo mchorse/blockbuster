@@ -59,6 +59,7 @@ public class GuiReplay extends GuiScreen
     private GuiButton remove;
     private GuiButton record;
     private GuiButton pick;
+    private GuiButton duplicate;
     private GuiToggle invincible;
     private GuiToggle invisible;
 
@@ -116,13 +117,17 @@ public class GuiReplay extends GuiScreen
         {
             this.invisible.toggle();
         }
-        else if (button.id == 8)
-        {
-            this.sendRecordMessage();
-        }
         else if (button.id == 6)
         {
             this.morphs.morphs.setHidden(false);
+        }
+        else if (button.id == 7)
+        {
+            this.parent.duplicate(this.index);
+        }
+        else if (button.id == 8)
+        {
+            this.sendRecordMessage();
         }
     }
 
@@ -248,16 +253,18 @@ public class GuiReplay extends GuiScreen
         /* Buttons */
         this.detach = new GuiButton(3, this.width - margin - 80, margin, 80, 20, I18n.format("blockbuster.gui.detach"));
         this.remove = new GuiButton(2, this.width - margin - 80, margin + 25, 80, 20, I18n.format("blockbuster.gui.remove"));
-        this.record = new GuiButton(8, x, margin, 80, 20, I18n.format("blockbuster.gui.record"));
         this.pick = new GuiButton(6, x, margin + 25, 80, 20, I18n.format("blockbuster.gui.pick"));
+        this.duplicate = new GuiButton(7, x, margin + 50, 80, 20, I18n.format("blockbuster.gui.duplicate"));
+        this.record = new GuiButton(8, x, margin, 80, 20, I18n.format("blockbuster.gui.record"));
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
         this.buttonList.add(this.remove);
         this.buttonList.add(this.detach);
-        this.buttonList.add(this.record);
         this.buttonList.add(this.pick);
+        this.buttonList.add(this.duplicate);
+        this.buttonList.add(this.record);
 
         this.buttonList.add(this.invincible);
         this.buttonList.add(this.invisible);

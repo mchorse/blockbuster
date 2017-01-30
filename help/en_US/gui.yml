@@ -13,6 +13,7 @@ blockbuster.gui:
     detach: Detach
     record: Record
     pick: Pick morph...
+    duplicate: Duplicate
     search: "Search:"
     
     # Director block GUI strings

@@ -5,6 +5,9 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.recording.data.Record;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client handler requested frames
@@ -15,7 +18,8 @@ import mchorse.blockbuster.recording.data.Record;
 public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketRequestedFrames>
 {
     @Override
-    public void run(net.minecraft.client.entity.EntityPlayerSP player, PacketRequestedFrames message)
+    @SideOnly(Side.CLIENT)
+    public void run(EntityPlayerSP player, PacketRequestedFrames message)
     {
         Record record = new Record(message.filename);
         record.frames = message.frames;

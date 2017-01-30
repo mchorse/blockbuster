@@ -156,6 +156,25 @@ public class Replay
     }
 
     @Override
+    public Replay clone()
+    {
+        Replay replay = new Replay();
+
+        replay.id = this.id;
+        replay.name = this.name;
+        replay.invincible = this.invincible;
+
+        replay.invisible = this.invisible;
+
+        if (this.morph != null)
+        {
+            replay.morph = this.morph.clone();
+        }
+
+        return replay;
+    }
+
+    @Override
     public String toString()
     {
         return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("morph", this.morph).add("invisible", this.invisible).toString();

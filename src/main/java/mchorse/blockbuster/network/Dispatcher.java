@@ -17,6 +17,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
@@ -51,6 +52,7 @@ import mchorse.blockbuster.network.server.camera.ServerHandlerCameraReset;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
 import mchorse.blockbuster.network.server.camera.ServerHandlerLoadCameraProfile;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorAdd;
+import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDuplicate;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
@@ -147,6 +149,7 @@ public class Dispatcher
         register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
         register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
         register(PacketDirectorAdd.class, ServerHandlerDirectorAdd.class, Side.SERVER);
+        register(PacketDirectorDuplicate.class, ServerHandlerDirectorDuplicate.class, Side.SERVER);
         register(PacketDirectorEdit.class, ServerHandlerDirectorEdit.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
 
