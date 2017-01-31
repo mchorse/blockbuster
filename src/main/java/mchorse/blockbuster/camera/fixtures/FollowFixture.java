@@ -1,6 +1,7 @@
 package mchorse.blockbuster.camera.fixtures;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.camera.Interpolations;
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,9 +74,9 @@ public class FollowFixture extends LookFixture
 
         float value = Blockbuster.proxy.config.camera_interpolate_target ? Blockbuster.proxy.config.camera_interpolate_target_value : 1.0F;
 
-        x = this.interpolate(this.oldX, x, value);
-        y = this.interpolate(this.oldY, y, value);
-        z = this.interpolate(this.oldZ, z, value);
+        x = Interpolations.lerp(this.oldX, x, value);
+        y = Interpolations.lerp(this.oldY, y, value);
+        z = Interpolations.lerp(this.oldZ, z, value);
 
         pos.copy(this.position);
         pos.point.set(x, y, z);
@@ -84,11 +85,6 @@ public class FollowFixture extends LookFixture
         this.oldY = y;
         this.oldZ = z;
         this.oldProgress = progress;
-    }
-
-    private float interpolate(float a, float b, float position)
-    {
-        return a + (b - a) * position;
     }
 
     @Override

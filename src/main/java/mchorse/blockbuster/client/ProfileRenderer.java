@@ -140,12 +140,13 @@ public class ProfileRenderer
      */
     private void drawPathFixture(Color color, AbstractFixture fixture, Position prev, Position next)
     {
-        List<Position> points = ((PathFixture) fixture).getPoints();
+        PathFixture path = (PathFixture) fixture;
+        List<Position> points = path.getPoints();
 
-        for (int i = 0, size = points.size() - 1; i < size; i++)
+        for (int i = 0, size = points.size() - 1; i < size * 20; i++)
         {
-            prev.copy(points.get(i));
-            next.copy(points.get(i + 1));
+            path.applyFixture((float) i / (float) (size * 20 - 1), 0, prev);
+            path.applyFixture((float) (i + 1) / (float) (size * 20 - 1), 0, next);
 
             this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
         }

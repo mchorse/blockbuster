@@ -59,14 +59,11 @@ public class AbstractFixtureAdapter implements JsonSerializer<AbstractFixture>, 
     @Override
     public AbstractFixture deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
-        JsonObject map = json.getAsJsonObject();
-        String type = map.get("type").getAsString();
+        JsonObject object = json.getAsJsonObject();
+        String type = object.get("type").getAsString();
         AbstractFixture fixture = this.gson.fromJson(json, this.types.get(type));
 
-        if (fixture instanceof LookFixture)
-        {
-            ((LookFixture) fixture).setTarget(map.get("target").getAsString());
-        }
+        fixture.fromJSON(object);
 
         return fixture;
     }
@@ -83,11 +80,7 @@ public class AbstractFixtureAdapter implements JsonSerializer<AbstractFixture>, 
     {
         JsonObject object = (JsonObject) this.gson.toJsonTree(src);
 
-        if (src instanceof LookFixture)
-        {
-            object.addProperty("target", ((LookFixture) src).getTarget().getUniqueID().toString());
-        }
-
+        src.toJSON(object);
         object.addProperty("type", getKeyByValue(AbstractFixture.STRING_TO_TYPE, src.getType()));
 
         return object;

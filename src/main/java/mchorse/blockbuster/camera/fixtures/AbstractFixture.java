@@ -3,6 +3,7 @@ package mchorse.blockbuster.camera.fixtures;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.camera.Position;
@@ -125,6 +126,16 @@ public abstract class AbstractFixture
     {
         return this.duration;
     }
+
+    /* JSON (de)serialization methods */
+
+    public void fromJSON(JsonObject object)
+    {}
+
+    public void toJSON(JsonObject object)
+    {}
+
+    /* Abstract methods */
 
     /**
      * Edit this fixture with given CLI arguments and given player. For every
