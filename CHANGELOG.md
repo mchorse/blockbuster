@@ -12,6 +12,7 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
 
 * Adapted `MORPH` action to Metamorph's integration
 * Adapted actor and director GUIs to Metamorph's integration
+* Added `cubic` path fixture interpolation
 * Added `MORPH_ACTION` action (which basically executes morph's action)
 * Added `COMMAND` action (which executes command based on actor)
 * Added `/record` command with four sub-commands:
