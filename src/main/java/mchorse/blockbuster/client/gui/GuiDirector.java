@@ -150,7 +150,7 @@ public class GuiDirector extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.replays.updateRect(x, y + 45, w + 8, (this.height - y * 3 - h - 45));
+        this.replays.updateRect(-1, y + 45, 122, (this.height - y * 3 - h - 45));
         this.replay.initGui();
     }
 

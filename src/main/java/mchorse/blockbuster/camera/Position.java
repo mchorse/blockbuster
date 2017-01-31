@@ -12,9 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class Position
 {
-    /**
-     * Null position. Please don't modify.
-     */
     public static final Position ZERO = new Position(0, 0, 0, 0, 0);
 
     @Expose

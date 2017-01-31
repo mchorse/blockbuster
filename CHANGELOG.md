@@ -26,6 +26,7 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
 * Added default `fred` custom model (4px wide arms with overlays)
 * Added duplicate button in **director block** GUI (thanks to badr)
 * Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
+* Added a replay thumbnail in **director block** GUI (thanks to badr)
 * Corrected `ATTACK` action's direction vector
 * Flipped texture of **actor configuration** item (thanks to Tom Soel)
 * Fixed NPE crash at the end of playback with mounts (thanks to Tom Soel)
