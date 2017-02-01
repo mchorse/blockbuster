@@ -1,8 +1,6 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.render.layers.LayerActorArmor;
-import mchorse.blockbuster.client.render.layers.LayerElytra;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -25,12 +23,9 @@ public class RenderActor extends RenderLiving<EntityActor>
     /**
      * Initiate render actor
      */
-    public RenderActor(RenderManager manager, float f)
+    public RenderActor(RenderManager manager, float shadow)
     {
-        super(manager, null, f);
-
-        this.addLayer(new LayerElytra(this));
-        this.addLayer(new LayerActorArmor(this));
+        super(manager, null, shadow);
     }
 
     /**
@@ -46,8 +41,6 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.shadowOpaque = entity.invisible ? 0.0F : 1.0F;
-
         if (entity.invisible)
         {
             return;

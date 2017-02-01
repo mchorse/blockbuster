@@ -1,5 +1,7 @@
 package mchorse.blockbuster_pack.client.render;
 
+import mchorse.blockbuster_pack.client.render.layers.LayerActorArmor;
+import mchorse.blockbuster_pack.client.render.layers.LayerElytra;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -18,6 +20,9 @@ public class RenderCustomActor extends RenderCustomModel
     public RenderCustomActor(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
     {
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
+
+        this.addLayer(new LayerElytra(this));
+        this.addLayer(new LayerActorArmor(this));
     }
 
     /**
