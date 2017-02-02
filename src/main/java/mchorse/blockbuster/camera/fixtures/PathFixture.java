@@ -115,6 +115,11 @@ public class PathFixture extends AbstractFixture
         float x, y, z;
         float yaw, pitch, roll, fov;
 
+        if (this.interpolation == null)
+        {
+            this.interpolation = InterpolationType.LINEAR;
+        }
+
         if (this.interpolation.equals(InterpolationType.CUBIC))
         {
             Position p0 = this.getPoint(index - 1);
