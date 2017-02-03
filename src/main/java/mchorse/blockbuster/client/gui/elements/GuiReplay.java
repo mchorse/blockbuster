@@ -175,6 +175,13 @@ public class GuiReplay extends GuiScreen
 
         value.actor = this.replay.actor;
 
+        if (this.replay.equals(value))
+        {
+            return;
+        }
+
+        this.replay.morph = value.morph;
+
         Dispatcher.sendToServer(new PacketDirectorEdit(this.pos, value, this.index, update));
     }
 

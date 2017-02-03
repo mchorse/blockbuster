@@ -156,6 +156,19 @@ public class Replay
     }
 
     @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Replay)
+        {
+            Replay replay = (Replay) obj;
+
+            return Objects.equal(replay.id, this.id) && Objects.equal(replay.name, this.name) && replay.invincible == this.invincible && replay.invisible == this.invisible && Objects.equal(replay.morph, this.morph);
+        }
+
+        return super.equals(obj);
+    }
+
+    @Override
     public Replay clone()
     {
         Replay replay = new Replay();
