@@ -30,6 +30,7 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
 * Corrected `ATTACK` action's direction vector
 * Flipped texture of **actor configuration** item (thanks to Tom Soel)
 * Fixed NPE crash at the end of playback with mounts (thanks to Tom Soel)
+* Fixed toggle replay bug in **director block** GUI (thanks to badr)
 * Implemented item pick-up animation (item magnet-like animation)
 * Increased item pick-up delay (from `10` to `40`)
 * Made actors rideable (sneak + right click is to start record)
