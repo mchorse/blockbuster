@@ -170,7 +170,7 @@ public class GuiReplay extends GuiScreen
         value.name = this.name.getText();
         value.invincible = this.invincible.getValue();
 
-        value.morph = cell == null ? null : cell.morph.clone();
+        value.morph = cell == null ? this.replay.morph : cell.morph.clone();
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
@@ -342,6 +342,15 @@ public class GuiReplay extends GuiScreen
             GlStateManager.popMatrix();
 
             this.drawCenteredString(this.fontRendererObj, cell.name, center, 12, 0xffffffff);
+        }
+        else if (this.replay.morph != null)
+        {
+            int center = 120 + (this.width - 120) / 2;
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0, -40);
+            this.replay.morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            GlStateManager.popMatrix();
         }
 
         /* Draw GUI elements */
