@@ -2,6 +2,7 @@ package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
+import mchorse.blockbuster.network.client.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
@@ -17,6 +18,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -44,6 +46,7 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
+import mchorse.blockbuster.network.server.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
@@ -152,6 +155,9 @@ public class Dispatcher
         register(PacketDirectorDuplicate.class, ServerHandlerDirectorDuplicate.class, Side.SERVER);
         register(PacketDirectorEdit.class, ServerHandlerDirectorEdit.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
+
+        register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
+        register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
 
         /* Camera management */
         register(PacketCameraProfile.class, ClientHandlerCameraProfile.class, Side.CLIENT);

@@ -90,6 +90,7 @@ public class CommonProxy
         this.config = new BlockbusterConfig(this.forge);
 
         MinecraftForge.EVENT_BUS.register(this.config);
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
 
         /* Creative tab */
         Blockbuster.blockbusterTab = new BlockbusterTab();

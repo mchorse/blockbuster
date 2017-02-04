@@ -15,6 +15,12 @@ blockbuster.gui:
     pick: Pick morph...
     duplicate: Duplicate
     search: "Search:"
+    cancel: Cancel
+    break: Break
+    
+    confirm:
+        title: Confirm Breaking Director Block
+        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
     
     # Director block GUI strings
     director:

@@ -65,7 +65,7 @@ public class Replay
         this.name = actor.getCustomNameTag();
         this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
 
-        if (actor.morph != null)
+        if (actor.morph != null && this.morph == null)
         {
             this.morph = actor.getMorph().clone();
         }
