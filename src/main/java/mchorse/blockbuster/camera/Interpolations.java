@@ -29,37 +29,37 @@ public class Interpolations
      */
     public static float lerpYaw(float a, float b, float position)
     {
-        float diff = b - a;
-
-        if (diff > 180 || diff < -180)
-        {
-            diff = Math.copySign(360 - Math.abs(diff), -diff);
-            float value = a + diff * position;
-
-            return value > 180 ? -(360 - value) : (value < -180 ? 360 + value : value);
-        }
-
-        return lerp(a, b, position);
+        return lerp(a, normalizeYaw(a, b), position);
     }
 
     /**
-     * The same thing as lerp yaw, but with cubic interpolation. y1 and y2 are
-     * supposed to be points with indices of x and x+1 (where y0 is x-1 and y3
-     * is x+2).
+     * Yaw normalization for cubic interpolation
      */
     public static float cubicYaw(float y0, float y1, float y2, float y3, float position)
     {
-        float diff = y1 - y2;
+        y1 = normalizeYaw(y0, y1);
+        y2 = normalizeYaw(y1, y2);
+        y3 = normalizeYaw(y2, y3);
+
+        return cubic(y0, y1, y2, y3, position);
+    }
+
+    /**
+     * Normalize yaw rotation (argument {@code b}) based on the previous
+     * yaw rotation.
+     */
+    public static float normalizeYaw(float a, float b)
+    {
+        float diff = a - b;
 
         if (diff > 180 || diff < -180)
         {
-            diff = Math.copySign(360 - Math.abs(diff), -diff);
-            float value = cubic(y0, y1, y1 + diff, y1 + diff + (y3 - diff), position);
+            diff = Math.copySign(360 - Math.abs(diff), diff);
 
-            return value > 180 ? -(360 - value) : (value < -180 ? 360 + value : value);
+            return a + diff;
         }
 
-        return cubic(y0, y1, y2, y3, position);
+        return b;
     }
 
     /**
