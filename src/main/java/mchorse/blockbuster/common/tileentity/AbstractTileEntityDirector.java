@@ -140,7 +140,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         for (Replay replay : this.replays)
         {
             boolean hasActor = replay.actor != null && replay.actor.equals(actor.getUniqueID());
-            boolean hasName = replay.name.equals(actor.getCustomNameTag());
+            boolean hasName = actor.hasCustomName() ? replay.name.equals(actor.getCustomNameTag()) : false;
 
             if (hasActor)
             {
