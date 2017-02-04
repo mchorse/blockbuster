@@ -88,6 +88,7 @@ public class GuiReplay extends GuiScreen
         this.index = index;
 
         this.morphs.morphs.setFilter("");
+        this.morphs.search.setText("");
 
         if (replay != null)
         {
