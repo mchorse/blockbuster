@@ -90,8 +90,7 @@ public class Interpolations
          * (ax^2 + b*x + c) * x + y1
          * ((ax + b) * x + c) * x + y1
          *
-         * That's it folks. By the way, I'm not a math genius, it's just high
-         * school math.
+         * That's it folks.
          */
         return ((a * x + b) * x + c) * x + y1;
     }

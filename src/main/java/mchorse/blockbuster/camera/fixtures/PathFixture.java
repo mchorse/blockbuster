@@ -166,7 +166,7 @@ public class PathFixture extends AbstractFixture
     @Override
     public void toJSON(JsonObject object)
     {
-        object.addProperty("intepolation", this.interpolation.equals(InterpolationType.LINEAR) ? "linear" : "cubic");
+        object.addProperty("interpolation", this.interpolation.equals(InterpolationType.LINEAR) ? "linear" : "cubic");
     }
 
     @Override
