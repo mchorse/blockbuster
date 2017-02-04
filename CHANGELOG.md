@@ -8,10 +8,11 @@ Another patch update. This patch update is what I waited for a long time! This u
 
 **Important**: due to integration, the format of custom models and skins was changed, so before trying out this update, make sure to back up your world as it may make all your actors morphless (invisible actors with shadows).
 
-Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **[badr](https://twitter.com/TomSoel)**, **[Tom Soel](https://twitter.com/xdthatshit)** and **[Vasily12345](https://www.youtube.com/user/MinecraftLifeSeries)** for beta-testing this update!
+Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **[badr](https://twitter.com/TomSoel)**, **[Tom Soel](https://twitter.com/xdthatshit)** and **[Vasily12345](https://www.youtube.com/user/MinecraftLifeSeries)** for beta-testing and suggesting features for this update!
 
 * Adapted `MORPH` action to Metamorph's integration
 * Adapted actor and director GUIs to Metamorph's integration
+* Added director block break confirmation (thanks to Tom Soel)
 * Added `cubic` path fixture interpolation
 * Added `MORPH_ACTION` action (which basically executes morph's action)
 * Added `COMMAND` action (which executes command based on actor)
