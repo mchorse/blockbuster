@@ -270,8 +270,13 @@ public class ActionHandler
      * a command in the chat). Adds an action only for server commands.
      */
     @SubscribeEvent
-    public void onServerChatEvent(CommandEvent event)
+    public void onPlayerCommand(CommandEvent event)
     {
+        if (!Blockbuster.proxy.config.record_commands)
+        {
+            return;
+        }
+
         ICommandSender sender = event.getSender();
 
         if (sender instanceof EntityPlayer)

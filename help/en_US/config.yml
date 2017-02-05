@@ -16,6 +16,7 @@ blockbuster.config:
         record_unload: Automatic record unloading
         record_sync_rate: Record tick synchronization rate
         record_attack_on_swipe: Attack on swipe
+        record_commands: Record commands
     
     camera:
         title: Camera

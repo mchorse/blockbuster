@@ -92,6 +92,11 @@ public class BlockbusterConfig
      */
     public boolean record_attack_on_swipe;
 
+    /**
+     * Does command action should be recorded?
+     */
+    public boolean record_commands;
+
     /* Actors */
 
     /**
@@ -153,6 +158,7 @@ public class BlockbusterConfig
         this.record_unload = this.config.getBoolean("record_unload", recording, true, "Enable automatic record unloading?", recPrefix + "record_unload");
         this.record_sync_rate = this.config.getInt("record_sync_rate", recording, 6, 1, 30, "How often a record going to synchronize with the server", recPrefix + "record_sync_rate");
         this.record_attack_on_swipe = this.config.getBoolean("record_attack_on_swipe", recording, false, "Does attack action get recorded with swipe action?", recPrefix + "record_attack_on_swipe");
+        this.record_commands = this.config.getBoolean("record_commands", recording, true, "Does command action gets recorded during recording?", recPrefix + "record_commands");
 
         /* Actor */
         this.actor_fall_damage = this.config.getBoolean("actor_fall_damage", actor, true, "Does actor receive fall damage?", actPrefix + "actor_fall_damage");

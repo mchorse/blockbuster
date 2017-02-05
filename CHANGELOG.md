@@ -24,6 +24,7 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
 * Added config options:
     * Recording countdown (suggested by The Minebox)
     * Disable teleport to director block (suggested by badr)
+    * Enable command action recording
 * Added default `fred` custom model (4px wide arms with overlays)
 * Added duplicate button in **director block** GUI (thanks to badr)
 * Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
