@@ -94,6 +94,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public AbstractMorph morph;
 
+    /* Elytra interpolated animated properties */
+    public float rotateElytraX = 0.0F;
+    public float rotateElytraY = 0.0F;
+    public float rotateElytraZ = 0.0F;
+
     public EntityActor(World worldIn)
     {
         super(worldIn);
@@ -237,6 +242,16 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             this.newPosRotationIncrements--;
             this.setPosition(d0, d1, d2);
         }
+        else if (!this.isServerWorld())
+        {
+            this.motionX *= 0.98D;
+            this.motionY *= 0.98D;
+            this.motionZ *= 0.98D;
+        }
+
+        if (Math.abs(this.motionX) < 0.005D) this.motionX = 0.0D;
+        if (Math.abs(this.motionY) < 0.005D) this.motionY = 0.0D;
+        if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
         this.updateArmSwingProgress();
 

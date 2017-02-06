@@ -1,6 +1,6 @@
 package mchorse.blockbuster_pack.client.render.layers;
 
-import net.minecraft.client.model.ModelElytra;
+import mchorse.blockbuster_pack.client.model.ModelElytra;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
