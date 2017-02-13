@@ -51,6 +51,12 @@ public class SubCommandPathEdit extends CommandBase
 
         PathFixture path = (PathFixture) fixture;
 
+        if (!path.hasPoint(point))
+        {
+            L10n.error(sender, "profile.no_path_point", index, point);
+            return;
+        }
+
         path.editPoint(new Position((EntityPlayer) sender), point);
     }
 }

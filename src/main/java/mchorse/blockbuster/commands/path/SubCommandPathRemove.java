@@ -49,6 +49,12 @@ public class SubCommandPathRemove extends CommandBase
 
         PathFixture path = (PathFixture) fixture;
 
+        if (!path.hasPoint(point))
+        {
+            L10n.error(sender, "profile.no_path_point", index, point);
+            return;
+        }
+
         path.removePoint(point);
     }
 }

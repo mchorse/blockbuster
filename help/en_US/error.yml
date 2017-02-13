@@ -55,3 +55,5 @@ blockbuster.error:
         
         not_path: {f}Fixture at index %s{f} isn't a path fixture!
         not_exists: {f}There's no camera fixture at %s{f} index in current camera profile!
+        no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f}!
+        move_no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f} or at index %s{f}!

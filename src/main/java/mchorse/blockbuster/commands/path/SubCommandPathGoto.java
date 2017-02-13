@@ -57,6 +57,13 @@ public class SubCommandPathGoto extends CommandBase
         }
 
         PathFixture path = (PathFixture) fixture;
+
+        if (!path.hasPoint(point))
+        {
+            L10n.error(sender, "profile.no_path_point", index, point);
+            return;
+        }
+
         Position position = path.getPoint(point);
 
         Point pos = position.point;

@@ -51,6 +51,12 @@ public class SubCommandPathMove extends CommandBase
 
         PathFixture path = (PathFixture) fixture;
 
+        if (!path.hasPoint(from) || !path.hasPoint(to))
+        {
+            L10n.error(sender, "profile.move_no_path_point", index, from, to);
+            return;
+        }
+
         path.movePoint(from, to);
     }
 }

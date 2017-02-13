@@ -60,6 +60,12 @@ public class SubCommandPathAdd extends CommandBase
             /* Add before given point */
             int point = CommandBase.parseInt(args[1]);
 
+            if (!path.hasPoint(point))
+            {
+                L10n.error(sender, "profile.no_path_point", index, point);
+                return;
+            }
+
             path.addPoint(new Position((EntityPlayer) sender), point);
         }
     }
