@@ -1,5 +1,7 @@
 package mchorse.blockbuster.camera;
 
+import net.minecraft.util.math.MathHelper;
+
 /**
  * Interpolation methods
  *
@@ -29,6 +31,9 @@ public class Interpolations
      */
     public static float lerpYaw(float a, float b, float position)
     {
+        a = MathHelper.wrapDegrees(a);
+        b = MathHelper.wrapDegrees(b);
+
         return lerp(a, normalizeYaw(a, b), position);
     }
 
@@ -37,6 +42,11 @@ public class Interpolations
      */
     public static float cubicYaw(float y0, float y1, float y2, float y3, float position)
     {
+        y0 = MathHelper.wrapDegrees(y0);
+        y1 = MathHelper.wrapDegrees(y1);
+        y2 = MathHelper.wrapDegrees(y2);
+        y3 = MathHelper.wrapDegrees(y3);
+
         y1 = normalizeYaw(y0, y1);
         y2 = normalizeYaw(y1, y2);
         y3 = normalizeYaw(y2, y3);
