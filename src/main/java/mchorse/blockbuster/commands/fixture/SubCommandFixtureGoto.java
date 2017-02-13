@@ -1,4 +1,4 @@
-package mchorse.blockbuster.commands.camera;
+package mchorse.blockbuster.commands.fixture;
 
 import mchorse.blockbuster.camera.Angle;
 import mchorse.blockbuster.camera.CameraProfile;
@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
  *
  * Teleports player to specific camera fixture with specified progress.
  */
-public class SubCommandCameraGoto extends CommandBase
+public class SubCommandFixtureGoto extends CommandBase
 {
     @Override
     public String getCommandName()
@@ -64,6 +64,7 @@ public class SubCommandCameraGoto extends CommandBase
 
         profile.get(index).applyFixture(progress, 0, pos);
         player.setPositionAndRotation(point.x, point.y, point.z, angle.yaw, angle.pitch);
+        player.setVelocity(0, 0, 0);
 
         CommandCamera.getControl().roll = angle.roll;
         Minecraft.getMinecraft().gameSettings.fovSetting = angle.fov;

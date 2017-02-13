@@ -162,13 +162,42 @@ blockbuster:
                         {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
                         
                         {r}Set duration in milliseconds to given fixture at given {7}<index>{r}
-                path: 
-                    |
-                        {l}{6}/{r}camera {8}path{r} {7}<fixture_index> [point_index]{r}
-                        
-                        {r}Add a point to path fixture (if {7}[point_index]{r} isn't specified), or remove path point in fixture at index {7}[point_index]{r}.
+                
                 move: 
                     |
                         {l}{6}/{r}camera {8}move{r} {7}<from> <to>{r}
                         
                         {r}Move camera fixture at {7}<from>{r} index to {7}<to>{r} index in the camera profile
+            
+            path: 
+                help: {r}{o}Camera path sub-command{r}. Provides sub-commands for managing path fixture and its points.
+                
+                add:
+                    |
+                        {l}{6}/{r}camera path {8}add{r} {7}<index> [before_point]{r}
+                        
+                        {r}Adds a point in the path fixture at {7}<index>{r} in the end, or before {7}[before_point]{r} point, if specified.
+                
+                edit:
+                    |
+                        {l}{6}/{r}camera path {8}edit{r} {7}<index> <point_index>{r}
+                        
+                        {r}Edit position of a point at index {7}<point_index>{r} in the path fixture at {7}<index>{r}.
+                
+                goto:
+                    |
+                        {l}{6}/{r}camera path {8}goto{r} {7}<index> <point_index>{r}
+                        
+                        {r}Go to position of a point at index {7}<point_index>{r} in the path fixture at {7}<index>{r}.
+                
+                move:
+                    |
+                        {l}{6}/{r}camera path {8}move{r} {7}<index> <from> <to>{r}
+                        
+                        {r}Move a point at index {7}<from>{r} to {7}<to>{r} in the path fixture at {7}<index>{r}.
+                
+                remove:
+                    |
+                        {l}{6}/{r}camera path {8}remove{r} {7}<index> <point_index>{r}
+                        
+                        {r}Remove a point at index {7}<point_index>{r} from the path fixture at {7}<index>{r}.

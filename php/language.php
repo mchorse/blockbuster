@@ -34,7 +34,10 @@ $blacklist = [
     'blockbuster.director',
     'blockbuster.actor_config',
     'blockbuster.playback',
-    'blockbuster.register'
+    'blockbuster.register',
+    'blockbuster.alex',
+    'blockbuster.steve',
+    'blockbuster.fred'
 ];
 
 /** Starting output */

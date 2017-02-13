@@ -60,6 +60,21 @@ public class PathFixture extends AbstractFixture
         this.points.add(point);
     }
 
+    public void addPoint(Position point, int before)
+    {
+        this.points.add(before, point);
+    }
+
+    public void movePoint(int from, int to)
+    {
+        this.points.add(to, this.points.remove(from));
+    }
+
+    public void editPoint(Position point, int index)
+    {
+        this.points.set(index, point);
+    }
+
     public void removePoint(int index)
     {
         this.points.remove(index);
