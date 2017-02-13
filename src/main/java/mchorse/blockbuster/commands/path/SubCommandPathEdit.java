@@ -51,6 +51,6 @@ public class SubCommandPathEdit extends CommandBase
 
         PathFixture path = (PathFixture) fixture;
 
-        path.addPoint(new Position((EntityPlayer) sender), point);
+        path.editPoint(new Position((EntityPlayer) sender), point);
     }
 }
