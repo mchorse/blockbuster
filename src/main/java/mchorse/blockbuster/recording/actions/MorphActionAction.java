@@ -22,19 +22,31 @@ public class MorphActionAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
-        float yaw = actor.rotationYaw;
-        float pitch = actor.rotationPitch;
-
-        actor.rotationYaw = frame.yaw;
-        actor.rotationPitch = frame.pitch;
-
         if (actor.morph != null)
         {
-            actor.morph.action(actor);
-        }
+            Frame frame = actor.playback.record.frames.get(actor.playback.tick);
 
-        actor.rotationYaw = yaw;
-        actor.rotationPitch = pitch;
+            float yaw = actor.rotationYaw;
+            float yawHead = actor.rotationYaw;
+            float pitch = actor.rotationPitch;
+
+            float prevYaw = actor.prevRotationYaw;
+            float prevYawHead = actor.prevRotationYawHead;
+            float prevPitch = actor.prevRotationPitch;
+
+            actor.rotationYaw = actor.prevRotationYaw = frame.yaw;
+            actor.rotationYawHead = actor.prevRotationYawHead = frame.yawHead;
+            actor.rotationPitch = actor.prevRotationPitch = frame.pitch;
+
+            actor.morph.action(actor);
+
+            actor.rotationYaw = yaw;
+            actor.rotationYawHead = yawHead;
+            actor.rotationPitch = pitch;
+
+            actor.prevRotationYaw = prevYaw;
+            actor.prevRotationYawHead = prevYawHead;
+            actor.prevRotationPitch = prevPitch;
+        }
     }
 }
