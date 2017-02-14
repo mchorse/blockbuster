@@ -9,7 +9,7 @@ key:
 
         # Camera control
         control: 
-            title: Camera Control
+            title: Blockbuster Camera Control
             
             stepUp: Step up
             stepDown: Step down

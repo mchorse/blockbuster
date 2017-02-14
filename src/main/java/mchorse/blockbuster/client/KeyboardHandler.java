@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -364,6 +365,7 @@ public class KeyboardHandler
         EntityPlayer player = this.mc.thePlayer;
         CameraControl control = CommandCamera.getControl();
 
+        /* Roll key handling */
         if (this.addRoll.isKeyDown())
         {
             control.addRoll(1.0F);
@@ -373,6 +375,7 @@ public class KeyboardHandler
             control.addRoll(-1.0F);
         }
 
+        /* FOV key handling */
         if (this.addFov.isKeyDown())
         {
             Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
@@ -382,28 +385,11 @@ public class KeyboardHandler
             Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
         }
 
+        /* Camera control keys handling */
         if (player != null)
         {
-            double factor = 0.01;
-            double angleFactor = 0.1;
-            double x = player.posX;
-            double y = player.posY;
-            double z = player.posZ;
-
-            if (this.stepUp.isKeyDown() || this.stepDown.isKeyDown())
-            {
-                y += (this.stepUp.isKeyDown() ? factor : -factor);
-            }
-
-            if (this.stepLeft.isKeyDown() || this.stepRight.isKeyDown())
-            {
-                x += (this.stepLeft.isKeyDown() ? factor : -factor);
-            }
-
-            if (this.stepFront.isKeyDown() || this.stepBack.isKeyDown())
-            {
-                z += (this.stepFront.isKeyDown() ? factor : -factor);
-            }
+            double factor = Blockbuster.proxy.config.camera_step_factor;
+            double angleFactor = Blockbuster.proxy.config.camera_rotate_factor;
 
             float yaw = player.rotationYaw;
             float pitch = player.rotationPitch;
@@ -418,8 +404,39 @@ public class KeyboardHandler
                 yaw += (this.rotateLeft.isKeyDown() ? -angleFactor : angleFactor);
             }
 
-            if (x != player.posX || y != player.posY || z != player.posZ || yaw != player.rotationYaw || pitch != player.rotationPitch)
+            double x = player.posX;
+            double y = player.posY;
+            double z = player.posZ;
+
+            double xx = 0;
+            double yy = 0;
+            double zz = 0;
+
+            if (this.stepUp.isKeyDown() || this.stepDown.isKeyDown())
             {
+                yy = (this.stepUp.isKeyDown() ? factor : -factor);
+            }
+
+            if (this.stepLeft.isKeyDown() || this.stepRight.isKeyDown())
+            {
+                xx = (this.stepLeft.isKeyDown() ? factor : -factor);
+            }
+
+            if (this.stepFront.isKeyDown() || this.stepBack.isKeyDown())
+            {
+                zz = (this.stepFront.isKeyDown() ? factor : -factor);
+            }
+
+            if (xx != 0 || yy != 0 || zz != 0 || yaw != player.rotationYaw || pitch != player.rotationPitch)
+            {
+                Vec3d vec = new Vec3d(xx, yy, zz);
+
+                vec = vec.rotateYaw(-yaw / 180 * (float) Math.PI);
+
+                x += vec.xCoord;
+                y += vec.yCoord;
+                z += vec.zCoord;
+
                 player.setPositionAndRotation(x, y, z, yaw, pitch);
             }
         }

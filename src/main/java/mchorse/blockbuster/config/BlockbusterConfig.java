@@ -60,6 +60,16 @@ public class BlockbusterConfig
      */
     public boolean camera_spectator;
 
+    /**
+     * Factor for step keys
+     */
+    public float camera_step_factor;
+
+    /**
+     * Factor for rotate keys
+     */
+    public float camera_rotate_factor;
+
     /* Recording */
 
     /**
@@ -150,6 +160,8 @@ public class BlockbusterConfig
         this.camera_interpolate_target = this.config.getBoolean("camera_interpolate_target", camera, false, "Interpolate target based camera fixtures (follow and look) outcome", camPrefix + "camera_interpolate_target");
         this.camera_interpolate_target_value = this.config.getFloat("camera_interpolate_target_value", camera, 0.5F, 0.0F, 1.0F, "Interpolation value for target based camera fixture interpolation", camPrefix + "camera_interpolate_target_value");
         this.camera_spectator = this.config.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback", camPrefix + "camera_spectator");
+        this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
+        this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
 
         /* Recording */
         this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");
