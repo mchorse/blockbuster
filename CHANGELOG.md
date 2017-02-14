@@ -25,6 +25,18 @@ Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **
     * Recording countdown (suggested by The Minebox)
     * Disable teleport to director block (suggested by badr)
     * Enable command action recording
+    * Camera step and rotation factors for keys
+* Added `/director spawn` subcommand (spawns actors in director block at given tick in pause mode)
+* Added `/camera path` subcommands:
+    * `/camera path add` – add a point in a path fixture
+    * `/camera path edit` – edit a point in a path fixture
+    * `/camera path remove` – remove a point from path fixture
+    * `/camera path move` – move a point to another index in a path fixture
+    * `/camera path goto` – go to a point in a path fixture (like `/camera goto`, but specific for path fixtures)
+* Added commands and keys for more precise player position and angle adjustments:
+    * `/camera step` – moves player absolutely or relatively
+    * `/camera rotate` – rotates player absolutely or relatively
+    * 6 keys for XYZ step and 4 keys for yaw and pitch step in positive and negative directions
 * Added default `fred` custom model (4px wide arms with overlays)
 * Added duplicate button in **director block** GUI (thanks to badr)
 * Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
