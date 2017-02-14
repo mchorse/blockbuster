@@ -130,7 +130,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public boolean isPlaying()
     {
-        return this.playback != null && !this.playback.isFinished();
+        return this.playback != null && this.playback.playing && !this.playback.isFinished();
     }
 
     /**
@@ -212,6 +212,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void onLivingUpdate()
     {
+        if (this.noClip)
+        {
+            return;
+        }
+
         this.pickUpNearByItems();
 
         if (this.playback != null && this.playback.playing)

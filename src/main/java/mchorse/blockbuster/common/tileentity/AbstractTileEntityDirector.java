@@ -217,6 +217,11 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     public abstract void stopPlayback();
 
     /**
+     * Spawn actors at given tick
+     */
+    public abstract void spawn(int tick);
+
+    /**
      * Toggle scene's playback
      */
     public boolean togglePlayback()

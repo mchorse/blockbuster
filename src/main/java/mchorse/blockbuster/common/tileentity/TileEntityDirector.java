@@ -187,10 +187,64 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (actor == exception) continue;
 
             actor.stopPlaying();
+            actor.noClip = false;
         }
 
         this.actors.clear();
         this.playBlock(false);
+    }
+
+    /**
+     * Spawns actors at given tick in idle mode. This is pretty useful for
+     * positioning cameras for exact positions.
+     */
+    @Override
+    public void spawn(int tick)
+    {
+        if (this.replays.isEmpty())
+        {
+            return;
+        }
+
+        if (!this.actors.isEmpty())
+        {
+            this.stopPlayback();
+        }
+
+        for (Replay replay : this.replays)
+        {
+            if (replay.id.isEmpty())
+            {
+                Utils.broadcastError("director.empty_filename");
+
+                return;
+            }
+        }
+
+        this.collectActors();
+
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        {
+            Replay replay = entry.getKey();
+            EntityActor actor = entry.getValue();
+            boolean notAttached = replay.actor == null;
+
+            actor.startPlaying(replay.id, notAttached);
+
+            if (actor.playback != null)
+            {
+                actor.playback.playing = false;
+                actor.playback.record.applyFrame(tick, actor, true);
+                actor.noClip = true;
+            }
+
+            if (notAttached)
+            {
+                this.worldObj.spawnEntityInWorld(actor);
+            }
+        }
+
+        this.playBlock(true);
     }
 
     /**
