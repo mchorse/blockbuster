@@ -8,8 +8,10 @@ import mchorse.blockbuster.commands.camera.SubCommandCameraFOV;
 import mchorse.blockbuster.commands.camera.SubCommandCameraLoad;
 import mchorse.blockbuster.commands.camera.SubCommandCameraNew;
 import mchorse.blockbuster.commands.camera.SubCommandCameraRoll;
+import mchorse.blockbuster.commands.camera.SubCommandCameraRotate;
 import mchorse.blockbuster.commands.camera.SubCommandCameraSave;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStart;
+import mchorse.blockbuster.commands.camera.SubCommandCameraStep;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStop;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureAdd;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureDuration;
@@ -87,9 +89,11 @@ public class CommandCamera extends SubCommandBase
         this.add(new SubCommandCameraClear());
 
         /* Camera control */
-        this.add(new SubCommandCameraDefault());
+        this.add(new SubCommandCameraStep());
+        this.add(new SubCommandCameraRotate());
         this.add(new SubCommandCameraRoll());
         this.add(new SubCommandCameraFOV());
+        this.add(new SubCommandCameraDefault());
 
         /* Fixture editing */
         this.add(new SubCommandFixtureAdd());

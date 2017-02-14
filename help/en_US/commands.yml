@@ -4,9 +4,9 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
+                {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
                 
-                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There's also {7}spawn{r} action which will spawn idle actors on {7}[tick]{r} tick ({7}[tick]{r} argument used only by this action).
 
         # Record's commands
         record:
@@ -139,6 +139,18 @@ blockbuster:
                     {l}{6}/{r}camera {8}roll{r} {7}[roll]{r}
                     
                     {r}Set or get client's camera {7}[roll]{r} (rotation across {7}Z-axis{r}).
+            
+            rotate:
+                |
+                    {l}{6}/{r}camera {8}rotate{r} {7}[yaw] [pitch]{r}
+                    
+                    {r}Set camera's angle based on absolute or relative values. You can set absolute angle of the camera by specifying plain floating point numbers {6}/camera {8}rotate {7}90 90{r}. Or you can provide a relative value by using {7}+{r} or {7}-{r} signs {6}/camera {8}rotate {7}+0.5 -0.5{r}.
+            
+            step:
+                |
+                    {l}{6}/{r}camera {8}step{r} {7}[x] [y] [z]{r}
+                    
+                    {r}Set camera's position based on absolute or relative values. You can set absolute position of the camera by specifying plain floating point numbers {6}/camera {8}step {7}0 4 0{r}. Or you can provide a relative value by using {7}+{r} or {7}-{r} signs {6}/camera {8}step {7}+0 +0.1 +0{r}. It works similar to {6}/tp{r} command.
 
             fixture:
                 add: 
