@@ -61,6 +61,7 @@ directions
 * Added duplicate button in **director block** GUI (thanks to badr)
 * Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
 * Fixed toggle replay bug in **director block** GUI (thanks to badr)
+* When *registering device* item is attached to director block, using the item will bring up **director block** GUI
 
 #### Recording
 
