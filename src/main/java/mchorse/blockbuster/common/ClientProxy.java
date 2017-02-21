@@ -21,6 +21,7 @@ import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -151,13 +152,37 @@ public class ClientProxy extends CommonProxy
      * This method is responsible for loading models on the client.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void loadModels(ModelPack pack)
     {
         super.loadModels(pack);
 
         for (Map.Entry<String, Model> model : this.models.models.entrySet())
         {
-            ModelParser.parse(model.getKey(), model.getValue());
+            Model mod = model.getValue();
+            boolean flag = true;
+
+            if (!mod.model.isEmpty())
+            {
+                try
+                {
+                    Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
+
+                    /* Parse custom custom (overcustomized) model */
+                    ModelParser.parse(model.getKey(), mod, clazz);
+
+                    flag = false;
+                }
+                catch (ClassNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (flag)
+            {
+                ModelParser.parse(model.getKey(), model.getValue());
+            }
         }
 
         this.factory.registerClient(null);

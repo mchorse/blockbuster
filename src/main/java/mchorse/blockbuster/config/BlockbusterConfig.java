@@ -33,6 +33,11 @@ public class BlockbusterConfig
      */
     public boolean disable_teleport_playback_button;
 
+    /**
+     * This option does literally nothing. Or maybe it does...?
+     */
+    public boolean extra_wubs;
+
     /* Camera */
 
     /**
@@ -153,6 +158,7 @@ public class BlockbusterConfig
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
         this.clean_model_downloads = this.config.getBoolean("clean_model_downloads", general, true, "Clean downloaded models upon exiting a server", genPrefix + "clean_model_downloads");
         this.disable_teleport_playback_button = this.config.getBoolean("disable_teleport_playback_button", general, false, "Is teleport disabled on sneaking + right click with playback button?", genPrefix + "disable_teleport_playback_button");
+        this.extra_wubs = this.config.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or does it...?", genPrefix + "extra_wubs");
 
         /* Camera */
         this.camera_duration_step = this.config.getInt("camera_duration_step", camera, 10, 1, 100, "What is default step to use when adding or reducing duration of the camera fixture (in ticks)", camPrefix + "camera_duration_step");

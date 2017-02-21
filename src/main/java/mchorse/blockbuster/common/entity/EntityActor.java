@@ -32,6 +32,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -39,6 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -191,17 +193,47 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Give default morph to actor
+     * Give a morph to an actor
+     *
+     * Also contains some extra wubs and easter eggs
      */
     @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
     {
         NBTTagCompound tag = new NBTTagCompound();
+        boolean extraWubs = Blockbuster.proxy.config.extra_wubs;
 
-        tag.setString("Name", "blockbuster.steve");
+        if (extraWubs && this.rand.nextInt(100) <= 5)
+        {
+            this.setCustomNameTag(this.rand.nextInt(100) <= 100 ? "YokeFilms" : "YikeFilms");
+            tag.setString("Name", "blockbuster.yike");
+        }
+        else
+        {
+            tag.setString("Name", "blockbuster.steve");
+        }
+
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
 
         return super.onInitialSpawn(difficulty, livingdata);
+    }
+
+    /**
+     * Primarily used for easter eggs
+     */
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount)
+    {
+        if (Blockbuster.proxy.config.extra_wubs && this.playback == null)
+        {
+            if (!this.worldObj.isRemote && this.getCustomNameTag().equals("YokeFilms") && source.getSourceOfDamage() instanceof EntityPlayerMP)
+            {
+                this.setCustomNameTag("YikeFilms");
+                ((EntityPlayerMP) source.getSourceOfDamage()).addChatMessage(new TextComponentTranslation("blockbuster.eggs.yike"));
+            }
+        }
+
+        return super.attackEntityFrom(source, amount);
     }
 
     /**
@@ -581,7 +613,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public void readSpawnData(ByteBuf buffer)
     {
         this.morph = MorphUtils.morphFromBuf(buffer);
-
         this.invisible = buffer.readBoolean();
 
         if (buffer.readBoolean())
@@ -610,6 +641,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
+
+        System.out.println(this.morph);
     }
 
     /**

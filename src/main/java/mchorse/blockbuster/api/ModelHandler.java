@@ -74,6 +74,7 @@ public class ModelHandler
             this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
             this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
             this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));
+            this.models.put("blockbuster.yike", Model.parse(loader.getResourceAsStream(path + "yike.json")));
         }
         catch (Exception e)
         {

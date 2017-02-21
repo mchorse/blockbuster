@@ -6,6 +6,7 @@ blockbuster.config:
         load_models_on_login: Send models
         clean_model_downloads: Clean model downloads
         disable_teleport_playback_button: Disable playback button teleport
+        extra_wubs: Extra Wubs
     
     recording:
         title: Recording

@@ -36,6 +36,7 @@ directions
 
 * Added `cubic` path fixture interpolation
 * Added keys for more precise player position and angle adjustments (under *Blockbuster Camera Control* category)
+* Added markers for path fixture points
 
 #### Commands
 

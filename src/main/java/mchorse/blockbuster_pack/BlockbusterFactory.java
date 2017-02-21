@@ -40,6 +40,7 @@ public class BlockbusterFactory implements IMorphFactory
     public void registerModels()
     {
         this.morphs.clear();
+        this.morphs.put("yike", this.createMorph("yike"));
         this.morphs.put("alex", this.createMorph("alex"));
         this.morphs.put("steve", this.createMorph("steve"));
         this.morphs.put("fred", this.createMorph("fred"));
@@ -105,6 +106,11 @@ public class BlockbusterFactory implements IMorphFactory
             String key = morph.getKey();
             ActorMorph original = morph.getValue();
 
+            if (key.equals("yike"))
+            {
+                continue;
+            }
+
             if (original.model.defaultTexture != null)
             {
                 ActorMorph actor = (ActorMorph) original.clone();
@@ -121,8 +127,6 @@ public class BlockbusterFactory implements IMorphFactory
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
             }
         }
-
-        morphs.morphs.remove("blockbuster.Actor");
     }
 
     @Override

@@ -37,7 +37,8 @@ $blacklist = [
     'blockbuster.register',
     'blockbuster.alex',
     'blockbuster.steve',
-    'blockbuster.fred'
+    'blockbuster.fred',
+    'blockbuster.yike'
 ];
 
 /** Starting output */
