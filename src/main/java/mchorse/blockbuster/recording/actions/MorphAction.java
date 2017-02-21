@@ -37,6 +37,10 @@ public class MorphAction extends Action
         {
             actor.morph = this.morph.clone();
         }
+        else
+        {
+            actor.morph = null;
+        }
 
         actor.notifyPlayers();
     }
