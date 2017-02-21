@@ -17,7 +17,6 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -117,7 +116,7 @@ public class RecordManager
     }
 
     /**
-     * Stop recording for given player
+     * Stop recording given player
      */
     public boolean stopRecording(EntityPlayer player, boolean hasDied, boolean notify)
     {
@@ -150,7 +149,6 @@ public class RecordManager
 
             if (notify)
             {
-                MorphAPI.demorph(player);
                 Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
 
