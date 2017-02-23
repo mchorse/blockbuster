@@ -45,14 +45,17 @@ public class MountingAction extends Action
             Frame frame = actor.playback.record.frames.get(actor.playback.tick);
             float yaw = actor.rotationYaw;
             float pitch = actor.rotationPitch;
+            float yawHead = actor.rotationYawHead;
 
             actor.rotationYaw = frame.yaw;
             actor.rotationPitch = frame.pitch;
+            actor.rotationYawHead = frame.yawHead;
 
             mount = EntityUtils.getTargetEntity(actor, 5.0);
 
             actor.rotationYaw = yaw;
             actor.rotationPitch = pitch;
+            actor.rotationYawHead = yawHead;
         }
 
         if (mount == null)
