@@ -28,6 +28,16 @@ public class BlockbusterConfig
      */
     public boolean clean_model_downloads;
 
+    /**
+     * Is teleport disabled on sneaking + right click with playback button?
+     */
+    public boolean disable_teleport_playback_button;
+
+    /**
+     * This option does literally nothing. Or maybe it does...?
+     */
+    public boolean extra_wubs;
+
     /* Camera */
 
     /**
@@ -55,7 +65,22 @@ public class BlockbusterConfig
      */
     public boolean camera_spectator;
 
+    /**
+     * Factor for step keys
+     */
+    public float camera_step_factor;
+
+    /**
+     * Factor for rotate keys
+     */
+    public float camera_rotate_factor;
+
     /* Recording */
+
+    /**
+     * Recording <s>final</s> countdown
+     */
+    public int recording_countdown;
 
     /**
      * Recording frame skip
@@ -81,6 +106,11 @@ public class BlockbusterConfig
      * Does attack action get recorded with swipe action?
      */
     public boolean record_attack_on_swipe;
+
+    /**
+     * Does command action should be recorded?
+     */
+    public boolean record_commands;
 
     /* Actors */
 
@@ -127,6 +157,8 @@ public class BlockbusterConfig
         /* General */
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
         this.clean_model_downloads = this.config.getBoolean("clean_model_downloads", general, true, "Clean downloaded models upon exiting a server", genPrefix + "clean_model_downloads");
+        this.disable_teleport_playback_button = this.config.getBoolean("disable_teleport_playback_button", general, false, "Is teleport disabled on sneaking + right click with playback button?", genPrefix + "disable_teleport_playback_button");
+        this.extra_wubs = this.config.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or does it...?", genPrefix + "extra_wubs");
 
         /* Camera */
         this.camera_duration_step = this.config.getInt("camera_duration_step", camera, 10, 1, 100, "What is default step to use when adding or reducing duration of the camera fixture (in ticks)", camPrefix + "camera_duration_step");
@@ -134,13 +166,17 @@ public class BlockbusterConfig
         this.camera_interpolate_target = this.config.getBoolean("camera_interpolate_target", camera, false, "Interpolate target based camera fixtures (follow and look) outcome", camPrefix + "camera_interpolate_target");
         this.camera_interpolate_target_value = this.config.getFloat("camera_interpolate_target_value", camera, 0.5F, 0.0F, 1.0F, "Interpolation value for target based camera fixture interpolation", camPrefix + "camera_interpolate_target_value");
         this.camera_spectator = this.config.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback", camPrefix + "camera_spectator");
+        this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
+        this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
 
         /* Recording */
+        this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");
         this.recording_delay = this.config.getInt("recording_delay", recording, 1, 1, 10, "Frame delay for recording", recPrefix + "recording_delay");
         this.record_unload_time = this.config.getInt("record_unload_time", recording, 2400, 600, 72000, "How long is it takes to unload a record (in ticks)", recPrefix + "record_unload_time");
         this.record_unload = this.config.getBoolean("record_unload", recording, true, "Enable automatic record unloading?", recPrefix + "record_unload");
         this.record_sync_rate = this.config.getInt("record_sync_rate", recording, 6, 1, 30, "How often a record going to synchronize with the server", recPrefix + "record_sync_rate");
         this.record_attack_on_swipe = this.config.getBoolean("record_attack_on_swipe", recording, false, "Does attack action get recorded with swipe action?", recPrefix + "record_attack_on_swipe");
+        this.record_commands = this.config.getBoolean("record_commands", recording, true, "Does command action gets recorded during recording?", recPrefix + "record_commands");
 
         /* Actor */
         this.actor_fall_damage = this.config.getBoolean("actor_fall_damage", actor, true, "Does actor receive fall damage?", actPrefix + "actor_fall_damage");

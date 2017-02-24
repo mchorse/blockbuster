@@ -83,7 +83,7 @@ public class ProfileRenderer
         Position prev = new Position(0, 0, 0, 0, 0);
         Position next = new Position(0, 0, 0, 0, 0);
 
-        EntityPlayer player = this.mc.thePlayer;
+        EntityPlayer player = this.mc.player;
         float ticks = event.getPartialTicks();
 
         this.playerX = player.prevPosX + (player.posX - player.prevPosX) * ticks;
@@ -140,15 +140,94 @@ public class ProfileRenderer
      */
     private void drawPathFixture(Color color, AbstractFixture fixture, Position prev, Position next)
     {
-        List<Position> points = ((PathFixture) fixture).getPoints();
+        PathFixture path = (PathFixture) fixture;
+        List<Position> points = path.getPoints();
+
+        final int p = 15;
 
         for (int i = 0, size = points.size() - 1; i < size; i++)
         {
-            prev.copy(points.get(i));
-            next.copy(points.get(i + 1));
+            for (int j = 0; j < p; j++)
+            {
+                path.applyFixture((float) (j + i * p) / (float) (size * p - 1), 0, prev);
+                path.applyFixture((float) (j + i * p + 1) / (float) (size * p - 1), 0, next);
 
-            this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
+                this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
+            }
+
+            if (i != 0)
+            {
+                path.applyFixture((float) i / (float) size, 0, prev);
+
+                this.drawPathPoint(color, prev, i);
+            }
         }
+    }
+
+    /**
+     * Draw the path point
+     *
+     * This method is responsible for drawing a square with a label which shows
+     * the index of that point. This is very useful for path point management.
+     */
+    private void drawPathPoint(Color color, Position position, int index)
+    {
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        GlStateManager.enableBlend();
+        GlStateManager.color(color.red, color.green, color.blue, 1.0F);
+
+        this.mc.renderEngine.bindTexture(TEXTURE);
+
+        double x = position.point.x - this.playerX;
+        double y = position.point.y - this.playerY;
+        double z = position.point.z - this.playerZ;
+
+        GL11.glNormal3f(0, 1, 0);
+        GlStateManager.translate(x, y + this.mc.player.eyeHeight, z);
+        GlStateManager.rotate(-this.mc.getRenderManager().playerViewY, 0, 1, 0);
+        GlStateManager.rotate(this.mc.getRenderManager().playerViewX, 1, 0, 0);
+
+        float factor = 0.1F;
+        float minX = -factor;
+        float minY = -factor;
+        float maxX = factor;
+        float maxY = factor;
+
+        int tw = 34;
+
+        int tx = 32;
+        int tx2 = 34;
+
+        float texX = (float) tx / (float) tw;
+        float texY = 0;
+        float texRX = (float) tx2 / (float) tw;
+        float texRY = 2.0F / 16.0F;
+
+        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+
+        vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        vb.pos(minX, minY, 0).tex(texRX, texRY).endVertex();
+        vb.pos(minX, maxY, 0).tex(texRX, texY).endVertex();
+        vb.pos(maxX, maxY, 0).tex(texX, texY).endVertex();
+        vb.pos(maxX, minY, 0).tex(texX, texRY).endVertex();
+
+        Tessellator.getInstance().draw();
+        GlStateManager.disableBlend();
+
+        String indexString = String.valueOf(index);
+        int indexWidth = this.mc.fontRendererObj.getStringWidth(indexString) / 2;
+
+        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.scale(0.03f, 0.03f, 0.03f);
+        GlStateManager.translate(0, -3.5, -0.1);
+        GlStateManager.translate(0, -12, 0);
+
+        this.mc.fontRendererObj.drawString(indexString, -indexWidth, 0, -1);
+
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+        GlStateManager.color(1, 1, 1, 1);
     }
 
     /**
@@ -187,7 +266,7 @@ public class ProfileRenderer
         double z = pos.point.z - this.playerZ;
 
         GL11.glNormal3f(0, 1, 0);
-        GlStateManager.translate(x, y + this.mc.thePlayer.eyeHeight, z);
+        GlStateManager.translate(x, y + this.mc.player.eyeHeight, z);
         GlStateManager.rotate(-this.mc.getRenderManager().playerViewY, 0, 1, 0);
         GlStateManager.rotate(this.mc.getRenderManager().playerViewX, 1, 0, 0);
 
@@ -198,11 +277,15 @@ public class ProfileRenderer
         float maxX = factor;
         float maxY = factor;
 
+        int tw = 34;
         int i = selected ? 1 : 0;
 
-        float texX = i * 0.5F;
+        int tx = i * 16;
+        int tx2 = tx + 16;
+
+        float texX = (float) tx / (float) tw;
         float texY = 0;
-        float texRX = i * 0.5F + 0.5F;
+        float texRX = (float) tx2 / (float) tw;
         float texRY = 1;
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
@@ -255,7 +338,7 @@ public class ProfileRenderer
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 
-        vb.setTranslation(x, y + this.mc.thePlayer.eyeHeight, z);
+        vb.setTranslation(x, y + this.mc.player.eyeHeight, z);
         vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         vb.pos(next.point.x - prev.point.x, next.point.y - prev.point.y, next.point.z - prev.point.z).endVertex();
         vb.pos(0, 0, 0).endVertex();
@@ -285,6 +368,9 @@ public class ProfileRenderer
         return ProfileRenderer.Color.IDLE;
     }
 
+    /**
+     * Colors for fixture types.
+     */
     public static enum Color
     {
         IDLE(0.085F, 0.62F, 0.395F), PATH(0.408F, 0.128F, 0.681F), LOOK(0.85F, 0.137F, 0.329F), FOLLOW(0.298F, 0.690F, 0.972F), CIRCULAR(0.298F, 0.631F, 0.247F);

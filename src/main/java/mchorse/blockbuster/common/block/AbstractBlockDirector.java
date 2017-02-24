@@ -113,7 +113,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
     {
         ItemStack item = playerIn.getHeldItem(hand);
 
-        if (!item.func_190926_b() && this.handleItem(item, worldIn, pos, playerIn))
+        if (!item.isEmpty() && this.handleItem(item, worldIn, pos, playerIn))
         {
             return true;
         }

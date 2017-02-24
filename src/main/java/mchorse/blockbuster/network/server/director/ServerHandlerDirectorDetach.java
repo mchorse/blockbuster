@@ -12,8 +12,8 @@ public class ServerHandlerDirectorDetach extends ServerMessageHandler<PacketDire
     @Override
     public void run(EntityPlayerMP player, PacketDirectorDetach message)
     {
-        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
-        EntityActor actor = (EntityActor) EntityUtils.entityByUUID(player.worldObj, tile.replays.get(message.index).actor);
+        TileEntityDirector tile = ((TileEntityDirector) player.world.getTileEntity(message.pos));
+        EntityActor actor = (EntityActor) EntityUtils.entityByUUID(player.world, tile.replays.get(message.index).actor);
 
         actor.directorBlock = null;
     }

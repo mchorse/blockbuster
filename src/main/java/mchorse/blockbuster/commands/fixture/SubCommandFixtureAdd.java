@@ -22,13 +22,13 @@ import net.minecraft.util.math.BlockPos;
 public class SubCommandFixtureAdd extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "add";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.fixture.add";
     }
@@ -38,20 +38,20 @@ public class SubCommandFixtureAdd extends CommandBase
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         CommandCamera.getProfile().add(AbstractFixture.fromCommand(args, (EntityPlayer) sender));
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if (args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, AbstractFixture.STRING_TO_TYPE.keySet());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }

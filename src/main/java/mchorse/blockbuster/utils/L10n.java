@@ -22,7 +22,7 @@ public class L10n
      */
     public static void send(ICommandSender sender, String key, Object... objects)
     {
-        sender.addChatMessage(new TextComponentTranslation(key, objects));
+        sender.sendMessage(new TextComponentTranslation(key, objects));
     }
 
     /**
@@ -33,7 +33,7 @@ public class L10n
         ITextComponent text = new TextComponentTranslation(key, objects);
         text.getStyle().setColor(color);
 
-        sender.addChatMessage(text);
+        sender.sendMessage(text);
     }
 
     /**
@@ -74,6 +74,6 @@ public class L10n
         System.out.println(string.getFormattedText());
 
         message.appendSibling(string);
-        sender.addChatMessage(message);
+        sender.sendMessage(message);
     }
 }

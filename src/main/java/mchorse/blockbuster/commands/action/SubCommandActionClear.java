@@ -22,13 +22,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandActionClear extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "clear";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.clear";
     }

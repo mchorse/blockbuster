@@ -41,13 +41,13 @@ import net.minecraft.util.text.event.ClickEvent;
 public class SubCommandModelExport extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "export";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.export";
     }
@@ -57,7 +57,7 @@ public class SubCommandModelExport extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         /* Gather needed elements for exporter class */
@@ -106,7 +106,7 @@ public class SubCommandModelExport extends CommandBase
      * Brutally ripped from {@link CommandSummon} class
      */
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         return args.length == 1 ? getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList()) : Collections.<String> emptyList();
     }

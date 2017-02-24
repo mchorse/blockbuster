@@ -23,13 +23,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandFixtureEdit extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "edit";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.fixture.edit";
     }
@@ -39,7 +39,7 @@ public class SubCommandFixtureEdit extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         CameraProfile profile = CommandCamera.getProfile();

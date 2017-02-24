@@ -20,13 +20,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandCameraNew extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "new";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.new";
     }
@@ -34,9 +34,9 @@ public class SubCommandCameraNew extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 1 || args[0].isEmpty())
+        if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         CameraProfile profile = CommandCamera.getProfile();

@@ -6,9 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.capabilities.morphing.Morphing;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
@@ -49,6 +50,11 @@ public class RecordManager
     public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
 
     /**
+     * Scheduled recordings
+     */
+    public Map<EntityPlayer, ScheduledRecording> scheduled = new HashMap<EntityPlayer, ScheduledRecording>();
+
+    /**
      * Get action list for given player
      */
     public List<Action> getActions(EntityPlayer player)
@@ -61,10 +67,22 @@ public class RecordManager
     /**
      * Start recording given player to record with given filename
      */
-    public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify)
+    public boolean startRecording(String filename, EntityPlayer player, Mode mode, boolean notify, Runnable runnable)
     {
+        int countdown = Blockbuster.proxy.config.recording_countdown;
+
+        if (runnable != null && (countdown == 0 || this.recorders.containsKey(player)))
+        {
+            runnable.run();
+        }
+
         if (filename.isEmpty() || this.stopRecording(player, false, notify))
         {
+            if (filename.isEmpty())
+            {
+                Utils.broadcastError("recording.empty_filename");
+            }
+
             return false;
         }
 
@@ -78,21 +96,42 @@ public class RecordManager
             }
         }
 
-        this.recorders.put(player, new RecordRecorder(new Record(filename), mode));
+        RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
 
-        if (notify)
+        if (countdown == 0 || player.world.isRemote)
         {
-            Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+            this.recorders.put(player, recorder);
+
+            if (notify)
+            {
+                Dispatcher.sendTo(new PacketPlayerRecording(true, filename), (EntityPlayerMP) player);
+            }
+        }
+        else if (!player.world.isRemote)
+        {
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, countdown * 20));
         }
 
         return true;
     }
 
     /**
-     * Stop recording for given player
+     * Stop recording given player
      */
     public boolean stopRecording(EntityPlayer player, boolean hasDied, boolean notify)
     {
+        /* Stop countdown */
+        ScheduledRecording scheduled = this.scheduled.get(player);
+
+        if (scheduled != null)
+        {
+            this.scheduled.remove(player);
+            Dispatcher.sendTo(new PacketCaption(), (EntityPlayerMP) player);
+
+            return true;
+        }
+
+        /* Stop the recording via command or whatever the source is */
         RecordRecorder recorder = this.recorders.get(player);
 
         if (recorder != null)
@@ -110,7 +149,6 @@ public class RecordManager
 
             if (notify)
             {
-                Morphing.get(player).reset();
                 Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
 
@@ -133,10 +171,15 @@ public class RecordManager
 
         try
         {
-            File file = Utils.replayFile(filename);
+            Record record = this.getRecord(filename);
 
-            Record record = new Record(filename);
-            record.load(file);
+            if (record.frames.size() == 0)
+            {
+                Utils.broadcastError("recording.empty_record", filename);
+
+                return false;
+            }
+
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
@@ -148,7 +191,6 @@ public class RecordManager
                 Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
             }
 
-            this.records.put(filename, record);
             this.players.put(actor, player);
 
             return true;
@@ -200,6 +242,21 @@ public class RecordManager
      */
     public void reset()
     {
+        for (Record record : this.records.values())
+        {
+            if (record.dirty)
+            {
+                try
+                {
+                    record.save(Utils.replayFile(record.filename));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         this.records.clear();
         this.chunks.clear();
         this.recorders.clear();
@@ -216,6 +273,56 @@ public class RecordManager
             RecordRecorder recorder = this.recorders.remove(player);
 
             Utils.broadcastError("recording.logout", recorder.record.filename);
+        }
+    }
+
+    /**
+     * Get record by the filename
+     *
+     * If a record by the filename doesn't exist, then record manager tries to
+     * load this record.
+     */
+    public Record getRecord(String filename) throws Exception
+    {
+        Record record = this.records.get(filename);
+
+        if (record == null)
+        {
+            File file = Utils.replayFile(filename);
+
+            record = new Record(filename);
+            record.load(file);
+
+            this.records.put(filename, record);
+        }
+
+        return record;
+    }
+
+    /**
+     * Scheduled recorder class
+     */
+    public static class ScheduledRecording
+    {
+        public RecordRecorder recorder;
+        public EntityPlayer player;
+        public Runnable runnable;
+        public int countdown;
+
+        public ScheduledRecording(RecordRecorder recorder, EntityPlayer player, Runnable runnable, int countdown)
+        {
+            this.recorder = recorder;
+            this.player = player;
+            this.runnable = runnable;
+            this.countdown = countdown;
+        }
+
+        public void run()
+        {
+            if (this.runnable != null)
+            {
+                this.runnable.run();
+            }
         }
     }
 }

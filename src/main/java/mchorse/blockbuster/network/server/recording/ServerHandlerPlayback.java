@@ -10,7 +10,7 @@ public class ServerHandlerPlayback extends ServerMessageHandler<PacketPlayback>
     @Override
     public void run(EntityPlayerMP player, PacketPlayback message)
     {
-        EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
+        EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
 
         if (actor.playback != null)
         {

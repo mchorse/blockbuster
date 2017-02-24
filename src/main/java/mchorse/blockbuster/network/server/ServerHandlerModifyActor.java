@@ -16,11 +16,11 @@ public class ServerHandlerModifyActor extends ServerMessageHandler<PacketModifyA
     @Override
     public void run(EntityPlayerMP player, PacketModifyActor message)
     {
-        Entity entity = player.worldObj.getEntityByID(message.id);
+        Entity entity = player.world.getEntityByID(message.id);
 
         if (entity instanceof EntityActor)
         {
-            ((EntityActor) entity).modify(message.model, message.skin, message.invisible, true);
+            ((EntityActor) entity).modify(message.morph, message.invisible, true);
         }
     }
 }

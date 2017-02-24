@@ -15,13 +15,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandActionStop extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "stop";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.stop";
     }

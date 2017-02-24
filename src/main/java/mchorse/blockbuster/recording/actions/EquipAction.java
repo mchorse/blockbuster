@@ -1,14 +1,8 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -56,7 +50,7 @@ public class EquipAction extends Action
 
         if (this.armorId == -1)
         {
-            actor.setItemStackToSlot(slot, ItemStack.field_190927_a);
+            actor.setItemStackToSlot(slot, ItemStack.EMPTY);
         }
         else
         {
@@ -72,30 +66,6 @@ public class EquipAction extends Action
         }
 
         return null;
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.armorSlot = in.readByte();
-        this.armorId = in.readShort();
-
-        if (this.armorId != -1)
-        {
-            this.itemData = CompressedStreamTools.read((DataInputStream) in);
-        }
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        out.writeByte(this.armorSlot);
-        out.writeShort(this.armorId);
-
-        if (this.armorId != -1)
-        {
-            CompressedStreamTools.write(this.itemData, out);
-        }
     }
 
     @Override

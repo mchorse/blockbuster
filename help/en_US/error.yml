@@ -8,10 +8,6 @@ blockbuster.error:
     actor:
         not_attached: {f}This registering item isn't attached to a director block!
     
-    # Morph error strings
-    morph:
-        wrong: {f}Morph by name %s{f} doesn't exist!
-    
     # Director block error strings
     director:
         playing: {f}Director block at (%s{f}, %s{f}, %s{f}) is playing!
@@ -19,17 +15,29 @@ blockbuster.error:
         
         missing: {f}The director block, that was attached to this device at (%s{f}, %s{f}, %s{f}), was destroyed or moved. Attach this device to another director block!
         no_director: {f}No director block exists at (%s{f}, %s{f}, %s{f}).
+        empty_filename: {f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}.
     
     # Errors for /model export
     model.export:
         error_save: {f}Can't save exported model!
         wrong_type: {f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer).
     
+    # Record command errors
+    record:
+        no_action: {f}Player recording by filename %s{f} doesn't have an action at %s{f} tick!
+        not_exist: {f}Player recording by filename %s{f} doesn't exist!
+        tick_out_range: {f}Action on tick %s{f} doesn't exist!
+        wrong_action: {f}Action of type %s{f} doesn't exist!
+        set: "{f}Action of type %s{f} couldn't be added due to error: %s"
+    
     # Recording errors
     recording:
         read: {f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f}).
         logout: {f}Stopped recording %s{f}, because the player is logged out!
         not_found: {f}Can't find %s{f} recording file!
+        fill_filename: {f}Please fill the {7}Recording ID{f} field!
+        empty_filename: {f}Cannot record a player recording with empty {7}Recording ID{f}.
+        empty_record: {f}Cannot playback record %s{f}, because it's empty!
     
     # Camera fixtures errors
     fixture:
@@ -47,3 +55,5 @@ blockbuster.error:
         
         not_path: {f}Fixture at index %s{f} isn't a path fixture!
         not_exists: {f}There's no camera fixture at %s{f} index in current camera profile!
+        no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f}!
+        move_no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f} or at index %s{f}!

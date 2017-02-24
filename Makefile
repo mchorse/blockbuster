@@ -1,4 +1,4 @@
-VERSION=1.4.6-1.11
+VERSION=1.4.7-1.11.2
 MODS_DIR=~/Library/Application\ Support/minecraft/mods/
 
 build_mod: copy_assets build_lang

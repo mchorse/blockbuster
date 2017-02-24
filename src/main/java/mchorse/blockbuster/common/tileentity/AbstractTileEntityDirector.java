@@ -140,7 +140,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         for (Replay replay : this.replays)
         {
             boolean hasActor = replay.actor != null && replay.actor.equals(actor.getUniqueID());
-            boolean hasName = replay.name.equals(actor.getCustomNameTag());
+            boolean hasName = actor.hasCustomName() ? replay.name.equals(actor.getCustomNameTag()) : false;
 
             if (hasActor)
             {
@@ -167,6 +167,14 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         }
 
         return false;
+    }
+
+    /**
+     * Duplicate a replay by given index
+     */
+    public void duplicate(int index)
+    {
+        this.replays.add(this.replays.get(index).clone());
     }
 
     /**
@@ -209,6 +217,11 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     public abstract void stopPlayback();
 
     /**
+     * Spawn actors at given tick
+     */
+    public abstract void spawn(int tick);
+
+    /**
      * Toggle scene's playback
      */
     public boolean togglePlayback()
@@ -232,7 +245,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     @Override
     public void update()
     {
-        boolean isRemote = this.worldObj.isRemote;
+        boolean isRemote = this.world.isRemote;
 
         if (!isRemote && !this._replays.isEmpty())
         {
@@ -261,13 +274,12 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         while (it.hasNext())
         {
             String uuid = it.next();
-            EntityActor actor = (EntityActor) EntityUtils.entityByUUID(this.worldObj, uuid);
+            EntityActor actor = (EntityActor) EntityUtils.entityByUUID(this.world, uuid);
 
             if (actor != null && !actor._filename.isEmpty())
             {
                 Replay replay = new Replay(actor);
                 replay.id = actor._filename;
-                replay.model = "steve";
 
                 this.replays.add(replay);
                 it.remove();
@@ -286,7 +298,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
-        this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractBlockDirector.PLAYING, isPlaying));
+        this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).withProperty(AbstractBlockDirector.PLAYING, isPlaying));
     }
 
     /**
@@ -294,6 +306,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public boolean isPlaying()
     {
-        return this.worldObj.getBlockState(this.pos).getValue(AbstractBlockDirector.PLAYING);
+        return this.world.getBlockState(this.pos).getValue(AbstractBlockDirector.PLAYING);
     }
 }

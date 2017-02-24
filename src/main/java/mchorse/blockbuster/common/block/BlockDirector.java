@@ -29,11 +29,8 @@ public class BlockDirector extends AbstractBlockDirector
         this.setUnlocalizedName("blockbuster.director");
     }
 
-    /**
-     * F*cked up addInformation method in 1.11
-     */
     @Override
-    public void func_190948_a(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.director_block"));
     }

@@ -29,7 +29,7 @@ public class FrameHandler
             return;
         }
 
-        if (player.worldObj.isRemote && ClientProxy.manager.recorders.containsKey(player))
+        if (player.world.isRemote && ClientProxy.manager.recorders.containsKey(player))
         {
             ClientProxy.manager.recorders.get(player).record(player);
         }

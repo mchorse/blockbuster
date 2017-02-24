@@ -3,7 +3,6 @@ package mchorse.blockbuster.network.client.recording;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
@@ -29,16 +28,14 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
     public void run(EntityPlayerSP player, PacketPlayerRecording message)
     {
         ClientProxy.recordingOverlay.setVisible(message.recording);
-        ClientProxy.recordingOverlay.setCaption(message.filename);
+        ClientProxy.recordingOverlay.setCaption(message.filename, true);
 
         if (message.recording)
         {
-            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false);
+            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false, null);
         }
         else
         {
-            Morphing.get(player).reset();
-
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
             ClientProxy.manager.stopRecording(player, false, false);
         }

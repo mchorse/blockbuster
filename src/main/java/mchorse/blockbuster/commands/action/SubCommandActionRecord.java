@@ -21,13 +21,13 @@ import net.minecraft.util.math.BlockPos;
 public class SubCommandActionRecord extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "record";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.record";
     }
@@ -37,11 +37,10 @@ public class SubCommandActionRecord extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         EntityPlayer player = getCommandSenderAsPlayer(sender);
-        boolean recording = CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true);
 
         if (args.length >= 4)
         {
@@ -50,18 +49,12 @@ public class SubCommandActionRecord extends CommandBase
 
             if (tile instanceof TileEntityDirector)
             {
-                TileEntityDirector director = (TileEntityDirector) tile;
-
-                if (recording)
-                {
-                    director.applyReplay(director.byFile(args[0]), player);
-                    director.startPlayback(args[0]);
-                }
-                else
-                {
-                    director.stopPlayback();
-                }
+                ((TileEntityDirector) tile).startRecording(args[0], player);
             }
+        }
+        else
+        {
+            CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true, null);
         }
     }
 }

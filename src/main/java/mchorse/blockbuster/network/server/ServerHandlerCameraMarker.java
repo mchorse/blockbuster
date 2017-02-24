@@ -24,7 +24,7 @@ public class ServerHandlerCameraMarker extends ServerMessageHandler<PacketCamera
         String string = I18n.format("blockbuster.marker", record.record.filename, Integer.toString(delay), tick, difference);
 
         CommonProxy.manager.getActions(player).add(new ChatAction(string));
-        player.addChatMessage(new TextComponentString(string));
+        player.sendMessage(new TextComponentString(string));
         record.previousTick = record.tick;
     }
 }

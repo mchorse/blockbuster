@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.client.ActorsPack;
@@ -14,21 +13,19 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
-import mchorse.blockbuster.client.render.RenderPlayer;
-import mchorse.blockbuster.client.render.RenderSubPlayer;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandModel;
-import mchorse.blockbuster.commands.CommandMorph;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster_pack.client.render.RenderCustomActor;
+import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.client.model.ModelCustom;
+import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -53,12 +50,13 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-    public static RenderPlayer playerRender;
 
     public static ProfileRunner profileRunner = new ProfileRunner();
     public static ProfileRenderer profileRenderer = new ProfileRenderer();
 
     public static RecordManager manager = new RecordManager();
+
+    public static RenderCustomActor actorRenderer;
 
     public static File config;
 
@@ -69,6 +67,10 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preLoad(FMLPreInitializationEvent event)
     {
+        String path = event.getSuggestedConfigurationFile().getAbsolutePath();
+        path = path.substring(0, path.length() - 4);
+
+        config = new File(path);
         super.preLoad(event);
 
         /* Items */
@@ -82,7 +84,7 @@ public class ClientProxy extends CommonProxy
         /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
-        this.injectResourcePack(event.getSuggestedConfigurationFile().getAbsolutePath());
+        this.injectResourcePack(path);
     }
 
     /**
@@ -96,9 +98,6 @@ public class ClientProxy extends CommonProxy
     @SuppressWarnings("unchecked")
     private void injectResourcePack(String path)
     {
-        path = path.substring(0, path.length() - 4);
-        config = new File(path);
-
         try
         {
             Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
@@ -111,12 +110,10 @@ public class ClientProxy extends CommonProxy
             actorPack.pack.addFolder(path + "/downloads");
             actorPack.pack.reload();
 
-            /* Create alex and steve skins folders */
-            File alex = new File(path + "/models/alex/skins");
-            File steve = new File(path + "/models/steve/skins");
-
-            alex.mkdirs();
-            steve.mkdirs();
+            /* Create steve, alex and fred skins folders */
+            new File(path + "/models/steve/skins").mkdirs();
+            new File(path + "/models/alex/skins").mkdirs();
+            new File(path + "/models/fred/skins").mkdirs();
         }
         catch (Exception e)
         {
@@ -131,74 +128,22 @@ public class ClientProxy extends CommonProxy
     @Override
     public void load(FMLInitializationEvent event)
     {
-        super.load(event);
-
         Minecraft mc = Minecraft.getMinecraft();
 
         recordingOverlay = new GuiRecordingOverlay(mc);
-        playerRender = new RenderPlayer(mc.getRenderManager(), 0.5F);
+        actorRenderer = new RenderCustomActor(mc.getRenderManager(), null, 0);
+
+        super.load(event);
 
         /* Event listeners */
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
-        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay, playerRender));
+        MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
         MinecraftForge.EVENT_BUS.register(profileRenderer);
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
-        ClientCommandHandler.instance.registerCommand(new CommandMorph());
-
-        this.substitutePlayerRenderers();
-    }
-
-    /**
-     * Substitute default player renders to get the ability to render the
-     * hand.
-     *
-     * Please, kids, don't do that at home. This was made by an expert in
-     * this field, so please, don't override skinMap the way I did. Don't break
-     * the compatibility with this mod.
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void substitutePlayerRenderers()
-    {
-        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
-        Map<String, net.minecraft.client.renderer.entity.RenderPlayer> skins = null;
-
-        /* Iterate over all render manager fields and get access to skinMap */
-        for (Field field : manager.getClass().getDeclaredFields())
-        {
-            if (field.getType().equals(Map.class))
-            {
-                field.setAccessible(true);
-
-                try
-                {
-                    Map map = (Map) field.get(manager);
-
-                    if (map.get("default") instanceof net.minecraft.client.renderer.entity.RenderPlayer)
-                    {
-                        skins = map;
-
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        /* Replace player renderers with Blockbuster substitutes */
-        if (skins != null)
-        {
-            skins.put("slim", new RenderSubPlayer(manager, playerRender, true));
-            skins.put("default", new RenderSubPlayer(manager, playerRender, false));
-
-            System.out.println("Skin map renderers were successfully replaced with Blockbuster RenderSubPlayer substitutes!");
-        }
     }
 
     /**
@@ -207,16 +152,40 @@ public class ClientProxy extends CommonProxy
      * This method is responsible for loading models on the client.
      */
     @Override
+    @SuppressWarnings("unchecked")
     public void loadModels(ModelPack pack)
     {
         super.loadModels(pack);
 
-        ModelCustom.MODELS.clear();
-
         for (Map.Entry<String, Model> model : this.models.models.entrySet())
         {
-            ModelParser.parse(model.getKey(), model.getValue());
+            Model mod = model.getValue();
+            boolean flag = true;
+
+            if (!mod.model.isEmpty())
+            {
+                try
+                {
+                    Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
+
+                    /* Parse custom custom (overcustomized) model */
+                    ModelParser.parse(model.getKey(), mod, clazz);
+
+                    flag = false;
+                }
+                catch (ClassNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            if (flag)
+            {
+                ModelParser.parse(model.getKey(), model.getValue());
+            }
         }
+
+        this.factory.registerClient(null);
     }
 
     /**

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
-import mchorse.blockbuster.client.gui.widgets.GuiScrollPane;
 import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -89,11 +89,11 @@ public class GuiReplays extends GuiScrollPane
     {}
 
     @Override
-    protected void drawPane()
+    protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
         if (this.entries.size() == 0)
         {
-            this.fontRendererObj.drawStringWithShadow(this.stringNoCast, this.x + 2, this.y + 8, 0xffcccccc);
+            this.fontRendererObj.drawStringWithShadow(this.stringNoCast, this.x + 9, this.y + 8, 0xffcccccc);
             return;
         }
 
@@ -106,7 +106,12 @@ public class GuiReplays extends GuiScrollPane
             Entry entry = this.entries.get(i);
             String name = flag ? "> " + entry.name : entry.name;
 
-            this.fontRendererObj.drawStringWithShadow(name, x, y + 8, flag ? 0xffcccccc : 0xffffffff);
+            this.fontRendererObj.drawStringWithShadow(name, x + 9, y + 8, entry.replay.id.isEmpty() ? 0xffff3355 : (flag ? 0xffcccccc : 0xffffffff));
+
+            if (entry.replay.morph != null)
+            {
+                entry.replay.morph.renderOnScreen(this.mc.player, this.x + this.w - 16, y + this.span, this.span / 2, 1.0F);
+            }
         }
     }
 

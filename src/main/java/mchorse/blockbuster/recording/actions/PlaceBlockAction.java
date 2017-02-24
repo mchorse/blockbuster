@@ -1,9 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -43,23 +39,7 @@ public class PlaceBlockAction extends InteractBlockAction
     {
         Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
         IBlockState state = block.getStateFromMeta(this.metadata);
-        actor.worldObj.setBlockState(this.pos, state);
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        super.fromBytes(in);
-        this.metadata = in.readByte();
-        this.block = in.readUTF();
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        super.toBytes(out);
-        out.writeByte(this.metadata);
-        out.writeUTF(this.block);
+        actor.world.setBlockState(this.pos, state);
     }
 
     @Override

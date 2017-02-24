@@ -18,13 +18,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandCameraClear extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "clear";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.clear";
     }

@@ -3,7 +3,12 @@ blockbuster:
     # Parsing
     parsing.lacks_pose: Parsed model with name "%s" doesn't have "%s" pose!
     
-    marker: {6}{l}|{r} Record {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}difference is {7}%s{6}t{8}){r}.
+    marker: "{6}{l}|{r} Record {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}difference is {7}%s{6}t{8}){r}."
     recording: Recording to {7}%s{r}
     yes: "Yes"
     no: "No"
+    eggs:
+        yike: {l}Alright{r}, {o}alright{r}, that was {7}McHorse{r}'s joke! Switching back to {6}YikeFilms{r}.
+
+# Metamorph category
+morph.category.blockbuster: Blockbuster models

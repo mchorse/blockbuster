@@ -17,13 +17,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandModelRequest extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "request";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.request";
     }

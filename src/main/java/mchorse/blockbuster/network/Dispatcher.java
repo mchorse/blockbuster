@@ -1,10 +1,10 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.network.client.ClientHandlerCaption;
+import mchorse.blockbuster.network.client.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
-import mchorse.blockbuster.network.client.ClientHandlerMorph;
-import mchorse.blockbuster.network.client.ClientHandlerMorphPlayer;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraProfile;
 import mchorse.blockbuster.network.client.camera.ClientHandlerCameraState;
 import mchorse.blockbuster.network.client.camera.ClientHandlerListCameraProfiles;
@@ -17,10 +17,11 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
+import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.PacketMorph;
-import mchorse.blockbuster.network.common.PacketMorphPlayer;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketRequestModels;
 import mchorse.blockbuster.network.common.camera.PacketCameraProfile;
@@ -45,8 +46,8 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
+import mchorse.blockbuster.network.server.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
-import mchorse.blockbuster.network.server.ServerHandlerMorph;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.network.server.camera.ServerHandlerCameraProfile;
@@ -54,6 +55,7 @@ import mchorse.blockbuster.network.server.camera.ServerHandlerCameraReset;
 import mchorse.blockbuster.network.server.camera.ServerHandlerListCameraProfiles;
 import mchorse.blockbuster.network.server.camera.ServerHandlerLoadCameraProfile;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorAdd;
+import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDuplicate;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
@@ -92,7 +94,7 @@ public class Dispatcher
      */
     public static void sendToTracked(Entity entity, IMessage message)
     {
-        EntityTracker tracker = ((WorldServer) entity.worldObj).getEntityTracker();
+        EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
 
         for (EntityPlayer player : tracker.getTrackingPlayers(entity))
         {
@@ -142,14 +144,20 @@ public class Dispatcher
 
         register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
 
+        register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
+
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
 
         register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
         register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
         register(PacketDirectorAdd.class, ServerHandlerDirectorAdd.class, Side.SERVER);
+        register(PacketDirectorDuplicate.class, ServerHandlerDirectorDuplicate.class, Side.SERVER);
         register(PacketDirectorEdit.class, ServerHandlerDirectorEdit.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
+
+        register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
+        register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
 
         /* Camera management */
         register(PacketCameraProfile.class, ClientHandlerCameraProfile.class, Side.CLIENT);
@@ -164,11 +172,6 @@ public class Dispatcher
         register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
 
         register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
-
-        /* Morphing */
-        register(PacketMorph.class, ClientHandlerMorph.class, Side.CLIENT);
-        register(PacketMorph.class, ServerHandlerMorph.class, Side.SERVER);
-        register(PacketMorphPlayer.class, ClientHandlerMorphPlayer.class, Side.CLIENT);
 
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);

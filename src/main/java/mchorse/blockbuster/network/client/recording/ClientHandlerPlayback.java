@@ -32,7 +32,7 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketPlayback message)
     {
-        EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
+        EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
 
         if (message.state)
         {

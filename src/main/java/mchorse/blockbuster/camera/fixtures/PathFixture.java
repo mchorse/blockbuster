@@ -3,8 +3,10 @@ package mchorse.blockbuster.camera.fixtures;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
+import mchorse.blockbuster.camera.Interpolations;
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -21,9 +23,36 @@ public class PathFixture extends AbstractFixture
     @Expose
     protected List<Position> points = new ArrayList<Position>();
 
+    protected InterpolationType interpolation = InterpolationType.LINEAR;
+
     public PathFixture(long duration)
     {
         super(duration);
+    }
+
+    public Position getPoint(int index)
+    {
+        if (this.points.size() == 0)
+        {
+            return Position.ZERO;
+        }
+
+        if (index >= this.points.size())
+        {
+            return this.points.get(this.points.size() - 1);
+        }
+
+        if (index < 0)
+        {
+            return this.points.get(0);
+        }
+
+        return this.points.get(index);
+    }
+
+    public boolean hasPoint(int index)
+    {
+        return !this.points.isEmpty() && index >= 0 && index < this.points.size() - 1;
     }
 
     public List<Position> getPoints()
@@ -34,6 +63,21 @@ public class PathFixture extends AbstractFixture
     public void addPoint(Position point)
     {
         this.points.add(point);
+    }
+
+    public void addPoint(Position point, int before)
+    {
+        this.points.add(before, point);
+    }
+
+    public void movePoint(int from, int to)
+    {
+        this.points.add(to, this.points.remove(from));
+    }
+
+    public void editPoint(Position point, int index)
+    {
+        this.points.set(index, point);
     }
 
     public void removePoint(int index)
@@ -50,9 +94,16 @@ public class PathFixture extends AbstractFixture
         }
         else if (args.length == 1)
         {
-            int max = this.points.size() - 1;
+            if (args[0].equals("linear") || args[0].equals("cubic"))
+            {
+                this.interpolation = interpFromString(args[0]);
+            }
+            else
+            {
+                int max = this.points.size() - 1;
 
-            this.points.get(CommandBase.parseInt(args[0], 0, max)).set(player);
+                this.points.get(CommandBase.parseInt(args[0], 0, max)).set(player);
+            }
         }
     }
 
@@ -64,54 +115,64 @@ public class PathFixture extends AbstractFixture
         int length = this.points.size() - 1;
 
         progress += ((float) 1 / this.duration) * partialTicks;
-        progress = MathHelper.clamp_float(progress * (length), 0, length);
+        progress = MathHelper.clamp(progress * length, 0, length);
 
-        int prev = (int) Math.floor(progress);
-        int next = (int) Math.ceil(progress);
+        int index = (int) Math.floor(progress);
 
-        Position prevPos = this.points.get(prev);
-        Position nextPos = this.points.get(next);
+        progress = progress - index;
 
-        progress = progress - prev;
-
-        float x = this.interpolate(prevPos.point.x, nextPos.point.x, progress);
-        float y = this.interpolate(prevPos.point.y, nextPos.point.y, progress);
-        float z = this.interpolate(prevPos.point.z, nextPos.point.z, progress);
-
-        float yaw = this.interpolateYaw(prevPos.angle.yaw, nextPos.angle.yaw, progress);
-        float pitch = this.interpolate(prevPos.angle.pitch, nextPos.angle.pitch, progress);
-        float roll = this.interpolate(prevPos.angle.roll, nextPos.angle.roll, progress);
-        float fov = this.interpolate(prevPos.angle.fov, nextPos.angle.fov, progress);
-
-        pos.point.set(x, y, z);
-        pos.angle.set(yaw, pitch, roll, fov);
-    }
-
-    private float interpolate(float a, float b, float position)
-    {
-        return a + (b - a) * position;
+        this.apply(pos, index, progress);
     }
 
     /**
-     * Special interpolation method for interpolating yaw. The problem with yaw,
-     * is that it may go in the "wrong" direction when having, for example,
-     * -170 (as a) and 170 (as b) degress or other way around (170 and -170).
+     * Apply interpolation and stuff
      *
-     * This interpolation method fixes this problem.
+     * Basic if-else, because I'm really lazy to write clever implementation,
+     * lol.
      */
-    private float interpolateYaw(float a, float b, float position)
+    private void apply(Position pos, int index, float progress)
     {
-        float diff = b - a;
+        float x, y, z;
+        float yaw, pitch, roll, fov;
 
-        if (diff > 180 || diff < -180)
+        if (this.interpolation == null)
         {
-            diff = Math.copySign(360 - Math.abs(diff), -diff);
-            float value = a + diff * position;
-
-            return value > 180 ? -(360 - value) : (value < -180 ? 360 + value : value);
+            this.interpolation = InterpolationType.LINEAR;
         }
 
-        return a + (b - a) * position;
+        if (this.interpolation.equals(InterpolationType.CUBIC))
+        {
+            Position p0 = this.getPoint(index - 1);
+            Position p1 = this.getPoint(index);
+            Position p2 = this.getPoint(index + 1);
+            Position p3 = this.getPoint(index + 2);
+
+            x = (float) Interpolations.cubicHermite(p0.point.x, p1.point.x, p2.point.x, p3.point.x, progress);
+            y = (float) Interpolations.cubicHermite(p0.point.y, p1.point.y, p2.point.y, p3.point.y, progress);
+            z = (float) Interpolations.cubicHermite(p0.point.z, p1.point.z, p2.point.z, p3.point.z, progress);
+
+            yaw = Interpolations.cubicYaw(p0.angle.yaw, p1.angle.yaw, p2.angle.yaw, p3.angle.yaw, progress);
+            pitch = Interpolations.cubic(p0.angle.pitch, p1.angle.pitch, p2.angle.pitch, p3.angle.pitch, progress);
+            roll = Interpolations.cubic(p0.angle.roll, p1.angle.roll, p2.angle.roll, p3.angle.roll, progress);
+            fov = Interpolations.cubic(p0.angle.fov, p1.angle.fov, p2.angle.fov, p3.angle.fov, progress);
+        }
+        else
+        {
+            Position prevPos = this.getPoint(index);
+            Position nextPos = this.getPoint(index + 1);
+
+            x = Interpolations.lerp(prevPos.point.x, nextPos.point.x, progress);
+            y = Interpolations.lerp(prevPos.point.y, nextPos.point.y, progress);
+            z = Interpolations.lerp(prevPos.point.z, nextPos.point.z, progress);
+
+            yaw = Interpolations.lerpYaw(prevPos.angle.yaw, nextPos.angle.yaw, progress);
+            pitch = Interpolations.lerp(prevPos.angle.pitch, nextPos.angle.pitch, progress);
+            roll = Interpolations.lerp(prevPos.angle.roll, nextPos.angle.roll, progress);
+            fov = Interpolations.lerp(prevPos.angle.fov, nextPos.angle.fov, progress);
+        }
+
+        pos.point.set(x, y, z);
+        pos.angle.set(yaw, pitch, roll, fov);
     }
 
     /* Save/load methods */
@@ -120,5 +181,30 @@ public class PathFixture extends AbstractFixture
     public byte getType()
     {
         return AbstractFixture.PATH;
+    }
+
+    @Override
+    public void toJSON(JsonObject object)
+    {
+        object.addProperty("interpolation", this.interpolation.equals(InterpolationType.LINEAR) ? "linear" : "cubic");
+    }
+
+    @Override
+    public void fromJSON(JsonObject object)
+    {
+        if (object.has("interpolation"))
+        {
+            this.interpolation = interpFromString(object.get("interpolation").getAsString());
+        }
+    }
+
+    public static InterpolationType interpFromString(String string)
+    {
+        return string.equals("linear") ? InterpolationType.LINEAR : InterpolationType.CUBIC;
+    }
+
+    public static enum InterpolationType
+    {
+        LINEAR, CUBIC;
     }
 }

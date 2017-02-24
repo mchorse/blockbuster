@@ -24,13 +24,13 @@ import net.minecraft.util.math.BlockPos;
 public class CommandDirector extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "director";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender)
+    public String getUsage(ICommandSender icommandsender)
     {
         return "blockbuster.commands.director";
     }
@@ -46,7 +46,7 @@ public class CommandDirector extends CommandBase
     {
         if (args.length < 4)
         {
-            throw new WrongUsageException(this.getCommandUsage(null));
+            throw new WrongUsageException(this.getUsage(null));
         }
 
         String action = args[0];
@@ -89,6 +89,10 @@ public class CommandDirector extends CommandBase
             boolean isPlaying = director.togglePlayback();
             L10n.success(sender, isPlaying ? play : stop, args[1], args[2], args[3]);
         }
+        else if (action.equals("spawn") && args.length > 4)
+        {
+            director.spawn(CommandBase.parseInt(args[4]));
+        }
     }
 
     /**
@@ -107,13 +111,13 @@ public class CommandDirector extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle");
+            return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle", "spawn");
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }

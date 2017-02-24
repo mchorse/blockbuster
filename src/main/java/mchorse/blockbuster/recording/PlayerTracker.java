@@ -72,7 +72,7 @@ public class PlayerTracker
      */
     private boolean trackItemToSlot(ItemStack item, int slot)
     {
-        if (!item.func_190926_b())
+        if (!item.isEmpty())
         {
             int id = Item.getIdFromItem(item.getItem());
 

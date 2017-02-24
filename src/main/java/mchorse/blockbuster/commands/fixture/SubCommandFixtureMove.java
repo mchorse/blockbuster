@@ -16,13 +16,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandFixtureMove extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "move";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.fixture.move";
     }
@@ -32,7 +32,7 @@ public class SubCommandFixtureMove extends CommandBase
     {
         if (args.length < 2)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         CommandCamera.getProfile().move(CommandBase.parseInt(args[0]), CommandBase.parseInt(args[1]));

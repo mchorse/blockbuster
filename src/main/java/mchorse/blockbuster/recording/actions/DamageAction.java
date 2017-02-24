@@ -1,9 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -35,7 +31,7 @@ public class DamageAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        actor.attackEntityFrom(DamageSource.outOfWorld, this.damage);
+        actor.attackEntityFrom(DamageSource.OUT_OF_WORLD, this.damage);
     }
 
     @Override
@@ -48,17 +44,5 @@ public class DamageAction extends Action
     public void toNBT(NBTTagCompound tag)
     {
         tag.setFloat("Damage", this.damage);
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.damage = in.readFloat();
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        out.writeFloat(this.damage);
     }
 }

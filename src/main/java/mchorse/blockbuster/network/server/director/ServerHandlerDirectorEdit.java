@@ -12,7 +12,7 @@ public class ServerHandlerDirectorEdit extends ServerMessageHandler<PacketDirect
     @Override
     public void run(EntityPlayerMP player, PacketDirectorEdit message)
     {
-        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
+        TileEntityDirector tile = ((TileEntityDirector) player.world.getTileEntity(message.pos));
 
         tile.edit(message.index, message.replay);
 

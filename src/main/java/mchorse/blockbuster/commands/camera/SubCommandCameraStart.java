@@ -15,13 +15,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandCameraStart extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "start";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.start";
     }

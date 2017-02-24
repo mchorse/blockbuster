@@ -18,13 +18,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandFixtureDuration extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "duration";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.fixture.duration";
     }

@@ -29,7 +29,7 @@ public abstract class ClientMessageHandler<T extends IMessage> extends AbstractM
             @Override
             public void run()
             {
-                ClientMessageHandler.this.run(Minecraft.getMinecraft().thePlayer, message);
+                ClientMessageHandler.this.run(Minecraft.getMinecraft().player, message);
             }
         });
 

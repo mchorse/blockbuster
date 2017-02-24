@@ -27,6 +27,6 @@ public class BreakBlockAction extends InteractBlockAction
     @Override
     public void apply(EntityActor actor)
     {
-        actor.worldObj.destroyBlock(this.pos, false);
+        actor.world.destroyBlock(this.pos, false);
     }
 }

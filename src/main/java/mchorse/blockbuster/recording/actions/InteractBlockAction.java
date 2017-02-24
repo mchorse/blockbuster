@@ -1,9 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
@@ -42,7 +38,7 @@ public class InteractBlockAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        IBlockState state = actor.worldObj.getBlockState(this.pos);
+        IBlockState state = actor.world.getBlockState(this.pos);
 
         /* Black listed block */
         if (state.getBlock() instanceof BlockDirector)
@@ -58,21 +54,7 @@ public class InteractBlockAction extends Action
         actor.fakePlayer.rotationYaw = frame.yaw;
         actor.fakePlayer.rotationPitch = frame.pitch;
 
-        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.pos = new BlockPos(in.readInt(), in.readInt(), in.readInt());
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        out.writeInt(this.pos.getX());
-        out.writeInt(this.pos.getY());
-        out.writeInt(this.pos.getZ());
+        state.getBlock().onBlockActivated(actor.world, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

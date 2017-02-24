@@ -66,7 +66,7 @@ public class ProfileRunner
         {
             if (Blockbuster.proxy.config.camera_spectator)
             {
-                this.mc.thePlayer.sendChatMessage("/gamemode 3");
+                this.mc.player.sendChatMessage("/gamemode 3");
             }
 
             this.fov = this.mc.gameSettings.fovSetting;
@@ -84,7 +84,7 @@ public class ProfileRunner
         {
             if (Blockbuster.proxy.config.camera_spectator)
             {
-                this.mc.thePlayer.sendChatMessage("/gamemode 1");
+                this.mc.player.sendChatMessage("/gamemode 1");
             }
 
             this.mc.gameSettings.fovSetting = this.fov;
@@ -116,7 +116,7 @@ public class ProfileRunner
         {
             this.profile.applyProfile(progress, event.renderTickTime, this.position);
 
-            EntityPlayer player = this.mc.thePlayer;
+            EntityPlayer player = this.mc.player;
             Point point = this.position.point;
             Angle angle = this.position.angle;
 
@@ -139,7 +139,7 @@ public class ProfileRunner
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-        if (event.side == Side.CLIENT && event.phase == Phase.START && event.player == this.mc.thePlayer)
+        if (event.side == Side.CLIENT && event.phase == Phase.START && event.player == this.mc.player)
         {
             this.ticks++;
         }

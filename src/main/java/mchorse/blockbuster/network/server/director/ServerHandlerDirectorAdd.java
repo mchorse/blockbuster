@@ -12,7 +12,7 @@ public class ServerHandlerDirectorAdd extends ServerMessageHandler<PacketDirecto
     @Override
     public void run(EntityPlayerMP player, PacketDirectorAdd message)
     {
-        TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
+        TileEntityDirector tile = ((TileEntityDirector) player.world.getTileEntity(message.pos));
 
         tile.add(message.id);
         Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);

@@ -22,7 +22,7 @@ public class CommandModel extends SubCommandBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "model";
     }

@@ -44,7 +44,7 @@ public class Angle
         yaw = yaw > 180 ? -(360 - yaw) : yaw;
 
         /* Clamp pitch */
-        pitch = MathHelper.clamp_float(pitch, -90, 90);
+        pitch = MathHelper.clamp(pitch, -90, 90);
 
         this.yaw = yaw;
         this.pitch = pitch;

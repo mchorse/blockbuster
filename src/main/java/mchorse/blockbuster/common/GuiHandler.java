@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler
      */
     public static void open(EntityPlayer player, int ID, int x, int y, int z)
     {
-        player.openGui(Blockbuster.instance, ID, player.worldObj, x, y, z);
+        player.openGui(Blockbuster.instance, ID, player.world, x, y, z);
     }
 
     /**

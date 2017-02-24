@@ -16,13 +16,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandCameraDefault extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "default";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.default";
     }

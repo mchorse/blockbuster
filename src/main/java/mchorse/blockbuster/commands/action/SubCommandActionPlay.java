@@ -20,13 +20,13 @@ import net.minecraft.world.World;
 public class SubCommandActionPlay extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "play";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.play";
     }
@@ -36,13 +36,13 @@ public class SubCommandActionPlay extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         World world = sender.getEntityWorld();
         EntityActor actor = CommandAction.actorFromArgs(args, world);
 
         CommonProxy.manager.startPlayback(args[0], actor, Mode.BOTH, true, true);
-        world.spawnEntityInWorld(actor);
+        world.spawnEntity(actor);
     }
 }

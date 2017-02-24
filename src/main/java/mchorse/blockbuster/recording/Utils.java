@@ -52,13 +52,13 @@ public class Utils
     {
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
-        for (String username : players.getAllUsernames())
+        for (String username : players.getOnlinePlayerNames())
         {
             EntityPlayerMP player = players.getPlayerByUsername(username);
 
             if (player != null)
             {
-                player.addChatMessage(message);
+                player.sendMessage(message);
             }
         }
     }
@@ -72,7 +72,7 @@ public class Utils
     {
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
-        for (String username : players.getAllUsernames())
+        for (String username : players.getOnlinePlayerNames())
         {
             EntityPlayerMP player = players.getPlayerByUsername(username);
 
@@ -92,7 +92,7 @@ public class Utils
     {
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
-        for (String username : players.getAllUsernames())
+        for (String username : players.getOnlinePlayerNames())
         {
             EntityPlayerMP player = players.getPlayerByUsername(username);
 
@@ -222,7 +222,7 @@ public class Utils
         PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
         String filename = record.filename;
 
-        for (String username : players.getAllUsernames())
+        for (String username : players.getOnlinePlayerNames())
         {
             EntityPlayerMP player = players.getPlayerByUsername(username);
 

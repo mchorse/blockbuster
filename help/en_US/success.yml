@@ -1,8 +1,4 @@
 blockbuster.success:
-    morph:
-        enable: {f}You morphed into %s{f} model.
-        disable: {f}You've been demorphed.
-    
     director:
         play: {f}Director block at (%s{f}, %s{f}, %s{f}) has started playing!
         stop: {f}Director block at (%s{f}, %s{f}, %s{f}) has stopped!

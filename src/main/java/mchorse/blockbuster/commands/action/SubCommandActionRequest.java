@@ -15,13 +15,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandActionRequest extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "request";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.action.request";
     }
@@ -31,7 +31,7 @@ public class SubCommandActionRequest extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         Utils.sendRecord(args[0], getCommandSenderAsPlayer(sender));

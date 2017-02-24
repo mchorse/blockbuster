@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.gui.elements.GuiReplay;
 import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
@@ -140,7 +141,7 @@ public class GuiDirector extends GuiScreen
         int h = 20;
 
         /* Initiate fields */
-        this.done = new GuiButton(0, this.width - 100 - x, this.height - y - h, 100, h, I18n.format("blockbuster.gui.done"));
+        this.done = new GuiButton(0, this.width - 80 - x, this.height - y - h, 80, h, I18n.format("blockbuster.gui.done"));
         this.reset = new GuiButton(1, x, this.height - y - h, w, h, I18n.format("blockbuster.gui.reset"));
 
         this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
@@ -149,7 +150,7 @@ public class GuiDirector extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.reset);
 
-        this.replays.updateRect(x, y + 45, w, (this.height - y * 3 - h - 45));
+        this.replays.updateRect(-1, y + 45, 122, (this.height - y * 3 - h - 45));
         this.replay.initGui();
     }
 
@@ -209,6 +210,11 @@ public class GuiDirector extends GuiScreen
         this.replay.select(null, -1);
         this.previous = null;
         this.replays.reset();
+    }
+
+    public void duplicate(int index)
+    {
+        Dispatcher.sendToServer(new PacketDirectorDuplicate(this.pos, index));
     }
 
     public void detach(int index)

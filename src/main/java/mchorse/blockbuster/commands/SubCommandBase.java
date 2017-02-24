@@ -51,7 +51,7 @@ public abstract class SubCommandBase extends CommandBase
      */
     protected void add(CommandBase subcommand)
     {
-        this.subcommands.put(subcommand.getCommandName(), subcommand);
+        this.subcommands.put(subcommand.getName(), subcommand);
     }
 
     /**
@@ -64,13 +64,13 @@ public abstract class SubCommandBase extends CommandBase
      *
      */
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         String message = I18n.format(this.getHelp()) + "\n\n";
 
         for (CommandBase command : this.subcommands.values())
         {
-            message += I18n.format(command.getCommandUsage(sender)).split("\n")[0] + "\n";
+            message += I18n.format(command.getUsage(sender)).split("\n")[0] + "\n";
         }
 
         return message.trim();
@@ -86,14 +86,14 @@ public abstract class SubCommandBase extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         CommandBase command = this.subcommands.get(args[0]);
 
         if (args.length == 2 && args[1].equals("-h"))
         {
-            throw new WrongUsageException(command.getCommandUsage(sender));
+            throw new WrongUsageException(command.getUsage(sender));
         }
 
         if (command != null)
@@ -103,7 +103,7 @@ public abstract class SubCommandBase extends CommandBase
             return;
         }
 
-        throw new WrongUsageException(this.getCommandUsage(sender));
+        throw new WrongUsageException(this.getUsage(sender));
     }
 
     /**
@@ -113,11 +113,11 @@ public abstract class SubCommandBase extends CommandBase
      * of sub-commands) or completions of sub-command.
      */
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if (args.length == 0)
         {
-            return super.getTabCompletionOptions(server, sender, args, pos);
+            return super.getTabCompletions(server, sender, args, pos);
         }
 
         Collection<CommandBase> commands = this.subcommands.values();
@@ -128,7 +128,7 @@ public abstract class SubCommandBase extends CommandBase
 
             for (CommandBase command : commands)
             {
-                options.add(command.getCommandName());
+                options.add(command.getName());
             }
 
             return getListOfStringsMatchingLastWord(args, options);
@@ -136,12 +136,12 @@ public abstract class SubCommandBase extends CommandBase
 
         for (CommandBase command : commands)
         {
-            if (command.getCommandName().equals(args[0]))
+            if (command.getName().equals(args[0]))
             {
-                return command.getTabCompletionOptions(server, sender, dropFirstArgument(args), pos);
+                return command.getTabCompletions(server, sender, dropFirstArgument(args), pos);
             }
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }

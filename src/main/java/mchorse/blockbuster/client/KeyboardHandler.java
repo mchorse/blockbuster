@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -36,6 +37,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class KeyboardHandler
 {
+    private Minecraft mc = Minecraft.getMinecraft();
+
     /* Camera profile keys */
     private KeyBinding addIdleFixture;
     private KeyBinding addPathFixture;
@@ -74,6 +77,19 @@ public class KeyboardHandler
     private KeyBinding reduceFov;
     private KeyBinding resetFov;
 
+    /* Camera control */
+    private KeyBinding stepUp;
+    private KeyBinding stepDown;
+    private KeyBinding stepLeft;
+    private KeyBinding stepRight;
+    private KeyBinding stepFront;
+    private KeyBinding stepBack;
+
+    private KeyBinding rotateUp;
+    private KeyBinding rotateDown;
+    private KeyBinding rotateLeft;
+    private KeyBinding rotateRight;
+
     /**
      * Create and register key bindings for mod
      */
@@ -83,6 +99,7 @@ public class KeyboardHandler
         String general = "key.blockbuster.general";
         String fixtures = "key.blockbuster.fixtures.title";
         String camera = "key.blockbuster.camera";
+        String control = "key.blockbuster.control.title";
         String duration = "key.blockbuster.duration.title";
         String path = "key.blockbuster.path.title";
         String misc = "key.blockbuster.misc";
@@ -165,6 +182,31 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.addFov);
         ClientRegistry.registerKeyBinding(this.reduceFov);
         ClientRegistry.registerKeyBinding(this.resetFov);
+
+        /* Camera control */
+        this.stepUp = new KeyBinding("key.blockbuster.control.stepUp", Keyboard.KEY_NONE, control);
+        this.stepDown = new KeyBinding("key.blockbuster.control.stepDown", Keyboard.KEY_NONE, control);
+        this.stepLeft = new KeyBinding("key.blockbuster.control.stepLeft", Keyboard.KEY_NONE, control);
+        this.stepRight = new KeyBinding("key.blockbuster.control.stepRight", Keyboard.KEY_NONE, control);
+        this.stepFront = new KeyBinding("key.blockbuster.control.stepFront", Keyboard.KEY_NONE, control);
+        this.stepBack = new KeyBinding("key.blockbuster.control.stepBack", Keyboard.KEY_NONE, control);
+
+        ClientRegistry.registerKeyBinding(this.stepUp);
+        ClientRegistry.registerKeyBinding(this.stepDown);
+        ClientRegistry.registerKeyBinding(this.stepLeft);
+        ClientRegistry.registerKeyBinding(this.stepRight);
+        ClientRegistry.registerKeyBinding(this.stepFront);
+        ClientRegistry.registerKeyBinding(this.stepBack);
+
+        this.rotateUp = new KeyBinding("key.blockbuster.control.rotateUp", Keyboard.KEY_NONE, control);
+        this.rotateDown = new KeyBinding("key.blockbuster.control.rotateDown", Keyboard.KEY_NONE, control);
+        this.rotateLeft = new KeyBinding("key.blockbuster.control.rotateLeft", Keyboard.KEY_NONE, control);
+        this.rotateRight = new KeyBinding("key.blockbuster.control.rotateRight", Keyboard.KEY_NONE, control);
+
+        ClientRegistry.registerKeyBinding(this.rotateUp);
+        ClientRegistry.registerKeyBinding(this.rotateDown);
+        ClientRegistry.registerKeyBinding(this.rotateLeft);
+        ClientRegistry.registerKeyBinding(this.rotateRight);
     }
 
     @SubscribeEvent
@@ -181,7 +223,7 @@ public class KeyboardHandler
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
 
         try
         {
@@ -315,13 +357,15 @@ public class KeyboardHandler
     }
 
     /**
-     * Client tick event is used for doing stuff like
+     * Client tick event is used for doing stuff like tick based stuff
      */
     @SubscribeEvent
     public void onClientTick(ClientTickEvent event)
     {
+        EntityPlayer player = this.mc.player;
         CameraControl control = CommandCamera.getControl();
 
+        /* Roll key handling */
         if (this.addRoll.isKeyDown())
         {
             control.addRoll(1.0F);
@@ -331,6 +375,7 @@ public class KeyboardHandler
             control.addRoll(-1.0F);
         }
 
+        /* FOV key handling */
         if (this.addFov.isKeyDown())
         {
             Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
@@ -338,6 +383,62 @@ public class KeyboardHandler
         else if (this.reduceFov.isKeyDown())
         {
             Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
+        }
+
+        /* Camera control keys handling */
+        if (player != null)
+        {
+            double factor = Blockbuster.proxy.config.camera_step_factor;
+            double angleFactor = Blockbuster.proxy.config.camera_rotate_factor;
+
+            float yaw = player.rotationYaw;
+            float pitch = player.rotationPitch;
+
+            if (this.rotateUp.isKeyDown() || this.rotateDown.isKeyDown())
+            {
+                pitch += (this.rotateUp.isKeyDown() ? -angleFactor : angleFactor);
+            }
+
+            if (this.rotateLeft.isKeyDown() || this.rotateRight.isKeyDown())
+            {
+                yaw += (this.rotateLeft.isKeyDown() ? -angleFactor : angleFactor);
+            }
+
+            double x = player.posX;
+            double y = player.posY;
+            double z = player.posZ;
+
+            double xx = 0;
+            double yy = 0;
+            double zz = 0;
+
+            if (this.stepUp.isKeyDown() || this.stepDown.isKeyDown())
+            {
+                yy = (this.stepUp.isKeyDown() ? factor : -factor);
+            }
+
+            if (this.stepLeft.isKeyDown() || this.stepRight.isKeyDown())
+            {
+                xx = (this.stepLeft.isKeyDown() ? factor : -factor);
+            }
+
+            if (this.stepFront.isKeyDown() || this.stepBack.isKeyDown())
+            {
+                zz = (this.stepFront.isKeyDown() ? factor : -factor);
+            }
+
+            if (xx != 0 || yy != 0 || zz != 0 || yaw != player.rotationYaw || pitch != player.rotationPitch)
+            {
+                Vec3d vec = new Vec3d(xx, yy, zz);
+
+                vec = vec.rotateYaw(-yaw / 180 * (float) Math.PI);
+
+                x += vec.xCoord;
+                y += vec.yCoord;
+                z += vec.zCoord;
+
+                player.setPositionAndRotation(x, y, z, yaw, pitch);
+            }
         }
     }
 }

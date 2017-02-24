@@ -18,13 +18,13 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandCameraLoad extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "load";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.camera.load";
     }
@@ -34,7 +34,7 @@ public class SubCommandCameraLoad extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         Dispatcher.sendToServer(new PacketLoadCameraProfile(args[0]));
