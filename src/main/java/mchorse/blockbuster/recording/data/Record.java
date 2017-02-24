@@ -13,6 +13,7 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -152,12 +153,12 @@ public class Record
             /* Reseting actor's state */
             actor.setSneaking(false);
             actor.setSprinting(false);
-            actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
-            actor.setItemStackToSlot(EntityEquipmentSlot.CHEST, null);
-            actor.setItemStackToSlot(EntityEquipmentSlot.LEGS, null);
-            actor.setItemStackToSlot(EntityEquipmentSlot.FEET, null);
-            actor.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
-            actor.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+            actor.setItemStackToSlot(EntityEquipmentSlot.CHEST, ItemStack.EMPTY);
+            actor.setItemStackToSlot(EntityEquipmentSlot.LEGS, ItemStack.EMPTY);
+            actor.setItemStackToSlot(EntityEquipmentSlot.FEET, ItemStack.EMPTY);
+            actor.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            actor.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, ItemStack.EMPTY);
         }
     }
 

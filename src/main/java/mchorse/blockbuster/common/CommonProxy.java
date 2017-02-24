@@ -108,7 +108,7 @@ public class CommonProxy
         GameRegistry.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         /* Entities */
-        this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster", "Actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
+        this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");

@@ -32,7 +32,7 @@ public class BlockbusterFactory implements IMorphFactory
     public void register(MorphManager manager)
     {
         /* Blacklist actors */
-        manager.blacklist.add("blockbuster.Actor");
+        manager.blacklist.add("blockbuster:actor");
 
         this.registerModels();
     }
