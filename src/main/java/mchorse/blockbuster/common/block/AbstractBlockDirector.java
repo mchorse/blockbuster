@@ -57,7 +57,8 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
         super(Material.ROCK);
         this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
         this.setCreativeTab(Blockbuster.blockbusterTab);
-        this.setHardness(8);
+        this.setBlockUnbreakable();
+        this.setResistance(6000000.0F);
     }
 
     @Override
