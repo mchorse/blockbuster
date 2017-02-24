@@ -37,7 +37,7 @@ public class CommandAction extends Action
     @Override
     public byte getType()
     {
-        return 16;
+        return Action.COMMAND;
     }
 
     @Override
