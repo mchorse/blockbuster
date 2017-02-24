@@ -73,9 +73,9 @@ public class BlockbusterFactory implements IMorphFactory
 
     @Override
     @SideOnly(Side.CLIENT)
-    public String displayNameForMorph(String morphName)
+    public String displayNameForMorph(AbstractMorph morph)
     {
-        String[] splits = morphName.split("\\.");
+        String[] splits = morph.name.split("\\.");
 
         if (splits.length >= 2 && splits[0].equals("blockbuster") && this.morphs.containsKey(splits[1]))
         {
