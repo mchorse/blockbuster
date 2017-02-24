@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-VERSION=1.4.6-1.9.4
-=======
-VERSION=1.4.7-1.10.2
->>>>>>> dev
+VERSION=1.4.7-1.9.4
 MODS_DIR=~/Library/Application\ Support/minecraft/mods/
 
 build_mod: copy_assets build_lang
