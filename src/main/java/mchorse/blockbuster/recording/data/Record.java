@@ -11,6 +11,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,6 +39,11 @@ public class Record
     public String filename = "";
 
     /**
+     * Version of this record
+     */
+    public short version = SIGNATURE;
+
+    /**
      * Delay between recording frames
      */
     public int delay = 1;
@@ -55,6 +62,11 @@ public class Record
      * Unload timer. Used only on server side.
      */
     public int unload;
+
+    /**
+     * Whether this record has changed elements
+     */
+    public boolean dirty;
 
     public Record(String filename)
     {
@@ -86,7 +98,7 @@ public class Record
      */
     public void applyFrame(int tick, EntityActor actor, boolean force)
     {
-        if (tick > this.frames.size())
+        if (tick >= this.frames.size())
         {
             return;
         }
@@ -95,10 +107,12 @@ public class Record
 
         if (tick != 0)
         {
+            Frame prev = this.frames.get(tick - 1);
+
             /* Override fall distance, apparently fallDistance gets reset
              * faster than RecordRecorder can record both onGround and
              * fallDistance being correct for player, so we just hack */
-            actor.fallDistance = this.frames.get(tick - 1).fallDistance;
+            actor.fallDistance = prev.fallDistance;
         }
     }
 
@@ -108,7 +122,7 @@ public class Record
      */
     public void applyAction(int tick, EntityActor actor)
     {
-        if (tick > this.actions.size())
+        if (tick >= this.actions.size())
         {
             return;
         }
@@ -134,6 +148,16 @@ public class Record
         if (actor.getHealth() > 0.0F)
         {
             this.applyFrame(0, actor, true);
+
+            /* Reseting actor's state */
+            actor.setSneaking(false);
+            actor.setSprinting(false);
+            actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.CHEST, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.LEGS, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.FEET, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+            actor.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, null);
         }
     }
 
@@ -169,7 +193,12 @@ public class Record
 
             if (frame != null)
             {
-                actor.getRidingEntity().setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+                Entity mount = actor.getRidingEntity();
+
+                if (mount != null && !(mount instanceof EntityActor))
+                {
+                    mount.setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
+                }
             }
         }
     }
@@ -232,16 +261,11 @@ public class Record
      * This method basically checks if the given file has appropriate short
      * signature, and reads all frames and actions from the file.
      */
-    public void load(File file) throws IOException, Exception
+    public void load(File file) throws IOException
     {
         NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
-        short version = compound.getShort("Version");
 
-        if (version != SIGNATURE)
-        {
-            throw new Exception("Given file doesn't have appropriate signature!");
-        }
-
+        this.version = compound.getShort("Version");
         this.delay = compound.getByte("Delay");
 
         NBTTagList frames = (NBTTagList) compound.getTag("Frames");
@@ -256,10 +280,20 @@ public class Record
 
             if (actionTag != null)
             {
-                Action action = Action.fromType(actionTag.getByte("Type"));
-                action.fromNBT(actionTag);
+                byte type = actionTag.getByte("Type");
 
-                this.actions.add(action);
+                try
+                {
+                    Action action = Action.fromType(type);
+                    action.fromNBT(actionTag);
+
+                    this.actions.add(action);
+                }
+                catch (Exception e)
+                {
+                    System.out.println("Failed to load an action at frame " + i + " of type " + type);
+                    e.printStackTrace();
+                }
             }
             else
             {

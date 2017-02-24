@@ -3,24 +3,21 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import mchorse.blockbuster.capabilities.morphing.IMorphing;
-import mchorse.blockbuster.capabilities.morphing.Morphing;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketMorph;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Director tile entity
  *
- * Used to store actors and manipulate block isPlaying state. Not really sure
- * if it's the best way to implement activation of the redstone (See update
- * method for more information).
+ * Used to store actors and manipulate block isPlaying state. Not really sure if
+ * it's the best way to implement activation of the redstone (See update method
+ * for more information).
  */
 public class TileEntityDirector extends AbstractTileEntityDirector
 {
@@ -38,14 +35,29 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     /**
-     * The same thing as startPlayback, but don't play the actor that is
-     * passed in the arguments (because he might be recorded by the player)
+     * The same thing as startPlayback, but don't play the actor that is passed
+     * in the arguments (because he might be recorded by the player)
      */
     public void startPlayback(EntityActor exception)
     {
         if (this.worldObj.isRemote || this.isPlaying())
         {
             return;
+        }
+
+        if (this.replays.isEmpty())
+        {
+            return;
+        }
+
+        for (Replay replay : this.replays)
+        {
+            if (replay.id.isEmpty())
+            {
+                Utils.broadcastError("director.empty_filename");
+
+                return;
+            }
         }
 
         this.collectActors();
@@ -74,8 +86,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     }
 
     /**
-     * The same thing as startPlayback, but don't play the replay that is
-     * passed in the arguments (because he might be recorded by the player)
+     * The same thing as startPlayback, but don't play the replay that is passed
+     * in the arguments (because he might be recorded by the player)
      */
     public void startPlayback(String exception)
     {
@@ -175,10 +187,64 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (actor == exception) continue;
 
             actor.stopPlaying();
+            actor.noClip = false;
         }
 
         this.actors.clear();
         this.playBlock(false);
+    }
+
+    /**
+     * Spawns actors at given tick in idle mode. This is pretty useful for
+     * positioning cameras for exact positions.
+     */
+    @Override
+    public void spawn(int tick)
+    {
+        if (this.replays.isEmpty())
+        {
+            return;
+        }
+
+        if (!this.actors.isEmpty())
+        {
+            this.stopPlayback();
+        }
+
+        for (Replay replay : this.replays)
+        {
+            if (replay.id.isEmpty())
+            {
+                Utils.broadcastError("director.empty_filename");
+
+                return;
+            }
+        }
+
+        this.collectActors();
+
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        {
+            Replay replay = entry.getKey();
+            EntityActor actor = entry.getValue();
+            boolean notAttached = replay.actor == null;
+
+            actor.startPlaying(replay.id, notAttached);
+
+            if (actor.playback != null)
+            {
+                actor.playback.playing = false;
+                actor.playback.record.applyFrame(tick, actor, true);
+                actor.noClip = true;
+            }
+
+            if (notAttached)
+            {
+                this.worldObj.spawnEntityInWorld(actor);
+            }
+        }
+
+        this.playBlock(true);
     }
 
     /**
@@ -208,14 +274,58 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     /**
      * Start recording player
      */
-    public void startRecording(EntityActor actor, EntityPlayer player)
+    public void startRecording(final EntityActor actor, final EntityPlayer player)
     {
-        Replay replay = this.byActor(actor);
+        final Replay replay = this.byActor(actor);
 
         if (replay != null)
         {
-            this.applyReplay(replay, player);
-            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true);
+            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (!CommonProxy.manager.recorders.containsKey(player))
+                    {
+                        TileEntityDirector.this.startPlayback(actor);
+                    }
+                    else
+                    {
+                        TileEntityDirector.this.stopPlayback(actor);
+                    }
+
+                    TileEntityDirector.this.applyReplay(replay, player);
+                }
+            });
+        }
+    }
+
+    /**
+     * Start recording player
+     */
+    public void startRecording(final String filename, final EntityPlayer player)
+    {
+        final Replay replay = this.byFile(filename);
+
+        if (replay != null)
+        {
+            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (!CommonProxy.manager.recorders.containsKey(player))
+                    {
+                        TileEntityDirector.this.startPlayback(filename);
+                    }
+                    else
+                    {
+                        TileEntityDirector.this.stopPlayback();
+                    }
+
+                    TileEntityDirector.this.applyReplay(replay, player);
+                }
+            });
         }
     }
 
@@ -226,12 +336,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     {
         if (replay == null) return;
 
-        IMorphing cap = Morphing.get(player);
-
-        cap.setModel(replay.model);
-        cap.setSkin(replay.skin);
-
-        Dispatcher.sendTo(new PacketMorph(replay.model, replay.skin), (EntityPlayerMP) player);
+        MorphAPI.morph(player, replay.morph, true);
     }
 
     /**

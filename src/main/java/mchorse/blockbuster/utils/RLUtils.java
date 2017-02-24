@@ -22,9 +22,9 @@ public class RLUtils
 
         if (skin.indexOf(":") == -1)
         {
-            String suffix = (skin.indexOf("/") == -1 ? model + "/" : "");
+            String prefix = (skin.indexOf("/") == -1 ? model + "/" : "");
 
-            return new ResourceLocation("blockbuster.actors", suffix + skin);
+            return new ResourceLocation("blockbuster.actors", prefix + skin);
         }
 
         return new ResourceLocation(skin);

@@ -7,6 +7,8 @@
         "mcversion": "${mcversion}",
         "url": "https://github.com/mchorse/blockbuster",
         "authorList": ["mchorse"],
-        "credits": "This mod is available thanks to Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, and EchebKeso's Mocap mod"
+        "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345 and The Minebox for feature suggesting and testing!",
+        "requiredMods": ["metamorph"],
+        "dependencies": ["metamorph"]
     }
 ]

@@ -6,10 +6,11 @@ import com.google.common.base.Objects;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster_pack.MorphUtils;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
@@ -26,8 +27,7 @@ public class Replay
     public boolean invincible = false;
 
     /* Visual data */
-    public String model = "";
-    public ResourceLocation skin;
+    public AbstractMorph morph;
     public boolean invisible = false;
 
     /* UUID */
@@ -49,8 +49,11 @@ public class Replay
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
 
-        actor.model = this.model;
-        actor.skin = this.skin;
+        if (this.morph != null)
+        {
+            actor.morph = this.morph.clone();
+        }
+
         actor.invisible = this.invisible;
     }
 
@@ -62,10 +65,12 @@ public class Replay
         this.name = actor.getCustomNameTag();
         this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
 
-        this.model = actor.model;
-        this.skin = actor.skin;
-        this.invisible = actor.invisible;
+        if (actor.morph != null && this.morph == null)
+        {
+            this.morph = actor.getMorph().clone();
+        }
 
+        this.invisible = actor.invisible;
         this.actor = actor.getUniqueID();
     }
 
@@ -77,8 +82,8 @@ public class Replay
         tag.setString("Name", this.name);
         tag.setBoolean("Invincible", this.invincible);
 
-        tag.setString("Model", this.model);
-        tag.setString("Skin", this.skin == null ? "" : this.skin.toString());
+        MorphUtils.morphToNBT(tag, this.morph);
+
         tag.setBoolean("Invisible", this.invisible);
 
         if (this.actor != null)
@@ -93,8 +98,8 @@ public class Replay
         this.name = tag.getString("Name");
         this.invincible = tag.getBoolean("Invincible");
 
-        this.model = tag.getString("Model");
-        this.skin = RLUtils.fromString(tag.getString("Skin"), this.model);
+        this.morph = MorphUtils.morphFromNBT(tag);
+
         this.invisible = tag.getBoolean("Invisible");
 
         String uuid = tag.getString("UUID");
@@ -112,11 +117,17 @@ public class Replay
         ByteBufUtils.writeUTF8String(buf, this.id);
         ByteBufUtils.writeUTF8String(buf, this.name);
         buf.writeBoolean(this.invincible);
+        buf.writeBoolean(this.morph != null);
 
-        ByteBufUtils.writeUTF8String(buf, this.model);
-        ByteBufUtils.writeUTF8String(buf, this.skin == null ? "" : this.skin.toString());
+        if (this.morph != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            this.morph.toNBT(tag);
+
+            ByteBufUtils.writeTag(buf, tag);
+        }
+
         buf.writeBoolean(this.invisible);
-
         buf.writeBoolean(this.actor != null);
 
         if (this.actor != null)
@@ -131,8 +142,11 @@ public class Replay
         this.name = ByteBufUtils.readUTF8String(buf);
         this.invincible = buf.readBoolean();
 
-        this.model = ByteBufUtils.readUTF8String(buf);
-        this.skin = RLUtils.fromString(ByteBufUtils.readUTF8String(buf), this.model);
+        if (buf.readBoolean())
+        {
+            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
+        }
+
         this.invisible = buf.readBoolean();
 
         if (buf.readBoolean())
@@ -142,8 +156,40 @@ public class Replay
     }
 
     @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof Replay)
+        {
+            Replay replay = (Replay) obj;
+
+            return Objects.equal(replay.id, this.id) && Objects.equal(replay.name, this.name) && replay.invincible == this.invincible && replay.invisible == this.invisible && Objects.equal(replay.morph, this.morph);
+        }
+
+        return super.equals(obj);
+    }
+
+    @Override
+    public Replay clone()
+    {
+        Replay replay = new Replay();
+
+        replay.id = this.id;
+        replay.name = this.name;
+        replay.invincible = this.invincible;
+
+        replay.invisible = this.invisible;
+
+        if (this.morph != null)
+        {
+            replay.morph = this.morph.clone();
+        }
+
+        return replay;
+    }
+
+    @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("model", this.model).add("skin", this.skin).add("invisible", this.invisible).toString();
+        return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("morph", this.morph).add("invisible", this.invisible).toString();
     }
 }

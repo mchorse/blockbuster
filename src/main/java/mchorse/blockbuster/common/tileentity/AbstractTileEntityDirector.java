@@ -140,7 +140,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         for (Replay replay : this.replays)
         {
             boolean hasActor = replay.actor != null && replay.actor.equals(actor.getUniqueID());
-            boolean hasName = replay.name.equals(actor.getCustomNameTag());
+            boolean hasName = actor.hasCustomName() ? replay.name.equals(actor.getCustomNameTag()) : false;
 
             if (hasActor)
             {
@@ -167,6 +167,14 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
         }
 
         return false;
+    }
+
+    /**
+     * Duplicate a replay by given index
+     */
+    public void duplicate(int index)
+    {
+        this.replays.add(this.replays.get(index).clone());
     }
 
     /**
@@ -207,6 +215,11 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      * Stop scene's playback
      */
     public abstract void stopPlayback();
+
+    /**
+     * Spawn actors at given tick
+     */
+    public abstract void spawn(int tick);
 
     /**
      * Toggle scene's playback
@@ -267,7 +280,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
             {
                 Replay replay = new Replay(actor);
                 replay.id = actor._filename;
-                replay.model = "steve";
 
                 this.replays.add(replay);
                 it.remove();

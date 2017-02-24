@@ -1,24 +1,11 @@
 package mchorse.blockbuster.client.render;
 
-import java.util.Map;
-
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.client.render.layers.LayerActorArmor;
-import mchorse.blockbuster.client.render.layers.LayerElytra;
-import mchorse.blockbuster.client.render.layers.LayerHeldItem;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.utils.EntityUtils;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.GlStateManager;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 /**
@@ -32,26 +19,13 @@ public class RenderActor extends RenderLiving<EntityActor>
      * Default texture of the renderer
      */
     private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
-    private static final String defaultModel = "steve";
 
     /**
-     * Initiate render actor with set of layers.
-     *
-     * - Layer elytra is responsible for rendering elytra on the back of the
-     *   custom model
-     * - Layer held item is responsible for rendering item that selected in
-     *   hot bar and located in off hand slot for every limb that
-     *   has "holding" property
-     * - Layer biped armor is responsible for rendering armor on every limb
-     *   that has "armor" property
+     * Initiate render actor
      */
-    public RenderActor(RenderManager manager, float f)
+    public RenderActor(RenderManager manager, float shadow)
     {
-        super(manager, ModelCustom.MODELS.get(defaultModel), f);
-
-        this.addLayer(new LayerElytra(this));
-        this.addLayer(new LayerHeldItem(this));
-        this.addLayer(new LayerActorArmor(this));
+        super(manager, null, shadow);
     }
 
     /**
@@ -61,175 +35,22 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
-        ResourceLocation skin = entity.skin;
-
-        if (skin != null)
-        {
-            boolean actors = skin.getResourceDomain().equals("blockbuster.actors");
-
-            if (!actors || (actors && ClientProxy.actorPack.resourceExists(skin)))
-            {
-                return skin;
-            }
-        }
-
         return defaultTexture;
     }
 
-    /**
-     * Most important extension! Don't render the name in GUI, that looks
-     * irritating. actor.renderName is switched for awhile to false during GUI
-     * rendering.
-     *
-     * See GuiActorSkin for a reference.
-     */
-    @Override
-    protected boolean canRenderName(EntityActor entity)
-    {
-        return super.canRenderName(entity) && entity.renderName;
-    }
-
-    /**
-     * Another important extension. Assign sneaking property, without it, actor
-     * would look like an idiot who's clipping through the ground for a minute.
-     *
-     * Also, head rotation is interpolated inside of this method, another thing,
-     * yeah previousYaw thing is pretty stupid (the renderer is one for all),
-     * but it works...
-     */
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.shadowOpaque = entity.invisible ? 0.0F : 1.0F;
-
         if (entity.invisible)
         {
             return;
         }
 
-        this.setupModel(entity);
+        AbstractMorph morph = entity.getMorph();
 
-        if (this.mainModel != null)
+        if (morph != null)
         {
-            this.setHands(entity);
-            super.doRender(entity, x, y, z, entityYaw, partialTicks);
-        }
-    }
-
-    /**
-     * Set hands postures
-     */
-    private void setHands(EntityActor actor)
-    {
-        ItemStack rightItem = actor.getHeldItemMainhand();
-        ItemStack leftItem = actor.getHeldItemOffhand();
-
-        ModelBiped.ArmPose right = ModelBiped.ArmPose.EMPTY;
-        ModelBiped.ArmPose left = ModelBiped.ArmPose.EMPTY;
-        ModelCustom model = (ModelCustom) this.mainModel;
-
-        if (rightItem != null)
-        {
-            right = ModelBiped.ArmPose.ITEM;
-
-            if (actor.getItemInUseCount() > 0)
-            {
-                EnumAction enumaction = rightItem.getItemUseAction();
-
-                if (enumaction == EnumAction.BLOCK)
-                {
-                    right = ModelBiped.ArmPose.BLOCK;
-                }
-                else if (enumaction == EnumAction.BOW)
-                {
-                    right = ModelBiped.ArmPose.BOW_AND_ARROW;
-                }
-            }
-        }
-
-        if (leftItem != null)
-        {
-            left = ModelBiped.ArmPose.ITEM;
-
-            if (actor.getItemInUseCount() > 0)
-            {
-                EnumAction enumaction1 = leftItem.getItemUseAction();
-
-                if (enumaction1 == EnumAction.BLOCK)
-                {
-                    left = ModelBiped.ArmPose.BLOCK;
-                }
-            }
-        }
-
-        model.rightPose = right;
-        model.leftPose = left;
-    }
-
-    /**
-     * Setup the model for actor instance.
-     *
-     * This method is responsible for picking the right model and pose based
-     * on actor properties.
-     */
-    protected void setupModel(EntityActor entity)
-    {
-        Map<String, ModelCustom> models = ModelCustom.MODELS;
-
-        String key = models.containsKey(entity.model) ? entity.model : defaultModel;
-        String pose = EntityUtils.poseForEntity(entity);
-
-        ModelCustom model = models.get(key);
-
-        if (model != null)
-        {
-            model.pose = model.model.getPose(pose);
-
-            this.mainModel = model;
-        }
-    }
-
-    /**
-     * Make actor a little bit smaller (so he looked like steve, and not like a
-     * overgrown rodent).
-     */
-    @Override
-    protected void preRenderCallback(EntityActor actor, float partialTickTime)
-    {
-        float f = 0.935F;
-        GlStateManager.scale(f, f, f);
-    }
-
-    /**
-     * Taken from RenderPlayer
-     *
-     * This code is primarily changes the angle of the actor while it's flying
-     * an elytra. You know,
-     */
-    @Override
-    protected void rotateCorpse(EntityActor actor, float pitch, float yaw, float partialTicks)
-    {
-        super.rotateCorpse(actor, pitch, yaw, partialTicks);
-
-        if (actor.isElytraFlying())
-        {
-            float f = actor.getTicksElytraFlying() + partialTicks;
-            float f1 = MathHelper.clamp_float(f * f / 100.0F, 0.0F, 1.0F);
-
-            Vec3d vec3d = actor.getLook(partialTicks);
-
-            double d0 = actor.motionX * actor.motionX + actor.motionZ * actor.motionZ;
-            double d1 = vec3d.xCoord * vec3d.xCoord + vec3d.zCoord * vec3d.zCoord;
-
-            GlStateManager.rotate(f1 * (-90.0F - actor.rotationPitch), 1.0F, 0.0F, 0.0F);
-
-            if (d0 > 0.0D && d1 > 0.0D)
-            {
-                double d2 = (actor.motionX * vec3d.xCoord + actor.motionZ * vec3d.zCoord) / (Math.sqrt(d0) * Math.sqrt(d1));
-                double d3 = actor.motionX * vec3d.zCoord - actor.motionZ * vec3d.xCoord;
-
-                GlStateManager.rotate((float) (Math.signum(d3) * Math.acos(d2)) * 180.0F / (float) Math.PI, 0.0F, 1.0F, 0.0F);
-            }
+            morph.render(entity, x, y, z, entityYaw, partialTicks);
         }
     }
 

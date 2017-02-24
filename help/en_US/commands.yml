@@ -4,14 +4,37 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
+                {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
                 
-                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you could use F3 to determine coordinates).
-        morph: 
-            |
-                {l}{6}/{r}morph {7}<model> <skin>{r}
-                
-                {r}Morphs current player into given {7}<model>{r} with skin named {7}<skin>{r}.
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There's also {7}spawn{r} action which will spawn idle actors on {7}[tick]{r} tick ({7}[tick]{r} argument used only by this action).
+
+        # Record's commands
+        record:
+            help: {r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions.
+            
+            get:
+                |
+                    {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
+                    
+                    {r}Outputs data tag of action found at {7}<tick>{r} in player recording by filename {7}<filename>{r}.
+            
+            info:
+                |
+                    {l}{6}/{r}record {8}info{r} {7}<filename>{r}
+                    
+                    {r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc.
+            
+            set:
+                |
+                    {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r}.
+            
+            search:
+                |
+                    {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
+                    
+                    {r}Searches for actions, optionally limited by {7}[limit]{r}, of given {7}<action_type>{r} and outputs the tick and, optionally output data tag, found in player recording by filename {7}<filename>{r}.
 
         # Model's commands
         model:
@@ -116,6 +139,18 @@ blockbuster:
                     {l}{6}/{r}camera {8}roll{r} {7}[roll]{r}
                     
                     {r}Set or get client's camera {7}[roll]{r} (rotation across {7}Z-axis{r}).
+            
+            rotate:
+                |
+                    {l}{6}/{r}camera {8}rotate{r} {7}[yaw] [pitch]{r}
+                    
+                    {r}Set camera's angle based on absolute or relative values. You can set absolute angle of the camera by specifying plain floating point numbers {6}/camera {8}rotate {7}90 90{r}. Or you can provide a relative value by using {7}+{r} or {7}-{r} signs {6}/camera {8}rotate {7}+0.5 -0.5{r}.
+            
+            step:
+                |
+                    {l}{6}/{r}camera {8}step{r} {7}[x] [y] [z]{r}
+                    
+                    {r}Set camera's position based on absolute or relative values. You can set absolute position of the camera by specifying plain floating point numbers {6}/camera {8}step {7}0 4 0{r}. Or you can provide a relative value by using {7}+{r} or {7}-{r} signs {6}/camera {8}step {7}+0 +0.1 +0{r}. It works similar to {6}/tp{r} command.
 
             fixture:
                 add: 
@@ -139,13 +174,42 @@ blockbuster:
                         {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
                         
                         {r}Set duration in milliseconds to given fixture at given {7}<index>{r}
-                path: 
-                    |
-                        {l}{6}/{r}camera {8}path{r} {7}<fixture_index> [point_index]{r}
-                        
-                        {r}Add a point to path fixture (if {7}[point_index]{r} isn't specified), or remove path point in fixture at index {7}[point_index]{r}.
+                
                 move: 
                     |
                         {l}{6}/{r}camera {8}move{r} {7}<from> <to>{r}
                         
                         {r}Move camera fixture at {7}<from>{r} index to {7}<to>{r} index in the camera profile
+            
+            path: 
+                help: {r}{o}Camera path sub-command{r}. Provides sub-commands for managing path fixture and its points.
+                
+                add:
+                    |
+                        {l}{6}/{r}camera path {8}add{r} {7}<index> [before_point]{r}
+                        
+                        {r}Adds a point in the path fixture at {7}<index>{r} in the end, or before {7}[before_point]{r} point, if specified.
+                
+                edit:
+                    |
+                        {l}{6}/{r}camera path {8}edit{r} {7}<index> <point_index>{r}
+                        
+                        {r}Edit position of a point at index {7}<point_index>{r} in the path fixture at {7}<index>{r}.
+                
+                goto:
+                    |
+                        {l}{6}/{r}camera path {8}goto{r} {7}<index> <point_index>{r}
+                        
+                        {r}Go to position of a point at index {7}<point_index>{r} in the path fixture at {7}<index>{r}.
+                
+                move:
+                    |
+                        {l}{6}/{r}camera path {8}move{r} {7}<index> <from> <to>{r}
+                        
+                        {r}Move a point at index {7}<from>{r} to {7}<to>{r} in the path fixture at {7}<index>{r}.
+                
+                remove:
+                    |
+                        {l}{6}/{r}camera path {8}remove{r} {7}<index> <point_index>{r}
+                        
+                        {r}Remove a point at index {7}<point_index>{r} from the path fixture at {7}<index>{r}.

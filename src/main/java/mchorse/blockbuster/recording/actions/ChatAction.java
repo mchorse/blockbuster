@@ -1,9 +1,5 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
-
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -36,18 +32,6 @@ public class ChatAction extends Action
     public void apply(mchorse.blockbuster.common.entity.EntityActor actor)
     {
         Utils.broadcastMessage(this.message.replace('[', '§'));
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.message = in.readUTF();
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        out.writeUTF(this.message);
     }
 
     @Override

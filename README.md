@@ -7,7 +7,7 @@ Blockbuster (**pun intended**) is a Minecraft mod which lets you create simple
 Minecraft machinimas in single player, without having to recruit and organize a 
 crowd of body actors and cameras.
 
-Blockbuster mod is built on top of Forge 12.18.1.2073 for Minecraft 1.10.2. Blockbuster mod is also provides build for 1.9.4, if it's possible, without changing the code.
+Blockbuster mod is built on top of Forge 12.18.1.2185 for Minecraft 1.10.2. Blockbuster mod is also provides build for 1.9.4, if it's possible, without changing the code.
 
 Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 

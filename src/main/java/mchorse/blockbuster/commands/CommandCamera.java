@@ -5,16 +5,18 @@ import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.commands.camera.SubCommandCameraClear;
 import mchorse.blockbuster.commands.camera.SubCommandCameraDefault;
 import mchorse.blockbuster.commands.camera.SubCommandCameraFOV;
-import mchorse.blockbuster.commands.camera.SubCommandCameraGoto;
 import mchorse.blockbuster.commands.camera.SubCommandCameraLoad;
 import mchorse.blockbuster.commands.camera.SubCommandCameraNew;
 import mchorse.blockbuster.commands.camera.SubCommandCameraRoll;
+import mchorse.blockbuster.commands.camera.SubCommandCameraRotate;
 import mchorse.blockbuster.commands.camera.SubCommandCameraSave;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStart;
+import mchorse.blockbuster.commands.camera.SubCommandCameraStep;
 import mchorse.blockbuster.commands.camera.SubCommandCameraStop;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureAdd;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureDuration;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureEdit;
+import mchorse.blockbuster.commands.fixture.SubCommandFixtureGoto;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureMove;
 import mchorse.blockbuster.commands.fixture.SubCommandFixturePath;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureRemove;
@@ -85,12 +87,13 @@ public class CommandCamera extends SubCommandBase
 
         /* Profile */
         this.add(new SubCommandCameraClear());
-        this.add(new SubCommandCameraGoto());
 
         /* Camera control */
-        this.add(new SubCommandCameraDefault());
+        this.add(new SubCommandCameraStep());
+        this.add(new SubCommandCameraRotate());
         this.add(new SubCommandCameraRoll());
         this.add(new SubCommandCameraFOV());
+        this.add(new SubCommandCameraDefault());
 
         /* Fixture editing */
         this.add(new SubCommandFixtureAdd());
@@ -99,6 +102,7 @@ public class CommandCamera extends SubCommandBase
         this.add(new SubCommandFixtureRemove());
         this.add(new SubCommandFixtureDuration());
         this.add(new SubCommandFixturePath());
+        this.add(new SubCommandFixtureGoto());
     }
 
     @Override

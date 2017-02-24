@@ -5,15 +5,19 @@ blockbuster.config:
         
         load_models_on_login: Send models
         clean_model_downloads: Clean model downloads
+        disable_teleport_playback_button: Disable playback button teleport
+        extra_wubs: Extra Wubs
     
     recording:
         title: Recording
 
+        recording_countdown: Recording countdown
         recording_delay: Recording frame skip
         record_unload_time: Automatic record unload time
         record_unload: Automatic record unloading
         record_sync_rate: Record tick synchronization rate
         record_attack_on_swipe: Attack on swipe
+        record_commands: Record commands
     
     camera:
         title: Camera
@@ -23,6 +27,8 @@ blockbuster.config:
         camera_interpolate_target: Interpolate target fixtures
         camera_interpolate_target_value: Target interpolation value
         camera_spectator: Switch to specator
+        camera_step_factor: Camera step factor
+        camera_rotate_factor: Camera rotate factor
     
     actor:
         title: Actor

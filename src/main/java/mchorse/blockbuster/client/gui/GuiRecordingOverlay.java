@@ -32,9 +32,9 @@ public class GuiRecordingOverlay extends Gui
 
     /* Public API */
 
-    public void setCaption(String caption)
+    public void setCaption(String caption, boolean recording)
     {
-        this.caption = I18n.format("blockbuster.recording", caption);
+        this.caption = recording ? I18n.format("blockbuster.recording", caption) : caption;
     }
 
     public void setVisible(boolean isVisible)
@@ -64,10 +64,6 @@ public class GuiRecordingOverlay extends Gui
 
         GlStateManager.pushAttrib();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableLighting();
-
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
 
         this.drawTexturedModalRect(4, 4, 0, 0, 16, 16);
         font.drawStringWithShadow(this.caption, 22, 8, 0xffffffff);

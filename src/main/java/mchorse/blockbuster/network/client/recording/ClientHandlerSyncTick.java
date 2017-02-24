@@ -5,6 +5,8 @@ import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Client handler synchronize ticks.
@@ -14,6 +16,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketSyncTick message)
     {
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);

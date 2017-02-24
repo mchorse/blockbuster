@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import mchorse.blockbuster.client.gui.utils.TabCompleter;
+import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
 
 /**
@@ -49,7 +50,7 @@ public class GuiCompleterViewer extends GuiScrollPane
     }
 
     @Override
-    protected void drawPane()
+    protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
         List<String> completions = this.completer.getCompletions();
 

@@ -113,7 +113,7 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (player.isSneaking())
+            if (player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
             {
                 player.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 

@@ -34,7 +34,7 @@ public class SubCommandCameraNew extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (args.length < 1 || args[0].isEmpty())
+        if (args.length < 1)
         {
             throw new WrongUsageException(this.getCommandUsage(sender));
         }

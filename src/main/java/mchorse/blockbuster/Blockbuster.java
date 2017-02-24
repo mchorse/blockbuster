@@ -2,6 +2,7 @@ package mchorse.blockbuster;
 
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
+import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.common.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -45,13 +46,13 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *         actors frame-based</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@1.1")
 public class Blockbuster
 {
     /* Mod info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
-    public static final String VERSION = "1.4.6";
+    public static final String VERSION = "1.4.7";
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
     /* Proxies */
@@ -108,6 +109,7 @@ public class Blockbuster
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
+        event.registerServerCommand(new CommandRecord());
     }
 
     @EventHandler

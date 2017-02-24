@@ -2,6 +2,77 @@
 
 Blockbuster's change log.
 
+## Version 1.4.7 (Metamorph integration)
+
+Another patch update. This patch update is what I waited for a long time! This update integrates Blockbuster with Metamorph. This makes Blockbuster able to perform Metamorph's abilities, attacks and abilities as well as to use Metamorph's morphs for actor morphing. From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](https://github.com/mchorse/metamorph).
+
+**Important**: due to integration, the format of custom models and skins was changed, so before trying out this update, make sure to back up your world as it may make all your actors morphless (invisible actors with shadows).
+
+Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **Badr**, **[Tom Soel](https://twitter.com/TomSoel)** and **[Vasily12345](https://www.youtube.com/user/MinecraftLifeSeries)** for beta-testing and suggesting features for this update!
+
+#### General
+
+* Added config options:
+    * Recording countdown (suggested by The Minebox)
+    * Disable teleport to director block with playback (suggested by badr)
+    * Enable command action recording
+    * Camera step and rotation factors for keys
+directions
+* Adapted `MORPH` action to Metamorph's integration
+* Adapted actor and director GUIs to Metamorph's integration
+* Removed `/morph` command and morphing capability from Blockbuster
+* Replaced `Custom Model` and `Skin` fields with morph picker
+* Works with Metamorph `1.1`
+
+#### Actors
+
+* Added default `fred` custom model (4px wide arms with overlays)
+* Flipped texture of **actor configuration** item (thanks to Tom Soel)
+* Increased item pick-up delay (from `10` to `40`)
+* Implemented item pick-up animation (item magnet-like animation)
+* Made actors rideable (sneak + right click is to start record)
+
+#### Camera
+
+* Added `cubic` path fixture interpolation
+* Added keys for more precise player position and angle adjustments (under *Blockbuster Camera Control* category)
+* Added markers for path fixture points
+
+#### Commands
+
+* Added `/camera path` subcommands:
+    * `/camera path add` – add a point in a path fixture
+    * `/camera path edit` – edit a point in a path fixture
+    * `/camera path remove` – remove a point from path fixture
+    * `/camera path move` – move a point to another index in a path fixture
+    * `/camera path goto` – go to a point in a path fixture (like `/camera goto`, but specific for path fixtures)
+* Added `/camera step` which moves player absolutely or relatively
+* Added `/camera rotate` which rotates player absolutely or relatively
+* Added `/director spawn` subcommand (spawns actors in director block at given tick in pause mode)
+* Added `/record` command with four sub-commands:
+    * `/record get` – output the data tag of the action in given player recording and tick
+    * `/record set` – set an action in given player recording at given tick
+    * `/record info` – output the information about given player recording
+    * `/record search` – find actions of specified type in given player recording
+
+#### Director block
+
+* Added a replay thumbnail in **director block** GUI (thanks to badr)
+* Added director block break confirmation (thanks to Tom Soel)
+* Added duplicate button in **director block** GUI (thanks to badr)
+* Added error messages and red labels when `Recording ID` field is empty (thanks to The Minebox)
+* Fixed toggle replay bug in **director block** GUI (thanks to badr)
+* When *registering device* item is attached to director block, using the item will bring up **director block** GUI
+
+#### Recording
+
+* Added `COMMAND` action (which executes command based on actor)
+* Added `MORPH_ACTION` action (which basically executes morph's action)
+* Corrected `ATTACK` action's direction vector
+* Fixed NPE crash at the end of playback with mounts (thanks to Tom Soel)
+
+There were also few bugs during testing which lead to game crash, but they're not listed here, since they were fixed during the release (thus it will be inappropriate add them since they weren't present in previous update).
+
 ## Version 1.4.6
 
 Another patch update. This patch is quite useful and contains one bug fix and two very useful config options. This patch fixes annoying scrolling in **director block** GUI and adds two config options for controlling render and tracking range of the actors, allowing players to render actors from much further distance (up to 1024 blocks away).
@@ -63,7 +134,7 @@ This is a big update that improves the quality of recording. Now you can use [Mi
 
 The player recording code was almost rewritten from scratch and camera code was altered enough to support frame-based playback and synchronization with actor playback. In simple words, now you can capture smooth high-quality machinimas with Minema!
 
-**Tutorial video** for 1.4: 
+**Showcase video** for 1.4: 
 <a href="https://youtu.be/EiNlOLCzc_s?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"> 
     <img src="https://img.youtube.com/vi/EiNlOLCzc_s/0.jpg">
 </a>
@@ -116,7 +187,7 @@ The player recording code was almost rewritten from scratch and camera code was 
 
 This is a big update that brings custom models and morphing into the game. This update adds support for custom models and player morphing. Your machinimas will be much interesting, because now you can record not only players, but also `mobs`, `blocks`, or even your own custom creatures. All thanks to custom models!
 
-**Tutorial video** for 1.3:  
+**Showcase video** for 1.3:  
 <a href="https://youtu.be/WXrBEQZrQ7Q?list=PL6UPd2Tj65nGxteZIdEE_fIga7_HoZJ9w">
     <img src="https://img.youtube.com/vi/WXrBEQZrQ7Q/0.jpg">
 </a>
@@ -146,7 +217,7 @@ editor.
 
 This is a small patch that enhances existing elements of the mod. Nothing new, just enhancements and fixes.
 
-**Tutorial video** for 1.2.1:  
+**Showcase video** for 1.2.1:  
 <a href="https://youtu.be/mDCYX1oRKYk?list=PL6UPd2Tj65nHvEH-_F_brz6LQDdlsCIXJ">
     <img src="https://img.youtube.com/vi/mDCYX1oRKYk/0.jpg">
 </a>
@@ -172,7 +243,7 @@ added. Now, instead of riding cameras every time when you doing screen recording
 you can just press play button and sit down, because you setup once, play camera 
 how many times you want.
 
-**Tutorial video** for 1.2:  
+**Showcase video** for 1.2:  
 <a href="https://youtu.be/gq7sg-njyUk?list=PL6UPd2Tj65nHjnaQqL3gscufRcVDBezPm">
     <img src="https://img.youtube.com/vi/gq7sg-njyUk/0.jpg">
 </a>
@@ -212,7 +283,7 @@ to the actor/director map block) and substituted this with *nice looking* GUIs.
 
 Basically, this release mostly focuses on enhancing GUI and the look of the mod.
 
-**Tutorial video** for 1.1:  
+**Showcase video** for 1.1:  
 <a href="https://www.youtube.com/watch?v=mjvWD9rIO0U">
     <img src="https://img.youtube.com/vi/mjvWD9rIO0U/0.jpg">
 </a>
@@ -245,7 +316,7 @@ First version of Blockbuster mod. This release provides really basic features
 that allows to capture simple Minecraft machinimas and cinematics for 
 adventure maps.
 
-**Tutorial video** for 1.0:  
+**Showcase video** for 1.0:  
 <a href="https://www.youtube.com/watch?v=LPJb49VUUqk">
     <img src="https://img.youtube.com/vi/LPJb49VUUqk/0.jpg">
 </a>

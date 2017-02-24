@@ -6,6 +6,22 @@ key:
         marker: Camera marker
         misc: Blockbuster Misc.
         camera: Blockbuster Camera
+
+        # Camera control
+        control: 
+            title: Blockbuster Camera Control
+            
+            stepUp: Step up
+            stepDown: Step down
+            stepLeft: Step left
+            stepRight: Step right
+            stepFront: Step front
+            stepBack: Step back
+            
+            rotateUp: Rotate up
+            rotateDown: Rotate down
+            rotateLeft: Rotate left
+            rotateRight: Rotate right
         
         # Camera fixtures
         fixtures:

@@ -1,16 +1,11 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Random;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
@@ -59,7 +54,7 @@ public class DropAction extends Action
         item.motionX = (-MathHelper.sin(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
         item.motionZ = (MathHelper.cos(yaw / 180.0F * PI) * MathHelper.cos(pitch / 180.0F * PI) * f);
         item.motionY = (-MathHelper.sin(pitch / 180.0F * PI) * f + 0.1F);
-        item.setDefaultPickupDelay();
+        item.setPickupDelay(40);
 
         f = 0.02F;
         float f1 = rand.nextFloat() * PI * 2.0F * rand.nextFloat();
@@ -69,18 +64,6 @@ public class DropAction extends Action
         item.motionZ += Math.sin(f1) * f;
 
         actor.worldObj.spawnEntityInWorld(item);
-    }
-
-    @Override
-    public void fromBytes(DataInput in) throws IOException
-    {
-        this.itemData = CompressedStreamTools.read((DataInputStream) in);
-    }
-
-    @Override
-    public void toBytes(DataOutput out) throws IOException
-    {
-        CompressedStreamTools.write(this.itemData, out);
     }
 
     @Override

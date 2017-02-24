@@ -12,6 +12,8 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class Position
 {
+    public static final Position ZERO = new Position(0, 0, 0, 0, 0);
+
     @Expose
     public Point point = new Point(0, 0, 0);
     @Expose

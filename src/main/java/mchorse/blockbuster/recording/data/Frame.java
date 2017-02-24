@@ -108,6 +108,11 @@ public class Frame
     {
         Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
 
+        if (mount instanceof EntityActor)
+        {
+            mount = actor;
+        }
+
         boolean isRemote = actor.worldObj.isRemote;
 
         /* This is most important part of the code that makes the recording
@@ -117,13 +122,6 @@ public class Frame
          * reference see renderer classes (they use prev* and lastTick* stuff
          * for interpolation).
          */
-        if (isRemote)
-        {
-            mount.prevPosX = mount.posX;
-            mount.prevPosY = mount.posY;
-            mount.prevPosZ = mount.posZ;
-        }
-
         if (this.isMounted)
         {
             mount.prevRotationYaw = mount.rotationYaw;
