@@ -22,7 +22,7 @@ directions
 * Adapted actor and director GUIs to Metamorph's integration
 * Removed `/morph` command and morphing capability from Blockbuster
 * Replaced `Custom Model` and `Skin` fields with morph picker
-* Works with Metamorph `1.1`
+* Works with [Metamorph](https://minecraft.curseforge.com/projects/metamorph) `1.1.1`
 
 #### Actors
 
@@ -36,7 +36,6 @@ directions
 
 * Added `cubic` path fixture interpolation
 * Added keys for more precise player position and angle adjustments (under *Blockbuster Camera Control* category)
-* Added markers for path fixture points
 
 #### Commands
 
