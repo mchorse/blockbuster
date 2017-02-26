@@ -69,6 +69,11 @@ public class ProfileRunner
                 this.mc.thePlayer.sendChatMessage("/gamemode 3");
             }
 
+            if (Blockbuster.proxy.config.camera_minema)
+            {
+                this.mc.thePlayer.sendChatMessage("/minema enable");
+            }
+
             this.fov = this.mc.gameSettings.fovSetting;
             MinecraftForge.EVENT_BUS.register(this);
         }
@@ -85,6 +90,11 @@ public class ProfileRunner
             if (Blockbuster.proxy.config.camera_spectator)
             {
                 this.mc.thePlayer.sendChatMessage("/gamemode 1");
+            }
+
+            if (Blockbuster.proxy.config.camera_minema)
+            {
+                this.mc.thePlayer.sendChatMessage("/minema disable");
             }
 
             this.mc.gameSettings.fovSetting = this.fov;
