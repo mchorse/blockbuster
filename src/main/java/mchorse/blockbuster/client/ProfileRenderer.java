@@ -149,8 +149,8 @@ public class ProfileRenderer
         {
             for (int j = 0; j < p; j++)
             {
-                path.applyFixture((float) (j + i * p) / (float) (size * p - 1), 0, prev);
-                path.applyFixture((float) (j + i * p + 1) / (float) (size * p - 1), 0, next);
+                path.applyFixture((float) (j + i * p) / (float) (size * p), 0, prev);
+                path.applyFixture((float) (j + i * p + 1) / (float) (size * p), 0, next);
 
                 this.drawLine(color, this.playerX, this.playerY, this.playerZ, prev, next);
             }

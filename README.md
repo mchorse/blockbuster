@@ -5,7 +5,7 @@
 
 Blockbuster (**pun intended**) is a Minecraft mod which lets you create Minecraft machinimas in single player, without having to recruit and/or organize a crowd of body actors and cameras.
 
-Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). It's built on top of Forge 12.18.1.2185 for Minecraft 1.10.2, and provides builds for 1.9.4 and 1.11.2.
+Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. It's built on top of Forge 12.18.1.2185 for Minecraft 1.10.2, and provides builds for 1.9.4 and 1.11.2.
 
 Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
@@ -99,4 +99,4 @@ make build_lang
 
 This should compile YML files into language files. Also, you'll have to refresh Eclipse or your IDE to get the changed file get into the app. Simply open `en_US.lang` in IDE and build the project again.
 
-Also download one of the [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s `-dev` jars (and optionally `-source`, for documentation) published in releases. Every Blockbuster change log specifies the version of Metamorph supported.
+Also download one of the [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s `-dev` jars (and optionally `-source`, for documentation) published in releases. Put the `-dev` mod into `run/mods` (for more information check `depenencies` block in `build.gradle`).
