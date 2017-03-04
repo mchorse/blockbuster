@@ -29,6 +29,7 @@ blockbuster.config:
         camera_spectator: Switch to specator
         camera_step_factor: Camera step factor
         camera_rotate_factor: Camera rotate factor
+        camera_minema: Minema
     
     actor:
         title: Actor

@@ -75,6 +75,11 @@ public class BlockbusterConfig
      */
     public float camera_rotate_factor;
 
+    /**
+     * Activate Minema recording on camera start and deactivate on camera stop
+     */
+    public boolean camera_minema;
+
     /* Recording */
 
     /**
@@ -168,6 +173,7 @@ public class BlockbusterConfig
         this.camera_spectator = this.config.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback", camPrefix + "camera_spectator");
         this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
         this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
+        this.camera_minema = this.config.getBoolean("camera_minema", camera, false, "Activate Minema recording on camera start and deactivate on camera stop", camPrefix + "camera_minema");
 
         /* Recording */
         this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");
