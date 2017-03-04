@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.commands.CommandCamera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -69,9 +70,11 @@ public class ProfileRunner
                 this.mc.thePlayer.sendChatMessage("/gamemode 3");
             }
 
+            /* Currently Minema supports client side /minema command which
+             * record video */
             if (Blockbuster.proxy.config.camera_minema)
             {
-                this.mc.thePlayer.sendChatMessage("/minema enable");
+                ClientCommandHandler.instance.executeCommand(this.mc.thePlayer, "/minema enable");
             }
 
             this.fov = this.mc.gameSettings.fovSetting;
@@ -94,7 +97,7 @@ public class ProfileRunner
 
             if (Blockbuster.proxy.config.camera_minema)
             {
-                this.mc.thePlayer.sendChatMessage("/minema disable");
+                ClientCommandHandler.instance.executeCommand(this.mc.thePlayer, "/minema disable");
             }
 
             this.mc.gameSettings.fovSetting = this.fov;
