@@ -10,6 +10,8 @@ Another patch update. This patch update is what I waited for a long time! This u
 
 Special thanks to **[The Minebox](https://www.youtube.com/user/TheMinebox)**, **Badr**, **[Tom Soel](https://twitter.com/TomSoel)** and **[Vasily12345](https://www.youtube.com/user/MinecraftLifeSeries)** for beta-testing and suggesting features for this update!
 
+<a href="https://youtu.be/EY8pvphu724"><img src="https://img.youtube.com/vi/EY8pvphu724/0.jpg"></a> 
+
 #### General
 
 * Added config options:
