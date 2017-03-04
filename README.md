@@ -32,7 +32,7 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 Feature videos for 1.4. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
 
-<a href="https://youtu.be/EiNlOLCzc_s?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/EiNlOLCzc_s/0.jpg"></a> 
+<a href="https://youtu.be/EY8pvphu724?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/EY8pvphu724/0.jpg"></a> 
 
 There's also a video that shows how to create a simple machinima with Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
 
@@ -42,7 +42,7 @@ There's also a video that shows how to create a simple machinima with Blockbuste
 
 This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
 
-<a href="https://youtu.be/ny0_8RkAG8w?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/ny0_8RkAG8w/0.jpg"></a> 
+<a href="https://youtu.be/11L4vLzhcVM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/11L4vLzhcVM/0.jpg"></a> 
 
 ## Bug reports
 
