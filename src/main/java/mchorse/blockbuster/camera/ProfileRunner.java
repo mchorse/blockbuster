@@ -74,7 +74,7 @@ public class ProfileRunner
              * record video */
             if (Blockbuster.proxy.config.camera_minema)
             {
-                ClientCommandHandler.instance.executeCommand(this.mc.thePlayer, "/minema enable");
+                ClientCommandHandler.instance.executeCommand(this.mc.player, "/minema enable");
             }
 
             this.fov = this.mc.gameSettings.fovSetting;
@@ -97,7 +97,7 @@ public class ProfileRunner
 
             if (Blockbuster.proxy.config.camera_minema)
             {
-                ClientCommandHandler.instance.executeCommand(this.mc.thePlayer, "/minema disable");
+                ClientCommandHandler.instance.executeCommand(this.mc.player, "/minema disable");
             }
 
             this.mc.gameSettings.fovSetting = this.fov;
