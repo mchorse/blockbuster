@@ -53,7 +53,7 @@ public class GuiListViewer extends GuiScrollPane
     public void setStrings(List<String> strings)
     {
         this.strings = strings;
-        this.scrollHeight = 20 * strings.size();
+        this.scrollHeight = strings.size() * this.span;
     }
 
     @Override

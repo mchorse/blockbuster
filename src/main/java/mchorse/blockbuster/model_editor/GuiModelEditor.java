@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
 import mchorse.blockbuster.model_editor.modal.GuiAlertModal;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
+import mchorse.blockbuster.model_editor.modal.GuiLimbsList;
+import mchorse.blockbuster.model_editor.modal.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.modal.GuiListViewer;
 import mchorse.blockbuster.model_editor.modal.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.client.Minecraft;
@@ -28,7 +33,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * This GUI
  */
-public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder
+public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder, ILimbPicker
 {
     /**
      * Currently data model which we are editing
@@ -58,6 +63,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiListViewer poses;
 
     /**
+     * Limbs sidebar
+     */
+    private GuiLimbsList limbs;
+
+    /**
      * Texture path field
      */
     private GuiTextField texture;
@@ -83,6 +93,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public GuiModelEditor()
     {
         this.poses = new GuiListViewer(null, this);
+        this.limbs = new GuiLimbsList(this);
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
     }
 
@@ -97,6 +108,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         poses.addAll(this.data.poses.keySet());
 
         this.poses.setStrings(poses);
+        this.limbs.setModel(this.data);
         this.buildModel();
     }
 
@@ -149,6 +161,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         this.poses.updateRect(this.width - 90, this.height - 106, 80, 80);
         this.poses.setHidden(true);
+
+        this.limbs.updateRect(this.width - 91, 47, 82, this.height - 47 - 30);
 
         if (this.currentModal != null)
         {
@@ -203,6 +217,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     @Override
+    public void pickLimb(Limb limb)
+    {
+        System.out.println(limb);
+    }
+
+    @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         if (this.currentModal == null)
@@ -225,7 +245,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     public void handleMouseInput() throws IOException
     {
+        int i = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int j = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
         super.handleMouseInput();
+
+        if (!this.poses.isInside(i, j))
+        {
+            this.limbs.handleMouseInput();
+        }
+
         this.poses.handleMouseInput();
     }
 
@@ -234,6 +263,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         super.setWorldAndResolution(mc, width, height);
         this.poses.setWorldAndResolution(mc, width, height);
+        this.limbs.setWorldAndResolution(mc, width, height);
     }
 
     @Override
@@ -264,6 +294,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         this.drawDefaultBackground();
         this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
+        this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 85, 35, 0xffffff);
 
         this.texture.drawTextBox();
 
@@ -278,6 +309,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
 
         /* Draw current modal */
