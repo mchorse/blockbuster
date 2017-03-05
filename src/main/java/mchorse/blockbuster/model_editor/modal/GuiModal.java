@@ -3,7 +3,6 @@ package mchorse.blockbuster.model_editor.modal;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.model_editor.IModalCallback;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -11,6 +10,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 /**
  * Abstract modal
+ *
+ * This class provides all needed methods for creating custom modals.
  */
 public abstract class GuiModal
 {
@@ -19,9 +20,19 @@ public abstract class GuiModal
      */
     public String label;
 
+    /**
+     * Parent screen
+     */
     public GuiScreen parent;
+
+    /**
+     * Font renderer
+     */
     public FontRenderer font;
 
+    /**
+     * List of buttons
+     */
     public List<GuiButton> buttons = new ArrayList<GuiButton>();
 
     public int buttonWidth = 60;
@@ -32,7 +43,10 @@ public abstract class GuiModal
         this.font = font;
     }
 
-    public abstract void initButtons();
+    /**
+     * Use this method to initiate all your needed GUI fields.
+     */
+    public abstract void initiate();
 
     /**
      * Perform an action based on button's input

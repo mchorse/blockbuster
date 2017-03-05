@@ -1,13 +1,19 @@
 package mchorse.blockbuster.model_editor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import mchorse.blockbuster.model_editor.modal.GuiAlertModal;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
+import mchorse.blockbuster.model_editor.modal.GuiListViewer;
+import mchorse.blockbuster.model_editor.modal.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
+import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -22,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * This GUI
  */
-public class GuiModelEditor extends GuiScreen implements IModalCallback
+public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder
 {
     /**
      * Currently data model which we are editing
@@ -47,17 +53,36 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
     /* GUI fields */
 
     /**
+     * Available poses
+     */
+    private GuiListViewer poses;
+
+    /**
      * Texture path field
      */
     private GuiTextField texture;
 
+    /**
+     * Pose field
+     */
+    private GuiButton pose;
+
+    /**
+     * Save button, this will prompt user to choose a name
+     */
     private GuiButton save;
+
+    /**
+     * Create clean, new, model out of existing ones or
+     */
+    private GuiButton clean;
 
     /**
      * Setup by default the
      */
     public GuiModelEditor()
     {
+        this.poses = new GuiListViewer(null, this);
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
     }
 
@@ -68,10 +93,22 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
     {
         this.data = ModelUtils.cloneModel(model.model);
 
+        List<String> poses = new ArrayList<String>();
+        poses.addAll(this.data.poses.keySet());
+
+        this.poses.setStrings(poses);
+        this.buildModel();
+    }
+
+    /**
+     * Build the model from data model
+     */
+    private void buildModel()
+    {
         try
         {
             this.model = new ModelParser().parseModel(this.data, ModelCustom.class);
-            this.model.pose = this.data.getPose("standing");
+            this.changePose("standing");
         }
         catch (Exception e)
         {
@@ -79,22 +116,43 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
         }
     }
 
+    /**
+     * Change pose
+     */
+    private void changePose(String pose)
+    {
+        this.model.pose = this.data.getPose(pose);
+
+        if (this.pose != null)
+        {
+            this.pose.displayString = pose;
+        }
+    }
+
     @Override
     public void initGui()
     {
         /* Initiate the texture field */
-        this.texture = new GuiTextField(0, this.fontRendererObj, 11, this.height - 29, 98, 18);
+        this.texture = new GuiTextField(0, this.fontRendererObj, 11, this.height - 24, 98, 18);
         this.texture.setMaxStringLength(400);
         this.texture.setText("blockbuster.actors:steve/Walter");
         this.textureRL = new ResourceLocation(this.texture.getText());
 
+        /* Buttons */
         this.save = new GuiButton(0, this.width - 60, 5, 50, 20, "Save");
+        this.clean = new GuiButton(1, this.width - 115, 5, 50, 20, "New");
+        this.pose = new GuiButton(2, this.width - 90, this.height - 25, 80, 20, "standing");
 
         this.buttonList.add(this.save);
+        this.buttonList.add(this.clean);
+        this.buttonList.add(this.pose);
+
+        this.poses.updateRect(this.width - 90, this.height - 106, 80, 80);
+        this.poses.setHidden(true);
 
         if (this.currentModal != null)
         {
-            this.currentModal.initButtons();
+            this.currentModal.initiate();
         }
     }
 
@@ -105,7 +163,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
         {
             this.currentModal = new GuiInputModal(this, this.fontRendererObj);
             this.currentModal.label = "Say my name?";
-            this.currentModal.initButtons();
+            this.currentModal.initiate();
+        }
+        else if (button.id == 1)
+        {
+            /* New one */
+        }
+        else if (button.id == 2)
+        {
+            this.poses.setHidden(false);
         }
     }
 
@@ -126,8 +192,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
 
             this.currentModal = new GuiAlertModal(this, this.fontRendererObj);
             this.currentModal.label = "Are you sure you want to ratched and clank with me, " + input + "?";
-            this.currentModal.initButtons();
+            this.currentModal.initiate();
         }
+    }
+
+    @Override
+    public void pickedValue(String value)
+    {
+        this.changePose(value);
     }
 
     @Override
@@ -151,8 +223,27 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
     }
 
     @Override
+    public void handleMouseInput() throws IOException
+    {
+        super.handleMouseInput();
+        this.poses.handleMouseInput();
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+        this.poses.setWorldAndResolution(mc, width, height);
+    }
+
+    @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
+        if (this.poses.isInside(mouseX, mouseY))
+        {
+            return;
+        }
+
         if (this.currentModal == null)
         {
             this.texture.mouseClicked(mouseX, mouseY, mouseButton);
@@ -178,7 +269,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
 
         /* Draw the model */
         float scale = this.height / 3;
-        float x = 120 + (this.width - 120) / 2;
+        float x = this.width / 2;
         float y = this.height / 2 + scale * 1.1F;
         float yaw = (x - mouseX) / this.width * 90;
         float pitch = (y + scale + mouseY) / this.height * 90 - 135;
@@ -186,6 +277,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback
         this.drawModel(x, y, scale, yaw, pitch);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        this.poses.drawScreen(mouseX, mouseY, partialTicks);
 
         /* Draw current modal */
         if (this.currentModal != null)

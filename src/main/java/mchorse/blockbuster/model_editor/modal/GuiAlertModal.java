@@ -20,7 +20,7 @@ public class GuiAlertModal extends GuiModal
     }
 
     @Override
-    public void initButtons()
+    public void initiate()
     {
         int x = this.parent.width / 2 + 100;
         int y = this.parent.height / 2 + 45;

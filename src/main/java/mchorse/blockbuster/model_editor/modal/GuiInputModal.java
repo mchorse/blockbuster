@@ -29,15 +29,23 @@ public class GuiInputModal extends GuiModal
         return this.input.getText();
     }
 
+    /**
+     * Set user's input
+     */
+    public void setInput(String input)
+    {
+        this.input.setText(input);
+    }
+
     @Override
-    public void initButtons()
+    public void initiate()
     {
         int x = this.parent.width / 2 - 90;
         int y = this.parent.height / 2 + 45 - 28;
 
         int w = 200 - 20;
 
-        this.proceed = new GuiButton(-2, x + (w - this.buttonWidth), y, this.buttonWidth, 20, "Ok");
+        this.proceed = new GuiButton(-2, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, "Ok");
         this.input = new GuiTextField(-2, this.font, x, y + 2, w - 1 - this.buttonWidth, 16);
 
         this.buttons.clear();
