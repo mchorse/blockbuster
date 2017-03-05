@@ -4,6 +4,7 @@ key:
         # Categories
         general: Blockbuster General
         marker: Camera marker
+        model_editor: Model Editor
         misc: Blockbuster Misc.
         camera: Blockbuster Camera
 
