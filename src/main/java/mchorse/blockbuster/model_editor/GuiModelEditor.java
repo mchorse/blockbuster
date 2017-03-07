@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Model editor GUI
@@ -101,6 +102,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      * Ticks timer for arm idling animation
      */
     private int timer;
+
+    /**
+     * Model's scale
+     */
+    private float scale;
 
     /* Mouse dragging */
     private boolean dragging;
@@ -276,27 +282,40 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     @Override
-    public void handleMouseInput() throws IOException
-    {
-        int i = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int j = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-
-        super.handleMouseInput();
-
-        if (!this.poses.isInside(i, j))
-        {
-            this.limbs.handleMouseInput();
-        }
-
-        this.poses.handleMouseInput();
-    }
-
-    @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc, width, height);
         this.poses.setWorldAndResolution(mc, width, height);
         this.limbs.setWorldAndResolution(mc, width, height);
+    }
+
+    /* Mouse events */
+
+    @Override
+    public void handleMouseInput() throws IOException
+    {
+        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+        super.handleMouseInput();
+
+        if (x > 120 && x < this.width - 120)
+        {
+            int scroll = -Mouse.getEventDWheel();
+
+            if (scroll != 0)
+            {
+                this.scale += Math.copySign(2.0, scroll);
+                this.scale = MathHelper.clamp_float(this.scale, -100, 500);
+            }
+        }
+
+        if (!this.poses.isInside(x, y))
+        {
+            this.limbs.handleMouseInput();
+        }
+
+        this.poses.handleMouseInput();
     }
 
     @Override
@@ -355,10 +374,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.drawHorizontalGradientRect(0, 0, 120, this.height, 0x55000000, 0x00000000);
         this.drawHorizontalGradientRect(this.width - 120, 0, this.width, this.height, 0x00000000, 0x55000000);
 
-        /* Labels */
-        this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
-        this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 105, 35, 0xffffff);
-
         /* Draw the model */
         float scale = this.height / 3;
         float x = this.width / 2;
@@ -366,7 +381,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         float yaw = (x - mouseX) / this.width * 90;
         float pitch = (y + scale + mouseY) / this.height * 90 - 135;
 
-        this.drawModel(x, y, scale, yaw, pitch);
+        this.drawModel(x, y, scale + this.scale, yaw, pitch);
+
+        /* Labels */
+        this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
+        this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 105, 35, 0xffffff);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -394,9 +413,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      */
     private void drawModel(float x, float y, float scale, float yaw, float pitch)
     {
+        /* Extending model's rendering range, otherwise it gets clipped */
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 300000.0D);
+        GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
 
         EntityPlayer player = this.mc.thePlayer;
