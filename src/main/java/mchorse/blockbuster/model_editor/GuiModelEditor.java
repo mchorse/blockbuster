@@ -102,6 +102,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      */
     private int timer;
 
+    /* Mouse dragging */
+    private boolean dragging;
+    private int prevX;
+    private int prevY;
+
+    /* Model spinning */
+    private float yaw;
+    private float pitch;
+
+    private float prevYaw;
+    private float prevPitch;
+
     /**
      * Setup by default the
      */
@@ -300,12 +312,31 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             this.texture.mouseClicked(mouseX, mouseY, mouseButton);
             this.limbEditor.mouseClicked(mouseX, mouseY, mouseButton);
 
+            if (mouseX > 120 && mouseX < this.width - 120)
+            {
+                this.dragging = true;
+                this.prevX = mouseX;
+                this.prevY = mouseY;
+            }
+
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
         else
         {
             this.currentModal.mouseClicked(mouseX, mouseY, mouseButton);
         }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        this.dragging = false;
+        this.prevYaw += this.yaw;
+        this.prevPitch += this.pitch;
+        this.yaw = this.pitch = 0;
+        this.prevX = this.prevY = 0;
+
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
@@ -328,12 +359,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
         this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 105, 35, 0xffffff);
 
-        this.texture.drawTextBox();
-
         /* Draw the model */
         float scale = this.height / 3;
         float x = this.width / 2;
-        float y = this.height / 2 + scale * 1.1F;
+        float y = this.height / 2;
         float yaw = (x - mouseX) / this.width * 90;
         float pitch = (y + scale + mouseY) / this.height * 90 - 135;
 
@@ -345,11 +374,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
 
+        if (this.dragging)
+        {
+            this.yaw = -(this.prevX - mouseX);
+            this.pitch = this.prevY - mouseY;
+        }
+
         /* Draw current modal */
         if (this.currentModal != null)
         {
             this.currentModal.drawModal(mouseX, mouseY, partialTicks);
         }
+
+        this.texture.drawTextBox();
     }
 
     /**
@@ -357,6 +394,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      */
     private void drawModel(float x, float y, float scale, float yaw, float pitch)
     {
+        GlStateManager.matrixMode(5889);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 300000.0D);
+        GlStateManager.matrixMode(5888);
+
         EntityPlayer player = this.mc.thePlayer;
         float factor = 0.0625F;
 
@@ -364,10 +406,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 50.0F);
+        GlStateManager.translate(x, y, 0.0F);
         GlStateManager.scale((-scale), scale, scale);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(180.0F + this.prevYaw + this.yaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(this.prevPitch + this.pitch, 1.0F, 0.0F, 0.0F);
 
         RenderHelper.enableStandardItemLighting();
 
@@ -386,7 +429,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, this.model.pose.size[1] / 2, 0);
         this.model.render(player, 0, 0, 0, 0, 0, factor);
+        GlStateManager.popMatrix();
 
         GlStateManager.disableDepth();
 
@@ -405,7 +451,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     /**
-     * Draws a rectangle with a horizontal gradient between the specified colors
+     * Draws a rectangle with a horizontal gradient between with specified colors
      */
     protected void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
     {
