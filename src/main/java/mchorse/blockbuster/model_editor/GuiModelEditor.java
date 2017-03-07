@@ -6,12 +6,13 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
+import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
+import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
+import mchorse.blockbuster.model_editor.elements.GuiListViewer;
+import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.modal.GuiAlertModal;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
-import mchorse.blockbuster.model_editor.modal.GuiLimbsList;
-import mchorse.blockbuster.model_editor.modal.GuiLimbsList.ILimbPicker;
-import mchorse.blockbuster.model_editor.modal.GuiListViewer;
-import mchorse.blockbuster.model_editor.modal.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.metamorph.api.models.Model;
@@ -25,13 +26,17 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Model editor GUI
  *
- * This GUI
+ * This GUI is responsible providing to player tools to edit custom models,
+ * just like McME, but better and up to date.
  */
 public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder, ILimbPicker
 {
@@ -68,6 +73,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiLimbsList limbs;
 
     /**
+     * Limb editor
+     */
+    private GuiLimbEditor limbEditor;
+
+    /**
      * Texture path field
      */
     private GuiTextField texture;
@@ -88,12 +98,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiButton clean;
 
     /**
+     * Ticks timer for arm idling animation
+     */
+    private int timer;
+
+    /**
      * Setup by default the
      */
     public GuiModelEditor()
     {
         this.poses = new GuiListViewer(null, this);
         this.limbs = new GuiLimbsList(this);
+        this.limbEditor = new GuiLimbEditor(this);
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
     }
 
@@ -139,13 +155,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         {
             this.pose.displayString = pose;
         }
+
+        this.limbEditor.setPose(this.model.pose);
     }
 
     @Override
     public void initGui()
     {
         /* Initiate the texture field */
-        this.texture = new GuiTextField(0, this.fontRendererObj, 11, this.height - 24, 98, 18);
+        this.texture = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 49, this.height - 24, 98, 18);
         this.texture.setMaxStringLength(400);
         this.texture.setText("blockbuster.actors:steve/Walter");
         this.textureRL = new ResourceLocation(this.texture.getText());
@@ -153,16 +171,17 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         /* Buttons */
         this.save = new GuiButton(0, this.width - 60, 5, 50, 20, "Save");
         this.clean = new GuiButton(1, this.width - 115, 5, 50, 20, "New");
-        this.pose = new GuiButton(2, this.width - 90, this.height - 25, 80, 20, "standing");
+        this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "standing");
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
         this.buttonList.add(this.pose);
 
-        this.poses.updateRect(this.width - 90, this.height - 106, 80, 80);
+        this.poses.updateRect(this.width - 110, this.height - 106, 100, 80);
         this.poses.setHidden(true);
 
-        this.limbs.updateRect(this.width - 91, 47, 82, this.height - 47 - 30);
+        this.limbEditor.initiate(10, 47);
+        this.limbs.updateRect(this.width - 111, 47, 102, this.height - 47 - 30);
 
         if (this.currentModal != null)
         {
@@ -219,7 +238,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     public void pickLimb(Limb limb)
     {
-        System.out.println(limb);
+        this.limbEditor.setLimb(limb);
     }
 
     @Override
@@ -233,6 +252,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             {
                 this.textureRL = new ResourceLocation(this.texture.getText());
             }
+
+            this.limbEditor.keyTyped(typedChar, keyCode);
         }
         else
         {
@@ -277,6 +298,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         if (this.currentModal == null)
         {
             this.texture.mouseClicked(mouseX, mouseY, mouseButton);
+            this.limbEditor.mouseClicked(mouseX, mouseY, mouseButton);
 
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
@@ -286,6 +308,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
     }
 
+    @Override
+    public void updateScreen()
+    {
+        this.timer++;
+    }
+
     /**
      * Draw the screen
      */
@@ -293,8 +321,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
+        this.drawHorizontalGradientRect(0, 0, 120, this.height, 0x55000000, 0x00000000);
+        this.drawHorizontalGradientRect(this.width - 120, 0, this.width, this.height, 0x00000000, 0x55000000);
+
+        /* Labels */
         this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
-        this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 85, 35, 0xffffff);
+        this.fontRendererObj.drawStringWithShadow("Limbs", this.width - 105, 35, 0xffffff);
 
         this.texture.drawTextBox();
 
@@ -309,6 +341,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
+        this.limbEditor.draw(mouseX, mouseY, partialTicks);
         this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -348,7 +381,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.enableAlpha();
 
         this.model.setLivingAnimations(player, 0, 0, 0);
-        this.model.setRotationAngles(0, 0, player.ticksExisted, yaw, pitch, factor, player);
+        this.model.setRotationAngles(0, 0, this.timer, yaw, pitch, factor, player);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -369,5 +402,40 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    /**
+     * Draws a rectangle with a horizontal gradient between the specified colors
+     */
+    protected void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
+    {
+        float a1 = (startColor >> 24 & 255) / 255.0F;
+        float r1 = (startColor >> 16 & 255) / 255.0F;
+        float g1 = (startColor >> 8 & 255) / 255.0F;
+        float b1 = (startColor & 255) / 255.0F;
+        float a2 = (endColor >> 24 & 255) / 255.0F;
+        float r2 = (endColor >> 16 & 255) / 255.0F;
+        float g2 = (endColor >> 8 & 255) / 255.0F;
+        float b2 = (endColor & 255) / 255.0F;
+
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(7425);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        vertexbuffer.pos(right, top, this.zLevel).color(r2, g2, b2, a2).endVertex();
+        vertexbuffer.pos(left, top, this.zLevel).color(r1, g1, b1, a1).endVertex();
+        vertexbuffer.pos(left, bottom, this.zLevel).color(r1, g1, b1, a1).endVertex();
+        vertexbuffer.pos(right, bottom, this.zLevel).color(r2, g2, b2, a2).endVertex();
+        tessellator.draw();
+
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 }

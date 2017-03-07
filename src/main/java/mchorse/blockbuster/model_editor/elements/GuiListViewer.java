@@ -1,4 +1,4 @@
-package mchorse.blockbuster.model_editor.modal;
+package mchorse.blockbuster.model_editor.elements;
 
 import java.io.IOException;
 import java.util.List;

@@ -39,7 +39,7 @@ public class ModelUtils
             b.poses.put(entry.getKey(), clonePose(entry.getValue()));
         }
 
-        return a;
+        return b;
     }
 
     /**

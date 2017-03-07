@@ -1,4 +1,4 @@
-package mchorse.blockbuster.model_editor.modal;
+package mchorse.blockbuster.model_editor.elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,9 +82,7 @@ public class GuiLimbsList extends GuiScrollPane
      */
     @Override
     protected void drawBackground()
-    {
-        Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 2, 0x33000000);
-    }
+    {}
 
     @Override
     protected void drawPane(int mouseX, int mouseY, float partialTicks)
@@ -94,31 +92,35 @@ public class GuiLimbsList extends GuiScrollPane
             return;
         }
 
-        int i = 0;
-        int c = this.model.limbs.size();
-
-        for (String entry : this.model.limbs.keySet())
+        for (int i = 0, c = this.limbs.size(); i < c; i++)
         {
+            Model.Limb limb = this.limbs.get(i);
+
             int x = this.x + 6;
             int y = this.y + i * this.span;
 
             int color = 0xffffffff;
 
+            /* If hovered */
             if (mouseX >= this.x && mouseX <= this.x + this.w && mouseY + this.scrollY >= y && mouseY + this.scrollY < y + this.span)
             {
                 color = 0xff999999;
             }
 
+            /* If selected */
+            if (limb == this.limb)
+            {
+                color = 0xff555555;
+            }
+
             /* Label */
-            this.fontRendererObj.drawStringWithShadow(entry, x, y + 6, color);
+            this.fontRendererObj.drawStringWithShadow(limb.name, x, y + 6, color);
 
             /* Separator */
             if (i != c - 1)
             {
                 Gui.drawRect(x - 5, y + this.span - 1, this.x + this.w - 1, y + this.span, 0x44ffffff);
             }
-
-            i++;
         }
     }
 
