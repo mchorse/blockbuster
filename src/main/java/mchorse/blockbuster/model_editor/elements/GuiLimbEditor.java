@@ -33,7 +33,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private static final int MIRROR = 2;
     private static final int TEXTURE = 3;
     private static final int SIZE = 4;
-    private static final int ANCHOR = 4;
+    private static final int ANCHOR = 5;
 
     /* Gameplay properties */
     private static final int LOOKING = 6;
@@ -248,19 +248,19 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         {
             this.looking.xPosition = x;
             this.looking.yPosition = y;
-            y += 20;
+            y += 16;
             this.idle.xPosition = x;
             this.idle.yPosition = y;
-            y += 20;
+            y += 16;
             this.swinging.xPosition = x;
             this.swinging.yPosition = y;
-            y += 20;
+            y += 16;
             this.swiping.xPosition = x;
             this.swiping.yPosition = y;
-            y += 20;
+            y += 16;
             this.invert.xPosition = x;
             this.invert.yPosition = y;
-            y += 18;
+            y += 20;
             this.holding.xPosition = x;
             this.holding.yPosition = y;
             y += 25;
@@ -282,7 +282,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             y += 25;
         }
 
-        int w = (width / 2) - 2;
+        int w = 20;
 
         this.prev.xPosition = x;
         this.next.xPosition = x + width - w;
@@ -382,7 +382,10 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             return;
         }
 
+        String cat = this.counter == 0 ? "Visual" : (this.counter == 1 ? "Gameplay" : "Pose");
+
         font.drawStringWithShadow(this.limb.name, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
+        this.editor.drawCenteredString(font, cat, this.prev.xPosition + 49, this.next.yPosition + 6, 0xffffffff);
 
         if (this.counter == 0)
         {
@@ -439,6 +442,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         if (button.id == MIRROR)
         {
             this.limb.mirror = this.mirror.isChecked();
+            this.editor.buildModel();
         }
         if (button.id == LOOKING)
         {
@@ -477,28 +481,32 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             return;
         }
 
-        if (id == TEXTURE)
-        {
-
-        }
-        if (id == ANCHOR)
-        {
-
-        }
-        if (id == SIZE)
-        {
-
-        }
-
-        if (this.pose == null)
-        {
-            return;
-        }
-
         try
         {
-            Model.Transform trans = this.pose.limbs.get(this.limb.name);
             float val = Float.parseFloat(value);
+
+            if (id == TEXTURE && val >= 0)
+            {
+                this.limb.texture[subset] = (int) val;
+                this.editor.buildModel();
+            }
+            if (id == ANCHOR)
+            {
+                this.limb.anchor[subset] = val;
+                this.editor.buildModel();
+            }
+            if (id == SIZE && val > 0)
+            {
+                this.limb.size[subset] = (int) val;
+                this.editor.buildModel();
+            }
+
+            if (this.pose == null)
+            {
+                return;
+            }
+
+            Model.Transform trans = this.pose.limbs.get(this.limb.name);
 
             if (id == TRANSLATE)
             {

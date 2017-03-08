@@ -159,7 +159,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     /**
      * Build the model from data model
      */
-    private void buildModel()
+    public void buildModel()
     {
         try
         {
