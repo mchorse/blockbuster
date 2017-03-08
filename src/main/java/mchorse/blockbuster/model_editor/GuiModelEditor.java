@@ -21,6 +21,7 @@ import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -99,6 +100,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiButton clean;
 
     /**
+     * Button which returns user back to main menu
+     */
+    private GuiButton back;
+
+    /**
      * Ticks timer for arm idling animation
      */
     private int timer;
@@ -120,15 +126,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private float prevYaw;
     private float prevPitch;
 
+    /* Main menu flag */
+    private boolean mainMenu;
+
     /**
      * Setup by default the
      */
-    public GuiModelEditor()
+    public GuiModelEditor(boolean mainMenu)
     {
         this.poses = new GuiListViewer(null, this);
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
-        this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
+        this.setupModel(ModelCustom.MODELS.get("blockbuster.mchorse"));
+        this.mainMenu = mainMenu;
     }
 
     /**
@@ -183,13 +193,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         /* Initiate the texture field */
         this.texture = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 49, this.height - 24, 98, 18);
         this.texture.setMaxStringLength(400);
-        this.texture.setText("blockbuster.actors:steve/Walter");
+        this.texture.setText("blockbuster.actors:mchorse/mchorse");
         this.textureRL = new ResourceLocation(this.texture.getText());
 
         /* Buttons */
         this.save = new GuiButton(0, this.width - 60, 5, 50, 20, "Save");
         this.clean = new GuiButton(1, this.width - 115, 5, 50, 20, "New");
         this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "standing");
+
+        if (this.mainMenu)
+        {
+            this.back = new GuiButton(-100, this.width - 170, 5, 50, 20, "Back");
+            this.buttonList.add(this.back);
+        }
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
@@ -223,6 +239,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         else if (button.id == 2)
         {
             this.poses.setHidden(false);
+        }
+        else if (this.mainMenu && button == this.back)
+        {
+            this.mc.displayGuiScreen(new GuiMainMenu());
         }
     }
 
@@ -278,7 +298,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             this.currentModal.keyTyped(typedChar, keyCode);
         }
 
-        super.keyTyped(typedChar, keyCode);
+        if (!this.mainMenu)
+        {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 
     @Override
@@ -471,7 +494,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     /**
-     * Draws a rectangle with a horizontal gradient between with specified colors
+     * Draws a rectangle with a horizontal gradient between with specified
+     * colors, the code is borrowed form {@link #drawGradientRect(int, int, int, int, int, int)}
      */
     protected void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
     {

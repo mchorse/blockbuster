@@ -5,7 +5,7 @@ import java.util.List;
 
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
-import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IThreeListener;
+import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
  * This thing is going to be responsible for editing current selected limb,
  * its data and also current pose's transformations.
  */
-public class GuiLimbEditor implements IThreeListener, GuiResponder
+public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 {
     /* Field IDs */
 
@@ -40,12 +40,13 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
     private static final int IDLE = 7;
     private static final int SWINGING = 8;
     private static final int SWIPING = 9;
-    private static final int HOLDING = 10;
+    private static final int INVERT = 10;
+    private static final int HOLDING = 11;
 
     /* Pose properties */
-    private static final int TRANSLATE = 11;
-    private static final int SCALE = 12;
-    private static final int ROTATE = 13;
+    private static final int TRANSLATE = 12;
+    private static final int SCALE = 13;
+    private static final int ROTATE = 14;
 
     /* Data */
 
@@ -77,6 +78,7 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
 
     /* Visual properties */
     private GuiCheckBox mirror;
+    private GuiTwoInput texture;
     private GuiThreeInput size;
     private GuiThreeInput anchor;
 
@@ -85,6 +87,7 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
     private GuiCheckBox idle;
     private GuiCheckBox swinging;
     private GuiCheckBox swiping;
+    private GuiCheckBox invert;
     private GuiCirculate holding;
 
     /* Poses */
@@ -92,7 +95,11 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
     private GuiThreeInput scale;
     private GuiThreeInput rotate;
 
-    private int thing;
+    /* Stuff */
+    private int counter;
+
+    private GuiButton next;
+    private GuiButton prev;
 
     /**
      * Initiate all GUI fields here
@@ -115,6 +122,7 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
 
         /* Initiate inputs */
         this.mirror = new GuiCheckBox(MIRROR, 0, 0, "Mirror", false);
+        this.texture = new GuiTwoInput(TEXTURE, font, 0, 0, 0, this);
         this.size = new GuiThreeInput(SIZE, font, 0, 0, 0, this);
         this.anchor = new GuiThreeInput(ANCHOR, font, 0, 0, 0, this);
 
@@ -123,6 +131,7 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         this.idle = new GuiCheckBox(IDLE, 0, 0, "Idle", false);
         this.swinging = new GuiCheckBox(SWINGING, 0, 0, "Swinging", false);
         this.swiping = new GuiCheckBox(SWIPING, 0, 0, "Swiping", false);
+        this.invert = new GuiCheckBox(INVERT, 0, 0, "Invert", false);
         this.holding = new GuiCirculate(HOLDING, 0, 0, width, 20);
 
         this.holding.addLabel("No hands");
@@ -134,17 +143,9 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         this.scale = new GuiThreeInput(SCALE, font, 0, 0, width, this);
         this.rotate = new GuiThreeInput(ROTATE, font, 0, 0, width, this);
 
-        /* Attach buttons */
-        this.buttons.add(this.name);
-        this.buttons.add(this.parent);
-
-        this.buttons.add(this.mirror);
-
-        this.buttons.add(this.looking);
-        this.buttons.add(this.idle);
-        this.buttons.add(this.swinging);
-        this.buttons.add(this.swiping);
-        this.buttons.add(this.holding);
+        /* Category switchers */
+        this.next = new GuiButton(-1, 0, 0, ">");
+        this.prev = new GuiButton(-2, 0, 0, "<");
     }
 
     /**
@@ -156,6 +157,8 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
 
         /* Visual */
         this.mirror.setIsChecked(limb.mirror);
+        this.texture.a.setText(String.valueOf(limb.texture[0]));
+        this.texture.b.setText(String.valueOf(limb.texture[1]));
         this.size.a.setText(String.valueOf(limb.size[0]));
         this.size.b.setText(String.valueOf(limb.size[1]));
         this.size.c.setText(String.valueOf(limb.size[2]));
@@ -168,6 +171,7 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         this.idle.setIsChecked(limb.idle);
         this.swinging.setIsChecked(limb.swinging);
         this.swiping.setIsChecked(limb.swiping);
+        this.invert.setIsChecked(limb.invert);
         this.holding.setValue(limb.holding.isEmpty() ? 0 : (limb.holding.equals("right") ? 1 : 2));
 
         this.updatePoseFields();
@@ -220,34 +224,73 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         y += 25;
         this.parent.xPosition = x;
         this.parent.yPosition = y;
-        y += 35;
-        this.mirror.xPosition = x;
-        this.mirror.yPosition = y;
-        y += 15;
-        this.size.update(x, y, width);
-        y += 20;
-        this.anchor.update(x, y, width);
-        y += 33;
-        this.looking.xPosition = x;
-        this.looking.yPosition = y;
-        y += 20;
-        this.idle.xPosition = x;
-        this.idle.yPosition = y;
-        y += 20;
-        this.swinging.xPosition = x;
-        this.swinging.yPosition = y;
-        y += 20;
-        this.swiping.xPosition = x;
-        this.swiping.yPosition = y;
-        y += 18;
-        this.holding.xPosition = x;
-        this.holding.yPosition = y;
-        y += 35;
-        this.translate.update(x, y, width);
-        y += 20;
-        this.scale.update(x, y, width);
-        y += 20;
-        this.rotate.update(x, y, width);
+        y += 30;
+
+        this.buttons.clear();
+        this.buttons.add(this.name);
+        this.buttons.add(this.parent);
+
+        if (this.counter == 0)
+        {
+            this.mirror.xPosition = x;
+            this.mirror.yPosition = y;
+            y += 15;
+            this.texture.update(x, y, width);
+            y += 20;
+            this.size.update(x, y, width);
+            y += 20;
+            this.anchor.update(x, y, width);
+            y += 23;
+
+            this.buttons.add(this.mirror);
+        }
+        else if (this.counter == 1)
+        {
+            this.looking.xPosition = x;
+            this.looking.yPosition = y;
+            y += 20;
+            this.idle.xPosition = x;
+            this.idle.yPosition = y;
+            y += 20;
+            this.swinging.xPosition = x;
+            this.swinging.yPosition = y;
+            y += 20;
+            this.swiping.xPosition = x;
+            this.swiping.yPosition = y;
+            y += 20;
+            this.invert.xPosition = x;
+            this.invert.yPosition = y;
+            y += 18;
+            this.holding.xPosition = x;
+            this.holding.yPosition = y;
+            y += 25;
+
+            this.buttons.add(this.looking);
+            this.buttons.add(this.idle);
+            this.buttons.add(this.swinging);
+            this.buttons.add(this.swiping);
+            this.buttons.add(this.invert);
+            this.buttons.add(this.holding);
+        }
+        else if (this.counter == 2)
+        {
+            this.translate.update(x, y, width);
+            y += 20;
+            this.scale.update(x, y, width);
+            y += 20;
+            this.rotate.update(x, y, width);
+            y += 25;
+        }
+
+        int w = (width / 2) - 2;
+
+        this.prev.xPosition = x;
+        this.next.xPosition = x + width - w;
+        this.next.yPosition = this.prev.yPosition = y;
+        this.next.width = this.prev.width = w;
+
+        this.buttons.add(this.next);
+        this.buttons.add(this.prev);
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
@@ -257,8 +300,12 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
             return;
         }
 
-        this.size.mouseClicked(mouseX, mouseY, mouseButton);
-        this.anchor.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.counter == 0)
+        {
+            this.texture.mouseClicked(mouseX, mouseY, mouseButton);
+            this.size.mouseClicked(mouseX, mouseY, mouseButton);
+            this.anchor.mouseClicked(mouseX, mouseY, mouseButton);
+        }
 
         this.checkButtons(mouseX, mouseY, mouseButton);
 
@@ -267,9 +314,12 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
             return;
         }
 
-        this.translate.mouseClicked(mouseX, mouseY, mouseButton);
-        this.scale.mouseClicked(mouseX, mouseY, mouseButton);
-        this.rotate.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.counter == 2)
+        {
+            this.translate.mouseClicked(mouseX, mouseY, mouseButton);
+            this.scale.mouseClicked(mouseX, mouseY, mouseButton);
+            this.rotate.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 
     /**
@@ -302,17 +352,24 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
             return;
         }
 
-        this.size.keyTyped(typedChar, keyCode);
-        this.anchor.keyTyped(typedChar, keyCode);
+        if (this.counter == 0)
+        {
+            this.texture.keyTyped(typedChar, keyCode);
+            this.size.keyTyped(typedChar, keyCode);
+            this.anchor.keyTyped(typedChar, keyCode);
+        }
 
         if (this.pose == null)
         {
             return;
         }
 
-        this.translate.keyTyped(typedChar, keyCode);
-        this.scale.keyTyped(typedChar, keyCode);
-        this.rotate.keyTyped(typedChar, keyCode);
+        if (this.counter == 2)
+        {
+            this.translate.keyTyped(typedChar, keyCode);
+            this.scale.keyTyped(typedChar, keyCode);
+            this.rotate.keyTyped(typedChar, keyCode);
+        }
     }
 
     public void draw(int mouseX, int mouseY, float partialTicks)
@@ -327,8 +384,12 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
 
         font.drawStringWithShadow(this.limb.name, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
 
-        this.size.draw();
-        this.anchor.draw();
+        if (this.counter == 0)
+        {
+            this.texture.draw();
+            this.size.draw();
+            this.anchor.draw();
+        }
 
         for (GuiButton button : this.buttons)
         {
@@ -340,9 +401,12 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
             return;
         }
 
-        this.translate.draw();
-        this.rotate.draw();
-        this.scale.draw();
+        if (this.counter == 2)
+        {
+            this.translate.draw();
+            this.rotate.draw();
+            this.scale.draw();
+        }
     }
 
     /* Methods for changing values */
@@ -361,6 +425,15 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         if (this.limb == null)
         {
             return;
+        }
+
+        if (button.id == -1 || button.id == -2)
+        {
+            boolean next = button.id == -1;
+
+            this.counter += next ? 1 : -1;
+            this.counter = this.counter > 2 ? 0 : (this.counter < 0 ? 2 : this.counter);
+            this.initiate(this.name.xPosition, this.name.yPosition);
         }
 
         if (button.id == MIRROR)
@@ -383,6 +456,10 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
         {
             this.limb.swiping = this.swiping.isChecked();
         }
+        if (button.id == INVERT)
+        {
+            this.limb.invert = this.invert.isChecked();
+        }
         if (button.id == HOLDING)
         {
             this.holding.toggle();
@@ -400,6 +477,10 @@ public class GuiLimbEditor implements IThreeListener, GuiResponder
             return;
         }
 
+        if (id == TEXTURE)
+        {
+
+        }
         if (id == ANCHOR)
         {
 

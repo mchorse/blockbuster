@@ -363,7 +363,7 @@ public class KeyboardHandler
 
         if (this.modelEditor.isPressed())
         {
-            this.mc.displayGuiScreen(new GuiModelEditor());
+            this.mc.displayGuiScreen(new GuiModelEditor(false));
         }
     }
 

@@ -2,9 +2,12 @@ package mchorse.blockbuster.model_editor.elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
 
@@ -49,11 +52,16 @@ public class GuiLimbsList extends GuiScrollPane
         this.model = model;
         this.scrollHeight = model.limbs.size() * this.span;
         this.limbs.clear();
+        this.limbs.addAll(model.limbs.values());
 
-        for (Model.Limb limb : model.limbs.values())
+        Collections.sort(this.limbs, new Comparator<Model.Limb>()
         {
-            this.limbs.add(limb);
-        }
+            @Override
+            public int compare(Limb a, Limb b)
+            {
+                return a.name.compareToIgnoreCase(b.name);
+            }
+        });
     }
 
     @Override
