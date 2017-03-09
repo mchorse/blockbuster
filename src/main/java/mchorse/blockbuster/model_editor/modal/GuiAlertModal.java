@@ -13,10 +13,12 @@ import net.minecraft.client.gui.GuiScreen;
 public class GuiAlertModal extends GuiModal
 {
     private GuiButton cancel;
+    private int id;
 
-    public GuiAlertModal(GuiScreen parent, FontRenderer font)
+    public GuiAlertModal(int id, GuiScreen parent, FontRenderer font)
     {
         super(parent, font);
+        this.id = id;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class GuiAlertModal extends GuiModal
         int x = this.parent.width / 2 + 100;
         int y = this.parent.height / 2 + 45;
 
-        this.cancel = new GuiButton(-1, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, "Ok");
+        this.cancel = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, "Ok");
 
         this.buttons.clear();
         this.buttons.add(this.cancel);

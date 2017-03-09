@@ -1,7 +1,8 @@
 package mchorse.blockbuster.model_editor;
 
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -17,11 +18,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class MainMenuHandler
 {
-    public GuiButton openModelEditor;
+    public GuiTextureButton openModelEditor;
 
     public MainMenuHandler()
     {
-        this.openModelEditor = new GuiButton(-300, 10, 10, 80, 20, "Model Editor");
+        this.openModelEditor = new GuiTextureButton(-300, 5, 5, GuiLimbEditor.GUI);
+        this.openModelEditor.setTexPos(0, 0).setActiveTexPos(0, 16);
     }
 
     @SubscribeEvent

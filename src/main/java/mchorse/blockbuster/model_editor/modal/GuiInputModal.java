@@ -15,10 +15,13 @@ public class GuiInputModal extends GuiModal
 {
     private GuiButton proceed;
     private GuiTextField input;
+    private int id;
+    private String inputText;
 
-    public GuiInputModal(GuiScreen parent, FontRenderer font)
+    public GuiInputModal(int id, GuiScreen parent, FontRenderer font)
     {
         super(parent, font);
+        this.id = id;
     }
 
     /**
@@ -34,7 +37,12 @@ public class GuiInputModal extends GuiModal
      */
     public void setInput(String input)
     {
-        this.input.setText(input);
+        this.inputText = input;
+
+        if (this.input != null)
+        {
+            this.input.setText(input);
+        }
     }
 
     @Override
@@ -45,8 +53,9 @@ public class GuiInputModal extends GuiModal
 
         int w = 200 - 20;
 
-        this.proceed = new GuiButton(-2, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, "Ok");
+        this.proceed = new GuiButton(this.id, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, "Ok");
         this.input = new GuiTextField(-2, this.font, x, y + 2, w - 1 - this.buttonWidth, 16);
+        this.input.setText(this.inputText);
 
         this.buttons.clear();
         this.buttons.add(this.proceed);

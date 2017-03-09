@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
-import mchorse.blockbuster.model_editor.modal.GuiAlertModal;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
@@ -20,6 +20,7 @@ import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -42,10 +43,16 @@ import net.minecraft.util.math.MathHelper;
  */
 public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder, ILimbPicker
 {
+    /* Field IDs */
+    public static final int CHANGE_NAME = -10;
+    public static final int CHANGE_PARENT = -11;
+
+    /* Data */
+
     /**
      * Currently data model which we are editing
      */
-    private Model data;
+    public Model data;
 
     /**
      * Compiled data model which we are currently editing
@@ -57,12 +64,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      */
     private ResourceLocation textureRL;
 
+    /* GUI fields */
+
     /**
      * Current modal
      */
-    public GuiModal currentModal;
-
-    /* GUI fields */
+    private GuiModal currentModal;
 
     /**
      * Available poses
@@ -105,6 +112,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiButton back;
 
     /**
+     * Add a limb
+     */
+    private GuiTextureButton addLimb;
+
+    /**
+     * Remove current limb
+     */
+    private GuiTextureButton removeLimb;
+
+    /**
      * Ticks timer for arm idling animation
      */
     private int timer;
@@ -142,6 +159,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     /**
+     * Open the modal
+     */
+    public void openModal(GuiModal modal)
+    {
+        this.currentModal = modal;
+        modal.initiate();
+    }
+
+    /**
      * Setup the model
      */
     private void setupModel(ModelCustom model)
@@ -153,7 +179,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         this.poses.setStrings(poses);
         this.limbs.setModel(this.data);
+
         this.buildModel();
+        this.changePose("standing");
     }
 
     /**
@@ -164,7 +192,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         try
         {
             this.model = new ModelParser().parseModel(this.data, ModelCustom.class);
-            this.changePose("standing");
         }
         catch (Exception e)
         {
@@ -228,9 +255,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         if (button.id == 0)
         {
-            this.currentModal = new GuiInputModal(this, this.fontRendererObj);
-            this.currentModal.label = "Say my name?";
-            this.currentModal.initiate();
+            /* Save */
         }
         else if (button.id == 1)
         {
@@ -253,18 +278,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     public void modalButtonPressed(GuiModal modal, GuiButton button)
     {
-        if (button.id == -1)
+        if (button.id == CHANGE_NAME)
         {
-            this.currentModal = null;
+            this.limbEditor.changeName(((GuiInputModal) modal).getInput());
         }
-        else if (button.id == -2)
+        if (button.id == CHANGE_PARENT)
         {
-            String input = ((GuiInputModal) this.currentModal).getInput();
+            this.limbEditor.changeParent(((GuiInputModal) modal).getInput());
+            this.buildModel();
+            this.model.pose = this.limbEditor.pose;
+        }
 
-            this.currentModal = new GuiAlertModal(this, this.fontRendererObj);
-            this.currentModal.label = "Are you sure you want to ratched and clank with me, " + input + "?";
-            this.currentModal.initiate();
-        }
+        this.currentModal = null;
     }
 
     @Override
@@ -282,6 +307,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
+        if (!this.mainMenu && this.currentModal == null)
+        {
+            super.keyTyped(typedChar, keyCode);
+        }
+
         if (this.currentModal == null)
         {
             this.texture.textboxKeyTyped(typedChar, keyCode);
@@ -296,11 +326,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         else
         {
             this.currentModal.keyTyped(typedChar, keyCode);
-        }
 
-        if (!this.mainMenu)
-        {
-            super.keyTyped(typedChar, keyCode);
+            if (keyCode == 1)
+            {
+                this.currentModal = null;
+            }
         }
     }
 
@@ -404,7 +434,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         float yaw = (x - mouseX) / this.width * 90;
         float pitch = (y + scale + mouseY) / this.height * 90 - 135;
 
-        this.drawModel(x, y, scale + this.scale, yaw, pitch);
+        try
+        {
+            this.drawModel(x, y, scale + this.scale, yaw, pitch);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         /* Labels */
         this.fontRendererObj.drawStringWithShadow("Model Editor", 10, 10, 0xffffff);
@@ -416,19 +453,25 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
 
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.renderEngine.bindTexture(new ResourceLocation("blockbuster:textures/gui/model_editor.png"));
+        this.drawTexturedModalRect(this.width - 25, 30, 16, 0, 16, 16);
+        this.drawTexturedModalRect(this.width - 25 - 16, 30, 32, 0, 16, 16);
+
         if (this.dragging)
         {
             this.yaw = -(this.prevX - mouseX);
             this.pitch = this.prevY - mouseY;
         }
 
+        this.texture.drawTextBox();
+
         /* Draw current modal */
         if (this.currentModal != null)
         {
+            Gui.drawRect(0, 0, this.width, this.height, 0x55000000);
             this.currentModal.drawModal(mouseX, mouseY, partialTicks);
         }
-
-        this.texture.drawTextBox();
     }
 
     /**
@@ -454,6 +497,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(180.0F + this.prevYaw + this.yaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(this.prevPitch + this.pitch, 1.0F, 0.0F, 0.0F);
+
+        pitch += this.prevPitch + this.pitch;
 
         RenderHelper.enableStandardItemLighting();
 

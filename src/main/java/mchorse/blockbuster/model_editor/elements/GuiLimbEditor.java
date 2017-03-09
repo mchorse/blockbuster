@@ -6,12 +6,14 @@ import java.util.List;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
+import mchorse.blockbuster.model_editor.modal.GuiInputModal;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -21,8 +23,10 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
  * This thing is going to be responsible for editing current selected limb,
  * its data and also current pose's transformations.
  */
-public class GuiLimbEditor implements IMultiInputListener, GuiResponder
+public class GuiLimbEditor implements IMultiInputListener
 {
+    public static final ResourceLocation GUI = new ResourceLocation("blockbuster:textures/gui/model_editor.png");
+
     /* Field IDs */
 
     /* Meta */
@@ -146,6 +150,52 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         /* Category switchers */
         this.next = new GuiButton(-1, 0, 0, ">");
         this.prev = new GuiButton(-2, 0, 0, "<");
+    }
+
+    /**
+     * Change limb's name
+     */
+    public void changeName(String newName)
+    {
+        if (newName.isEmpty())
+        {
+            return;
+        }
+
+        /* Rename limb name in poses */
+        for (Model.Pose pose : this.editor.data.poses.values())
+        {
+            Model.Transform transform = pose.limbs.remove(this.limb.name);
+
+            pose.limbs.put(newName, transform);
+        }
+
+        /* Rename all children limbs */
+        for (Model.Limb limb : this.editor.data.limbs.values())
+        {
+            if (limb.parent.equals(this.limb.name))
+            {
+                limb.parent = newName;
+            }
+        }
+
+        /* And finally remap the limb name to the new name */
+        this.editor.data.limbs.remove(this.limb.name);
+        this.editor.data.limbs.put(newName, this.limb);
+        this.limb.name = newName;
+    }
+
+    /**
+     * Change the parent
+     */
+    public void changeParent(String newParent)
+    {
+        if (!newParent.isEmpty() && !this.editor.data.limbs.containsKey(newParent))
+        {
+            return;
+        }
+
+        this.limb.parent = newParent;
     }
 
     /**
@@ -392,6 +442,13 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.texture.draw();
             this.size.draw();
             this.anchor.draw();
+
+            /* Icons for visual category */
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            this.editor.mc.renderEngine.bindTexture(GUI);
+            this.editor.drawTexturedModalRect(this.texture.a.xPosition + 100, this.texture.a.yPosition, 96, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.size.a.xPosition + 100, this.size.a.yPosition, 96, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.anchor.a.xPosition + 100, this.anchor.a.yPosition, 64, 16, 16, 16);
         }
 
         for (GuiButton button : this.buttons)
@@ -409,6 +466,13 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.translate.draw();
             this.rotate.draw();
             this.scale.draw();
+
+            /* Icons for pose */
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            this.editor.mc.renderEngine.bindTexture(GUI);
+            this.editor.drawTexturedModalRect(this.translate.a.xPosition + 100, this.translate.a.yPosition, 64, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.scale.a.xPosition + 100, this.scale.a.yPosition, 80, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.rotate.a.xPosition + 100, this.rotate.a.yPosition, 80, 16, 16, 16);
         }
     }
 
@@ -428,6 +492,25 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         if (this.limb == null)
         {
             return;
+        }
+
+        if (button.id == NAME)
+        {
+            GuiInputModal modal = new GuiInputModal(GuiModelEditor.CHANGE_NAME, this.editor, this.editor.mc.fontRendererObj);
+
+            modal.label = "Type in a new name for currently editing limb:";
+            modal.setInput(this.limb.name);
+
+            this.editor.openModal(modal);
+        }
+        if (button.id == PARENT)
+        {
+            GuiInputModal modal = new GuiInputModal(GuiModelEditor.CHANGE_PARENT, this.editor, this.editor.mc.fontRendererObj);
+
+            modal.label = "Type in the name of the limb you want to be the parent for currently editing limb:";
+            modal.setInput(this.limb.parent);
+
+            this.editor.openModal(modal);
         }
 
         if (button.id == -1 || button.id == -2)
@@ -473,6 +556,12 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Callback method from {@link IMultiInputListener}.
+     *
+     * This callback will apply values from multiple slotted inputs to the poses
+     * and some of visual properties (with model rebuilding).
+     */
     @Override
     public void setValue(int id, int subset, String value)
     {
@@ -523,22 +612,5 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
         catch (NumberFormatException e)
         {}
-    }
-
-    @Override
-    public void setEntryValue(int id, boolean value)
-    {}
-
-    @Override
-    public void setEntryValue(int id, float value)
-    {}
-
-    @Override
-    public void setEntryValue(int id, String value)
-    {
-        if (this.limb == null)
-        {
-            return;
-        }
     }
 }
