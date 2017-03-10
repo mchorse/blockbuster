@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import mchorse.blockbuster.model_editor.ModelUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
@@ -47,12 +48,49 @@ public class GuiLimbsList extends GuiScrollPane
         this.limbs.clear();
     }
 
+    /**
+     * Add a new limb
+     */
+    public void addLimb(String name)
+    {
+        if (name.isEmpty())
+        {
+            return;
+        }
+
+        Model.Limb limb = ModelUtils.addLimb(this.model, name);
+
+        this.limb = limb;
+        this.limbs.add(limb);
+        this.picker.pickLimb(limb);
+
+        this.scrollHeight = this.limbs.size() * this.span;
+        this.scrollTo(this.scrollHeight);
+    }
+
+    /**
+     * Remove currently selected limb
+     */
+    public void removeLimb()
+    {
+        ModelUtils.removeLimb(this.model, this.limb);
+
+        this.limb = null;
+        this.picker.pickLimb(null);
+        this.constructLimbs();
+    }
+
     public void setModel(Model model)
     {
         this.model = model;
-        this.scrollHeight = model.limbs.size() * this.span;
+        this.constructLimbs();
+    }
+
+    private void constructLimbs()
+    {
+        this.scrollHeight = this.model.limbs.size() * this.span;
         this.limbs.clear();
-        this.limbs.addAll(model.limbs.values());
+        this.limbs.addAll(this.model.limbs.values());
 
         Collections.sort(this.limbs, new Comparator<Model.Limb>()
         {
@@ -95,11 +133,6 @@ public class GuiLimbsList extends GuiScrollPane
     @Override
     protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model == null)
-        {
-            return;
-        }
-
         for (int i = 0, c = this.limbs.size(); i < c; i++)
         {
             Model.Limb limb = this.limbs.get(i);

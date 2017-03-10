@@ -1,5 +1,7 @@
 package mchorse.blockbuster.model_editor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import mchorse.metamorph.api.models.Model;
@@ -13,6 +15,55 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelUtils
 {
+    /**
+     * Add a limb into a model
+     */
+    public static Model.Limb addLimb(Model model, String name)
+    {
+        Model.Limb limb = new Model.Limb();
+
+        limb.name = name;
+        model.limbs.put(name, limb);
+
+        for (Model.Pose pose : model.poses.values())
+        {
+            pose.limbs.put(name, new Model.Transform());
+        }
+
+        return limb;
+    }
+
+    /**
+     * Remove limb from a model
+     *
+     * If given any limb in the model is child of this limb, then they're
+     * also getting removed.
+     */
+    public static void removeLimb(Model model, Model.Limb limb)
+    {
+        model.limbs.remove(limb.name);
+
+        List<Model.Limb> limbsToRemove = new ArrayList<Model.Limb>();
+
+        for (Model.Limb child : model.limbs.values())
+        {
+            if (child.parent.equals(limb.name))
+            {
+                limbsToRemove.add(child);
+            }
+        }
+
+        for (Model.Pose pose : model.poses.values())
+        {
+            pose.limbs.remove(limb.name);
+        }
+
+        for (Model.Limb limbToRemove : limbsToRemove)
+        {
+            removeLimb(model, limbToRemove);
+        }
+    }
+
     /**
      * Clone a model
      */

@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.widgets.buttons;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTextureButton extends GuiButton
@@ -42,6 +43,7 @@ public class GuiTextureButton extends GuiButton
         if (this.visible)
         {
             mc.renderEngine.bindTexture(this.texture);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             this.drawTexturedModalRect(this.xPosition, this.yPosition, this.hovered ? this.atx : this.tx, this.hovered ? this.aty : this.ty, this.width, this.height);
         }

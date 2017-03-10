@@ -46,6 +46,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     /* Field IDs */
     public static final int CHANGE_NAME = -10;
     public static final int CHANGE_PARENT = -11;
+    public static final int ADD_LIMB = -20;
 
     /* Data */
 
@@ -200,6 +201,17 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     /**
+     * Build the model from data model
+     */
+    public void rebuildModel()
+    {
+        Model.Pose oldPose = this.model.pose;
+
+        this.buildModel();
+        this.model.pose = oldPose;
+    }
+
+    /**
      * Change pose
      */
     private void changePose(String pose)
@@ -228,6 +240,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.clean = new GuiButton(1, this.width - 115, 5, 50, 20, "New");
         this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "standing");
 
+        this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
+        this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);
+
         if (this.mainMenu)
         {
             this.back = new GuiButton(-100, this.width - 170, 5, 50, 20, "Back");
@@ -237,6 +252,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
         this.buttonList.add(this.pose);
+
+        this.buttonList.add(this.addLimb);
+        this.buttonList.add(this.removeLimb);
 
         this.poses.updateRect(this.width - 110, this.height - 106, 100, 80);
         this.poses.setHidden(true);
@@ -265,6 +283,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         {
             this.poses.setHidden(false);
         }
+        else if (button.id == 3)
+        {
+            GuiInputModal modal = new GuiInputModal(ADD_LIMB, this, this.fontRendererObj);
+
+            modal.label = "Choose a name for your new limb:";
+
+            this.openModal(modal);
+        }
+        else if (button.id == 4)
+        {
+            this.limbs.removeLimb();
+            this.rebuildModel();
+        }
         else if (this.mainMenu && button == this.back)
         {
             this.mc.displayGuiScreen(new GuiMainMenu());
@@ -285,8 +316,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         if (button.id == CHANGE_PARENT)
         {
             this.limbEditor.changeParent(((GuiInputModal) modal).getInput());
-            this.buildModel();
-            this.model.pose = this.limbEditor.pose;
+            this.rebuildModel();
+        }
+        if (button.id == ADD_LIMB)
+        {
+            this.limbs.addLimb(((GuiInputModal) modal).getInput());
+            this.rebuildModel();
         }
 
         this.currentModal = null;
@@ -452,11 +487,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbEditor.draw(mouseX, mouseY, partialTicks);
         this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
-
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(new ResourceLocation("blockbuster:textures/gui/model_editor.png"));
-        this.drawTexturedModalRect(this.width - 25, 30, 16, 0, 16, 16);
-        this.drawTexturedModalRect(this.width - 25 - 16, 30, 32, 0, 16, 16);
 
         if (this.dragging)
         {

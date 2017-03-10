@@ -35,6 +35,16 @@ public abstract class GuiModal
      */
     public List<GuiButton> buttons = new ArrayList<GuiButton>();
 
+    /**
+     * Width of the modal
+     */
+    public int width = 200;
+
+    /**
+     * Height of the modal
+     */
+    public int height = 90;
+
     public int buttonWidth = 60;
 
     public GuiModal(GuiScreen parent, FontRenderer font)
@@ -92,15 +102,13 @@ public abstract class GuiModal
     {
         int x = this.parent.width / 2;
         int y = this.parent.height / 2;
-        int width = 200;
-        int height = 90;
 
-        Gui.drawRect(x - width / 2, y - height / 2, x + width / 2, y + height / 2, 0xffcccccc);
-        Gui.drawRect(x - width / 2 + 1, y - height / 2 + 1, x + width / 2 - 1, y + height / 2 - 1, 0xff000000);
+        Gui.drawRect(x - this.width / 2, y - this.height / 2, x + this.width / 2, y + this.height / 2, 0xffcccccc);
+        Gui.drawRect(x - this.width / 2 + 1, y - this.height / 2 + 1, x + this.width / 2 - 1, y + this.height / 2 - 1, 0xff000000);
 
-        float offset = width * 0.5F - 10;
+        float offset = this.width * 0.5F - 10;
 
-        this.font.drawSplitString(this.label, x - (int) offset, y - height / 2 + 10, (int) (offset * 2), 0xffffff);
+        this.font.drawSplitString(this.label, x - (int) offset, y - this.height / 2 + 10, (int) (offset * 2), 0xffffff);
 
         for (GuiButton button : this.buttons)
         {

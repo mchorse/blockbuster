@@ -205,6 +205,11 @@ public class GuiLimbEditor implements IMultiInputListener
     {
         this.limb = limb;
 
+        if (limb == null)
+        {
+            return;
+        }
+
         /* Visual */
         this.mirror.setIsChecked(limb.mirror);
         this.texture.a.setText(String.valueOf(limb.texture[0]));
@@ -428,7 +433,7 @@ public class GuiLimbEditor implements IMultiInputListener
 
         if (this.limb == null)
         {
-            font.drawStringWithShadow("No limb selected", this.name.xPosition, this.name.yPosition - 15, 0xffffff);
+            font.drawStringWithShadow("No limb selected...", this.name.xPosition, this.name.yPosition - 15, 0xffffff);
             return;
         }
 
@@ -525,7 +530,7 @@ public class GuiLimbEditor implements IMultiInputListener
         if (button.id == MIRROR)
         {
             this.limb.mirror = this.mirror.isChecked();
-            this.editor.buildModel();
+            this.editor.rebuildModel();
         }
         if (button.id == LOOKING)
         {
@@ -577,17 +582,17 @@ public class GuiLimbEditor implements IMultiInputListener
             if (id == TEXTURE && val >= 0)
             {
                 this.limb.texture[subset] = (int) val;
-                this.editor.buildModel();
+                this.editor.rebuildModel();
             }
             if (id == ANCHOR)
             {
                 this.limb.anchor[subset] = val;
-                this.editor.buildModel();
+                this.editor.rebuildModel();
             }
             if (id == SIZE && val > 0)
             {
                 this.limb.size[subset] = (int) val;
-                this.editor.buildModel();
+                this.editor.rebuildModel();
             }
 
             if (this.pose == null)
