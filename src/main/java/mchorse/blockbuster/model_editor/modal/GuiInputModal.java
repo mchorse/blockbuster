@@ -48,8 +48,8 @@ public class GuiInputModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 - 90;
-        int y = this.parent.height / 2 + 45 - 28;
+        int x = this.parent.width / 2 - this.width / 2 + 10;
+        int y = this.parent.height / 2 + this.height / 2 - 28;
 
         int w = 200 - 20;
 

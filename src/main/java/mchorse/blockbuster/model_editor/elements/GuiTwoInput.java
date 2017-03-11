@@ -21,7 +21,7 @@ public class GuiTwoInput implements GuiResponder
         this.listener = listener;
 
         this.a = new GuiTextField(id, font, x + 1, y + 1, w - 2, 16);
-        this.b = new GuiTextField(id + 1, font, x + width - w, y, w - 2, 16);
+        this.b = new GuiTextField(id + 1, font, x + width - w, y + 1, w - 2, 16);
 
         this.a.setGuiResponder(this);
         this.b.setGuiResponder(this);
@@ -49,7 +49,10 @@ public class GuiTwoInput implements GuiResponder
     @Override
     public void setEntryValue(int id, String value)
     {
-        this.listener.setValue(this.id, id - this.id, value);
+        if (this.listener != null)
+        {
+            this.listener.setValue(this.id, id - this.id, value);
+        }
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)

@@ -12,6 +12,7 @@ import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
+import mchorse.blockbuster.model_editor.elements.GuiModelModal;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
@@ -47,6 +48,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public static final int CHANGE_NAME = -10;
     public static final int CHANGE_PARENT = -11;
     public static final int ADD_LIMB = -20;
+    public static final int MODEL_PROPS = -30;
 
     /* Data */
 
@@ -121,6 +123,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      * Remove current limb
      */
     private GuiTextureButton removeLimb;
+
+    /**
+     * Edit model properties button
+     */
+    private GuiButton edit;
 
     /**
      * Ticks timer for arm idling animation
@@ -243,6 +250,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
         this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);
 
+        this.edit = new GuiButton(5, this.width - 170, 30, 50, 20, "Edit");
+
         if (this.mainMenu)
         {
             this.back = new GuiButton(-100, this.width - 170, 5, 50, 20, "Back");
@@ -255,6 +264,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         this.buttonList.add(this.addLimb);
         this.buttonList.add(this.removeLimb);
+
+        this.buttonList.add(this.edit);
 
         this.poses.updateRect(this.width - 110, this.height - 106, 100, 80);
         this.poses.setHidden(true);
@@ -296,6 +307,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             this.limbs.removeLimb();
             this.rebuildModel();
         }
+        else if (button.id == 5)
+        {
+            GuiModelModal modal = new GuiModelModal(MODEL_PROPS, this, this.fontRendererObj);
+
+            modal.label = "This modal provides a way to edit model's general properties.";
+            modal.model = this.data;
+
+            this.openModal(modal);
+        }
         else if (this.mainMenu && button == this.back)
         {
             this.mc.displayGuiScreen(new GuiMainMenu());
@@ -313,15 +333,38 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         {
             this.limbEditor.changeName(((GuiInputModal) modal).getInput());
         }
-        if (button.id == CHANGE_PARENT)
+        else if (button.id == CHANGE_PARENT)
         {
             this.limbEditor.changeParent(((GuiInputModal) modal).getInput());
             this.rebuildModel();
         }
-        if (button.id == ADD_LIMB)
+        else if (button.id == ADD_LIMB)
         {
             this.limbs.addLimb(((GuiInputModal) modal).getInput());
             this.rebuildModel();
+        }
+        else if (button.id == MODEL_PROPS)
+        {
+            try
+            {
+                GuiModelModal model = (GuiModelModal) modal;
+
+                String name = model.name.getText();
+                float[] scale = new float[] {Float.parseFloat(model.scale.a.getText()), Float.parseFloat(model.scale.b.getText()), Float.parseFloat(model.scale.c.getText())};
+                int[] texture = new int[] {Integer.parseInt(model.texture.a.getText()), Integer.parseInt(model.texture.b.getText())};
+
+                if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
+                {
+                    return;
+                }
+
+                this.data.name = name;
+                this.data.scale = scale;
+                this.data.texture = texture;
+                this.rebuildModel();
+            }
+            catch (Exception e)
+            {}
         }
 
         this.currentModal = null;

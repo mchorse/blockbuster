@@ -24,8 +24,8 @@ public class GuiAlertModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 + 100;
-        int y = this.parent.height / 2 + 45;
+        int x = this.parent.width / 2 + this.width / 2;
+        int y = this.parent.height / 2 + this.height / 2;
 
         this.cancel = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, "Ok");
 
