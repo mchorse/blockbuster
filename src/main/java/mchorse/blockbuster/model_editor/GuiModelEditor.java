@@ -1,12 +1,18 @@
 package mchorse.blockbuster.model_editor;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
@@ -49,6 +55,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public static final int CHANGE_PARENT = -11;
     public static final int ADD_LIMB = -20;
     public static final int MODEL_PROPS = -30;
+    public static final int SAVE = -40;
 
     /* Data */
 
@@ -66,6 +73,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      * Cached texture path
      */
     private ResourceLocation textureRL;
+
+    /**
+     * Model name for saving
+     */
+    private String modelName = "";
 
     /* GUI fields */
 
@@ -162,8 +174,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.poses = new GuiListViewer(null, this);
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
-        this.setupModel(ModelCustom.MODELS.get("blockbuster.mchorse"));
+        this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
         this.mainMenu = mainMenu;
+        this.textureRL = new ResourceLocation("blockbuster:textures/entity/actor.png");
     }
 
     /**
@@ -239,8 +252,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         /* Initiate the texture field */
         this.texture = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 49, this.height - 24, 98, 18);
         this.texture.setMaxStringLength(400);
-        this.texture.setText("blockbuster.actors:mchorse/mchorse");
-        this.textureRL = new ResourceLocation(this.texture.getText());
+        this.texture.setText(this.textureRL.toString());
 
         /* Buttons */
         this.save = new GuiButton(0, this.width - 60, 5, 50, 20, "Save");
@@ -279,16 +291,32 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
     }
 
+    private void setTexture(String texture)
+    {
+        this.textureRL = new ResourceLocation(texture);
+
+        if (this.texture != null)
+        {
+            this.texture.setText(this.textureRL.toString());
+        }
+    }
+
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.id == 0)
         {
-            /* Save */
+            GuiInputModal modal = new GuiInputModal(SAVE, this, this.fontRendererObj);
+
+            modal.label = "In order to save, you should specify a name of your model:";
+            modal.setInput(this.modelName);
+
+            this.openModal(modal);
         }
         else if (button.id == 1)
         {
-            /* New one */
+            this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
+            this.setTexture("blockbuster:textures/entity/actor.png");
         }
         else if (button.id == 2)
         {
@@ -365,6 +393,38 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             }
             catch (Exception e)
             {}
+        }
+        else if (button.id == SAVE)
+        {
+            String name = ((GuiInputModal) modal).getInput();
+
+            if (name.isEmpty())
+            {
+                return;
+            }
+
+            File folder = new File(ClientProxy.config, "models/" + name);
+            File file = new File(folder, "model.json");
+
+            folder.mkdirs();
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().serializeSpecialFloatingPointValues().create();
+            String output = gson.toJson(this.data);
+
+            try
+            {
+                PrintWriter writer = new PrintWriter(file);
+
+                writer.print(output);
+                writer.close();
+
+                this.modelName = name;
+                ModelCustom.MODELS.put("blockbuster." + name, this.model);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
         }
 
         this.currentModal = null;
@@ -581,8 +641,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.enableRescaleNormal();
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
-
-        GlStateManager.enableAlpha();
 
         this.model.setLivingAnimations(player, 0, 0, 0);
         this.model.setRotationAngles(0, 0, this.timer, yaw, pitch, factor, player);

@@ -41,7 +41,7 @@ public class GuiModelModal extends GuiModal
         int w = this.width - 55;
         int x2 = x - 8 - w;
 
-        this.name = new GuiTextField(0, this.font, x2 + 1, y - 103 + 1, w - 2, 18);
+        this.name = new GuiTextField(0, this.font, x2 + 1, y - 104, w - 2, 18);
         this.scale = new GuiThreeInput(0, this.font, x2, y - 78, w, null);
         this.texture = new GuiTwoInput(0, this.font, x2 + 33, y - 53, w - 33, null);
         this.done = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, "Done");
@@ -92,7 +92,7 @@ public class GuiModelModal extends GuiModal
         int x = this.parent.width / 2 - this.width / 2 + 10;
         int y = this.parent.height / 2 + this.height / 2 - 9;
 
-        this.font.drawStringWithShadow("Name", x, y - 89, 0xffffffff);
+        this.font.drawStringWithShadow("Name", x, y - 90, 0xffffffff);
         this.font.drawStringWithShadow("Scale", x, y - 64, 0xffffffff);
         this.font.drawStringWithShadow("Texture size", x, y - 39, 0xffffffff);
     }
