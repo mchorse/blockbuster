@@ -100,7 +100,7 @@ public class GuiLimbEditor implements IMultiInputListener
     private GuiThreeInput rotate;
 
     /* Stuff */
-    private int counter;
+    private int category;
 
     private GuiButton next;
     private GuiButton prev;
@@ -150,6 +150,11 @@ public class GuiLimbEditor implements IMultiInputListener
         /* Category switchers */
         this.next = new GuiButton(-1, 0, 0, ">");
         this.prev = new GuiButton(-2, 0, 0, "<");
+    }
+
+    private boolean isCategory(int index)
+    {
+        return this.category == index || this.category == -1;
     }
 
     /**
@@ -273,6 +278,9 @@ public class GuiLimbEditor implements IMultiInputListener
     public void initiate(int x, int y)
     {
         int width = 100;
+        boolean full = this.editor.height > 360;
+
+        this.category = full ? -1 : (this.category == -1 ? 0 : this.category);
 
         this.name.xPosition = x;
         this.name.yPosition = y;
@@ -285,7 +293,7 @@ public class GuiLimbEditor implements IMultiInputListener
         this.buttons.add(this.name);
         this.buttons.add(this.parent);
 
-        if (this.counter == 0)
+        if (this.category == 0 || full)
         {
             this.mirror.xPosition = x;
             this.mirror.yPosition = y;
@@ -299,7 +307,8 @@ public class GuiLimbEditor implements IMultiInputListener
 
             this.buttons.add(this.mirror);
         }
-        else if (this.counter == 1)
+
+        if (this.category == 1 || full)
         {
             this.looking.xPosition = x;
             this.looking.yPosition = y;
@@ -327,7 +336,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.buttons.add(this.invert);
             this.buttons.add(this.holding);
         }
-        else if (this.counter == 2)
+
+        if (this.category == 2 || full)
         {
             this.translate.update(x, y, width);
             y += 20;
@@ -337,15 +347,18 @@ public class GuiLimbEditor implements IMultiInputListener
             y += 25;
         }
 
-        int w = 20;
+        if (!full)
+        {
+            int w = 20;
 
-        this.prev.xPosition = x;
-        this.next.xPosition = x + width - w;
-        this.next.yPosition = this.prev.yPosition = y;
-        this.next.width = this.prev.width = w;
+            this.prev.xPosition = x;
+            this.next.xPosition = x + width - w;
+            this.next.yPosition = this.prev.yPosition = y;
+            this.next.width = this.prev.width = w;
 
-        this.buttons.add(this.next);
-        this.buttons.add(this.prev);
+            this.buttons.add(this.next);
+            this.buttons.add(this.prev);
+        }
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
@@ -355,7 +368,7 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        if (this.counter == 0)
+        if (this.isCategory(0))
         {
             this.texture.mouseClicked(mouseX, mouseY, mouseButton);
             this.size.mouseClicked(mouseX, mouseY, mouseButton);
@@ -369,7 +382,7 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        if (this.counter == 2)
+        if (this.isCategory(2))
         {
             this.translate.mouseClicked(mouseX, mouseY, mouseButton);
             this.scale.mouseClicked(mouseX, mouseY, mouseButton);
@@ -407,7 +420,7 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        if (this.counter == 0)
+        if (this.isCategory(0))
         {
             this.texture.keyTyped(typedChar, keyCode);
             this.size.keyTyped(typedChar, keyCode);
@@ -419,7 +432,7 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        if (this.counter == 2)
+        if (this.isCategory(2))
         {
             this.translate.keyTyped(typedChar, keyCode);
             this.scale.keyTyped(typedChar, keyCode);
@@ -437,12 +450,16 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        String cat = this.counter == 0 ? "Visual" : (this.counter == 1 ? "Gameplay" : "Pose");
-
         font.drawStringWithShadow(this.limb.name, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
-        this.editor.drawCenteredString(font, cat, this.prev.xPosition + 49, this.next.yPosition + 6, 0xffffffff);
 
-        if (this.counter == 0)
+        if (this.category != -1)
+        {
+            String cat = this.category == 0 ? "Visual" : (this.category == 1 ? "Gameplay" : "Pose");
+
+            this.editor.drawCenteredString(font, cat, this.prev.xPosition + 49, this.next.yPosition + 6, 0xffffffff);
+        }
+
+        if (this.isCategory(0))
         {
             this.texture.draw();
             this.size.draw();
@@ -466,7 +483,7 @@ public class GuiLimbEditor implements IMultiInputListener
             return;
         }
 
-        if (this.counter == 2)
+        if (this.isCategory(2))
         {
             this.translate.draw();
             this.rotate.draw();
@@ -522,42 +539,49 @@ public class GuiLimbEditor implements IMultiInputListener
         {
             boolean next = button.id == -1;
 
-            this.counter += next ? 1 : -1;
-            this.counter = this.counter > 2 ? 0 : (this.counter < 0 ? 2 : this.counter);
+            this.category += next ? 1 : -1;
+            this.category = this.category > 2 ? 0 : (this.category < 0 ? 2 : this.category);
             this.initiate(this.name.xPosition, this.name.yPosition);
         }
 
-        if (button.id == MIRROR)
+        if (this.isCategory(0))
         {
-            this.limb.mirror = this.mirror.isChecked();
-            this.editor.rebuildModel();
+            if (button.id == MIRROR)
+            {
+                this.limb.mirror = this.mirror.isChecked();
+                this.editor.rebuildModel();
+            }
         }
-        if (button.id == LOOKING)
-        {
-            this.limb.looking = this.looking.isChecked();
-        }
-        if (button.id == IDLE)
-        {
-            this.limb.idle = this.idle.isChecked();
-        }
-        if (button.id == SWINGING)
-        {
-            this.limb.swinging = this.swinging.isChecked();
-        }
-        if (button.id == SWIPING)
-        {
-            this.limb.swiping = this.swiping.isChecked();
-        }
-        if (button.id == INVERT)
-        {
-            this.limb.invert = this.invert.isChecked();
-        }
-        if (button.id == HOLDING)
-        {
-            this.holding.toggle();
 
-            int value = this.holding.getValue();
-            this.limb.holding = value == 0 ? "" : (value == 1 ? "right" : "left");
+        if (this.isCategory(1))
+        {
+            if (button.id == LOOKING)
+            {
+                this.limb.looking = this.looking.isChecked();
+            }
+            if (button.id == IDLE)
+            {
+                this.limb.idle = this.idle.isChecked();
+            }
+            if (button.id == SWINGING)
+            {
+                this.limb.swinging = this.swinging.isChecked();
+            }
+            if (button.id == SWIPING)
+            {
+                this.limb.swiping = this.swiping.isChecked();
+            }
+            if (button.id == INVERT)
+            {
+                this.limb.invert = this.invert.isChecked();
+            }
+            if (button.id == HOLDING)
+            {
+                this.holding.toggle();
+
+                int value = this.holding.getValue();
+                this.limb.holding = value == 0 ? "" : (value == 1 ? "right" : "left");
+            }
         }
     }
 

@@ -17,13 +17,29 @@ public class GuiModelModal extends GuiModal
 {
     public Model model;
 
-    /* Fields */
-    public GuiTextField name;
-    public GuiThreeInput scale;
-    public GuiTwoInput texture;
-    private GuiButton done;
-
     private int id;
+
+    /* GUI fields */
+
+    /**
+     * Name of the model
+     */
+    public GuiTextField name;
+
+    /**
+     * Scale of the model
+     */
+    public GuiThreeInput scale;
+
+    /**
+     * Texture size of the model
+     */
+    public GuiTwoInput texture;
+
+    /**
+     * Button which activates saving of the model
+     */
+    private GuiButton done;
 
     public GuiModelModal(int id, GuiScreen parent, FontRenderer font)
     {

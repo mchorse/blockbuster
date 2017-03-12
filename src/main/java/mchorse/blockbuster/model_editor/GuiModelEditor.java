@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
@@ -35,9 +36,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -56,6 +54,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public static final int ADD_LIMB = -20;
     public static final int MODEL_PROPS = -30;
     public static final int SAVE = -40;
+    public static final int NEW = -50;
 
     /* Data */
 
@@ -167,15 +166,17 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private boolean mainMenu;
 
     /**
-     * Setup by default the
+     * Setup by default
      */
     public GuiModelEditor(boolean mainMenu)
     {
+        this.mainMenu = mainMenu;
+
         this.poses = new GuiListViewer(null, this);
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
+
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
-        this.mainMenu = mainMenu;
         this.textureRL = new ResourceLocation("blockbuster:textures/entity/actor.png");
     }
 
@@ -201,23 +202,25 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.poses.setStrings(poses);
         this.limbs.setModel(this.data);
 
-        this.buildModel();
+        this.model = this.buildModel();
         this.changePose("standing");
     }
 
     /**
      * Build the model from data model
      */
-    public void buildModel()
+    public ModelCustom buildModel()
     {
         try
         {
-            this.model = new ModelParser().parseModel(this.data, ModelCustom.class);
+            return new ModelParser().parseModel(this.data, ModelCustom.class);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     /**
@@ -227,8 +230,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         Model.Pose oldPose = this.model.pose;
 
-        this.buildModel();
-        this.model.pose = oldPose;
+        this.model = this.buildModel();
+
+        if (this.model != null)
+        {
+            this.model.pose = oldPose;
+        }
     }
 
     /**
@@ -246,6 +253,21 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbEditor.setPose(this.model.pose);
     }
 
+    /**
+     * Set texture
+     */
+    private void setTexture(String texture)
+    {
+        this.textureRL = new ResourceLocation(texture);
+
+        if (this.texture != null)
+        {
+            this.texture.setText(this.textureRL.toString());
+        }
+    }
+
+    /* Initiate GUI and handle input from other widgets */
+
     @Override
     public void initGui()
     {
@@ -255,29 +277,25 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.texture.setText(this.textureRL.toString());
 
         /* Buttons */
-        this.save = new GuiButton(0, this.width - 60, 5, 50, 20, "Save");
-        this.clean = new GuiButton(1, this.width - 115, 5, 50, 20, "New");
+        this.edit = new GuiTextureButton(5, this.width - 107, 5, GuiLimbEditor.GUI).setTexPos(48, 32).setActiveTexPos(48, 48);
+        this.save = new GuiTextureButton(0, this.width - 79, 5, GuiLimbEditor.GUI).setTexPos(0, 32).setActiveTexPos(0, 48);
+        this.clean = new GuiTextureButton(1, this.width - 52, 5, GuiLimbEditor.GUI).setTexPos(16, 32).setActiveTexPos(16, 48);
+        this.back = new GuiTextureButton(-100, this.width - 25, 5, GuiLimbEditor.GUI).setTexPos(32, 32).setActiveTexPos(32, 48);
+
         this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "standing");
 
         this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
         this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);
 
-        this.edit = new GuiButton(5, this.width - 170, 30, 50, 20, "Edit");
-
-        if (this.mainMenu)
-        {
-            this.back = new GuiButton(-100, this.width - 170, 5, 50, 20, "Back");
-            this.buttonList.add(this.back);
-        }
-
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
+        this.buttonList.add(this.edit);
+        this.buttonList.add(this.back);
+
         this.buttonList.add(this.pose);
 
         this.buttonList.add(this.addLimb);
         this.buttonList.add(this.removeLimb);
-
-        this.buttonList.add(this.edit);
 
         this.poses.updateRect(this.width - 110, this.height - 106, 100, 80);
         this.poses.setHidden(true);
@@ -288,16 +306,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         if (this.currentModal != null)
         {
             this.currentModal.initiate();
-        }
-    }
-
-    private void setTexture(String texture)
-    {
-        this.textureRL = new ResourceLocation(texture);
-
-        if (this.texture != null)
-        {
-            this.texture.setText(this.textureRL.toString());
         }
     }
 
@@ -315,8 +323,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
         else if (button.id == 1)
         {
-            this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
-            this.setTexture("blockbuster:textures/entity/actor.png");
+            GuiInputModal modal = new GuiInputModal(NEW, this, this.fontRendererObj);
+
+            modal.label = "Type in a model which you want to use for ";
+            modal.setInput("blockbuster.steve");
+
+            this.openModal(modal);
         }
         else if (button.id == 2)
         {
@@ -344,9 +356,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
             this.openModal(modal);
         }
-        else if (this.mainMenu && button == this.back)
+        else if (button == this.back)
         {
-            this.mc.displayGuiScreen(new GuiMainMenu());
+            this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
         }
     }
 
@@ -419,12 +431,24 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
                 writer.close();
 
                 this.modelName = name;
-                ModelCustom.MODELS.put("blockbuster." + name, this.model);
+                ModelCustom.MODELS.put("blockbuster." + name, this.buildModel());
             }
             catch (Exception e)
             {
                 return;
             }
+        }
+        else if (button.id == NEW)
+        {
+            String name = ((GuiInputModal) modal).getInput();
+
+            if (!ModelCustom.MODELS.containsKey(name))
+            {
+                return;
+            }
+
+            this.setupModel(ModelCustom.MODELS.get(name));
+            this.modelName = name;
         }
 
         this.currentModal = null;
@@ -442,6 +466,30 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbEditor.setLimb(limb);
     }
 
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    {
+        super.setWorldAndResolution(mc, width, height);
+        this.poses.setWorldAndResolution(mc, width, height);
+        this.limbs.setWorldAndResolution(mc, width, height);
+    }
+
+    /* Handling input */
+
+    @Override
+    public void handleKeyboardInput() throws IOException
+    {
+        super.handleKeyboardInput();
+
+        this.limbs.handleKeyboardInput();
+    }
+
+    /**
+     * Key pressed
+     *
+     * Used for delegating keyboard events to different fields and to current
+     * model (if it's active).
+     */
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
@@ -472,16 +520,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
     }
 
-    @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
-    {
-        super.setWorldAndResolution(mc, width, height);
-        this.poses.setWorldAndResolution(mc, width, height);
-        this.limbs.setWorldAndResolution(mc, width, height);
-    }
-
-    /* Mouse events */
-
+    /**
+     * Handle mouse input
+     *
+     * This method is used to prevent delegation of mouse input events in the
+     * limbs list (when poses list overlays limbs list) and zooming the model.
+     */
     @Override
     public void handleMouseInput() throws IOException
     {
@@ -490,6 +534,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         super.handleMouseInput();
 
+        /* Zooming the model */
         if (x > 120 && x < this.width - 120)
         {
             int scroll = -Mouse.getEventDWheel();
@@ -509,6 +554,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.poses.handleMouseInput();
     }
 
+    /**
+     * Mouse clicked
+     *
+     * This method is used for responsible for delegating mouse click event to
+     * the child widgets, modal and to rotation thing.
+     */
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
@@ -537,17 +588,27 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
     }
 
+    /**
+     * Mouse released
+     *
+     * Used to calculate final yaw and pitch for the model rotation.
+     */
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        this.dragging = false;
-        this.prevYaw += this.yaw;
-        this.prevPitch += this.pitch;
-        this.yaw = this.pitch = 0;
-        this.prevX = this.prevY = 0;
+        if (this.dragging)
+        {
+            this.dragging = false;
+            this.prevYaw += this.yaw;
+            this.prevPitch += this.pitch;
+            this.yaw = this.pitch = 0;
+            this.prevX = this.prevY = 0;
+        }
 
         super.mouseReleased(mouseX, mouseY, state);
     }
+
+    /* Updating and rendering */
 
     @Override
     public void updateScreen()
@@ -562,8 +623,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.drawHorizontalGradientRect(0, 0, 120, this.height, 0x55000000, 0x00000000);
-        this.drawHorizontalGradientRect(this.width - 120, 0, this.width, this.height, 0x00000000, 0x55000000);
+        GuiUtils.drawHorizontalGradientRect(0, 0, 120, this.height, 0x55000000, 0x00000000, this.zLevel);
+        GuiUtils.drawHorizontalGradientRect(this.width - 120, 0, this.width, this.height, 0x00000000, 0x55000000, this.zLevel);
 
         /* Draw the model */
         float scale = this.height / 3;
@@ -609,6 +670,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
     /**
      * Draw currently edited model
+     *
+     * Totally stole it from Metamorph's code from {@link GuiUtils}.
      */
     private void drawModel(float x, float y, float scale, float yaw, float pitch)
     {
@@ -667,41 +730,5 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    }
-
-    /**
-     * Draws a rectangle with a horizontal gradient between with specified
-     * colors, the code is borrowed form {@link #drawGradientRect(int, int, int, int, int, int)}
-     */
-    protected void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
-    {
-        float a1 = (startColor >> 24 & 255) / 255.0F;
-        float r1 = (startColor >> 16 & 255) / 255.0F;
-        float g1 = (startColor >> 8 & 255) / 255.0F;
-        float b1 = (startColor & 255) / 255.0F;
-        float a2 = (endColor >> 24 & 255) / 255.0F;
-        float r2 = (endColor >> 16 & 255) / 255.0F;
-        float g2 = (endColor >> 8 & 255) / 255.0F;
-        float b2 = (endColor & 255) / 255.0F;
-
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(7425);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
-        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        vertexbuffer.pos(right, top, this.zLevel).color(r2, g2, b2, a2).endVertex();
-        vertexbuffer.pos(left, top, this.zLevel).color(r1, g1, b1, a1).endVertex();
-        vertexbuffer.pos(left, bottom, this.zLevel).color(r1, g1, b1, a1).endVertex();
-        vertexbuffer.pos(right, bottom, this.zLevel).color(r2, g2, b2, a2).endVertex();
-        tessellator.draw();
-
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
     }
 }

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import mchorse.blockbuster.model_editor.ModelUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.models.Model.Limb;
@@ -86,6 +88,12 @@ public class GuiLimbsList extends GuiScrollPane
         this.constructLimbs();
     }
 
+    /**
+     * Construct limbs
+     *
+     * This method is responsible for setting up limbs array for editing,
+     * sorting it
+     */
     private void constructLimbs()
     {
         this.scrollHeight = this.model.limbs.size() * this.span;
@@ -102,6 +110,34 @@ public class GuiLimbsList extends GuiScrollPane
         });
     }
 
+    /**
+     * Key typed
+     *
+     * This method is responsible for switching between the limbs in the limb
+     * list sidebar.
+     */
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
+        boolean isUp = keyCode == Keyboard.KEY_UP;
+
+        if (isUp || keyCode == Keyboard.KEY_DOWN)
+        {
+            int index = this.limbs.indexOf(this.limb);
+
+            if (index != -1)
+            {
+                int length = this.limbs.size();
+
+                index += isUp ? -1 : 1;
+                index = index < 0 ? length - 1 : (index >= length ? 0 : index);
+
+                this.limb = this.limbs.get(index);
+                this.picker.pickLimb(this.limb);
+            }
+        }
+    }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
@@ -116,6 +152,9 @@ public class GuiLimbsList extends GuiScrollPane
 
         if (this.limbs.isEmpty() || index < 0 || index > this.limbs.size() - 1)
         {
+            this.limb = null;
+            this.picker.pickLimb(null);
+
             return;
         }
 
@@ -165,6 +204,11 @@ public class GuiLimbsList extends GuiScrollPane
         }
     }
 
+    /**
+     * Limb picker interface
+     *
+     * Basically
+     */
     public static interface ILimbPicker
     {
         public void pickLimb(Model.Limb limb);
