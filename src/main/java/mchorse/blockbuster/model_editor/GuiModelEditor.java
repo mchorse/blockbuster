@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.common.ClientProxy;
@@ -20,6 +21,8 @@ import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.elements.GuiModelModal;
+import mchorse.blockbuster.model_editor.elements.GuiTexturePicker;
+import mchorse.blockbuster.model_editor.elements.GuiTexturePicker.ITexturePicker;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
@@ -32,7 +35,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -46,7 +48,7 @@ import net.minecraft.util.math.MathHelper;
  * This GUI is responsible providing to player tools to edit custom models,
  * just like McME, but better and up to date.
  */
-public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder, ILimbPicker
+public class GuiModelEditor extends GuiScreen implements IModalCallback, IListResponder, ILimbPicker, ITexturePicker
 {
     /* Field IDs */
     public static final int CHANGE_NAME = -10;
@@ -101,9 +103,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private GuiLimbEditor limbEditor;
 
     /**
+     * Texture picker
+     */
+    private GuiTexturePicker texturePicker;
+
+    /**
      * Texture path field
      */
-    private GuiTextField texture;
+    private GuiButton showTextures;
 
     /**
      * Pose field
@@ -175,6 +182,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.poses = new GuiListViewer(null, this);
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
+        this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
 
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
         this.textureRL = new ResourceLocation("blockbuster:textures/entity/actor.png");
@@ -259,11 +267,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     private void setTexture(String texture)
     {
         this.textureRL = new ResourceLocation(texture);
-
-        if (this.texture != null)
-        {
-            this.texture.setText(this.textureRL.toString());
-        }
     }
 
     /* Initiate GUI and handle input from other widgets */
@@ -271,10 +274,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     public void initGui()
     {
-        /* Initiate the texture field */
-        this.texture = new GuiTextField(0, this.fontRendererObj, this.width / 2 - 49, this.height - 24, 98, 18);
-        this.texture.setMaxStringLength(400);
-        this.texture.setText(this.textureRL.toString());
+        /* Initiate the texture button */
+        this.showTextures = new GuiTextureButton(6, 110 - 16, 5, GuiLimbEditor.GUI).setTexPos(0, 0).setActiveTexPos(0, 16);
 
         /* Buttons */
         this.edit = new GuiTextureButton(5, this.width - 107, 5, GuiLimbEditor.GUI).setTexPos(48, 32).setActiveTexPos(48, 48);
@@ -286,6 +287,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
         this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);
+
+        this.buttonList.add(this.showTextures);
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
@@ -302,6 +305,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         this.limbEditor.initiate(10, 47);
         this.limbs.updateRect(this.width - 111, 47, 102, this.height - 47 - 30);
+
+        this.texturePicker.updateRect(120, -1, this.width - 240, this.height + 2);
+        this.texturePicker.setHidden(true);
 
         if (this.currentModal != null)
         {
@@ -355,6 +361,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             modal.model = this.data;
 
             this.openModal(modal);
+        }
+        else if (button.id == 6)
+        {
+            this.texturePicker.setHidden(false);
         }
         else if (button == this.back)
         {
@@ -467,11 +477,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     @Override
+    public void pickTexture(String texture)
+    {
+        this.setTexture(texture);
+        this.texturePicker.setHidden(true);
+    }
+
+    @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         super.setWorldAndResolution(mc, width, height);
         this.poses.setWorldAndResolution(mc, width, height);
         this.limbs.setWorldAndResolution(mc, width, height);
+        this.texturePicker.setWorldAndResolution(mc, width, height);
     }
 
     /* Handling input */
@@ -500,13 +518,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         if (this.currentModal == null)
         {
-            this.texture.textboxKeyTyped(typedChar, keyCode);
-
-            if (this.texture.isFocused() && !this.texture.getText().equals(this.textureRL.toString()))
-            {
-                this.textureRL = new ResourceLocation(this.texture.getText());
-            }
-
             this.limbEditor.keyTyped(typedChar, keyCode);
         }
         else
@@ -532,10 +543,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
-        super.handleMouseInput();
+        this.texturePicker.handleMouseInput();
 
         /* Zooming the model */
-        if (x > 120 && x < this.width - 120)
+        if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden())
         {
             int scroll = -Mouse.getEventDWheel();
 
@@ -552,6 +563,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
 
         this.poses.handleMouseInput();
+
+        super.handleMouseInput();
     }
 
     /**
@@ -570,7 +583,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
 
         if (this.currentModal == null)
         {
-            this.texture.mouseClicked(mouseX, mouseY, mouseButton);
             this.limbEditor.mouseClicked(mouseX, mouseY, mouseButton);
 
             if (mouseX > 120 && mouseX < this.width - 120)
@@ -651,6 +663,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.limbEditor.draw(mouseX, mouseY, partialTicks);
         this.limbs.drawScreen(mouseX, mouseY, partialTicks);
         this.poses.drawScreen(mouseX, mouseY, partialTicks);
+        this.texturePicker.drawScreen(mouseX, mouseY, partialTicks);
 
         if (this.dragging)
         {
@@ -658,7 +671,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             this.pitch = this.prevY - mouseY;
         }
 
-        this.texture.drawTextBox();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.renderEngine.bindTexture(GuiLimbEditor.GUI);
+        this.drawTexturedModalRect(this.pose.xPosition + 2, this.pose.yPosition + 2, 64, 32, 16, 16);
 
         /* Draw current modal */
         if (this.currentModal != null)

@@ -33,8 +33,14 @@ public class GuiListViewer extends GuiScrollPane
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (!this.isInside(mouseX, mouseY) || mouseX > this.x + this.w - 8)
+        if (mouseX > this.x + this.w - 8)
         {
+            return;
+        }
+
+        if (!this.isInside(mouseX, mouseY))
+        {
+            this.setHidden(true);
             return;
         }
 
