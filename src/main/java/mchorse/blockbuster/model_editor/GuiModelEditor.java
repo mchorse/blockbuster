@@ -440,8 +440,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
                 writer.print(output);
                 writer.close();
 
-                this.modelName = name;
                 ModelCustom.MODELS.put("blockbuster." + name, this.buildModel());
+                this.modelName = name;
             }
             catch (Exception e)
             {
@@ -457,8 +457,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
                 return;
             }
 
+            int index = name.indexOf(".") + 1;
+
             this.setupModel(ModelCustom.MODELS.get(name));
-            this.modelName = name;
+            this.modelName = index == -1 ? name : name.substring(index);
         }
 
         this.currentModal = null;

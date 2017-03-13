@@ -15,6 +15,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Texture picker GUI
+ *
+ * This GUI is responsible for allowing user to pick a texture from default one
+ * and also from {@link ModelPack}.
+ */
 public class GuiTexturePicker extends GuiScrollPane
 {
     private ModelPack pack;
@@ -26,6 +32,11 @@ public class GuiTexturePicker extends GuiScrollPane
         this.picker = picker;
         this.pack = pack;
         this.pack.reload();
+
+        /* Adding factory textures */
+        this.textures.add(new TextureInfo(64, 32, new ResourceLocation("blockbuster:textures/entity/actor.png")));
+        this.textures.add(new TextureInfo(64, 64, new ResourceLocation("minecraft:textures/entity/steve.png")));
+        this.textures.add(new TextureInfo(64, 64, new ResourceLocation("minecraft:textures/entity/alex.png")));
 
         for (Map.Entry<String, Map<String, File>> skins : pack.skins.entrySet())
         {
@@ -46,18 +57,31 @@ public class GuiTexturePicker extends GuiScrollPane
         }
     }
 
+    /**
+     * Recalculate the scroll height of texture picker
+     */
     @Override
     public void initGui()
     {
         this.scrollHeight = (this.textures.size() / 6 + 1) * (this.w / 6);
     }
 
+    /**
+     * Draw solid black background
+     */
     @Override
     protected void drawBackground()
     {
         Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, 0xff000000);
     }
 
+    /**
+     * Mouse click event
+     *
+     * This method is responsible for picking the texture. It uses simple
+     * arithmetic algorithm to calculate the index of the texture based on
+     * mouse's X and Y coordinates.
+     */
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
@@ -80,12 +104,15 @@ public class GuiTexturePicker extends GuiScrollPane
         int width = this.w / 6;
         int index = x / width + y / width * 6;
 
-        if (index >= 0 && index < this.textures.size() && this.picker != null)
+        if (this.picker != null && index >= 0 && index < this.textures.size())
         {
             this.picker.pickTexture(this.textures.get(index).path.toString());
         }
     }
 
+    /**
+     * Draw textures on the screen
+     */
     @Override
     protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
@@ -107,6 +134,13 @@ public class GuiTexturePicker extends GuiScrollPane
         }
     }
 
+    /**
+     * Texture info class
+     *
+     * This class is responsible for holding information about texture in the
+     * texture picker. Used mostly for caching purposes and the ability to
+     * correctly size texture's width and height.
+     */
     public static class TextureInfo
     {
         public int w;
@@ -121,6 +155,12 @@ public class GuiTexturePicker extends GuiScrollPane
         }
     }
 
+    /**
+     * Pick texture interface
+     *
+     * Basically {@link GuiTexturePicker} needs a callback for notifying some
+     * object that user clicked some texture.
+     */
     public static interface ITexturePicker
     {
         public void pickTexture(String texture);
