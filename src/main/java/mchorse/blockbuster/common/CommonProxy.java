@@ -142,6 +142,7 @@ public class CommonProxy
     {
         this.models.loadModels(pack);
         this.models.pack = pack;
+
         this.factory.models = this.models;
         this.factory.registerModels();
     }
