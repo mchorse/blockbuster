@@ -59,6 +59,11 @@ public class MainMenuHandler
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
+        if (!Blockbuster.proxy.config.auto_refresh_models)
+        {
+            return;
+        }
+
         GuiScreen gui = event.getGui();
 
         boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
