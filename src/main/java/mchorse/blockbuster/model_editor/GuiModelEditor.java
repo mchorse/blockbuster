@@ -8,9 +8,6 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -188,7 +185,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
 
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
-        this.textureRL = new ResourceLocation("blockbuster:textures/entity/actor.png");
+        this.setTexture("blockbuster:textures/entity/actor.png");
     }
 
     /**
@@ -252,7 +249,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     }
 
     /**
-     * Change pose
+     * Change pose of the model
      */
     private void changePose(String pose)
     {
@@ -305,6 +302,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.buttonList.add(this.addLimb);
         this.buttonList.add(this.removeLimb);
 
+        /* Custom GUI controls */
         this.poses.updateRect(this.width - 110, this.height - 106, 100, 80);
         this.poses.setHidden(true);
 
@@ -314,12 +312,19 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         this.texturePicker.updateRect(120, -1, this.width - 240, this.height + 2);
         this.texturePicker.setHidden(true);
 
+        /* Initiate the modal */
         if (this.currentModal != null)
         {
             this.currentModal.initiate();
         }
     }
 
+    /**
+     * Button handler
+     *
+     * This monolithic method is responsible for showing modals and executing
+     * some actions on the press of button.
+     */
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
@@ -327,7 +332,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         {
             GuiInputModal modal = new GuiInputModal(SAVE, this, this.fontRendererObj);
 
-            modal.label = "In order to save, you should specify a name of your model:";
+            modal.label = "In order to save, you should specify a name of your model.";
             modal.setInput(this.modelName);
 
             this.openModal(modal);
@@ -348,7 +353,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         {
             GuiInputModal modal = new GuiInputModal(ADD_LIMB, this, this.fontRendererObj);
 
-            modal.label = "Choose a name for your new limb:";
+            modal.label = "Choose a name for your new limb.";
 
             this.openModal(modal);
         }
@@ -399,77 +404,110 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
         else if (button.id == MODEL_PROPS)
         {
-            try
-            {
-                GuiModelModal model = (GuiModelModal) modal;
-
-                String name = model.name.getText();
-                float[] scale = new float[] {Float.parseFloat(model.scale.a.getText()), Float.parseFloat(model.scale.b.getText()), Float.parseFloat(model.scale.c.getText())};
-                int[] texture = new int[] {Integer.parseInt(model.texture.a.getText()), Integer.parseInt(model.texture.b.getText())};
-
-                if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
-                {
-                    return;
-                }
-
-                this.data.name = name;
-                this.data.scale = scale;
-                this.data.texture = texture;
-                this.rebuildModel();
-            }
-            catch (Exception e)
-            {}
-        }
-        else if (button.id == SAVE)
-        {
-            String name = ((GuiInputModal) modal).getInput();
-
-            if (name.isEmpty())
+            if (!this.editModelProperties((GuiModelModal) modal))
             {
                 return;
             }
-
-            File folder = new File(ClientProxy.config, "models/" + name);
-            File file = new File(folder, "model.json");
-
-            folder.mkdirs();
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().serializeSpecialFloatingPointValues().create();
-            String output = gson.toJson(this.data);
-
-            try
-            {
-                PrintWriter writer = new PrintWriter(file);
-
-                writer.print(output);
-                writer.close();
-
-                ModelCustom.MODELS.put("blockbuster." + name, this.buildModel());
-                this.modelName = name;
-            }
-            catch (Exception e)
+        }
+        else if (button.id == SAVE)
+        {
+            if (!this.saveModel(((GuiInputModal) modal).getInput()))
             {
                 return;
             }
         }
         else if (button.id == NEW)
         {
-            ModelCell cell = ((GuiNewModal) this.currentModal).models.selected;
-
-            if (cell == null)
+            if (!this.newModel(((GuiNewModal) this.currentModal).models.selected))
             {
                 return;
             }
-
-            String name = cell.key;
-            int index = name.indexOf(".") + 1;
-
-            this.setupModel(cell.model);
-            this.textureRL = cell.texture;
-            this.modelName = index == -1 ? name : name.substring(index);
         }
 
         this.currentModal = null;
+    }
+
+    /**
+     * Edit model properties
+     *
+     * This method is responsible for extracting data from {@link GuiModelModal}
+     * and setting those values to currently editing model.
+     */
+    private boolean editModelProperties(GuiModelModal modal)
+    {
+        try
+        {
+            String name = modal.name.getText();
+            float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
+            int[] texture = new int[] {Integer.parseInt(modal.texture.a.getText()), Integer.parseInt(modal.texture.b.getText())};
+
+            if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
+            {
+                return false;
+            }
+
+            this.data.name = name;
+            this.data.scale = scale;
+            this.data.texture = texture;
+            this.rebuildModel();
+        }
+        catch (Exception e)
+        {}
+
+        return true;
+    }
+
+    /**
+     * Save model
+     *
+     * This method is responsible for saving model into users's config folder.
+     */
+    private boolean saveModel(String name)
+    {
+        if (name.isEmpty())
+        {
+            return false;
+        }
+
+        File folder = new File(ClientProxy.config, "models/" + name);
+        File file = new File(folder, "model.json");
+        String output = ModelUtils.toJson(this.data);
+
+        folder.mkdirs();
+
+        try
+        {
+            PrintWriter writer = new PrintWriter(file);
+
+            writer.print(output);
+            writer.close();
+
+            ModelCustom.MODELS.put("blockbuster." + name, this.buildModel());
+            this.modelName = name;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean newModel(ModelCell cell)
+    {
+        if (cell == null)
+        {
+            return false;
+        }
+
+        String name = cell.key;
+        int index = name.indexOf(".") + 1;
+
+        this.setupModel(cell.model);
+        this.textureRL = cell.texture;
+        this.modelName = index == -1 ? name : name.substring(index);
+
+        return true;
     }
 
     @Override
@@ -552,16 +590,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
         int scroll = -Mouse.getEventDWheel();
 
+        boolean inModal = this.currentModal != null;
+
         this.texturePicker.handleMouseInput();
 
         /* Zooming the model */
-        if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && this.currentModal == null)
+        if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && !inModal)
         {
             this.scale += Math.copySign(2.0, scroll);
             this.scale = MathHelper.clamp_float(this.scale, -100, 500);
         }
 
-        if (scroll != 0 && this.currentModal != null)
+        if (scroll != 0 && inModal)
         {
             this.currentModal.wheelScroll(x, y, scroll);
         }
@@ -643,6 +683,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        /* Background and beautiful horizontal fade outs */
         this.drawDefaultBackground();
         GuiUtils.drawHorizontalGradientRect(0, 0, 120, this.height, 0x55000000, 0x00000000, this.zLevel);
         GuiUtils.drawHorizontalGradientRect(this.width - 120, 0, this.width, this.height, 0x00000000, 0x55000000, this.zLevel);
@@ -695,7 +736,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     /**
      * Draw currently edited model
      *
-     * Totally stole it from Metamorph's code from {@link GuiUtils}.
+     * Totally stole it from Metamorph's code from {@link GuiUtils}. I hate to
+     * copy and paste code like this, but unfortunately, there are too much
+     * lines of code that depend on each other and cannot be separated.
      */
     private void drawModel(float x, float y, float scale, float yaw, float pitch)
     {

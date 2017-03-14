@@ -543,8 +543,6 @@ public class GuiLimbEditor implements IMultiInputListener
             this.category += next ? 1 : -1;
             this.category = this.category > 2 ? 0 : (this.category < 0 ? 2 : this.category);
             this.initiate(this.name.xPosition, this.name.yPosition);
-
-            System.out.println(this.category);
         }
 
         if (this.isCategory(0))

@@ -1,9 +1,17 @@
 package mchorse.blockbuster.model_editor;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
+
+import mchorse.blockbuster.model_editor.json.ModelAdapter;
+import mchorse.blockbuster.model_editor.json.ModelLimbAdapter;
+import mchorse.blockbuster.model_editor.json.ModelPoseAdapter;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,6 +23,35 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelUtils
 {
+    /**
+     * Save model to JSON
+     *
+     * This method is responsible for making the JSON output pretty printed and
+     * 4 spaces indented (fuck 2 space indentation).
+     */
+    public static String toJson(Model model)
+    {
+        GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
+
+        builder.registerTypeAdapter(Model.class, new ModelAdapter());
+        builder.registerTypeAdapter(Model.Limb.class, new ModelLimbAdapter());
+        builder.registerTypeAdapter(Model.Pose.class, new ModelPoseAdapter());
+
+        Gson gson = builder.create();
+        StringWriter writer = new StringWriter();
+        JsonWriter jsonWriter = new JsonWriter(writer);
+
+        jsonWriter.setIndent("    ");
+        gson.toJson(model, Model.class, jsonWriter);
+
+        String output = writer.toString();
+
+        /* Prettify arrays */
+        output = output.replaceAll("\\n\\s+(?=-?\\d|\\])", " ");
+
+        return output;
+    }
+
     /**
      * Add a limb into a model
      */

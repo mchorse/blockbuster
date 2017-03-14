@@ -19,6 +19,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class GuiModelsView extends GuiScrollView
@@ -52,7 +53,7 @@ public class GuiModelsView extends GuiScrollView
     {
         int index = this.models.indexOf(this.selected);
 
-        this.scrollHeight = (this.models.size() / 3 + 1) * (this.w / 3);
+        this.scrollHeight = MathHelper.ceiling_float_int(this.models.size() / 3.0F) * (this.w / 3);
         this.scrollY = index == -1 ? 0 : index / 3 * this.w / 3;
     }
 
@@ -99,11 +100,11 @@ public class GuiModelsView extends GuiScrollView
                 model.model.pose = model.model.model.getPose("standing");
 
                 this.drawModel(model.model, this.dummy, x + w / 2, y + (int) (w * 0.8F), w / 2.5F);
+            }
 
-                if (this.selected == model)
-                {
-                    this.renderSelected(x, y, w, w);
-                }
+            if (this.selected == model)
+            {
+                this.renderSelected(x, y, w, w);
             }
 
             i++;
