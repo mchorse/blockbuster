@@ -89,6 +89,12 @@ public abstract class GuiModal
         }
     }
 
+    public void mouseReleased(int mouseX, int mouseY, int state)
+    {}
+
+    public void wheelScroll(int mouseX, int mouseY, int scroll)
+    {}
+
     /**
      * If keyboard input is needed
      */

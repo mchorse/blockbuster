@@ -21,6 +21,8 @@ import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer;
 import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.elements.GuiModelModal;
+import mchorse.blockbuster.model_editor.elements.GuiModelsView.ModelCell;
+import mchorse.blockbuster.model_editor.elements.GuiNewModal;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker.ITexturePicker;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
@@ -329,10 +331,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
         else if (button.id == 1)
         {
-            GuiInputModal modal = new GuiInputModal(NEW, this, this.fontRendererObj);
+            GuiNewModal modal = new GuiNewModal(NEW, this, this.fontRendererObj);
 
-            modal.label = "Type in a model which you want to use for ";
-            modal.setInput("blockbuster.steve");
+            modal.label = "Choose a model which you want to edit or use as a template";
 
             this.openModal(modal);
         }
@@ -450,16 +451,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
         else if (button.id == NEW)
         {
-            String name = ((GuiInputModal) modal).getInput();
+            ModelCell cell = ((GuiNewModal) this.currentModal).models.selected;
 
-            if (!ModelCustom.MODELS.containsKey(name))
+            if (cell == null)
             {
                 return;
             }
 
+            String name = cell.key;
             int index = name.indexOf(".") + 1;
 
-            this.setupModel(ModelCustom.MODELS.get(name));
+            this.setupModel(cell.model);
+            this.textureRL = cell.texture;
             this.modelName = index == -1 ? name : name.substring(index);
         }
 
@@ -544,19 +547,20 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+        int scroll = -Mouse.getEventDWheel();
 
         this.texturePicker.handleMouseInput();
 
         /* Zooming the model */
-        if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden())
+        if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && this.currentModal == null)
         {
-            int scroll = -Mouse.getEventDWheel();
+            this.scale += Math.copySign(2.0, scroll);
+            this.scale = MathHelper.clamp_float(this.scale, -100, 500);
+        }
 
-            if (scroll != 0)
-            {
-                this.scale += Math.copySign(2.0, scroll);
-                this.scale = MathHelper.clamp_float(this.scale, -100, 500);
-            }
+        if (scroll != 0 && this.currentModal != null)
+        {
+            this.currentModal.wheelScroll(x, y, scroll);
         }
 
         if (!this.poses.isInside(x, y))

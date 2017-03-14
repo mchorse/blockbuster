@@ -87,7 +87,7 @@ public class GuiTexturePicker extends GuiScrollPane
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (this.getHidden() || mouseX > this.x + this.w - 8)
+        if (this.getHidden() || this.dragging)
         {
             return;
         }
