@@ -408,6 +408,8 @@ public class GuiLimbEditor implements IMultiInputListener
                 {
                     button.playPressSound(this.editor.mc.getSoundHandler());
                     this.actionPerformed(button);
+
+                    break;
                 }
             }
         }
@@ -527,10 +529,9 @@ public class GuiLimbEditor implements IMultiInputListener
         }
         if (button.id == PARENT)
         {
-            GuiInputModal modal = new GuiInputModal(GuiModelEditor.CHANGE_PARENT, this.editor, this.editor.mc.fontRendererObj);
+            GuiParentModal modal = new GuiParentModal(GuiModelEditor.CHANGE_PARENT, this.limb, this.editor.data, this.editor, this.editor.mc.fontRendererObj);
 
-            modal.label = "Type in the name of the limb you want to be the parent for currently editing limb:";
-            modal.setInput(this.limb.parent);
+            modal.label = "Choose a limb you want to be parent of currently selected limb";
 
             this.editor.openModal(modal);
         }
@@ -542,6 +543,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.category += next ? 1 : -1;
             this.category = this.category > 2 ? 0 : (this.category < 0 ? 2 : this.category);
             this.initiate(this.name.xPosition, this.name.yPosition);
+
+            System.out.println(this.category);
         }
 
         if (this.isCategory(0))

@@ -23,6 +23,7 @@ import mchorse.blockbuster.model_editor.elements.GuiListViewer.IListResponder;
 import mchorse.blockbuster.model_editor.elements.GuiModelModal;
 import mchorse.blockbuster.model_editor.elements.GuiModelsView.ModelCell;
 import mchorse.blockbuster.model_editor.elements.GuiNewModal;
+import mchorse.blockbuster.model_editor.elements.GuiParentModal;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker.ITexturePicker;
 import mchorse.blockbuster.model_editor.modal.GuiInputModal;
@@ -386,7 +387,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         }
         else if (button.id == CHANGE_PARENT)
         {
-            this.limbEditor.changeParent(((GuiInputModal) modal).getInput());
+            this.limbEditor.changeParent(((GuiParentModal) modal).parents.getSelected());
             this.rebuildModel();
         }
         else if (button.id == ADD_LIMB)
