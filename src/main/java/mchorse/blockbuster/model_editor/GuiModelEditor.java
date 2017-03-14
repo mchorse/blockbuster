@@ -211,7 +211,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         poses.addAll(this.data.poses.keySet());
 
         this.poses.setStrings(poses);
+        this.limbs.reset();
         this.limbs.setModel(this.data);
+        this.limbEditor.setLimb(null);
 
         this.model = this.buildModel();
         this.changePose("standing");
