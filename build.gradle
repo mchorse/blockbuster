@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "1.4.7"
+version = "1.4.8"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 

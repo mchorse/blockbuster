@@ -26,6 +26,14 @@ public class ActorMorph extends CustomMorph
     public ResourceLocation skin;
 
     /**
+     * Make hands true!
+     */
+    public ActorMorph()
+    {
+        this.hands = true;
+    }
+
+    /**
      * Render actor morph on the screen
      *
      * This method overrides parent class method to take in account current

@@ -58,7 +58,7 @@ public class MountingAction extends Action
             actor.rotationYawHead = yawHead;
         }
 
-        if (mount == null)
+        if (mount == null && this.isMounting)
         {
             return;
         }

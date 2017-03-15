@@ -42,7 +42,7 @@ There's also a video that shows how to create a simple machinima with Blockbuste
 
 This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
 
-<a href="https://youtu.be/ny0_8RkAG8w?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/ny0_8RkAG8w/0.jpg"></a> 
+<a href="https://youtu.be/11L4vLzhcVM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/11L4vLzhcVM/0.jpg"></a> 
 
 ## Bug reports
 

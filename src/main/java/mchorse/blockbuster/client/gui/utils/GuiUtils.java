@@ -4,7 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
@@ -58,5 +61,41 @@ public class GuiUtils
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    }
+
+    /**
+     * Draws a rectangle with a horizontal gradient between with specified
+     * colors, the code is borrowed form {@link #drawGradientRect(int, int, int, int, int, int)}
+     */
+    public static void drawHorizontalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor, float zLevel)
+    {
+        float a1 = (startColor >> 24 & 255) / 255.0F;
+        float r1 = (startColor >> 16 & 255) / 255.0F;
+        float g1 = (startColor >> 8 & 255) / 255.0F;
+        float b1 = (startColor & 255) / 255.0F;
+        float a2 = (endColor >> 24 & 255) / 255.0F;
+        float r2 = (endColor >> 16 & 255) / 255.0F;
+        float g2 = (endColor >> 8 & 255) / 255.0F;
+        float b2 = (endColor & 255) / 255.0F;
+
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(7425);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        vertexbuffer.pos(right, top, zLevel).color(r2, g2, b2, a2).endVertex();
+        vertexbuffer.pos(left, top, zLevel).color(r1, g1, b1, a1).endVertex();
+        vertexbuffer.pos(left, bottom, zLevel).color(r1, g1, b1, a1).endVertex();
+        vertexbuffer.pos(right, bottom, zLevel).color(r2, g2, b2, a2).endVertex();
+        tessellator.draw();
+
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 }

@@ -12,6 +12,7 @@ import mchorse.blockbuster.camera.fixtures.LookFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.utils.L10n;
@@ -67,8 +68,6 @@ public class KeyboardHandler
     private KeyBinding startRunning;
     private KeyBinding stopRunning;
 
-    private KeyBinding cameraMarker;
-
     private KeyBinding addRoll;
     private KeyBinding reduceRoll;
     private KeyBinding resetRoll;
@@ -89,6 +88,10 @@ public class KeyboardHandler
     private KeyBinding rotateDown;
     private KeyBinding rotateLeft;
     private KeyBinding rotateRight;
+
+    /* Misc. */
+    private KeyBinding modelEditor;
+    private KeyBinding cameraMarker;
 
     /**
      * Create and register key bindings for mod
@@ -155,11 +158,6 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.startRunning);
         ClientRegistry.registerKeyBinding(this.stopRunning);
 
-        /* Misc */
-        this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, misc);
-
-        ClientRegistry.registerKeyBinding(this.cameraMarker);
-
         /* Camera key bindings */
         this.increaseDuration = new KeyBinding("key.blockbuster.duration.increase", Keyboard.KEY_NONE, duration);
         this.reduceDuration = new KeyBinding("key.blockbuster.duration.reduce", Keyboard.KEY_NONE, duration);
@@ -207,6 +205,13 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.rotateDown);
         ClientRegistry.registerKeyBinding(this.rotateLeft);
         ClientRegistry.registerKeyBinding(this.rotateRight);
+
+        /* Misc */
+        this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, misc);
+        this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, misc);
+
+        ClientRegistry.registerKeyBinding(this.cameraMarker);
+        ClientRegistry.registerKeyBinding(this.modelEditor);
     }
 
     @SubscribeEvent
@@ -340,11 +345,6 @@ public class KeyboardHandler
             ClientProxy.profileRunner.stop();
         }
 
-        if (this.cameraMarker.isPressed())
-        {
-            Dispatcher.sendToServer(new PacketCameraMarker());
-        }
-
         if (this.resetRoll.isPressed())
         {
             control.resetRoll();
@@ -353,6 +353,17 @@ public class KeyboardHandler
         if (this.resetFov.isPressed())
         {
             Minecraft.getMinecraft().gameSettings.fovSetting = 70.0F;
+        }
+
+        /* Misc. */
+        if (this.cameraMarker.isPressed())
+        {
+            Dispatcher.sendToServer(new PacketCameraMarker());
+        }
+
+        if (this.modelEditor.isPressed())
+        {
+            this.mc.displayGuiScreen(new GuiModelEditor(false));
         }
     }
 

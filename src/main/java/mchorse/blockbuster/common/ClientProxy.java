@@ -17,6 +17,7 @@ import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.model_editor.MainMenuHandler;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
@@ -136,6 +137,7 @@ public class ClientProxy extends CommonProxy
         super.load(event);
 
         /* Event listeners */
+        MinecraftForge.EVENT_BUS.register(new MainMenuHandler());
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
