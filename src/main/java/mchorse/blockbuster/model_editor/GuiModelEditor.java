@@ -545,7 +545,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
     {
         super.handleKeyboardInput();
 
-        this.limbs.handleKeyboardInput();
+        if (this.currentModal == null)
+        {
+            this.limbs.handleKeyboardInput();
+        }
     }
 
     /**
@@ -664,6 +667,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
             this.prevPitch += this.pitch;
             this.yaw = this.pitch = 0;
             this.prevX = this.prevY = 0;
+        }
+
+        if (this.currentModal != null)
+        {
+            this.currentModal.mouseReleased(mouseX, mouseY, state);
         }
 
         super.mouseReleased(mouseX, mouseY, state);

@@ -53,6 +53,12 @@ blockbuster:
                     {l}{6}/{r}model {8}request{r}
                     
                     {r}Requests models from the server (including host's models in LAN game).
+            
+            clear:
+                |
+                    {l}{6}/{r}model {8}clear{r}
+                    
+                    {r}Clears the texture cache from loaded skin textures.
 
         # Action's commands
         action:
@@ -166,7 +172,7 @@ blockbuster:
                 remove: 
                     |
                         {l}{6}/{r}camera {8}remove{r} {7}<index>{r}
-                        
+                        §
                         {r}Remove camera fixture from currently used camera profile at {7}<index>{r}
                 duration: 
                     |
