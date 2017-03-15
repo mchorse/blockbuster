@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.metamorph.client.gui.GuiCreativeMenu;
 import mchorse.metamorph.client.gui.GuiSurvivalMenu;
@@ -85,6 +86,7 @@ public class MainMenuHandler
             }
 
             Blockbuster.proxy.loadModels(pack);
+            ClientProxy.actorPack.pack.reload();
         }
     }
 }
