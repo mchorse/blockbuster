@@ -15,7 +15,7 @@ public class GuiNewModal extends GuiModal
     {
         super(parent, font);
         this.models = new GuiModelsView(parent);
-        this.height = 130;
+        this.height = 140;
         this.id = id;
     }
 
@@ -45,10 +45,10 @@ public class GuiNewModal extends GuiModal
         int x = this.parent.width / 2 + this.width / 2;
         int y = this.parent.height / 2 + this.height / 2;
 
-        this.models.updateRect(x - this.width + 10, y - this.height + 30, this.width - 20, this.height - 57);
+        this.models.updateRect(x - this.width + 11, y - this.height + 30, this.width - 22, this.height - 70);
         this.models.initiate();
 
-        this.button = new GuiButton(this.id, x - this.width + 10, y - 28, this.width - 20, 20, "Done");
+        this.button = new GuiButton(this.id, x - this.width + 10, y - 41, this.width - 20, 20, "Done");
         this.buttons.clear();
         this.buttons.add(this.button);
     }
@@ -59,5 +59,18 @@ public class GuiNewModal extends GuiModal
         super.drawModal(mouseX, mouseY, partialTicks);
 
         this.models.draw(mouseX, mouseY, partialTicks);
+
+        if (this.models.selected != null)
+        {
+            String title = this.models.selected.key;
+            int index = title.lastIndexOf(".");
+
+            if (index != -1)
+            {
+                title = title.substring(index + 1);
+            }
+
+            this.parent.drawCenteredString(this.font, title, this.parent.width / 2, this.parent.height / 2 + this.height / 2 - 16, 0xffffff);
+        }
     }
 }
