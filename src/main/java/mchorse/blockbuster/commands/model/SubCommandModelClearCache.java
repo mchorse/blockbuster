@@ -75,12 +75,8 @@ public class SubCommandModelClearCache extends CommandBase
 
                     if (entry.getKey().getResourceDomain().equals("blockbuster.actors") && entry.getValue() instanceof DynamicTexture)
                     {
-                        System.out.println("Hello, removed!");
-
                         it.remove();
                     }
-
-                    System.out.println(entry.getKey() + " " + entry.getValue());
                 }
             }
             catch (Exception e)
