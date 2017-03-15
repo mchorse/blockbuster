@@ -598,7 +598,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && !inModal)
         {
             this.scale += Math.copySign(2.0, scroll);
-            this.scale = MathHelper.clamp_float(this.scale, -100, 500);
+            this.scale = MathHelper.clamp(this.scale, -100, 500);
         }
 
         if (scroll != 0 && inModal)
@@ -748,7 +748,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
         GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
 
-        EntityPlayer player = this.mc.thePlayer;
+        EntityPlayer player = this.mc.player;
         float factor = 0.0625F;
 
         this.mc.renderEngine.bindTexture(this.textureRL);

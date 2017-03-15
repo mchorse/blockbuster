@@ -43,6 +43,8 @@ public class ActorsPack implements IResourcePack
         String path = location.getResourcePath();
         String[] splits = path.split("/");
 
+        System.out.println("Fetch: " + location);
+
         if (splits.length == 1 && path.indexOf("/") == -1)
         {
             return new FileInputStream(this.pack.models.get(splits[0]));
@@ -67,6 +69,8 @@ public class ActorsPack implements IResourcePack
     {
         String path = location.getResourcePath();
         String[] splits = path.split("/");
+
+        System.out.println("Check: " + location);
 
         if (splits.length == 1 && path.indexOf("/") == -1)
         {

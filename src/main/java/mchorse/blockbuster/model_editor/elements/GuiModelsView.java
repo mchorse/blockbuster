@@ -53,7 +53,7 @@ public class GuiModelsView extends GuiScrollView
     {
         int index = this.models.indexOf(this.selected);
 
-        this.scrollHeight = MathHelper.ceiling_float_int(this.models.size() / 3.0F) * (this.w / 3);
+        this.scrollHeight = MathHelper.ceil(this.models.size() / 3.0F) * (this.w / 3);
         this.scrollY = index == -1 ? 0 : index / 3 * this.w / 3;
     }
 
