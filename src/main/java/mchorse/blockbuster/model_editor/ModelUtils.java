@@ -150,6 +150,7 @@ public class ModelUtils
 
         b.name = a.name;
         b.parent = a.parent;
+        b.holding = a.holding;
 
         return b;
     }
