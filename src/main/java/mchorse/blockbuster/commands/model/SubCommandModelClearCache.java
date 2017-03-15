@@ -18,19 +18,19 @@ import net.minecraft.util.ResourceLocation;
 public class SubCommandModelClearCache extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "clear";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.clear";
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked", "unused"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
