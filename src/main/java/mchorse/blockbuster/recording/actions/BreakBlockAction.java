@@ -32,6 +32,7 @@ public class BreakBlockAction extends InteractBlockAction
     public void apply(EntityActor actor)
     {
         actor.worldObj.destroyBlock(this.pos, this.drop);
+        actor.worldObj.sendBlockBreakProgress(actor.getEntityId(), this.pos, 0);
     }
 
     @Override
