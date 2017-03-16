@@ -202,7 +202,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, IListRe
      */
     private void setupModel(ModelCustom model)
     {
-        this.data = ModelUtils.cloneModel(model.model);
+        this.data = model.model.clone();
 
         List<String> poses = new ArrayList<String>();
         poses.addAll(this.data.poses.keySet());

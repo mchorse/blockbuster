@@ -57,6 +57,10 @@ public class MainMenuHandler
         }
     }
 
+    /**
+     * Refresh models, skins and morphs upon entering in Metamorph and/or
+     * Blockbuster GUIs.
+     */
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
