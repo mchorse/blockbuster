@@ -38,6 +38,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -50,6 +51,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -69,6 +71,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class ActionHandler
 {
     /**
+     * Adds a world event listener
+     */
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event)
+    {
+        World world = event.getWorld();
+
+        if (!world.isRemote)
+        {
+            world.addEventListener(new WorldEventListener(world));
+        }
+    }
+
+    /**
      * Event listener for Action.BREAK_BLOCK
      */
     @SubscribeEvent
@@ -79,7 +95,7 @@ public class ActionHandler
 
         if (!player.world.isRemote && events != null)
         {
-            events.add(new BreakBlockAction(event.getPos()));
+            events.add(new BreakBlockAction(event.getPos(), !player.isCreative()));
         }
     }
 
