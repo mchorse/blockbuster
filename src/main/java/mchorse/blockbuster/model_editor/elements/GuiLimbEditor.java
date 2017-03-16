@@ -11,7 +11,9 @@ import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -23,7 +25,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
  * This thing is going to be responsible for editing current selected limb,
  * its data and also current pose's transformations.
  */
-public class GuiLimbEditor implements IMultiInputListener
+public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 {
     public static final ResourceLocation GUI = new ResourceLocation("blockbuster:textures/gui/model_editor.png");
 
@@ -38,19 +40,21 @@ public class GuiLimbEditor implements IMultiInputListener
     private static final int TEXTURE = 3;
     private static final int SIZE = 4;
     private static final int ANCHOR = 5;
+    private static final int COLOR = 6;
+    private static final int OPACITY = 7;
 
     /* Gameplay properties */
-    private static final int LOOKING = 6;
-    private static final int IDLE = 7;
-    private static final int SWINGING = 8;
-    private static final int SWIPING = 9;
-    private static final int INVERT = 10;
-    private static final int HOLDING = 11;
+    private static final int LOOKING = 8;
+    private static final int IDLE = 9;
+    private static final int SWINGING = 10;
+    private static final int SWIPING = 11;
+    private static final int INVERT = 12;
+    private static final int HOLDING = 13;
 
     /* Pose properties */
-    private static final int TRANSLATE = 12;
-    private static final int SCALE = 13;
-    private static final int ROTATE = 14;
+    private static final int TRANSLATE = 14;
+    private static final int SCALE = 15;
+    private static final int ROTATE = 16;
 
     /* Data */
 
@@ -85,6 +89,8 @@ public class GuiLimbEditor implements IMultiInputListener
     private GuiTwoInput texture;
     private GuiThreeInput size;
     private GuiThreeInput anchor;
+    private GuiThreeInput color;
+    private GuiTextField opacity;
 
     /* Gameplay features */
     private GuiCheckBox looking;
@@ -129,6 +135,9 @@ public class GuiLimbEditor implements IMultiInputListener
         this.texture = new GuiTwoInput(TEXTURE, font, 0, 0, 0, this);
         this.size = new GuiThreeInput(SIZE, font, 0, 0, 0, this);
         this.anchor = new GuiThreeInput(ANCHOR, font, 0, 0, 0, this);
+        this.color = new GuiThreeInput(COLOR, font, 0, 0, 0, this);
+        this.opacity = new GuiTextField(OPACITY, font, 0, 0, 0, 16);
+        this.opacity.setGuiResponder(this);
 
         /* Gameplay */
         this.looking = new GuiCheckBox(LOOKING, 0, 0, "Looking", false);
@@ -225,6 +234,10 @@ public class GuiLimbEditor implements IMultiInputListener
         this.anchor.a.setText(String.valueOf(limb.anchor[0]));
         this.anchor.b.setText(String.valueOf(limb.anchor[1]));
         this.anchor.c.setText(String.valueOf(limb.anchor[2]));
+        this.color.a.setText(String.valueOf(limb.color[0]));
+        this.color.b.setText(String.valueOf(limb.color[1]));
+        this.color.c.setText(String.valueOf(limb.color[2]));
+        this.opacity.setText(String.valueOf(limb.opacity));
 
         /* Gameplay */
         this.looking.setIsChecked(limb.looking);
@@ -287,7 +300,7 @@ public class GuiLimbEditor implements IMultiInputListener
         y += 25;
         this.parent.xPosition = x;
         this.parent.yPosition = y;
-        y += 30;
+        y += 28;
 
         this.buttons.clear();
         this.buttons.add(this.name);
@@ -303,6 +316,12 @@ public class GuiLimbEditor implements IMultiInputListener
             this.size.update(x, y, width);
             y += 20;
             this.anchor.update(x, y, width);
+            y += 20;
+            this.color.update(x, y, width);
+            y += 20;
+            this.opacity.xPosition = x + 1;
+            this.opacity.yPosition = y + 1;
+            this.opacity.width = width - 2;
             y += 23;
 
             this.buttons.add(this.mirror);
@@ -373,6 +392,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.texture.mouseClicked(mouseX, mouseY, mouseButton);
             this.size.mouseClicked(mouseX, mouseY, mouseButton);
             this.anchor.mouseClicked(mouseX, mouseY, mouseButton);
+            this.color.mouseClicked(mouseX, mouseY, mouseButton);
+            this.opacity.mouseClicked(mouseX, mouseY, mouseButton);
         }
 
         this.checkButtons(mouseX, mouseY, mouseButton);
@@ -427,6 +448,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.texture.keyTyped(typedChar, keyCode);
             this.size.keyTyped(typedChar, keyCode);
             this.anchor.keyTyped(typedChar, keyCode);
+            this.color.keyTyped(typedChar, keyCode);
+            this.opacity.textboxKeyTyped(typedChar, keyCode);
         }
 
         if (this.pose == null)
@@ -466,6 +489,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.texture.draw();
             this.size.draw();
             this.anchor.draw();
+            this.color.draw();
+            this.opacity.drawTextBox();
 
             /* Icons for visual category */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -473,6 +498,8 @@ public class GuiLimbEditor implements IMultiInputListener
             this.editor.drawTexturedModalRect(this.texture.a.xPosition + 100, this.texture.a.yPosition, 96, 0, 16, 16);
             this.editor.drawTexturedModalRect(this.size.a.xPosition + 100, this.size.a.yPosition, 96, 16, 16, 16);
             this.editor.drawTexturedModalRect(this.anchor.a.xPosition + 100, this.anchor.a.yPosition, 64, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.color.a.xPosition + 100, this.color.a.yPosition, 80, 32, 16, 16);
+            this.editor.drawTexturedModalRect(this.opacity.xPosition + 100, this.opacity.yPosition, 96, 32, 16, 16);
         }
 
         for (GuiButton button : this.buttons)
@@ -619,6 +646,10 @@ public class GuiLimbEditor implements IMultiInputListener
                 this.limb.size[subset] = (int) val;
                 this.editor.rebuildModel();
             }
+            if (id == COLOR && val >= 0 && val <= 1)
+            {
+                this.limb.color[subset] = val;
+            }
 
             if (this.pose == null)
             {
@@ -638,6 +669,30 @@ public class GuiLimbEditor implements IMultiInputListener
             if (id == ROTATE)
             {
                 trans.rotate[subset] = val;
+            }
+        }
+        catch (NumberFormatException e)
+        {}
+    }
+
+    @Override
+    public void setEntryValue(int id, boolean value)
+    {}
+
+    @Override
+    public void setEntryValue(int id, float value)
+    {}
+
+    @Override
+    public void setEntryValue(int id, String value)
+    {
+        try
+        {
+            float val = Float.parseFloat(value);
+
+            if (id == OPACITY)
+            {
+                this.limb.opacity = val;
             }
         }
         catch (NumberFormatException e)
