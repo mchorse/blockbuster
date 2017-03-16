@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import mchorse.blockbuster.model_editor.ModelUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
@@ -60,7 +59,7 @@ public class GuiLimbsList extends GuiScrollPane
             return;
         }
 
-        Model.Limb limb = ModelUtils.addLimb(this.model, name);
+        Model.Limb limb = this.model.addLimb(name);
 
         this.limb = limb;
         this.limbs.add(limb);
@@ -75,7 +74,7 @@ public class GuiLimbsList extends GuiScrollPane
      */
     public void removeLimb()
     {
-        ModelUtils.removeLimb(this.model, this.limb);
+        this.model.removeLimb(this.limb);
 
         this.limb = null;
         this.picker.pickLimb(null);
