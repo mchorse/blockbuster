@@ -24,6 +24,8 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.api.events.MorphActionEvent;
+import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
