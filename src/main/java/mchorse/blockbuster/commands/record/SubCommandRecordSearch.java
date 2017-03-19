@@ -65,11 +65,11 @@ public class SubCommandRecordSearch extends McCommandBase
 
         L10n.info(sender, "record.search_type", args[1]);
 
-        for (Action action : record.actions)
+        for (List<Action> actions : record.actions)
         {
             tick++;
 
-            if (action == null || action.getType() != type)
+            if (actions == null)
             {
                 continue;
             }
@@ -79,20 +79,33 @@ public class SubCommandRecordSearch extends McCommandBase
                 break;
             }
 
-            if (outputData)
-            {
-                NBTTagCompound tag = new NBTTagCompound();
-                action.toNBT(tag);
+            int j = 0;
 
-                L10n.info(sender, "record.search_action_data", tick, tag.toString());
-            }
-            else
+            for (Action action : actions)
             {
-                L10n.info(sender, "record.search_action", tick);
+                if (action.getType() != type)
+                {
+                    continue;
+                }
+
+                if (outputData)
+                {
+                    NBTTagCompound tag = new NBTTagCompound();
+                    action.toNBT(tag);
+
+                    L10n.info(sender, "record.search_action_data", tick, tag.toString(), j);
+                }
+                else
+                {
+                    L10n.info(sender, "record.search_action", tick, j);
+                }
+
+                j++;
             }
 
             i++;
         }
+
     }
 
     @Override

@@ -69,11 +69,11 @@ public class SubCommandRecordSet extends McCommandBase
         {
             Action action = Action.fromType(Action.TYPES.get(args[2]).byteValue());
 
-            if (args.length > 3)
+            if (args.length > 4)
             {
                 String dataTag = "";
 
-                for (int i = 3; i < args.length; i++)
+                for (int i = 4; i < args.length; i++)
                 {
                     dataTag += args[i] + (i == args.length - 1 ? "" : " ");
                 }
@@ -81,7 +81,24 @@ public class SubCommandRecordSet extends McCommandBase
                 action.fromNBT(JsonToNBT.getTagFromJson(dataTag));
             }
 
-            record.actions.set(tick, action);
+            if (args.length > 3)
+            {
+                int index = CommandBase.parseInt(args[3], -1);
+
+                if (index == -1)
+                {
+                    record.addAction(tick, action);
+                }
+                else
+                {
+                    record.addAction(tick, index, action);
+                }
+            }
+            else
+            {
+                record.addAction(tick, action);
+            }
+
             record.dirty = true;
         }
         catch (Exception e)

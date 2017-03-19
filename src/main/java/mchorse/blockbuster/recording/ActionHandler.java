@@ -24,8 +24,6 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.metamorph.api.events.MorphActionEvent;
-import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
@@ -93,9 +91,9 @@ public class ActionHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.worldObj.isRemote && events != null)
+        if (!player.worldObj.isRemote && player.isCreative() && events != null)
         {
-            events.add(new BreakBlockAction(event.getPos(), !player.isCreative()));
+            events.add(new BreakBlockAction(event.getPos(), false));
         }
     }
 

@@ -141,7 +141,7 @@ public class RecordManager
 
             if (hasDied && !record.actions.isEmpty())
             {
-                record.actions.set(record.actions.size() - 1, new DamageAction(200.0F));
+                record.addAction(record.actions.size() - 1, new DamageAction(200.0F));
             }
 
             this.records.put(filename, record);
