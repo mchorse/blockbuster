@@ -83,7 +83,9 @@ public class WorldEventListener implements IWorldEventListener
             EntityPlayer player = (EntityPlayer) breaker;
             List<Action> events = CommonProxy.manager.getActions(player);
 
-            if (!player.world.isRemote && events != null)
+            System.out.println(progress);
+
+            if (!player.world.isRemote && events != null && progress <= 11)
             {
                 events.add(new BreakBlockAnimation(pos, progress));
             }

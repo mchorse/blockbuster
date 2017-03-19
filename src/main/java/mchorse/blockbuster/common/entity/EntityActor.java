@@ -642,8 +642,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
-
-        System.out.println(this.morph);
     }
 
     /**

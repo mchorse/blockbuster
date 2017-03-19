@@ -30,8 +30,8 @@ blockbuster.info:
                 {7}*{f} Ticks before unload: %s
         
         search_type: "{f}Search for action with type %s{f}:"
-        search_action: {f}Found action at %s{f} tick.
-        search_action_data: "{f}Found action at %s{f} tick with data: %s"
+        search_action: "{f}Found action at %s{f} tick at index %s{f}."
+        search_action_data: "{f}Found action at %s{f} tick at index %s{f} with data: %s"
     
     # Recording strings
     recording:

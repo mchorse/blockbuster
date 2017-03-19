@@ -26,9 +26,9 @@ blockbuster:
             
             set:
                 |
-                    {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [index] [data_tag]{r}
                     
-                    {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r}.
+                    {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r} at optional index {7}[index]{r}.
             
             search:
                 |

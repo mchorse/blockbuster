@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands.record;
 
+import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.commands.CommandRecord;
@@ -52,25 +53,35 @@ public class SubCommandRecordGet extends McCommandBase
         }
 
         NBTTagCompound tag = new NBTTagCompound();
-        Action action = record.actions.get(tick);
+        List<Action> actions = record.actions.get(tick);
+
+        if (actions == null)
+        {
+            throw new CommandException("record.no_action", filename, tick);
+        }
+
+        for (Action action : actions)
+        {
+            String type = byteToType(action.getType());
+            action.toNBT(tag);
+
+            L10n.info(sender, "record.action", tick, type, tag.toString());
+        }
+    }
+
+    public static String byteToType(byte actionType)
+    {
         String type = "none";
 
         for (Map.Entry<String, Integer> entry : Action.TYPES.entrySet())
         {
-            if (entry.getValue().equals(action.getType()))
+            if (entry.getValue().equals(actionType))
             {
                 type = entry.getKey();
                 break;
             }
         }
 
-        if (action == null)
-        {
-            throw new CommandException("record.no_action", filename, tick);
-        }
-
-        action.toNBT(tag);
-
-        L10n.info(sender, "record.action", tick, type, tag.toString());
+        return type;
     }
 }

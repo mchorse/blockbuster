@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
@@ -52,7 +53,7 @@ public class Record
     /**
      * Recorded actions
      */
-    public List<Action> actions = new ArrayList<Action>();
+    public List<List<Action>> actions = new ArrayList<List<Action>>();
 
     /**
      * Recorded frames
@@ -128,11 +129,14 @@ public class Record
             return;
         }
 
-        Action action = this.actions.get(tick);
+        List<Action> actions = this.actions.get(tick);
 
-        if (action != null)
+        if (actions != null)
         {
-            action.apply(actor);
+            for (Action action : actions)
+            {
+                action.apply(actor);
+            }
         }
     }
 
@@ -172,16 +176,19 @@ public class Record
         /* Find at which tick player has mounted a vehicle */
         for (int i = 0, c = this.actions.size(); i < c; i++)
         {
-            Action action = this.actions.get(i);
+            List<Action> actions = this.actions.get(i);
 
-            if (action instanceof MountingAction)
+            for (Action action : actions)
             {
-                MountingAction act = (MountingAction) action;
-
-                if (act.isMounting)
+                if (action instanceof MountingAction)
                 {
-                    index = i + 1;
-                    break;
+                    MountingAction act = (MountingAction) action;
+
+                    if (act.isMounting)
+                    {
+                        index = i + 1;
+                        break;
+                    }
                 }
             }
         }
@@ -201,6 +208,46 @@ public class Record
                     mount.setPositionAndRotation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
                 }
             }
+        }
+    }
+
+    /**
+     * Add an action to the record
+     */
+    public void addAction(int tick, Action action)
+    {
+        List<Action> actions = this.actions.get(tick);
+
+        if (actions != null)
+        {
+            actions.add(action);
+        }
+        else
+        {
+            actions = new ArrayList<Action>();
+            actions.add(action);
+
+            this.actions.set(tick, actions);
+        }
+    }
+
+    /**
+     * Add an action to the record
+     */
+    public void addAction(int tick, int index, Action action)
+    {
+        List<Action> actions = this.actions.get(tick);
+
+        if (actions != null)
+        {
+            actions.add(index, action);
+        }
+        else
+        {
+            actions = new ArrayList<Action>();
+            actions.add(action);
+
+            this.actions.set(tick, actions);
         }
     }
 
@@ -229,23 +276,30 @@ public class Record
             NBTTagCompound frameTag = new NBTTagCompound();
 
             Frame frame = this.frames.get(i);
-            Action action = null;
+            List<Action> actions = null;
 
             if (d + i <= this.actions.size() - 1)
             {
-                action = this.actions.get(d + i);
+                actions = this.actions.get(d + i);
             }
 
             frame.toNBT(frameTag);
 
-            if (action != null)
+            if (actions != null)
             {
-                NBTTagCompound actionTag = new NBTTagCompound();
+                NBTTagList actionsTag = new NBTTagList();
 
-                action.toNBT(actionTag);
-                actionTag.setByte("Type", action.getType());
+                for (Action action : actions)
+                {
+                    NBTTagCompound actionTag = new NBTTagCompound();
 
-                frameTag.setTag("Action", actionTag);
+                    action.toNBT(actionTag);
+                    actionTag.setByte("Type", action.getType());
+
+                    actionsTag.appendTag(actionTag);
+                }
+
+                frameTag.setTag("Action", actionsTag);
             }
 
             frames.appendTag(frameTag);
@@ -274,25 +328,36 @@ public class Record
         for (int i = 0, c = frames.tagCount(); i < c; i++)
         {
             NBTTagCompound frameTag = frames.getCompoundTagAt(i);
-            NBTTagCompound actionTag = (NBTTagCompound) frameTag.getTag("Action");
+            NBTBase actionTag = frameTag.getTag("Action");
             Frame frame = new Frame();
 
             frame.fromNBT(frameTag);
 
             if (actionTag != null)
             {
-                byte type = actionTag.getByte("Type");
-
                 try
                 {
-                    Action action = Action.fromType(type);
-                    action.fromNBT(actionTag);
+                    List<Action> actions = new ArrayList<Action>();
 
-                    this.actions.add(action);
+                    if (actionTag instanceof NBTTagCompound)
+                    {
+                        actions.add(this.actionFromNBT((NBTTagCompound) actionTag));
+                    }
+                    else if (actionTag instanceof NBTTagList)
+                    {
+                        NBTTagList list = (NBTTagList) actionTag;
+
+                        for (int ii = 0, cc = list.tagCount(); ii < cc; ii++)
+                        {
+                            actions.add(this.actionFromNBT(list.getCompoundTagAt(ii)));
+                        }
+                    }
+
+                    this.actions.add(actions);
                 }
                 catch (Exception e)
                 {
-                    System.out.println("Failed to load an action at frame " + i + " of type " + type);
+                    System.out.println("Failed to load an action at frame " + i);
                     e.printStackTrace();
                 }
             }
@@ -303,5 +368,16 @@ public class Record
 
             this.frames.add(frame);
         }
+    }
+
+    private Action actionFromNBT(NBTTagCompound tag) throws Exception
+    {
+        byte type = tag.getByte("Type");
+        Action action = null;
+
+        action = Action.fromType(type);
+        action.fromNBT(tag);
+
+        return action;
     }
 }
