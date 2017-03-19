@@ -105,20 +105,23 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super(worldIn);
 
-        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_420_xXx"))
+        if (worldIn.isRemote)
         {
-            @Override
-            public boolean isSpectator()
+            this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_420_xXx"))
             {
-                return false;
-            }
+                @Override
+                public boolean isSpectator()
+                {
+                    return false;
+                }
 
-            @Override
-            public boolean isCreative()
-            {
-                return false;
-            }
-        };
+                @Override
+                public boolean isCreative()
+                {
+                    return false;
+                }
+            };
+        }
     }
 
     @Override
