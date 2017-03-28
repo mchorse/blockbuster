@@ -5,7 +5,9 @@ import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;
 
 /**
- * "Three inputs in one" GUI widget
+ * Three input GUI widget
+ *
+ * This widget is responsible for managing three text fields.
  */
 public class GuiThreeInput implements GuiResponder
 {
