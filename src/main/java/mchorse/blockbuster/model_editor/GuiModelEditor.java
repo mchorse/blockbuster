@@ -858,7 +858,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
-        this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * ticks) / 6.0F, 0.0F, 1.0F);
+        this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * ticks) / 6.0F, 0.0F, 1.0F);
         this.model.setLivingAnimations(player, 0, 0, ticks);
         this.model.setRotationAngles(this.swing + ticks, this.swingAmount, this.timer, yaw, pitch, factor, player);
 

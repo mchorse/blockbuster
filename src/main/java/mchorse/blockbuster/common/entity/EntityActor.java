@@ -294,7 +294,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.updateArmSwingProgress();
 
         /* Make foot steps sound more player-like */
-        if (!this.worldObj.isRemote && this.isPlaying() && this.playback.tick < this.playback.record.frames.size() - 1 && !this.isSneaking() && this.onGround)
+        if (!this.world.isRemote && this.isPlaying() && this.playback.tick < this.playback.record.frames.size() - 1 && !this.isSneaking() && this.onGround)
         {
             Frame current = this.playback.record.frames.get(this.playback.tick);
             Frame next = this.playback.record.frames.get(this.playback.tick + 1);
@@ -303,8 +303,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             double dy = next.y - current.y;
             double dz = next.z - current.z;
 
-            this.distanceWalkedModified = this.distanceWalkedModified + MathHelper.sqrt_double(dx * dx + dz * dz) * 0.32F;
-            this.distanceWalkedOnStepModified = this.distanceWalkedOnStepModified + MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz) * 0.32F;
+            this.distanceWalkedModified = this.distanceWalkedModified + MathHelper.sqrt(dx * dx + dz * dz) * 0.32F;
+            this.distanceWalkedOnStepModified = this.distanceWalkedOnStepModified + MathHelper.sqrt(dx * dx + dy * dy + dz * dz) * 0.32F;
         }
 
         /* Trigger pressure playback */
