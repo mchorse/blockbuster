@@ -156,7 +156,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.scale = new GuiThreeInput(SCALE, font, 0, 0, width, this);
         this.rotate = new GuiThreeInput(ROTATE, font, 0, 0, width, this);
 
-        /* Category switchers */
+        /* Category buttons */
         this.next = new GuiButton(-1, 0, 0, ">");
         this.prev = new GuiButton(-2, 0, 0, "<");
     }

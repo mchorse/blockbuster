@@ -297,7 +297,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.updateArmSwingProgress();
 
         /* Make foot steps sound more player-like */
-        if (!this.worldObj.isRemote && this.isPlaying() && this.playback.tick < this.playback.record.frames.size() - 1)
+        if (!this.worldObj.isRemote && this.isPlaying() && this.playback.tick < this.playback.record.frames.size() - 1 && !this.isSneaking() && this.onGround)
         {
             Frame current = this.playback.record.frames.get(this.playback.tick);
             Frame next = this.playback.record.frames.get(this.playback.tick + 1);

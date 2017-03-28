@@ -5,6 +5,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;
 
+/**
+ * Two input GUI widget
+ *
+ * This widget is responsible for managing two text fields.
+ */
 public class GuiTwoInput implements GuiResponder
 {
     public GuiTextField a;
