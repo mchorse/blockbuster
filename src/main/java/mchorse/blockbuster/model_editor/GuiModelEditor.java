@@ -146,6 +146,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     private GuiButton edit;
 
     /**
+     * Swipe button
+     */
+    private GuiButton swipeArms;
+
+    /**
+     * Swing button
+     */
+    private GuiButton swingLegs;
+
+    /**
      * Ticks timer for arm idling animation
      */
     private int timer;
@@ -167,6 +177,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     private float prevYaw;
     private float prevPitch;
 
+    private int swipe = 0;
+    private boolean swinging;
+
+    private float swingAmount;
+    private float swing;
+
     /* Main menu flag */
     private boolean mainMenu;
 
@@ -183,6 +199,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
+        this.swipe = -1;
     }
 
     /**
@@ -271,9 +288,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     @Override
     public void initGui()
     {
-        /* Initiate the texture button */
-        this.showTextures = new GuiTextureButton(6, 110 - 16, 5, GuiLimbEditor.GUI).setTexPos(0, 0).setActiveTexPos(0, 16);
-
         /* Buttons */
         this.edit = new GuiTextureButton(5, this.width - 107, 5, GuiLimbEditor.GUI).setTexPos(48, 32).setActiveTexPos(48, 48);
         this.save = new GuiTextureButton(0, this.width - 79, 5, GuiLimbEditor.GUI).setTexPos(0, 32).setActiveTexPos(0, 48);
@@ -285,7 +299,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
         this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);
 
-        this.buttonList.add(this.showTextures);
+        int cx = this.width / 2;
+        int by = this.height - 16 - 2;
+
+        this.showTextures = new GuiTextureButton(6, cx - 8 - 24, by, GuiLimbEditor.GUI).setTexPos(0, 0).setActiveTexPos(0, 16);
+        this.swipeArms = new GuiTextureButton(7, cx - 8 + 24, by, GuiLimbEditor.GUI).setTexPos(64, 48).setActiveTexPos(64, 64);
+        this.swingLegs = new GuiTextureButton(8, cx - 8, by, GuiLimbEditor.GUI).setTexPos(80, 48).setActiveTexPos(80, 64);
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
@@ -296,6 +315,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         this.buttonList.add(this.addLimb);
         this.buttonList.add(this.removeLimb);
+
+        this.buttonList.add(this.showTextures);
+        this.buttonList.add(this.swipeArms);
+        this.buttonList.add(this.swingLegs);
 
         /* Custom GUI controls */
         this.limbEditor.initiate(10, 47);
@@ -379,6 +402,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         else if (button.id == 6)
         {
             this.texturePicker.setHidden(false);
+        }
+        else if (button.id == 7)
+        {
+            this.swipe = 6;
+        }
+        else if (button.id == 8)
+        {
+            this.swinging = !this.swinging;
         }
         else if (button == this.back)
         {
@@ -714,6 +745,22 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     public void updateScreen()
     {
         this.timer++;
+
+        if (this.swipe > -1)
+        {
+            this.swipe--;
+        }
+
+        if (this.swinging)
+        {
+            this.swing += 0.75F;
+            this.swingAmount = 1.0F;
+        }
+        else
+        {
+            this.swing = 0.0F;
+            this.swingAmount = 0.0F;
+        }
     }
 
     /**
@@ -736,7 +783,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         try
         {
-            this.drawModel(x, y, scale + this.scale, yaw, pitch);
+            this.drawModel(x, y, scale + this.scale, yaw, pitch, partialTicks);
         }
         catch (Exception e)
         {
@@ -778,7 +825,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      * copy and paste code like this, but unfortunately, there are too much
      * lines of code that depend on each other and cannot be separated.
      */
-    private void drawModel(float x, float y, float scale, float yaw, float pitch)
+    private void drawModel(float x, float y, float scale, float yaw, float pitch, float ticks)
     {
         /* Extending model's rendering range, otherwise it gets clipped */
         GlStateManager.matrixMode(5889);
@@ -788,6 +835,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         EntityPlayer player = this.mc.thePlayer;
         float factor = 0.0625F;
+        float oldSwing = this.model.swingProgress;
 
         this.mc.renderEngine.bindTexture(this.textureRL);
 
@@ -810,15 +858,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
-        this.model.setLivingAnimations(player, 0, 0, 0);
-        this.model.setRotationAngles(0, 0, this.timer, yaw, pitch, factor, player);
+        this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * ticks) / 6.0F, 0.0F, 1.0F);
+        this.model.setLivingAnimations(player, 0, 0, ticks);
+        this.model.setRotationAngles(this.swing + ticks, this.swingAmount, this.timer, yaw, pitch, factor, player);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, this.model.pose.size[1] / 2, 0);
-        this.model.render(player, 0, 0, 0, 0, 0, factor);
+        this.model.render(player, 0, 0, this.timer, yaw, pitch, factor);
         GlStateManager.popMatrix();
 
         GlStateManager.disableDepth();
@@ -835,5 +884,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+        this.model.swingProgress = oldSwing;
     }
 }
