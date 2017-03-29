@@ -9,6 +9,7 @@ import mchorse.blockbuster_pack.morphs.ActorMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -125,6 +126,22 @@ public class BlockbusterFactory implements IMorphFactory
 
                 actor.skin = new ResourceLocation("blockbuster.actors", path);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
+
+                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                {
+                    String pose = entry.getKey();
+
+                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
+                    {
+                        continue;
+                    }
+
+                    ActorMorph poseActor = (ActorMorph) actor.clone();
+
+                    poseActor.currentPose = pose;
+                    poseActor.pose = entry.getValue();
+                    morphs.addMorphVariant(actor.name, "blockbuster", skin + ", pose " + pose, poseActor);
+                }
             }
         }
     }

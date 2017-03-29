@@ -15,7 +15,7 @@ public class GuiNewModal extends GuiModal
     {
         super(parent, font);
         this.models = new GuiModelsView(parent);
-        this.height = 140;
+        this.height = 190;
         this.id = id;
     }
 

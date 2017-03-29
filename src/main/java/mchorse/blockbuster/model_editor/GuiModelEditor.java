@@ -272,6 +272,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         {
             this.model.pose = pose;
             this.limbEditor.setPose(pose);
+
+            if (this.pose != null)
+            {
+                this.pose.displayString = name;
+            }
         }
     }
 
@@ -294,7 +299,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.clean = new GuiTextureButton(1, this.width - 52, 5, GuiLimbEditor.GUI).setTexPos(16, 32).setActiveTexPos(16, 48);
         this.back = new GuiTextureButton(-100, this.width - 25, 5, GuiLimbEditor.GUI).setTexPos(32, 32).setActiveTexPos(32, 48);
 
-        this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "Poses");
+        this.pose = new GuiButton(2, this.width - 110, this.height - 25, 100, 20, "standing");
 
         this.addLimb = new GuiTextureButton(3, this.width - 25, 30, GuiLimbEditor.GUI).setTexPos(16, 0).setActiveTexPos(16, 16);
         this.removeLimb = new GuiTextureButton(4, this.width - 25 - 16, 30, GuiLimbEditor.GUI).setTexPos(32, 0).setActiveTexPos(32, 16);

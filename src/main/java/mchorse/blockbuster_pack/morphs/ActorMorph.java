@@ -51,7 +51,7 @@ public class ActorMorph extends CustomMorph
 
             if (data != null && (data.defaultTexture != null || this.skin != null))
             {
-                model.pose = model.model.poses.get("standing");
+                model.pose = this.pose == null ? model.model.poses.get("standing") : this.pose;
                 model.swingProgress = 0;
 
                 Minecraft.getMinecraft().renderEngine.bindTexture(this.skin == null ? data.defaultTexture : this.skin);
