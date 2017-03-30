@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,6 +27,8 @@ public class GuiTexturePicker extends GuiScrollPane
     private ModelPack pack;
     private List<TextureInfo> textures = new ArrayList<TextureInfo>();
     private ITexturePicker picker;
+    private GuiTextField search;
+    private ResourceLocation name;
 
     public GuiTexturePicker(ITexturePicker picker, ModelPack pack)
     {
@@ -57,22 +60,59 @@ public class GuiTexturePicker extends GuiScrollPane
         }
     }
 
+    public void search(String search)
+    {
+        int i = 0;
+        int index = 0;
+
+        for (TextureInfo texture : this.textures)
+        {
+            if (search.isEmpty())
+            {
+                texture.highlight = true;
+            }
+            else
+            {
+                texture.highlight = texture.path.toString().toLowerCase().indexOf(search.toLowerCase()) != -1;
+
+                if (texture.highlight && index == 0)
+                {
+                    index = i;
+                }
+
+                i++;
+            }
+        }
+
+        this.scrollTo(index / 6 * this.w / 6);
+    }
+
     /**
      * Recalculate the scroll height of texture picker
      */
     @Override
     public void initGui()
     {
+        int w = this.w - 40;
+
         this.scrollHeight = (this.textures.size() / 6 + 1) * (this.w / 6);
+        this.search = new GuiTextField(0, this.fontRendererObj, this.width / 2 - w / 2, this.height - 25, w, 18);
+        this.search.setFocused(false);
+        this.name = null;
     }
 
-    /**
-     * Draw solid black background
-     */
     @Override
-    protected void drawBackground()
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, 0xff000000);
+        if (!this.hidden)
+        {
+            this.search.textboxKeyTyped(typedChar, keyCode);
+
+            if (this.search.isFocused())
+            {
+                this.search(this.search.getText());
+            }
+        }
     }
 
     /**
@@ -87,8 +127,15 @@ public class GuiTexturePicker extends GuiScrollPane
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (this.getHidden() || this.dragging)
+        if (this.hidden || this.dragging)
         {
+            return;
+        }
+
+        if (mouseX >= this.search.xPosition && mouseX <= this.search.xPosition + this.search.width && mouseY >= this.search.yPosition && mouseY <= this.search.yPosition + this.search.height)
+        {
+            this.search.mouseClicked(mouseX, mouseY, mouseButton);
+
             return;
         }
 
@@ -107,7 +154,19 @@ public class GuiTexturePicker extends GuiScrollPane
         if (this.picker != null && index >= 0 && index < this.textures.size())
         {
             this.picker.pickTexture(this.textures.get(index).path.toString());
+            this.search("");
+            this.search.setText("");
+            this.search.setFocused(false);
         }
+    }
+
+    /**
+     * Draw solid black background
+     */
+    @Override
+    protected void drawBackground()
+    {
+        Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, 0xff000000);
     }
 
     /**
@@ -126,11 +185,47 @@ public class GuiTexturePicker extends GuiScrollPane
 
             boolean hover = mouseX >= x && mouseX < x + width && mouseY + this.scrollY >= y && mouseY + this.scrollY < y + width;
 
+            GlStateManager.enableBlend();
             this.mc.renderEngine.bindTexture(texture.path);
-            GlStateManager.color(hover ? 0.0F : 1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(hover ? 0.0F : 1.0F, 1.0F, 1.0F, texture.highlight ? 1.0F : 0.25F);
             Gui.drawScaledCustomSizeModalRect(x, y, 8, 8, 8, 8, width, width, texture.w, texture.h);
 
+            if (hover && this.name == null)
+            {
+                this.name = texture.path;
+            }
+
             i++;
+        }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        if (!this.hidden)
+        {
+            if (this.name != null)
+            {
+                String path = this.name.getResourcePath();
+                String domain = this.name.getResourceDomain();
+
+                int w = Math.max(this.fontRendererObj.getStringWidth(path), this.fontRendererObj.getStringWidth(domain)) + 4;
+                int x = this.x + this.w / 2;
+
+                Gui.drawRect(x - w / 2, 3, x + w / 2, 25, 0x88000000);
+                this.drawCenteredString(this.fontRendererObj, path, this.width / 2, 5, 0xffffff);
+                this.drawCenteredString(this.fontRendererObj, domain, this.width / 2, 15, 0xffffff);
+            }
+
+            this.search.drawTextBox();
+            this.name = null;
+
+            if (!this.search.isFocused() && this.search.getText().isEmpty())
+            {
+                this.fontRendererObj.drawStringWithShadow("Search texture...", this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+            }
         }
     }
 
@@ -146,6 +241,7 @@ public class GuiTexturePicker extends GuiScrollPane
         public int w;
         public int h;
         public ResourceLocation path;
+        public boolean highlight = true;
 
         public TextureInfo(int w, int h, ResourceLocation path)
         {

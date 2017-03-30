@@ -2,6 +2,8 @@ package mchorse.blockbuster.model_editor.elements;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +47,46 @@ public class GuiModelsView extends GuiScrollView
             this.models.add(cell);
         }
 
+        Collections.sort(this.models, new Comparator<ModelCell>()
+        {
+            @Override
+            public int compare(ModelCell a, ModelCell b)
+            {
+                return a.name.compareTo(b.name);
+            }
+        });
+
         this.dummy = new DummyEntity(null);
+    }
+
+    /**
+     * Search for the
+     */
+    public void search(String search)
+    {
+        int index = 0;
+        int i = 0;
+
+        for (ModelCell cell : this.models)
+        {
+            if (search.isEmpty())
+            {
+                cell.highlight = false;
+            }
+            else
+            {
+                cell.highlight = cell.name.toLowerCase().indexOf(search.toLowerCase()) != -1;
+
+                if (cell.highlight && index == 0)
+                {
+                    index = i;
+                }
+
+                i++;
+            }
+        }
+
+        this.scrollTo(index / 3 * this.w / 3);
     }
 
     @Override
@@ -61,6 +102,11 @@ public class GuiModelsView extends GuiScrollView
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        if (!this.isInside(mouseX, mouseY))
+        {
+            return;
+        }
 
         if (this.dragging)
         {
@@ -104,7 +150,11 @@ public class GuiModelsView extends GuiScrollView
 
             if (this.selected == model)
             {
-                this.renderSelected(x, y, w, w);
+                this.renderSelected(x, y, w, w, 0xffcccccc);
+            }
+            else if (model.highlight)
+            {
+                this.renderSelected(x, y, w, w, 0xff0088ff);
             }
 
             i++;
@@ -116,10 +166,8 @@ public class GuiModelsView extends GuiScrollView
      *
      * Basically, this method renders selection.
      */
-    private void renderSelected(int x, int y, int width, int height)
+    private void renderSelected(int x, int y, int width, int height, int color)
     {
-        int color = 0xffcccccc;
-
         this.drawHorizontalLine(x, x + width - 1, y, color);
         this.drawHorizontalLine(x, x + width - 1, y + height - 1, color);
 
@@ -184,11 +232,22 @@ public class GuiModelsView extends GuiScrollView
         public ModelCustom model;
         public ResourceLocation texture;
         public String key;
+        public String name;
+        public boolean highlight = false;
 
         public ModelCell(ModelCustom model, String key)
         {
+            String name = key;
+            int index = name.indexOf(".");
+
+            if (index != -1)
+            {
+                name = name.substring(index + 1);
+            }
+
             this.model = model;
             this.key = key;
+            this.name = name;
 
             if (model.model.defaultTexture != null)
             {
@@ -196,9 +255,6 @@ public class GuiModelsView extends GuiScrollView
             }
             else
             {
-                int index = key.indexOf(".");
-
-                String name = index == -1 ? key : key.substring(index + 1);
                 Map<String, File> skins = Blockbuster.proxy.models.pack.skins.get(name);
 
                 if (skins != null && !skins.isEmpty())

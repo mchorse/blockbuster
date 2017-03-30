@@ -622,6 +622,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         if (this.currentModal == null)
         {
             this.limbs.handleKeyboardInput();
+            this.texturePicker.handleKeyboardInput();
         }
     }
 
@@ -669,8 +670,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         boolean inModal = this.currentModal != null;
 
-        this.texturePicker.handleMouseInput();
-
         /* Zooming the model */
         if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && !inModal)
         {
@@ -688,6 +687,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             this.limbs.handleMouseInput();
         }
 
+        this.texturePicker.handleMouseInput();
+
         super.handleMouseInput();
     }
 
@@ -704,14 +705,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         {
             this.limbEditor.mouseClicked(mouseX, mouseY, mouseButton);
 
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+
             if (mouseX > 120 && mouseX < this.width - 120)
             {
                 this.dragging = true;
                 this.prevX = mouseX;
                 this.prevY = mouseY;
             }
-
-            super.mouseClicked(mouseX, mouseY, mouseButton);
         }
         else
         {
