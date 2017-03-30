@@ -4,11 +4,13 @@ import mchorse.blockbuster.model_editor.modal.GuiModal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 public class GuiNewModal extends GuiModal
 {
     public GuiModelsView models;
     public GuiButton button;
+    public GuiTextField search;
     public int id;
 
     public GuiNewModal(int id, GuiScreen parent, FontRenderer font)
@@ -20,10 +22,23 @@ public class GuiNewModal extends GuiModal
     }
 
     @Override
+    public void keyTyped(char typedChar, int keyCode)
+    {
+        super.keyTyped(typedChar, keyCode);
+        this.search.textboxKeyTyped(typedChar, keyCode);
+
+        if (this.search.isFocused())
+        {
+            this.models.search(this.search.getText());
+        }
+    }
+
+    @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.models.mouseClicked(mouseX, mouseY, mouseButton);
+        this.search.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -45,8 +60,10 @@ public class GuiNewModal extends GuiModal
         int x = this.parent.width / 2 + this.width / 2;
         int y = this.parent.height / 2 + this.height / 2;
 
-        this.models.updateRect(x - this.width + 11, y - this.height + 30, this.width - 22, this.height - 70);
+        this.models.updateRect(x - this.width + 11, y - this.height + 50, this.width - 22, this.height - 90);
         this.models.initiate();
+
+        this.search = new GuiTextField(0, this.font, this.parent.width / 2 - this.width / 2 + 12, this.parent.height / 2 - this.height / 2 + 32, this.width - 24, 18);
 
         this.button = new GuiButton(this.id, x - this.width + 10, y - 41, this.width - 20, 20, "Done");
         this.buttons.clear();
@@ -59,18 +76,16 @@ public class GuiNewModal extends GuiModal
         super.drawModal(mouseX, mouseY, partialTicks);
 
         this.models.draw(mouseX, mouseY, partialTicks);
+        this.search.drawTextBox();
+
+        if (!this.search.isFocused() && this.search.getText().isEmpty())
+        {
+            this.font.drawStringWithShadow("Search...", this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+        }
 
         if (this.models.selected != null)
         {
-            String title = this.models.selected.key;
-            int index = title.lastIndexOf(".");
-
-            if (index != -1)
-            {
-                title = title.substring(index + 1);
-            }
-
-            this.parent.drawCenteredString(this.font, title, this.parent.width / 2, this.parent.height / 2 + this.height / 2 - 16, 0xffffff);
+            this.parent.drawCenteredString(this.font, this.models.selected.name, this.parent.width / 2, this.parent.height / 2 + this.height / 2 - 16, 0xffffff);
         }
     }
 }
