@@ -1,5 +1,6 @@
-package mchorse.blockbuster.model_editor.modal;
+package mchorse.blockbuster.model_editor.elements.modals;
 
+import mchorse.blockbuster.model_editor.modal.GuiModal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,10 +26,12 @@ public class GuiAlertModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 + this.width / 2;
-        int y = this.parent.height / 2 + this.height / 2;
+        super.initiate();
 
-        this.cancel = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, I18n.format("blockbuster.gui.ok"));
+        int x = this.x + this.width - this.buttonWidth - 8;
+        int y = this.y + this.height - 28;
+
+        this.cancel = new GuiButton(this.id, x, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.ok"));
 
         this.buttons.clear();
         this.buttons.add(this.cancel);

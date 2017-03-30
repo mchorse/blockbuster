@@ -38,3 +38,4 @@ blockbuster.gui.me:
         name: "Name"
         scale: "Scale"
         texture_size: "Texture size"
+        texture: "Default texture"

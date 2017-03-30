@@ -16,14 +16,14 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
-import mchorse.blockbuster.model_editor.elements.GuiModelModal;
-import mchorse.blockbuster.model_editor.elements.GuiModelsView.ModelCell;
-import mchorse.blockbuster.model_editor.elements.GuiNewModal;
-import mchorse.blockbuster.model_editor.elements.GuiParentModal;
-import mchorse.blockbuster.model_editor.elements.GuiPoseModal;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker.ITexturePicker;
-import mchorse.blockbuster.model_editor.modal.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiModelModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiNewModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiParentModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiPoseModal;
+import mchorse.blockbuster.model_editor.elements.scrolls.GuiModelsView.ModelCell;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.metamorph.api.models.Model;
@@ -39,7 +39,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -71,6 +71,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      * Currently data model which we are editing
      */
     public Model data;
+
+    /**
+     * Dummy entity for rendering
+     */
+    public EntityLivingBase dummy;
 
     /**
      * Compiled data model which we are currently editing
@@ -207,6 +212,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
         this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
+        this.dummy = new DummyEntity(null);
 
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
@@ -480,7 +486,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         {
             String name = modal.name.getText();
             float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
-            int[] texture = new int[] {Integer.parseInt(modal.texture.a.getText()), Integer.parseInt(modal.texture.b.getText())};
+            int[] texture = new int[] {Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText())};
 
             if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
             {
@@ -808,7 +814,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             float yaw = (x - mouseX) / this.width * 90;
             float pitch = (y + scale + mouseY) / this.height * 90 - 135;
 
-            this.drawModel(x, y, scale + this.scale, yaw, pitch, partialTicks);
+            this.drawModel(x, y, MathHelper.clamp_float(scale + this.scale, 20, 1000), yaw, pitch, partialTicks);
         }
         catch (Exception e)
         {
@@ -858,7 +864,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
 
-        EntityPlayer player = this.mc.thePlayer;
         float factor = 0.0625F;
         float oldSwing = this.model.swingProgress;
 
@@ -884,15 +889,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
         this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * ticks) / 6.0F, 0.0F, 1.0F);
-        this.model.setLivingAnimations(player, 0, 0, ticks);
-        this.model.setRotationAngles(this.swing + ticks, this.swingAmount, this.timer, yaw, pitch, factor, player);
+        this.model.setLivingAnimations(this.dummy, 0, 0, ticks);
+        this.model.setRotationAngles(this.swing + ticks, this.swingAmount, this.timer, yaw, pitch, factor, this.dummy);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, this.model.pose.size[1] / 2, 0);
-        this.model.render(player, 0, 0, this.timer, yaw, pitch, factor);
+        this.model.render(this.dummy, 0, 0, this.timer, yaw, pitch, factor);
         GlStateManager.popMatrix();
 
         GlStateManager.disableDepth();

@@ -1,9 +1,10 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.modals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.model_editor.GuiModelEditor;
+import mchorse.blockbuster.model_editor.elements.scrolls.GuiPosesView;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -70,8 +71,10 @@ public class GuiPoseModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 - this.width / 2;
-        int y = this.parent.height / 2 - this.height / 2;
+        super.initiate();
+
+        int x = this.x;
+        int y = this.y;
         int w = this.width;
         int h = this.height;
 

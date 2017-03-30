@@ -1,5 +1,7 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.modals;
 
+import mchorse.blockbuster.model_editor.elements.GuiThreeInput;
+import mchorse.blockbuster.model_editor.elements.GuiTwoInput;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.gui.FontRenderer;
@@ -13,12 +15,15 @@ import net.minecraft.client.resources.I18n;
  *
  * This modal allows users to edit properties of the currently editing model
  * such as name, visual scale and texture size.
+ *
+ * TODO: add ability to edit path to default texture
  */
 public class GuiModelModal extends GuiModal
 {
     private final String strName = I18n.format("blockbuster.gui.me.model.name");
     private final String strScale = I18n.format("blockbuster.gui.me.model.scale");
     private final String strTextureSize = I18n.format("blockbuster.gui.me.model.texture_size");
+    private final String strTexture = I18n.format("blockbuster.gui.me.model.texture");
 
     public Model model;
 
@@ -39,7 +44,12 @@ public class GuiModelModal extends GuiModal
     /**
      * Texture size of the model
      */
-    public GuiTwoInput texture;
+    public GuiTwoInput textureSize;
+
+    /**
+     * Path to default texture of the model
+     */
+    public GuiTextField texture;
 
     /**
      * Button which activates saving of the model
@@ -63,16 +73,18 @@ public class GuiModelModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 + this.width / 2;
-        int y = this.parent.height / 2 + this.height / 2;
+        super.initiate();
+
+        int x = this.x + this.width;
+        int y = this.y + this.height;
 
         int w = this.width - 55;
         int x2 = x - 8 - w;
 
         this.name = new GuiTextField(0, this.font, x2 + 1, y - 104, w - 2, 18);
         this.scale = new GuiThreeInput(0, this.font, x2, y - 78, w, null);
-        this.texture = new GuiTwoInput(0, this.font, x2 + 33, y - 53, w - 33, null);
-        this.done = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
+        this.textureSize = new GuiTwoInput(0, this.font, x2 + 33, y - 53, w - 33, null);
+        this.done = new GuiButton(this.id, x - this.buttonWidth - 10, y - 30, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
 
         this.buttons.clear();
         this.buttons.add(this.done);
@@ -85,8 +97,8 @@ public class GuiModelModal extends GuiModal
             this.scale.b.setText(String.valueOf(this.model.scale[1]));
             this.scale.c.setText(String.valueOf(this.model.scale[2]));
 
-            this.texture.a.setText(String.valueOf(this.model.texture[0]));
-            this.texture.b.setText(String.valueOf(this.model.texture[1]));
+            this.textureSize.a.setText(String.valueOf(this.model.texture[0]));
+            this.textureSize.b.setText(String.valueOf(this.model.texture[1]));
         }
     }
 
@@ -95,7 +107,7 @@ public class GuiModelModal extends GuiModal
     {
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.scale.keyTyped(typedChar, keyCode);
-        this.texture.keyTyped(typedChar, keyCode);
+        this.textureSize.keyTyped(typedChar, keyCode);
     }
 
     @Override
@@ -103,7 +115,7 @@ public class GuiModelModal extends GuiModal
     {
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.scale.mouseClicked(mouseX, mouseY, mouseButton);
-        this.texture.mouseClicked(mouseX, mouseY, mouseButton);
+        this.textureSize.mouseClicked(mouseX, mouseY, mouseButton);
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -115,10 +127,10 @@ public class GuiModelModal extends GuiModal
 
         this.name.drawTextBox();
         this.scale.draw();
-        this.texture.draw();
+        this.textureSize.draw();
 
-        int x = this.parent.width / 2 - this.width / 2 + 10;
-        int y = this.parent.height / 2 + this.height / 2 - 9;
+        int x = this.x + 10;
+        int y = this.y + this.height - 9;
 
         this.font.drawStringWithShadow(this.strName, x, y - 90, 0xffffffff);
         this.font.drawStringWithShadow(this.strScale, x, y - 64, 0xffffffff);

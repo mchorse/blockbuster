@@ -1,8 +1,9 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.modals;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.model_editor.elements.scrolls.GuiParentsView;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.gui.FontRenderer;
@@ -59,8 +60,10 @@ public class GuiParentModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 + this.width / 2;
-        int y = this.parent.height / 2 + this.height / 2;
+        super.initiate();
+
+        int x = this.x + this.width;
+        int y = this.y + this.height;
 
         this.parents.updateRect(x - this.width + 10, y - this.height + 30, this.width - 20, this.height - 57);
         this.parents.initiate();

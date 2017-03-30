@@ -45,6 +45,16 @@ public abstract class GuiModal
      */
     public int height = 90;
 
+    /**
+     * X coordinate of the modal
+     */
+    public int x;
+
+    /**
+     * Y coordinate of the modal
+     */
+    public int y;
+
     public int buttonWidth = 60;
 
     public GuiModal(GuiScreen parent, FontRenderer font)
@@ -56,7 +66,11 @@ public abstract class GuiModal
     /**
      * Use this method to initiate all your needed GUI fields.
      */
-    public abstract void initiate();
+    public void initiate()
+    {
+        this.x = this.parent.width / 2 - this.width / 2;
+        this.y = this.parent.height / 2 - this.height / 2;
+    }
 
     public GuiModal setLabel(String label)
     {
@@ -113,15 +127,10 @@ public abstract class GuiModal
      */
     public void drawModal(int mouseX, int mouseY, float partialTicks)
     {
-        int x = this.parent.width / 2;
-        int y = this.parent.height / 2;
+        Gui.drawRect(this.x, this.y, this.x + this.width, this.y + this.height, 0xffcccccc);
+        Gui.drawRect(this.x + 1, this.y + 1, this.x + this.width - 1, this.y + this.height - 1, 0xff000000);
 
-        Gui.drawRect(x - this.width / 2, y - this.height / 2, x + this.width / 2, y + this.height / 2, 0xffcccccc);
-        Gui.drawRect(x - this.width / 2 + 1, y - this.height / 2 + 1, x + this.width / 2 - 1, y + this.height / 2 - 1, 0xff000000);
-
-        float offset = this.width * 0.5F - 10;
-
-        this.font.drawSplitString(this.label, x - (int) offset, y - this.height / 2 + 10, (int) (offset * 2), 0xffffff);
+        this.font.drawSplitString(this.label, this.x + 10, this.y + 10, this.width - 20, 0xffffff);
 
         for (GuiButton button : this.buttons)
         {

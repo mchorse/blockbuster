@@ -1,4 +1,4 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.scrolls;
 
 import java.util.ArrayList;
 import java.util.List;

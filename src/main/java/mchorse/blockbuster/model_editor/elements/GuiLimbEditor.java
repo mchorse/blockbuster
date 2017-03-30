@@ -6,7 +6,8 @@ import java.util.List;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
-import mchorse.blockbuster.model_editor.modal.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiParentModal;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -138,7 +139,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.parent = new GuiButton(PARENT, 0, 0, width, 20, I18n.format("blockbuster.gui.me.parent"));
 
         /* Initiate inputs */
-        this.mirror = new GuiCheckBox(MIRROR, 0, 0, I18n.format("blockbsuter.gui.me.mirror"), false);
+        this.mirror = new GuiCheckBox(MIRROR, 0, 0, I18n.format("blockbuster.gui.me.mirror"), false);
         this.texture = new GuiTwoInput(TEXTURE, font, 0, 0, 0, this);
         this.size = new GuiThreeInput(SIZE, font, 0, 0, 0, this);
         this.anchor = new GuiThreeInput(ANCHOR, font, 0, 0, 0, this);
@@ -147,16 +148,16 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.opacity.setGuiResponder(this);
 
         /* Gameplay */
-        this.looking = new GuiCheckBox(LOOKING, 0, 0, I18n.format("blockbsuter.gui.me.looking"), false);
-        this.idle = new GuiCheckBox(IDLE, 0, 0, I18n.format("blockbsuter.gui.me.idle"), false);
-        this.swinging = new GuiCheckBox(SWINGING, 0, 0, I18n.format("blockbsuter.gui.me.swinging"), false);
-        this.swiping = new GuiCheckBox(SWIPING, 0, 0, I18n.format("blockbsuter.gui.me.swiping"), false);
-        this.invert = new GuiCheckBox(INVERT, 0, 0, I18n.format("blockbsuter.gui.me.invert"), false);
+        this.looking = new GuiCheckBox(LOOKING, 0, 0, I18n.format("blockbuster.gui.me.looking"), false);
+        this.idle = new GuiCheckBox(IDLE, 0, 0, I18n.format("blockbuster.gui.me.idle"), false);
+        this.swinging = new GuiCheckBox(SWINGING, 0, 0, I18n.format("blockbuster.gui.me.swinging"), false);
+        this.swiping = new GuiCheckBox(SWIPING, 0, 0, I18n.format("blockbuster.gui.me.swiping"), false);
+        this.invert = new GuiCheckBox(INVERT, 0, 0, I18n.format("blockbuster.gui.me.invert"), false);
         this.holding = new GuiCirculate(HOLDING, 0, 0, width, 20);
 
-        this.holding.addLabel(I18n.format("blockbsuter.gui.me.no_hands"));
-        this.holding.addLabel(I18n.format("blockbsuter.gui.me.right_hand"));
-        this.holding.addLabel(I18n.format("blockbsuter.gui.me.left_hand"));
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.no_hands"));
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.right_hand"));
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.left_hand"));
 
         /* Poses */
         this.translate = new GuiThreeInput(TRANSLATE, font, 0, 0, width, this);
@@ -267,6 +268,10 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.updatePoseFields();
     }
 
+    /**
+     * Sets the pose variables based on current limb's transform in the current
+     * pose.
+     */
     private void updatePoseFields()
     {
         if (this.limb == null)
@@ -274,26 +279,29 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             return;
         }
 
-        Model.Transform trans = this.pose.limbs.get(this.limb.name);
+        Model.Transform transform = this.pose.limbs.get(this.limb.name);
 
-        if (trans != null)
+        if (transform != null)
         {
-            this.translate.a.setText(String.valueOf(trans.translate[0]));
-            this.translate.b.setText(String.valueOf(trans.translate[1]));
-            this.translate.c.setText(String.valueOf(trans.translate[2]));
+            this.translate.a.setText(String.valueOf(transform.translate[0]));
+            this.translate.b.setText(String.valueOf(transform.translate[1]));
+            this.translate.c.setText(String.valueOf(transform.translate[2]));
 
-            this.scale.a.setText(String.valueOf(trans.scale[0]));
-            this.scale.b.setText(String.valueOf(trans.scale[1]));
-            this.scale.c.setText(String.valueOf(trans.scale[2]));
+            this.scale.a.setText(String.valueOf(transform.scale[0]));
+            this.scale.b.setText(String.valueOf(transform.scale[1]));
+            this.scale.c.setText(String.valueOf(transform.scale[2]));
 
-            this.rotate.a.setText(String.valueOf(trans.rotate[0]));
-            this.rotate.b.setText(String.valueOf(trans.rotate[1]));
-            this.rotate.c.setText(String.valueOf(trans.rotate[2]));
+            this.rotate.a.setText(String.valueOf(transform.rotate[0]));
+            this.rotate.b.setText(String.valueOf(transform.rotate[1]));
+            this.rotate.c.setText(String.valueOf(transform.rotate[2]));
         }
     }
 
     /**
-     * Initiate here all your GUI stuff
+     * Initiate here all GUI stuff
+     *
+     * This method is responsible for initiating categories of different
+     * widgets which is in current category.
      */
     public void initiate(int x, int y)
     {
@@ -387,6 +395,9 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Click only on stuff that are in current category
+     */
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.limb == null)
@@ -443,6 +454,12 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Key typed
+     *
+     * Delegates key typing only for those fields that are in the current
+     * category.
+     */
     public void keyTyped(char typedChar, int keyCode)
     {
         if (this.limb == null)
@@ -472,6 +489,13 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Draw limb editor
+     *
+     * This method is responsible for drawing all buttons and widgets on the
+     * screen. The complex thing in this method is rendering of "categories".
+     * See how much ifs we've got here.
+     */
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         FontRenderer font = this.editor.mc.fontRendererObj;

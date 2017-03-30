@@ -1,4 +1,4 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.scrolls;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,29 +8,34 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.modal.GuiScrollView;
 import mchorse.metamorph.client.model.ModelCustom;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
+/**
+ * Models view GUI
+ *
+ * This GUI is responsible for displaying and selecting a model in the scroll
+ * view.
+ */
 public class GuiModelsView extends GuiScrollView
 {
     public List<ModelCell> models = new ArrayList<ModelCell>();
     public ModelCell selected;
     public EntityLivingBase dummy;
 
-    public GuiModelsView(GuiScreen parent)
+    /**
+     * Initiate models from model repository
+     */
+    public GuiModelsView(GuiModelEditor parent)
     {
         super(parent);
 
@@ -56,11 +61,15 @@ public class GuiModelsView extends GuiScrollView
             }
         });
 
-        this.dummy = new DummyEntity(null);
+        this.dummy = parent.dummy;
     }
 
     /**
-     * Search for the
+     * Search the models
+     *
+     * This method will highlight all models which has given string in the
+     * displayed name and will also scroll to the first model which was
+     * highlighted.
      */
     public void search(String search)
     {
@@ -98,6 +107,9 @@ public class GuiModelsView extends GuiScrollView
         this.scrollTo(index == -1 ? 0 : index / 3 * this.w / 3);
     }
 
+    /**
+     * When mouse is clicked
+     */
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
@@ -129,6 +141,9 @@ public class GuiModelsView extends GuiScrollView
     protected void drawBackground()
     {}
 
+    /**
+     * Draw models and selection/search highlighted models
+     */
     @Override
     protected void drawView(int mouseX, int mouseY, float partialTicks)
     {
@@ -162,7 +177,7 @@ public class GuiModelsView extends GuiScrollView
     }
 
     /**
-     * Render a grey outline around the given area.
+     * Render a colored outline around the given area.
      *
      * Basically, this method renders selection.
      */
@@ -227,12 +242,21 @@ public class GuiModelsView extends GuiScrollView
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
+    /**
+     * Model cell
+     *
+     * This class is responsible for holding information about a model for
+     * display. Such features as texture, display name, model and key is stored
+     * here.
+     */
     public static class ModelCell
     {
-        public ModelCustom model;
-        public ResourceLocation texture;
         public String key;
         public String name;
+
+        public ModelCustom model;
+        public ResourceLocation texture;
+
         public boolean highlight = false;
 
         public ModelCell(ModelCustom model, String key)
@@ -265,33 +289,4 @@ public class GuiModelsView extends GuiScrollView
         }
     }
 
-    public static class DummyEntity extends EntityLivingBase
-    {
-        public DummyEntity(World worldIn)
-        {
-            super(worldIn);
-        }
-
-        @Override
-        public Iterable<ItemStack> getArmorInventoryList()
-        {
-            return null;
-        }
-
-        @Override
-        public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
-        {
-            return null;
-        }
-
-        @Override
-        public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
-        {}
-
-        @Override
-        public EnumHandSide getPrimaryHand()
-        {
-            return null;
-        }
-    }
 }
