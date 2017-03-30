@@ -30,7 +30,7 @@ public class SubCommandModelClearCache extends CommandBase
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked", "unused"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
