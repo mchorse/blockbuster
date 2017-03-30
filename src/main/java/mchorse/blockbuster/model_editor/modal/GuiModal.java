@@ -18,7 +18,7 @@ public abstract class GuiModal
     /**
      * Label which should be displayed
      */
-    public String label;
+    public String label = "";
 
     /**
      * Parent screen
@@ -57,6 +57,13 @@ public abstract class GuiModal
      * Use this method to initiate all your needed GUI fields.
      */
     public abstract void initiate();
+
+    public GuiModal setLabel(String label)
+    {
+        this.label = label;
+
+        return this;
+    }
 
     /**
      * Perform an action based on button's input

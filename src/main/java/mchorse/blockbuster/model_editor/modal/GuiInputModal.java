@@ -4,6 +4,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Input modal
@@ -35,7 +36,7 @@ public class GuiInputModal extends GuiModal
     /**
      * Set user's input
      */
-    public void setInput(String input)
+    public GuiInputModal setInput(String input)
     {
         this.inputText = input;
 
@@ -43,6 +44,8 @@ public class GuiInputModal extends GuiModal
         {
             this.input.setText(input);
         }
+
+        return this;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class GuiInputModal extends GuiModal
 
         int w = 200 - 20;
 
-        this.proceed = new GuiButton(this.id, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, "Ok");
+        this.proceed = new GuiButton(this.id, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.ok"));
         this.input = new GuiTextField(-2, this.font, x, y + 2, w - 1 - this.buttonWidth, 16);
         this.input.setText(this.inputText);
 

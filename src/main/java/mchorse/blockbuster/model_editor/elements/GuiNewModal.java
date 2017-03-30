@@ -5,9 +5,12 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 public class GuiNewModal extends GuiModal
 {
+    private final String strSearch = I18n.format("blockbuster.gui.me.search");
+
     public GuiModelsView models;
     public GuiButton button;
     public GuiTextField search;
@@ -65,7 +68,7 @@ public class GuiNewModal extends GuiModal
 
         this.search = new GuiTextField(0, this.font, this.parent.width / 2 - this.width / 2 + 12, this.parent.height / 2 - this.height / 2 + 32, this.width - 24, 18);
 
-        this.button = new GuiButton(this.id, x - this.width + 10, y - 41, this.width - 20, 20, "Done");
+        this.button = new GuiButton(this.id, x - this.width + 10, y - 41, this.width - 20, 20, I18n.format("blockbuster.gui.done"));
         this.buttons.clear();
         this.buttons.add(this.button);
     }
@@ -80,7 +83,7 @@ public class GuiNewModal extends GuiModal
 
         if (!this.search.isFocused() && this.search.getText().isEmpty())
         {
-            this.font.drawStringWithShadow("Search...", this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+            this.font.drawStringWithShadow(this.strSearch, this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
         }
 
         if (this.models.selected != null)

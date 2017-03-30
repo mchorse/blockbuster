@@ -8,6 +8,7 @@ import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiParentModal extends GuiModal
 {
@@ -21,7 +22,7 @@ public class GuiParentModal extends GuiModal
 
         List<String> limbs = new ArrayList<String>();
 
-        limbs.add("None");
+        limbs.add(I18n.format("blockbuster.gui.me.none"));
         limbs.addAll(model.limbs.keySet());
 
         this.parents = new GuiParentsView(limbs, parent);
@@ -64,7 +65,7 @@ public class GuiParentModal extends GuiModal
         this.parents.updateRect(x - this.width + 10, y - this.height + 30, this.width - 20, this.height - 57);
         this.parents.initiate();
 
-        this.button = new GuiButton(this.id, x - this.width + 10, y - 28, this.width - 20, 20, "Done");
+        this.button = new GuiButton(this.id, x - this.width + 10, y - 28, this.width - 20, 20, I18n.format("blockbuster.gui.done"));
         this.buttons.clear();
         this.buttons.add(this.button);
     }

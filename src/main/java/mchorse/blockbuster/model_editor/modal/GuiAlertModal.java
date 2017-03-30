@@ -3,6 +3,7 @@ package mchorse.blockbuster.model_editor.modal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Alert modal
@@ -27,7 +28,7 @@ public class GuiAlertModal extends GuiModal
         int x = this.parent.width / 2 + this.width / 2;
         int y = this.parent.height / 2 + this.height / 2;
 
-        this.cancel = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, "Ok");
+        this.cancel = new GuiButton(this.id, x - this.buttonWidth - 8, y - 28, this.buttonWidth, 20, I18n.format("blockbuster.gui.ok"));
 
         this.buttons.clear();
         this.buttons.add(this.cancel);
