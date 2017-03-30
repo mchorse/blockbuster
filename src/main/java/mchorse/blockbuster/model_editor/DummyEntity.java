@@ -1,6 +1,7 @@
 package mchorse.blockbuster.model_editor;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
@@ -14,9 +15,16 @@ import net.minecraft.world.World;
  */
 public class DummyEntity extends EntityLivingBase
 {
+    private final ItemStack[] held;
+
     public DummyEntity(World worldIn)
     {
         super(worldIn);
+
+        ItemStack iron = new ItemStack(Items.IRON_INGOT);
+        ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
+
+        this.held = new ItemStack[] {sword, iron};
     }
 
     @Override
@@ -28,6 +36,15 @@ public class DummyEntity extends EntityLivingBase
     @Override
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
+        if (slotIn.equals(EntityEquipmentSlot.MAINHAND))
+        {
+            return this.held[0];
+        }
+        else if (slotIn.equals(EntityEquipmentSlot.OFFHAND))
+        {
+            return this.held[1];
+        }
+
         return null;
     }
 

@@ -164,6 +164,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      */
     private GuiButton swingLegs;
 
+    /**
+     * Whether to render items
+     */
+    private GuiButton renderItems;
+
     /* Mouse dragging and model rotation */
     private boolean dragging;
     private int prevX;
@@ -199,6 +204,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
     private float swingAmount;
     private float swing;
+
+    /**
+     * Render items in the limbs which are responsible for holding items
+     */
+    private boolean items;
 
     /**
      * Whether player opened this menu from main menu or from the game
@@ -326,6 +336,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.showTextures = new GuiTextureButton(6, cx - 8 - 24, by, GuiLimbEditor.GUI).setTexPos(0, 0).setActiveTexPos(0, 16);
         this.swipeArms = new GuiTextureButton(7, cx - 8 + 24, by, GuiLimbEditor.GUI).setTexPos(64, 48).setActiveTexPos(64, 64);
         this.swingLegs = new GuiTextureButton(8, cx - 8, by, GuiLimbEditor.GUI).setTexPos(80, 48).setActiveTexPos(80, 64);
+        this.renderItems = new GuiTextureButton(9, cx - 8 + 48, by, GuiLimbEditor.GUI).setTexPos(96, 48).setActiveTexPos(96, 64);
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
@@ -340,6 +351,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.buttonList.add(this.showTextures);
         this.buttonList.add(this.swipeArms);
         this.buttonList.add(this.swingLegs);
+        this.buttonList.add(this.renderItems);
 
         /* Custom GUI controls */
         this.limbEditor.initiate(10, 47);
@@ -413,6 +425,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         else if (button.id == 8)
         {
             this.swinging = !this.swinging;
+        }
+        else if (button.id == 9)
+        {
+            this.items = !this.items;
         }
         else if (button == this.back)
         {
@@ -888,9 +904,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
+        float limbSwing = this.swing + ticks;
+
         this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * ticks) / 6.0F, 0.0F, 1.0F);
         this.model.setLivingAnimations(this.dummy, 0, 0, ticks);
-        this.model.setRotationAngles(this.swing + ticks, this.swingAmount, this.timer, yaw, pitch, factor, this.dummy);
+        this.model.setRotationAngles(limbSwing, this.swingAmount, this.timer, yaw, pitch, factor, this.dummy);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -898,6 +916,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, this.model.pose.size[1] / 2, 0);
         this.model.render(this.dummy, 0, 0, this.timer, yaw, pitch, factor);
+
+        if (this.items)
+        {
+            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, ticks, this.timer, yaw, pitch, factor);
+        }
+
         GlStateManager.popMatrix();
 
         GlStateManager.disableDepth();
