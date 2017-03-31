@@ -556,7 +556,12 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.print(output);
             writer.close();
 
-            ModelCustom.MODELS.put("blockbuster." + name, this.buildModel());
+            String key = "blockbuster." + name;
+
+            Model model = Blockbuster.proxy.models.models.get(key);
+            ModelUtils.copy(this.data.clone(), model);
+            ModelCustom.MODELS.put(key, this.buildModel());
+
             this.modelName = name;
         }
         catch (Exception e)

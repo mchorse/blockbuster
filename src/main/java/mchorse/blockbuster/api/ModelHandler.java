@@ -58,6 +58,7 @@ public class ModelHandler
                 InputStream modelStream = new FileInputStream(pack.models.get(model));
 
                 this.models.put("blockbuster." + model, Model.parse(modelStream));
+                modelStream.close();
             }
             catch (Exception e)
             {

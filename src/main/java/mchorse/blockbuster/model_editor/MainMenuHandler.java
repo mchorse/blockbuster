@@ -72,9 +72,10 @@ public class MainMenuHandler
         GuiScreen gui = event.getGui();
 
         boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
-        boolean isBlockbuster = gui instanceof GuiDirector || gui instanceof GuiActor || gui instanceof GuiModelEditor;
+        boolean isBlockbuster = gui instanceof GuiDirector || gui instanceof GuiActor;
+        boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiModelEditor;
 
-        if (isMetamorph || isBlockbuster)
+        if (isMetamorph || isBlockbuster || exitME)
         {
             /* Reload models and skin */
             ModelPack pack = Blockbuster.proxy.models.pack;

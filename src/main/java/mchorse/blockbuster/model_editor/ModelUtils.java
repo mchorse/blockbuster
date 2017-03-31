@@ -47,4 +47,20 @@ public class ModelUtils
 
         return output;
     }
+
+    /**
+     * Copy model from model
+     */
+    public static void copy(Model from, Model to)
+    {
+        to.defaultTexture = from.defaultTexture;
+        to.texture = from.texture;
+        to.scheme = from.scheme;
+        to.scale = from.scale;
+        to.model = from.model;
+        to.name = from.name;
+
+        to.poses = from.poses;
+        to.limbs = from.limbs;
+    }
 }
