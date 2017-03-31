@@ -15,8 +15,6 @@ import net.minecraft.client.resources.I18n;
  *
  * This modal allows users to edit properties of the currently editing model
  * such as name, visual scale and texture size.
- *
- * TODO: add ability to edit path to default texture
  */
 public class GuiModelModal extends GuiModal
 {

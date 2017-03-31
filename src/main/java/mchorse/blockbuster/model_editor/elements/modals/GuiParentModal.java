@@ -11,6 +11,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
+/**
+ * Parent change modal
+ *
+ * This modal is responsible for displaying available limbs which are suitable
+ * for being parent and ability to retrieve selected parent limb.
+ */
 public class GuiParentModal extends GuiModal
 {
     public GuiParentsView parents;
@@ -21,11 +27,21 @@ public class GuiParentModal extends GuiModal
     {
         super(parent, font);
 
+        /* Construct limbs list */
         List<String> limbs = new ArrayList<String>();
 
         limbs.add(I18n.format("blockbuster.gui.me.none"));
         limbs.addAll(model.limbs.keySet());
 
+        /* Remove currently selected limb from parents */
+        int index = limbs.indexOf(current.name);
+
+        if (index != -1)
+        {
+            limbs.remove(index);
+        }
+
+        /* Parents scroll view */
         this.parents = new GuiParentsView(limbs, parent);
 
         if (!current.parent.isEmpty())

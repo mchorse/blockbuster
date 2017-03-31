@@ -12,6 +12,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
+/**
+ * Poses modal
+ *
+ * This modal is responsible for adding an ability to manipulate poses.
+ */
 public class GuiPoseModal extends GuiModal
 {
     private final String strName = I18n.format("blockbuster.gui.me.pose_name");

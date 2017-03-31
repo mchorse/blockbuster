@@ -36,4 +36,14 @@ public class GuiAlertModal extends GuiModal
         this.buttons.clear();
         this.buttons.add(this.cancel);
     }
+
+    @Override
+    public void keyTyped(char typedChar, int keyCode)
+    {
+        /* On enter, submit */
+        if (keyCode == 28)
+        {
+            this.actionPerformed(this.cancel);
+        }
+    }
 }
