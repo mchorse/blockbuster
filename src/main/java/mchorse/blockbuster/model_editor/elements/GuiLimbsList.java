@@ -13,6 +13,12 @@ import mchorse.metamorph.api.models.Model.Limb;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
 
+/**
+ * Limb list GUI
+ *
+ * This method is responsible displaying available limbs in currently editing
+ * custom model.
+ */
 public class GuiLimbsList extends GuiScrollPane
 {
     /**
@@ -206,7 +212,8 @@ public class GuiLimbsList extends GuiScrollPane
     /**
      * Limb picker interface
      *
-     * Basically
+     * Basically this interface is used to notify the parent (or the current
+     * displayed screen) that limb have been picked from this widget.
      */
     public static interface ILimbPicker
     {

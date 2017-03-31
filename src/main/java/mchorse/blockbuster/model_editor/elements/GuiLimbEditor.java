@@ -6,7 +6,8 @@ import java.util.List;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
-import mchorse.blockbuster.model_editor.modal.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
+import mchorse.blockbuster.model_editor.elements.modals.GuiParentModal;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -55,6 +57,12 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private static final int TRANSLATE = 14;
     private static final int SCALE = 15;
     private static final int ROTATE = 16;
+
+    /* Strings */
+    private final String strNoLimbs = I18n.format("blockbuster.gui.me.no_limbs");
+    private final String strVisual = I18n.format("blockbuster.gui.me.visual");
+    private final String strGameplay = I18n.format("blockbuster.gui.me.gameplay");
+    private final String strPose = I18n.format("blockbuster.gui.me.pose");
 
     /* Data */
 
@@ -127,11 +135,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         final int width = 100;
 
         /* Buttons */
-        this.name = new GuiButton(NAME, 0, 0, width, 20, "Change name");
-        this.parent = new GuiButton(PARENT, 0, 0, width, 20, "Change parent");
+        this.name = new GuiButton(NAME, 0, 0, width, 20, I18n.format("blockbuster.gui.me.name"));
+        this.parent = new GuiButton(PARENT, 0, 0, width, 20, I18n.format("blockbuster.gui.me.parent"));
 
         /* Initiate inputs */
-        this.mirror = new GuiCheckBox(MIRROR, 0, 0, "Mirror", false);
+        this.mirror = new GuiCheckBox(MIRROR, 0, 0, I18n.format("blockbuster.gui.me.mirror"), false);
         this.texture = new GuiTwoInput(TEXTURE, font, 0, 0, 0, this);
         this.size = new GuiThreeInput(SIZE, font, 0, 0, 0, this);
         this.anchor = new GuiThreeInput(ANCHOR, font, 0, 0, 0, this);
@@ -140,16 +148,16 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.opacity.setGuiResponder(this);
 
         /* Gameplay */
-        this.looking = new GuiCheckBox(LOOKING, 0, 0, "Looking", false);
-        this.idle = new GuiCheckBox(IDLE, 0, 0, "Idle", false);
-        this.swinging = new GuiCheckBox(SWINGING, 0, 0, "Swinging", false);
-        this.swiping = new GuiCheckBox(SWIPING, 0, 0, "Swiping", false);
-        this.invert = new GuiCheckBox(INVERT, 0, 0, "Invert", false);
+        this.looking = new GuiCheckBox(LOOKING, 0, 0, I18n.format("blockbuster.gui.me.looking"), false);
+        this.idle = new GuiCheckBox(IDLE, 0, 0, I18n.format("blockbuster.gui.me.idle"), false);
+        this.swinging = new GuiCheckBox(SWINGING, 0, 0, I18n.format("blockbuster.gui.me.swinging"), false);
+        this.swiping = new GuiCheckBox(SWIPING, 0, 0, I18n.format("blockbuster.gui.me.swiping"), false);
+        this.invert = new GuiCheckBox(INVERT, 0, 0, I18n.format("blockbuster.gui.me.invert"), false);
         this.holding = new GuiCirculate(HOLDING, 0, 0, width, 20);
 
-        this.holding.addLabel("No hands");
-        this.holding.addLabel("Right");
-        this.holding.addLabel("Left");
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.no_hands"));
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.right_hand"));
+        this.holding.addLabel(I18n.format("blockbuster.gui.me.left_hand"));
 
         /* Poses */
         this.translate = new GuiThreeInput(TRANSLATE, font, 0, 0, width, this);
@@ -260,6 +268,10 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.updatePoseFields();
     }
 
+    /**
+     * Sets the pose variables based on current limb's transform in the current
+     * pose.
+     */
     private void updatePoseFields()
     {
         if (this.limb == null)
@@ -267,26 +279,29 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             return;
         }
 
-        Model.Transform trans = this.pose.limbs.get(this.limb.name);
+        Model.Transform transform = this.pose.limbs.get(this.limb.name);
 
-        if (trans != null)
+        if (transform != null)
         {
-            this.translate.a.setText(String.valueOf(trans.translate[0]));
-            this.translate.b.setText(String.valueOf(trans.translate[1]));
-            this.translate.c.setText(String.valueOf(trans.translate[2]));
+            this.translate.a.setText(String.valueOf(transform.translate[0]));
+            this.translate.b.setText(String.valueOf(transform.translate[1]));
+            this.translate.c.setText(String.valueOf(transform.translate[2]));
 
-            this.scale.a.setText(String.valueOf(trans.scale[0]));
-            this.scale.b.setText(String.valueOf(trans.scale[1]));
-            this.scale.c.setText(String.valueOf(trans.scale[2]));
+            this.scale.a.setText(String.valueOf(transform.scale[0]));
+            this.scale.b.setText(String.valueOf(transform.scale[1]));
+            this.scale.c.setText(String.valueOf(transform.scale[2]));
 
-            this.rotate.a.setText(String.valueOf(trans.rotate[0]));
-            this.rotate.b.setText(String.valueOf(trans.rotate[1]));
-            this.rotate.c.setText(String.valueOf(trans.rotate[2]));
+            this.rotate.a.setText(String.valueOf(transform.rotate[0]));
+            this.rotate.b.setText(String.valueOf(transform.rotate[1]));
+            this.rotate.c.setText(String.valueOf(transform.rotate[2]));
         }
     }
 
     /**
-     * Initiate here all your GUI stuff
+     * Initiate here all GUI stuff
+     *
+     * This method is responsible for initiating categories of different
+     * widgets which is in current category.
      */
     public void initiate(int x, int y)
     {
@@ -380,6 +395,9 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Click only on stuff that are in current category
+     */
     public void mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.limb == null)
@@ -436,6 +454,12 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Key typed
+     *
+     * Delegates key typing only for those fields that are in the current
+     * category.
+     */
     public void keyTyped(char typedChar, int keyCode)
     {
         if (this.limb == null)
@@ -465,13 +489,20 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         }
     }
 
+    /**
+     * Draw limb editor
+     *
+     * This method is responsible for drawing all buttons and widgets on the
+     * screen. The complex thing in this method is rendering of "categories".
+     * See how much ifs we've got here.
+     */
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         FontRenderer font = this.editor.mc.fontRendererObj;
 
         if (this.limb == null)
         {
-            font.drawStringWithShadow("No limb selected...", this.name.xPosition, this.name.yPosition - 15, 0xffffff);
+            font.drawStringWithShadow(this.strNoLimbs, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
             return;
         }
 
@@ -479,7 +510,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         if (this.category != -1)
         {
-            String cat = this.category == 0 ? "Visual" : (this.category == 1 ? "Gameplay" : "Pose");
+            String cat = this.category == 0 ? this.strVisual : (this.category == 1 ? this.strGameplay : this.strPose);
 
             this.editor.drawCenteredString(font, cat, this.prev.xPosition + 49, this.next.yPosition + 6, 0xffffffff);
         }
@@ -547,20 +578,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         if (button.id == NAME)
         {
-            GuiInputModal modal = new GuiInputModal(GuiModelEditor.CHANGE_NAME, this.editor, this.editor.mc.fontRendererObj);
-
-            modal.label = "Type in a new name for currently editing limb:";
-            modal.setInput(this.limb.name);
-
-            this.editor.openModal(modal);
+            this.editor.openModal(new GuiInputModal(GuiModelEditor.CHANGE_NAME, this.editor, this.editor.mc.fontRendererObj).setInput(this.limb.name).setLabel(I18n.format("blockbuster.gui.me.limb_name_modal")));
         }
         if (button.id == PARENT)
         {
-            GuiParentModal modal = new GuiParentModal(GuiModelEditor.CHANGE_PARENT, this.limb, this.editor.data, this.editor, this.editor.mc.fontRendererObj);
-
-            modal.label = "Choose a limb you want to be parent of currently selected limb";
-
-            this.editor.openModal(modal);
+            this.editor.openModal(new GuiParentModal(GuiModelEditor.CHANGE_PARENT, this.limb, this.editor.data, this.editor, this.editor.mc.fontRendererObj).setLabel(I18n.format("blockbuster.gui.me.limb_parent_modal")));
         }
 
         if (button.id == -1 || button.id == -2)
@@ -609,6 +631,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
                 int value = this.holding.getValue();
                 this.limb.holding = value == 0 ? "" : (value == 1 ? "right" : "left");
+                this.editor.rebuildModel();
             }
         }
     }

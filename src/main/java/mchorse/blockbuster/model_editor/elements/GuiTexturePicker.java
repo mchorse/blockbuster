@@ -14,6 +14,7 @@ import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -24,6 +25,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class GuiTexturePicker extends GuiScrollPane
 {
+    private final String strSearch = I18n.format("blockbuster.gui.me.search_texture");
+
     private ModelPack pack;
     private List<TextureInfo> textures = new ArrayList<TextureInfo>();
     private ITexturePicker picker;
@@ -224,7 +227,7 @@ public class GuiTexturePicker extends GuiScrollPane
 
             if (!this.search.isFocused() && this.search.getText().isEmpty())
             {
-                this.fontRendererObj.drawStringWithShadow("Search texture...", this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+                this.fontRendererObj.drawStringWithShadow(this.strSearch, this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
             }
         }
     }

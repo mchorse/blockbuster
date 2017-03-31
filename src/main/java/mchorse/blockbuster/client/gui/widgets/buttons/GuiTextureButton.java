@@ -5,6 +5,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Textured button
+ *
+ * This button is like regular {@link GuiButton}, but it gets drawn as a
+ * texture icon.
+ */
 public class GuiTextureButton extends GuiButton
 {
     public ResourceLocation texture;

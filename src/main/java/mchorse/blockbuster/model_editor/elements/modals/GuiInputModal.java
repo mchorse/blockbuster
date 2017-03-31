@@ -1,9 +1,11 @@
-package mchorse.blockbuster.model_editor.modal;
+package mchorse.blockbuster.model_editor.elements.modals;
 
+import mchorse.blockbuster.model_editor.modal.GuiModal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Input modal
@@ -15,8 +17,8 @@ public class GuiInputModal extends GuiModal
 {
     private GuiButton proceed;
     private GuiTextField input;
-    private int id;
     private String inputText = "";
+    private int id;
 
     public GuiInputModal(int id, GuiScreen parent, FontRenderer font)
     {
@@ -35,7 +37,7 @@ public class GuiInputModal extends GuiModal
     /**
      * Set user's input
      */
-    public void setInput(String input)
+    public GuiInputModal setInput(String input)
     {
         this.inputText = input;
 
@@ -43,18 +45,20 @@ public class GuiInputModal extends GuiModal
         {
             this.input.setText(input);
         }
+
+        return this;
     }
 
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 - this.width / 2 + 10;
-        int y = this.parent.height / 2 + this.height / 2 - 28;
+        super.initiate();
 
-        int w = 200 - 20;
+        int w = this.width - this.buttonWidth - 25;
+        int y = this.y + this.height - 30;
 
-        this.proceed = new GuiButton(this.id, x + (w - this.buttonWidth) + 2, y, this.buttonWidth, 20, "Ok");
-        this.input = new GuiTextField(-2, this.font, x, y + 2, w - 1 - this.buttonWidth, 16);
+        this.proceed = new GuiButton(this.id, this.x + w + 15, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.ok"));
+        this.input = new GuiTextField(-2, this.font, this.x + 11, y + 1, w - 2, 18);
         this.input.setText(this.inputText);
 
         this.buttons.clear();

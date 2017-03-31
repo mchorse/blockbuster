@@ -15,6 +15,13 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Command /model clear
+ *
+ * This sub-command is responsible for clearing texture cache from the textures
+ * which were fetched from blockbuster.actors domains, and were cached as
+ * dynamic texture (purple checkered).
+ */
 public class SubCommandModelClearCache extends CommandBase
 {
     @Override
@@ -36,6 +43,7 @@ public class SubCommandModelClearCache extends CommandBase
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
         Field textureMap = null;
 
+        /* Finding the field which has holds the texture cache */
         for (Field field : manager.getClass().getDeclaredFields())
         {
             if (Modifier.isStatic(field.getModifiers()))
@@ -62,6 +70,7 @@ public class SubCommandModelClearCache extends CommandBase
             }
         }
 
+        /* Iterating through texture cache and removing all elements */
         if (textureMap != null)
         {
             try

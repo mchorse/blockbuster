@@ -1,17 +1,26 @@
-package mchorse.blockbuster.model_editor.elements;
+package mchorse.blockbuster.model_editor.elements.modals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.model_editor.GuiModelEditor;
+import mchorse.blockbuster.model_editor.elements.scrolls.GuiPosesView;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
+/**
+ * Poses modal
+ *
+ * This modal is responsible for adding an ability to manipulate poses.
+ */
 public class GuiPoseModal extends GuiModal
 {
+    private final String strName = I18n.format("blockbuster.gui.me.pose_name");
+
     private GuiTextField name;
     private GuiButton done;
     private GuiButton add;
@@ -24,10 +33,10 @@ public class GuiPoseModal extends GuiModal
         super(parent, font);
 
         this.name = new GuiTextField(0, font, 0, 0, 0, 18);
-        this.done = new GuiButton(-1, 0, 0, 0, 20, "Done");
-        this.add = new GuiButton(add_id, 0, 0, 0, 20, "Add");
-        this.remove = new GuiButton(remove_id, 0, 0, 0, 20, "Remove");
-        this.select = new GuiButton(select_id, 0, 0, 0, 20, "Select");
+        this.done = new GuiButton(-1, 0, 0, 0, 20, I18n.format("blockbuster.gui.done"));
+        this.add = new GuiButton(add_id, 0, 0, 0, 20, I18n.format("blockbuster.gui.add"));
+        this.remove = new GuiButton(remove_id, 0, 0, 0, 20, I18n.format("blockbuster.gui.remove"));
+        this.select = new GuiButton(select_id, 0, 0, 0, 20, I18n.format("blockbuster.gui.select"));
 
         this.buttons.add(this.done);
         this.buttons.add(this.add);
@@ -38,7 +47,7 @@ public class GuiPoseModal extends GuiModal
         this.updatePoses();
 
         this.height = 122;
-        this.label = "§lPoses";
+        this.label = I18n.format("blockbuster.gui.me.pose_title_modal");
     }
 
     private void updatePoses()
@@ -67,8 +76,10 @@ public class GuiPoseModal extends GuiModal
     @Override
     public void initiate()
     {
-        int x = this.parent.width / 2 - this.width / 2;
-        int y = this.parent.height / 2 - this.height / 2;
+        super.initiate();
+
+        int x = this.x;
+        int y = this.y;
         int w = this.width;
         int h = this.height;
 
@@ -139,7 +150,7 @@ public class GuiPoseModal extends GuiModal
 
         if (!this.name.isFocused() && this.name.getText().isEmpty())
         {
-            this.font.drawStringWithShadow("New pose's name...", this.name.xPosition + 4, this.name.yPosition + 5, 0xaaaaaa);
+            this.font.drawStringWithShadow(this.strName, this.name.xPosition + 4, this.name.yPosition + 5, 0xaaaaaa);
         }
     }
 }
