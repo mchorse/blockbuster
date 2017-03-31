@@ -503,16 +503,25 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             String name = modal.name.getText();
             float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
             int[] texture = new int[] {Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText())};
+            String defaultTexture = modal.texture.getText();
 
             if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
             {
                 return false;
             }
 
+            ResourceLocation oldTexture = this.data.defaultTexture;
+
             this.data.name = name;
             this.data.scale = scale;
             this.data.texture = texture;
+            this.data.defaultTexture = defaultTexture.isEmpty() ? null : new ResourceLocation(defaultTexture);
             this.rebuildModel();
+
+            if (oldTexture.equals(this.textureRL) && this.data.defaultTexture != null)
+            {
+                this.textureRL = this.data.defaultTexture;
+            }
         }
         catch (Exception e)
         {}

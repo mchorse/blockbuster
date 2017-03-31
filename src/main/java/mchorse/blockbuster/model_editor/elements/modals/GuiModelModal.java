@@ -59,7 +59,7 @@ public class GuiModelModal extends GuiModal
     public GuiModelModal(int id, GuiScreen parent, FontRenderer font)
     {
         super(parent, font);
-        this.height = 140;
+        this.height = 170;
         this.id = id;
     }
 
@@ -78,13 +78,23 @@ public class GuiModelModal extends GuiModal
         int x = this.x + this.width;
         int y = this.y + this.height;
 
-        int w = this.width - 55;
-        int x2 = x - 8 - w;
+        int w = this.width;
 
-        this.name = new GuiTextField(0, this.font, x2 + 1, y - 104, w - 2, 18);
-        this.scale = new GuiThreeInput(0, this.font, x2, y - 78, w, null);
-        this.textureSize = new GuiTwoInput(0, this.font, x2 + 33, y - 53, w - 33, null);
-        this.done = new GuiButton(this.id, x - this.buttonWidth - 10, y - 30, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
+        /* Some dirty way to make things dynamically adjust or so */
+        y -= 30;
+        this.done = new GuiButton(this.id, x - this.buttonWidth - 10, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
+        y -= 25;
+        w = this.width - this.font.getStringWidth(this.strTexture) - 24;
+        this.texture = new GuiTextField(0, this.font, x - 10 - w + 1, y, w - 3, 18);
+        y -= 25;
+        w = this.width - this.font.getStringWidth(this.strTextureSize) - 24;
+        this.textureSize = new GuiTwoInput(0, this.font, x - 10 - w, y, w, null);
+        y -= 25;
+        w = this.width - this.font.getStringWidth(this.strScale) - 24;
+        this.scale = new GuiThreeInput(0, this.font, x - 10 - w, y, w, null);
+        y -= 25;
+        w = this.width - this.font.getStringWidth(this.strName) - 24;
+        this.name = new GuiTextField(0, this.font, x - 10 - w + 1, y, w - 2, 18);
 
         this.buttons.clear();
         this.buttons.add(this.done);
@@ -99,6 +109,10 @@ public class GuiModelModal extends GuiModal
 
             this.textureSize.a.setText(String.valueOf(this.model.texture[0]));
             this.textureSize.b.setText(String.valueOf(this.model.texture[1]));
+
+            this.texture.setMaxStringLength(200);
+            this.texture.setText(this.model.defaultTexture.toString());
+            this.texture.setCursorPosition(0);
         }
     }
 
@@ -108,6 +122,7 @@ public class GuiModelModal extends GuiModal
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.scale.keyTyped(typedChar, keyCode);
         this.textureSize.keyTyped(typedChar, keyCode);
+        this.texture.textboxKeyTyped(typedChar, keyCode);
     }
 
     @Override
@@ -116,6 +131,7 @@ public class GuiModelModal extends GuiModal
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.scale.mouseClicked(mouseX, mouseY, mouseButton);
         this.textureSize.mouseClicked(mouseX, mouseY, mouseButton);
+        this.texture.mouseClicked(mouseX, mouseY, mouseButton);
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
@@ -128,12 +144,17 @@ public class GuiModelModal extends GuiModal
         this.name.drawTextBox();
         this.scale.draw();
         this.textureSize.draw();
+        this.texture.drawTextBox();
 
         int x = this.x + 10;
-        int y = this.y + this.height - 9;
+        int y = this.y + this.height - 50;
 
-        this.font.drawStringWithShadow(this.strName, x, y - 90, 0xffffffff);
-        this.font.drawStringWithShadow(this.strScale, x, y - 64, 0xffffffff);
-        this.font.drawStringWithShadow(this.strTextureSize, x, y - 39, 0xffffffff);
+        this.font.drawStringWithShadow(this.strTexture, x, y, 0xffffffff);
+        y -= 25;
+        this.font.drawStringWithShadow(this.strTextureSize, x, y, 0xffffffff);
+        y -= 25;
+        this.font.drawStringWithShadow(this.strScale, x, y, 0xffffffff);
+        y -= 25;
+        this.font.drawStringWithShadow(this.strName, x, y, 0xffffffff);
     }
 }

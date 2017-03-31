@@ -17,8 +17,8 @@ public class GuiInputModal extends GuiModal
 {
     private GuiButton proceed;
     private GuiTextField input;
-    private int id;
     private String inputText = "";
+    private int id;
 
     public GuiInputModal(int id, GuiScreen parent, FontRenderer font)
     {
