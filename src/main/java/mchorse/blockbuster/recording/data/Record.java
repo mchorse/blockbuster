@@ -32,7 +32,7 @@ public class Record
      * Signature of the recording. If the first short of the record file isn't
      * this file, then the
      */
-    public static final short SIGNATURE = 131;
+    public static final short SIGNATURE = 148;
 
     /**
      * Filename of this record

@@ -52,7 +52,6 @@ public class SubCommandRecordGet extends McCommandBase
             throw new CommandException("record.tick_out_range", tick);
         }
 
-        NBTTagCompound tag = new NBTTagCompound();
         List<Action> actions = record.actions.get(tick);
 
         if (actions == null)
@@ -62,6 +61,7 @@ public class SubCommandRecordGet extends McCommandBase
 
         for (Action action : actions)
         {
+            NBTTagCompound tag = new NBTTagCompound();
             String type = byteToType(action.getType());
             action.toNBT(tag);
 
@@ -69,13 +69,16 @@ public class SubCommandRecordGet extends McCommandBase
         }
     }
 
+    /**
+     * Get string name based on byte value
+     */
     public static String byteToType(byte actionType)
     {
         String type = "none";
 
         for (Map.Entry<String, Integer> entry : Action.TYPES.entrySet())
         {
-            if (entry.getValue().equals(actionType))
+            if (entry.getValue().byteValue() == actionType)
             {
                 type = entry.getKey();
                 break;
