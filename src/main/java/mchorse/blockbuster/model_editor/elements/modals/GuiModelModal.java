@@ -109,7 +109,12 @@ public class GuiModelModal extends GuiModal
             this.textureSize.b.setText(String.valueOf(this.model.texture[1]));
 
             this.texture.setMaxStringLength(200);
-            this.texture.setText(this.model.defaultTexture.toString());
+
+            if (this.model.defaultTexture != null)
+            {
+                this.texture.setText(this.model.defaultTexture.toString());
+            }
+
             this.texture.setCursorPosition(0);
         }
     }
