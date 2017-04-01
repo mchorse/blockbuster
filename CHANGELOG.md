@@ -2,6 +2,27 @@
 
 Blockbuster's change log.
 
+## Version 1.4.8 (Integrated McME)
+
+Patch update. This update is focused on bringing [McME](https://mchorse.github.io/mcme/) into the mod itself. Why integrating model editor in the mod? Because this will increase productivity of making custom models. When you edit models in the game, you'll have instant feedback on how the model looks, meanwhile with McME, ther might be some bugs related to wrong angles between how custom model looks in the game and in the editor, how does the character would look with items in hand, etc.
+
+**Important**: there's a new way of recording actions was implemented. Player recordings recorded in `1.4.8`, **can't** be used in 1.4.7 and below. However, you can use actions from `1.4.7` in `1.4.8`.
+
+* Added a button in main menu to access model editor
+* Added config option for custom model and skins refresh
+* Added **model editor** GUI with following features:
+    * Saving and loading models
+    * Add, edit and remove limbs 
+    * Add, edit and remove poses 
+    * Edit general model properties (name, texture size, etc.)
+    * Rotate and scale model in GUI
+    * Limb swinging and swiping, and item holding buttons
+    * Texture picker
+* Added recording of breaking block animation (`break_animation`)
+* Added `Drop` (boolean) property for `place_block` action which is responsible for dropping an according block
+* Fixed `mounting` action mounting again and over again
+* Switched to recording multiple actions per one frame
+
 ## Version 1.4.7 (Metamorph integration)
 
 Another patch update. This patch update is what I waited for a long time! This update integrates Blockbuster with Metamorph. This makes Blockbuster able to perform Metamorph's abilities, attacks and abilities as well as to use Metamorph's morphs for actor morphing. From now and on, Blockbuster isn't a standalone mod. It requires [Metamorph](https://github.com/mchorse/metamorph).

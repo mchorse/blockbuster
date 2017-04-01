@@ -7,6 +7,8 @@ blockbuster.gui.me:
     limb_parent_modal: "Choose a limb you want to be parent of currently selected limb"
     pose_title_modal: "{l}Poses"
     
+    warning_skins: It appears that you're adding a new model. You need to add at least one skin for that "%s" model, in order for it to appear in creative morph menu. \n\nSee "config/models/%s/skins" folder.
+    
     model_editor: "Model Editor"
     limbs: "Limbs"
     

@@ -18,6 +18,7 @@ import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList.ILimbPicker;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker;
 import mchorse.blockbuster.model_editor.elements.GuiTexturePicker.ITexturePicker;
+import mchorse.blockbuster.model_editor.elements.modals.GuiAlertModal;
 import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
 import mchorse.blockbuster.model_editor.elements.modals.GuiModelModal;
 import mchorse.blockbuster.model_editor.elements.modals.GuiNewModal;
@@ -545,10 +546,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         File file = new File(folder, "model.json");
         String output = ModelUtils.toJson(this.data);
 
+        boolean exists = folder.exists();
+
         folder.mkdirs();
 
-        /* TODO: inform the user that (s)he have to add skins to a new
-         * model */
         try
         {
             PrintWriter writer = new PrintWriter(file);
@@ -557,15 +558,27 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.close();
 
             String key = "blockbuster." + name;
-
             Model model = Blockbuster.proxy.models.models.get(key);
-            ModelUtils.copy(this.data.clone(), model);
-            ModelCustom.MODELS.put(key, this.buildModel());
 
+            if (model != null)
+            {
+                ModelUtils.copy(this.data.clone(), model);
+            }
+
+            ModelCustom.MODELS.put(key, this.buildModel());
             this.modelName = name;
+
+            if (!exists && this.data.defaultTexture == null)
+            {
+                this.openModal(new GuiAlertModal(0, this, this.fontRendererObj).setSize(220, 120).setLabel(I18n.format("blockbuster.gui.me.warning_skins", name, name)));
+
+                return false;
+            }
         }
         catch (Exception e)
         {
+            e.printStackTrace();
+
             return false;
         }
 

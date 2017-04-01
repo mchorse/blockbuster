@@ -79,6 +79,14 @@ public abstract class GuiModal
         return this;
     }
 
+    public GuiModal setSize(int width, int height)
+    {
+        if (width > 0) this.width = width;
+        if (height > 0) this.height = height;
+
+        return this;
+    }
+
     /**
      * Perform an action based on button's input
      */
