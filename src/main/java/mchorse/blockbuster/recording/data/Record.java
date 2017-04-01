@@ -177,6 +177,11 @@ public class Record
         {
             List<Action> actions = this.actions.get(i);
 
+            if (actions == null)
+            {
+                continue;
+            }
+
             for (Action action : actions)
             {
                 if (action instanceof MountingAction)
