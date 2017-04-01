@@ -17,8 +17,10 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.World;
 
 /**
  * Record manager
@@ -53,6 +55,11 @@ public class RecordManager
      * Scheduled recordings
      */
     public Map<EntityPlayer, ScheduledRecording> scheduled = new HashMap<EntityPlayer, ScheduledRecording>();
+
+    /**
+     * Damage control objects
+     */
+    public Map<Object, DamageControl> damage = new HashMap<Object, DamageControl>();
 
     /**
      * Get action list for given player
@@ -97,6 +104,11 @@ public class RecordManager
         }
 
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
+
+        if (!player.worldObj.isRemote)
+        {
+            this.addDamageControl(recorder, player);
+        }
 
         if (countdown == 0 || player.worldObj.isRemote)
         {
@@ -149,6 +161,8 @@ public class RecordManager
 
             if (notify)
             {
+                this.restoreDamageControl(recorder, player.worldObj);
+
                 Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
 
@@ -233,8 +247,8 @@ public class RecordManager
             }
         }
 
-        actor.playback = null;
         this.players.remove(actor);
+        actor.playback = null;
     }
 
     /**
@@ -261,6 +275,7 @@ public class RecordManager
         this.chunks.clear();
         this.recorders.clear();
         this.players.clear();
+        this.damage.clear();
     }
 
     /**
@@ -297,6 +312,32 @@ public class RecordManager
         }
 
         return record;
+    }
+
+    /**
+     * Start observing damage made to terrain
+     */
+    public void addDamageControl(Object object, EntityLivingBase player)
+    {
+        if (Blockbuster.proxy.config.damage_control)
+        {
+            int dist = Blockbuster.proxy.config.damage_control_distance;
+
+            this.damage.put(object, new DamageControl(player, dist));
+        }
+    }
+
+    /**
+     * Restore made damage
+     */
+    public void restoreDamageControl(Object object, World world)
+    {
+        DamageControl control = this.damage.remove(object);
+
+        if (control != null)
+        {
+            control.apply(world);
+        }
     }
 
     /**

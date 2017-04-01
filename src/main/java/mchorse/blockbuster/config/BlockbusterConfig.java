@@ -139,6 +139,18 @@ public class BlockbusterConfig
      */
     public int actor_rendering_range;
 
+    /* Damage control */
+
+    /**
+     * Whether damage control is active
+     */
+    public boolean damage_control;
+
+    /**
+     * Radius of effect for damage control
+     */
+    public int damage_control_distance;
+
     private Configuration config;
 
     public BlockbusterConfig(Configuration config)
@@ -158,11 +170,13 @@ public class BlockbusterConfig
         String recording = "recording";
         String camera = "camera";
         String actor = "actor";
+        String damage = "damage_control";
 
         String genPrefix = "blockbuster.config.general.";
         String recPrefix = "blockbuster.config.recording.";
         String camPrefix = "blockbuster.config.camera.";
         String actPrefix = "blockbuster.config.actor.";
+        String damPrefix = "blockbuster.config.damage_control.";
 
         /* General */
         this.load_models_on_login = this.config.getBoolean("load_models_on_login", general, false, "Send models and skins when player is logging in", genPrefix + "load_models_on_login");
@@ -194,6 +208,10 @@ public class BlockbusterConfig
         this.actor_fall_damage = this.config.getBoolean("actor_fall_damage", actor, true, "Does actor receive fall damage?", actPrefix + "actor_fall_damage");
         this.actor_tracking_range = this.config.getInt("actor_tracking_range", actor, 96, 64, 1024, "How far actors are tracked? Requires restart of the game.", actPrefix + "actor_tracking_range");
         this.actor_rendering_range = this.config.getInt("actor_rendering_range", actor, 64, 64, 1024, "How far actors are seen?", actPrefix + "actor_rendering_range");
+
+        /* Damage control */
+        this.damage_control = this.config.getBoolean("damage_control", damage, false, "Whether damage control is active", damPrefix + "damage_control");
+        this.damage_control_distance = this.config.getInt("damage_control_distance", damage, 32, 1, 1024, "Radius of effect for damage control", damPrefix + "damage_control_distance");
 
         if (this.config.hasChanged())
         {

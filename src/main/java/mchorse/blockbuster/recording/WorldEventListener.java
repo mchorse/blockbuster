@@ -2,7 +2,9 @@ package mchorse.blockbuster.recording;
 
 import java.util.List;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
 import net.minecraft.block.state.IBlockState;
@@ -29,9 +31,27 @@ public class WorldEventListener implements IWorldEventListener
         this.world = world;
     }
 
+    /**
+     * Used by damage control
+     */
     @Override
     public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags)
-    {}
+    {
+        if (Blockbuster.proxy.config.damage_control)
+        {
+            if (oldState.getBlock() instanceof AbstractBlockDirector)
+            {
+                return;
+            }
+
+            System.out.println(pos + " " + oldState + " " + newState);
+
+            for (DamageControl damage : CommonProxy.manager.damage.values())
+            {
+                damage.addBlock(pos, oldState);
+            }
+        }
+    }
 
     @Override
     public void notifyLightSet(BlockPos pos)
