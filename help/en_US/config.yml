@@ -38,3 +38,9 @@ blockbuster.config:
         actor_fall_damage: Actor fall damage
         actor_tracking_range: Actor tracking range
         actor_rendering_range: Actor rendering range
+
+    damage_control:
+        title: Damage control
+        
+        damage_control: Damage control
+        damage_control_distance: Damage distance

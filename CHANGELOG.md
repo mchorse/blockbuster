@@ -10,6 +10,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 * Added a button in main menu to access model editor
 * Added config option for custom model and skins refresh
+* Added configurable damage control (by default disabled, see mod options)
 * Added **model editor** GUI with following features:
     * Saving and loading models
     * Add, edit and remove limbs 
@@ -22,6 +23,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 * Added `Drop` (boolean) property for `place_block` action which is responsible for dropping an according block
 * Fixed `mounting` action mounting again and over again
 * Switched to recording multiple actions per one frame
+* Updated `/record` sub-commands to multiple action per frame feature
 
 ## Version 1.4.7 (Metamorph integration)
 

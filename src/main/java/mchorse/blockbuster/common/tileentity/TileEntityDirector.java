@@ -62,6 +62,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         this.collectActors();
 
+        EntityActor firstActor = null;
+
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
@@ -69,6 +71,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             boolean notAttached = replay.actor == null;
 
             if (actor == exception) continue;
+
+            if (firstActor == null)
+            {
+                firstActor = actor;
+            }
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -83,11 +90,15 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.playBlock(true);
+
+        CommonProxy.manager.addDamageControl(this, firstActor);
     }
 
     /**
      * The same thing as startPlayback, but don't play the replay that is passed
      * in the arguments (because he might be recorded by the player)
+     *
+     * Used by recording code.
      */
     public void startPlayback(String exception)
     {
@@ -98,6 +109,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         this.collectActors();
 
+        EntityActor firstActor = null;
+
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
@@ -105,6 +118,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             boolean notAttached = replay.actor == null;
 
             if (replay.id.equals(exception)) continue;
+
+            if (firstActor == null)
+            {
+                firstActor = actor;
+            }
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -192,6 +210,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         this.actors.clear();
         this.playBlock(false);
+
+        CommonProxy.manager.restoreDamageControl(this, this.world);
     }
 
     /**
