@@ -171,7 +171,7 @@ public class GuiReplay extends GuiScreen
         value.name = this.name.getText();
         value.invincible = this.invincible.getValue();
 
-        value.morph = cell == null ? this.replay.morph : cell.morph.clone();
+        value.morph = cell == null ? this.replay.morph : cell.morph.clone(true);
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;

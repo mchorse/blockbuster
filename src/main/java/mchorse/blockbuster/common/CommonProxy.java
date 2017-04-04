@@ -184,4 +184,12 @@ public class CommonProxy
     {
         EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 3, false, primary, secondary);
     }
+
+    /**
+     * Whether physical side is client
+     */
+    public boolean isClient()
+    {
+        return false;
+    }
 }

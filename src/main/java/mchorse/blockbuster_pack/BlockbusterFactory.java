@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
@@ -92,7 +93,7 @@ public class BlockbusterFactory implements IMorphFactory
     public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
     {
         String name = tag.getString("Name");
-        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone();
+        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone(Blockbuster.proxy.isClient());
 
         morph.fromNBT(tag);
 
@@ -114,14 +115,14 @@ public class BlockbusterFactory implements IMorphFactory
 
             if (original.model.defaultTexture != null)
             {
-                ActorMorph actor = (ActorMorph) original.clone();
+                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
             }
 
             for (String skin : this.models.pack.getSkins(key))
             {
-                ActorMorph actor = (ActorMorph) original.clone();
+                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
                 String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
 
                 actor.skin = new ResourceLocation("blockbuster.actors", path);
@@ -136,7 +137,7 @@ public class BlockbusterFactory implements IMorphFactory
                         continue;
                     }
 
-                    ActorMorph poseActor = (ActorMorph) actor.clone();
+                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
 
                     poseActor.currentPose = pose;
                     poseActor.pose = entry.getValue();

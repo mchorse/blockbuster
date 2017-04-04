@@ -94,7 +94,7 @@ public class ActorMorph extends CustomMorph
     }
 
     @Override
-    public AbstractMorph clone()
+    public AbstractMorph clone(boolean clone)
     {
         ActorMorph morph = new ActorMorph();
 

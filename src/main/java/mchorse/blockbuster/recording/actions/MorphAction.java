@@ -35,7 +35,7 @@ public class MorphAction extends Action
     {
         if (this.morph != null)
         {
-            actor.morph = this.morph.clone();
+            actor.morph = this.morph.clone(false);
         }
         else
         {
