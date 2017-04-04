@@ -120,6 +120,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 return false;
             }
         };
+
+        this.fakePlayer.capabilities.isCreativeMode = true;
     }
 
     @Override
