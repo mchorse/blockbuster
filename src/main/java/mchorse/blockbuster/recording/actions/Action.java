@@ -34,6 +34,7 @@ public abstract class Action
     public static final byte MORPH_ACTION = 15;
     public static final byte COMMAND = 16;
     public static final byte BREAK_ANIMATION = 17;
+    public static final byte USE_ITEM = 18;
 
     /* Register actions */
     static
@@ -53,6 +54,7 @@ public abstract class Action
         TYPES.put("morph_action", 15);
         TYPES.put("command", 16);
         TYPES.put("break_animation", 17);
+        TYPES.put("use_item", 18);
     }
 
     /**

@@ -39,6 +39,11 @@ public abstract class McCommandBase extends CommandBase
         }
         catch (CommandException e)
         {
+            if (e.getMessage().startsWith("commands."))
+            {
+                throw e;
+            }
+
             L10n.error(sender, e.getMessage(), e.getErrorObjects());
         }
     }

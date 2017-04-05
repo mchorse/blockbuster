@@ -1,12 +1,11 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,12 +14,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * Command /record set
+ * Command /record add
  *
- * This command is responsible for replacing action in given player record
- * at given tick with given data.
+ * This command is responsible for adding a desired action to the given player
+ * recording.
  */
-public class SubCommandRecordSet extends McCommandBase
+public class SubCommandRecordAdd extends SubCommandRecordBase
 {
     @Override
     public int getRequiredArgs()
@@ -31,13 +30,13 @@ public class SubCommandRecordSet extends McCommandBase
     @Override
     public String getName()
     {
-        return "set";
+        return "add";
     }
 
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.record.set";
+        return "blockbuster.commands.record.add";
     }
 
     @Override
@@ -47,77 +46,43 @@ public class SubCommandRecordSet extends McCommandBase
         int tick = CommandBase.parseInt(args[1], 0);
         Record record = CommandRecord.getRecord(filename);
 
-        if (tick <= 0 || tick >= record.actions.size())
+        if (tick < 0 || tick >= record.actions.size())
         {
             throw new CommandException("record.tick_out_range", tick);
         }
 
-        if (!Action.TYPES.containsKey(args[2]) && !args[2].equals("none"))
+        if (!Action.TYPES.containsKey(args[2]))
         {
             throw new CommandException("record.wrong_action", args[2]);
-        }
-
-        if (args[2].equals("none"))
-        {
-            record.actions.set(tick, null);
-            record.dirty = true;
-
-            return;
         }
 
         try
         {
             Action action = Action.fromType(Action.TYPES.get(args[2]).byteValue());
 
-            if (args.length > 4)
-            {
-                String dataTag = "";
-
-                for (int i = 4; i < args.length; i++)
-                {
-                    dataTag += args[i] + (i == args.length - 1 ? "" : " ");
-                }
-
-                action.fromNBT(JsonToNBT.getTagFromJson(dataTag));
-            }
-
             if (args.length > 3)
             {
-                int index = CommandBase.parseInt(args[3], -1);
-
-                if (index == -1)
-                {
-                    record.addAction(tick, action);
-                }
-                else
-                {
-                    record.addAction(tick, index, action);
-                }
-            }
-            else
-            {
-                record.addAction(tick, action);
+                action.fromNBT(JsonToNBT.getTagFromJson(CommandMorph.mergeArgs(args, 3)));
             }
 
+            record.addAction(tick, action);
             record.dirty = true;
         }
         catch (Exception e)
         {
-            throw new CommandException("record.set", args[2], e.getMessage());
+            throw new CommandException("record.add", args[2], e.getMessage());
         }
     }
 
+    /**
+     * Tab complete action
+     */
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 3)
+        if (args.length == 2)
         {
-            List<String> types = new ArrayList<String>();
-
-            types.addAll(Action.TYPES.keySet());
-            types.add("none");
-
-            return getListOfStringsMatchingLastWord(args, types);
+            return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
         }
 
         return super.getTabCompletions(server, sender, args, pos);

@@ -2,6 +2,8 @@ package mchorse.blockbuster.recording;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
@@ -116,6 +118,29 @@ public class Utils
         }
 
         return new File(file.getAbsolutePath() + "/" + filename + ".dat");
+    }
+
+    /**
+     * Get list of all available replays
+     */
+    public static List<String> getReplays()
+    {
+        List<String> list = new ArrayList<String>();
+        File replays = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
+
+        for (File file : replays.listFiles())
+        {
+            String name = file.getName();
+
+            if (file.isFile() && name.endsWith(".dat"))
+            {
+                int index = name.indexOf(".");
+
+                list.add(name.substring(0, index));
+            }
+        }
+
+        return list;
     }
 
     /**

@@ -18,6 +18,7 @@ import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MorphActionAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
@@ -47,6 +48,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
@@ -84,6 +86,18 @@ public class ActionHandler
         }
     }
 
+    @SubscribeEvent
+    public void onItemUse(PlayerInteractEvent.RightClickItem event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.world.isRemote && events != null)
+        {
+            events.add(new ItemUseAction(event.getHand()));
+        }
+    }
+
     /**
      * Event listener for Action.BREAK_BLOCK
      */
@@ -93,7 +107,7 @@ public class ActionHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.world.isRemote && player.isCreative() && events != null)
+        if (!player.world.isRemote && events != null && player.isCreative())
         {
             events.add(new BreakBlockAction(event.getPos(), false));
         }

@@ -174,7 +174,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public void duplicate(int index)
     {
-        this.replays.add(this.replays.get(index).clone());
+        this.replays.add(this.replays.get(index).clone(this.world.isRemote));
     }
 
     /**

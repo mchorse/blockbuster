@@ -8,7 +8,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 **Important**: there's a new way of recording actions was implemented. Player recordings recorded in `1.4.8`, **can't** be used in 1.4.7 and below. However, you can use actions from `1.4.7` in `1.4.8`.
 
-* Added a button in main menu to access model editor
+* Added a button in main menu to access the model editor
 * Added config option for custom model and skins refresh
 * Added configurable damage control (by default disabled, see mod options)
 * Added **model editor** GUI with following features:
@@ -20,10 +20,14 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
     * Limb swinging and swiping, and item holding buttons
     * Texture picker
 * Added recording of breaking block animation (`break_animation`)
+* Added recording of item usage
 * Added `Drop` (boolean) property for `place_block` action which is responsible for dropping an according block
 * Fixed `mounting` action mounting again and over again
 * Switched to recording multiple actions per one frame
 * Updated `/record` sub-commands to multiple action per frame feature
+    * Added `/record add` and `/record remove`
+    * Removed `/record set`
+* Works with Metamorph `1.1.2`
 
 ## Version 1.4.7 (Metamorph integration)
 

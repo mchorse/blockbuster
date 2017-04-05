@@ -1,10 +1,8 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -15,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-public class SubCommandRecordSearch extends McCommandBase
+public class SubCommandRecordSearch extends SubCommandRecordBase
 {
     @Override
     public int getRequiredArgs()
@@ -113,11 +111,7 @@ public class SubCommandRecordSearch extends McCommandBase
     {
         if (args.length == 2)
         {
-            List<String> types = new ArrayList<String>();
-
-            types.addAll(Action.TYPES.keySet());
-
-            return getListOfStringsMatchingLastWord(args, types);
+            return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
         }
 
         return super.getTabCompletions(server, sender, args, pos);

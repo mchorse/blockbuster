@@ -218,4 +218,10 @@ public class ClientProxy extends CommonProxy
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
     }
+
+    @Override
+    public boolean isClient()
+    {
+        return true;
+    }
 }

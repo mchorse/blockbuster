@@ -44,8 +44,6 @@ public class WorldEventListener implements IWorldEventListener
                 return;
             }
 
-            System.out.println(pos + " " + oldState + " " + newState);
-
             for (DamageControl damage : CommonProxy.manager.damage.values())
             {
                 damage.addBlock(pos, oldState);
