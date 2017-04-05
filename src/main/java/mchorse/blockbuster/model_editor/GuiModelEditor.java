@@ -38,6 +38,7 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -170,6 +171,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      */
     private GuiButton renderItems;
 
+    /**
+     * Whether to render AABB
+     */
+    private GuiButton renderAABB;
+
     /* Mouse dragging and model rotation */
     private boolean dragging;
     private int prevX;
@@ -210,6 +216,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      * Render items in the limbs which are responsible for holding items
      */
     private boolean items;
+
+    /**
+     * Render hit box around the model based on its pose size
+     */
+    private boolean aabb;
 
     /**
      * Whether player opened this menu from main menu or from the game
@@ -315,6 +326,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.textureRL = new ResourceLocation(texture);
     }
 
+    /**
+     * Get currently editing pose
+     *
+     * TODO: Rename
+     */
+    public Model.Pose getCurrentLimbPose()
+    {
+        return this.limbEditor.pose;
+    }
+
     /* Initiate GUI and handle input from other widgets */
 
     @Override
@@ -338,6 +359,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.swipeArms = new GuiTextureButton(7, cx - 8 + 24, by, GuiLimbEditor.GUI).setTexPos(64, 48).setActiveTexPos(64, 64);
         this.swingLegs = new GuiTextureButton(8, cx - 8, by, GuiLimbEditor.GUI).setTexPos(80, 48).setActiveTexPos(80, 64);
         this.renderItems = new GuiTextureButton(9, cx - 8 + 48, by, GuiLimbEditor.GUI).setTexPos(96, 48).setActiveTexPos(96, 64);
+        this.renderAABB = new GuiTextureButton(10, cx - 8 - 48, by, GuiLimbEditor.GUI).setTexPos(48, 0).setActiveTexPos(48, 16);
 
         this.buttonList.add(this.save);
         this.buttonList.add(this.clean);
@@ -353,6 +375,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.buttonList.add(this.swipeArms);
         this.buttonList.add(this.swingLegs);
         this.buttonList.add(this.renderItems);
+        this.buttonList.add(this.renderAABB);
 
         /* Custom GUI controls */
         this.limbEditor.initiate(10, 47);
@@ -430,6 +453,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         else if (button.id == 9)
         {
             this.items = !this.items;
+        }
+        else if (button.id == 10)
+        {
+            this.aabb = !this.aabb;
         }
         else if (button == this.back)
         {
@@ -928,8 +955,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.disableCull();
 
         GlStateManager.enableRescaleNormal();
-        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
-        GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
         float limbSwing = this.swing + ticks;
 
@@ -940,8 +965,13 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+        GlStateManager.translate(0, -this.model.pose.size[1] / 2, 0);
+
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0, this.model.pose.size[1] / 2, 0);
+        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+        GlStateManager.scale(this.data.scale[0], this.data.scale[1], this.data.scale[2]);
+        GlStateManager.translate(0.0F, -1.501F, 0.0F);
+
         this.model.render(this.dummy, 0, 0, this.timer, yaw, pitch, factor);
 
         if (this.items)
@@ -950,6 +980,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         }
 
         GlStateManager.popMatrix();
+
+        if (this.aabb)
+        {
+            this.renderAABB();
+        }
 
         GlStateManager.disableDepth();
 
@@ -967,5 +1002,42 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
         this.model.swingProgress = oldSwing;
+    }
+
+    /**
+     * Render model's hit box
+     *
+     * Just like in Minecraft's world when you hit F3 + H. This method renders
+     * similar box, but in model editor.
+     */
+    private void renderAABB()
+    {
+        Model.Pose current = this.getCurrentLimbPose();
+
+        if (current == null)
+        {
+            return;
+        }
+
+        float minX = -current.size[0] / 2.0F;
+        float maxX = current.size[0] / 2.0F;
+        float minY = 0.0F;
+        float maxY = current.size[1];
+        float minZ = -current.size[0] / 2.0F;
+        float maxZ = current.size[0] / 2.0F;
+
+        GlStateManager.depthMask(false);
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.disableBlend();
+
+        RenderGlobal.drawBoundingBox(minX, minY, minZ, maxX, maxY, maxZ, 1.0F, 1.0F, 1.0F, 1.0F);
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
+        GlStateManager.disableBlend();
+        GlStateManager.depthMask(true);
     }
 }
