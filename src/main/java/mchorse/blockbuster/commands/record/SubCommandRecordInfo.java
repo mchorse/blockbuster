@@ -1,14 +1,18 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-public class SubCommandRecordInfo extends McCommandBase
+/**
+ * Command /record info
+ *
+ * This command is responsible for outputting information about given record.
+ */
+public class SubCommandRecordInfo extends SubCommandRecordBase
 {
     @Override
     public int getRequiredArgs()

@@ -12,6 +12,12 @@ blockbuster:
         record:
             help: {r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions.
             
+            add: 
+                |
+                    {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}Adds an action to player recording by {7}<filename>{r} at {7}<tick>{r} of type {7}<action_type>{r} with additional data specified in {7}[data_tag]{r}.
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
@@ -24,11 +30,11 @@ blockbuster:
                     
                     {r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc.
             
-            set:
+            remove:
                 |
-                    {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [index] [data_tag]{r}
+                    {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
-                    {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r} at optional index {7}[index]{r}.
+                    {r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}.
             
             search:
                 |

@@ -2,10 +2,11 @@ package mchorse.blockbuster.commands;
 
 import java.io.FileNotFoundException;
 
+import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
 import mchorse.blockbuster.commands.record.SubCommandRecordGet;
 import mchorse.blockbuster.commands.record.SubCommandRecordInfo;
+import mchorse.blockbuster.commands.record.SubCommandRecordRemove;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
-import mchorse.blockbuster.commands.record.SubCommandRecordSet;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.command.CommandException;
@@ -21,9 +22,10 @@ public class CommandRecord extends SubCommandBase
     public CommandRecord()
     {
         /* Register sub-commands */
+        this.add(new SubCommandRecordAdd());
         this.add(new SubCommandRecordGet());
         this.add(new SubCommandRecordInfo());
-        this.add(new SubCommandRecordSet());
+        this.add(new SubCommandRecordRemove());
         this.add(new SubCommandRecordSearch());
     }
 

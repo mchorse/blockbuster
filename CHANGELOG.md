@@ -25,6 +25,8 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 * Fixed `mounting` action mounting again and over again
 * Switched to recording multiple actions per one frame
 * Updated `/record` sub-commands to multiple action per frame feature
+    * Added `/record add` and `/record remove`
+    * Removed `/record set`
 * Works with Metamorph `1.1.2`
 
 ## Version 1.4.7 (Metamorph integration)
