@@ -155,15 +155,20 @@ public class GuiModelsView extends GuiScrollView
             int x = this.x + (i % 3) * w;
             int y = this.y + (i / 3) * w;
 
+            boolean selected = this.selected == model;
+
             if (model.texture != null)
             {
                 this.mc.renderEngine.bindTexture(model.texture);
                 model.model.pose = model.model.model.getPose("standing");
 
-                this.drawModel(model.model, this.dummy, x + w / 2, y + (int) (w * 0.8F), w / 2.5F);
+                float scale = selected ? w / 1.8F : w / 2.5F;
+                int mY = y + (int) (w * 0.8F);
+
+                this.drawModel(model.model, this.dummy, x + w / 2, mY, scale);
             }
 
-            if (this.selected == model)
+            if (selected)
             {
                 this.renderSelected(x, y, w, w, 0xffcccccc);
             }
@@ -288,5 +293,4 @@ public class GuiModelsView extends GuiScrollView
             }
         }
     }
-
 }
