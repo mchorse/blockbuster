@@ -5,7 +5,7 @@
         "down": "blockbuster:blocks/director_block_blank",
         "up": "blockbuster:blocks/director_block_blank",
         "north": "blockbuster:blocks/director_block_side",
-        "east": "blockbuster:blocks/director_block_start",
+        "east": "blockbuster:blocks/director_block_current_start",
         "south": "blockbuster:blocks/director_block_side",
         "west": "blockbuster:blocks/director_block_stop"
     }
