@@ -208,10 +208,10 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             actor.noClip = false;
         }
 
+        CommonProxy.manager.restoreDamageControl(this, this.worldObj);
+
         this.actors.clear();
         this.playBlock(false);
-
-        CommonProxy.manager.restoreDamageControl(this, this.worldObj);
     }
 
     /**
