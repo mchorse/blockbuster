@@ -80,7 +80,7 @@ public class SubCommandRecordAdd extends SubCommandRecordBase
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
-        if (args.length == 2)
+        if (args.length == 3)
         {
             return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
         }
