@@ -80,10 +80,10 @@ public class SubCommandCameraRotate extends CommandBase
     }
 
     /**
-     * Parse relative double with given base number
+     * Parse relative long with given base number
      *
-     * User may provide relative or absolute value. This way it's very easy to
-     * pick up numbers.
+     * User may provide relative or absolute value. This way it's somewhat
+     * easier to pick up numbers.
      */
     public static long parseRelativeLong(String input, long base) throws CommandException
     {
