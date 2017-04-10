@@ -16,6 +16,9 @@ public class ItemUseAction extends Action
 {
     public EnumHand hand;
 
+    public ItemUseAction()
+    {}
+
     public ItemUseAction(EnumHand hand)
     {
         this.hand = hand;
