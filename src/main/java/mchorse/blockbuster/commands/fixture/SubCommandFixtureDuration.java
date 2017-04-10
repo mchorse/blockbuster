@@ -3,6 +3,7 @@ package mchorse.blockbuster.commands.fixture;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.commands.camera.SubCommandCameraRotate;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -36,7 +37,7 @@ public class SubCommandFixtureDuration extends CommandBase
 
         if (args.length == 0)
         {
-            L10n.info(sender, "camera.duration.profile", profile.getDuration());
+            L10n.info(sender, "camera.duration.profile", profile.getDuration(), profile.getCount());
             return;
         }
 
@@ -56,6 +57,14 @@ public class SubCommandFixtureDuration extends CommandBase
             return;
         }
 
-        fixture.setDuration(CommandBase.parseLong(args[1]));
+        /* Setting relative duration */
+        long duration = SubCommandCameraRotate.parseRelativeLong(args[1], fixture.getDuration());
+
+        if (duration <= 0)
+        {
+            duration = 1;
+        }
+
+        fixture.setDuration(duration);
     }
 }
