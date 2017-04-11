@@ -45,11 +45,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy
 {
     /**
-     * FFS what's going on?
-     */
-    public static int unused;
-
-    /**
      * Record manager for server side
      */
     public static RecordManager manager = new RecordManager();
