@@ -79,6 +79,7 @@ public abstract class Action
         if (type == MORPH_ACTION) return new MorphActionAction();
         if (type == COMMAND) return new CommandAction();
         if (type == BREAK_ANIMATION) return new BreakBlockAnimation();
+        if (type == USE_ITEM) return new ItemUseAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }

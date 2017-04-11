@@ -9,7 +9,7 @@ blockbuster.info:
     camera:
         duration:
             fixture: {f}Camera fixture at index %s{f} runs for %s{f} ticks.
-            profile: {f}Camera profile runs for %s{f} ticks.
+            profile: {f}Camera profile runs for %s{f} ticks and has %s{f} camera fixtures.
         
         # Camera roll and fov
         fov: {f}Your field-of-view is %s{f} degrees.

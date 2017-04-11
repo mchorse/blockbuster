@@ -46,7 +46,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *         actors frame-based</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@1.1")
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY)
 public class Blockbuster
 {
     /* Mod info */

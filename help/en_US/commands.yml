@@ -178,14 +178,14 @@ blockbuster:
                 remove: 
                     |
                         {l}{6}/{r}camera {8}remove{r} {7}<index>{r}
-                        §
+                        
                         {r}Remove camera fixture from currently used camera profile at {7}<index>{r}
+                    
                 duration: 
                     |
-                    
                         {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
                         
-                        {r}Set duration in milliseconds to given fixture at given {7}<index>{r}
+                        {r}Can be used to set, or to get duration of whole camera profile or one camera fixture. If all arguments are present, the command sets the {7}[duration]{r} in ticks to given fixture at given {7}[index]{r}. Relative values can be used for {7}[duration]{r} argument.
                 
                 move: 
                     |

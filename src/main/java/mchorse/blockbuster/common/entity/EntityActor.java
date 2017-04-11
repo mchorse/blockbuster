@@ -257,19 +257,19 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (this.playback != null && this.playback.playing)
         {
             this.playback.next(this);
+        }
 
-            if (!this.world.isRemote)
+        if (!this.world.isRemote && this.playback != null && this.playback.playing)
+        {
+            int tick = this.playback.tick;
+
+            if (this.playback.isFinished())
             {
-                int tick = this.playback.tick;
-
-                if (this.playback.isFinished())
-                {
-                    CommonProxy.manager.stopPlayback(this);
-                }
-                else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
-                {
-                    Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
-                }
+                CommonProxy.manager.stopPlayback(this);
+            }
+            else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
+            {
+                Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
             }
         }
 

@@ -3,10 +3,12 @@ key:
     blockbuster:
         # Categories
         general: Blockbuster General
-        marker: Camera marker
-        model_editor: Model Editor
         misc: Blockbuster Misc.
         camera: Blockbuster Camera
+        
+        model_editor: Model Editor
+        marker: Camera marker
+        smooth_camera: Smooth camera
 
         # Camera control
         control: 

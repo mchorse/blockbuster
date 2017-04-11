@@ -65,15 +65,47 @@ public class SubCommandCameraRotate extends CommandBase
             {
                 throw new NumberInvalidException("commands.generic.num.invalid", input);
             }
-            else
-            {
-                if (plus || minus)
-                {
-                    number = plus ? base + number : (minus ? base - number : number);
-                }
 
-                return number;
+            if (plus || minus)
+            {
+                number = plus ? base + number : (minus ? base - number : number);
             }
+
+            return number;
+        }
+        catch (NumberFormatException var3)
+        {
+            throw new NumberInvalidException("commands.generic.num.invalid", input);
+        }
+    }
+
+    /**
+     * Parse relative long with given base number
+     *
+     * User may provide relative or absolute value. This way it's somewhat
+     * easier to pick up numbers.
+     */
+    public static long parseRelativeLong(String input, long base) throws CommandException
+    {
+        String first = input.substring(0, 1);
+        boolean plus = first.equals("+");
+        boolean minus = first.equals("-");
+
+        try
+        {
+            if (plus || minus)
+            {
+                input = input.substring(1);
+            }
+
+            long number = Long.parseLong(input);
+
+            if (plus || minus)
+            {
+                number = plus ? base + number : (minus ? base - number : number);
+            }
+
+            return number;
         }
         catch (NumberFormatException var3)
         {
