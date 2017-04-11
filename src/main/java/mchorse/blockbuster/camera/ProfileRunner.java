@@ -32,6 +32,9 @@ public class ProfileRunner
     protected CameraProfile profile;
     protected Position position = new Position(0, 0, 0, 0, 0);
 
+    public float yaw = 0.0F;
+    public float pitch = 0.0F;
+
     /* Profile access methods */
 
     public CameraProfile getProfile()
@@ -140,9 +143,17 @@ public class ProfileRunner
             /* Fighting with Optifine disappearing entities bug */
             double y = point.y + Math.sin(progress) * 0.000000001 + 0.000000001;
 
-            player.setLocationAndAngles(point.x, point.y, point.z, angle.yaw, angle.pitch);
+            player.setLocationAndAngles(point.x, y, point.z, angle.yaw, angle.pitch);
             player.setPositionAndRotation(point.x, y, point.z, angle.yaw, angle.pitch);
             player.motionX = player.motionY = player.motionZ = 0;
+
+            this.yaw = angle.yaw;
+            this.pitch = angle.pitch;
+
+            if (player.isSneaking())
+            {
+                player.setSneaking(false);
+            }
         }
     }
 
@@ -152,7 +163,7 @@ public class ProfileRunner
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-        if (event.side == Side.CLIENT && event.phase == Phase.START && event.player == this.mc.thePlayer)
+        if (event.side == Side.CLIENT && event.player == this.mc.thePlayer && event.phase == Phase.START)
         {
             this.ticks++;
         }

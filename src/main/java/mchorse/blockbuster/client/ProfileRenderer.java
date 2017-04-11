@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraProfile;
 import mchorse.blockbuster.camera.Position;
+import mchorse.blockbuster.camera.ProfileRunner;
+import mchorse.blockbuster.camera.SmoothCamera;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.CircularFixture;
 import mchorse.blockbuster.camera.fixtures.FollowFixture;
@@ -21,9 +23,11 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,6 +47,7 @@ public class ProfileRenderer
     protected Minecraft mc = Minecraft.getMinecraft();
     protected boolean render = true;
     protected CameraProfile profile;
+    public SmoothCamera smooth = new SmoothCamera();
 
     protected double playerX;
     protected double playerY;
@@ -58,9 +63,33 @@ public class ProfileRenderer
         this.render = !this.render;
     }
 
+    /**
+     * Orient the camera
+     *
+     * This method is responsible for setting the roll of the camera and also
+     * locking yaw and pitch during profile running.
+     */
     @SubscribeEvent
     public void onCameraOrient(EntityViewRenderEvent.CameraSetup event)
     {
+        ProfileRunner runner = ClientProxy.profileRunner;
+
+        if (runner.isRunning())
+        {
+            event.setYaw(-180 + runner.yaw);
+            event.setPitch(runner.pitch);
+        }
+        else if (this.smooth.enabled)
+        {
+            float yaw = this.smooth.getInterpYaw((float) event.getRenderPartialTicks());
+            float pitch = this.smooth.getInterpPitch((float) event.getRenderPartialTicks());
+
+            pitch = MathHelper.clamp_float(pitch, -90.0F, 90.0F);
+
+            event.setYaw(-180 + yaw);
+            event.setPitch(-pitch);
+        }
+
         float roll = CommandCamera.getControl().roll;
 
         if (roll == 0)
@@ -71,6 +100,38 @@ public class ProfileRenderer
         event.setRoll(roll);
     }
 
+    /**
+     * This is updating smooth camera
+     */
+    @SubscribeEvent
+    public void onPlayerTick(PlayerTickEvent event)
+    {
+        SmoothCamera camera = ClientProxy.profileRenderer.smooth;
+        EntityPlayer player = this.mc.thePlayer;
+
+        if (event.side == Side.CLIENT && event.player == player && camera.enabled)
+        {
+            float sensetivity = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+            float finalSensetivity = sensetivity * sensetivity * sensetivity * 8.0F;
+            float dx = this.mc.mouseHelper.deltaX * finalSensetivity * 0.15F;
+            float dy = this.mc.mouseHelper.deltaY * finalSensetivity * 0.15F;
+
+            float yaw = camera.getInterpYaw(0);
+            float pitch = camera.getInterpPitch(0);
+
+            camera.update(this.mc.thePlayer, dx, dy);
+
+            player.rotationYaw = camera.getInterpYaw(1);
+            player.rotationPitch = -camera.getInterpPitch(1);
+
+            player.prevRotationYaw = yaw;
+            player.prevRotationPitch = -pitch;
+        }
+    }
+
+    /**
+     * Render all camera fixtures
+     */
     @SubscribeEvent
     public void onLastRender(RenderWorldLastEvent event)
     {

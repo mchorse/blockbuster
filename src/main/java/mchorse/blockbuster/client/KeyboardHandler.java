@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraControl;
 import mchorse.blockbuster.camera.Position;
+import mchorse.blockbuster.camera.SmoothCamera;
 import mchorse.blockbuster.camera.fixtures.CircularFixture;
 import mchorse.blockbuster.camera.fixtures.FollowFixture;
 import mchorse.blockbuster.camera.fixtures.IdleFixture;
@@ -92,6 +93,7 @@ public class KeyboardHandler
     /* Misc. */
     private KeyBinding modelEditor;
     private KeyBinding cameraMarker;
+    private KeyBinding smoothCamera;
 
     /**
      * Create and register key bindings for mod
@@ -209,9 +211,11 @@ public class KeyboardHandler
         /* Misc */
         this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, misc);
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, misc);
+        this.smoothCamera = new KeyBinding("key.blockbuster.smooth_camera", Keyboard.KEY_NONE, misc);
 
         ClientRegistry.registerKeyBinding(this.cameraMarker);
         ClientRegistry.registerKeyBinding(this.modelEditor);
+        ClientRegistry.registerKeyBinding(this.smoothCamera);
     }
 
     @SubscribeEvent
@@ -237,6 +241,29 @@ public class KeyboardHandler
         catch (CommandException e)
         {
             L10n.error(player, e.getMessage(), e.getErrorObjects());
+        }
+
+        /* Misc. */
+        if (this.cameraMarker.isPressed())
+        {
+            Dispatcher.sendToServer(new PacketCameraMarker());
+        }
+
+        if (this.modelEditor.isPressed())
+        {
+            this.mc.displayGuiScreen(new GuiModelEditor(false));
+        }
+
+        if (this.smoothCamera.isPressed())
+        {
+            SmoothCamera camera = ClientProxy.profileRenderer.smooth;
+
+            camera.enabled = !camera.enabled;
+
+            if (camera.enabled)
+            {
+                camera.set(player.rotationYaw, player.rotationPitch);
+            }
         }
     }
 
@@ -353,17 +380,6 @@ public class KeyboardHandler
         if (this.resetFov.isPressed())
         {
             Minecraft.getMinecraft().gameSettings.fovSetting = 70.0F;
-        }
-
-        /* Misc. */
-        if (this.cameraMarker.isPressed())
-        {
-            Dispatcher.sendToServer(new PacketCameraMarker());
-        }
-
-        if (this.modelEditor.isPressed())
-        {
-            this.mc.displayGuiScreen(new GuiModelEditor(false));
         }
     }
 
