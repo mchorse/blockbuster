@@ -8,8 +8,8 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 **Important**: there's a new way of recording actions was implemented. Player recordings recorded in `1.4.8`, **can't** be used in 1.4.7 and below. However, you can use actions from `1.4.7` in `1.4.8`.
 
-* Added a button in main menu to access the model editor
-* Added config option for custom model and skins refresh
+* Added a button in main menu and a keybind to access the model editor
+* Added a config option for custom model and skins refresh
 * Added configurable damage control (by default disabled, see mod options)
 * Added **model editor** GUI with following features:
     * Saving and loading models

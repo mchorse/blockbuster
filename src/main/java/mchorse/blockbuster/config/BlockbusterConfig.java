@@ -85,6 +85,11 @@ public class BlockbusterConfig
      */
     public boolean camera_minema;
 
+    /**
+     * Clamp smooth camera's pitch between -90 and 90 degrees range?
+     */
+    public boolean camera_smooth_clamp;
+
     /* Recording */
 
     /**
@@ -194,6 +199,7 @@ public class BlockbusterConfig
         this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
         this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
         this.camera_minema = this.config.getBoolean("camera_minema", camera, false, "Activate Minema recording on camera start and deactivate on camera stop", camPrefix + "camera_minema");
+        this.camera_smooth_clamp = this.config.getBoolean("camera_smooth_clamp", camera, true, "Clip smooth camera's pitch between -90 and 90 degrees range?", camPrefix + "camera_smooth_clamp");
 
         /* Recording */
         this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");

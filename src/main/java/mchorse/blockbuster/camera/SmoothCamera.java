@@ -1,6 +1,8 @@
 package mchorse.blockbuster.camera;
 
+import mchorse.blockbuster.Blockbuster;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,6 +26,11 @@ public class SmoothCamera
     {
         this.yaw += dx;
         this.pitch += dy;
+
+        if (Blockbuster.proxy.config.camera_smooth_clamp)
+        {
+            this.pitch = MathHelper.clamp(this.pitch, -90, 90);
+        }
 
         this.x.update(this.yaw);
         this.y.update(this.pitch);
@@ -58,7 +65,7 @@ public class SmoothCamera
      * Just like {@link net.minecraft.util.MouseFilter}, but only uses cubic
      * interolation.
      */
-    class MouseFilter
+    public class MouseFilter
     {
         public float a;
         public float b;
