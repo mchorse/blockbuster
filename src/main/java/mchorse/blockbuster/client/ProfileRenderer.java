@@ -23,7 +23,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -84,10 +83,16 @@ public class ProfileRenderer
             float yaw = this.smooth.getInterpYaw((float) event.getRenderPartialTicks());
             float pitch = this.smooth.getInterpPitch((float) event.getRenderPartialTicks());
 
-            pitch = MathHelper.clamp_float(pitch, -90.0F, 90.0F);
-
             event.setYaw(-180 + yaw);
             event.setPitch(-pitch);
+
+            EntityPlayer player = this.mc.thePlayer;
+
+            player.rotationYaw = yaw;
+            player.rotationPitch = -pitch;
+
+            player.prevRotationYaw = yaw;
+            player.prevRotationPitch = -pitch;
         }
 
         float roll = CommandCamera.getControl().roll;
@@ -111,21 +116,13 @@ public class ProfileRenderer
 
         if (event.side == Side.CLIENT && event.player == player && camera.enabled)
         {
+            /* Copied from EntityRenderer */
             float sensetivity = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
             float finalSensetivity = sensetivity * sensetivity * sensetivity * 8.0F;
             float dx = this.mc.mouseHelper.deltaX * finalSensetivity * 0.15F;
             float dy = this.mc.mouseHelper.deltaY * finalSensetivity * 0.15F;
 
-            float yaw = camera.getInterpYaw(0);
-            float pitch = camera.getInterpPitch(0);
-
             camera.update(this.mc.thePlayer, dx, dy);
-
-            player.rotationYaw = camera.getInterpYaw(1);
-            player.rotationPitch = -camera.getInterpPitch(1);
-
-            player.prevRotationYaw = yaw;
-            player.prevRotationPitch = -pitch;
         }
     }
 
