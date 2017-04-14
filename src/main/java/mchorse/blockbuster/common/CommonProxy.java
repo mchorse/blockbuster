@@ -187,4 +187,10 @@ public class CommonProxy
     {
         return false;
     }
+
+    /**
+     * Triggered when config is changed
+     */
+    public void onConfigChange(Configuration config)
+    {}
 }

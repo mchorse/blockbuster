@@ -22,10 +22,22 @@ public class SmoothCamera
     public MouseFilter x = new MouseFilter();
     public MouseFilter y = new MouseFilter();
 
+    public float accX;
+    public float accY;
+
+    public float fricX = 0.9F;
+    public float fricY = 0.9F;
+
     public void update(EntityPlayer player, float dx, float dy)
     {
-        this.yaw += dx;
-        this.pitch += dy;
+        this.accX += dx / 10.0F;
+        this.accY += dy / 10.0F;
+
+        this.accX *= this.fricX;
+        this.accY *= this.fricY;
+
+        this.yaw += this.accX;
+        this.pitch += this.accY;
 
         if (Blockbuster.proxy.config.camera_smooth_clamp)
         {

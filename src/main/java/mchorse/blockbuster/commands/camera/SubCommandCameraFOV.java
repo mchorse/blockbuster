@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands.camera;
 
+import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
@@ -37,7 +38,7 @@ public class SubCommandCameraFOV extends CommandBase
         }
         else
         {
-            mc.gameSettings.fovSetting = (float) CommandBase.parseDouble(args[0]);
+            CommandCamera.getControl().setFOV((float) CommandBase.parseDouble(args[0]));
         }
     }
 }

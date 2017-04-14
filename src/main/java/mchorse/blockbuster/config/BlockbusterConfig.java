@@ -156,7 +156,12 @@ public class BlockbusterConfig
      */
     public int damage_control_distance;
 
-    private Configuration config;
+    /* Non conifg option stuff */
+
+    /**
+     * Forge configuration
+     */
+    public Configuration config;
 
     public BlockbusterConfig(Configuration config)
     {
@@ -199,7 +204,9 @@ public class BlockbusterConfig
         this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
         this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
         this.camera_minema = this.config.getBoolean("camera_minema", camera, false, "Activate Minema recording on camera start and deactivate on camera stop", camPrefix + "camera_minema");
-        this.camera_smooth_clamp = this.config.getBoolean("camera_smooth_clamp", camera, true, "Clip smooth camera's pitch between -90 and 90 degrees range?", camPrefix + "camera_smooth_clamp");
+
+        /* Smooth camera */
+        this.camera_smooth_clamp = this.config.getBoolean("camera_smooth_clamp", "camera.smooth", true, "Clip smooth camera's pitch between -90 and 90 degrees range?", camPrefix + "camera_smooth_clamp");
 
         /* Recording */
         this.recording_countdown = this.config.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown", recPrefix + "recording_countdown");
@@ -218,6 +225,8 @@ public class BlockbusterConfig
         /* Damage control */
         this.damage_control = this.config.getBoolean("damage_control", damage, false, "Whether damage control is active", damPrefix + "damage_control");
         this.damage_control_distance = this.config.getInt("damage_control_distance", damage, 32, 1, 1024, "Radius of effect for damage control", damPrefix + "damage_control_distance");
+
+        Blockbuster.proxy.onConfigChange(this.config);
 
         if (this.config.hasChanged())
         {

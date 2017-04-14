@@ -22,6 +22,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -69,12 +70,12 @@ public class KeyboardHandler
     private KeyBinding startRunning;
     private KeyBinding stopRunning;
 
-    private KeyBinding addRoll;
-    private KeyBinding reduceRoll;
+    public KeyBinding addRoll;
+    public KeyBinding reduceRoll;
     private KeyBinding resetRoll;
 
-    private KeyBinding addFov;
-    private KeyBinding reduceFov;
+    public KeyBinding addFov;
+    public KeyBinding reduceFov;
     private KeyBinding resetFov;
 
     /* Camera control */
@@ -257,8 +258,12 @@ public class KeyboardHandler
         if (this.smoothCamera.isPressed())
         {
             SmoothCamera camera = ClientProxy.profileRenderer.smooth;
+            Property enabled = Blockbuster.proxy.forge.getCategory("camera.smooth").get("smooth_enabled");
 
-            camera.enabled = !camera.enabled;
+            enabled.set(!enabled.getBoolean());
+
+            Blockbuster.proxy.onConfigChange(Blockbuster.proxy.forge);
+            Blockbuster.proxy.forge.save();
 
             if (camera.enabled)
             {
@@ -379,7 +384,7 @@ public class KeyboardHandler
 
         if (this.resetFov.isPressed())
         {
-            Minecraft.getMinecraft().gameSettings.fovSetting = 70.0F;
+            control.resetFOV();
         }
     }
 
@@ -390,26 +395,30 @@ public class KeyboardHandler
     public void onClientTick(ClientTickEvent event)
     {
         EntityPlayer player = this.mc.player;
-        CameraControl control = CommandCamera.getControl();
 
-        /* Roll key handling */
-        if (this.addRoll.isKeyDown())
+        if (!ClientProxy.profileRenderer.smooth.enabled)
         {
-            control.addRoll(1.0F);
-        }
-        else if (this.reduceRoll.isKeyDown())
-        {
-            control.addRoll(-1.0F);
-        }
+            CameraControl control = CommandCamera.getControl();
 
-        /* FOV key handling */
-        if (this.addFov.isKeyDown())
-        {
-            Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
-        }
-        else if (this.reduceFov.isKeyDown())
-        {
-            Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
+            /* Roll key handling */
+            if (this.addRoll.isKeyDown())
+            {
+                control.roll += 0.5F;
+            }
+            else if (this.reduceRoll.isKeyDown())
+            {
+                control.roll -= 0.5F;
+            }
+
+            /* FOV key handling */
+            if (this.addFov.isKeyDown())
+            {
+                Minecraft.getMinecraft().gameSettings.fovSetting += 0.25F;
+            }
+            else if (this.reduceFov.isKeyDown())
+            {
+                Minecraft.getMinecraft().gameSettings.fovSetting += -0.25F;
+            }
         }
 
         /* Camera control keys handling */
