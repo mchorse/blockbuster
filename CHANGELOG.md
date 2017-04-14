@@ -28,6 +28,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 * Updated `/record` sub-commands to multiple action per frame feature
     * Added `/record add` and `/record remove`
     * Removed `/record set`
+* Updated `/camera duration` sub-command to take in account relative values (like with `/camera step` and `/camera rotate`)
 * Works with Metamorph `1.1.2`
 
 ## Version 1.4.7 (Metamorph integration)

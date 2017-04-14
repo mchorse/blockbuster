@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.CameraProfile;
+import mchorse.blockbuster.camera.Interpolations;
 import mchorse.blockbuster.camera.Position;
 import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.camera.SmoothCamera;
@@ -23,6 +24,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -46,7 +48,10 @@ public class ProfileRenderer
     protected Minecraft mc = Minecraft.getMinecraft();
     protected boolean render = true;
     protected CameraProfile profile;
+
     public SmoothCamera smooth = new SmoothCamera();
+    public Filter roll = new Filter();
+    public Filter fov = new Filter();
 
     protected double playerX;
     protected double playerY;
@@ -73,15 +78,18 @@ public class ProfileRenderer
     {
         ProfileRunner runner = ClientProxy.profileRunner;
 
+        float ticks = (float) event.getRenderPartialTicks();
+
         if (runner.isRunning())
         {
             event.setYaw(-180 + runner.yaw);
             event.setPitch(runner.pitch);
         }
-        else if (this.smooth.enabled)
+        else if (this.smooth.enabled && !this.mc.isGamePaused())
         {
-            float yaw = this.smooth.getInterpYaw((float) event.getRenderPartialTicks());
-            float pitch = this.smooth.getInterpPitch((float) event.getRenderPartialTicks());
+            /* Yaw and pitch */
+            float yaw = this.smooth.getInterpYaw(ticks);
+            float pitch = this.smooth.getInterpPitch(ticks);
 
             event.setYaw(-180 + yaw);
             event.setPitch(-pitch);
@@ -93,6 +101,28 @@ public class ProfileRenderer
 
             player.prevRotationYaw = yaw;
             player.prevRotationPitch = -pitch;
+
+            /* Roll and FOV */
+            if (this.roll.acc != 0.0F)
+            {
+                CommandCamera.getControl().roll = this.roll.interpolate(ticks);
+            }
+            else
+            {
+                this.roll.set(CommandCamera.getControl().roll);
+            }
+
+            if (this.fov.acc != 0.0F)
+            {
+                this.fov.interpolate(ticks);
+                this.fov.value = MathHelper.clamp_float(this.fov.value, 0.0001F, 179.9999F);
+
+                this.mc.gameSettings.fovSetting = this.fov.value;
+            }
+            else
+            {
+                this.fov.set(this.mc.gameSettings.fovSetting);
+            }
         }
 
         float roll = CommandCamera.getControl().roll;
@@ -122,7 +152,17 @@ public class ProfileRenderer
             float dx = this.mc.mouseHelper.deltaX * finalSensetivity * 0.15F;
             float dy = this.mc.mouseHelper.deltaY * finalSensetivity * 0.15F;
 
+            /* Updating smooth camera */
             camera.update(this.mc.thePlayer, dx, dy);
+
+            /* Roll and FOV acceleration */
+            KeyboardHandler keys = ClientProxy.keys;
+
+            float roll = keys.addRoll.isKeyDown() ? 1 : (keys.reduceRoll.isKeyDown() ? -1 : 0F);
+            float fov = keys.addFov.isKeyDown() ? 1 : (keys.reduceFov.isKeyDown() ? -1 : 0F);
+
+            this.roll.accelerate(roll * this.roll.factor);
+            this.fov.accelerate(fov * this.fov.factor);
         }
     }
 
@@ -442,6 +482,74 @@ public class ProfileRenderer
             this.red = red;
             this.green = green;
             this.blue = blue;
+        }
+    }
+
+    /**
+     * Acceleration based filter
+     */
+    public static class Filter
+    {
+        public float acc;
+        public float value;
+        public float prevValue;
+
+        /**
+         * Friction for acceleration, this value decides how fast acceleration
+         * slow downs.
+         */
+        public float friction = 0.9F;
+
+        /**
+         * Factor for acceleration (should be used externally)
+         */
+        public float factor = 0.1F;
+
+        public void set(float value)
+        {
+            this.value = this.prevValue = value;
+        }
+
+        /**
+         * Reset the value
+         *
+         * Same thing as set, but also resetting the acceleration
+         */
+        public void reset(float value)
+        {
+            this.acc = 0.0F;
+            this.value = this.prevValue = value;
+        }
+
+        /**
+         * Accelerate the acceleration
+         */
+        public void accelerate(float value)
+        {
+            this.acc += value;
+            this.acc *= this.friction;
+
+            if (Math.abs(this.acc) < 0.005F)
+            {
+                this.acc = 0.0F;
+            }
+        }
+
+        /**
+         * Interpolate the value
+         *
+         * This method also changes the value of the filter, be careful with
+         * it.
+         */
+        public float interpolate(float ticks)
+        {
+            float result;
+
+            this.value += this.acc;
+            result = Interpolations.lerp(this.prevValue, this.value, ticks);
+            this.prevValue = this.value;
+
+            return result;
         }
     }
 }

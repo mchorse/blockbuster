@@ -38,7 +38,7 @@ public class SubCommandCameraRoll extends CommandBase
         }
         else
         {
-            control.roll = (float) CommandBase.parseDouble(args[0]);
+            CommandCamera.getControl().setRoll((float) CommandBase.parseDouble(args[0]));
         }
     }
 }

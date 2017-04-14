@@ -33,9 +33,12 @@ public class GuiConfig extends net.minecraftforge.fml.client.config.GuiConfig
         for (String name : Blockbuster.proxy.forge.getCategoryNames())
         {
             ConfigCategory category = Blockbuster.proxy.forge.getCategory(name);
-
             category.setLanguageKey("blockbuster.config." + name + ".title");
-            elements.add(new ConfigElement(category));
+
+            if (name.indexOf(".") == -1)
+            {
+                elements.add(new ConfigElement(category));
+            }
         }
 
         return elements;
