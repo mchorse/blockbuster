@@ -90,6 +90,11 @@ public class BlockbusterConfig
      */
     public boolean camera_smooth_clamp;
 
+    /**
+     * Default camera path interpolation method
+     */
+    public String camera_path_default_interp;
+
     /* Recording */
 
     /**
@@ -204,6 +209,7 @@ public class BlockbusterConfig
         this.camera_step_factor = this.config.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys", camPrefix + "camera_step_factor");
         this.camera_rotate_factor = this.config.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys", camPrefix + "camera_rotate_factor");
         this.camera_minema = this.config.getBoolean("camera_minema", camera, false, "Activate Minema recording on camera start and deactivate on camera stop", camPrefix + "camera_minema");
+        this.camera_path_default_interp = this.config.getString("camera_path_default_interp", camera, "linear", "Default interpolation method for path fixture", camPrefix + "camera_path_default_interp");
 
         /* Smooth camera */
         this.camera_smooth_clamp = this.config.getBoolean("camera_smooth_clamp", "camera.smooth", true, "Clip smooth camera's pitch between -90 and 90 degrees range?", camPrefix + "camera_smooth_clamp");

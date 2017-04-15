@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.camera.Interpolations;
 import mchorse.blockbuster.camera.Position;
 import net.minecraft.command.CommandBase;
@@ -23,12 +24,17 @@ public class PathFixture extends AbstractFixture
     @Expose
     protected List<Position> points = new ArrayList<Position>();
 
-    protected InterpolationType interpolationPos = InterpolationType.LINEAR;
-    protected InterpolationType interpolationAngle = InterpolationType.LINEAR;
+    protected InterpolationType interpolationPos;
+    protected InterpolationType interpolationAngle;
 
     public PathFixture(long duration)
     {
         super(duration);
+
+        InterpolationType type = Blockbuster.proxy.config.camera_path_default_interp.equals("cubic") ? InterpolationType.CUBIC : InterpolationType.LINEAR;
+
+        this.interpolationPos = type;
+        this.interpolationAngle = type;
     }
 
     public Position getPoint(int index)
