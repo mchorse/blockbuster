@@ -77,10 +77,12 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
                 break;
             }
 
-            int j = 0;
+            int j = -1;
 
             for (Action action : actions)
             {
+                j++;
+
                 if (action.getType() != type)
                 {
                     continue;
@@ -91,14 +93,12 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
                     NBTTagCompound tag = new NBTTagCompound();
                     action.toNBT(tag);
 
-                    L10n.info(sender, "record.search_action_data", tick, tag.toString(), j);
+                    L10n.info(sender, "record.search_action_data", tick, j, tag.toString());
                 }
                 else
                 {
                     L10n.info(sender, "record.search_action", tick, j);
                 }
-
-                j++;
             }
 
             i++;
