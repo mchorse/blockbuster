@@ -22,13 +22,13 @@ import net.minecraft.server.MinecraftServer;
 public class CommandLoadChunks extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "load_chunks";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "/load_chunks - loads all chunks in render distance";
     }
