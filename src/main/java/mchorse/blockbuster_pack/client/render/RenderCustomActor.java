@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.client.render;
 
 import mchorse.blockbuster_pack.client.render.layers.LayerActorArmor;
+import mchorse.blockbuster_pack.client.render.layers.LayerCustomHead;
 import mchorse.blockbuster_pack.client.render.layers.LayerElytra;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
 import mchorse.metamorph.api.EntityUtils;
@@ -27,6 +28,7 @@ public class RenderCustomActor extends RenderCustomModel
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerActorArmor(this));
+        this.addLayer(new LayerCustomHead());
     }
 
     /**
