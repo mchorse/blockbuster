@@ -15,6 +15,13 @@ blockbuster.info:
         fov: {f}Your field-of-view is %s{f} degrees.
         roll: {f}Your roll is %s{f} degrees.
     
+    # General command infos
+    commands:
+        load_chunks: {f}Loaded all generated chunks in render distance.
+        
+        replace_texture: {f}Texture %s{f} was replaced with texture %s{f}.
+        restore_texture: {f}Texture %s{f} was restored to its original state.
+    
     models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
     
     record:
