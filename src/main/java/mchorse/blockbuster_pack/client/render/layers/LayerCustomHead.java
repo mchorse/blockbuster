@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -66,8 +65,6 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
             }
 
-            boolean flag = entity instanceof EntityVillager || entity instanceof EntityZombie && ((EntityZombie) entity).isVillager();
-
             if (entity.isChild() && !(entity instanceof EntityVillager))
             {
                 GlStateManager.translate(0.0F, 0.5F * scale, 0.0F);
@@ -84,11 +81,6 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
             if (item == Items.SKULL)
             {
                 GlStateManager.scale(1.1875F, -1.1875F, -1.1875F);
-
-                if (flag)
-                {
-                    GlStateManager.translate(0.0F, 0.0625F, 0.0F);
-                }
 
                 GameProfile gameprofile = null;
 
@@ -120,11 +112,6 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
                 GlStateManager.translate(0.0F, -0.25F, 0.0F);
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 GlStateManager.scale(0.625F, -0.625F, -0.625F);
-
-                if (flag)
-                {
-                    GlStateManager.translate(0.0F, 0.1875F, 0.0F);
-                }
 
                 minecraft.getItemRenderer().renderItem(entity, itemstack, ItemCameraTransforms.TransformType.HEAD);
             }

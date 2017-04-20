@@ -34,13 +34,13 @@ public class SubCommandModelReplaceTexture extends McCommandBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "replace_texture";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.replace_texture";
     }
