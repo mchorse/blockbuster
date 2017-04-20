@@ -24,6 +24,8 @@ import net.minecraft.util.ResourceLocation;
  */
 public class SubCommandModelClearCache extends CommandBase
 {
+    public static Field TEXTURE_MAP;
+
     @Override
     public String getName()
     {
@@ -37,12 +39,54 @@ public class SubCommandModelClearCache extends CommandBase
     }
 
     @Override
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
-        Field textureMap = null;
+        Map<ResourceLocation, ITextureObject> map = getTextures(manager);
 
+        if (map != null)
+        {
+            Iterator<Map.Entry<ResourceLocation, ITextureObject>> it = map.entrySet().iterator();
+
+            while (it.hasNext())
+            {
+                Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
+
+                if (entry.getKey().getResourceDomain().equals("blockbuster.actors") && entry.getValue() instanceof DynamicTexture)
+                {
+                    it.remove();
+                }
+            }
+        }
+    }
+
+    /**
+     * Get texture map from texture manager using reflection API
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<ResourceLocation, ITextureObject> getTextures(TextureManager manager)
+    {
+        if (TEXTURE_MAP == null)
+        {
+            setupTextureMapField(manager);
+        }
+
+        try
+        {
+            return (Map<ResourceLocation, ITextureObject>) TEXTURE_MAP.get(manager);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Setup texture map field which is looked up using the reflection API
+     */
+    @SuppressWarnings("rawtypes")
+    public static void setupTextureMapField(TextureManager manager)
+    {
         /* Finding the field which has holds the texture cache */
         for (Field field : manager.getClass().getDeclaredFields())
         {
@@ -59,33 +103,9 @@ public class SubCommandModelClearCache extends CommandBase
 
                 if (value instanceof Map && ((Map) value).keySet().iterator().next() instanceof ResourceLocation)
                 {
-                    textureMap = field;
+                    TEXTURE_MAP = field;
 
                     break;
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-
-        /* Iterating through texture cache and removing all elements */
-        if (textureMap != null)
-        {
-            try
-            {
-                Map<ResourceLocation, ITextureObject> map = (Map<ResourceLocation, ITextureObject>) textureMap.get(manager);
-                Iterator<Map.Entry<ResourceLocation, ITextureObject>> it = map.entrySet().iterator();
-
-                while (it.hasNext())
-                {
-                    Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
-
-                    if (entry.getKey().getResourceDomain().equals("blockbuster.actors") && entry.getValue() instanceof DynamicTexture)
-                    {
-                        it.remove();
-                    }
                 }
             }
             catch (Exception e)

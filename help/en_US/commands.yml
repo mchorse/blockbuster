@@ -65,6 +65,12 @@ blockbuster:
                     {l}{6}/{r}model {8}clear{r}
                     
                     {r}Clears the texture cache from loaded skin textures.
+                    
+            replace_texture:
+                |
+                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
+                    
+                    {r}Replaces a texture by ResourceLocation {7}<target>{r} to texture by ResourceLocation {7}[replace]{r}. If {7}[replace]{r} isn't specified, then original {7}<target>{r}'s original texture will be restored.
 
         # Action's commands
         action:

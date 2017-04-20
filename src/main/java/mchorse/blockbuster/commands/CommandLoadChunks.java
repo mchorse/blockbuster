@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands;
 
 import java.lang.reflect.Field;
 
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.ViewFrustum;
@@ -78,10 +79,14 @@ public class CommandLoadChunks extends CommandBase
                         chunks.updateChunkNow(chunk);
                     }
                 }
+
+                L10n.info(sender, "commands.load_chunks");
             }
             catch (Exception e)
             {
                 e.printStackTrace();
+
+                L10n.error(sender, "commands.load_chunks");
             }
         }
     }
