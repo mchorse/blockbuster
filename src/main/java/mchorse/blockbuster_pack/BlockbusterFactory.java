@@ -113,13 +113,31 @@ public class BlockbusterFactory implements IMorphFactory
                 continue;
             }
 
+            /* Morphs with default texture */
             if (original.model.defaultTexture != null)
             {
                 ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
+
+                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                {
+                    String pose = entry.getKey();
+
+                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
+                    {
+                        continue;
+                    }
+
+                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
+
+                    poseActor.currentPose = pose;
+                    poseActor.pose = entry.getValue();
+                    morphs.addMorphVariant(actor.name, "blockbuster", "pose " + pose, poseActor);
+                }
             }
 
+            /* Morphs with skins */
             for (String skin : this.models.pack.getSkins(key))
             {
                 ActorMorph actor = (ActorMorph) original.clone(world.isRemote);

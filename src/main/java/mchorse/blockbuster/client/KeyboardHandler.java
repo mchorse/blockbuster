@@ -267,7 +267,7 @@ public class KeyboardHandler
 
             if (camera.enabled)
             {
-                camera.set(player.rotationYaw, player.rotationPitch);
+                camera.set(player.rotationYaw, -player.rotationPitch);
             }
         }
     }
