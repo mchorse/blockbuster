@@ -53,8 +53,10 @@ public class SmoothCamera
         this.yaw = yaw;
         this.pitch = pitch;
 
+        this.accX = this.accY = 0.0F;
+
         this.x.set(yaw);
-        this.y.set(-pitch);
+        this.y.set(pitch);
     }
 
     /**
