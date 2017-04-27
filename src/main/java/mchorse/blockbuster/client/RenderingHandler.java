@@ -65,5 +65,10 @@ public class RenderingHandler
         {
             list.add("Recording frame " + recorder.tick + " (delay: " + recorder.delay + ")");
         }
+
+        if (ClientProxy.profileRunner.isRunning())
+        {
+            list.add("Camera ticks " + ClientProxy.profileRunner.getTicks());
+        }
     }
 }

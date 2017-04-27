@@ -52,6 +52,11 @@ public class ProfileRunner
         return this.isRunning;
     }
 
+    public long getTicks()
+    {
+        return this.ticks;
+    }
+
     /* Playback methods (start/stop) */
 
     /**
