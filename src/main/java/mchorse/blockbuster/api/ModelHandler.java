@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
+import mchorse.blockbuster.utils.L10n;
+import mchorse.metamorph.Metamorph;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -127,6 +129,11 @@ public class ModelHandler
         if (Blockbuster.proxy.config.load_models_on_login)
         {
             ServerHandlerRequestModels.sendModels(this, player);
+        }
+
+        if (!Metamorph.VERSION.equals(Blockbuster.METAMORPH))
+        {
+            L10n.info(player, "metamorph", Metamorph.VERSION, Blockbuster.METAMORPH);
         }
     }
 }
