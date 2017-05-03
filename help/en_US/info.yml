@@ -1,4 +1,6 @@
 blockbuster.info:
+    metamorph: {f}You're using Metamorph %s{f}. It is recommended to update to Metamorph %s{f} as it's the main version which was tested with current version of Blockbuster mod. Thank you for attention!
+    
     actor:
         playing: {f}This actor already plays!
     

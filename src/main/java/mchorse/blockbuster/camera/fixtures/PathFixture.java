@@ -31,7 +31,7 @@ public class PathFixture extends AbstractFixture
     {
         super(duration);
 
-        InterpolationType type = Blockbuster.proxy.config.camera_path_default_interp.equals("cubic") ? InterpolationType.CUBIC : InterpolationType.LINEAR;
+        InterpolationType type = interpFromString(Blockbuster.proxy.config.camera_path_default_interp);
 
         this.interpolationPos = type;
         this.interpolationAngle = type;
@@ -101,7 +101,7 @@ public class PathFixture extends AbstractFixture
         }
         else if (args.length == 1)
         {
-            if (args[0].equals("linear") || args[0].equals("cubic"))
+            if (args[0].equals("linear") || args[0].equals("cubic") || args[0].equals("hermite"))
             {
                 InterpolationType type = interpFromString(args[0]);
 
@@ -117,12 +117,12 @@ public class PathFixture extends AbstractFixture
         }
         else if (args.length == 2)
         {
-            if (args[0].equals("linear") || args[0].equals("cubic"))
+            if (args[0].equals("linear") || args[0].equals("cubic") || args[0].equals("hermite"))
             {
                 this.interpolationPos = interpFromString(args[0]);
             }
 
-            if (args[1].equals("linear") || args[1].equals("cubic"))
+            if (args[1].equals("linear") || args[1].equals("cubic") || args[1].equals("hermite"))
             {
                 this.interpolationAngle = interpFromString(args[1]);
             }
@@ -180,6 +180,13 @@ public class PathFixture extends AbstractFixture
             roll = Interpolations.cubic(p0.angle.roll, p1.angle.roll, p2.angle.roll, p3.angle.roll, progress);
             fov = Interpolations.cubic(p0.angle.fov, p1.angle.fov, p2.angle.fov, p3.angle.fov, progress);
         }
+        else if (this.interpolationAngle.equals(InterpolationType.HERMITE))
+        {
+            yaw = (float) Interpolations.cubicHermiteYaw(p0.angle.yaw, p1.angle.yaw, p2.angle.yaw, p3.angle.yaw, progress);
+            pitch = (float) Interpolations.cubicHermite(p0.angle.pitch, p1.angle.pitch, p2.angle.pitch, p3.angle.pitch, progress);
+            roll = (float) Interpolations.cubicHermite(p0.angle.roll, p1.angle.roll, p2.angle.roll, p3.angle.roll, progress);
+            fov = (float) Interpolations.cubicHermite(p0.angle.fov, p1.angle.fov, p2.angle.fov, p3.angle.fov, progress);
+        }
         else
         {
             yaw = Interpolations.lerpYaw(p1.angle.yaw, p2.angle.yaw, progress);
@@ -190,6 +197,12 @@ public class PathFixture extends AbstractFixture
 
         /* Interpolating the position */
         if (this.interpolationPos.equals(InterpolationType.CUBIC))
+        {
+            x = Interpolations.cubic(p0.point.x, p1.point.x, p2.point.x, p3.point.x, progress);
+            y = Interpolations.cubic(p0.point.y, p1.point.y, p2.point.y, p3.point.y, progress);
+            z = Interpolations.cubic(p0.point.z, p1.point.z, p2.point.z, p3.point.z, progress);
+        }
+        else if (this.interpolationPos.equals(InterpolationType.HERMITE))
         {
             x = (float) Interpolations.cubicHermite(p0.point.x, p1.point.x, p2.point.x, p3.point.x, progress);
             y = (float) Interpolations.cubicHermite(p0.point.y, p1.point.y, p2.point.y, p3.point.y, progress);
@@ -217,8 +230,8 @@ public class PathFixture extends AbstractFixture
     @Override
     public void toJSON(JsonObject object)
     {
-        object.addProperty("interpolation", this.interpolationPos.equals(InterpolationType.LINEAR) ? "linear" : "cubic");
-        object.addProperty("interpolationAngle", this.interpolationAngle.equals(InterpolationType.LINEAR) ? "linear" : "cubic");
+        object.addProperty("interpolation", this.interpolationPos.name);
+        object.addProperty("interpolationAngle", this.interpolationAngle.name);
     }
 
     @Override
@@ -235,13 +248,32 @@ public class PathFixture extends AbstractFixture
         }
     }
 
+    /* Interpolation */
+
     public static InterpolationType interpFromString(String string)
     {
-        return string.equals("linear") ? InterpolationType.LINEAR : InterpolationType.CUBIC;
+        if (string.equals("cubic"))
+        {
+            return InterpolationType.CUBIC;
+        }
+
+        if (string.equals("hermite"))
+        {
+            return InterpolationType.HERMITE;
+        }
+
+        return InterpolationType.LINEAR;
     }
 
     public static enum InterpolationType
     {
-        LINEAR, CUBIC;
+        LINEAR("linear"), CUBIC("cubic"), HERMITE("hermite");
+
+        public final String name;
+
+        private InterpolationType(String name)
+        {
+            this.name = name;
+        }
     }
 }

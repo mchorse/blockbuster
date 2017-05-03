@@ -3,6 +3,8 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -25,6 +27,11 @@ import net.minecraft.world.World;
  */
 public abstract class AbstractTileEntityDirector extends TileEntity implements ITickable
 {
+    /**
+     * Pattern for finding numbered
+     */
+    public static final Pattern NUMBERED_SUFFIX = Pattern.compile("_(\\d+)$");
+
     public List<String> _replays = new ArrayList<String>();
     public List<Replay> replays = new ArrayList<Replay>();
 
@@ -171,10 +178,25 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
 
     /**
      * Duplicate a replay by given index
+     *
+     * Also increments the numerical suffix, if it's not there suffix "_1" is
+     * added.
      */
     public void duplicate(int index)
     {
-        this.replays.add(this.replays.get(index).clone(this.world.isRemote));
+        Replay replay = this.replays.get(index).clone(this.world.isRemote);
+        Matcher matcher = NUMBERED_SUFFIX.matcher(replay.id);
+
+        if (matcher.find())
+        {
+            replay.id = replay.id.substring(0, matcher.start()) + "_" + (Integer.parseInt(matcher.group(1)) + 1);
+        }
+        else
+        {
+            replay.id = replay.id + "_1";
+        }
+
+        this.replays.add(replay);
     }
 
     /**
