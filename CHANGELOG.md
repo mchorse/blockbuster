@@ -24,6 +24,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 * Added `Drop` (boolean) property for `place_block` action which is responsible for dropping an according block
 * Added smooth cubic interpolated camera (like cinematic vanilla, but Minema friendly)
 * Added accelerated linear interpolation for roll and FOV when smooth camera enabled
+* Added `hermite` interpolation type for path fixture (`/camera edit 0 hermite`)
 * Fixed `mounting` action mounting again and over again
 * Switched to recording multiple actions per one frame
 * Updated `/record` sub-commands to multiple action per frame feature
