@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -39,6 +41,8 @@ public class GuiActor extends GuiScreen
     private GuiButton done;
     private GuiButton pick;
     private GuiToggle invisible;
+    private GuiSlider rotateX;
+    private GuiSlider rotateY;
     private GuiMorphsPopup morphs;
 
     /**
@@ -82,11 +86,21 @@ public class GuiActor extends GuiScreen
     {
         MorphCell morph = this.morphs.morphs.getSelected();
 
+        /* Update actor's morph */
         if (morph != null)
         {
             boolean invisible = this.invisible.getValue();
 
             Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.morph, invisible));
+        }
+
+        /* Rotate the actor */
+        float yaw = (float) this.rotateX.getValue();
+        float pitch = (float) this.rotateY.getValue();
+
+        if (yaw != this.actor.rotationYaw || pitch != this.actor.rotationPitch)
+        {
+            Dispatcher.sendToServer(new PacketActorRotate(this.actor.getEntityId(), yaw, pitch));
         }
 
         Minecraft.getMinecraft().displayGuiScreen(null);
@@ -149,12 +163,19 @@ public class GuiActor extends GuiScreen
         this.done = new GuiButton(0, x, y2, w, 20, I18n.format("blockbuster.gui.done"));
         this.pick = new GuiButton(1, x, 40, w, 20, I18n.format("blockbuster.gui.pick"));
 
+        /* TODO: export language strings, lazy eh */
+        this.rotateX = new GuiSlider(-1, x, 40 + 30, w, 20, "Yaw ", "", -180, 180, this.actor.rotationYaw, false, true);
+        this.rotateY = new GuiSlider(-2, x, 40 + 30 * 2, w, 20, "Pitch ", "", -90, 90, this.actor.rotationPitch, false, true);
+
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
         this.buttonList.add(this.done);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.invisible);
+
+        this.buttonList.add(this.rotateX);
+        this.buttonList.add(this.rotateY);
 
         this.morphs.updateRect(120, 40, this.width - 128, this.height - 50);
     }
@@ -202,6 +223,10 @@ public class GuiActor extends GuiScreen
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        /* Apply yaw and pitch on the actor */
+        this.actor.renderYawOffset = this.actor.prevRenderYawOffset = this.actor.rotationYawHead = this.actor.prevRotationYawHead = this.actor.rotationYaw = this.actor.prevRotationYaw = (float) this.rotateX.getValue();
+        this.actor.rotationPitch = this.actor.prevRotationPitch = (float) this.rotateY.getValue();
 
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
