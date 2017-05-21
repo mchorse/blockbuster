@@ -2,6 +2,8 @@ package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster_pack.morphs.ActorMorph;
+import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -50,6 +52,20 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         if (morph != null)
         {
+            float shadow = 0.5F;
+
+            if (morph instanceof ActorMorph)
+            {
+                Model model = ((ActorMorph) morph).model;
+
+                if (model != null)
+                {
+                    shadow = model.getPose("standing").size[0];
+                }
+            }
+
+            this.shadowSize = shadow;
+
             morph.render(entity, x, y, z, entityYaw, partialTicks);
         }
     }

@@ -53,6 +53,12 @@ public class RenderCustomActor extends RenderCustomModel
         return super.getEntityTexture(entity);
     }
 
+    /**
+     * Can the nametag be rendered by this entity
+     *
+     * This method is also takes in account the config option for making actor
+     * nametags visible always.
+     */
     @Override
     protected boolean canRenderName(EntityLivingBase entity)
     {
