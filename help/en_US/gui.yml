@@ -17,6 +17,8 @@ blockbuster.gui:
     search: "Search:"
     cancel: Cancel
     break: Break
+    select: Select
+    ok: Ok
     
     confirm:
         title: Confirm Breaking Director Block

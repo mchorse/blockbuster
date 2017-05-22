@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
+import com.google.common.base.Objects;
+
+import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.CustomMorph;
@@ -26,6 +29,14 @@ public class ActorMorph extends CustomMorph
     public ResourceLocation skin;
 
     /**
+     * Make hands true!
+     */
+    public ActorMorph()
+    {
+        this.hands = true;
+    }
+
+    /**
      * Render actor morph on the screen
      *
      * This method overrides parent class method to take in account current
@@ -43,7 +54,14 @@ public class ActorMorph extends CustomMorph
 
             if (data != null && (data.defaultTexture != null || this.skin != null))
             {
-                model.pose = model.model.poses.get("standing");
+                if (this.pose == null)
+                {
+                    String poseName = EntityUtils.getPose(player, this.currentPose, this.currentPoseOnSneak);
+
+                    this.pose = data.getPose(poseName);
+                }
+
+                model.pose = this.pose == null ? model.model.poses.get("standing") : this.pose;
                 model.swingProgress = 0;
 
                 Minecraft.getMinecraft().renderEngine.bindTexture(this.skin == null ? data.defaultTexture : this.skin);
@@ -68,6 +86,10 @@ public class ActorMorph extends CustomMorph
         {
             ActorMorph actor = (ActorMorph) object;
 
+            // TODO: Move to Metamorph in next update
+            result = result && Objects.equal(this.currentPose, actor.currentPose);
+            result = result && this.currentPoseOnSneak == actor.currentPoseOnSneak;
+
             if (this.skin == null && actor.skin == null)
             {
                 return result;
@@ -86,12 +108,16 @@ public class ActorMorph extends CustomMorph
     }
 
     @Override
-    public AbstractMorph clone()
+    public AbstractMorph clone(boolean clone)
     {
         ActorMorph morph = new ActorMorph();
 
         morph.name = this.name;
         morph.skin = this.skin;
+
+        // TODO: Also move to Metamorph
+        morph.currentPose = this.currentPose;
+        morph.currentPoseOnSneak = this.currentPoseOnSneak;
 
         morph.abilities = this.abilities;
         morph.attack = this.attack;

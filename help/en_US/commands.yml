@@ -12,6 +12,12 @@ blockbuster:
         record:
             help: {r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions.
             
+            add: 
+                |
+                    {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}Adds an action to player recording by {7}<filename>{r} at {7}<tick>{r} of type {7}<action_type>{r} with additional data specified in {7}[data_tag]{r}.
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
@@ -24,11 +30,11 @@ blockbuster:
                     
                     {r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc.
             
-            set:
+            remove:
                 |
-                    {l}{6}/{r}record {8}set{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
-                    {r}Sets action by type {7}<action_type>{r} with optional data {7}[data_tag]{r} in player recording by filename of {7}<filename>{r} at {7}<tick>{r}.
+                    {r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}.
             
             search:
                 |
@@ -53,6 +59,18 @@ blockbuster:
                     {l}{6}/{r}model {8}request{r}
                     
                     {r}Requests models from the server (including host's models in LAN game).
+            
+            clear:
+                |
+                    {l}{6}/{r}model {8}clear{r}
+                    
+                    {r}Clears the texture cache from loaded skin textures.
+                    
+            replace_texture:
+                |
+                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
+                    
+                    {r}Replaces a texture by ResourceLocation {7}<target>{r} to texture by ResourceLocation {7}[replace]{r}. If {7}[replace]{r} isn't specified, then original {7}<target>{r}'s original texture will be restored.
 
         # Action's commands
         action:
@@ -168,12 +186,12 @@ blockbuster:
                         {l}{6}/{r}camera {8}remove{r} {7}<index>{r}
                         
                         {r}Remove camera fixture from currently used camera profile at {7}<index>{r}
+                    
                 duration: 
                     |
-                    
                         {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
                         
-                        {r}Set duration in milliseconds to given fixture at given {7}<index>{r}
+                        {r}Can be used to set, or to get duration of whole camera profile or one camera fixture. If all arguments are present, the command sets the {7}[duration]{r} in ticks to given fixture at given {7}[index]{r}. Relative values can be used for {7}[duration]{r} argument.
                 
                 move: 
                     |

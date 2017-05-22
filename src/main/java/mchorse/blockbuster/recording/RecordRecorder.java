@@ -90,7 +90,18 @@ public class RecordRecorder
         if (this.mode == Mode.ACTIONS || both)
         {
             this.tracker.track(player);
-            this.record.actions.add(this.actions.isEmpty() ? null : this.actions.remove(0));
+
+            List<Action> list = null;
+
+            if (!this.actions.isEmpty())
+            {
+                list = new ArrayList<Action>();
+                list.addAll(this.actions);
+
+                this.actions.clear();
+            }
+
+            this.record.actions.add(list);
         }
 
         this.tick++;

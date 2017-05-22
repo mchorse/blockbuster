@@ -1,4 +1,6 @@
 blockbuster.info:
+    metamorph: {f}You're using Metamorph %s{f}. It is recommended to update to Metamorph %s{f} as it's the main version which was tested with current version of Blockbuster mod. Thank you for attention!
+    
     actor:
         playing: {f}This actor already plays!
     
@@ -9,16 +11,23 @@ blockbuster.info:
     camera:
         duration:
             fixture: {f}Camera fixture at index %s{f} runs for %s{f} ticks.
-            profile: {f}Camera profile runs for %s{f} ticks.
+            profile: {f}Camera profile runs for %s{f} ticks and has %s{f} camera fixtures.
         
         # Camera roll and fov
         fov: {f}Your field-of-view is %s{f} degrees.
         roll: {f}Your roll is %s{f} degrees.
     
+    # General command infos
+    commands:
+        load_chunks: {f}Loaded all generated chunks in render distance.
+        
+        replace_texture: {f}Texture %s{f} was replaced with texture %s{f}.
+        restore_texture: {f}Texture %s{f} was restored to its original state.
+    
     models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
     
     record:
-        action: {f}Action at %s{f} tick is %s
+        action: "{f}Action at %s{f} tick is %s{f} at index %s{f} with data: %s"
         
         info:
             |
@@ -30,8 +39,8 @@ blockbuster.info:
                 {7}*{f} Ticks before unload: %s
         
         search_type: "{f}Search for action with type %s{f}:"
-        search_action: {f}Found action at %s{f} tick.
-        search_action_data: "{f}Found action at %s{f} tick with data: %s"
+        search_action: "{f}Found action at %s{f} tick at index %s{f}."
+        search_action_data: "{f}Found action at %s{f} tick at index %s{f} with data: %s"
     
     # Recording strings
     recording:

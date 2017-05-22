@@ -142,6 +142,7 @@ public class CommonProxy
     {
         this.models.loadModels(pack);
         this.models.pack = pack;
+
         this.factory.models = this.models;
         this.factory.registerModels();
     }
@@ -183,4 +184,18 @@ public class CommonProxy
     {
         EntityRegistry.registerModEntity(entity, name, this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 3, false, primary, secondary);
     }
+
+    /**
+     * Whether physical side is client
+     */
+    public boolean isClient()
+    {
+        return false;
+    }
+
+    /**
+     * Triggered when config is changed
+     */
+    public void onConfigChange(Configuration config)
+    {}
 }

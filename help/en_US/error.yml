@@ -8,6 +8,15 @@ blockbuster.error:
     actor:
         not_attached: {f}This registering item isn't attached to a director block!
     
+    # General command errors
+    commands:
+        load_chunks: Couldn't load all generated chunks in render distance! See logs for detailed error.
+        
+        restore_texture: {f}Texture %s{f} couldn't be restored, because it wasn't changed by this command.
+        replace_texture: {f}Texture %s{f} and %s{f} aren't loaded!
+        replace_texture_one: {f}Texture %s{f} isn't loaded!
+        
+    
     # Director block error strings
     director:
         playing: {f}Director block at (%s{f}, %s{f}, %s{f}) is playing!
@@ -26,9 +35,11 @@ blockbuster.error:
     record:
         no_action: {f}Player recording by filename %s{f} doesn't have an action at %s{f} tick!
         not_exist: {f}Player recording by filename %s{f} doesn't exist!
-        tick_out_range: {f}Action on tick %s{f} doesn't exist!
+        tick_out_range: {f}Action on tick %s{f} doesn't exist! Should be between {7}0{r} and %s{r}.
+        index_out_range: {f}Index %s{f} is out of range! Should be between {7}0{r} and %s{r}.
+        already_empty: {f}There are no actions at index %s{r} in player recording %s{r}!
         wrong_action: {f}Action of type %s{f} doesn't exist!
-        set: "{f}Action of type %s{f} couldn't be added due to error: %s"
+        add: "{f}Action of type %s{f} couldn't be added due to error: %s"
     
     # Recording errors
     recording:

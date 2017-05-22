@@ -33,6 +33,8 @@ public abstract class Action
     public static final byte DAMAGE = 14;
     public static final byte MORPH_ACTION = 15;
     public static final byte COMMAND = 16;
+    public static final byte BREAK_ANIMATION = 17;
+    public static final byte USE_ITEM = 18;
 
     /* Register actions */
     static
@@ -51,6 +53,8 @@ public abstract class Action
         TYPES.put("damage", 14);
         TYPES.put("morph_action", 15);
         TYPES.put("command", 16);
+        TYPES.put("break_animation", 17);
+        TYPES.put("use_item", 18);
     }
 
     /**
@@ -74,6 +78,8 @@ public abstract class Action
         if (type == DAMAGE) return new DamageAction();
         if (type == MORPH_ACTION) return new MorphActionAction();
         if (type == COMMAND) return new CommandAction();
+        if (type == BREAK_ANIMATION) return new BreakBlockAnimation();
+        if (type == USE_ITEM) return new ItemUseAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }

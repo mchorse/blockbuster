@@ -18,6 +18,7 @@ import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MorphActionAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
@@ -38,6 +39,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -46,10 +48,12 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -69,6 +73,32 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class ActionHandler
 {
     /**
+     * Adds a world event listener
+     */
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event)
+    {
+        World world = event.getWorld();
+
+        if (!world.isRemote)
+        {
+            world.addEventListener(new WorldEventListener(world));
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemUse(PlayerInteractEvent.RightClickItem event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.worldObj.isRemote && events != null)
+        {
+            events.add(new ItemUseAction(event.getHand()));
+        }
+    }
+
+    /**
      * Event listener for Action.BREAK_BLOCK
      */
     @SubscribeEvent
@@ -77,9 +107,9 @@ public class ActionHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.worldObj.isRemote && events != null)
+        if (!player.worldObj.isRemote && events != null && player.isCreative())
         {
-            events.add(new BreakBlockAction(event.getPos()));
+            events.add(new BreakBlockAction(event.getPos(), false));
         }
     }
 

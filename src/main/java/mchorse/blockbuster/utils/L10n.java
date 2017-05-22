@@ -15,6 +15,7 @@ import net.minecraft.util.text.translation.I18n;
  *
  * API should be clear, short and concise.
  */
+@SuppressWarnings("deprecation")
 public class L10n
 {
     /**

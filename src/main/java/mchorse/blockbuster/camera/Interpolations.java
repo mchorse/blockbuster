@@ -38,41 +38,6 @@ public class Interpolations
     }
 
     /**
-     * Yaw normalization for cubic interpolation
-     */
-    public static float cubicYaw(float y0, float y1, float y2, float y3, float position)
-    {
-        y0 = MathHelper.wrapDegrees(y0);
-        y1 = MathHelper.wrapDegrees(y1);
-        y2 = MathHelper.wrapDegrees(y2);
-        y3 = MathHelper.wrapDegrees(y3);
-
-        y1 = normalizeYaw(y0, y1);
-        y2 = normalizeYaw(y1, y2);
-        y3 = normalizeYaw(y2, y3);
-
-        return cubic(y0, y1, y2, y3, position);
-    }
-
-    /**
-     * Normalize yaw rotation (argument {@code b}) based on the previous
-     * yaw rotation.
-     */
-    public static float normalizeYaw(float a, float b)
-    {
-        float diff = a - b;
-
-        if (diff > 180 || diff < -180)
-        {
-            diff = Math.copySign(360 - Math.abs(diff), diff);
-
-            return a + diff;
-        }
-
-        return b;
-    }
-
-    /**
      * Cubic interpolation using Hermite between y1 and y2. Taken from paul's
      * website.
      *
@@ -106,6 +71,23 @@ public class Interpolations
     }
 
     /**
+     * Yaw normalization for cubic interpolation
+     */
+    public static double cubicHermiteYaw(float y0, float y1, float y2, float y3, float position)
+    {
+        y0 = MathHelper.wrapDegrees(y0);
+        y1 = MathHelper.wrapDegrees(y1);
+        y2 = MathHelper.wrapDegrees(y2);
+        y3 = MathHelper.wrapDegrees(y3);
+
+        y1 = normalizeYaw(y0, y1);
+        y2 = normalizeYaw(y1, y2);
+        y3 = normalizeYaw(y2, y3);
+
+        return cubicHermite(y0, y1, y2, y3, position);
+    }
+
+    /**
      * Cubic interpolation between y1 and y2. Taken from paul's website.
      *
      * @param y0 - points[x-1]
@@ -121,5 +103,40 @@ public class Interpolations
         float c = y2 - y0;
 
         return ((a * x + b) * x + c) * x + y1;
+    }
+
+    /**
+     * Yaw normalization for cubic interpolation
+     */
+    public static float cubicYaw(float y0, float y1, float y2, float y3, float position)
+    {
+        y0 = MathHelper.wrapDegrees(y0);
+        y1 = MathHelper.wrapDegrees(y1);
+        y2 = MathHelper.wrapDegrees(y2);
+        y3 = MathHelper.wrapDegrees(y3);
+
+        y1 = normalizeYaw(y0, y1);
+        y2 = normalizeYaw(y1, y2);
+        y3 = normalizeYaw(y2, y3);
+
+        return cubic(y0, y1, y2, y3, position);
+    }
+
+    /**
+     * Normalize yaw rotation (argument {@code b}) based on the previous
+     * yaw rotation.
+     */
+    public static float normalizeYaw(float a, float b)
+    {
+        float diff = a - b;
+
+        if (diff > 180 || diff < -180)
+        {
+            diff = Math.copySign(360 - Math.abs(diff), diff);
+
+            return a + diff;
+        }
+
+        return b;
     }
 }

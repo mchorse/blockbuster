@@ -1,10 +1,8 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -15,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-public class SubCommandRecordSearch extends McCommandBase
+public class SubCommandRecordSearch extends SubCommandRecordBase
 {
     @Override
     public int getRequiredArgs()
@@ -65,11 +63,11 @@ public class SubCommandRecordSearch extends McCommandBase
 
         L10n.info(sender, "record.search_type", args[1]);
 
-        for (Action action : record.actions)
+        for (List<Action> actions : record.actions)
         {
             tick++;
 
-            if (action == null || action.getType() != type)
+            if (actions == null)
             {
                 continue;
             }
@@ -79,20 +77,33 @@ public class SubCommandRecordSearch extends McCommandBase
                 break;
             }
 
-            if (outputData)
-            {
-                NBTTagCompound tag = new NBTTagCompound();
-                action.toNBT(tag);
+            int j = -1;
 
-                L10n.info(sender, "record.search_action_data", tick, tag.toString());
-            }
-            else
+            for (Action action : actions)
             {
-                L10n.info(sender, "record.search_action", tick);
+                j++;
+
+                if (action.getType() != type)
+                {
+                    continue;
+                }
+
+                if (outputData)
+                {
+                    NBTTagCompound tag = new NBTTagCompound();
+                    action.toNBT(tag);
+
+                    L10n.info(sender, "record.search_action_data", tick, j, tag.toString());
+                }
+                else
+                {
+                    L10n.info(sender, "record.search_action", tick, j);
+                }
             }
 
             i++;
         }
+
     }
 
     @Override
@@ -100,11 +111,7 @@ public class SubCommandRecordSearch extends McCommandBase
     {
         if (args.length == 2)
         {
-            List<String> types = new ArrayList<String>();
-
-            types.addAll(Action.TYPES.keySet());
-
-            return getListOfStringsMatchingLastWord(args, types);
+            return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

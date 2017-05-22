@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands.record;
 
+import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
  * This command is responsible for outputting data of action at given tick and
  * player recording.
  */
-public class SubCommandRecordGet extends McCommandBase
+public class SubCommandRecordGet extends SubCommandRecordBase
 {
     @Override
     public int getRequiredArgs()
@@ -51,26 +51,40 @@ public class SubCommandRecordGet extends McCommandBase
             throw new CommandException("record.tick_out_range", tick);
         }
 
-        NBTTagCompound tag = new NBTTagCompound();
-        Action action = record.actions.get(tick);
+        List<Action> actions = record.actions.get(tick);
+
+        if (actions == null)
+        {
+            throw new CommandException("record.no_action", filename, tick);
+        }
+
+        for (int i = 0, c = actions.size(); i < c; i++)
+        {
+            Action action = actions.get(i);
+            NBTTagCompound tag = new NBTTagCompound();
+            String type = byteToType(action.getType());
+            action.toNBT(tag);
+
+            L10n.info(sender, "record.action", tick, type, i, tag.toString());
+        }
+    }
+
+    /**
+     * Get string name based on byte value
+     */
+    public static String byteToType(byte actionType)
+    {
         String type = "none";
 
         for (Map.Entry<String, Integer> entry : Action.TYPES.entrySet())
         {
-            if (entry.getValue().equals(action.getType()))
+            if (entry.getValue().byteValue() == actionType)
             {
                 type = entry.getKey();
                 break;
             }
         }
 
-        if (action == null)
-        {
-            throw new CommandException("record.no_action", filename, tick);
-        }
-
-        action.toNBT(tag);
-
-        L10n.info(sender, "record.action", tick, type, tag.toString());
+        return type;
     }
 }

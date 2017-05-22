@@ -13,7 +13,7 @@
  * </p>
  *
  * <p>
- * However, I still going to honor EchebKeso and his Mocap mod, and going to
+ * However, I'm still going to honor EchebKeso and his Mocap mod, and going to
  * mention his name and/or his mod name, because he gave me a base start for
  * player recording. Thank you, EchebKeso :)
  * </p>

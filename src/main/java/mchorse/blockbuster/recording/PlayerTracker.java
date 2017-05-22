@@ -22,7 +22,7 @@ public class PlayerTracker
     public RecordRecorder recorder;
 
     /* Items to track */
-    private int[] items = new int[6];
+    private int[] items = new int[] {-1, -1, -1, -1, -1, -1};
 
     public PlayerTracker(RecordRecorder recorder)
     {
@@ -58,10 +58,8 @@ public class PlayerTracker
         ItemStack mainhand = player.getHeldItemMainhand();
         ItemStack offhand = player.getHeldItemOffhand();
 
-        if (!this.trackItemToSlot(mainhand, 0))
-        {
-            this.trackItemToSlot(offhand, 5);
-        }
+        this.trackItemToSlot(mainhand, 0);
+        this.trackItemToSlot(offhand, 5);
     }
 
     /**

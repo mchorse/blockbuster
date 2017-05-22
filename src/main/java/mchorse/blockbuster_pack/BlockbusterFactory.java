@@ -3,12 +3,14 @@ package mchorse.blockbuster_pack;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -91,7 +93,7 @@ public class BlockbusterFactory implements IMorphFactory
     public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
     {
         String name = tag.getString("Name");
-        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone();
+        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone(Blockbuster.proxy.isClient());
 
         morph.fromNBT(tag);
 
@@ -111,20 +113,54 @@ public class BlockbusterFactory implements IMorphFactory
                 continue;
             }
 
+            /* Morphs with default texture */
             if (original.model.defaultTexture != null)
             {
-                ActorMorph actor = (ActorMorph) original.clone();
+                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
+
+                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                {
+                    String pose = entry.getKey();
+
+                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
+                    {
+                        continue;
+                    }
+
+                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
+
+                    poseActor.currentPose = pose;
+                    poseActor.pose = entry.getValue();
+                    morphs.addMorphVariant(actor.name, "blockbuster", "pose " + pose, poseActor);
+                }
             }
 
+            /* Morphs with skins */
             for (String skin : this.models.pack.getSkins(key))
             {
-                ActorMorph actor = (ActorMorph) original.clone();
+                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
                 String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
 
                 actor.skin = new ResourceLocation("blockbuster.actors", path);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
+
+                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                {
+                    String pose = entry.getKey();
+
+                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
+                    {
+                        continue;
+                    }
+
+                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
+
+                    poseActor.currentPose = pose;
+                    poseActor.pose = entry.getValue();
+                    morphs.addMorphVariant(actor.name, "blockbuster", skin + ", pose " + pose, poseActor);
+                }
             }
         }
     }

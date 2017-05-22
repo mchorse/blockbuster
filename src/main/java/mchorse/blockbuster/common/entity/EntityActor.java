@@ -17,6 +17,7 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
@@ -119,6 +120,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 return false;
             }
         };
+
+        this.fakePlayer.capabilities.isCreativeMode = true;
     }
 
     @Override
@@ -254,19 +257,19 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (this.playback != null && this.playback.playing)
         {
             this.playback.next(this);
+        }
 
-            if (!this.worldObj.isRemote)
+        if (!this.worldObj.isRemote && this.playback != null && this.playback.playing)
+        {
+            int tick = this.playback.tick;
+
+            if (this.playback.isFinished())
             {
-                int tick = this.playback.tick;
-
-                if (this.playback.isFinished())
-                {
-                    CommonProxy.manager.stopPlayback(this);
-                }
-                else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
-                {
-                    Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
-                }
+                CommonProxy.manager.stopPlayback(this);
+            }
+            else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
+            {
+                Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
             }
         }
 
@@ -291,6 +294,20 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         if (Math.abs(this.motionZ) < 0.005D) this.motionZ = 0.0D;
 
         this.updateArmSwingProgress();
+
+        /* Make foot steps sound more player-like */
+        if (!this.worldObj.isRemote && this.isPlaying() && this.playback.tick < this.playback.record.frames.size() - 1 && !this.isSneaking() && this.onGround)
+        {
+            Frame current = this.playback.record.frames.get(this.playback.tick);
+            Frame next = this.playback.record.frames.get(this.playback.tick + 1);
+
+            double dx = next.x - current.x;
+            double dy = next.y - current.y;
+            double dz = next.z - current.z;
+
+            this.distanceWalkedModified = this.distanceWalkedModified + MathHelper.sqrt_double(dx * dx + dz * dz) * 0.32F;
+            this.distanceWalkedOnStepModified = this.distanceWalkedOnStepModified + MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz) * 0.32F;
+        }
 
         /* Trigger pressure playback */
         this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
@@ -641,8 +658,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
-
-        System.out.println(this.morph);
     }
 
     /**

@@ -143,6 +143,7 @@ public class ModelPack
             if (file.isDirectory())
             {
                 Map<String, File> map = new HashMap<String, File>();
+                String filename = file.getName();
 
                 skins.mkdirs();
 
@@ -156,7 +157,14 @@ public class ModelPack
                     }
                 }
 
-                this.skins.put(file.getName(), map);
+                if (this.skins.containsKey(filename))
+                {
+                    this.skins.get(filename).putAll(map);
+                }
+                else
+                {
+                    this.skins.put(filename, map);
+                }
             }
         }
     }

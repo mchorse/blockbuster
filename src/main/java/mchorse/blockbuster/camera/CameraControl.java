@@ -3,6 +3,7 @@ package mchorse.blockbuster.camera;
 import mchorse.blockbuster.camera.fixtures.AbstractFixture;
 import mchorse.blockbuster.camera.fixtures.PathFixture;
 import mchorse.blockbuster.commands.CommandCamera;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketLoadCameraProfile;
 import net.minecraft.client.Minecraft;
@@ -211,9 +212,10 @@ public class CameraControl
     /**
      * Add roll (it can be negative too)
      */
-    public void addRoll(float value)
+    public void setRoll(float value)
     {
-        this.roll += value;
+        ClientProxy.profileRenderer.roll.reset(value);
+        this.roll = value;
     }
 
     /**
@@ -221,6 +223,23 @@ public class CameraControl
      */
     public void resetRoll()
     {
-        this.roll = 0;
+        this.setRoll(0.0F);
+    }
+
+    /**
+     * Set FOV
+     */
+    public void setFOV(float value)
+    {
+        ClientProxy.profileRenderer.fov.reset(value);
+        Minecraft.getMinecraft().gameSettings.fovSetting = value;
+    }
+
+    /**
+     * Reset FOV to default value
+     */
+    public void resetFOV()
+    {
+        this.setFOV(70.0F);
     }
 }

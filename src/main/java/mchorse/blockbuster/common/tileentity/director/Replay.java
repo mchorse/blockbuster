@@ -51,7 +51,7 @@ public class Replay
 
         if (this.morph != null)
         {
-            actor.morph = this.morph.clone();
+            actor.morph = this.morph.clone(actor.worldObj.isRemote);
         }
 
         actor.invisible = this.invisible;
@@ -67,7 +67,7 @@ public class Replay
 
         if (actor.morph != null && this.morph == null)
         {
-            this.morph = actor.getMorph().clone();
+            this.morph = actor.getMorph().clone(actor.worldObj.isRemote);
         }
 
         this.invisible = actor.invisible;
@@ -168,8 +168,7 @@ public class Replay
         return super.equals(obj);
     }
 
-    @Override
-    public Replay clone()
+    public Replay clone(boolean isRemote)
     {
         Replay replay = new Replay();
 
@@ -181,7 +180,7 @@ public class Replay
 
         if (this.morph != null)
         {
-            replay.morph = this.morph.clone();
+            replay.morph = this.morph.clone(isRemote);
         }
 
         return replay;
