@@ -11,7 +11,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 #### Camera
 
 * Added a config option for default path fixture interpolation
-* Added smooth cubic interpolated camera (like cinematic vanilla, but Minema friendly)
+* Added smooth cubic interpolated camera (like cinematic vanilla but Minema-friendly)
 * Added accelerated linear interpolation for roll and FOV when smooth camera enabled
 * Added `hermite` interpolation type for path fixture (`/camera edit 0 hermite`)
 
@@ -35,7 +35,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 * Added a config option for custom model and skins refresh
 * Added a config option for enabling rendering nametags for actors always
-* Added a friendly reminder chat message when player enters a world, the mod let him know that he's using not recommended version of Metamorph
+* Added a friendly reminder chat message when the player enters a world. Blockbuster lets the player know that (s)he's using not recommended version of Metamorph
 * Added configurable damage control (by default disabled, see mod options)
 * Compatible with Metamorph `1.1.3`
 * Fixed grammar and phrasing in config comments (thanks to reck829)
@@ -52,6 +52,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
     * Limb swinging and swiping, hit box rendering, and item holding buttons
     * Texture picker
 * Added current camera playback tick in F3 screen
+* Added sliders in actor configuration GUI to rotate an actor (reck829's suggestion)
 * When you duplicate a replay in director block GUI, recording ID field will get incremented (`record -> record_1`, `horse_5 -> horse_6`, etc.) (thanks to sanchan)
 
 #### Recording
