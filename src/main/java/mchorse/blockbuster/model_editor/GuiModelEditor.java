@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -93,6 +94,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      * Model name for saving
      */
     private String modelName = "";
+
+    private AxisAlignedBB newAabb = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
     /* GUI fields */
 
@@ -1026,13 +1029,18 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         float minZ = -current.size[0] / 2.0F;
         float maxZ = current.size[0] / 2.0F;
 
+        if (this.newAabb.minX != minX || this.newAabb.minY != minY || this.newAabb.minZ != minZ || this.newAabb.maxX != maxX || this.newAabb.maxY != maxY || this.newAabb.maxZ != maxX)
+        {
+            this.newAabb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+        }
+
         GlStateManager.depthMask(false);
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.disableBlend();
 
-        RenderGlobal.drawBoundingBox(minX, minY, minZ, maxX, maxY, maxZ, 1.0F, 1.0F, 1.0F, 1.0F);
+        RenderGlobal.func_181563_a(this.newAabb, 255, 255, 255, 255);
 
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
