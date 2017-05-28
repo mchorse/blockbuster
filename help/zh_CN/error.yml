@@ -37,7 +37,7 @@ blockbuster.error:
         not_exist: {f}文件名为 %s{f} 的玩家录制内容不存在！
         tick_out_range: {f}在 tick %s{f} 的内容不存在！范围应在{7}0{r} 和 %s{r}之间。
         index_out_range: {f}Index %s{f} 超出范围！范围应在{7}0{r} 和 %s{r}之间。
-        already_empty: {f}在索引 %s{r}，玩家录制文件 %s{r} 里没有动作！
+        already_empty: {f}在索引号 %s{r}，玩家录制文件 %s{r} 里没有动作！
         wrong_action: {f}动作类别 %s{f} 不存在！
         add: "{f}动作类别 %s{f} 由于以下错误而无法添加： %s"
     
@@ -53,8 +53,8 @@ blockbuster.error:
     # Camera fixtures errors
     fixture:
         few_args: {f}这个命令的参数给少了！
-        wrong_type: {f}相机定点类型 %s{f} 不存在！
-        no_entity: {f}你应该看着某个实体来创建这个相机定点！
+        wrong_type: {f}相机关键点类型 %s{f} 不存在！
+        no_entity: {f}你应该看着某个实体来创建这个相机关键点！
         
         empty: {f}这个摄像机配置文件是空的！
     
@@ -64,7 +64,7 @@ blockbuster.error:
         cant_save: {f}无法以文件名 %s{f} 保存摄像机配置。
         cant_load: {f}无法以文件名 %s{f} 加载摄像机配置。
         
-        not_path: {f}在索引 %s{f} 的定点不是路径定点！
-        not_exists: {f}在目前的相机配置文件里没有相机定点在 %s{f} 索引里！
-        no_path_point: {f}索引 %s{f} 里的相机定点在索引 %s{f} 里没有路径定点！
-        move_no_path_point: {f}索引 %s{f} 里的相机定点在索引 %s{f} 或者索引 %s{f} 里没有路径定点！
+        not_path: {f}在索引号 %s{f} 的关键点不是路径关键点！
+        not_exists: {f}在目前的相机配置文件里没有相机关键点在 %s{f} 索引号里！
+        no_path_point: {f}路径索引号 %s{f} 里在索引号 %s{f} 里没有路径定点！
+        move_no_path_point: {f}路径索引号 %s{f} 里在索引号 %s{f} 或 %s{f} 里没有定点！

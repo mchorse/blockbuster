@@ -10,8 +10,8 @@ blockbuster.info:
     # Camera duration
     camera:
         duration:
-            fixture: {f}在索引 %s{f} 的相机定点持续时长为 %s{f} ticks。
-            profile: {f}摄像机配置时长为%s{f} ticks，并且有%s{f}个节点。
+            fixture: {f}在索引 %s{f} 的相机关键点持续时长为 %s{f} ticks。
+            profile: {f}摄像机配置时长为%s{f} ticks，并且有%s{f}个关键点。
         
         # Camera roll and fov
         fov: {f}你的FOV为%s{f}度。
@@ -27,7 +27,7 @@ blockbuster.info:
     models.loaded: {f}已从服务器收到%s{f}个自定义模型和%s{f}个皮肤。
     
     record:
-        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引 %s{f} 并带有数据： %s"
+        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引号 %s{f} 并带有数据： %s"
         
         info:
             |
@@ -39,8 +39,8 @@ blockbuster.info:
                 {7}*{f} 卸载前的tick时长: %s
         
         search_type: "{f}以类型 %s{f} 搜索动作:"
-        search_action: "{f}在%s{f} tick找到动作， 在索引 %s{f}."
-        search_action_data: "{f}在%s{f} tick找到动作， 在索引 %s{f} 并带有数据: %s"
+        search_action: "{f}在%s{f} tick找到动作， 在索引号 %s{f}."
+        search_action_data: "{f}在%s{f} tick找到动作， 在索引号 %s{f} 并带有数据: %s"
     
     # Recording strings
     recording:

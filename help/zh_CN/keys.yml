@@ -28,7 +28,7 @@ key:
         
         # 相机关键点s
         fixtures:
-            title: Blockbuster 定点
+            title: Blockbuster 相机关键点
             
             idle: 添加固定相机关键点
             path: 添加路径相机关键点
@@ -40,10 +40,10 @@ key:
             remove: 移除相机关键点
         
         path:
-            title: Blockbuster 路径相机关键点
+            title: Blockbuster 路径关键点
             
-            add: 添加路径相机关键点
-            remove: 移除最后一个路径相机关键点
+            add: 添加路径关键点
+            remove: 移除最后一个路径关键点
         
         # Roll controlling keys
         roll:
