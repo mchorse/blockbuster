@@ -1,56 +1,56 @@
 blockbuster.info:
-    metamorph: {f}You're using Metamorph %s{f}. It is recommended to update to Metamorph %s{f} as it's the main version which was tested with current version of Blockbuster mod. Thank you for attention!
-    
+    metamorph: {f}你正在使用 Metamorph %s{f}。建议你升级到 Metamorph %s{f}，这个版本是正式版而且已经与当前版本的Blockbuster mod测试过了。感谢！
+
     actor:
-        playing: {f}This actor already plays!
+        playing: {f}这个演员已经在播放了！
     
     director:
-        already_registered: {f}This actor is already registered by this director block!
+        already_registered: {f}这个演员已经链接到了这个导演方块上了！
     
     # Camera duration
     camera:
         duration:
-            fixture: {f}Camera fixture at index %s{f} runs for %s{f} ticks.
-            profile: {f}Camera profile runs for %s{f} ticks and has %s{f} camera fixtures.
+            fixture: {f}在索引 %s{f} 的相机定点持续时长为 %s{f} ticks。
+            profile: {f}摄像机配置时长为%s{f} ticks，并且有%s{f}个节点。
         
         # Camera roll and fov
-        fov: {f}Your field-of-view is %s{f} degrees.
-        roll: {f}Your roll is %s{f} degrees.
+        fov: {f}你的FOV为%s{f}度。
+        roll: {f}你的倾斜度为%s{f}度。
     
     # General command infos
     commands:
-        load_chunks: {f}Loaded all generated chunks in render distance.
+        load_chunks: {f}已加载在渲染范围里的已创建区块。
         
-        replace_texture: {f}Texture %s{f} was replaced with texture %s{f}.
-        restore_texture: {f}Texture %s{f} was restored to its original state.
+        replace_texture: {f}材质 %s{f} 已被材质 %s{f} 替换。
+        restore_texture: {f}材质 %s{f} 已经还原为初始状态。
     
-    models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
+    models.loaded: {f}已从服务器收到%s{f}个自定义模型和%s{f}个皮肤。
     
     record:
-        action: "{f}Action at %s{f} tick is %s{f} at index %s{f} with data: %s"
+        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引 %s{f} 并带有数据： %s"
         
         info:
             |
-                {f}Information about the player recording named %s{f}:
+                {f}关于 %s{f} 的信息:
                 
-                {7}*{f} Recording version: %s
-                {7}*{f} Length of recording in ticks: %s
-                {7}*{f} Frame delay: %s
-                {7}*{f} Ticks before unload: %s
+                {7}*{f} 录制版本: %s
+                {7}*{f} 录制的时长（ticks单位）: %s
+                {7}*{f} 延时帧: %s
+                {7}*{f} 卸载前的tick时长: %s
         
-        search_type: "{f}Search for action with type %s{f}:"
-        search_action: "{f}Found action at %s{f} tick at index %s{f}."
-        search_action_data: "{f}Found action at %s{f} tick at index %s{f} with data: %s"
+        search_type: "{f}以类型 %s{f} 搜索动作:"
+        search_action: "{f}在%s{f} tick找到动作， 在索引 %s{f}."
+        search_action_data: "{f}在%s{f} tick找到动作， 在索引 %s{f} 并带有数据: %s"
     
     # Recording strings
     recording:
-        recording: %s{f} is already being recorded to.
-        dead: {f}Stopped recording %s{f}, because player's dead.
-        message: {f}To start recording an actor %s{f}, %s{f}!
+        recording: %s{f} 已经在录制了。
+        dead: {f}已停止录制 %s{f}，因为玩家死了。
+        message: {f}如要开始录制 %s{f}, %s{f}!
     
     # Camera profile
     profile:
-        new: {f}Created new camera profile with filename %s{f}.
-        loaded: {f}Camera profile by name %s{f} is already loaded!
-        start: {f}Current camera profile was started.
-        stop: {f}Currently running camera profile was stopped.
+        new: {f}已创建一个新的相机配置文件，命名为 %s{f}。
+        loaded: {f}名称为 %s{f} 的相机配置文件已被加载！
+        start: {f}目前的相机配置已经在运行。
+        stop: {f}目前运行的相机配置已停止。
