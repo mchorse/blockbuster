@@ -1,27 +1,27 @@
 # Item tooltips
 blockbuster:
     info:
-        playback_button: Toggles director block
-        playback_director: Attached to ({r}%d{7}, {r}%d{7}, {r}%d{7})
-        playback_profile: Plays profile "{f}{o}%s{r}{7}"
-        playback_play: Plays camera
+        playback_button: 切换导演方块
+        playback_director: 链接到({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_profile: 回放配置文件 "{f}{o}%s{r}{7}"
+        playback_play: 回放摄像机
 
-        actor_config: Use on actor
-        register: Ties actors to director block
-        director_block: Manages actors and replays
+        actor_config: 在演员上使用
+        register: 关联演员到导演方块
+        director_block: 管理回放和演员的方块
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 
 # Block name
-tile.blockbuster.director.name: Director block
+tile.blockbuster.director.name: 导演方块
 
 # Item names
 item:
     blockbuster:
-        playback.name: Playback button
-        register.name: Registering device
-        actor_config.name: Actor configuration device
+        playback.name: 播放按钮
+        register.name: 激活设备
+        actor_config.name: 演员设置设备
 
 # Entity names
-entity.blockbuster.Actor.name: Actor
+entity.blockbuster.Actor.name: 演员
