@@ -1,0 +1,51 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: Done
+    next: Next
+    previous: Previous
+    restore: Restore Default
+    reset: Reset
+    add: Add
+    edit: Edit
+    remove: Remove
+    detach: Detach
+    record: Record
+    pick: Pick morph...
+    duplicate: Duplicate
+    search: "Search:"
+    cancel: Cancel
+    break: Break
+    select: Select
+    ok: Ok
+    
+    confirm:
+        title: Confirm Breaking Director Block
+        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
+    
+    # Director block GUI strings
+    director:
+        title: Director Block
+        add: Add a replay...
+        no_cast: No replays!
+    
+    # Actor configuration GUI strings
+    actor:
+        title: Actor Configuration
+        default: Default
+        name: Name
+        filename: Recording ID
+        invincible: Can be killed?
+        invisible: Is visible?
+        attached: Attached to actor
+
+    # Playback GUI
+    playback:
+        title: Playback configuration
+        camera_mode: Camera mode
+        profile: Profile filename
+
+        nothing: Do nothing
+        play: Play only
+        load_profile: Load and play

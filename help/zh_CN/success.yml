@@ -1,0 +1,15 @@
+blockbuster.success:
+    director:
+        play: {f}Director block at (%s{f}, %s{f}, %s{f}) has started playing!
+        stop: {f}Director block at (%s{f}, %s{f}, %s{f}) has stopped!
+        
+        was_registered: {f}This actor was successfully attached to director block!
+        attached_device: {f}This registering device was successfully attached to director block!
+    
+    model.export:
+        saved: {f}Entity model %s{f} was saved to %s{f}.
+    
+    profile:
+        clear: {f}Currently used camera profile was cleared.
+        save: {f}Current camera profile was saved in file %s{f}.
+        load: {f}Camera profile was loaded from file %s{f}.
