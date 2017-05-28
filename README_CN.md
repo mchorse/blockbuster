@@ -22,7 +22,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 
 ## 安装
 
-安装 [Minecraft Forge](http://files.minecraftforge.net/，下载本mod支持的Minecraft版本的最新稳定版。并安装以下mod：[Metamorph](https://minecraft.curseforge.com/projects/metamorph)。拷贝到Minecraft的 `mods` 文件夹，启动游戏。
+安装 [Minecraft Forge](http://files.minecraftforge.net/)，下载本mod支持的Minecraft版本的最新稳定版。并安装以下mod：[Metamorph](https://minecraft.curseforge.com/projects/metamorph)。拷贝到Minecraft的 `mods` 文件夹，启动游戏。
 
 之后，Blockbuster mod 应该安装了，显示在 Minecraft 的 mods 菜单。如果没有显示在菜单里，那么你可能错误地进行操作了。
 
@@ -89,4 +89,3 @@ make build_lang
 
 并且别忘了下载一份 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的 `-dev` jars (自愿选择 `-source`，文档用) 在发布的版本中。将 `-dev` mod 放到 `run/mods` (查看 `build.gradle` 的 `depenencies` 部分了解更多)。
 
-中文翻译(Chinese translation): [Howard Zheng](https://github.com/ycwei982)
