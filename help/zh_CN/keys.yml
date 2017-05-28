@@ -2,80 +2,80 @@
 key:
     blockbuster:
         # Categories
-        general: Blockbuster General
+        general: Blockbuster 通用
         misc: Blockbuster Misc.
-        camera: Blockbuster Camera
+        camera: Blockbuster 摄像机
         
-        model_editor: Model Editor
-        marker: Camera marker
-        smooth_camera: Smooth camera
+        model_editor: 模型编辑器
+        marker: 摄像机标记
+        smooth_camera: 平滑摄像机
 
         # Camera control
         control: 
-            title: Blockbuster Camera Control
+            title: Blockbuster 摄像机控制
             
-            stepUp: Step up
-            stepDown: Step down
-            stepLeft: Step left
-            stepRight: Step right
-            stepFront: Step front
-            stepBack: Step back
+            stepUp: 向上
+            stepDown: 向下
+            stepLeft: 向左
+            stepRight: 向右
+            stepFront: 向前
+            stepBack: 向后
             
-            rotateUp: Rotate up
-            rotateDown: Rotate down
-            rotateLeft: Rotate left
-            rotateRight: Rotate right
+            rotateUp: 向上倾斜
+            rotateDown: 向下倾斜
+            rotateLeft: 向左倾斜
+            rotateRight: 向右倾斜
         
-        # Camera fixtures
+        # 相机关键点s
         fixtures:
-            title: Blockbuster Fixtures
+            title: Blockbuster 定点
             
-            idle: Add Idle Camera Fixture
-            path: Add Path Camera Fixture
-            look: Add Look Camera Fixture
-            follow: Add Follow Camera Fixture
-            circular: Add Circular Camera Fixture
+            idle: 添加固定相机关键点
+            path: 添加路径相机关键点
+            look: 添加看望相机关键点
+            follow: 添加跟踪相机关键点
+            circular: 添加圆周环顾相机关键点
             
-            edit: Edit Camera Fixture
-            remove: Remove Camera Fixture
+            edit: 编辑相机关键点
+            remove: 移除相机关键点
         
         path:
-            title: Blockbuster Path Fixture
+            title: Blockbuster 路径相机关键点
             
-            add: Add Path Point
-            remove: Remove Last Path Point
+            add: 添加路径相机关键点
+            remove: 移除最后一个路径相机关键点
         
         # Roll controlling keys
         roll:
-            add: Roll clockwise
-            reduce: Roll counter-clockwise
-            reset: Reset roll
+            add: 以顺时针翻转
+            reduce: 以逆时针翻转
+            reset: 初始化翻转
         
         # Roll controlling keys
         fov:
-            add: Increase FOV
-            reduce: Reduce FOV
-            reset: Reset FOV
+            add: 增加 FOV
+            reduce: 降低 FOV
+            reset: 初始化 FOV
         
         # Duration
         duration: 
-            title: Blockbuster Fixture Duration
+            title: Blockbuster 相机关键点时长
             
-            increase: Increase Duration
-            reduce: Reduce Duration
+            increase: 增加时长
+            reduce: 降低时长
 
         # Profile management keys
         profile:
-            title: Blockbuster Camera Profile
+            title: Blockbuster 摄像机配置文件
 
-            goto: Go to Camera Fixture
-            toggle: Toggle Camera Profile Rendering
+            goto: 前往相机关键点
+            toggle: 切换摄像机渲染配置
 
-            save: Save Camera Profile
-            load: Reload Camera Profile
+            save: 保存摄像机配置
+            load: 重新加载摄像机配置
 
-            next: Next Camera Fixture
-            prev: Previous Camera Fixture
+            next: 下一个相机关键点
+            prev: 上一个相机关键点
 
-            start: Start Camera Profile
-            stop: Stop Camera Profile
+            start: 开始摄像机配置
+            stop: 停止摄像机配置
