@@ -4,7 +4,7 @@ blockbuster.success:
         stop: {f}在(%s{f}, %s{f}, %s{f})的导演方块已经停止播放了！
         
         was_registered: {f}这个演员已经链接到了导演方块！
-        attached_device: {f}这个激活设备ri已经链接到了导演方块！
+        attached_device: {f}这个激活设备已经链接到了导演方块！
     
     model.export:
         saved: {f}实体模型 %s{f} 已经保存在 %s{f}。
