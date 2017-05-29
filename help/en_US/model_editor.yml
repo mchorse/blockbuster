@@ -2,7 +2,7 @@ blockbuster.gui.me:
     save_modal: "In order to save, you should specify a name of your model."
     new_modal: "Choose a model which you want to edit or use as a template."
     add_limb_modal: "Choose a name for your new limb."
-    model_props_modal: "This modal provides a way to edit model's general properties."
+    model_props_modal: "This model provides a way to edit model's general properties."
     limb_name_modal: "Type in a new name for currently editing limb."
     limb_parent_modal: "Choose a limb you want to be parent of currently selected limb"
     pose_title_modal: "{l}Poses"

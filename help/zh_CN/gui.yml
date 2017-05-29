@@ -1,0 +1,51 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: 完成
+    next: 下一个
+    previous: 上一个
+    restore: 恢复默认
+    reset: 初始化
+    add: 添加
+    edit: 编辑
+    remove: 移除
+    detach: 脱离
+    record: 录制
+    pick: 选择生物...
+    duplicate: 拷贝
+    search: "搜索:"
+    cancel: 取消
+    break: 破坏
+    select: 选择
+    ok: 好
+    
+    confirm:
+        title: 确认破坏导演方块
+        description: 在({7}%s{f}, {7}%s{f}, {7}%s{f})的导演方块总共含{7}%s{f}个回放。你真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
+    
+    # Director block GUI strings
+    director:
+        title: 导演方块
+        add: 添加一个回放...
+        no_cast: 没有回放！
+    
+    # Actor configuration GUI strings
+    actor:
+        title: 演员设定
+        default: 默认
+        name: 名称
+        filename: 录制ID
+        invincible: 可被杀掉吗？
+        invisible: 可见？
+        attached: 演员链接
+
+    # Playback GUI
+    playback:
+        title: 播放设定
+        camera_mode: 摄像机模式
+        profile: 档案文件名称
+
+        nothing: 什么都不做
+        play: 仅播放
+        load_profile: 读取并播放
