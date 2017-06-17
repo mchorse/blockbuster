@@ -43,7 +43,7 @@ public class GuiReplay extends GuiScreen
     private String stringInvincible = I18n.format("blockbuster.gui.actor.invincible");
     private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
     private String stringAttached = I18n.format("blockbuster.gui.actor.attached");
-	private String stringClickhere = I18n.format("blockbuster.info.recording.clickhere");
+    private String stringClickhere = I18n.format("blockbuster.info.recording.clickhere");
 
     /* Domain objects, they provide data */
     private Replay replay;
