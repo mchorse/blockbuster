@@ -47,6 +47,7 @@ blockbuster.info:
         recording: %s{f} 已经在录制了。
         dead: {f}已停止录制 %s{f}，因为玩家死了。
         message: {f}如要开始录制 %s{f}, %s{f}!
+        clickhere: 点击这里
     
     # Camera profile
     profile:
