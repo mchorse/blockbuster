@@ -47,6 +47,7 @@ blockbuster.info:
         recording: %s{f} is already being recorded to.
         dead: {f}Stopped recording %s{f}, because player's dead.
         message: {f}To start recording an actor %s{f}, %s{f}!
+        clickhere: click here
     
     # Camera profile
     profile:

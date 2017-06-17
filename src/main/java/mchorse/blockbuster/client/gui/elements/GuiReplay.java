@@ -43,6 +43,7 @@ public class GuiReplay extends GuiScreen
     private String stringInvincible = I18n.format("blockbuster.gui.actor.invincible");
     private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
     private String stringAttached = I18n.format("blockbuster.gui.actor.attached");
+    private String stringClickhere = I18n.format("blockbuster.info.recording.clickhere");
 
     /* Domain objects, they provide data */
     private Replay replay;
@@ -148,7 +149,7 @@ public class GuiReplay extends GuiScreen
 
         String command = "/action record " + this.filename.getText() + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
 
-        ITextComponent component = new TextComponentString("click here");
+        ITextComponent component = new TextComponentString(stringClickhere);
         component.getStyle().setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
         component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
         component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
