@@ -31,11 +31,12 @@ blockbuster.config:
         camera_step_factor: Camera step factor
         camera_rotate_factor: Camera rotate factor
         camera_minema: Minema
-        camera_smooth_clamp: Clip camera's pitch
         camera_path_default_interp: Default path interpolation
         
         smooth:
             title: Smooth camera
+            
+            camera_smooth_clamp: Clip camera's pitch
             
             roll_speed: Roll speed
             roll_friction: Roll friction

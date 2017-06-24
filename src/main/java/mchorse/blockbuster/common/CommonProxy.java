@@ -198,4 +198,12 @@ public class CommonProxy
      */
     public void onConfigChange(Configuration config)
     {}
+
+    /**
+     * Get language string
+     */
+    public String getLanguageString(String key, String defaultComment)
+    {
+        return defaultComment;
+    }
 }

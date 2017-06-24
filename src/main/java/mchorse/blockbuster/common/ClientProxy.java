@@ -28,6 +28,7 @@ import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -237,15 +238,28 @@ public class ClientProxy extends CommonProxy
     {
         String smooth = "camera.smooth";
         String prefix = "blockbuster.config.camera.smooth.";
+        String comment = "blockbuster.config.comments.camera.smooth.";
 
-        profileRenderer.roll.friction = config.getFloat("roll_friction", smooth, 0.985F, 0.0F, 0.99999F, "Roll acceleration friction (how fast it slows down)", prefix + "roll_friction");
-        profileRenderer.fov.friction = config.getFloat("fov_friction", smooth, 0.985F, 0.0F, 0.99999F, "FOV acceleration friction (how fast it slows down)", prefix + "fov_friction");
+        profileRenderer.roll.friction = config.getFloat("roll_friction", smooth, 0.985F, 0.0F, 0.99999F, this.getLanguageString(comment + "roll_friction", "Roll acceleration friction (how fast it slows down)"), prefix + "roll_friction");
+        profileRenderer.fov.friction = config.getFloat("fov_friction", smooth, 0.985F, 0.0F, 0.99999F, this.getLanguageString(comment + "fov_friction", "FOV acceleration friction (how fast it slows down)"), prefix + "fov_friction");
 
-        profileRenderer.roll.factor = config.getFloat("roll_speed", smooth, 0.01F, 0.0F, 10.0F, "Roll acceleration speed", prefix + "roll_speed");
-        profileRenderer.fov.factor = config.getFloat("fov_speed", smooth, 0.075F, 0.0F, 10.0F, "FOV acceleration speed", prefix + "fov_speed");
+        profileRenderer.roll.factor = config.getFloat("roll_speed", smooth, 0.01F, 0.0F, 10.0F, this.getLanguageString(comment + "roll_speed", "Roll acceleration speed"), prefix + "roll_speed");
+        profileRenderer.fov.factor = config.getFloat("fov_speed", smooth, 0.075F, 0.0F, 10.0F, this.getLanguageString(comment + "fov_speed", "FOV acceleration speed"), prefix + "fov_speed");
 
-        profileRenderer.smooth.enabled = config.getBoolean("smooth_enabled", smooth, false, "Enable smooth camera", prefix + "smooth_enabled");
-        profileRenderer.smooth.fricX = config.getFloat("mouse_x_friction", smooth, 0.92F, 0.0F, 1.0F, "Smooth mouse X friction", prefix + "mouse_x_friction");
-        profileRenderer.smooth.fricY = config.getFloat("mouse_y_friction", smooth, 0.92F, 0.0F, 1.0F, "Smooth mouse Y friction", prefix + "mouse_y_friction");
+        profileRenderer.smooth.enabled = config.getBoolean("smooth_enabled", smooth, false, this.getLanguageString(comment + "smooth_enabled", "Enable smooth camera"), prefix + "smooth_enabled");
+        profileRenderer.smooth.fricX = config.getFloat("mouse_x_friction", smooth, 0.92F, 0.0F, 1.0F, this.getLanguageString(comment + "mouse_x_friction", "Smooth mouse X friction (values toward 0 more friction, values toward 1 less friction)"), prefix + "mouse_x_friction");
+        profileRenderer.smooth.fricY = config.getFloat("mouse_y_friction", smooth, 0.92F, 0.0F, 1.0F, this.getLanguageString(comment + "mouse_y_friction", "Smooth mouse Y friction (values toward 0 more friction, values toward 1 less friction)"), prefix + "mouse_y_friction");
+    }
+
+    /**
+     * Client version of get language string.
+     */
+    @Override
+    public String getLanguageString(String key, String defaultComment)
+    {
+        String comment = I18n.format(key);
+
+        return comment;
+        // return comment.equals(key) ? defaultComment : key;
     }
 }
