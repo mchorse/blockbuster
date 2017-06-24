@@ -1,7 +1,7 @@
 package mchorse.blockbuster.recording;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import mchorse.blockbuster.config.BlockbusterConfig;
 import net.minecraft.block.state.IBlockState;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
  */
 public class DamageControl
 {
-    public Map<BlockPos, BlockEntry> blocks = new HashMap<BlockPos, DamageControl.BlockEntry>();
+    public List<BlockEntry> blocks = new ArrayList<BlockEntry>();
     public EntityLivingBase target;
 
     public int maxDistance;
@@ -41,12 +41,20 @@ public class DamageControl
         double y = Math.abs(this.target.posY - pos.getY());
         double z = Math.abs(this.target.posZ - pos.getZ());
 
-        if (x > this.maxDistance || y > this.maxDistance || z > this.maxDistance || this.blocks.containsKey(pos))
+        if (x > this.maxDistance || y > this.maxDistance || z > this.maxDistance)
         {
             return;
         }
 
-        this.blocks.put(pos, new BlockEntry(pos, state));
+        for (BlockEntry entry : this.blocks)
+        {
+            if (entry.pos.getX() == pos.getX() && entry.pos.getY() == pos.getY() && entry.pos.getZ() == pos.getZ())
+            {
+                return;
+            }
+        }
+
+        this.blocks.add(new BlockEntry(pos, state));
     }
 
     /**
@@ -54,7 +62,7 @@ public class DamageControl
      */
     public void apply(World world)
     {
-        for (BlockEntry entry : this.blocks.values())
+        for (BlockEntry entry : this.blocks)
         {
             world.setBlockState(entry.pos, entry.state);
         }

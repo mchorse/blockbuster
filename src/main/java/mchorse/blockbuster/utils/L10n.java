@@ -5,7 +5,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 
 /**
  * Localization utils
@@ -70,9 +69,6 @@ public class L10n
         ITextComponent string = new TextComponentTranslation(key, objects);
 
         string.getStyle().setColor(TextFormatting.GRAY);
-
-        System.out.println(String.format(I18n.translateToLocal(key), objects));
-        System.out.println(string.getFormattedText());
 
         message.appendSibling(string);
         sender.addChatMessage(message);
