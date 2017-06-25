@@ -1,0 +1,50 @@
+blockbuster.config.comments:
+    general:
+        load_models_on_login: 给登录到服务器的玩家发送所有服务器上的模型和皮肤吗？
+        clean_model_downloads: 退出服务器后，删除下载的所有模型？
+        disable_teleport_playback_button: 当你使用播放按钮的时候，瞬移功能是否开启？
+        extra_wubs: 这个选项可能没有作用，或者有点用？
+        auto_refresh_models: 当进入Metamorph或Blockbuster的GUI时，自动刷新模型和皮肤？
+
+    recording:
+        recording_countdown: 录制倒计时（秒）
+        recording_delay: 录制的帧延迟
+        record_unload_time: 卸载一个录制需要多久？（tick）
+        record_unload: 开启自动卸载录制？
+        record_sync_rate: 与服务器同步一个回放的频率是？
+        record_attack_on_swipe: 是否录制挥手时，生物受到的伤害？
+        record_commands: 是否录制玩家输入的命令？
+
+    camera:
+        camera_duration: 相机关键点的默认时长有多久？（tick）
+        camera_duration_step: 当使用快捷键改变关键点时长时，一次会增加/减少多少？（tick）
+        camera_interpolate_target: 插入目标为基础（follow和look）的相机关键点的结果
+        camera_interpolate_target_value: 插入目标为基础相机关键点的值
+        camera_spectator: 当开始播放相机回放时切换到旁观模式？
+        camera_step_factor: 为路径帧提供的相机路径参数
+        camera_rotate_factor: 为倾斜帧提供的相机倾斜参数
+        camera_minema: 当播放相机回放时开始Minema录制，并在回放结束后关闭
+        camera_path_default_interp: 插入路径时，路径的默认类型（linear, cubic 或 hermite）
+
+        smooth:
+            camera_smooth_clamp: 在－90和90度之间，修剪平滑相机的俯仰程度？
+
+            roll_speed: 倾斜加速速度
+            roll_friction: 倾斜加速摩擦力（慢下来有多快）
+
+            fov_speed: FOV加速速度
+            fov_friction: FOV加速摩擦力（慢下来有多快）
+
+            smooth_enabled: 开启平滑相机
+            mouse_x_friction: 鼠标平滑X轴摩擦力（越接近 0 摩擦力越大，1 摩擦力越小）
+            mouse_y_friction: 鼠标平滑Y轴摩擦力（越接近 0 摩擦力越大，1 摩擦力越小）
+
+    actor:
+        actor_fall_damage: 演员是否会掉落伤害？
+        actor_tracking_range: 演员跟踪会多远？需要重启游戏。
+        actor_rendering_range: 演员多远可见？
+        actor_always_render_names: 开启无条件渲染演员名称
+
+    damage_control:
+        damage_control: 伤害控制是否开启
+        damage_control_distance: 伤害控制效果的半径范围
