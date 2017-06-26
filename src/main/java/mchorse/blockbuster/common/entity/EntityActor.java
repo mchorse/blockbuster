@@ -13,6 +13,7 @@ import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
@@ -504,10 +505,77 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     /* Public API */
 
     /**
+     * Pause the playing actor
+     */
+    public void pause()
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        this.playback.playing = false;
+        this.noClip = true;
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), true, this.playback.tick));
+        }
+    }
+
+    /**
+     * Resume the paused actor
+     */
+    public void resume(int tick)
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        this.playback.tick = tick;
+        this.playback.playing = true;
+        this.noClip = false;
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), false, this.playback.tick));
+        }
+    }
+
+    /**
+     * Make an actor go to the given tick
+     */
+    public void goTo(int tick)
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        this.playback.tick = tick;
+        this.playback.record.applyFrame(tick, this, true);
+        this.playback.record.applyAction(tick, this);
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
+        }
+    }
+
+    /**
+     * Start the playback, but with default tick argument
+     */
+    public void startPlaying(String filename, boolean kill)
+    {
+        this.startPlaying(filename, 0, kill);
+    }
+
+    /**
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
-    public void startPlaying(String filename, boolean kill)
+    public void startPlaying(String filename, int tick, boolean kill)
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
@@ -516,7 +584,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             return;
         }
 
-        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, kill, true);
+        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, tick, kill, true);
     }
 
     /**

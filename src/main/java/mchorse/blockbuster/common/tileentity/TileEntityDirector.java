@@ -34,11 +34,16 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         this.startPlayback((EntityActor) null);
     }
 
+    public void startPlayback(EntityActor exception)
+    {
+        this.startPlayback(exception, 0);
+    }
+
     /**
      * The same thing as startPlayback, but don't play the actor that is passed
      * in the arguments (because he might be recorded by the player)
      */
-    public void startPlayback(EntityActor exception)
+    public void startPlayback(EntityActor exception, int tick)
     {
         if (this.worldObj.isRemote || this.isPlaying())
         {
@@ -77,7 +82,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 firstActor = actor;
             }
 
-            actor.startPlaying(replay.id, notAttached);
+            actor.startPlaying(replay.id, tick, notAttached);
 
             if (notAttached)
             {
@@ -383,5 +388,38 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return null;
+    }
+
+    /**
+     * Pause the director block playback (basically, pause all actors)
+     */
+    public void pause()
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.pause();
+        }
+    }
+
+    /**
+     * Resume paused director block playback (basically, resume all actors)
+     */
+    public void resume(int tick)
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.resume(tick);
+        }
+    }
+
+    /**
+     * Make actors go to the given tick
+     */
+    public void goTo(int tick)
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.goTo(tick);
+        }
     }
 }

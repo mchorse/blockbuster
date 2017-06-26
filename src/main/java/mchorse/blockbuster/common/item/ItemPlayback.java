@@ -4,13 +4,10 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -134,7 +131,7 @@ public class ItemPlayback extends Item
             {
                 if (tag.hasKey("CameraPlay"))
                 {
-                    Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player);
+                    /* Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player); */
                 }
                 else if (tag.hasKey("CameraProfile"))
                 {

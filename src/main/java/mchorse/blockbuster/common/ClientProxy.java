@@ -140,6 +140,8 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
 
+        CameraHandler.register();
+
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());

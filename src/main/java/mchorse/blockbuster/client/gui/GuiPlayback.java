@@ -9,7 +9,6 @@ import mchorse.blockbuster.client.gui.widgets.GuiCompleterViewer;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
-import mchorse.blockbuster.network.common.camera.PacketRequestCameraProfiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -174,7 +173,9 @@ public class GuiPlayback extends GuiScreen
 
     private void requestCompletions()
     {
+        /* TODO: this
         Dispatcher.sendToServer(new PacketRequestCameraProfiles());
+        */
     }
 
     public void setCompletions(List<String> completions)

@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
@@ -13,6 +14,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames
 import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
+import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketCaption;
@@ -28,6 +30,8 @@ import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
+import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
+import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -49,6 +53,8 @@ import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorReset;
+import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorGoto;
+import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorPlay;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
@@ -115,6 +121,7 @@ public class Dispatcher
         /* Update actor properties */
         register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
         register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
+        register(PacketActorPause.class, ClientHandlerActorPause.class, Side.CLIENT);
         register(PacketActorRotate.class, ServerHandlerActorRotate.class, Side.SERVER);
 
         /* Recording */
@@ -148,6 +155,10 @@ public class Dispatcher
 
         register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
         register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
+
+        /* Director block syncing */
+        register(PacketDirectorGoto.class, ServerHandlerDirectorGoto.class, Side.SERVER);
+        register(PacketDirectorPlay.class, ServerHandlerDirectorPlay.class, Side.SERVER);
 
         /* Camera management */
         register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
