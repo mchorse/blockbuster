@@ -20,34 +20,6 @@ blockbuster.config:
         record_attack_on_swipe: Attack on swipe
         record_commands: Record commands
     
-    camera:
-        title: Camera
-        
-        camera_duration: Default fixture duration
-        camera_duration_step: Duration step
-        camera_interpolate_target: Interpolate target fixtures
-        camera_interpolate_target_value: Target interpolation value
-        camera_spectator: Switch to specator
-        camera_step_factor: Camera step factor
-        camera_rotate_factor: Camera rotate factor
-        camera_minema: Minema
-        camera_path_default_interp: Default path interpolation
-        
-        smooth:
-            title: Smooth camera
-            
-            camera_smooth_clamp: Clip camera's pitch
-            
-            roll_speed: Roll speed
-            roll_friction: Roll friction
-            
-            fov_speed: FOV speed
-            fov_friction: FOV friction
-            
-            smooth_enabled: Smooth camera enabled
-            mouse_x_friction: Mouse Y friction
-            mouse_y_friction: Mouse Y friction
-    
     actor:
         title: Actor
         

@@ -7,16 +7,6 @@ blockbuster.info:
     director:
         already_registered: {f}This actor is already registered by this director block!
     
-    # Camera duration
-    camera:
-        duration:
-            fixture: {f}Camera fixture at index %s{f} runs for %s{f} ticks.
-            profile: {f}Camera profile runs for %s{f} ticks and has %s{f} camera fixtures.
-        
-        # Camera roll and fov
-        fov: {f}Your field-of-view is %s{f} degrees.
-        roll: {f}Your roll is %s{f} degrees.
-    
     # General command infos
     commands:
         load_chunks: {f}Loaded all generated chunks in render distance.
@@ -48,10 +38,3 @@ blockbuster.info:
         dead: {f}Stopped recording %s{f}, because player's dead.
         message: {f}To start recording an actor %s{f}, %s{f}!
         clickhere: click here
-    
-    # Camera profile
-    profile:
-        new: {f}Created new camera profile with filename %s{f}.
-        loaded: {f}Camera profile by name %s{f} is already loaded!
-        start: {f}Current camera profile was started.
-        stop: {f}Currently running camera profile was stopped.
