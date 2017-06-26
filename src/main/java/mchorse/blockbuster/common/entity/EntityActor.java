@@ -264,7 +264,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             int tick = this.playback.tick;
 
-            if (this.playback.isFinished())
+            if (this.playback.isFinished() && !this.noClip)
             {
                 CommonProxy.manager.stopPlayback(this);
             }
@@ -681,10 +681,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         MorphUtils.morphToBuf(buffer, this.morph);
 
         buffer.writeBoolean(this.invisible);
-        buffer.writeBoolean(this.isPlaying());
+        buffer.writeBoolean(this.playback != null);
 
-        if (this.isPlaying())
+        if (this.playback != null)
         {
+            buffer.writeBoolean(this.playback.playing);
             buffer.writeInt(this.playback.tick);
             buffer.writeByte(this.playback.recordDelay);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
@@ -702,6 +703,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (buffer.readBoolean())
         {
+            boolean playing = buffer.readBoolean();
             int tick = buffer.readInt();
             int delay = buffer.readByte();
             String filename = ByteBufUtils.readUTF8String(buffer);
@@ -722,6 +724,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             {
                 this.playback.tick = tick;
                 this.playback.recordDelay = delay;
+                this.playback.playing = playing;
             }
         }
 

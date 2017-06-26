@@ -19,14 +19,12 @@ public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirect
 
             if (message.isPlay())
             {
-                if (director.isPlaying())
+                if (!director.isPlaying())
                 {
-                    director.resume(message.tick);
+                    director.spawn(message.tick);
                 }
-                else
-                {
-                    director.startPlayback(null, message.tick);
-                }
+
+                director.resume(message.tick);
             }
             else if (message.isStop())
             {
@@ -35,6 +33,10 @@ public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirect
             else if (message.isPause())
             {
                 director.pause();
+            }
+            else if (message.isStart())
+            {
+                director.spawn(message.tick);
             }
         }
     }
