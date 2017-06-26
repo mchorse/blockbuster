@@ -3,7 +3,6 @@ package mchorse.blockbuster.common.item;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.camera.PacketCameraState;
@@ -139,7 +138,7 @@ public class ItemPlayback extends Item
                 }
                 else if (tag.hasKey("CameraProfile"))
                 {
-                    CameraUtils.sendProfileToPlayer(tag.getString("CameraProfile"), (EntityPlayerMP) player, true);
+                    /* TODO: Camera profile */
                 }
             }
         }

@@ -7,14 +7,11 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
-import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderActor;
-import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -54,9 +51,6 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-
-    public static ProfileRunner profileRunner = new ProfileRunner();
-    public static ProfileRenderer profileRenderer = new ProfileRenderer();
 
     public static RecordManager manager = new RecordManager();
 
@@ -145,10 +139,8 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
-        MinecraftForge.EVENT_BUS.register(profileRenderer);
 
         /* Client commands */
-        ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());
     }
@@ -235,21 +227,7 @@ public class ClientProxy extends CommonProxy
      */
     @Override
     public void onConfigChange(Configuration config)
-    {
-        String smooth = "camera.smooth";
-        String prefix = "blockbuster.config.camera.smooth.";
-        String comment = "blockbuster.config.comments.camera.smooth.";
-
-        profileRenderer.roll.friction = config.getFloat("roll_friction", smooth, 0.985F, 0.0F, 0.99999F, this.getLanguageString(comment + "roll_friction", "Roll acceleration friction (how fast it slows down)"), prefix + "roll_friction");
-        profileRenderer.fov.friction = config.getFloat("fov_friction", smooth, 0.985F, 0.0F, 0.99999F, this.getLanguageString(comment + "fov_friction", "FOV acceleration friction (how fast it slows down)"), prefix + "fov_friction");
-
-        profileRenderer.roll.factor = config.getFloat("roll_speed", smooth, 0.01F, 0.0F, 10.0F, this.getLanguageString(comment + "roll_speed", "Roll acceleration speed"), prefix + "roll_speed");
-        profileRenderer.fov.factor = config.getFloat("fov_speed", smooth, 0.075F, 0.0F, 10.0F, this.getLanguageString(comment + "fov_speed", "FOV acceleration speed"), prefix + "fov_speed");
-
-        profileRenderer.smooth.enabled = config.getBoolean("smooth_enabled", smooth, false, this.getLanguageString(comment + "smooth_enabled", "Enable smooth camera"), prefix + "smooth_enabled");
-        profileRenderer.smooth.fricX = config.getFloat("mouse_x_friction", smooth, 0.92F, 0.0F, 1.0F, this.getLanguageString(comment + "mouse_x_friction", "Smooth mouse X friction (values toward 0 more friction, values toward 1 less friction)"), prefix + "mouse_x_friction");
-        profileRenderer.smooth.fricY = config.getFloat("mouse_y_friction", smooth, 0.92F, 0.0F, 1.0F, this.getLanguageString(comment + "mouse_y_friction", "Smooth mouse Y friction (values toward 0 more friction, values toward 1 less friction)"), prefix + "mouse_y_friction");
-    }
+    {}
 
     /**
      * Client version of get language string.
