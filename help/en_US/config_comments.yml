@@ -5,16 +5,16 @@ blockbuster.config.comments:
         disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
         extra_wubs: This option does literally nothing. Or maybe it does...?
         auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
-    
+
     recording:
         recording_countdown: Recording countdown (in seconds)
         recording_delay: Frame delay for recording
         record_unload_time: How long does it take to unload a record (in ticks)
         record_unload: Enable automatic record unloading?
-        record_sync_rate: How often a recording is going to synchronize with the server
+        record_sync_rate: How often a recording is going to synchronize with the server?
         record_attack_on_swipe: Does attack action get recorded with swipe action?
         record_commands: Does command action get recorded during recording?
-    
+
     camera:
         camera_duration: What is default duration of the camera fixture (in ticks)
         camera_duration_step: What is default step to use when adding or reducing duration of the camera fixture (in ticks)
@@ -25,20 +25,20 @@ blockbuster.config.comments:
         camera_rotate_factor: Camera rotate factor for rotate keys
         camera_minema: Enable Minema recording on camera playback, and finish Minema recording when camera finish to playback
         camera_path_default_interp: Default interpolation method for path fixture (linear, cubic or hermite)
-        
+
         smooth:
             camera_smooth_clamp: Clip smooth camera's pitch between -90 and 90 degrees range?
-            
+
             roll_speed: Roll acceleration speed
             roll_friction: Roll acceleration friction (how fast it slows down)
-            
+
             fov_speed: FOV acceleration speed
             fov_friction: FOV acceleration friction (how fast it slows down)
-            
+
             smooth_enabled: Enable smooth camera
             mouse_x_friction: Smooth mouse X friction (values toward 0 more friction, values toward 1 less friction)
             mouse_y_friction: Smooth mouse Y friction (values toward 0 more friction, values toward 1 less friction)
-    
+
     actor:
         actor_fall_damage: Do actors receive fall damage?
         actor_tracking_range: How far actors are tracked? Requires restart of the game.
