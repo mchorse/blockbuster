@@ -17,6 +17,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Camera handler
+ *
+ * This is the event listener for soft dependency integration with Aperture mod.
+ * Basically what it does is hooks up these event listeners to Aperture and GUI
+ * events and control the director block playback based on these events.
+ */
 public class CameraHandler
 {
     @Method(modid = "aperture")
@@ -50,6 +57,9 @@ public class CameraHandler
         }
     }
 
+    /**
+     * Get director block position from player's playback button
+     */
     public static BlockPos getDirectorPos()
     {
         BlockPos pos = null;
@@ -63,6 +73,13 @@ public class CameraHandler
         return pos;
     }
 
+    /**
+     * Camera editor GUI handler
+     *
+     * This is also the part of the whole camera editor thing, but for
+     * exception it only spawns actors when the camera editor GUI is getting
+     * opened.
+     */
     public static class CameraGUIHandler
     {
         @Method(modid = "aperture")
@@ -86,16 +103,6 @@ public class CameraHandler
                 {
                     /* Camera editor opens */
                     Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
-                }
-                else if (current instanceof GuiCameraEditor && toOpen != ClientProxy.cameraEditor)
-                {
-                    if (ClientProxy.runner.isRunning())
-                    {
-                        return;
-                    }
-
-                    /* Camera editor closes */
-                    Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.STOP, tick));
                 }
             }
         }
