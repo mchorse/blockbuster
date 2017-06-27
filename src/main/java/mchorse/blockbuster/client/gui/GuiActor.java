@@ -163,9 +163,8 @@ public class GuiActor extends GuiScreen
         this.done = new GuiButton(0, x, y2, w, 20, I18n.format("blockbuster.gui.done"));
         this.pick = new GuiButton(1, x, 40, w, 20, I18n.format("blockbuster.gui.pick"));
 
-        /* TODO: export language strings, lazy eh */
-        this.rotateX = new GuiSlider(-1, x, 40 + 30, w, 20, "Yaw ", "", -180, 180, this.actor.rotationYaw, false, true);
-        this.rotateY = new GuiSlider(-2, x, 40 + 30 * 2, w, 20, "Pitch ", "", -90, 90, this.actor.rotationPitch, false, true);
+        this.rotateX = new GuiSlider(-1, x, 40 + 30, w, 20, I18n.format("blockbuster.gui.actor.yaw"), "", -180, 180, this.actor.rotationYaw, false, true);
+        this.rotateY = new GuiSlider(-2, x, 40 + 30 * 2, w, 20, I18n.format("blockbuster.gui.actor.pitch"), "", -90, 90, this.actor.rotationPitch, false, true);
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
