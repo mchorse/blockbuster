@@ -49,22 +49,3 @@ blockbuster.error:
         fill_filename: {f}Please fill the {7}Recording ID{f} field!
         empty_filename: {f}Cannot record a player recording with empty {7}Recording ID{f}.
         empty_record: {f}Cannot playback record %s{f}, because it's empty!
-    
-    # Camera fixtures errors
-    fixture:
-        few_args: {f}You passed not enough arguments for this command!
-        wrong_type: {f}Camera fixture by type %s{f} doesn't exist!
-        no_entity: {f}You should look at any entity to add this fixture!
-        
-        empty: {f}This camera profile is empty!
-    
-    # Camera profile errors
-    profile:
-        empty_filename: {f}This camera profile has empty filename! In current situation, specify the {7}[filename]{f} argument, please.
-        cant_save: {f}Can't save camera profile by file name %s{f}.
-        cant_load: {f}Can't load camera profile by file name %s{f}.
-        
-        not_path: {f}Fixture at index %s{f} isn't a path fixture!
-        not_exists: {f}There's no camera fixture at %s{f} index in current camera profile!
-        no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f}!
-        move_no_path_point: {f}Path fixture at index %s{f} has no point at index %s{f} or at index %s{f}!

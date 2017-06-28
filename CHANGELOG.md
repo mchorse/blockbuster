@@ -8,10 +8,12 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 **Important**: there's a new way of recording actions was implemented. Player recordings recorded in `1.4.8`, **can't** be used in 1.4.7 and below. However, you can use actions from `1.4.7` in `1.4.8`.
 
+<a href="https://youtu.be/CoJ_6Byh6LA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a> 
+
 #### Camera
 
 * Added a config option for default path fixture interpolation
-* Added smooth cubic interpolated camera (like cinematic vanilla but Minema-friendly)
+* Added smooth cubic interpolated camera, like cinematic vanilla but Minema-friendly, see `Options > Controls > Blockbuster Misc.`
 * Added accelerated linear interpolation for roll and FOV when smooth camera enabled
 * Added `hermite` interpolation type for path fixture (`/camera edit 0 hermite`)
 

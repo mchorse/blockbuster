@@ -173,10 +173,18 @@ public class RecordManager
     }
 
     /**
+     * Version with default tick parameter
+     */
+    public boolean startPlayback(String filename, EntityActor actor, Mode mode, boolean kill, boolean notify)
+    {
+        return this.startPlayback(filename, actor, mode, 0, kill, notify);
+    }
+
+    /**
      * Start playback from given filename and given actor. You also have to
      * specify the mode of playback.
      */
-    public boolean startPlayback(String filename, EntityActor actor, Mode mode, boolean kill, boolean notify)
+    public boolean startPlayback(String filename, EntityActor actor, Mode mode, int tick, boolean kill, boolean notify)
     {
         if (this.players.containsKey(actor))
         {
@@ -197,7 +205,8 @@ public class RecordManager
             RecordPlayer player = new RecordPlayer(record, mode);
 
             actor.playback = player;
-            actor.playback.record.applyFrame(0, actor, true);
+            actor.playback.tick = tick;
+            actor.playback.record.applyFrame(tick, actor, true);
             actor.playback.kill = kill;
 
             if (notify)

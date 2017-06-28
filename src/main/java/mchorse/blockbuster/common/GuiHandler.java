@@ -47,7 +47,7 @@ public class GuiHandler implements IGuiHandler
 
         if (ID == PLAYBACK)
         {
-            return new GuiPlayback(player);
+            return new GuiPlayback();
         }
         if (ID == ACTOR)
         {

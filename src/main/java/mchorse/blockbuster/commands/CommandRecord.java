@@ -41,6 +41,12 @@ public class CommandRecord extends SubCommandBase
         return "blockbuster.commands.record.help";
     }
 
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 2;
+    }
+
     /**
      * Get record by given filename
      *

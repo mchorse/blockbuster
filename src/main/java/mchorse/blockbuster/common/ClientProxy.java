@@ -7,14 +7,11 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.camera.ProfileRunner;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
-import mchorse.blockbuster.client.ProfileRenderer;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderActor;
-import mchorse.blockbuster.commands.CommandCamera;
 import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -28,6 +25,7 @@ import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -37,6 +35,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -53,9 +52,6 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-
-    public static ProfileRunner profileRunner = new ProfileRunner();
-    public static ProfileRenderer profileRenderer = new ProfileRenderer();
 
     public static RecordManager manager = new RecordManager();
 
@@ -144,10 +140,13 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
-        MinecraftForge.EVENT_BUS.register(profileRenderer);
+
+        if (Loader.isModLoaded("aperture"))
+        {
+            CameraHandler.register();
+        }
 
         /* Client commands */
-        ClientCommandHandler.instance.registerCommand(new CommandCamera());
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());
     }
@@ -234,18 +233,17 @@ public class ClientProxy extends CommonProxy
      */
     @Override
     public void onConfigChange(Configuration config)
+    {}
+
+    /**
+     * Client version of get language string.
+     */
+    @Override
+    public String getLanguageString(String key, String defaultComment)
     {
-        String smooth = "camera.smooth";
-        String prefix = "blockbuster.config.camera.smooth.";
+        String comment = I18n.format(key);
 
-        profileRenderer.roll.friction = config.getFloat("roll_friction", smooth, 0.985F, 0.0F, 0.99999F, "Roll acceleration friction (how fast it slows down)", prefix + "roll_friction");
-        profileRenderer.fov.friction = config.getFloat("fov_friction", smooth, 0.985F, 0.0F, 0.99999F, "FOV acceleration friction (how fast it slows down)", prefix + "fov_friction");
-
-        profileRenderer.roll.factor = config.getFloat("roll_speed", smooth, 0.01F, 0.0F, 10.0F, "Roll acceleration speed", prefix + "roll_speed");
-        profileRenderer.fov.factor = config.getFloat("fov_speed", smooth, 0.075F, 0.0F, 10.0F, "FOV acceleration speed", prefix + "fov_speed");
-
-        profileRenderer.smooth.enabled = config.getBoolean("smooth_enabled", smooth, false, "Enable smooth camera", prefix + "smooth_enabled");
-        profileRenderer.smooth.fricX = config.getFloat("mouse_x_friction", smooth, 0.92F, 0.0F, 1.0F, "Smooth mouse X friction", prefix + "mouse_x_friction");
-        profileRenderer.smooth.fricY = config.getFloat("mouse_y_friction", smooth, 0.92F, 0.0F, 1.0F, "Smooth mouse Y friction", prefix + "mouse_y_friction");
+        return comment;
+        // return comment.equals(key) ? defaultComment : key;
     }
 }

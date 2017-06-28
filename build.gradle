@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
-version = "1.4.8"
+version = "1.4.9"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
@@ -42,6 +42,7 @@ dependencies {
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
 	compile files("run/mods/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
 
     // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
     //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'

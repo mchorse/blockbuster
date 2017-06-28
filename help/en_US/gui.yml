@@ -39,6 +39,8 @@ blockbuster.gui:
         invincible: Can be killed?
         invisible: Is visible?
         attached: Attached to actor
+        yaw: Yaw 
+        pitch: Pitch 
 
     # Playback GUI
     playback:

@@ -3,7 +3,7 @@ package mchorse.blockbuster.common;
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

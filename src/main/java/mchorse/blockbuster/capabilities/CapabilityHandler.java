@@ -1,7 +1,6 @@
 package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.camera.CameraUtils;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
@@ -47,12 +46,7 @@ public class CapabilityHandler
         EntityPlayer player = event.player;
         IRecording recording = Recording.get(player);
 
-        if (recording != null && recording.hasProfile())
-        {
-            CameraUtils.sendProfileToPlayer(recording.currentProfile(), (EntityPlayerMP) player, false);
-
-            recording.setCurrentProfileTimestamp(System.currentTimeMillis());
-        }
+        /* Do something? */
     }
 
     /**

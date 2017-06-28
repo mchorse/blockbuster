@@ -9,6 +9,7 @@ copy_assets:
 	cp ./README.md ./src/main/resources/README.md
 	cp ./CHANGELOG.md ./src/main/resources/CHANGELOG.md
 	cp ./LICENSE.md ./src/main/resources/LICENSE.md
+	cp ./README_CN.md ./src/main/resources/README_CN.md
 
 install: build_mod
 	rm -f ${MODS_DIR}/blockbuster-${VERSION}.jar 2> /dev/null

@@ -328,8 +328,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
     /**
      * Get currently editing pose
-     *
-     * TODO: Rename
      */
     public Model.Pose getCurrentLimbPose()
     {

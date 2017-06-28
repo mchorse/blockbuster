@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,11 +35,16 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         this.startPlayback((EntityActor) null);
     }
 
+    public void startPlayback(EntityActor exception)
+    {
+        this.startPlayback(exception, 0);
+    }
+
     /**
      * The same thing as startPlayback, but don't play the actor that is passed
      * in the arguments (because he might be recorded by the player)
      */
-    public void startPlayback(EntityActor exception)
+    public void startPlayback(EntityActor exception, int tick)
     {
         if (this.world.isRemote || this.isPlaying())
         {
@@ -77,7 +83,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 firstActor = actor;
             }
 
-            actor.startPlaying(replay.id, notAttached);
+            actor.startPlaying(replay.id, tick, notAttached);
 
             if (notAttached)
             {
@@ -383,5 +389,65 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return null;
+    }
+
+    /**
+     * Pause the director block playback (basically, pause all actors)
+     */
+    public void pause()
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.pause();
+        }
+    }
+
+    /**
+     * Resume paused director block playback (basically, resume all actors)
+     */
+    public void resume(int tick)
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.resume(tick);
+        }
+    }
+
+    /**
+     * Make actors go to the given tick
+     */
+    public void goTo(int tick)
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.goTo(tick);
+        }
+    }
+
+    /**
+     * Get maximum length of current director block
+     */
+    public int getMaxLength()
+    {
+        int max = 0;
+
+        for (Replay replay : this.replays)
+        {
+            Record record = null;
+
+            try
+            {
+                record = CommonProxy.manager.getRecord(replay.id);
+            }
+            catch (Exception e)
+            {}
+
+            if (record != null)
+            {
+                max = Math.max(max, record.getLength());
+            }
+        }
+
+        return max;
     }
 }

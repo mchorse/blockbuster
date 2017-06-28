@@ -1,0 +1,63 @@
+# Config strings
+blockbuster.config:
+    general:
+        title: 通用
+
+        load_models_on_login: 发送模型
+        clean_model_downloads: 清除模型的下载内容
+        disable_teleport_playback_button: 关闭播放后瞬移功能
+        extra_wubs: 附加的杂物
+        auto_refresh_models: 刷新模型和皮肤
+
+    recording:
+        title: 录制
+
+        recording_countdown: 录制倒计时
+        recording_delay: 录制跳过帧
+        record_unload_time: 自动卸载录制的时间
+        record_unload: 自动卸载录制的
+        record_sync_rate: 录制tick的同步率
+        record_attack_on_swipe: 挥动手攻击
+        record_commands: 录制命令
+
+    camera:
+        title: 相机
+
+        camera_duration: 默认关键点时长
+        camera_duration_step: 时长步骤
+        camera_interpolate_target: 插入以目标为基础的帧
+        camera_interpolate_target_value: 插入以目标为基础的值
+        camera_spectator: 切换到旁观模式
+        camera_step_factor: 相机路径参数
+        camera_rotate_factor: 相机倾斜参数
+        camera_minema: Minema
+        camera_path_default_interp: 默认插入路径类型
+
+        smooth:
+            title: 平滑相机
+
+            camera_smooth_clamp: 修剪相机俯仰程度
+
+            roll_speed: 倾斜速度
+            roll_friction: 倾斜摩擦力
+
+            fov_speed: FOV 速度
+            fov_friction: FOV 摩擦力
+
+            smooth_enabled: 开启平滑相机
+            mouse_x_friction: 鼠标X轴摩擦力
+            mouse_y_friction: 鼠标Y轴摩擦力
+
+    actor:
+        title: 演员
+
+        actor_fall_damage: 演员掉落伤害
+        actor_tracking_range: 演员跟踪范围
+        actor_rendering_range: 演员渲染范围
+        actor_always_render_names: 总是渲染演员的名称
+
+    damage_control:
+        title: 伤害控制
+
+        damage_control: 伤害控制
+        damage_control_distance: 伤害距离
