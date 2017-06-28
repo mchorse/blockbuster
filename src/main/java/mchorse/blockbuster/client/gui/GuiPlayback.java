@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.aperture.camera.CameraAPI;
@@ -60,6 +61,19 @@ public class GuiPlayback extends GuiScreen
     public void handleMouseInput() throws IOException
     {
         super.handleMouseInput();
+
+        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+        if (this.area.isInside(x, y))
+        {
+            int scroll = -Mouse.getEventDWheel();
+
+            if (scroll != 0)
+            {
+                this.area.scrollBy((int) Math.copySign(2, scroll));
+            }
+        }
     }
 
     @Override
@@ -208,14 +222,16 @@ public class GuiPlayback extends GuiScreen
 
         if (isCameraProfile)
         {
-            GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, this.width, this.height);
-
             int x = this.area.x;
-            int y = this.area.y - this.area.scroll;
+            int y = this.area.y;
             int w = this.area.w;
-            int i = 0;
 
-            Gui.drawRect(x, y, x + this.area.w, y + this.area.h, 0x88000000);
+            Gui.drawRect(x, y, x + w, y + this.area.h, 0x88000000);
+            GuiUtils.scissor(x, y, w, this.area.h, this.width, this.height);
+
+            y -= this.area.scroll;
+
+            int i = 0;
 
             for (AbstractDestination dest : this.profiles)
             {
