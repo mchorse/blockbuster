@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
@@ -421,5 +422,32 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         {
             actor.goTo(tick);
         }
+    }
+
+    /**
+     * Get maximum length of current director block
+     */
+    public int getMaxLength()
+    {
+        int max = 0;
+
+        for (Replay replay : this.replays)
+        {
+            Record record = null;
+
+            try
+            {
+                record = CommonProxy.manager.getRecord(replay.id);
+            }
+            catch (Exception e)
+            {}
+
+            if (record != null)
+            {
+                max = Math.max(max, record.getLength());
+            }
+        }
+
+        return max;
     }
 }

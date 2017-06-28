@@ -22,7 +22,7 @@ public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
         EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
         RecordPlayer playback = actor.playback;
 
-        if (playback != null)
+        if (playback != null && playback.record != null)
         {
             playback.tick = message.tick;
             playback.delay = playback.record != null ? playback.delay : playback.recordDelay;

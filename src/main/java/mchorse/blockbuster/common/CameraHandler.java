@@ -8,11 +8,15 @@ import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientHandlerCameraProfileList;
+import mchorse.blockbuster.network.client.ClientHandlerSceneLength;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.network.common.camera.PacketRequestLength;
 import mchorse.blockbuster.network.common.camera.PacketRequestProfiles;
+import mchorse.blockbuster.network.common.camera.PacketSceneLength;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.network.server.ServerHandlerRequestProfiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,6 +37,11 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class CameraHandler
 {
+    /**
+     * Tick which is used to set the value of the camera editor scrub back
+     */
+    public static int tick = 0;
+
     @Method(modid = "aperture")
     public static void register()
     {
@@ -47,6 +56,9 @@ public class CameraHandler
         Dispatcher.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
         Dispatcher.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
+
+        Dispatcher.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
+        Dispatcher.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
     @Method(modid = "aperture")
@@ -118,7 +130,10 @@ public class CameraHandler
                 if (current != ClientProxy.cameraEditor && toOpen instanceof GuiCameraEditor)
                 {
                     /* Camera editor opens */
+                    CameraHandler.tick = tick;
+
                     Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
+                    Dispatcher.sendToServer(new PacketRequestLength(pos));
                 }
             }
         }
