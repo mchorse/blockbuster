@@ -1,11 +1,11 @@
-package mchorse.blockbuster.network.common;
+package mchorse.blockbuster.network.common.camera;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketCameraMarker implements IMessage
+public class PacketRequestProfiles implements IMessage
 {
-    public PacketCameraMarker()
+    public PacketRequestProfiles()
     {}
 
     @Override

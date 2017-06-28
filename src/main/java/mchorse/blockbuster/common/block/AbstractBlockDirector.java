@@ -17,6 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * <p>
@@ -148,7 +149,11 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
         }
 
         ItemPlayback.saveBlockPos("Dir", item, pos);
-        GuiHandler.open(player, GuiHandler.PLAYBACK, 0, 0, 0);
+
+        if (Loader.isModLoaded("aperture"))
+        {
+            GuiHandler.open(player, GuiHandler.PLAYBACK, 0, 0, 0);
+        }
 
         return true;
     }

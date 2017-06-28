@@ -22,8 +22,6 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
         compound.removeTag("CameraPlay");
         compound.removeTag("CameraProfile");
 
-        if (message.mode == 0) return;
-
         if (message.mode == 1)
         {
             compound.setBoolean("CameraPlay", true);

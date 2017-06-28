@@ -1,7 +1,6 @@
-package mchorse.blockbuster.network.common;
+package mchorse.blockbuster.network.common.director;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.network.common.director.PacketDirector;
 import net.minecraft.util.math.BlockPos;
 
 public class PacketDirectorDuplicate extends PacketDirector

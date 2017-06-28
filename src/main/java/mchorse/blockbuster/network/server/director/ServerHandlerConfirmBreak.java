@@ -1,7 +1,8 @@
-package mchorse.blockbuster.network.server;
+package mchorse.blockbuster.network.server.director;
 
 import mchorse.blockbuster.common.block.BlockDirector;
-import mchorse.blockbuster.network.common.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
+import mchorse.blockbuster.network.server.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 

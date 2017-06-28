@@ -3,7 +3,7 @@ package mchorse.blockbuster.client.gui;
 import java.io.IOException;
 
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

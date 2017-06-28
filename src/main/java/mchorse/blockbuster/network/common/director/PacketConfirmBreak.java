@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common;
+package mchorse.blockbuster.network.common.director;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;

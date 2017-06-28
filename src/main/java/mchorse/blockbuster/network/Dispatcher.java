@@ -1,11 +1,12 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.CameraHandler;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
-import mchorse.blockbuster.network.client.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
+import mchorse.blockbuster.network.client.director.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
@@ -16,16 +17,15 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
-import mchorse.blockbuster.network.common.PacketCameraMarker;
 import mchorse.blockbuster.network.common.PacketCaption;
-import mchorse.blockbuster.network.common.PacketConfirmBreak;
-import mchorse.blockbuster.network.common.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketRequestModels;
+import mchorse.blockbuster.network.common.PacketTickMarker;
+import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.network.common.director.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
@@ -42,11 +42,10 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
-import mchorse.blockbuster.network.server.ServerHandlerCameraMarker;
-import mchorse.blockbuster.network.server.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
-import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
+import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
+import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorAdd;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDuplicate;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
@@ -63,6 +62,7 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -160,19 +160,23 @@ public class Dispatcher
         register(PacketDirectorGoto.class, ServerHandlerDirectorGoto.class, Side.SERVER);
         register(PacketDirectorPlay.class, ServerHandlerDirectorPlay.class, Side.SERVER);
 
-        /* Camera management */
-        register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
-        register(PacketCameraMarker.class, ServerHandlerCameraMarker.class, Side.SERVER);
-
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
         register(PacketRequestModels.class, ServerHandlerRequestModels.class, Side.SERVER);
+
+        /* Miscellaneous */
+        register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+
+        if (Loader.isModLoaded("aperture"))
+        {
+            CameraHandler.registerMessages();
+        }
     }
 
     /**
      * Register given message with given message handler on a given side
      */
-    private static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
+    public static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
     {
         DISPATCHER.registerMessage(handler, message, PACKET_ID++, side);
     }

@@ -2,12 +2,14 @@ package mchorse.blockbuster.common.item;
 
 import java.util.List;
 
+import mchorse.aperture.camera.CameraAPI;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -131,11 +134,11 @@ public class ItemPlayback extends Item
             {
                 if (tag.hasKey("CameraPlay"))
                 {
-                    /* Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player); */
+                    CameraAPI.playCurrentProfile((EntityPlayerMP) player);
                 }
                 else if (tag.hasKey("CameraProfile"))
                 {
-                    /* TODO: Camera profile */
+                    CameraAPI.playCameraProfile((EntityPlayerMP) player, new ResourceLocation(tag.getString("CameraProfile")));
                 }
             }
         }

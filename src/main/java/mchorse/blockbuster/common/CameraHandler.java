@@ -4,10 +4,16 @@ import mchorse.aperture.ClientProxy;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorPlaybackStateEvent;
 import mchorse.aperture.events.CameraEditorScrubbedEvent;
+import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.client.ClientHandlerCameraProfileList;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.network.common.camera.PacketRequestProfiles;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.network.server.ServerHandlerRequestProfiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
@@ -16,6 +22,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Camera handler
@@ -31,6 +38,15 @@ public class CameraHandler
     {
         ClientProxy.EVENT_BUS.register(new CameraHandler());
         MinecraftForge.EVENT_BUS.register(new CameraGUIHandler());
+    }
+
+    @Method(modid = "aperture")
+    public static void registerMessages()
+    {
+        /* Camera management */
+        Dispatcher.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+        Dispatcher.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
+        Dispatcher.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
     }
 
     @Method(modid = "aperture")

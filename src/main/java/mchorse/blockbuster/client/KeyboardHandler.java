@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketCameraMarker;
+import mchorse.blockbuster.network.common.PacketTickMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -58,7 +58,7 @@ public class KeyboardHandler
     {
         if (this.cameraMarker.isPressed())
         {
-            Dispatcher.sendToServer(new PacketCameraMarker());
+            Dispatcher.sendToServer(new PacketTickMarker());
         }
 
         if (this.modelEditor.isPressed())
