@@ -48,9 +48,9 @@ blockbuster:
             
             export:
                 |
-                    {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
+                    {l}{6}/{r}model {8}export{r} {7}<entity_name> [entity_tag]{r}
                     
-                    {r}Exports model from {7}<entity_name>{r} mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder.
+                    {r}Exports model from {7}<entity_name>{r} mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder. Optionally you can provide {7}[entity_tag]{r} to generate a model from entity with specific data.
                     
                     {r}{l}Attention{r}: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
             
