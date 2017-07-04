@@ -95,6 +95,6 @@ public class SubCommandModelExport extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        return args.length == 1 ? getListOfStringsFromIterableMatchingLastWord(args, EntityList.func_151515_b()) : Collections.<String> emptyList();
+        return args.length == 1 ? getListOfStringsFromIterableMatchingLastWord(args, EntityList.stringToClassMapping.keySet()) : Collections.<String> emptyList();
     }
 }
