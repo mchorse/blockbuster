@@ -1,6 +1,8 @@
 package mchorse.blockbuster.commands;
 
+import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelRequest;
+import net.minecraft.command.ICommandSender;
 
 /**
  * Command /model
@@ -17,6 +19,13 @@ public class CommandModel extends SubCommandBase
     public CommandModel()
     {
         this.add(new SubCommandModelRequest());
+        this.add(new SubCommandModelExport());
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_)
+    {
+        return true;
     }
 
     @Override

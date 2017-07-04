@@ -19,6 +19,7 @@ import mchorse.blockbuster.commands.fixture.SubCommandFixtureMove;
 import mchorse.blockbuster.commands.fixture.SubCommandFixturePath;
 import mchorse.blockbuster.commands.fixture.SubCommandFixtureRemove;
 import mchorse.blockbuster.common.ClientProxy;
+import net.minecraft.command.ICommandSender;
 
 /**
  * Command /camera
@@ -105,6 +106,12 @@ public class CommandCamera extends SubCommandBase
     public String getCommandName()
     {
         return "camera";
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_)
+    {
+        return true;
     }
 
     @Override
