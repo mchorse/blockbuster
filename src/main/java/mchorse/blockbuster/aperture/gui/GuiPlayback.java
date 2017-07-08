@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui;
+package mchorse.blockbuster.aperture.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.utils.ScrollArea;
+import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
-import mchorse.blockbuster.network.common.camera.PacketRequestProfiles;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

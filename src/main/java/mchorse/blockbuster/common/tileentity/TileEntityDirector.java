@@ -225,11 +225,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      * positioning cameras for exact positions.
      */
     @Override
-    public void spawn(int tick)
+    public boolean spawn(int tick)
     {
         if (this.replays.isEmpty())
         {
-            return;
+            return false;
         }
 
         if (!this.actors.isEmpty())
@@ -243,7 +243,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             {
                 Utils.broadcastError("director.empty_filename");
 
-                return;
+                return false;
             }
         }
 
@@ -271,6 +271,8 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.playBlock(true);
+
+        return true;
     }
 
     /**

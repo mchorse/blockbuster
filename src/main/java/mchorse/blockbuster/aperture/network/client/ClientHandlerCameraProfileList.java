@@ -1,8 +1,9 @@
-package mchorse.blockbuster.network.client;
+package mchorse.blockbuster.aperture.network.client;
 
 import mchorse.aperture.camera.destination.ServerDestination;
 import mchorse.aperture.network.common.PacketCameraProfileList;
-import mchorse.blockbuster.client.gui.GuiPlayback;
+import mchorse.blockbuster.aperture.gui.GuiPlayback;
+import mchorse.blockbuster.network.client.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;

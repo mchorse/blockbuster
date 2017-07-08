@@ -15,6 +15,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
@@ -556,6 +557,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.playback.tick = tick;
         this.playback.record.applyFrame(tick, this, true);
         this.playback.record.applyAction(tick, this);
+        this.playback.record.resetUnload();
 
         if (this.isServerWorld())
         {
@@ -717,6 +719,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 else
                 {
                     this.playback = new RecordPlayer(null, Mode.FRAMES);
+
+                    Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
                 }
             }
 

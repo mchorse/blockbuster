@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common.camera;
+package mchorse.blockbuster.aperture.network.common;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
