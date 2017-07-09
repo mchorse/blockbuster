@@ -554,6 +554,14 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             return;
         }
 
+        int min = Math.min(this.playback.tick, tick);
+        int max = Math.max(this.playback.tick, tick);
+
+        for (int i = min; i < max; i++)
+        {
+            this.playback.record.applyAction(i, this);
+        }
+
         this.playback.tick = tick;
         this.playback.record.applyFrame(tick, this, true);
         this.playback.record.applyAction(tick, this);

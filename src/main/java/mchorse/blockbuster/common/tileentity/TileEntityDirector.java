@@ -248,12 +248,20 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         this.collectActors();
+        this.playBlock(true);
+
+        int j = 0;
 
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
             EntityActor actor = entry.getValue();
             boolean notAttached = replay.actor == null;
+
+            if (j == 0)
+            {
+                CommonProxy.manager.addDamageControl(this, actor);
+            }
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -262,15 +270,20 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 actor.playback.playing = false;
                 actor.playback.record.applyFrame(tick, actor, true);
                 actor.noClip = true;
+
+                for (int i = 0; i <= tick; i++)
+                {
+                    actor.playback.record.applyAction(i, actor);
+                }
             }
 
             if (notAttached)
             {
                 this.worldObj.spawnEntityInWorld(actor);
             }
-        }
 
-        this.playBlock(true);
+            j++;
+        }
 
         return true;
     }
@@ -420,9 +433,14 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      */
     public void goTo(int tick)
     {
-        for (EntityActor actor : this.actors.values())
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
-            actor.goTo(tick);
+            if (tick == 0)
+            {
+                entry.getKey().apply(entry.getValue());
+            }
+
+            entry.getValue().goTo(tick);
         }
     }
 
