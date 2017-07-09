@@ -1,9 +1,9 @@
 package mchorse.blockbuster.network.server;
 
+import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
+import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.camera.PacketRequestLength;
-import mchorse.blockbuster.network.common.camera.PacketSceneLength;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 

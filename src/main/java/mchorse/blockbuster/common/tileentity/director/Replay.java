@@ -55,6 +55,7 @@ public class Replay
         }
 
         actor.invisible = this.invisible;
+        actor.notifyPlayers();
     }
 
     /**

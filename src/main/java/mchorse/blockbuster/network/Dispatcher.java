@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.CameraHandler;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
@@ -62,7 +62,6 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -167,7 +166,7 @@ public class Dispatcher
         /* Miscellaneous */
         register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
 
-        if (Loader.isModLoaded("aperture"))
+        if (CameraHandler.isApertureLoaded())
         {
             CameraHandler.registerMessages();
         }

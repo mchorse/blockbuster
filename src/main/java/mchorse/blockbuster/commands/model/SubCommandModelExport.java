@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -22,6 +23,8 @@ import net.minecraft.command.server.CommandSummon;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -64,6 +67,23 @@ public class SubCommandModelExport extends CommandBase
         /* Gather needed elements for exporter class */
         String type = args[0];
         Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(type), sender.getEntityWorld());
+
+        if (args.length > 1)
+        {
+            try
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+
+                entity.writeToNBT(tag);
+                tag.merge(JsonToNBT.getTagFromJson(CommandMorph.mergeArgs(args, 1)));
+                entity.readFromNBT(tag);
+            }
+            catch (Exception e)
+            {
+                throw new CommandException("metamorph.error.morph.nbt", e.getMessage());
+            }
+        }
+
         Render render = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);
 
         if (render == null || !(render instanceof RenderLivingBase) || !(entity instanceof EntityLivingBase))

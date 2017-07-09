@@ -1,8 +1,9 @@
-package mchorse.blockbuster.network.client;
+package mchorse.blockbuster.aperture.network.client;
 
 import mchorse.aperture.ClientProxy;
-import mchorse.blockbuster.common.CameraHandler;
-import mchorse.blockbuster.network.common.camera.PacketSceneLength;
+import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
+import mchorse.blockbuster.network.client.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

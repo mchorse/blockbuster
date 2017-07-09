@@ -89,10 +89,6 @@ public class CommandDirector extends CommandBase
             boolean isPlaying = director.togglePlayback();
             L10n.success(sender, isPlaying ? play : stop, args[1], args[2], args[3]);
         }
-        else if (action.equals("spawn") && args.length > 4)
-        {
-            director.spawn(CommandBase.parseInt(args[4]));
-        }
     }
 
     /**

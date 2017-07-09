@@ -1,6 +1,7 @@
 package mchorse.blockbuster.common.block;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import net.minecraft.block.Block;
@@ -17,7 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
 
 /**
  * <p>
@@ -150,7 +150,7 @@ public abstract class AbstractBlockDirector extends Block implements ITileEntity
 
         ItemPlayback.saveBlockPos("Dir", item, pos);
 
-        if (Loader.isModLoaded("aperture"))
+        if (CameraHandler.isApertureLoaded())
         {
             GuiHandler.open(player, GuiHandler.PLAYBACK, 0, 0, 0);
         }

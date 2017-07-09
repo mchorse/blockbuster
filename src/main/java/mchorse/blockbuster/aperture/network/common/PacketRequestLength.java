@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common.camera;
+package mchorse.blockbuster.aperture.network.common;
 
 import mchorse.blockbuster.network.common.director.PacketDirector;
 import net.minecraft.util.math.BlockPos;

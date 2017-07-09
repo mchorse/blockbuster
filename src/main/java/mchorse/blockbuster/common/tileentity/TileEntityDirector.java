@@ -225,11 +225,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      * positioning cameras for exact positions.
      */
     @Override
-    public void spawn(int tick)
+    public boolean spawn(int tick)
     {
         if (this.replays.isEmpty())
         {
-            return;
+            return false;
         }
 
         if (!this.actors.isEmpty())
@@ -243,17 +243,25 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             {
                 Utils.broadcastError("director.empty_filename");
 
-                return;
+                return false;
             }
         }
 
         this.collectActors();
+        this.playBlock(true);
+
+        int j = 0;
 
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
             EntityActor actor = entry.getValue();
             boolean notAttached = replay.actor == null;
+
+            if (j == 0)
+            {
+                CommonProxy.manager.addDamageControl(this, actor);
+            }
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -262,15 +270,22 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 actor.playback.playing = false;
                 actor.playback.record.applyFrame(tick, actor, true);
                 actor.noClip = true;
+
+                for (int i = 0; i <= tick; i++)
+                {
+                    actor.playback.record.applyAction(i, actor);
+                }
             }
 
             if (notAttached)
             {
                 this.world.spawnEntity(actor);
             }
+
+            j++;
         }
 
-        this.playBlock(true);
+        return true;
     }
 
     /**
@@ -418,9 +433,14 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      */
     public void goTo(int tick)
     {
-        for (EntityActor actor : this.actors.values())
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
-            actor.goTo(tick);
+            if (tick == 0)
+            {
+                entry.getKey().apply(entry.getValue());
+            }
+
+            entry.getValue().goTo(tick);
         }
     }
 
