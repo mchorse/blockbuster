@@ -4,9 +4,9 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
+                {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
                 
-                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There's also {7}spawn{r} action which will spawn idle actors on {7}[tick]{r} tick ({7}[tick]{r} argument used only by this action).
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates).
 
         # Record's commands
         record:
