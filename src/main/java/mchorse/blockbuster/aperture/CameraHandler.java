@@ -78,13 +78,17 @@ public class CameraHandler
     @Method(modid = "aperture")
     public static void handlePlaybackItem(EntityPlayer player, NBTTagCompound tag)
     {
-        if (tag.hasKey("CameraPlay"))
+        /* To allow actors using playback item without a crash */
+        if (player instanceof EntityPlayerMP)
         {
-            CameraAPI.playCurrentProfile((EntityPlayerMP) player);
-        }
-        else if (tag.hasKey("CameraProfile"))
-        {
-            CameraAPI.playCameraProfile((EntityPlayerMP) player, new ResourceLocation(tag.getString("CameraProfile")));
+            if (tag.hasKey("CameraPlay"))
+            {
+                CameraAPI.playCurrentProfile((EntityPlayerMP) player);
+            }
+            else if (tag.hasKey("CameraProfile"))
+            {
+                CameraAPI.playCameraProfile((EntityPlayerMP) player, new ResourceLocation(tag.getString("CameraProfile")));
+            }
         }
     }
 
