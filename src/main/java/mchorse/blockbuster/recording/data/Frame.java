@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -64,7 +63,7 @@ public class Frame
 
         /* Position and rotation */
         this.x = mount.posX;
-        this.y = mount.posY;
+        this.y = player.isRiding() && player.getRidingEntity().posY > player.posY ? player.posY : mount.posY;
         this.z = mount.posZ;
 
         this.yaw = player.rotationYaw;
@@ -109,29 +108,14 @@ public class Frame
     {
         boolean isRemote = actor.worldObj.isRemote;
 
-        /* Gotta ride the pig to simulate the sitting on the stairs, or at least
-         * try simulating that */
-        if (isRemote)
-        {
-            if (this.isMounted && !actor.isRiding())
-            {
-                EntityPig pig = new EntityPig(actor.worldObj);
-
-                pig.setNoAI(true);
-                actor.startRiding(pig);
-            }
-            else if (!this.isMounted && actor.isRiding())
-            {
-                actor.dismountRidingEntity();
-            }
-        }
-
         Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
 
         if (mount instanceof EntityActor)
         {
             mount = actor;
         }
+
+        actor.isMounted = this.isMounted;
 
         /* This is most important part of the code that makes the recording
          * super smooth.

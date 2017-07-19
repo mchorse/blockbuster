@@ -104,6 +104,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public float rotateElytraY = 0.0F;
     public float rotateElytraZ = 0.0F;
 
+    /**
+     * Whether this actor is mounted
+     */
+    public boolean isMounted;
+
     public EntityActor(World worldIn)
     {
         super(worldIn);
