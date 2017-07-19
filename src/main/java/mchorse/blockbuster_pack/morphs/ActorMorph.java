@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.morphs;
 import com.google.common.base.Objects;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -170,7 +171,7 @@ public class ActorMorph extends CustomMorph
 
         if (tag.hasKey("Skin", 8))
         {
-            this.skin = new ResourceLocation(tag.getString("Skin"));
+            this.skin = new TextureLocation(tag.getString("Skin"));
         }
     }
 }

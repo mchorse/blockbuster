@@ -6,6 +6,7 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -13,7 +14,6 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -143,7 +143,7 @@ public class BlockbusterFactory implements IMorphFactory
                 ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
                 String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
 
-                actor.skin = new ResourceLocation("blockbuster.actors", path);
+                actor.skin = new TextureLocation("blockbuster.actors", path);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
 
                 for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
