@@ -292,7 +292,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     @Override
     public void update()
     {
-        if (Blockbuster.proxy.config.debug_playback_ticks)
+        if (Blockbuster.proxy.config.debug_playback_ticks && !this.actors.isEmpty())
         {
             EntityActor actor = this.actors.values().iterator().next();
 
