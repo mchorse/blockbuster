@@ -43,58 +43,10 @@ public class BlockbusterConfig
      */
     public boolean auto_refresh_models;
 
-    /* Camera */
-
     /**
-     * Camera duration step (used by keyboard duration bindings)
+     * Write ticks in the log during director block recording
      */
-    public int camera_duration_step;
-
-    /**
-     * Default camera duration (used by keyboard fixture bindings)
-     */
-    public int camera_duration;
-
-    /**
-     * Interpolate target fixtures position?
-     */
-    public boolean camera_interpolate_target;
-
-    /**
-     * Ratio for target fixtures interpolation
-     */
-    public float camera_interpolate_target_value;
-
-    /**
-     * Switch to spectator mode when starting camera playback?
-     */
-    public boolean camera_spectator;
-
-    /**
-     * Factor for step keys
-     */
-    public float camera_step_factor;
-
-    /**
-     * Factor for rotate keys
-     */
-    public float camera_rotate_factor;
-
-    /**
-     * Enable Minema recording on camera playback, and finish Minema recording
-     * when camera finish to playback
-     */
-    public boolean camera_minema;
-
-    /**
-     * Clamp smooth camera's pitch between -90 and 90 degrees range?
-     */
-    public boolean camera_smooth_clamp;
-
-    /**
-     * Default camera path interpolation method
-     */
-    public String camera_path_default_interp;
+    public boolean debug_playback_ticks;
 
     /* Recording */
 
@@ -189,7 +141,6 @@ public class BlockbusterConfig
     {
         String general = Configuration.CATEGORY_GENERAL;
         String recording = "recording";
-        String camera = "camera";
         String actor = "actor";
         String damage = "damage_control";
 
@@ -199,20 +150,7 @@ public class BlockbusterConfig
         this.disable_teleport_playback_button = this.getBoolean("disable_teleport_playback_button", general, false, "Is teleport feature disabled when you sneak and using the playback button?");
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");
-
-        /* Camera */
-        this.camera_duration_step = this.getInt("camera_duration_step", camera, 10, 1, 100, "What is default step to use when adding or reducing duration of the camera fixture (in ticks)");
-        this.camera_duration = this.getInt("camera_duration", camera, 30, 1, 1000, "What is default duration of the camera fixture (in ticks)");
-        this.camera_interpolate_target = this.getBoolean("camera_interpolate_target", camera, false, "Interpolate target based camera fixtures' (follow and look) outcome");
-        this.camera_interpolate_target_value = this.getFloat("camera_interpolate_target_value", camera, 0.5F, 0.0F, 1.0F, "Interpolation value for target based camera fixture interpolation");
-        this.camera_spectator = this.getBoolean("camera_spectator", camera, true, "Switch to spectator mode when starting camera playback?");
-        this.camera_step_factor = this.getFloat("camera_step_factor", camera, 0.01F, 0, 10, "Camera step factor for step keys");
-        this.camera_rotate_factor = this.getFloat("camera_rotate_factor", camera, 0.1F, 0, 10, "Camera rotate factor for rotate keys");
-        this.camera_minema = this.getBoolean("camera_minema", camera, false, "Enable Minema recording on camera playback, and finish Minema recording when camera finish to playback");
-        this.camera_path_default_interp = this.getString("camera_path_default_interp", camera, "linear", "Default interpolation method for path fixture (linear, cubic or hermite)");
-
-        /* Smooth camera */
-        this.camera_smooth_clamp = this.getBoolean("camera_smooth_clamp", "camera.smooth", true, "Clip smooth camera's pitch between -90 and 90 degrees range?");
+        this.debug_playback_ticks = this.getBoolean("debug_playback_ticks", general, false, "Write ticks in the log during director block recording");
 
         /* Recording */
         this.recording_countdown = this.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown (in seconds)");

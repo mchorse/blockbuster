@@ -1,5 +1,7 @@
 package mchorse.blockbuster;
 
+import org.apache.logging.log4j.Logger;
+
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandRecord;
@@ -79,6 +81,8 @@ public class Blockbuster
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
     public static CommonProxy proxy;
 
+    public static Logger LOGGER;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
@@ -91,6 +95,8 @@ public class Blockbuster
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
+        LOGGER = event.getModLog();
+
         proxy.preLoad(event);
     }
 
