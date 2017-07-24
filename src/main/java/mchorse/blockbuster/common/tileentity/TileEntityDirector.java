@@ -3,6 +3,7 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -286,6 +287,22 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return true;
+    }
+
+    @Override
+    public void update()
+    {
+        if (Blockbuster.proxy.config.debug_playback_ticks)
+        {
+            EntityActor actor = this.actors.values().iterator().next();
+
+            if (actor.playback != null)
+            {
+                Blockbuster.LOGGER.info("Director tick: " + actor.playback.tick);
+            }
+        }
+
+        super.update();
     }
 
     /**
