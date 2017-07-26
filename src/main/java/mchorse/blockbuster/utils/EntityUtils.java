@@ -6,11 +6,9 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -82,9 +80,9 @@ public class EntityUtils
     public static Entity getTargetEntity(Entity input, double maxReach)
     {
         double blockDistance = maxReach;
-        RayTraceResult result = input.rayTrace(maxReach, 1.0F);
 
-        Vec3d eyes = input.getPositionEyes(1.0F);
+        RayTraceResult result = rayTrace(input, maxReach, 1.0F);
+        Vec3d eyes = new Vec3d(input.posX, input.posY + input.getEyeHeight(), input.posZ);
 
         if (result != null)
         {
@@ -97,14 +95,14 @@ public class EntityUtils
 
         float area = 1.0F;
 
-        List<Entity> list = input.world.getEntitiesInAABBexcluding(input, input.getEntityBoundingBox().addCoord(look.xCoord * maxReach, look.yCoord * maxReach, look.zCoord * maxReach).expand(area, area, area), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
+        List<Entity> list = input.world.getEntitiesInAABBexcluding(input, input.getEntityBoundingBox().addCoord(look.xCoord * maxReach, look.yCoord * maxReach, look.zCoord * maxReach).expand(area, area, area), new Predicate<Entity>()
         {
             @Override
             public boolean apply(@Nullable Entity entity)
             {
                 return entity != null && entity.canBeCollidedWith();
             }
-        }));
+        });
 
         double entityDistance = blockDistance;
 
@@ -151,5 +149,18 @@ public class EntityUtils
         }
 
         return target;
+    }
+
+    /**
+     * This method is extracted from {@link Entity} class, because it was marked
+     * as client side only code.
+     */
+    public static RayTraceResult rayTrace(Entity input, double blockReachDistance, float partialTicks)
+    {
+        Vec3d eyePos = new Vec3d(input.posX, input.posY + input.getEyeHeight(), input.posZ);
+        Vec3d eyeDir = input.getLook(partialTicks);
+        Vec3d eyeReach = eyePos.addVector(eyeDir.xCoord * blockReachDistance, eyeDir.yCoord * blockReachDistance, eyeDir.zCoord * blockReachDistance);
+
+        return input.world.rayTraceBlocks(eyePos, eyeReach, false, false, true);
     }
 }
