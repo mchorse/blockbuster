@@ -127,11 +127,11 @@ public class ActorMorph extends CustomMorph
             }
         }
 
-        return super.equals(object);
+        return result;
     }
 
     @Override
-    public AbstractMorph clone(boolean clone)
+    public AbstractMorph clone(boolean isRemote)
     {
         ActorMorph morph = new ActorMorph();
 
@@ -147,7 +147,11 @@ public class ActorMorph extends CustomMorph
         morph.action = this.action;
 
         morph.model = this.model;
-        morph.renderer = this.renderer;
+
+        if (isRemote)
+        {
+            morph.renderer = this.renderer;
+        }
 
         return morph;
     }
