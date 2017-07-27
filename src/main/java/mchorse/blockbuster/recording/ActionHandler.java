@@ -25,6 +25,7 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.recording.sounds.SoundEventListener;
 import mchorse.metamorph.api.events.MorphActionEvent;
 import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
@@ -40,6 +41,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -82,7 +84,13 @@ public class ActionHandler
 
         if (!world.isRemote)
         {
+            SoundEventListener listener = new SoundEventListener(world);
+
             world.addEventListener(new WorldEventListener(world));
+            world.addEventListener(listener);
+            MinecraftForge.EVENT_BUS.register(listener);
+
+            SoundEventListener.INSTANCE = listener;
         }
     }
 

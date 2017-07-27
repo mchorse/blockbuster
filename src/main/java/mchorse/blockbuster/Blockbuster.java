@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.commands.CommandRecordSound;
 import mchorse.blockbuster.common.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -118,6 +119,7 @@ public class Blockbuster
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
         event.registerServerCommand(new CommandRecord());
+        event.registerServerCommand(new CommandRecordSound());
     }
 
     @EventHandler
