@@ -25,13 +25,13 @@ import net.minecraftforge.common.DimensionManager;
 public class CommandRecordSound extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "record_sound";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record_sound";
     }
@@ -44,7 +44,7 @@ public class CommandRecordSound extends CommandBase
             SoundEventListener.INSTANCE.session = new SoundSession();
             SoundEventListener.INSTANCE.frame = 0;
 
-            sender.addChatMessage(new TextComponentString("Started recording sound events!"));
+            sender.sendMessage(new TextComponentString("Started recording sound events!"));
         }
         else
         {
@@ -69,11 +69,11 @@ public class CommandRecordSound extends CommandBase
             {
                 Files.write(output, target, Charset.defaultCharset());
 
-                sender.addChatMessage(new TextComponentString("Successfully recorded sound events in file " + filename + "!"));
+                sender.sendMessage(new TextComponentString("Successfully recorded sound events in file " + filename + "!"));
             }
             catch (IOException e)
             {
-                sender.addChatMessage(new TextComponentString("Sound events couldn't be recorded, because: " + e.getMessage()));
+                sender.sendMessage(new TextComponentString("Sound events couldn't be recorded, because: " + e.getMessage()));
 
                 e.printStackTrace();
             }

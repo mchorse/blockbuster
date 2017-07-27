@@ -48,14 +48,14 @@ public class SoundEventListener implements IWorldEventListener
     {
         if (this.session != null)
         {
-            EntityPlayer thePlayer = this.mc.thePlayer;
+            EntityPlayer thePlayer = this.mc.player;
 
             double dx = thePlayer.posX - x;
             double dy = thePlayer.posY - y;
             double dz = thePlayer.posZ - z;
             double distance = dx * dx + dy * dy + dz * dz;
 
-            distance = MathHelper.clamp_double(distance, 0, 30 * 30) / (30 * 30);
+            distance = MathHelper.clamp(distance, 0, 30 * 30) / (30 * 30);
             volume = volume * (float) (1 - distance);
 
             if (volume > 0.00001F)
@@ -71,6 +71,10 @@ public class SoundEventListener implements IWorldEventListener
 
     @Override
     public void spawnParticle(int particleID, boolean ignoreRange, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int... parameters)
+    {}
+
+    @Override
+    public void spawnParticle(int p_190570_1_, boolean p_190570_2_, boolean p_190570_3_, double p_190570_4_, double p_190570_6_, double p_190570_8_, double p_190570_10_, double p_190570_12_, double p_190570_14_, int... p_190570_16_)
     {}
 
     @Override
@@ -99,7 +103,7 @@ public class SoundEventListener implements IWorldEventListener
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-        if (event.side == Side.CLIENT && event.player == this.mc.thePlayer && event.phase == Phase.START)
+        if (event.side == Side.CLIENT && event.player == this.mc.player && event.phase == Phase.START)
         {
             this.frame++;
         }
