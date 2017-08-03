@@ -6,9 +6,10 @@ import java.util.List;
 public class SoundSession
 {
     public List<SoundRecord> sounds = new ArrayList<SoundRecord>();
+    public int frame;
 
-    public void record(int frame, String string, float volume, float pitch)
+    public void record(String string, float volume, float pitch)
     {
-        this.sounds.add(new SoundRecord(frame, string, volume, pitch));
+        this.sounds.add(new SoundRecord(this.frame, string, volume, pitch));
     }
 }

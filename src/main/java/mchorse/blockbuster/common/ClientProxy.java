@@ -37,6 +37,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -151,6 +152,15 @@ public class ClientProxy extends CommonProxy
         ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());
     }
 
+    @Override
+    public void postLoad(FMLPostInitializationEvent event)
+    {
+        if (CameraHandler.isApertureLoaded())
+        {
+            CameraHandler.postRegister();
+        }
+    }
+
     /**
      * Load models into the game
      *
@@ -216,7 +226,7 @@ public class ClientProxy extends CommonProxy
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(path, "inventory"));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);

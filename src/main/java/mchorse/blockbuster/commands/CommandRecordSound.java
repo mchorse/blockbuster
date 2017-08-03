@@ -18,6 +18,7 @@ import mchorse.blockbuster.recording.sounds.SoundSession;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.DimensionManager;
@@ -39,16 +40,17 @@ public class CommandRecordSound extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (SoundEventListener.INSTANCE.session == null)
+        EntityPlayer player = CommandBase.getCommandSenderAsPlayer(sender);
+
+        if (!SoundEventListener.INSTANCE.isRecording(player))
         {
-            SoundEventListener.INSTANCE.session = new SoundSession();
-            SoundEventListener.INSTANCE.frame = 0;
+            SoundEventListener.INSTANCE.startRecording(player);
 
             sender.sendMessage(new TextComponentString("Started recording sound events!"));
         }
         else
         {
-            SoundSession session = SoundEventListener.INSTANCE.session;
+            SoundSession session = SoundEventListener.INSTANCE.stopRecording(player);
 
             GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
             Gson gson = builder.create();
@@ -77,8 +79,6 @@ public class CommandRecordSound extends CommandBase
 
                 e.printStackTrace();
             }
-
-            SoundEventListener.INSTANCE.session = null;
         }
     }
 }

@@ -552,8 +552,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
     /**
      * Make an actor go to the given tick
+     * @param actions 
      */
-    public void goTo(int tick)
+    public void goTo(int tick, boolean actions)
     {
         if (this.playback == null)
         {
@@ -563,15 +564,24 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         int min = Math.min(this.playback.tick, tick);
         int max = Math.max(this.playback.tick, tick);
 
-        for (int i = min; i < max; i++)
+        System.out.println(actions);
+
+        if (actions)
         {
-            this.playback.record.applyAction(i, this);
+            for (int i = min; i < max; i++)
+            {
+                this.playback.record.applyAction(i, this);
+            }
         }
 
         this.playback.tick = tick;
-        this.playback.record.applyFrame(tick, this, true);
-        this.playback.record.applyAction(tick, this);
         this.playback.record.resetUnload();
+        this.playback.record.applyFrame(tick, this, true);
+
+        if (actions)
+        {
+            this.playback.record.applyAction(tick, this);
+        }
 
         if (this.isServerWorld())
         {

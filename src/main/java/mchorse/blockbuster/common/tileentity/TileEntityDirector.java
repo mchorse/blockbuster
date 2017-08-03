@@ -448,7 +448,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
     /**
      * Make actors go to the given tick
      */
-    public void goTo(int tick)
+    public void goTo(int tick, boolean actions)
     {
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
@@ -457,7 +457,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 entry.getKey().apply(entry.getValue());
             }
 
-            entry.getValue().goTo(tick);
+            entry.getValue().goTo(tick, actions);
         }
     }
 
