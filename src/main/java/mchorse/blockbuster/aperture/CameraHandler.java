@@ -6,6 +6,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorPlaybackStateEvent;
 import mchorse.aperture.events.CameraEditorScrubbedEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
+import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
 import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
@@ -49,6 +50,16 @@ public class CameraHandler
     public static int tick = 0;
 
     /**
+     * Whether director should be reloaded when entering camera editor GUI
+     */
+    public static boolean reload = true;
+
+    /**
+     * Whether actions should played back also
+     */
+    public static boolean actions = true;
+
+    /**
      * Check whether Aperture is loaded
      */
     public static boolean isApertureLoaded()
@@ -61,6 +72,12 @@ public class CameraHandler
     {
         ClientProxy.EVENT_BUS.register(new CameraHandler());
         MinecraftForge.EVENT_BUS.register(new CameraGUIHandler());
+    }
+
+    @Method(modid = "aperture")
+    public static void postRegister()
+    {
+        ClientProxy.cameraEditor.config.options.add(new GuiDirectorConfigOptions(ClientProxy.cameraEditor));
     }
 
     @Method(modid = "aperture")
@@ -102,7 +119,7 @@ public class CameraHandler
 
         if (pos != null && !ClientProxy.runner.isRunning())
         {
-            Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position));
+            Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
         }
     }
 
@@ -165,7 +182,11 @@ public class CameraHandler
                     /* Camera editor opens */
                     CameraHandler.tick = tick;
 
-                    Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
+                    if (CameraHandler.reload)
+                    {
+                        Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
+                    }
+
                     Dispatcher.sendToServer(new PacketRequestLength(pos));
                 }
             }

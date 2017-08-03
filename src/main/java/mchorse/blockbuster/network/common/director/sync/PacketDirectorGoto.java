@@ -13,15 +13,17 @@ import net.minecraft.util.math.BlockPos;
 public class PacketDirectorGoto extends PacketDirector
 {
     public int tick;
+    public boolean actions;
 
     public PacketDirectorGoto()
     {}
 
-    public PacketDirectorGoto(BlockPos pos, int tick)
+    public PacketDirectorGoto(BlockPos pos, int tick, boolean actions)
     {
         super(pos);
 
         this.tick = tick;
+        this.actions = actions;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class PacketDirectorGoto extends PacketDirector
         super.fromBytes(buf);
 
         this.tick = buf.readInt();
+        this.actions = buf.readBoolean();
     }
 
     @Override
@@ -38,5 +41,6 @@ public class PacketDirectorGoto extends PacketDirector
         super.toBytes(buf);
 
         buf.writeInt(this.tick);
+        buf.writeBoolean(this.actions);
     }
 }

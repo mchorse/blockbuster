@@ -116,11 +116,7 @@ public class SoundEventListener implements IWorldEventListener
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-<<<<<<< Updated upstream
-        if (event.side == Side.CLIENT && event.player == this.mc.thePlayer && event.phase == Phase.START)
-=======
-        if (event.side == Side.SERVER && event.phase == Phase.END)
->>>>>>> Stashed changes
+    	if (event.side == Side.SERVER && event.phase == Phase.END)
         {
             SoundSession session = this.sessions.get(event.player);
 
