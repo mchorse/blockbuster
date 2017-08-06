@@ -16,6 +16,7 @@ public class PacketDirectorPlay extends PacketDirector
     public static final byte PLAY = 1;
     public static final byte PAUSE = 2;
     public static final byte START = 3;
+    public static final byte RESTART = 4;
 
     public byte state;
     public int tick;
@@ -49,6 +50,11 @@ public class PacketDirectorPlay extends PacketDirector
     public boolean isStart()
     {
         return this.state == START;
+    }
+
+    public boolean isRestart()
+    {
+        return this.state == RESTART;
     }
 
     @Override

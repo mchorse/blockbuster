@@ -51,3 +51,11 @@ blockbuster.gui:
         nothing: Do nothing
         play: Play only
         load_profile: Load and play
+        
+    aperture:
+        config:
+            title: Director
+            
+            reload: Reload actors
+            actions: Preview actions
+            reload_scene: Reload scene

@@ -117,7 +117,7 @@ public class CameraHandler
     {
         BlockPos pos = getDirectorPos();
 
-        if (pos != null && !ClientProxy.runner.isRunning())
+        if (pos != null)
         {
             Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
         }
