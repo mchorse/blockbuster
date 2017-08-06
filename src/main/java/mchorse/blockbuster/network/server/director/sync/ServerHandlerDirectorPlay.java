@@ -38,6 +38,11 @@ public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirect
             {
                 director.spawn(message.tick);
             }
+            else if (message.isRestart())
+            {
+                director.stopPlayback();
+                director.spawn(message.tick);
+            }
         }
     }
 }
