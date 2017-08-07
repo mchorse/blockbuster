@@ -400,15 +400,15 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     {
         if (button.id == 0)
         {
-            this.openModal(new GuiInputModal(SAVE, this, this.fontRendererObj).setInput(this.modelName).setLabel(I18n.format("blockbuster.gui.me.save_modal")));
+            this.openModal(new GuiInputModal(SAVE, this, this.fontRenderer).setInput(this.modelName).setLabel(I18n.format("blockbuster.gui.me.save_modal")));
         }
         else if (button.id == 1)
         {
-            this.openModal(new GuiNewModal(NEW, this, this.fontRendererObj).setLabel(I18n.format("blockbuster.gui.me.new_modal")));
+            this.openModal(new GuiNewModal(NEW, this, this.fontRenderer).setLabel(I18n.format("blockbuster.gui.me.new_modal")));
         }
         else if (button.id == 2)
         {
-            GuiPoseModal modal = new GuiPoseModal(ADD_POSE, REMOVE_POSE, SELECT_POSE, this, this.fontRendererObj);
+            GuiPoseModal modal = new GuiPoseModal(ADD_POSE, REMOVE_POSE, SELECT_POSE, this, this.fontRenderer);
             String pose = "";
 
             for (Map.Entry<String, Model.Pose> entry : this.data.poses.entrySet())
@@ -425,7 +425,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         }
         else if (button.id == 3)
         {
-            this.openModal(new GuiInputModal(ADD_LIMB, this, this.fontRendererObj).setLabel(I18n.format("blockbuster.gui.me.add_limb_modal")));
+            this.openModal(new GuiInputModal(ADD_LIMB, this, this.fontRenderer).setLabel(I18n.format("blockbuster.gui.me.add_limb_modal")));
         }
         else if (button.id == 4 && this.limbs.limb != null)
         {
@@ -434,7 +434,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         }
         else if (button.id == 5)
         {
-            this.openModal(new GuiModelModal(MODEL_PROPS, this, this.fontRendererObj).setModel(this.data).setLabel(I18n.format("blockbuster.gui.me.model_props_modal")));
+            this.openModal(new GuiModelModal(MODEL_PROPS, this, this.fontRenderer).setModel(this.data).setLabel(I18n.format("blockbuster.gui.me.model_props_modal")));
         }
         else if (button.id == 6)
         {
@@ -595,7 +595,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
             if (!exists && this.data.defaultTexture == null)
             {
-                this.openModal(new GuiAlertModal(0, this, this.fontRendererObj).setSize(220, 120).setLabel(I18n.format("blockbuster.gui.me.warning_skins", name, name)));
+                this.openModal(new GuiAlertModal(0, this, this.fontRenderer).setSize(220, 120).setLabel(I18n.format("blockbuster.gui.me.warning_skins", name, name)));
 
                 return false;
             }
@@ -890,8 +890,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         }
 
         /* Labels */
-        this.fontRendererObj.drawStringWithShadow(this.strME, 10, 10, 0xffffff);
-        this.fontRendererObj.drawStringWithShadow(this.strLimbs, this.width - 105, 35, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(this.strME, 10, 10, 0xffffff);
+        this.fontRenderer.drawStringWithShadow(this.strLimbs, this.width - 105, 35, 0xffffff);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -907,7 +907,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(GuiLimbEditor.GUI);
-        this.drawTexturedModalRect(this.pose.xPosition - 18, this.pose.yPosition + 2, 64, 32, 16, 16);
+        this.drawTexturedModalRect(this.pose.x - 18, this.pose.y + 2, 64, 32, 16, 16);
 
         /* Draw current modal */
         if (this.currentModal != null)

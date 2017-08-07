@@ -152,7 +152,7 @@ public class GuiMorphsPopup extends GuiScreen
     @Override
     public void initGui()
     {
-        this.search = new GuiTextField(0, this.fontRendererObj, this.x + 61 - 3, this.y + 4, this.w - 87, 18);
+        this.search = new GuiTextField(0, this.fontRenderer, this.x + 61 - 3, this.y + 4, this.w - 87, 18);
         this.close = new GuiButton(1, this.x + this.w - 23, this.y + 3, 20, 20, "X");
 
         this.buttonList.add(this.close);
@@ -174,7 +174,7 @@ public class GuiMorphsPopup extends GuiScreen
         }
 
         Gui.drawRect(this.x, this.y, this.x + this.w, this.y + this.h, 0xcc000000);
-        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.x + 9, this.y + 9, 0xffffffff);
+        this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.x + 9, this.y + 9, 0xffffffff);
 
         this.search.drawTextBox();
 
@@ -187,14 +187,14 @@ public class GuiMorphsPopup extends GuiScreen
 
         if (cell != null)
         {
-            int width = Math.max(this.fontRendererObj.getStringWidth(cell.name), this.fontRendererObj.getStringWidth(cell.morph.name)) + 6;
+            int width = Math.max(this.fontRenderer.getStringWidth(cell.name), this.fontRenderer.getStringWidth(cell.morph.name)) + 6;
             int center = this.x + this.w / 2;
             int y = this.y + this.h - 26;
 
             Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0xcc000000);
 
-            this.drawCenteredString(fontRendererObj, cell.name, center, y, 0xffffff);
-            this.drawCenteredString(fontRendererObj, cell.morph.name, center, y + 14, 0x888888);
+            this.drawCenteredString(fontRenderer, cell.name, center, y, 0xffffff);
+            this.drawCenteredString(fontRenderer, cell.morph.name, center, y + 14, 0x888888);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

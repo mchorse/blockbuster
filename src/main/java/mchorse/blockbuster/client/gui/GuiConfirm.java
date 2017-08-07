@@ -61,8 +61,8 @@ public class GuiConfirm extends GuiScreen
     {
         this.drawDefaultBackground();
 
-        this.drawCenteredString(this.fontRendererObj, this.titleString, this.width / 2, 20, 0xffffffff);
-        this.fontRendererObj.drawSplitString(this.desc, this.width / 2 - this.width / 4, this.height / 2 - this.height / 4, this.width / 2, 0xffffffff);
+        this.drawCenteredString(this.fontRenderer, this.titleString, this.width / 2, 20, 0xffffffff);
+        this.fontRenderer.drawSplitString(this.desc, this.width / 2 - this.width / 4, this.height / 2 - this.height / 4, this.width / 2, 0xffffffff);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

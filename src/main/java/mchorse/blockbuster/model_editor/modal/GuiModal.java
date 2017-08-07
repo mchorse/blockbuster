@@ -142,7 +142,7 @@ public abstract class GuiModal
 
         for (GuiButton button : this.buttons)
         {
-            button.drawButton(this.parent.mc, mouseX, mouseY);
+            button.drawButton(this.parent.mc, mouseX, mouseY, partialTicks);
         }
     }
 }

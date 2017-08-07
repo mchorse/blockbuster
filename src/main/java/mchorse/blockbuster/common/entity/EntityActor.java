@@ -236,10 +236,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (Blockbuster.proxy.config.extra_wubs && this.playback == null)
         {
-            if (!this.world.isRemote && this.getCustomNameTag().equals("YokeFilms") && source.getSourceOfDamage() instanceof EntityPlayerMP)
+            if (!this.world.isRemote && this.getCustomNameTag().equals("YokeFilms") && source.getTrueSource() instanceof EntityPlayerMP)
             {
                 this.setCustomNameTag("YikeFilms");
-                ((EntityPlayerMP) source.getSourceOfDamage()).sendMessage(new TextComponentTranslation("blockbuster.eggs.yike"));
+                ((EntityPlayerMP) source.getTrueSource()).sendMessage(new TextComponentTranslation("blockbuster.eggs.yike"));
             }
         }
 
@@ -317,7 +317,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         /* Trigger pressure playback */
-        this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
+        this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
     }
 
     /**
@@ -357,7 +357,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             for (EntityItem entityitem : this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D)))
             {
-                if (!entityitem.isDead && entityitem.getEntityItem() != null && !entityitem.cannotPickup())
+                if (!entityitem.isDead && entityitem.getItem() != null && !entityitem.cannotPickup())
                 {
                     this.onItemPickup(entityitem, 1);
                     entityitem.setDead();

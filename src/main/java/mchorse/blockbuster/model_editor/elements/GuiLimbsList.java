@@ -199,7 +199,7 @@ public class GuiLimbsList extends GuiScrollPane
             }
 
             /* Label */
-            this.fontRendererObj.drawStringWithShadow(limb.name, x, y + 6, color);
+            this.fontRenderer.drawStringWithShadow(limb.name, x, y + 6, color);
 
             /* Separator */
             if (i != c - 1)

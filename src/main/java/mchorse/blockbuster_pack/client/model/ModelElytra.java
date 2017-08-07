@@ -64,7 +64,7 @@ public class ModelElytra extends ModelBase
             if (entityIn.motionY < 0.0D)
             {
                 Vec3d vec3d = (new Vec3d(entityIn.motionX, entityIn.motionY, entityIn.motionZ)).normalize();
-                f4 = 1.0F - (float) Math.pow(-vec3d.yCoord, 1.5D);
+                f4 = 1.0F - (float) Math.pow(-vec3d.y, 1.5D);
             }
 
             f = f4 * 0.34906584F + (1.0F - f4) * f;

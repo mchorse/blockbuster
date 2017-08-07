@@ -2,6 +2,7 @@ package mchorse.blockbuster.common.tileentity.director;
 
 import java.util.UUID;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import io.netty.buffer.ByteBuf;
@@ -190,6 +191,6 @@ public class Replay
     @Override
     public String toString()
     {
-        return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("morph", this.morph).add("invisible", this.invisible).toString();
+        return MoreObjects.toStringHelper(this).add("id", this.id).add("name", this.name).add("invincible", this.invincible).add("morph", this.morph).add("invisible", this.invisible).toString();
     }
 }

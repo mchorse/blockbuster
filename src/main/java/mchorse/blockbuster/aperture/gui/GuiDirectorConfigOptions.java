@@ -49,7 +49,7 @@ public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
     @Override
     public int getWidth()
     {
-        return Math.max(this.max + 8, Minecraft.getMinecraft().fontRendererObj.getStringWidth(this.title) + 8);
+        return Math.max(this.max + 8, Minecraft.getMinecraft().fontRenderer.getStringWidth(this.title) + 8);
     }
 
     @Override
@@ -65,8 +65,8 @@ public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
 
         for (GuiButton button : this.buttons.buttons)
         {
-            button.xPosition = x + 4;
-            button.yPosition = y + 4 + i * 20 + 16;
+            button.x = x + 4;
+            button.y = y + 4 + i * 20 + 16;
 
             i++;
         }
@@ -111,6 +111,6 @@ public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
     {
         super.draw(mouseX, mouseY, partialTicks);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString(this.title, this.x + 4, this.y + 4, 0xffffff, true);
+        Minecraft.getMinecraft().fontRenderer.drawString(this.title, this.x + 4, this.y + 4, 0xffffff, true);
     }
 }

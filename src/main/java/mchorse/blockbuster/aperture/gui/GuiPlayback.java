@@ -200,12 +200,12 @@ public class GuiPlayback extends GuiScreen
         int x = this.width / 2 - 75;
 
         this.drawDefaultBackground();
-        this.drawString(this.fontRendererObj, this.stringTitle, x, 10, 0xffffffff);
-        this.drawString(this.fontRendererObj, this.stringCameraMode, x, this.height - 69, 0xffcccccc);
+        this.drawString(this.fontRenderer, this.stringTitle, x, 10, 0xffffffff);
+        this.drawString(this.fontRenderer, this.stringCameraMode, x, this.height - 69, 0xffcccccc);
 
         if (isCameraProfile)
         {
-            this.drawString(this.fontRendererObj, this.stringProfile, x, 35 - 4, 0xffcccccc);
+            this.drawString(this.fontRenderer, this.stringProfile, x, 35 - 4, 0xffcccccc);
         }
 
         this.drawProfiles(mouseX, mouseY);
@@ -243,7 +243,7 @@ public class GuiPlayback extends GuiScreen
                     Gui.drawRect(x, y, x + w, y + this.area.scrollItemSize, current ? 0x880088ff : 0x88000000);
                 }
 
-                this.mc.fontRendererObj.drawStringWithShadow(dest.getFilename(), x + 22, y + 7, 0xffffff);
+                this.mc.fontRenderer.drawStringWithShadow(dest.getFilename(), x + 22, y + 7, 0xffffff);
                 this.mc.renderEngine.bindTexture(GuiCameraEditor.EDITOR_TEXTURE);
 
                 GlStateManager.color(1, 1, 1, 1);

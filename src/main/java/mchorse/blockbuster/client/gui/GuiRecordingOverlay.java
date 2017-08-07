@@ -58,7 +58,7 @@ public class GuiRecordingOverlay extends Gui
             return;
         }
 
-        FontRenderer font = this.mc.fontRendererObj;
+        FontRenderer font = this.mc.fontRenderer;
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 

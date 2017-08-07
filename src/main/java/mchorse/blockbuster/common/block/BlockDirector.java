@@ -8,12 +8,15 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Descendant of abstract director block
@@ -30,7 +33,8 @@ public class BlockDirector extends AbstractBlockDirector
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.director_block"));
     }

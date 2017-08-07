@@ -36,17 +36,17 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
             case HEAD:
                 model.bipedHead.showModel = true;
                 model.bipedHeadwear.showModel = true;
-                break;
+            break;
             case CHEST:
                 model.bipedBody.showModel = true;
                 model.bipedRightArm.showModel = true;
                 model.bipedLeftArm.showModel = true;
-                break;
+            break;
             case LEGS:
                 model.bipedBody.showModel = true;
                 model.bipedRightLeg.showModel = true;
                 model.bipedLeftLeg.showModel = true;
-                break;
+            break;
             case FEET:
                 model.bipedRightLeg.showModel = true;
                 model.bipedLeftLeg.showModel = true;
@@ -55,7 +55,7 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
 
     protected void setModelVisible(ModelBiped model)
     {
-        model.setInvisible(false);
+        model.setVisible(true);
     }
 
     @Override

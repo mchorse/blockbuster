@@ -131,7 +131,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     {
         this.editor = editor;
 
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         final int width = 100;
 
         /* Buttons */
@@ -310,11 +310,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         this.category = full ? -1 : (this.category == -1 ? 0 : this.category);
 
-        this.name.xPosition = x;
-        this.name.yPosition = y;
+        this.name.x = x;
+        this.name.y = y;
         y += 25;
-        this.parent.xPosition = x;
-        this.parent.yPosition = y;
+        this.parent.x = x;
+        this.parent.y = y;
         y += 28;
 
         this.buttons.clear();
@@ -323,8 +323,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         if (this.category == 0 || full)
         {
-            this.mirror.xPosition = x;
-            this.mirror.yPosition = y;
+            this.mirror.x = x;
+            this.mirror.y = y;
             y += 15;
             this.texture.update(x, y, width);
             y += 20;
@@ -334,8 +334,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             y += 20;
             this.color.update(x, y, width);
             y += 20;
-            this.opacity.xPosition = x + 1;
-            this.opacity.yPosition = y + 1;
+            this.opacity.x = x + 1;
+            this.opacity.y = y + 1;
             this.opacity.width = width - 2;
             y += 23;
 
@@ -344,23 +344,23 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         if (this.category == 1 || full)
         {
-            this.looking.xPosition = x;
-            this.looking.yPosition = y;
+            this.looking.x = x;
+            this.looking.y = y;
             y += 16;
-            this.idle.xPosition = x;
-            this.idle.yPosition = y;
+            this.idle.x = x;
+            this.idle.y = y;
             y += 16;
-            this.swinging.xPosition = x;
-            this.swinging.yPosition = y;
+            this.swinging.x = x;
+            this.swinging.y = y;
             y += 16;
-            this.swiping.xPosition = x;
-            this.swiping.yPosition = y;
+            this.swiping.x = x;
+            this.swiping.y = y;
             y += 16;
-            this.invert.xPosition = x;
-            this.invert.yPosition = y;
+            this.invert.x = x;
+            this.invert.y = y;
             y += 20;
-            this.holding.xPosition = x;
-            this.holding.yPosition = y;
+            this.holding.x = x;
+            this.holding.y = y;
             y += 25;
 
             this.buttons.add(this.looking);
@@ -385,9 +385,9 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         {
             int w = 20;
 
-            this.prev.xPosition = x;
-            this.next.xPosition = x + width - w;
-            this.next.yPosition = this.prev.yPosition = y;
+            this.prev.x = x;
+            this.next.x = x + width - w;
+            this.next.y = this.prev.y = y;
             this.next.width = this.prev.width = w;
 
             this.buttons.add(this.next);
@@ -498,21 +498,21 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
      */
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        FontRenderer font = this.editor.mc.fontRendererObj;
+        FontRenderer font = this.editor.mc.fontRenderer;
 
         if (this.limb == null)
         {
-            font.drawStringWithShadow(this.strNoLimbs, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
+            font.drawStringWithShadow(this.strNoLimbs, this.name.x, this.name.y - 15, 0xffffff);
             return;
         }
 
-        font.drawStringWithShadow(this.limb.name, this.name.xPosition, this.name.yPosition - 15, 0xffffff);
+        font.drawStringWithShadow(this.limb.name, this.name.x, this.name.y - 15, 0xffffff);
 
         if (this.category != -1)
         {
             String cat = this.category == 0 ? this.strVisual : (this.category == 1 ? this.strGameplay : this.strPose);
 
-            this.editor.drawCenteredString(font, cat, this.prev.xPosition + 49, this.next.yPosition + 6, 0xffffffff);
+            this.editor.drawCenteredString(font, cat, this.prev.x + 49, this.next.y + 6, 0xffffffff);
         }
 
         if (this.isCategory(0))
@@ -526,16 +526,16 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             /* Icons for visual category */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.editor.mc.renderEngine.bindTexture(GUI);
-            this.editor.drawTexturedModalRect(this.texture.a.xPosition + 100, this.texture.a.yPosition, 96, 0, 16, 16);
-            this.editor.drawTexturedModalRect(this.size.a.xPosition + 100, this.size.a.yPosition, 96, 16, 16, 16);
-            this.editor.drawTexturedModalRect(this.anchor.a.xPosition + 100, this.anchor.a.yPosition, 64, 16, 16, 16);
-            this.editor.drawTexturedModalRect(this.color.a.xPosition + 100, this.color.a.yPosition, 80, 32, 16, 16);
-            this.editor.drawTexturedModalRect(this.opacity.xPosition + 100, this.opacity.yPosition, 96, 32, 16, 16);
+            this.editor.drawTexturedModalRect(this.texture.a.x + 100, this.texture.a.y, 96, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.size.a.x + 100, this.size.a.y, 96, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.anchor.a.x + 100, this.anchor.a.y, 64, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.color.a.x + 100, this.color.a.y, 80, 32, 16, 16);
+            this.editor.drawTexturedModalRect(this.opacity.x + 100, this.opacity.y, 96, 32, 16, 16);
         }
 
         for (GuiButton button : this.buttons)
         {
-            button.drawButton(this.editor.mc, mouseX, mouseY);
+            button.drawButton(this.editor.mc, mouseX, mouseY, partialTicks);
         }
 
         if (this.pose == null)
@@ -552,9 +552,9 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             /* Icons for pose */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.editor.mc.renderEngine.bindTexture(GUI);
-            this.editor.drawTexturedModalRect(this.translate.a.xPosition + 100, this.translate.a.yPosition, 64, 0, 16, 16);
-            this.editor.drawTexturedModalRect(this.scale.a.xPosition + 100, this.scale.a.yPosition, 80, 0, 16, 16);
-            this.editor.drawTexturedModalRect(this.rotate.a.xPosition + 100, this.rotate.a.yPosition, 80, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.translate.a.x + 100, this.translate.a.y, 64, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.scale.a.x + 100, this.scale.a.y, 80, 0, 16, 16);
+            this.editor.drawTexturedModalRect(this.rotate.a.x + 100, this.rotate.a.y, 80, 16, 16, 16);
         }
     }
 
@@ -578,11 +578,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
         if (button.id == NAME)
         {
-            this.editor.openModal(new GuiInputModal(GuiModelEditor.CHANGE_NAME, this.editor, this.editor.mc.fontRendererObj).setInput(this.limb.name).setLabel(I18n.format("blockbuster.gui.me.limb_name_modal")));
+            this.editor.openModal(new GuiInputModal(GuiModelEditor.CHANGE_NAME, this.editor, this.editor.mc.fontRenderer).setInput(this.limb.name).setLabel(I18n.format("blockbuster.gui.me.limb_name_modal")));
         }
         if (button.id == PARENT)
         {
-            this.editor.openModal(new GuiParentModal(GuiModelEditor.CHANGE_PARENT, this.limb, this.editor.data, this.editor, this.editor.mc.fontRendererObj).setLabel(I18n.format("blockbuster.gui.me.limb_parent_modal")));
+            this.editor.openModal(new GuiParentModal(GuiModelEditor.CHANGE_PARENT, this.limb, this.editor.data, this.editor, this.editor.mc.fontRenderer).setLabel(I18n.format("blockbuster.gui.me.limb_parent_modal")));
         }
 
         if (button.id == -1 || button.id == -2)
@@ -591,7 +591,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
 
             this.category += next ? 1 : -1;
             this.category = this.category > 2 ? 0 : (this.category < 0 ? 2 : this.category);
-            this.initiate(this.name.xPosition, this.name.yPosition);
+            this.initiate(this.name.x, this.name.y);
         }
 
         if (this.isCategory(0))

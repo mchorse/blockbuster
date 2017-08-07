@@ -276,8 +276,8 @@ public class GuiReplay extends GuiScreen
         this.invisible = new GuiToggle(5, x2, y2 - 55, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
         this.invincible = new GuiToggle(4, x2, y2 - 20, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
 
-        this.name = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 54, w - 2, 18);
-        this.filename = new GuiTextField(-1, this.fontRendererObj, x + 1, y2 - 19, w - 2, 18);
+        this.name = new GuiTextField(-1, this.fontRenderer, x + 1, y2 - 54, w - 2, 18);
+        this.filename = new GuiTextField(-1, this.fontRenderer, x + 1, y2 - 19, w - 2, 18);
 
         /* Buttons */
         this.detach = new GuiButton(3, this.width - margin - 80, margin, 80, 20, I18n.format("blockbuster.gui.detach"));
@@ -333,16 +333,16 @@ public class GuiReplay extends GuiScreen
         int y = this.height - 8;
 
         /* Draw labels for visual properties */
-        this.drawString(this.fontRendererObj, this.stringInvisible, x2, y - 65, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringInvincible, x2, y - 30, 0xffcccccc);
+        this.drawString(this.fontRenderer, this.stringInvisible, x2, y - 65, 0xffcccccc);
+        this.drawString(this.fontRenderer, this.stringInvincible, x2, y - 30, 0xffcccccc);
 
         /* Draw labels for meta properties */
-        this.drawString(this.fontRendererObj, this.stringName, x, y - 65, 0xffcccccc);
-        this.drawString(this.fontRendererObj, this.stringFilename, x, y - 30, this.filename.getText().isEmpty() ? 0xffff3355 : 0xffcccccc);
+        this.drawString(this.fontRenderer, this.stringName, x, y - 65, 0xffcccccc);
+        this.drawString(this.fontRenderer, this.stringFilename, x, y - 30, this.filename.getText().isEmpty() ? 0xffff3355 : 0xffcccccc);
 
         if (this.replay.actor != null)
         {
-            this.drawCenteredString(this.fontRendererObj, this.stringAttached, 120 + (this.width - 120) / 2, 24, 0xffaaaaaa);
+            this.drawCenteredString(this.fontRenderer, this.stringAttached, 120 + (this.width - 120) / 2, 24, 0xffaaaaaa);
         }
 
         /* Draw entity in the center of the screen */
@@ -372,7 +372,7 @@ public class GuiReplay extends GuiScreen
             this.replay.morph.renderOnScreen(Minecraft.getMinecraft().player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
-            this.drawCenteredString(this.fontRendererObj, this.replay.morph.name, center, 12, 0x888888);
+            this.drawCenteredString(this.fontRenderer, this.replay.morph.name, center, 12, 0x888888);
         }
 
         /* Draw GUI elements */

@@ -38,11 +38,11 @@ public class GuiThreeInput implements GuiResponder
     {
         int w = (width - 6) / 3;
 
-        this.a.xPosition = x + 1;
-        this.b.xPosition = x + w + 3 + 1;
-        this.c.xPosition = x + width - w + 1;
+        this.a.x = x + 1;
+        this.b.x = x + w + 3 + 1;
+        this.c.x = x + width - w + 1;
 
-        this.a.yPosition = this.b.yPosition = this.c.yPosition = y + 1;
+        this.a.y = this.b.y = this.c.y = y + 1;
         this.a.width = this.b.width = this.c.width = w - 2;
     }
 

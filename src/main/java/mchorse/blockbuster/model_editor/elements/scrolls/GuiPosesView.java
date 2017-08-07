@@ -101,7 +101,7 @@ public class GuiPosesView extends GuiScrollView
             }
 
             /* Label */
-            this.parent.mc.fontRendererObj.drawStringWithShadow(limb, x, y + 6, color);
+            this.parent.mc.fontRenderer.drawStringWithShadow(limb, x, y + 6, color);
 
             /* Separator */
             if (i != c - 1)

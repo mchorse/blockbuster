@@ -283,7 +283,7 @@ public class ActionHandler
 
         if (!player.world.isRemote && events != null)
         {
-            events.add(new DropAction(event.getEntityItem().getEntityItem()));
+            events.add(new DropAction(event.getEntityItem().getItem()));
         }
     }
 

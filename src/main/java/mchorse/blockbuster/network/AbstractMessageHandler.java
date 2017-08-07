@@ -40,7 +40,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
         }
         else
         {
-            return this.handleServerMessage(ctx.getServerHandler().playerEntity, message);
+            return this.handleServerMessage(ctx.getServerHandler().player, message);
         }
     }
 }

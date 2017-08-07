@@ -93,7 +93,7 @@ public class GuiReplays extends GuiScrollPane
     {
         if (this.entries.size() == 0)
         {
-            this.fontRendererObj.drawStringWithShadow(this.stringNoCast, this.x + 9, this.y + 8, 0xffcccccc);
+            this.fontRenderer.drawStringWithShadow(this.stringNoCast, this.x + 9, this.y + 8, 0xffcccccc);
             return;
         }
 
@@ -106,7 +106,7 @@ public class GuiReplays extends GuiScrollPane
             Entry entry = this.entries.get(i);
             String name = flag ? "> " + entry.name : entry.name;
 
-            this.fontRendererObj.drawStringWithShadow(name, x + 9, y + 8, entry.replay.id.isEmpty() ? 0xffff3355 : (flag ? 0xffcccccc : 0xffffffff));
+            this.fontRenderer.drawStringWithShadow(name, x + 9, y + 8, entry.replay.id.isEmpty() ? 0xffff3355 : (flag ? 0xffcccccc : 0xffffffff));
 
             if (entry.replay.morph != null)
             {

@@ -36,10 +36,10 @@ public class GuiTwoInput implements GuiResponder
     {
         int w = (width - 4) / 2;
 
-        this.a.xPosition = x + 1;
-        this.b.xPosition = x + width - w + 1;
+        this.a.x = x + 1;
+        this.b.x = x + width - w + 1;
 
-        this.a.yPosition = this.b.yPosition = y + 1;
+        this.a.y = this.b.y = y + 1;
         this.a.width = this.b.width = w - 2;
     }
 

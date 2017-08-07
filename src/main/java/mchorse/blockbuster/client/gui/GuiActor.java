@@ -196,10 +196,10 @@ public class GuiActor extends GuiScreen
         Gui.drawRect(0, 0, this.width, 30, 0x88000000);
 
         /* Draw labels: title */
-        this.drawString(this.fontRendererObj, this.stringTitle, 20, y + 1, 0xffffffff);
+        this.drawString(this.fontRenderer, this.stringTitle, 20, y + 1, 0xffffffff);
 
         /* Draw labels for visual properties */
-        this.drawString(this.fontRendererObj, this.stringInvisible, x, this.height - 70, 0xffffffff);
+        this.drawString(this.fontRenderer, this.stringInvisible, x, this.height - 70, 0xffffffff);
 
         /* Draw entity in the center of the screen */
         int size = this.height / 3;
@@ -218,7 +218,7 @@ public class GuiActor extends GuiScreen
             cell.morph.renderOnScreen(Minecraft.getMinecraft().player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
-            this.drawCenteredString(this.fontRendererObj, cell.name, center, 40, 0xffffffff);
+            this.drawCenteredString(this.fontRenderer, cell.name, center, 40, 0xffffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

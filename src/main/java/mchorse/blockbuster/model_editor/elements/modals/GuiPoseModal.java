@@ -102,19 +102,19 @@ public class GuiPoseModal extends GuiModal implements IMultiInputListener
         int w = this.width;
         int h = this.height;
 
-        this.name.xPosition = x + 5;
-        this.name.yPosition = y + h - 22 - 24 + 1;
+        this.name.x = x + 5;
+        this.name.y = y + h - 22 - 24 + 1;
         this.name.width = w - 62;
-        this.add.xPosition = x + w - 4 - 50;
-        this.add.yPosition = y + h - 22 - 24;
+        this.add.x = x + w - 4 - 50;
+        this.add.y = y + h - 22 - 24;
         this.add.width = 50;
 
-        this.remove.xPosition = this.select.xPosition = this.done.xPosition = x + 4;
+        this.remove.x = this.select.x = this.done.x = x + 4;
         this.remove.width = this.select.width = this.done.width = 60;
 
-        this.remove.yPosition = y + h - 24 * 5 + 2;
-        this.select.yPosition = y + h - 24 * 4 + 2;
-        this.done.yPosition = y + h - 24 * 3 + 2;
+        this.remove.y = y + h - 24 * 5 + 2;
+        this.select.y = y + h - 24 * 4 + 2;
+        this.done.y = y + h - 24 * 3 + 2;
 
         this.poses.updateRect(x + 68, y + 4, w - 72, h - 32 - 18);
         this.size.update(x + 4, y + h - 22, w - 8);
@@ -195,7 +195,7 @@ public class GuiPoseModal extends GuiModal implements IMultiInputListener
 
         if (!this.name.isFocused() && this.name.getText().isEmpty())
         {
-            this.font.drawStringWithShadow(this.strName, this.name.xPosition + 4, this.name.yPosition + 5, 0xaaaaaa);
+            this.font.drawStringWithShadow(this.strName, this.name.x + 4, this.name.y + 5, 0xaaaaaa);
         }
     }
 }

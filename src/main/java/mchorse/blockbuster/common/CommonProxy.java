@@ -34,6 +34,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -105,8 +106,8 @@ public class CommonProxy
         /* Blocks */
         Block director = new BlockDirector();
 
-        GameRegistry.register(Blockbuster.directorBlock = director);
-        GameRegistry.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
+        ForgeRegistries.BLOCKS.register(Blockbuster.directorBlock = director);
+        ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
@@ -171,7 +172,7 @@ public class CommonProxy
      */
     protected void registerItem(Item item)
     {
-        GameRegistry.register(item);
+        ForgeRegistries.ITEMS.register(item);
     }
 
     /**

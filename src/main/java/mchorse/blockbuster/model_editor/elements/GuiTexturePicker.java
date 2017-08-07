@@ -99,7 +99,7 @@ public class GuiTexturePicker extends GuiScrollPane
         int w = this.w - 40;
 
         this.scrollHeight = (this.textures.size() / 6 + 1) * (this.w / 6);
-        this.search = new GuiTextField(0, this.fontRendererObj, this.width / 2 - w / 2, this.height - 25, w, 18);
+        this.search = new GuiTextField(0, this.fontRenderer, this.width / 2 - w / 2, this.height - 25, w, 18);
         this.search.setFocused(false);
         this.name = null;
     }
@@ -135,7 +135,7 @@ public class GuiTexturePicker extends GuiScrollPane
             return;
         }
 
-        if (mouseX >= this.search.xPosition && mouseX <= this.search.xPosition + this.search.width && mouseY >= this.search.yPosition && mouseY <= this.search.yPosition + this.search.height)
+        if (mouseX >= this.search.x && mouseX <= this.search.x + this.search.width && mouseY >= this.search.y && mouseY <= this.search.y + this.search.height)
         {
             this.search.mouseClicked(mouseX, mouseY, mouseButton);
 
@@ -214,12 +214,12 @@ public class GuiTexturePicker extends GuiScrollPane
                 String path = this.name.getResourcePath();
                 String domain = this.name.getResourceDomain();
 
-                int w = Math.max(this.fontRendererObj.getStringWidth(path), this.fontRendererObj.getStringWidth(domain)) + 4;
+                int w = Math.max(this.fontRenderer.getStringWidth(path), this.fontRenderer.getStringWidth(domain)) + 4;
                 int x = this.x + this.w / 2;
 
                 Gui.drawRect(x - w / 2, 3, x + w / 2, 25, 0x88000000);
-                this.drawCenteredString(this.fontRendererObj, path, this.width / 2, 5, 0xffffff);
-                this.drawCenteredString(this.fontRendererObj, domain, this.width / 2, 15, 0xffffff);
+                this.drawCenteredString(this.fontRenderer, path, this.width / 2, 5, 0xffffff);
+                this.drawCenteredString(this.fontRenderer, domain, this.width / 2, 15, 0xffffff);
             }
 
             this.search.drawTextBox();
@@ -227,7 +227,7 @@ public class GuiTexturePicker extends GuiScrollPane
 
             if (!this.search.isFocused() && this.search.getText().isEmpty())
             {
-                this.fontRendererObj.drawStringWithShadow(this.strSearch, this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+                this.fontRenderer.drawStringWithShadow(this.strSearch, this.search.x + 4, this.search.y + 5, 0xaaaaaa);
             }
         }
     }

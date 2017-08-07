@@ -30,9 +30,12 @@ public class CapabilityHandler
      */
     @SubscribeEvent
     @SuppressWarnings("deprecation")
-    public void attachCapability(AttachCapabilitiesEvent.Entity event)
+    public void attachCapability(AttachCapabilitiesEvent<Entity> event)
     {
-        if (!(event.getEntity() instanceof EntityPlayer)) return;
+        if (!(event.getObject() instanceof EntityPlayer))
+        {
+            return;
+        }
 
         event.addCapability(RECORDING_CAP, new RecordingProvider());
     }

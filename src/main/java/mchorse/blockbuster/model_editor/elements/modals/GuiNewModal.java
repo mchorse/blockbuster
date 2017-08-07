@@ -92,7 +92,7 @@ public class GuiNewModal extends GuiModal
 
         if (!this.search.isFocused() && this.search.getText().isEmpty())
         {
-            this.font.drawStringWithShadow(this.strSearch, this.search.xPosition + 4, this.search.yPosition + 5, 0xaaaaaa);
+            this.font.drawStringWithShadow(this.strSearch, this.search.x + 4, this.search.y + 5, 0xaaaaaa);
         }
 
         if (this.models.selected != null)

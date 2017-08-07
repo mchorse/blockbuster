@@ -91,7 +91,7 @@ public class GuiDirector extends GuiScreen implements IModalCallback
         }
         else if (button.id == 1)
         {
-            this.modal = new GuiConfirmModal(NO_ID, YES_ID, this, this.fontRendererObj);
+            this.modal = new GuiConfirmModal(NO_ID, YES_ID, this, this.fontRenderer);
             this.modal.label = I18n.format("blockbuster.gui.director.reset_replays");
             this.modal.initiate();
         }
@@ -186,7 +186,7 @@ public class GuiDirector extends GuiScreen implements IModalCallback
         this.done = new GuiButton(0, this.width - 80 - x, this.height - y - h, 80, h, I18n.format("blockbuster.gui.done"));
         this.reset = new GuiButton(1, x, this.height - y - h, w, h, I18n.format("blockbuster.gui.reset"));
 
-        this.replayName = new GuiTextField(20, this.fontRendererObj, x + 1, y + 16, w - 2, h - 2);
+        this.replayName = new GuiTextField(20, this.fontRenderer, x + 1, y + 16, w - 2, h - 2);
 
         /* Adding GUI elements */
         this.buttonList.add(this.done);
@@ -224,14 +224,14 @@ public class GuiDirector extends GuiScreen implements IModalCallback
         this.drawGradientRect(0, y + 45, 120, this.height - y * 2 - 20, 0xff000000, 0xff000000);
 
         /* Title */
-        this.fontRendererObj.drawStringWithShadow(this.stringTitle, 8, 8, 0xffffffff);
+        this.fontRenderer.drawStringWithShadow(this.stringTitle, 8, 8, 0xffffffff);
 
         /* Draw GUI fields */
         this.replayName.drawTextBox();
 
         if (!this.replayName.isFocused() && this.replayName.getText().isEmpty())
         {
-            this.fontRendererObj.drawStringWithShadow(this.stringAdd, this.replayName.xPosition + 4, this.replayName.yPosition + 5, 0xff888888);
+            this.fontRenderer.drawStringWithShadow(this.stringAdd, this.replayName.x + 4, this.replayName.y + 5, 0xff888888);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

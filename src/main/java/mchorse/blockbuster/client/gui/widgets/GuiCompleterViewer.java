@@ -61,7 +61,7 @@ public class GuiCompleterViewer extends GuiScrollPane
             int y = this.y + i * this.span;
 
             /* Label */
-            this.fontRendererObj.drawStringWithShadow(entry, x, y + 4, 0xffffffff);
+            this.fontRenderer.drawStringWithShadow(entry, x, y + 4, 0xffffffff);
 
             /* Separator */
             if (i != c - 1)
