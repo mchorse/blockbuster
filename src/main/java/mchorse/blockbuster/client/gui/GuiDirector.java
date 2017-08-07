@@ -75,6 +75,11 @@ public class GuiDirector extends GuiScreen implements IModalCallback
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        if (this.replay != null && this.replay.isMorphPickerActive())
+        {
+            return;
+        }
+
         if (button.id == 0)
         {
             if (this.previous != null)

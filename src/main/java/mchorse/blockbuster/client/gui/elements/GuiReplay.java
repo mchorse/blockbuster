@@ -98,6 +98,14 @@ public class GuiReplay extends GuiScreen
         }
     }
 
+    /**
+     * Is morph picker is active? 
+     */
+    public boolean isMorphPickerActive()
+    {
+        return !this.morphs.morphs.getHidden();
+    }
+
     /* Actions */
 
     @Override
