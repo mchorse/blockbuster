@@ -19,6 +19,8 @@ blockbuster.gui:
     break: Break
     select: Select
     ok: Ok
+    yes: "Yes"
+    no: "No"
     
     confirm:
         title: Confirm Breaking Director Block
@@ -29,6 +31,7 @@ blockbuster.gui:
         title: Director Block
         add: Add a replay...
         no_cast: No replays!
+        reset_replays: Are you sure you want to {o}remove all{r} replays in {l}this{r} director block?  
     
     # Actor configuration GUI strings
     actor:

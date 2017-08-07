@@ -8,6 +8,9 @@ import org.lwjgl.input.Keyboard;
 import mchorse.blockbuster.client.gui.elements.GuiReplay;
 import mchorse.blockbuster.client.gui.elements.GuiReplays;
 import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.model_editor.elements.modals.GuiConfirmModal;
+import mchorse.blockbuster.model_editor.modal.GuiModal;
+import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
@@ -29,8 +32,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This GUI is responsible for managing director block's replays.
  */
 @SideOnly(Side.CLIENT)
-public class GuiDirector extends GuiScreen
+public class GuiDirector extends GuiScreen implements IModalCallback
 {
+    public static final int YES_ID = -1;
+    public static final int NO_ID = -2;
+
     private String stringTitle = I18n.format("blockbuster.gui.director.title");
     private String stringAdd = I18n.format("blockbuster.gui.director.add");
 
@@ -46,6 +52,8 @@ public class GuiDirector extends GuiScreen
     private GuiReplay replay;
 
     private Replay previous;
+
+    private GuiModal modal;
 
     public GuiDirector(BlockPos pos)
     {
@@ -67,6 +75,11 @@ public class GuiDirector extends GuiScreen
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        if (this.replay != null && this.replay.isMorphPickerActive())
+        {
+            return;
+        }
+
         if (button.id == 0)
         {
             if (this.previous != null)
@@ -78,11 +91,27 @@ public class GuiDirector extends GuiScreen
         }
         else if (button.id == 1)
         {
+            this.modal = new GuiConfirmModal(NO_ID, YES_ID, this, this.fontRendererObj);
+            this.modal.label = I18n.format("blockbuster.gui.director.reset_replays");
+            this.modal.initiate();
+        }
+    }
+
+    @Override
+    public void modalButtonPressed(GuiModal modal, GuiButton button)
+    {
+        if (button.id == YES_ID)
+        {
             Dispatcher.sendToServer(new PacketDirectorReset(this.pos));
 
             this.previous = null;
             this.replay.select(null, -1);
             this.replays.reset();
+            this.modal = null;
+        }
+        else
+        {
+            this.modal = null;
         }
     }
 
@@ -91,24 +120,37 @@ public class GuiDirector extends GuiScreen
     {
         super.handleMouseInput();
 
-        this.replays.handleMouseInput();
-        this.replay.handleMouseInput();
+        if (this.modal == null)
+        {
+            this.replays.handleMouseInput();
+            this.replay.handleMouseInput();
+        }
     }
 
     @Override
     public void handleKeyboardInput() throws IOException
     {
-        super.handleKeyboardInput();
+        if (this.modal == null)
+        {
+            super.handleKeyboardInput();
 
-        this.replay.handleKeyboardInput();
+            this.replay.handleKeyboardInput();
+        }
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.modal == null)
+        {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        this.replayName.mouseClicked(mouseX, mouseY, mouseButton);
+            this.replayName.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+        else
+        {
+            this.modal.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 
     @Override
@@ -152,6 +194,11 @@ public class GuiDirector extends GuiScreen
 
         this.replays.updateRect(-1, y + 45, 122, (this.height - y * 3 - h - 45));
         this.replay.initGui();
+
+        if (this.modal != null)
+        {
+            this.modal.initiate();
+        }
     }
 
     @Override
@@ -190,6 +237,12 @@ public class GuiDirector extends GuiScreen
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.replays.drawScreen(mouseX, mouseY, partialTicks);
         this.replay.drawScreen(mouseX, mouseY, partialTicks);
+
+        if (this.modal != null)
+        {
+            super.drawDefaultBackground();
+            this.modal.drawModal(mouseX, mouseY, partialTicks);
+        }
     }
 
     public void setSelected(Replay replay, int index)

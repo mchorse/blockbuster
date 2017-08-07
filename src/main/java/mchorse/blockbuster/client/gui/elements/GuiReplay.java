@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.elements;
 
 import java.io.IOException;
+import java.util.List;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
@@ -97,6 +98,14 @@ public class GuiReplay extends GuiScreen
         }
     }
 
+    /**
+     * Is morph picker is active? 
+     */
+    public boolean isMorphPickerActive()
+    {
+        return !this.morphs.morphs.getHidden();
+    }
+
     /* Actions */
 
     @Override
@@ -155,6 +164,17 @@ public class GuiReplay extends GuiScreen
         component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
 
         L10n.info(player, "recording.message", this.filename.getText(), component);
+
+        /* Add the command to the history */
+        List<String> messages = this.mc.ingameGUI.getChatGUI().getSentMessages();
+
+        boolean empty = messages.isEmpty();
+        boolean lastMessageIsntCommand = !empty && !messages.get(messages.size() - 1).equals(command);
+
+        if (lastMessageIsntCommand || empty)
+        {
+            messages.add(command);
+        }
     }
 
     /**
@@ -279,7 +299,7 @@ public class GuiReplay extends GuiScreen
         this.buttonList.add(this.invisible);
 
         /* Morph */
-        this.morphs.updateRect(x, margin, this.width - x - margin, this.height - 90);
+        this.morphs.updateRect(x, margin, this.width - x - margin, this.height - margin * 2);
     }
 
     private void fillData()
@@ -342,8 +362,6 @@ public class GuiReplay extends GuiScreen
             GlStateManager.translate(0, 0, -40);
             cell.morph.renderOnScreen(Minecraft.getMinecraft().player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
-
-            this.drawCenteredString(this.fontRendererObj, cell.name, center, 12, 0xffffffff);
         }
         else if (this.replay.morph != null)
         {
@@ -353,6 +371,8 @@ public class GuiReplay extends GuiScreen
             GlStateManager.translate(0, 0, -40);
             this.replay.morph.renderOnScreen(Minecraft.getMinecraft().player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
+
+            this.drawCenteredString(this.fontRendererObj, this.replay.morph.name, center, 12, 0x888888);
         }
 
         /* Draw GUI elements */
