@@ -1,20 +1,20 @@
 blockbuster.info:
-    metamorph: {f}You're using Metamorph %s{f}. It is recommended to update to Metamorph %s{f} as it's the main version which was tested with current version of Blockbuster mod. Thank you for attention!
+    metamorph: "{f}You're using Metamorph %s{f}. It is recommended to update to Metamorph %s{f} as it's the main version which was tested with current version of Blockbuster mod. Thank you for attention!"
     
     actor:
-        playing: {f}This actor already plays!
+        playing: "{f}This actor already plays!"
     
     director:
-        already_registered: {f}This actor is already registered by this director block!
+        already_registered: "{f}This actor is already registered by this director block!"
     
     # General command infos
     commands:
-        load_chunks: {f}Loaded all generated chunks in render distance.
+        load_chunks: "{f}Loaded all generated chunks in render distance."
         
-        replace_texture: {f}Texture %s{f} was replaced with texture %s{f}.
-        restore_texture: {f}Texture %s{f} was restored to its original state.
+        replace_texture: "{f}Texture %s{f} was replaced with texture %s{f}."
+        restore_texture: "{f}Texture %s{f} was restored to its original state."
     
-    models.loaded: {f}Received %s{f} custom models and %s{f} skins from server.
+    models.loaded: "{f}Received %s{f} custom models and %s{f} skins from server."
     
     record:
         action: "{f}Action at %s{f} tick is %s{f} at index %s{f} with data: %s"
@@ -34,7 +34,7 @@ blockbuster.info:
     
     # Recording strings
     recording:
-        recording: %s{f} is already being recorded to.
-        dead: {f}Stopped recording %s{f}, because player's dead.
-        message: {f}To start recording an actor %s{f}, %s{f}!
+        recording: "%s{f} is already being recorded to."
+        dead: "{f}Stopped recording %s{f}, because player's dead."
+        message: "{f}To start recording an actor %s{f}, %s{f}!"
         clickhere: click here

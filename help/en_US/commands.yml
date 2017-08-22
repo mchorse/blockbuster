@@ -10,7 +10,7 @@ blockbuster:
 
         # Record's commands
         record:
-            help: {r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions.
+            help: "{r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions."
             
             add: 
                 |
@@ -44,7 +44,7 @@ blockbuster:
 
         # Model's commands
         model:
-            help: {r}{o}Model command{r}. This command provides sub-commands for managing custom models.
+            help: "{r}{o}Model command{r}. This command provides sub-commands for managing custom models."
             
             export:
                 |
@@ -74,7 +74,7 @@ blockbuster:
 
         # Action's commands
         action:
-            help: {r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions.
+            help: "{r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions."
             
             clear:
                 |
