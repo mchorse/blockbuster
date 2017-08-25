@@ -8,7 +8,7 @@ blockbuster:
     yes: "Yes"
     no: "No"
     eggs:
-        yike: {l}Alright{r}, {o}alright{r}, that was {7}McHorse{r}'s joke! Switching back to {6}YikeFilms{r}.
+        yike: "{l}Alright{r}, {o}alright{r}, that was {7}McHorse{r}'s joke! Switching back to {6}YikeFilms{r}."
 
 # Metamorph category
 morph.category.blockbuster: Blockbuster models

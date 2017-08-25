@@ -3,15 +3,12 @@ package mchorse.blockbuster.common.item;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.camera.CameraUtils;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.camera.PacketCameraState;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,13 +76,16 @@ public class ItemPlayback extends Item
             return;
         }
 
-        if (tag.hasKey("CameraProfile"))
+        if (CameraHandler.isApertureLoaded())
         {
-            tooltip.add(I18n.format("blockbuster.info.playback_profile", tag.getString("CameraProfile")));
-        }
-        else if (tag.hasKey("CameraPlay"))
-        {
-            tooltip.add(I18n.format("blockbuster.info.playback_play"));
+            if (tag.hasKey("CameraProfile"))
+            {
+                tooltip.add(I18n.format("blockbuster.info.playback_profile", tag.getString("CameraProfile")));
+            }
+            else if (tag.hasKey("CameraPlay"))
+            {
+                tooltip.add(I18n.format("blockbuster.info.playback_play"));
+            }
         }
 
         BlockPos pos = getBlockPos("Dir", stack);
@@ -131,16 +131,9 @@ public class ItemPlayback extends Item
 
             AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
 
-            if (director.togglePlayback())
+            if (director.togglePlayback() && CameraHandler.isApertureLoaded())
             {
-                if (tag.hasKey("CameraPlay"))
-                {
-                    Dispatcher.sendTo(new PacketCameraState(true), (EntityPlayerMP) player);
-                }
-                else if (tag.hasKey("CameraProfile"))
-                {
-                    CameraUtils.sendProfileToPlayer(tag.getString("CameraProfile"), (EntityPlayerMP) player, true);
-                }
+                CameraHandler.handlePlaybackItem(player, tag);
             }
         }
 

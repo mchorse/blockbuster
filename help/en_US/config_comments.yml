@@ -1,0 +1,27 @@
+blockbuster.config.comments:
+    general:
+        load_models_on_login: Send all server models and skins to the player who's logging in?
+        clean_model_downloads: Remove all downloaded models after exiting a server?
+        disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
+        extra_wubs: This option does literally nothing. Or maybe it does...?
+        auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
+        debug_playback_ticks: Write ticks in the log during director block recording
+
+    recording:
+        recording_countdown: Recording countdown (in seconds)
+        recording_delay: Frame delay for recording
+        record_unload_time: How long does it take to unload a record (in ticks)
+        record_unload: Enable automatic record unloading?
+        record_sync_rate: How often a recording is going to synchronize with the server?
+        record_attack_on_swipe: Does attack action get recorded with swipe action?
+        record_commands: Does command action get recorded during recording?
+
+    actor:
+        actor_fall_damage: Do actors receive fall damage?
+        actor_tracking_range: How far actors are tracked? Requires restart of the game.
+        actor_rendering_range: How far actors are seen?
+        actor_always_render_names: Enable unconditional actor nametag rendering
+
+    damage_control:
+        damage_control: Whether damage control is enabled
+        damage_control_distance: Radius of effect for damage control

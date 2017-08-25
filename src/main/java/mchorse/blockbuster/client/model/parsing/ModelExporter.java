@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.model.parsing;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import mchorse.blockbuster.model_editor.ModelUtils;
 import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
@@ -17,9 +19,12 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
 import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.model.TexturedQuad;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Model exporter
@@ -54,7 +59,6 @@ public class ModelExporter
     public String export(String name)
     {
         Model data = new Model();
-        Gson gson = this.createGson();
 
         this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         ModelBase model = this.getModel();
@@ -73,7 +77,40 @@ public class ModelExporter
         this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         this.savePose("sneaking", data, limbs);
 
-        return gson.toJson(data);
+        this.setDefaultTexture(data);
+
+        return ModelUtils.toJson(data);
+    }
+
+    /**
+     * Tries to set default texture
+     */
+    private void setDefaultTexture(Model data)
+    {
+        Class<?> clazz = Render.class;
+
+        for (Method method : clazz.getDeclaredMethods())
+        {
+            Class[] args = method.getParameterTypes();
+
+            boolean hasEntityArg = args.length == 1 && args[0].isAssignableFrom(Entity.class);
+            boolean returnsRL = method.getReturnType().isAssignableFrom(ResourceLocation.class);
+
+            if (hasEntityArg && returnsRL)
+            {
+                try
+                {
+                    method.setAccessible(true);
+                    data.defaultTexture = (ResourceLocation) method.invoke(this.render, this.entity);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                break;
+            }
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -181,6 +182,20 @@ public class GuiMorphsPopup extends GuiScreen
         GlStateManager.translate(0, 0, 120);
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
         GlStateManager.popMatrix();
+
+        MorphCell cell = this.morphs.getSelected();
+
+        if (cell != null)
+        {
+            int width = Math.max(this.fontRendererObj.getStringWidth(cell.name), this.fontRendererObj.getStringWidth(cell.morph.name)) + 6;
+            int center = this.x + this.w / 2;
+            int y = this.y + this.h - 26;
+
+            Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0xcc000000);
+
+            this.drawCenteredString(fontRendererObj, cell.name, center, y, 0xffffff);
+            this.drawCenteredString(fontRendererObj, cell.morph.name, center, y + 14, 0x888888);
+        }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

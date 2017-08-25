@@ -12,31 +12,6 @@ package mchorse.blockbuster.capabilities.recording;
 public interface IRecording
 {
     /**
-     * Get filename of current camera profile
-     */
-    public String currentProfile();
-
-    /**
-     * Get timestamp of current camera profile
-     */
-    public long currentProfileTimestamp();
-
-    /**
-     * Does this capability has a camera profile?
-     */
-    public boolean hasProfile();
-
-    /**
-     * Set current's camera profile filename
-     */
-    public void setCurrentProfile(String filename);
-
-    /**
-     * Set current's camera profile timestamp
-     */
-    public void setCurrentProfileTimestamp(long timestamp);
-
-    /**
      * Does player has loaded recording?
      */
     public boolean hasRecording(String filename);

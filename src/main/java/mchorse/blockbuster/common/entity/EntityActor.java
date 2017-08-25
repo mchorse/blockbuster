@@ -13,7 +13,9 @@ import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
@@ -101,6 +103,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public float rotateElytraX = 0.0F;
     public float rotateElytraY = 0.0F;
     public float rotateElytraZ = 0.0F;
+
+    /**
+     * Whether this actor is mounted
+     */
+    public boolean isMounted;
 
     public EntityActor(World worldIn)
     {
@@ -263,7 +270,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             int tick = this.playback.tick;
 
-            if (this.playback.isFinished())
+            if (this.playback.isFinished() && !this.noClip)
             {
                 CommonProxy.manager.stopPlayback(this);
             }
@@ -504,10 +511,96 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     /* Public API */
 
     /**
+     * Pause the playing actor
+     */
+    public void pause()
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        this.playback.playing = false;
+        this.noClip = true;
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), true, this.playback.tick));
+        }
+    }
+
+    /**
+     * Resume the paused actor
+     */
+    public void resume(int tick)
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        this.playback.tick = tick;
+        this.playback.playing = true;
+        this.noClip = false;
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), false, this.playback.tick));
+        }
+    }
+
+    /**
+     * Make an actor go to the given tick
+     * @param actions 
+     */
+    public void goTo(int tick, boolean actions)
+    {
+        if (this.playback == null)
+        {
+            return;
+        }
+
+        int min = Math.min(this.playback.tick, tick);
+        int max = Math.max(this.playback.tick, tick);
+
+        System.out.println(actions);
+
+        if (actions)
+        {
+            for (int i = min; i < max; i++)
+            {
+                this.playback.record.applyAction(i, this);
+            }
+        }
+
+        this.playback.tick = tick;
+        this.playback.record.resetUnload();
+        this.playback.record.applyFrame(tick, this, true);
+
+        if (actions)
+        {
+            this.playback.record.applyAction(tick, this);
+        }
+
+        if (this.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
+        }
+    }
+
+    /**
+     * Start the playback, but with default tick argument
+     */
+    public void startPlaying(String filename, boolean kill)
+    {
+        this.startPlaying(filename, 0, kill);
+    }
+
+    /**
      * Start the playback, invoked by director block (more specifically by
      * DirectorTileEntity).
      */
-    public void startPlaying(String filename, boolean kill)
+    public void startPlaying(String filename, int tick, boolean kill)
     {
         if (CommonProxy.manager.players.containsKey(this))
         {
@@ -516,7 +609,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             return;
         }
 
-        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, kill, true);
+        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, tick, kill, true);
     }
 
     /**
@@ -613,10 +706,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         MorphUtils.morphToBuf(buffer, this.morph);
 
         buffer.writeBoolean(this.invisible);
-        buffer.writeBoolean(this.isPlaying());
+        buffer.writeBoolean(this.playback != null);
 
-        if (this.isPlaying())
+        if (this.playback != null)
         {
+            buffer.writeBoolean(this.playback.playing);
             buffer.writeInt(this.playback.tick);
             buffer.writeByte(this.playback.recordDelay);
             ByteBufUtils.writeUTF8String(buffer, this.playback.record.filename);
@@ -634,6 +728,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (buffer.readBoolean())
         {
+            boolean playing = buffer.readBoolean();
             int tick = buffer.readInt();
             int delay = buffer.readByte();
             String filename = ByteBufUtils.readUTF8String(buffer);
@@ -647,6 +742,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
                 else
                 {
                     this.playback = new RecordPlayer(null, Mode.FRAMES);
+
+                    Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
                 }
             }
 
@@ -654,6 +751,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             {
                 this.playback.tick = tick;
                 this.playback.recordDelay = delay;
+                this.playback.playing = playing;
             }
         }
 

@@ -23,8 +23,6 @@ public class RecordingStorage implements IStorage<IRecording>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setString("Profile", instance.currentProfile());
-
         return tag;
     }
 
@@ -34,8 +32,6 @@ public class RecordingStorage implements IStorage<IRecording>
         if (nbt instanceof NBTTagCompound)
         {
             NBTTagCompound tag = (NBTTagCompound) nbt;
-
-            instance.setCurrentProfile(tag.getString("Profile"));
         }
     }
 }

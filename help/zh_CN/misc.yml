@@ -8,7 +8,7 @@ blockbuster:
     yes: "是"
     no: "否"
     eggs:
-        yike: {l}好吧{r}, {o}好吧{r}, 那是 {7}McHorse{r}的笑话！现在切换回 {6}YikeFilms{r}。
+        yike: "{l}好吧{r}, {o}好吧{r}, 那是 {7}McHorse{r}的笑话！现在切换回 {6}YikeFilms{r}。"
 
 # Metamorph category
 morph.category.blockbuster: Blockbuster 模型

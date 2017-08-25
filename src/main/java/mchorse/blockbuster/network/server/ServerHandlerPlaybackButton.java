@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.server;
 
+import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.common.item.ItemPlayback;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,8 +21,6 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
 
         compound.removeTag("CameraPlay");
         compound.removeTag("CameraProfile");
-
-        if (message.mode == 0) return;
 
         if (message.mode == 1)
         {

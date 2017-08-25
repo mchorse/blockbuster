@@ -63,7 +63,7 @@ public class Frame
 
         /* Position and rotation */
         this.x = mount.posX;
-        this.y = mount.posY;
+        this.y = player.isRiding() && player.getRidingEntity().posY > player.posY ? player.posY : mount.posY;
         this.z = mount.posZ;
 
         this.yaw = player.rotationYaw;
@@ -106,6 +106,8 @@ public class Frame
      */
     public void applyOnActor(EntityActor actor, boolean force)
     {
+        boolean isRemote = actor.worldObj.isRemote;
+
         Entity mount = actor.isRiding() ? actor.getRidingEntity() : actor;
 
         if (mount instanceof EntityActor)
@@ -113,7 +115,7 @@ public class Frame
             mount = actor;
         }
 
-        boolean isRemote = actor.worldObj.isRemote;
+        actor.isMounted = this.isMounted;
 
         /* This is most important part of the code that makes the recording
          * super smooth.

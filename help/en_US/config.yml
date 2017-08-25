@@ -8,6 +8,7 @@ blockbuster.config:
         disable_teleport_playback_button: Disable playback button teleport
         extra_wubs: Extra Wubs
         auto_refresh_models: Refresh models and skins
+        debug_playback_ticks: Debug ticks
     
     recording:
         title: Recording
@@ -19,33 +20,6 @@ blockbuster.config:
         record_sync_rate: Record tick synchronization rate
         record_attack_on_swipe: Attack on swipe
         record_commands: Record commands
-    
-    camera:
-        title: Camera
-        
-        camera_duration: Default fixture duration
-        camera_duration_step: Duration step
-        camera_interpolate_target: Interpolate target fixtures
-        camera_interpolate_target_value: Target interpolation value
-        camera_spectator: Switch to specator
-        camera_step_factor: Camera step factor
-        camera_rotate_factor: Camera rotate factor
-        camera_minema: Minema
-        camera_smooth_clamp: Clip camera's pitch
-        camera_path_default_interp: Default path interpolation
-        
-        smooth:
-            title: Smooth camera
-            
-            roll_speed: Roll speed
-            roll_friction: Roll friction
-            
-            fov_speed: FOV speed
-            fov_friction: FOV friction
-            
-            smooth_enabled: Smooth camera enabled
-            mouse_x_friction: Mouse Y friction
-            mouse_y_friction: Mouse Y friction
     
     actor:
         title: Actor

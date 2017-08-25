@@ -19,6 +19,8 @@ blockbuster.gui:
     break: Break
     select: Select
     ok: Ok
+    yes: "Yes"
+    no: "No"
     
     confirm:
         title: Confirm Breaking Director Block
@@ -29,6 +31,7 @@ blockbuster.gui:
         title: Director Block
         add: Add a replay...
         no_cast: No replays!
+        reset_replays: Are you sure you want to {o}remove all{r} replays in {l}this{r} director block?  
     
     # Actor configuration GUI strings
     actor:
@@ -39,6 +42,8 @@ blockbuster.gui:
         invincible: Can be killed?
         invisible: Is visible?
         attached: Attached to actor
+        yaw: Yaw 
+        pitch: Pitch 
 
     # Playback GUI
     playback:
@@ -49,3 +54,11 @@ blockbuster.gui:
         nothing: Do nothing
         play: Play only
         load_profile: Load and play
+        
+    aperture:
+        config:
+            title: Director
+            
+            reload: Reload actors
+            actions: Preview actions
+            reload_scene: Reload scene

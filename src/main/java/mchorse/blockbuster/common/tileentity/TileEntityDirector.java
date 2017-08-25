@@ -3,11 +3,13 @@ package mchorse.blockbuster.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,11 +36,16 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         this.startPlayback((EntityActor) null);
     }
 
+    public void startPlayback(EntityActor exception)
+    {
+        this.startPlayback(exception, 0);
+    }
+
     /**
      * The same thing as startPlayback, but don't play the actor that is passed
      * in the arguments (because he might be recorded by the player)
      */
-    public void startPlayback(EntityActor exception)
+    public void startPlayback(EntityActor exception, int tick)
     {
         if (this.worldObj.isRemote || this.isPlaying())
         {
@@ -77,7 +84,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 firstActor = actor;
             }
 
-            actor.startPlaying(replay.id, notAttached);
+            actor.startPlaying(replay.id, tick, notAttached);
 
             if (notAttached)
             {
@@ -219,11 +226,11 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      * positioning cameras for exact positions.
      */
     @Override
-    public void spawn(int tick)
+    public boolean spawn(int tick)
     {
         if (this.replays.isEmpty())
         {
-            return;
+            return false;
         }
 
         if (!this.actors.isEmpty())
@@ -237,17 +244,25 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             {
                 Utils.broadcastError("director.empty_filename");
 
-                return;
+                return false;
             }
         }
 
         this.collectActors();
+        this.playBlock(true);
+
+        int j = 0;
 
         for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
             EntityActor actor = entry.getValue();
             boolean notAttached = replay.actor == null;
+
+            if (j == 0)
+            {
+                CommonProxy.manager.addDamageControl(this, actor);
+            }
 
             actor.startPlaying(replay.id, notAttached);
 
@@ -256,15 +271,38 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 actor.playback.playing = false;
                 actor.playback.record.applyFrame(tick, actor, true);
                 actor.noClip = true;
+
+                for (int i = 0; i <= tick; i++)
+                {
+                    actor.playback.record.applyAction(i, actor);
+                }
             }
 
             if (notAttached)
             {
                 this.worldObj.spawnEntityInWorld(actor);
             }
+
+            j++;
         }
 
-        this.playBlock(true);
+        return true;
+    }
+
+    @Override
+    public void update()
+    {
+        if (Blockbuster.proxy.config.debug_playback_ticks && !this.actors.isEmpty())
+        {
+            EntityActor actor = this.actors.values().iterator().next();
+
+            if (actor.playback != null)
+            {
+                Blockbuster.LOGGER.info("Director tick: " + actor.playback.tick);
+            }
+        }
+
+        super.update();
     }
 
     /**
@@ -383,5 +421,70 @@ public class TileEntityDirector extends AbstractTileEntityDirector
         }
 
         return null;
+    }
+
+    /**
+     * Pause the director block playback (basically, pause all actors)
+     */
+    public void pause()
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.pause();
+        }
+    }
+
+    /**
+     * Resume paused director block playback (basically, resume all actors)
+     */
+    public void resume(int tick)
+    {
+        for (EntityActor actor : this.actors.values())
+        {
+            actor.resume(tick);
+        }
+    }
+
+    /**
+     * Make actors go to the given tick
+     */
+    public void goTo(int tick, boolean actions)
+    {
+        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        {
+            if (tick == 0)
+            {
+                entry.getKey().apply(entry.getValue());
+            }
+
+            entry.getValue().goTo(tick, actions);
+        }
+    }
+
+    /**
+     * Get maximum length of current director block
+     */
+    public int getMaxLength()
+    {
+        int max = 0;
+
+        for (Replay replay : this.replays)
+        {
+            Record record = null;
+
+            try
+            {
+                record = CommonProxy.manager.getRecord(replay.id);
+            }
+            catch (Exception e)
+            {}
+
+            if (record != null)
+            {
+                max = Math.max(max, record.getLength());
+            }
+        }
+
+        return max;
     }
 }

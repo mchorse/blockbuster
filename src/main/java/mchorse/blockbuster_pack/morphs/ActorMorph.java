@@ -2,13 +2,16 @@ package mchorse.blockbuster_pack.morphs;
 
 import com.google.common.base.Objects;
 
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.CustomMorph;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import mchorse.metamorph.client.model.ModelCustom;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -70,6 +73,26 @@ public class ActorMorph extends CustomMorph
         }
     }
 
+    @Override
+    public void updateSize(EntityLivingBase target, IMorphing cap)
+    {
+        String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
+
+        if (target instanceof EntityActor)
+        {
+            poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
+        }
+
+        this.pose = this.model.getPose(poseName);
+
+        if (this.pose != null)
+        {
+            float[] pose = this.pose.size;
+
+            this.updateSize(target, pose[0], pose[1]);
+        }
+    }
+
     /**
      * Check whether given object equals to this object
      *
@@ -104,11 +127,11 @@ public class ActorMorph extends CustomMorph
             }
         }
 
-        return super.equals(object);
+        return result;
     }
 
     @Override
-    public AbstractMorph clone(boolean clone)
+    public AbstractMorph clone(boolean isRemote)
     {
         ActorMorph morph = new ActorMorph();
 
@@ -124,7 +147,11 @@ public class ActorMorph extends CustomMorph
         morph.action = this.action;
 
         morph.model = this.model;
-        morph.renderer = this.renderer;
+
+        if (isRemote)
+        {
+            morph.renderer = this.renderer;
+        }
 
         return morph;
     }

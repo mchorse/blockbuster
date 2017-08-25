@@ -154,6 +154,7 @@ public class Record
             this.applyFrame(0, actor, true);
 
             /* Reseting actor's state */
+            actor.isMounted = false;
             actor.setSneaking(false);
             actor.setSprinting(false);
             actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);

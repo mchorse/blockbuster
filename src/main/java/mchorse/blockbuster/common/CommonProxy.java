@@ -29,6 +29,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -132,6 +133,12 @@ public class CommonProxy
     }
 
     /**
+     *  
+     */
+    public void postLoad(FMLPostInitializationEvent event)
+    {}
+
+    /**
      * Load models from given model pack
      *
      * This method is responsible only for loading domain models (in form of
@@ -198,4 +205,12 @@ public class CommonProxy
      */
     public void onConfigChange(Configuration config)
     {}
+
+    /**
+     * Get language string
+     */
+    public String getLanguageString(String key, String defaultComment)
+    {
+        return defaultComment;
+    }
 }

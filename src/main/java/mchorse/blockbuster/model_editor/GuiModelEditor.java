@@ -328,8 +328,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
     /**
      * Get currently editing pose
-     *
-     * TODO: Rename
      */
     public Model.Pose getCurrentLimbPose()
     {
@@ -429,7 +427,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         {
             this.openModal(new GuiInputModal(ADD_LIMB, this, this.fontRendererObj).setLabel(I18n.format("blockbuster.gui.me.add_limb_modal")));
         }
-        else if (button.id == 4)
+        else if (button.id == 4 && this.limbs.limb != null)
         {
             this.limbs.removeLimb();
             this.rebuildModel();
@@ -529,8 +527,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         try
         {
             String name = modal.name.getText();
-            float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
-            int[] texture = new int[] {Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText())};
+            float[] scale = new float[] { Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText()) };
+            int[] texture = new int[] { Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText()) };
 
             if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
             {

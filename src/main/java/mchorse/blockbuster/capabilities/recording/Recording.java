@@ -10,42 +10,11 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class Recording implements IRecording
 {
-    public ItemInfo camera = new ItemInfo();
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
 
     public static IRecording get(EntityPlayer player)
     {
         return player.getCapability(RecordingProvider.RECORDING, null);
-    }
-
-    @Override
-    public String currentProfile()
-    {
-        return this.camera.filename;
-    }
-
-    @Override
-    public long currentProfileTimestamp()
-    {
-        return this.camera.timestamp;
-    }
-
-    @Override
-    public boolean hasProfile()
-    {
-        return !this.camera.filename.isEmpty();
-    }
-
-    @Override
-    public void setCurrentProfile(String filename)
-    {
-        this.camera.filename = filename;
-    }
-
-    @Override
-    public void setCurrentProfileTimestamp(long timestamp)
-    {
-        this.camera.timestamp = timestamp;
     }
 
     @Override
