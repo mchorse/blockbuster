@@ -27,11 +27,6 @@ compileJava
     sourceCompatibility = targetCompatibility = "1.6"
 }
 
-<<<<<<< HEAD
-minecraft {
-	version = "1.11.2-13.20.0.2228"
-	runDir = "run"
-=======
 /* Build language files */
 task buildLangFiles {
     doLast {
@@ -132,14 +127,10 @@ task buildLangFiles {
 }
 
 tasks.processResources.dependsOn('buildLangFiles')
-
-/* Minecraft */
-minecraft 
-{
-    version = "1.10.2-12.18.3.2185"
-    runDir = "run"
->>>>>>> dev
     
+minecraft {
+    version = "1.11.2-13.20.0.2228"
+    runDir = "run"
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -155,22 +146,6 @@ dependencies
 {
 	compile files("run/mods/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
 	compile files("run/mods/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
-<<<<<<< HEAD
-
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-=======
->>>>>>> dev
 }
 
 processResources
