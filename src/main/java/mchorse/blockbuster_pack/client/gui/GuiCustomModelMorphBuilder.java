@@ -24,6 +24,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
     {
         super();
 
+        /* TODO: extract strings */
         this.model = new GuiTextField(0, font, 0, 0, 0, 0);
         this.model.setMaxStringLength(200);
         this.texture = new GuiTextField(0, font, 0, 0, 0, 0);
@@ -189,6 +190,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
 
         this.poses.draw(mouseX, mouseY, mc.currentScreen.width, mc.currentScreen.height, partialTicks);
 
+        /* TODO: extract strings */
         this.font.drawStringWithShadow("Model", this.x, this.y + 37, 0xffffff);
         this.font.drawStringWithShadow("Skin", this.x, this.y + 67, 0xffffff);
         this.font.drawStringWithShadow("Pose", this.x, this.y + 97, 0xffffff);
