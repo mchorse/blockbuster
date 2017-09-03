@@ -10,7 +10,7 @@ blockbuster:
 
         # Record's commands
         record:
-            help: {r}{o}录制命令{r}。此命令提供一些次级命令来让玩家熟练录制操作。
+            help: "{r}{o}录制命令{r}。此命令提供一些次级命令来让玩家熟练录制操作。"
             
             add: 
                 |
@@ -44,7 +44,7 @@ blockbuster:
 
         # Model's commands
         model:
-            help: {r}{o}模型命令{r}。 本命令让你管理自定义模型。
+            help: "{r}{o}模型命令{r}。 本命令让你管理自定义模型。"
             
             export:
                 |
@@ -74,7 +74,7 @@ blockbuster:
 
         # Action's commands
         action:
-            help: {r}{o}动作命令{r}。本命令提供一些次级命令管理玩家录制内容动作。
+            help: "{r}{o}动作命令{r}。本命令提供一些次级命令管理玩家录制内容动作。"
             
             clear:
                 |
@@ -101,133 +101,3 @@ blockbuster:
                     {l}{6}/{r}action {8}stop{r}
                     
                     {r}停止录制动作。如果玩家没有录制任何东西，什么都不会发生。
-
-        # Camera's commands
-        camera:
-            help: {r}{o}相机命令{r}。 提供一些次级命令用来管理相机配置和关键点。
-            
-            start: 
-                |
-                    {l}{6}/{r}camera {8}start{r}
-                    
-                    {r}运行相机配置。
-            stop: 
-                |
-                    {l}{6}/{r}camera {8}stop{r}
-            
-                    {r}停止当前运行的相机配置。
-            new: 
-                |
-                    {l}{6}/{r}camera {8}new{r} {7}<filename>{r}
-                    
-                    {r}在当前会话创建一个新的 <filename> 相机配置。
-            load: 
-                |
-                    {l}{6}/{r}camera {8}load{r} {7}<filename>{r}
-                    
-                    {r}加载相机配置。
-            save: 
-                |
-                    {l}{6}/{r}camera {8}save{r} {7}[filename]{r}
-                    
-                    {r}保存相机配置到文件。如果未指定文件名，这个相机配置将会保存到 上次保存或加载的文件。
-            clear: 
-                |
-                    {l}{6}/{r}camera {8}clear{r}
-                    
-                    {r}清除相机配置文件 (会移除所有相机关键点)
-            goto: 
-                |
-                    {l}{6}/{r}camera {8}goto{r} {7}<index> [progress]{r}
-                    
-                    {r}传送你到索引 {7}<index>{r} 的相机关键点。你可以选择指定 {7}[progress]{r}(路程) (从 {7}0.0{r} 到 {7}1.0{r}) 这会允许你传送到相机路程的中间或者环绕点。
-
-            default:
-                |
-                    {l}{6}/{r}camera {8}default{r}
-                    
-                    {r}恢复相机的 {7}FOV{r} 和 {7}翻滚角度{r} 到默认设置({7}FOV 70.0{r} 和 {7}0.0{r} 度).
-            fov: 
-                |
-                    {l}{6}/{r}camera {8}fov{r} {7}[fov]{r}
-                    
-                    设定客户端相机的 {l}FOV{r}。
-            roll: 
-                |
-                    {l}{6}/{r}camera {8}roll{r} {7}[roll]{r}
-                    
-                    {r}设定客户端相机的 {7}[roll]{r} ({7}Z轴{r}翻滚程度)。
-            
-            rotate:
-                |
-                    {l}{6}/{r}camera {8}rotate{r} {7}[yaw] [pitch]{r}
-                    
-                    {r}设定摄像机的角度，可以只增加或减少参数。你可以通过指定数字设定绝对的摄像机角度 {6}/camera {8}rotate {7}90 90{r}。或者你可以通过{7}+{r} 或 {7}-{r} 标志来增加或减少幅度 {6}/camera {8}rotate {7}+0.5 -0.5{r}。
-            
-            step:
-                |
-                    {l}{6}/{r}camera {8}step{r} {7}[x] [y] [z]{r}
-                    
-                    {r}根据绝对的数值或增减幅度设定摄像机位置。你可以通过指定数字设定绝对的摄像机位置 {6}/camera {8}step {7}0 4 0{r}. 或者你可以通过{7}+{r} 或 {7}-{r} 标志来增加或减少位置数值 {6}/camera {8}step {7}+0 +0.1 +0{r}。很像 {6}/tp{r} 命令。
-
-            fixture:
-                add: 
-                    |
-                        {l}{6}/{r}camera {8}add{r} {7}<idle|path|follow|look|circular> <duration>{r}
-                        
-                        {r}在相机配置的最后添加一个指定的类型和 {7}<duration>{r}（时长）的相机关键点。
-                edit: 
-                    |
-                        {l}{6}/{r}camera {8}edit{r} {7}<index> <values...>{r}
-                        
-                        {r}在目前的相机配置里设定索引号 {7}<index>{r} 关键点的参数。
-                remove: 
-                    |
-                        {l}{6}/{r}camera {8}remove{r} {7}<index>{r}
-                        
-                        {r}移除索引号 {7}<index>{r} 的相机关键点。
-                    
-                duration: 
-                    |
-                        {l}{6}/{r}camera {8}duration{r} {7}[index] [duration]{r}
-                        
-                        {r}可以用来设置，或者获取整个相机配置或一个相机关键点的时长。如果所有的参数按照预设，命令会设置{7}[duration]{r} (tick单位)时长到索引号 {7}[index]{r} 的相机关键点。增减符号可以用在 {7}[duration]{r} 参数。
-                
-                move: 
-                    |
-                        {l}{6}/{r}camera {8}move{r} {7}<from> <to>{r}
-                        
-                        {r}在相机配置里，将关键点索引号 {7}<from>{r} 移动到索引号 {7}<to>{r}。
-            
-            path: 
-                help: {r}{o}相机路径次级命令{r}。提供管理相机路径和关键点的次级命令。
-                
-                add:
-                    |
-                        {l}{6}/{r}camera path {8}add{r} {7}<index> [before_point]{r}
-                        
-                        {r}在索引号 {7}<index>{r} 的后面添加一个路径点，或者在指定 {7}[before_point]{r} 编号的前面(如果指定了)。
-                
-                edit:
-                    |
-                        {l}{6}/{r}camera path {8}edit{r} {7}<index> <point_index>{r}
-                        
-                        {r}在路径索引号 {7}<index>{r} 的路径里编辑路径点索引号 {7}<point_index>{r} 的位置。
-                
-                goto:
-                    |
-                        {l}{6}/{r}camera path {8}goto{r} {7}<index> <point_index>{r}
-                        
-                        {r}在路径索引号 {7}<index>{r} 的路径里前往路径点索引号 {7}<point_index>{r} 的位置。
-                
-                move:
-                    |
-                        {l}{6}/{r}camera path {8}move{r} {7}<index> <from> <to>{r}
-                        
-                        {r}在路径索引号 {7}<index>{r} 的路径里将路径点索引号 {7}<from>{r} 移动到路径点索引号 {7}<to>{r}。
-                
-                remove:
-                    |
-                        {l}{6}/{r}camera path {8}remove{r} {7}<index> <point_index>{r}
-                        
-                        {r}在路径索引号 {7}<index>{r} 的路径里移除路径点索引号 {7}<point_index){r}。

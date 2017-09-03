@@ -37,7 +37,6 @@ public class GuiMorphsPopup extends GuiScreen
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
         this.morphs = new GuiCreativeMorphs(perRow, selected, morphing);
-        this.morphs.setScrollSpeed(3);
         this.morphs.setHidden(true);
         this.morphs.shiftX = 8;
     }
@@ -48,7 +47,9 @@ public class GuiMorphsPopup extends GuiScreen
         this.y = y;
         this.w = w;
         this.h = h;
+
         this.morphs.updateRect(x, y + 25, w, h - 25);
+        this.morphs.setPerRow((int) Math.ceil(w / 54.0F));
     }
 
     public boolean isInside(int x, int y)
@@ -187,14 +188,14 @@ public class GuiMorphsPopup extends GuiScreen
 
         if (cell != null)
         {
-            int width = Math.max(this.fontRendererObj.getStringWidth(cell.name), this.fontRendererObj.getStringWidth(cell.morph.name)) + 6;
+            int width = Math.max(this.fontRendererObj.getStringWidth(cell.current().name), this.fontRendererObj.getStringWidth(cell.current().morph.name)) + 6;
             int center = this.x + this.w / 2;
-            int y = this.y + this.h - 26;
+            int y = this.y + 34;
 
             Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0xcc000000);
 
-            this.drawCenteredString(fontRendererObj, cell.name, center, y, 0xffffff);
-            this.drawCenteredString(fontRendererObj, cell.morph.name, center, y + 14, 0x888888);
+            this.drawCenteredString(fontRendererObj, cell.current().name, center, y, 0xffffff);
+            this.drawCenteredString(fontRendererObj, cell.current().morph.name, center, y + 14, 0x888888);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

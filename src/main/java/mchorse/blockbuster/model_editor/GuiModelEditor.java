@@ -274,7 +274,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     {
         try
         {
-            return new ModelParser().parseModel(this.data, ModelCustom.class);
+            return new ModelParser(null).parseModel(this.data, ModelCustom.class);
         }
         catch (Exception e)
         {
@@ -527,8 +527,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         try
         {
             String name = modal.name.getText();
-            float[] scale = new float[] { Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText()) };
-            int[] texture = new int[] { Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText()) };
+            float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
+            int[] texture = new int[] {Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText())};
 
             if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
             {

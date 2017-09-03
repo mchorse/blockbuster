@@ -85,7 +85,7 @@ public class GuiReplays extends GuiScrollPane
     /* GUI & drawing */
 
     @Override
-    protected void drawBackground()
+    protected void drawBackground(int mouseX, int mouseY, float partialTicks)
     {}
 
     @Override
