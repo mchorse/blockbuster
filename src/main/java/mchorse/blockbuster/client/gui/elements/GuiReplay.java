@@ -192,7 +192,7 @@ public class GuiReplay extends GuiScreen
         value.name = this.name.getText();
         value.invincible = this.invincible.getValue();
 
-        value.morph = cell == null ? this.replay.morph : cell.morph.clone(true);
+        value.morph = cell == null ? this.replay.morph : cell.current().morph.clone(true);
         value.invisible = this.invisible.getValue();
 
         value.actor = this.replay.actor;
@@ -299,7 +299,7 @@ public class GuiReplay extends GuiScreen
         this.buttonList.add(this.invisible);
 
         /* Morph */
-        this.morphs.updateRect(x, margin, this.width - x - margin, this.height - margin * 2);
+        this.morphs.updateRect(x - margin, 0, this.width - x + margin, this.height);
     }
 
     private void fillData()
@@ -360,7 +360,7 @@ public class GuiReplay extends GuiScreen
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, -40);
-            cell.morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            cell.current().morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
         }
         else if (this.replay.morph != null)

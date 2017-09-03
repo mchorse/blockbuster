@@ -1,7 +1,5 @@
 package mchorse.blockbuster_pack.morphs;
 
-import com.google.common.base.Objects;
-
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.Model;
@@ -36,7 +34,7 @@ public class ActorMorph extends CustomMorph
      */
     public ActorMorph()
     {
-        this.hands = true;
+        this.settings.hands = true;
     }
 
     /**
@@ -109,10 +107,6 @@ public class ActorMorph extends CustomMorph
         {
             ActorMorph actor = (ActorMorph) object;
 
-            // TODO: Move to Metamorph in next update
-            result = result && Objects.equal(this.currentPose, actor.currentPose);
-            result = result && this.currentPoseOnSneak == actor.currentPoseOnSneak;
-
             if (this.skin == null && actor.skin == null)
             {
                 return result;
@@ -138,13 +132,10 @@ public class ActorMorph extends CustomMorph
         morph.name = this.name;
         morph.skin = this.skin;
 
-        // TODO: Also move to Metamorph
         morph.currentPose = this.currentPose;
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
 
-        morph.abilities = this.abilities;
-        morph.attack = this.attack;
-        morph.action = this.action;
+        morph.settings = settings;
 
         morph.model = this.model;
 

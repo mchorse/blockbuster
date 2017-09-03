@@ -19,8 +19,10 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.model_editor.MainMenuHandler;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster_pack.client.gui.GuiCustomModelMorphBuilder;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import mchorse.metamorph.client.model.ModelCustom;
 import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
@@ -150,6 +152,9 @@ public class ClientProxy extends CommonProxy
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());
+
+        /* Metamorph morph builder panel */
+        GuiMorphBuilder.BUILDERS.put("blockbuster", new GuiCustomModelMorphBuilder());
     }
 
     @Override
@@ -175,7 +180,15 @@ public class ClientProxy extends CommonProxy
         for (Map.Entry<String, Model> model : this.models.models.entrySet())
         {
             Model mod = model.getValue();
-            boolean flag = true;
+            String key = model.getKey().replace("blockbuster.", "");
+            File objModel = null;
+
+            boolean fallback = true;
+
+            if (pack.models.containsKey(key))
+            {
+                objModel = pack.models.get(key).objModel;
+            }
 
             if (!mod.model.isEmpty())
             {
@@ -184,9 +197,9 @@ public class ClientProxy extends CommonProxy
                     Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
 
                     /* Parse custom custom (overcustomized) model */
-                    ModelParser.parse(model.getKey(), mod, clazz);
+                    ModelParser.parse(model.getKey(), mod, clazz, objModel);
 
-                    flag = false;
+                    fallback = false;
                 }
                 catch (ClassNotFoundException e)
                 {
@@ -194,9 +207,9 @@ public class ClientProxy extends CommonProxy
                 }
             }
 
-            if (flag)
+            if (fallback)
             {
-                ModelParser.parse(model.getKey(), model.getValue());
+                ModelParser.parse(model.getKey(), model.getValue(), objModel);
             }
         }
 
@@ -226,7 +239,7 @@ public class ClientProxy extends CommonProxy
         ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(path, "inventory"));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);

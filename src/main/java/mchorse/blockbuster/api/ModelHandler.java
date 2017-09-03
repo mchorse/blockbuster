@@ -57,7 +57,7 @@ public class ModelHandler
 
             try
             {
-                InputStream modelStream = new FileInputStream(pack.models.get(model));
+                InputStream modelStream = new FileInputStream(pack.models.get(model).customModel);
 
                 this.models.put("blockbuster." + model, Model.parse(modelStream));
                 modelStream.close();
@@ -74,6 +74,7 @@ public class ModelHandler
             String path = "assets/blockbuster/models/entity/";
             ClassLoader loader = this.getClass().getClassLoader();
 
+            /* TODO: optional load (if it's there, don't) */
             this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
             this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
             this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));

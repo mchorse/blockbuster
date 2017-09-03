@@ -75,7 +75,7 @@ public class ServerHandlerRequestModels extends ServerMessageHandler<PacketReque
         {
             try
             {
-                InputStream modelStream = new FileInputStream(handler.pack.models.get(model));
+                InputStream modelStream = new FileInputStream(handler.pack.models.get(model).customModel);
 
                 if (modelStream != null)
                 {

@@ -34,8 +34,6 @@ public class BlockbusterFactory implements IMorphFactory
     public void register(MorphManager manager)
     {
         /* Blacklist actors */
-        manager.blacklist.add("blockbuster.Actor");
-
         this.registerModels();
     }
 
@@ -159,7 +157,7 @@ public class BlockbusterFactory implements IMorphFactory
 
                     poseActor.currentPose = pose;
                     poseActor.setPose(entry.getValue());
-                    morphs.addMorphVariant(actor.name, "blockbuster", skin + ", pose " + pose, poseActor);
+                    morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", skin, poseActor);
                 }
             }
         }

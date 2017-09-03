@@ -27,7 +27,7 @@ public class ModelPack
     /**
      * Cached models
      */
-    public Map<String, File> models = new HashMap<String, File>();
+    public Map<String, ModelEntry> models = new HashMap<String, ModelEntry>();
 
     /**
      * Cached skins
@@ -61,7 +61,7 @@ public class ModelPack
      */
     public List<String> getSkins(String model)
     {
-        Set<String> keys = this.skins.containsKey(model) ? this.skins.get(model).keySet() : Collections.<String> emptySet();
+        Set<String> keys = this.skins.containsKey(model) ? this.skins.get(model).keySet() : Collections.<String>emptySet();
 
         return new ArrayList<String>(keys);
     }
@@ -119,10 +119,11 @@ public class ModelPack
             }
 
             File model = new File(file.getAbsolutePath() + "/model.json");
+            File objModel = new File(file.getAbsolutePath() + "/model.obj");
 
             if (file.isDirectory() && model.isFile())
             {
-                this.models.put(file.getName(), model);
+                this.models.put(file.getName(), new ModelEntry(model, objModel.exists() ? objModel : null));
             }
         }
     }
@@ -166,6 +167,21 @@ public class ModelPack
                     this.skins.put(filename, map);
                 }
             }
+        }
+    }
+
+    /**
+     * Model entry 
+     */
+    public static class ModelEntry
+    {
+        public File customModel;
+        public File objModel;
+
+        public ModelEntry(File customModel, File objModel)
+        {
+            this.customModel = customModel;
+            this.objModel = objModel;
         }
     }
 }

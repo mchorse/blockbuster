@@ -91,7 +91,7 @@ public class GuiActor extends GuiScreen
         {
             boolean invisible = this.invisible.getValue();
 
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.morph, invisible));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.current().morph, invisible));
         }
 
         /* Rotate the actor */
@@ -176,7 +176,7 @@ public class GuiActor extends GuiScreen
         this.buttonList.add(this.rotateX);
         this.buttonList.add(this.rotateY);
 
-        this.morphs.updateRect(120, 40, this.width - 128, this.height - 50);
+        this.morphs.updateRect(120, 30, this.width - 120, this.height - 30);
     }
 
     private void fillData()
@@ -215,10 +215,10 @@ public class GuiActor extends GuiScreen
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, -40);
-            cell.morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            cell.current().morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
-            this.drawCenteredString(this.fontRendererObj, cell.name, center, 40, 0xffffffff);
+            this.drawCenteredString(this.fontRendererObj, cell.current().morph.name, center, 40, 0xffffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
