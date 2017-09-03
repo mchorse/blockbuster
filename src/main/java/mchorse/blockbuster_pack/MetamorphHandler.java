@@ -8,6 +8,6 @@ public class MetamorphHandler
     @SubscribeEvent
     public void onBlacklistReload(RegisterBlacklistEvent event)
     {
-        event.blacklist.add("blockbuster.Actor");
+        event.blacklist.add("blockbuster:actor");
     }
 }
