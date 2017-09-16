@@ -359,7 +359,7 @@ public class ActionHandler
      * handler which was responsible for recoring MORPH action.
      */
     @SubscribeEvent
-    public void onPlayerMorph(MorphEvent event)
+    public void onPlayerMorph(MorphEvent.Post event)
     {
         EntityPlayer player = event.player;
         List<Action> events = CommonProxy.manager.getActions(player);
