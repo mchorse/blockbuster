@@ -136,7 +136,6 @@ public class ActorMorph extends CustomMorph
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
 
         morph.settings = settings;
-
         morph.model = this.model;
 
         if (isRemote)
