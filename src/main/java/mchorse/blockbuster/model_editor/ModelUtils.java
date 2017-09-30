@@ -59,6 +59,7 @@ public class ModelUtils
         to.scale = from.scale;
         to.model = from.model;
         to.name = from.name;
+        to.providesObj = from.providesObj;
 
         to.poses = from.poses;
         to.limbs = from.limbs;

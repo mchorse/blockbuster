@@ -236,6 +236,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
         this.dummy = new DummyEntity(null);
 
+        this.modelName = "steve";
         this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
     }
@@ -246,6 +247,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     private void setupModel(ModelCustom model)
     {
         this.data = model.model.clone();
+
+        /* TODO: Move to Metamorph ASAP */
+        this.data.providesObj = model.model.providesObj;
+
+        for (Map.Entry<String, Model.Limb> limb : model.model.limbs.entrySet())
+        {
+            this.data.limbs.get(limb.getKey()).origin = limb.getValue().origin;
+        }
 
         List<String> poses = new ArrayList<String>();
         poses.addAll(this.data.poses.keySet());
@@ -274,7 +283,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     {
         try
         {
-            return new ModelParser(null).parseModel(this.data, ModelCustom.class);
+            File objModel = null;
+
+            if (ClientProxy.actorPack.pack.models.containsKey(this.modelName))
+            {
+                objModel = ClientProxy.actorPack.pack.models.get(this.modelName).objModel;
+            }
+
+            return new ModelParser(objModel).parseModel(this.data, ModelCustom.class);
         }
         catch (Exception e)
         {
@@ -623,9 +639,9 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         String name = cell.key;
         int index = name.indexOf(".") + 1;
 
-        this.setupModel(cell.model);
         this.textureRL = cell.texture;
         this.modelName = index == -1 ? name : name.substring(index);
+        this.setupModel(cell.model);
 
         return true;
     }
