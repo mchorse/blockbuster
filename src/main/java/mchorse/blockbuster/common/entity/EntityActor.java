@@ -105,9 +105,15 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public float rotateElytraZ = 0.0F;
 
     /**
-     * Whether this actor is mounted
+     * Whether this actor is mounted (used for hacking riding pose for 
+     * 3rd party sit-able mods, such as CFM or Quark) 
      */
     public boolean isMounted;
+
+    /**
+     * Whether this actor was attached to director block 
+     */
+    public boolean wasAttached;
 
     public EntityActor(World worldIn)
     {
@@ -672,6 +678,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         this.morph = MorphUtils.morphFromNBT(tag);
 
+        this.wasAttached = tag.getBoolean("WasAttached");
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
@@ -696,6 +703,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         tag.setBoolean("Invisible", this.invisible);
+        tag.setBoolean("WasAttached", this.wasAttached);
     }
 
     /* IEntityAdditionalSpawnData implementation */
@@ -703,6 +711,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
+        if (this.wasAttached && this.playback == null)
+        {
+            this.setDead();
+        }
+
         MorphUtils.morphToBuf(buffer, this.morph);
 
         buffer.writeBoolean(this.invisible);
