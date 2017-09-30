@@ -57,6 +57,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private static final int TRANSLATE = 14;
     private static final int SCALE = 15;
     private static final int ROTATE = 16;
+    private static final int ORIGIN = 17;
 
     /* Strings */
     private final String strNoLimbs = I18n.format("blockbuster.gui.me.no_limbs");
@@ -112,6 +113,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private GuiThreeInput translate;
     private GuiThreeInput scale;
     private GuiThreeInput rotate;
+    private GuiThreeInput origin;
 
     /* Stuff */
     private int category;
@@ -163,6 +165,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.translate = new GuiThreeInput(TRANSLATE, font, 0, 0, width, this);
         this.scale = new GuiThreeInput(SCALE, font, 0, 0, width, this);
         this.rotate = new GuiThreeInput(ROTATE, font, 0, 0, width, this);
+        this.origin = new GuiThreeInput(ORIGIN, font, 0, 0, width, this);
 
         /* Category buttons */
         this.next = new GuiButton(-1, 0, 0, ">");
@@ -254,6 +257,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.swiping.setIsChecked(limb.swiping);
         this.invert.setIsChecked(limb.invert);
         this.holding.setValue(limb.holding.isEmpty() ? 0 : (limb.holding.equals("right") ? 1 : 2));
+
+        /* OBJ origin */
+        this.origin.a.setText(String.valueOf(limb.origin[0]));
+        this.origin.b.setText(String.valueOf(limb.origin[1]));
+        this.origin.c.setText(String.valueOf(limb.origin[2]));
 
         this.updatePoseFields();
     }
@@ -379,6 +387,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             y += 20;
             this.rotate.update(x, y, width);
             y += 25;
+            this.origin.update(x, y, width);
+            y += 25;
         }
 
         if (!full)
@@ -426,6 +436,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.translate.mouseClicked(mouseX, mouseY, mouseButton);
             this.scale.mouseClicked(mouseX, mouseY, mouseButton);
             this.rotate.mouseClicked(mouseX, mouseY, mouseButton);
+            this.origin.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
 
@@ -486,6 +497,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.translate.keyTyped(typedChar, keyCode);
             this.scale.keyTyped(typedChar, keyCode);
             this.rotate.keyTyped(typedChar, keyCode);
+            this.origin.keyTyped(typedChar, keyCode);
         }
     }
 
@@ -548,6 +560,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.translate.draw();
             this.rotate.draw();
             this.scale.draw();
+            this.origin.draw();
 
             /* Icons for pose */
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -555,6 +568,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.editor.drawTexturedModalRect(this.translate.a.xPosition + 100, this.translate.a.yPosition, 64, 0, 16, 16);
             this.editor.drawTexturedModalRect(this.scale.a.xPosition + 100, this.scale.a.yPosition, 80, 0, 16, 16);
             this.editor.drawTexturedModalRect(this.rotate.a.xPosition + 100, this.rotate.a.yPosition, 80, 16, 16, 16);
+            this.editor.drawTexturedModalRect(this.origin.a.xPosition + 100, this.origin.a.yPosition, 112, 32, 16, 16);
         }
     }
 
@@ -672,6 +686,11 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             if (id == COLOR && val >= 0 && val <= 1)
             {
                 this.limb.color[subset] = val;
+            }
+            if (id == ORIGIN)
+            {
+                this.limb.origin[subset] = val;
+                this.editor.rebuildModel();
             }
 
             if (this.pose == null)
