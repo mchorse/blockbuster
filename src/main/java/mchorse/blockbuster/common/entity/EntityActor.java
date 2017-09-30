@@ -260,7 +260,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void onLivingUpdate()
     {
-        if (this.noClip)
+        if (this.noClip && !this.worldObj.isRemote)
         {
             return;
         }
@@ -569,8 +569,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         int min = Math.min(this.playback.tick, tick);
         int max = Math.max(this.playback.tick, tick);
 
-        System.out.println(actions);
-
         if (actions)
         {
             for (int i = min; i < max; i++)
@@ -650,10 +648,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(AbstractMorph morph, boolean invisible, boolean notify)
+    public void modify(AbstractMorph morph, boolean invisible, boolean freeze, boolean notify)
     {
         this.morph = morph;
         this.invisible = invisible;
+        this.noClip = freeze;
 
         if (!this.worldObj.isRemote && notify)
         {
@@ -666,7 +665,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void notifyPlayers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
+        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible, this.noClip));
     }
 
     /* Reading/writing to disk */
@@ -719,6 +718,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         MorphUtils.morphToBuf(buffer, this.morph);
 
         buffer.writeBoolean(this.invisible);
+        buffer.writeBoolean(this.noClip);
         buffer.writeBoolean(this.playback != null);
 
         if (this.playback != null)
@@ -738,6 +738,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         this.morph = MorphUtils.morphFromBuf(buffer);
         this.invisible = buffer.readBoolean();
+        this.noClip = buffer.readBoolean();
 
         if (buffer.readBoolean())
         {

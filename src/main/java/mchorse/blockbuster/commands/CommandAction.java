@@ -76,7 +76,7 @@ public class CommandAction extends SubCommandBase
         boolean invincible = args.length >= 5 ? CommandBase.parseBoolean(args[4]) : false;
 
         actor = new EntityActor(world);
-        actor.modify(MorphUtils.morphFromModel(model, skin), false, true);
+        actor.modify(MorphUtils.morphFromModel(model, skin), false, false, true);
         actor.setEntityInvulnerable(invincible);
         actor.setCustomNameTag(name);
 
