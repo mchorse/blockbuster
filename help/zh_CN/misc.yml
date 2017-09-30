@@ -5,8 +5,8 @@ blockbuster:
     
     marker: "{6}{l}|{r} 录制 {7}%s{r} {8}({6}x%s{8}){r},目前已进行 {7}%s{6}t{r} {8}({r} 与上次标记间隔 {7}%s{6}t{8}){r}。"
     recording: 录制到 {7}%s{r}
-    yes: "是"
-    no: "否"
+    "yes": "是"
+    "no": "否"
     eggs:
         yike: "{l}好吧{r}, {o}好吧{r}, 那是 {7}McHorse{r}的笑话！现在切换回 {6}YikeFilms{r}。"
 
