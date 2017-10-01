@@ -33,6 +33,8 @@ For exception of camera features, there are also some little tweaks made to othe
 
 * Add `/action record` command to the history when pressing `Record` button in director block GUI (thanks to Tom Soel)
 * Removed `spawn` sub-command from `/director` command
+* Removed `/camera` command
+* Removed `/load_chunks` command
 
 #### GUI
 

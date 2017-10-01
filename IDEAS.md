@@ -10,9 +10,7 @@ There's some ideas that I want to implement in next Blockbuster mod:
       With scripted recording you'll be able to specify different behavior like: 
       run over there, and then fight other actor in the sight, if he lowers your HP to 
       5, run like a pussy, and jump into lava. Something like that. 
-* Rewrite recording code (pixel -> vector, I'll get what I mean)
-* Custom actor actions (like dancing, waving with hands like crazy person, or making a blow kiss)
-* Animating actor skins (basically to create illusion of lip syncing or eyes blinking)  
+* Rewrite recording code (pixel -> vector, I'll get what I mean)  
 
 ## Things needed to be done before update
 

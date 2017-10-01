@@ -69,6 +69,8 @@ Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md
 
 ## For Devs
 
-Language files are compiled from YML in `help/` folder. So if you're going to touch localization strings, modify the appropriate YML file. 
+Language files are compiled from YML (which are located in `help/` folder) to INI format. 
 
-Use `./gradlew buildLangFiles` to convert YML to INI format `.lang` files directly into `src/main/resources/assets/blockbuster/lang`. Don't forget to refresh your IDE after building of YML files.
+If you're going to work with localization strings, modify the appropriate YML file, first. Then use the `./gradlew buildLangFiles` command to convert YML to INI format `.lang` files directly to `src/main/resources/assets/blockbuster/lang` folder. 
+
+Don't forget to refresh your IDE after building of YML files.
