@@ -2,7 +2,7 @@
 blockbuster:
     # Parsing
     parsing.lacks_pose: 解析的模型 "%s" 没有姿势 "%s" ！
-    
+
     marker: "{6}{l}|{r} 录制 {7}%s{r} {8}({6}x%s{8}){r},目前已进行 {7}%s{6}t{r} {8}({r} 与上次标记间隔 {7}%s{6}t{8}){r}。"
     recording: 录制到 {7}%s{r}
     "yes": "是"
@@ -12,3 +12,4 @@ blockbuster:
 
 # Metamorph category
 morph.category.blockbuster: Blockbuster 模型
+metamorph.builder.blockbuster: 自定义模型制作器

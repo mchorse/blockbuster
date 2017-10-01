@@ -19,26 +19,30 @@ blockbuster.gui:
     break: 破坏
     select: 选择
     ok: 好
-    
+
     confirm:
         title: 确认破坏导演方块
         description: 在({7}%s{f}, {7}%s{f}, {7}%s{f})的导演方块总共含{7}%s{f}个回放。你真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
-    
+
     # Director block GUI strings
     director:
         title: 导演方块
         add: 添加一个回放...
         no_cast: 没有回放！
-    
+        reset_replays: 你确定要把{l}这个{r}导演方块里的{o}所有{r}回放{o}移除{r}吗？
+
     # Actor configuration GUI strings
     actor:
         title: 演员设定
         default: 默认
         name: 名称
         filename: 录制ID
-        invincible: 可被杀掉吗？
-        invisible: 可见？
+        invincible: 可死亡吗？
+        invisible: 可见吗？
         attached: 演员链接
+        yaw: 偏航
+        pitch: 俯仰
+        freeze: 冻结这个演员？
 
     # Playback GUI
     playback:
@@ -49,3 +53,11 @@ blockbuster.gui:
         nothing: 什么都不做
         play: 仅播放
         load_profile: 读取并播放
+
+    aperture:
+        config:
+            title: 演员
+
+            reload: 重载演员
+            actions: 预览动作
+            reload_scene: 重载场景
