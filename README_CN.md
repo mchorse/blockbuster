@@ -1,8 +1,7 @@
 ![Blockbuster](http://i.imgur.com/nqDKg1R.png)
 
-[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum 帖子](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) - [中文百科](https://github.com/ycwei982/blockbuster/wiki)
-[EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap)
-s
+[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum 帖子](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) - [中文百科](https://github.com/ycwei982/blockbuster/wiki) - [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap)
+
 Blockbuster 是一个可以让你在Minecraft单人模式使用NPC演员和摄像机来制作短片的mod。本mod适用于Forge版本的Minecraft 1.9.4, 1.10.2 和 1.11.2，不适用于网易我的世界中国版。
 
 Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph)。每次更新日志会写上支持的Metamorph版本。
