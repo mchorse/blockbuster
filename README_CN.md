@@ -84,6 +84,6 @@ cd ..
 make build_lang
 ```
 
-这应该就可以把YML转换成语言文件。同时，你要去刷新一下Eclipse或者IDE. 同时你要刷新一下Eclipse或你的IDE来s让更改的文件导入。打开 `en_US.lang` 然后再gradle编译一遍就行了。
+这应该就可以把YML转换成语言文件。同时你要刷新一下Eclipse或你的IDE来s让更改的文件导入。打开 `en_US.lang` 然后再gradle编译一遍就行了。
 
 并且别忘了下载一份 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的 `-dev` jars (自愿选择 `-source`，文档用) 在发布的版本中。将 `-dev` mod 放到 `run/mods` (查看 `build.gradle` 的 `depenencies` 部分了解更多)。
