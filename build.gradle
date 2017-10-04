@@ -157,7 +157,7 @@ eclipse
             whenMerged
             {
                 def lib = entries.find { it.path.contains "metamorph-" + metamorph }
-                lib.sourcePath = fileReference(file("run/metamorph-" + aperture + "-" + project.minecraft.version + "-source.jar"))
+                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + project.minecraft.version + "-source.jar"))
                 
                 lib = entries.find { it.path.contains "aperture-" + aperture } 
                 lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + project.minecraft.version + "-source.jar"))
