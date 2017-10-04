@@ -144,8 +144,26 @@ minecraft {
 
 dependencies 
 {
-	compile files("run/mods/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/mods/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/" + project.minecraft.version + "/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/" + project.minecraft.version + "/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+}
+
+eclipse
+{
+    classpath
+    {
+        file
+        {
+            whenMerged
+            {
+                def lib = entries.find { it.path.contains "metamorph-" + metamorph }
+                lib.sourcePath = fileReference(file("run/metamorph-" + aperture + "-" + project.minecraft.version + "-source.jar"))
+                
+                lib = entries.find { it.path.contains "aperture-" + aperture } 
+                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + project.minecraft.version + "-source.jar"))
+            }
+        }
+    }
 }
 
 processResources

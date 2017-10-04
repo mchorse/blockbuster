@@ -28,6 +28,7 @@ blockbuster.config:
         actor_tracking_range: Actor tracking range
         actor_rendering_range: Actor rendering range
         actor_always_render_names: Always render actor names
+        actor_swish_swipe: Swipe swish
 
     damage_control:
         title: Damage control

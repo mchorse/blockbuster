@@ -86,6 +86,12 @@ public class RecordPlayer
             this.delay = this.recordDelay;
         }
 
+        /* Align the body with the head on spawn */
+        if (this.tick == 0)
+        {
+            actor.renderYawOffset = actor.rotationYaw;
+        }
+
         this.tick++;
     }
 }

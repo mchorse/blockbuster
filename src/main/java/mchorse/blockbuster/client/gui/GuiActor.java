@@ -3,7 +3,6 @@ package mchorse.blockbuster.client.gui;
 import java.io.IOException;
 
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
-import mchorse.blockbuster.client.gui.widgets.buttons.GuiToggle;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -17,6 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +32,6 @@ public class GuiActor extends GuiScreen
 {
     /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.actor.title");
-    private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
 
     /* Domain objects, they're provide data */
     private EntityActor actor;
@@ -40,7 +39,8 @@ public class GuiActor extends GuiScreen
     /* GUI fields */
     private GuiButton done;
     private GuiButton pick;
-    private GuiToggle invisible;
+    private GuiCheckBox invisible;
+    private GuiCheckBox freeze;
     private GuiSlider rotateX;
     private GuiSlider rotateY;
     private GuiMorphsPopup morphs;
@@ -69,10 +69,6 @@ public class GuiActor extends GuiScreen
         {
             this.morphs.morphs.setHidden(false);
         }
-        else if (button.id == 2)
-        {
-            this.invisible.toggle();
-        }
     }
 
     /**
@@ -89,9 +85,10 @@ public class GuiActor extends GuiScreen
         /* Update actor's morph */
         if (morph != null)
         {
-            boolean invisible = this.invisible.getValue();
+            boolean invisible = !this.invisible.isChecked();
+            boolean freeze = this.freeze.isChecked();
 
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.current().morph, invisible));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.current().morph, invisible, freeze));
         }
 
         /* Rotate the actor */
@@ -157,14 +154,15 @@ public class GuiActor extends GuiScreen
         int y2 = this.height - 30;
 
         /* Initializing all GUI fields first */
-        this.invisible = new GuiToggle(2, x, y2 - 30, w, 20, I18n.format("blockbuster.no"), I18n.format("blockbuster.yes"));
+        this.invisible = new GuiCheckBox(2, x, y2 - 40, I18n.format("blockbuster.gui.actor.invisible"), this.actor.invisible);
+        this.freeze = new GuiCheckBox(3, x, y2 - 20, I18n.format("blockbuster.gui.actor.freeze"), this.actor.noClip);
 
         /* Buttons */
         this.done = new GuiButton(0, x, y2, w, 20, I18n.format("blockbuster.gui.done"));
         this.pick = new GuiButton(1, x, 40, w, 20, I18n.format("blockbuster.gui.pick"));
 
-        this.rotateX = new GuiSlider(-1, x, 40 + 30, w, 20, I18n.format("blockbuster.gui.actor.yaw"), "", -180, 180, this.actor.rotationYaw, false, true);
-        this.rotateY = new GuiSlider(-2, x, 40 + 30 * 2, w, 20, I18n.format("blockbuster.gui.actor.pitch"), "", -90, 90, this.actor.rotationPitch, false, true);
+        this.rotateX = new GuiSlider(-1, x, 40 + 30, w, 20, I18n.format("blockbuster.gui.actor.yaw") + " ", "", -180, 180, this.actor.rotationYaw, false, true);
+        this.rotateY = new GuiSlider(-2, x, 40 + 30 * 2, w, 20, I18n.format("blockbuster.gui.actor.pitch") + " ", "", -90, 90, this.actor.rotationPitch, false, true);
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
@@ -172,6 +170,7 @@ public class GuiActor extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.invisible);
+        this.buttonList.add(this.freeze);
 
         this.buttonList.add(this.rotateX);
         this.buttonList.add(this.rotateY);
@@ -181,7 +180,8 @@ public class GuiActor extends GuiScreen
 
     private void fillData()
     {
-        this.invisible.setValue(this.actor.invisible);
+        this.invisible.setIsChecked(!this.actor.invisible);
+        this.freeze.setIsChecked(this.actor.noClip);
         this.morphs.morphs.setSelected(this.actor.getMorph());
     }
 
@@ -197,9 +197,6 @@ public class GuiActor extends GuiScreen
 
         /* Draw labels: title */
         this.drawString(this.fontRendererObj, this.stringTitle, 20, y + 1, 0xffffffff);
-
-        /* Draw labels for visual properties */
-        this.drawString(this.fontRendererObj, this.stringInvisible, x, this.height - 70, 0xffffffff);
 
         /* Draw entity in the center of the screen */
         int size = this.height / 3;

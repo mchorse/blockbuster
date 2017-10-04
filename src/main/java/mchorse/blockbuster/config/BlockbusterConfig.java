@@ -107,6 +107,11 @@ public class BlockbusterConfig
      */
     public boolean actor_always_render_names;
 
+    /**
+     * Do actors emits a swish sound when swiping? 
+     */
+    public boolean actor_swish_swipe;
+
     /* Damage control */
 
     /**
@@ -166,6 +171,7 @@ public class BlockbusterConfig
         this.actor_tracking_range = this.getInt("actor_tracking_range", actor, 96, 64, 1024, "How far actors are tracked? Requires restart of the game.");
         this.actor_rendering_range = this.getInt("actor_rendering_range", actor, 64, 64, 1024, "How far actors are seen?");
         this.actor_always_render_names = this.getBoolean("actor_always_render_names", actor, false, "Enable unconditional actor nametag rendering");
+        this.actor_swish_swipe = this.getBoolean("actor_swish_swipe", actor, false, "Do actors emit swish sound when swiping?");
 
         /* Damage control */
         this.damage_control = this.getBoolean("damage_control", damage, false, "Whether damage control is enabled");

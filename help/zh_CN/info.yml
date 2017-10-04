@@ -3,45 +3,35 @@ blockbuster.info:
 
     actor:
         playing: "{f}这个演员已经在播放了！"
-    
+
     director:
         already_registered: "{f}这个演员已经链接到了这个导演方块上了！"
-    
-    # Camera duration
-    camera:
-        duration:
-            fixture: "{f}在索引 %s{f} 的相机关键点持续时长为 %s{f} ticks。"
-            profile: "{f}摄像机配置时长为%s{f} ticks，并且有%s{f}个关键点。"
-        
-        # Camera roll and fov
-        fov: "{f}你的FOV为%s{f}度。"
-        roll: "{f}你的倾斜度为%s{f}度。"
-    
+
     # General command infos
     commands:
         load_chunks: "{f}已加载在渲染范围里的已创建区块。"
-        
+
         replace_texture: "{f}材质 %s{f} 已被材质 %s{f} 替换。"
         restore_texture: "{f}材质 %s{f} 已经还原为初始状态。"
-    
+
     models.loaded: "{f}已从服务器收到%s{f}个自定义模型和%s{f}个皮肤。"
-    
+
     record:
         action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引号 %s{f} 并带有数据： %s"
-        
+
         info:
             |
                 {f}关于 %s{f} 的信息:
-                
+
                 {7}*{f} 录制版本: %s
                 {7}*{f} 录制的时长（ticks单位）: %s
                 {7}*{f} 延时帧: %s
                 {7}*{f} 卸载前的tick时长: %s
-        
+
         search_type: "{f}以类型 %s{f} 搜索动作:"
         search_action: "{f}在%s{f} tick找到动作， 在索引号 %s{f}."
         search_action_data: "{f}在%s{f} tick找到动作， 在索引号 %s{f} 并带有数据: %s"
-    
+
     # Recording strings
     recording:
         recording: "%s{f} 已经在录制了。"

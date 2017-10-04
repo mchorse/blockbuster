@@ -19,8 +19,6 @@ blockbuster.gui:
     break: Break
     select: Select
     ok: Ok
-    yes: "Yes"
-    no: "No"
     
     confirm:
         title: Confirm Breaking Director Block
@@ -44,6 +42,7 @@ blockbuster.gui:
         attached: Attached to actor
         yaw: Yaw 
         pitch: Pitch 
+        freeze: Freeze this actor?
 
     # Playback GUI
     playback:

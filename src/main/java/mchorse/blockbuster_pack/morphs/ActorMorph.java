@@ -4,6 +4,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.Model;
+import mchorse.metamorph.api.models.Model.Pose;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.CustomMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -14,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootContext.EntityTarget;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -90,6 +92,19 @@ public class ActorMorph extends CustomMorph
 
             this.updateSize(target, pose[0], pose[1]);
         }
+    }
+
+    @Override
+    public Pose getPose(EntityLivingBase target)
+    {
+        String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
+
+        if (target instanceof EntityActor)
+        {
+            poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
+        }
+
+        return model.getPose(poseName);
     }
 
     /**

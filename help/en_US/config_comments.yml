@@ -21,6 +21,7 @@ blockbuster.config.comments:
         actor_tracking_range: How far actors are tracked? Requires restart of the game.
         actor_rendering_range: How far actors are seen?
         actor_always_render_names: Enable unconditional actor nametag rendering
+        actor_swish_swipe: Do actors emit swish sound when swiping?
 
     damage_control:
         damage_control: Whether damage control is enabled

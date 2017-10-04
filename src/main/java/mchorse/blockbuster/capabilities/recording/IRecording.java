@@ -1,5 +1,7 @@
 package mchorse.blockbuster.capabilities.recording;
 
+import net.minecraft.util.math.BlockPos;
+
 /**
  * Recording capability
  *
@@ -40,4 +42,14 @@ public interface IRecording
      * Update given recording's timestamp
      */
     public void updateRecordingTimestamp(String filename, long timestamp);
+
+    /**
+     * Set last teleported block position  
+     */
+    public void setLastTeleportedBlockPos(BlockPos pos);
+
+    /**
+     * Get last teleported block position 
+     */
+    public BlockPos getLastTeleportedBlockPos();
 }

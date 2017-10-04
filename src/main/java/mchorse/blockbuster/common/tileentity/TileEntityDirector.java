@@ -173,6 +173,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
             if (actor == null)
             {
                 actor = new EntityActor(this.world);
+                actor.wasAttached = true;
             }
 
             replay.apply(actor);

@@ -2,6 +2,53 @@
 
 Blockbuster's change log.
 
+## Version 1.4.9 (camera update)
+
+This patch that mainly aims at providing integration with my new [Aperture](https://minecraft.curseforge.com/projects/aperture) mod (a camera mod which camera creation process using GUI). This means that all old camera code in Blockbuster was removed.
+
+For exception of camera features, there are also some little tweaks made to other components of the mod. Mostly tweaks that fix some annoying stuff. Oh, and also OBJ support for custom models.
+
+**Compatible** with Metamorph `1.1.4` and Aperture `1.0.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions probably are incompatible.
+
+#### General
+
+* Added support for Aperture mod
+    * If you hold playback button attached to director block, you would be able to preview actors playback by scrubbing the timeline (bottom bar) or pressing play/pause button
+    * Added support for camera launching for playback buttons
+    * Added Blockbuster's camera editor options panel
+* Dropped Minecraft `1.9.4` support and added Minecraft `1.12` support
+* Toggle button teleport teleports you back to the place you teleported to director block in the first place (thanks to badr)
+* More sophisticated teleport to director block (searches for a free block pos and aligns player's look toward director block)
+
+#### Actors
+
+* Added `.obj` model support 
+* Added support for sitting on 3rd-party mods that provide sittable chairs for custom model based morphs only
+* Added actor `freeze` checkbox #34 
+* Remove entity shadows for invisible actors
+* Remove stuck actors after exiting during director block's playback
+* When actors spawn, align body with head
+
+#### Commands
+
+* Add `/action record` command to the history when pressing `Record` button in director block GUI (thanks to Tom Soel)
+* Removed `spawn` sub-command from `/director` command
+* Removed `/camera` command
+* Removed `/load_chunks` command
+
+#### GUI
+
+* Add confirmation modal to the director block GUI (thanks to Sanchan, badr and others)
+* Add label for morphs in morph pickers (thanks to Minebox)
+* Add the support for displaying OBJ model parts in model editor
+* Add GUI elements to modify `origin` and `providesObj` in model editor
+
+#### Recording
+
+* Add block placing sounds to `place_block` action (thanks to MadDreamer)
+* Fixed attack action on the server (requires Easy difficulty, in order to hit player)
+* Make actors make weak hit sound when swiping (configurable, by default disabled)
+
 ## Version 1.4.8 (integrated model editor)
 
 Patch update. This update is focused on bringing [McME](https://mchorse.github.io/mcme/) into the mod itself. Why integrating model editor in the mod? Because this will increase productivity of making custom models. When you edit models in the game, you'll have instant feedback on how the model looks, meanwhile with McME, ther might be some bugs related to wrong angles between how custom model looks in the game and in the editor, how does the character would look with items in hand, etc.
@@ -308,7 +355,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-  	* Idle fixture – static camera shot 
+    * Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -319,10 +366,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-	* Removing last fixture
-	* Adding idle, look or follow fixture to current camera profile
-	* Toggle camera profile rendering
-	* Start or stop camera profile
+    * Removing last fixture
+    * Adding idle, look or follow fixture to current camera profile
+    * Toggle camera profile rendering
+    * Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command

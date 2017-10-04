@@ -6,12 +6,12 @@ blockbuster.gui.me:
     limb_name_modal: "给目前编辑中的肢体取个名字。"
     limb_parent_modal: "选择一个你想让它成为你选择的肢体的父肢体。"
     pose_title_modal: "{l}姿势"
-    
+
     warning_skins: 看起来你在编辑一个新的模型。你至少要为这个 "%s" 模型指定一个皮肤。为了让皮肤显示到菜单，\n\n请前往 "config/models/%s/skins" 文件夹。
-    
+
     model_editor: "模型编辑器"
     limbs: "肢体"
-    
+
     name: "更改名字"
     parent: "更改父级"
     mirror: "镜像"
@@ -20,24 +20,25 @@ blockbuster.gui.me:
     swinging: "晃悠状态"
     swiping: "打击状态"
     invert: "反转"
-    
+
     no_hands: "无头"
     left_hand: "左"
     right_hand: "右"
-    
+
     no_limbs: "没有肢体被选中..."
     visual: "视觉"
     gameplay: "游玩"
     pose: "姿势"
-    
+
     pose_name: "新姿势的名字..."
     search: "搜索..."
     search_texture: "搜索材质..."
-    
+
     none: "无"
-    
+
     model:
         name: "名字"
         scale: "伸缩"
         texture_size: "材质大小"
         texture: "默认材质"
+        provides_obj: "提供OBJ模型"
