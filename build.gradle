@@ -151,8 +151,8 @@ minecraft
 
 dependencies 
 {
-	compile files("run/mods/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/mods/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/" + project.minecraft.version + "/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/" + project.minecraft.version + "/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
 }
 
 eclipse
