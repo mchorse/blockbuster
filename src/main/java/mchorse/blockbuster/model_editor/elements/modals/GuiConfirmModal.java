@@ -29,8 +29,8 @@ public class GuiConfirmModal extends GuiModal
         int x2 = this.x + 8;
         int y = this.y + this.height - 28;
 
-        this.cancel = new GuiButton(this.cancelId, x, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.no"));
-        this.ok = new GuiButton(this.okId, x2, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.yes"));
+        this.cancel = new GuiButton(this.cancelId, x, y, this.buttonWidth, 20, I18n.format("blockbuster.no"));
+        this.ok = new GuiButton(this.okId, x2, y, this.buttonWidth, 20, I18n.format("blockbuster.yes"));
 
         this.buttons.clear();
         this.buttons.add(this.cancel);

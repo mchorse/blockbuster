@@ -47,7 +47,7 @@ public class ActorsPack implements IResourcePack
 
         if (splits.length == 1 && path.indexOf("/") == -1)
         {
-            return new FileInputStream(this.pack.models.get(splits[0]));
+            return new FileInputStream(this.pack.models.get(splits[0]).customModel);
         }
         else if (splits.length == 2)
         {
@@ -97,7 +97,7 @@ public class ActorsPack implements IResourcePack
     @Override
     public Set<String> getResourceDomains()
     {
-        return ImmutableSet.<String> of("blockbuster.actors");
+        return ImmutableSet.<String>of("blockbuster.actors");
     }
 
     @Override

@@ -171,7 +171,7 @@ public class GuiLimbsList extends GuiScrollPane
      * No background
      */
     @Override
-    protected void drawBackground()
+    protected void drawBackground(int mouseX, int mouseY, float partialTicks)
     {}
 
     @Override

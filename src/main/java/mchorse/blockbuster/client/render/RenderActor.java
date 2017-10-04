@@ -43,6 +43,8 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public void doRender(EntityActor entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        this.shadowOpaque = 0;
+
         if (entity.invisible)
         {
             return;
@@ -52,6 +54,8 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         if (morph != null)
         {
+            this.shadowOpaque = 1.0F;
+
             float shadow = 0.5F;
 
             if (morph instanceof ActorMorph)

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Default implementation of {@link IRecording}
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class Recording implements IRecording
 {
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
+    public BlockPos teleportPos;
 
     public static IRecording get(EntityPlayer player)
     {
@@ -61,6 +63,18 @@ public class Recording implements IRecording
         {
             this.recordings.get(filename).timestamp = timestamp;
         }
+    }
+
+    @Override
+    public void setLastTeleportedBlockPos(BlockPos pos)
+    {
+        this.teleportPos = pos;
+    }
+
+    @Override
+    public BlockPos getLastTeleportedBlockPos()
+    {
+        return this.teleportPos;
     }
 
     /**

@@ -167,7 +167,7 @@ public class GuiTexturePicker extends GuiScrollPane
      * Draw solid black background
      */
     @Override
-    protected void drawBackground()
+    protected void drawBackground(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.x + 1, this.y + 1, this.x + this.w - 1, this.y + this.h - 1, 0xff000000);
     }

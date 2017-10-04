@@ -4,11 +4,13 @@ import mchorse.blockbuster.model_editor.elements.GuiThreeInput;
 import mchorse.blockbuster.model_editor.elements.GuiTwoInput;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.metamorph.api.models.Model;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 /**
  * Model properties modal
@@ -50,6 +52,11 @@ public class GuiModelModal extends GuiModal
     public GuiTextField texture;
 
     /**
+     * Whether this model provides OBJ model 
+     */
+    public GuiCheckBox providesObj;
+
+    /**
      * Button which activates saving of the model
      */
     private GuiButton done;
@@ -57,7 +64,7 @@ public class GuiModelModal extends GuiModal
     public GuiModelModal(int id, GuiScreen parent, FontRenderer font)
     {
         super(parent, font);
-        this.height = 170;
+        this.height = 200;
         this.id = id;
     }
 
@@ -81,6 +88,9 @@ public class GuiModelModal extends GuiModal
         /* Some dirty way to make things dynamically adjust or so */
         y -= 30;
         this.done = new GuiButton(this.id, x - this.buttonWidth - 10, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
+        y -= 25;
+        this.providesObj = new GuiCheckBox(0, x, y, I18n.format("blockbuster.gui.me.model.provides_obj"), false);
+        this.providesObj.x -= this.providesObj.width + 12;
         y -= 25;
         w = this.width - this.font.getStringWidth(this.strTexture) - 24;
         this.texture = new GuiTextField(0, this.font, x - 10 - w + 1, y, w - 3, 18);
@@ -116,6 +126,7 @@ public class GuiModelModal extends GuiModal
             }
 
             this.texture.setCursorPosition(0);
+            this.providesObj.setIsChecked(this.model.providesObj);
         }
     }
 
@@ -136,6 +147,11 @@ public class GuiModelModal extends GuiModal
         this.textureSize.mouseClicked(mouseX, mouseY, mouseButton);
         this.texture.mouseClicked(mouseX, mouseY, mouseButton);
 
+        if (this.providesObj.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY))
+        {
+            this.model.providesObj = this.providesObj.isChecked();
+        }
+
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -148,9 +164,10 @@ public class GuiModelModal extends GuiModal
         this.scale.draw();
         this.textureSize.draw();
         this.texture.drawTextBox();
+        this.providesObj.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks);
 
         int x = this.x + 10;
-        int y = this.y + this.height - 50;
+        int y = this.y + this.height - 75;
 
         this.font.drawStringWithShadow(this.strTexture, x, y, 0xffffffff);
         y -= 25;

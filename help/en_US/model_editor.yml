@@ -41,3 +41,4 @@ blockbuster.gui.me:
         scale: "Scale"
         texture_size: "Texture size"
         texture: "Default texture"
+        provides_obj: "Provides OBJ model"

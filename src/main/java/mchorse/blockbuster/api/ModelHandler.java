@@ -57,7 +57,7 @@ public class ModelHandler
 
             try
             {
-                InputStream modelStream = new FileInputStream(pack.models.get(model));
+                InputStream modelStream = new FileInputStream(pack.models.get(model).customModel);
 
                 this.models.put("blockbuster." + model, Model.parse(modelStream));
                 modelStream.close();
@@ -74,9 +74,22 @@ public class ModelHandler
             String path = "assets/blockbuster/models/entity/";
             ClassLoader loader = this.getClass().getClassLoader();
 
-            this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
-            this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
-            this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));
+            /* Optionally load default models */
+            if (!this.models.containsKey("blockbuster.alex"))
+            {
+                this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
+            }
+
+            if (!this.models.containsKey("blockbuster.steve"))
+            {
+                this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
+            }
+
+            if (!this.models.containsKey("blockbuster.fred"))
+            {
+                this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));
+            }
+
             this.models.put("blockbuster.yike", Model.parse(loader.getResourceAsStream(path + "yike.json")));
         }
         catch (Exception e)

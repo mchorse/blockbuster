@@ -1,19 +1,123 @@
-buildscript {
-    repositories {
+buildscript 
+{
+    repositories 
+    {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
     }
+
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.yaml:snakeyaml:1.18'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 version = "1.4.9"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
+/* Build language files */
+task buildLangFiles {
+    doLast {
+        def help = file("help")
+        
+        def flatten
+        
+        /**
+         * Flattens the map
+         */
+        flatten = { Map map, Map original, String prefix ->
+            for (entry in original.entrySet())
+            {
+                def value = entry.getValue();
+                
+                if (value instanceof String)
+                {
+                    map.put(prefix + entry.getKey(), value)
+                }
+                else if (value instanceof Map)
+                {
+                    flatten(map, value, prefix + entry.getKey() + ".")
+                }
+                else
+                {
+                    map.put(prefix + entry.getKey(), value.toString())
+                }
+            }
+        }
+        
+        /**
+         * Process the string read from the YML.
+         * 
+         * This method replaces new line symbols to escaped new line symbols
+         * and processes {} formatting to § Minecraft formatting.
+         */
+        def processString = { String str ->
+            return str.replace("\n", "\\n").replaceAll('\\{([\\w\\d_]+)\\}', '§$1')
+        }
+        
+        /**
+         * Compile YML file's contents to ini string
+         */
+        def compile = {File file ->
+            def output = "\n\n# " + file.getName() + "\n";
+            def yaml = new org.yaml.snakeyaml.Yaml()
+            def map = yaml.load(file.text)
+            def flat_map = new HashMap()
+            
+            flatten(flat_map, map, "")
+            
+            for (entry in flat_map.entrySet())
+            {
+                output += "${entry.getKey()}=${processString(entry.getValue())}\n";
+            }
+            
+            return output
+        }
+        
+        /**
+         * Convert given langauge dir from YML to ini
+         */
+        def convert = { File lang_dir ->
+            /* Forge directive that allows \n symbols to be allowed in the chat */
+            def output = "#PARSE_ESCAPES"
+            def output_file = file("src/main/resources/assets/${project.archivesBaseName}/lang/${lang_dir.getName()}.lang")
+            
+            for (file in lang_dir.listFiles())
+            {
+                if (file.getName().endsWith(".yml"))
+                {
+                    output += compile(file)
+                }
+            }
+            
+            def writer = new PrintWriter(output_file)
+            
+            writer.println(output.trim())
+            writer.close()
+        }
+        
+        if (help.exists())
+        {
+            for (lang_dir in help.listFiles())
+            {
+                if (lang_dir.isDirectory())
+                {
+                    convert(lang_dir)
+                    println "Converted ${lang_dir.getName()} to language file"
+                }
+            }
+        }
+        else
+        {
+            println "Directory 'help' is not found!"
+        }
+    }
+}
+
+tasks.processResources.dependsOn('buildLangFiles')
+    
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
@@ -22,7 +126,7 @@ compileJava {
 minecraft {
     version = "1.12-14.21.1.2387"
     runDir = "run"
-
+    
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -35,30 +139,28 @@ minecraft {
     serverJvmArgs = ["-Xmx1G"]
 }
 
-dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-	compile files("run/mods/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/mods/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+dependencies 
+{
+	compile files("run/mods/" + project.minecraft.version + "/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/mods/" + project.minecraft.version + "/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+}
 
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+eclipse
+{
+    classpath
+    {
+        file
+        {
+            whenMerged
+            {
+                def lib = entries.find { it.path.contains "metamorph-" + metamorph }
+                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + project.minecraft.version + "-source.jar"))
+                
+                lib = entries.find { it.path.contains "aperture-" + aperture } 
+                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + project.minecraft.version + "-source.jar"))
+            }
+        }
+    }
 }
 
 processResources

@@ -4,6 +4,8 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
@@ -18,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -121,7 +124,30 @@ public class ItemPlayback extends Item
 
             if (player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
             {
-                player.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+                IRecording recording = Recording.get(player);
+
+                float dx = (float) Math.abs(pos.getX() + 0.5F - player.posX);
+                float dy = (float) Math.abs(pos.getY() + 0.5F - player.posY);
+                float dz = (float) Math.abs(pos.getZ() + 0.5F - player.posZ);
+
+                if (dx > 5 || dy > 5 || dz > 5)
+                {
+                    if (recording != null)
+                    {
+                        recording.setLastTeleportedBlockPos(new BlockPos(player));
+                    }
+
+                    this.teleportPlayerToDirectorBlock(pos, player, worldIn);
+                }
+                else
+                {
+                    if (recording != null && recording.getLastTeleportedBlockPos() != null)
+                    {
+                        pos = recording.getLastTeleportedBlockPos();
+                        player.setPositionAndUpdate(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                        recording.setLastTeleportedBlockPos(null);
+                    }
+                }
 
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
@@ -144,5 +170,66 @@ public class ItemPlayback extends Item
         }
 
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+    }
+
+    /**
+     * Teleport given player to director block
+     * 
+     * This method is a bit complex than just teleport an entity on top 
+     * of director block. Instead it's uses some algorithm to find 
+     * closest available space.
+     */
+    private void teleportPlayerToDirectorBlock(BlockPos pos, EntityPlayer player, World worldIn)
+    {
+        BlockPos newPos = this.findPerfectSpotToTeleport(pos, worldIn);
+
+        double dX = (pos.getX() + 0.5) - (newPos.getX() + 0.5);
+        double dY = (pos.getY() + 0.5) - (newPos.getY() + player.eyeHeight * player.height);
+        double dZ = (pos.getZ() + 0.5) - (newPos.getZ() + 0.5);
+        double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
+
+        float yaw = (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
+        float pitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
+
+        player.setPositionAndRotation(newPos.getX() + 0.5, newPos.getY() + 1, newPos.getZ() + 0.5, yaw, pitch);
+        player.setPositionAndUpdate(newPos.getX() + 0.5, newPos.getY() + 1, newPos.getZ() + 0.5);
+    }
+
+    /**
+     * Find the perfect spot for teleporting the player within 5x5x5 
+     * radius away from director block
+     */
+    private BlockPos findPerfectSpotToTeleport(BlockPos pos, World worldIn)
+    {
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 5; x++)
+            {
+                for (int z = 0; z < 5; z++)
+                {
+                    /* Centerized indices (hopefully it's going to be 
+                     * faster out than from left-top corner) */
+                    int nx = x > 2 ? -x + 2 : x;
+                    int ny = y > 2 ? -y + 2 : y;
+                    int nz = z > 2 ? -z + 2 : z;
+
+                    BlockPos newPos = new BlockPos(pos.getX() + nx, pos.getY() + ny + 1, pos.getZ() + nz);
+
+                    if (worldIn.isAirBlock(newPos))
+                    {
+                        BlockPos topPos = new BlockPos(newPos.getX(), newPos.getY() + 1, newPos.getZ());
+
+                        if (worldIn.isAirBlock(topPos))
+                        {
+                            BlockPos belowPos = new BlockPos(newPos.getX(), newPos.getY() - 1, newPos.getZ());
+
+                            return new BlockPos(newPos.getX(), newPos.getY() - (worldIn.isAirBlock(belowPos) ? 2 : 1), newPos.getZ());
+                        }
+                    }
+                }
+            }
+        }
+
+        return pos;
     }
 }

@@ -3,9 +3,9 @@
 [Planet Minecraft page](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge page](https://minecraft.curseforge.com/projects/blockbuster) – [Source code](https://github.com/mchorse/blockbuster) – [AdFly support link](http://adf.ly/15268913/blockbuster-curseforge) – [Wiki](https://github.com/mchorse/blockbuster/wiki)  
 [EchebKeso](https://twitter.com/EchebKeso) – [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap's source code](https://github.com/EchebKeso/Mocap)
 
-Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors and cameras. This mod works on Forge for Minecraft 1.9.4, 1.10.2 and 1.11.2.
+Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors. This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.
 
-Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. 
+Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mode.
 
 Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
@@ -13,11 +13,11 @@ Recording is based and rewritten from scratch on recording code from Mocap mod b
 
 Blockbuster mod provides you with lots of features to make cool machinimas:
 
-* **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki/Home) for more information about limitations.
-* **Director blocks** – one actor is good, a crowd of them is even better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It has also outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
-* **Camera support** – camera is how you present your machinima. Blockbuster mod has a support for different camera features starting from simple idle camera to complex camera paths (with FOV animation), following and looking at the actor.
-* **Custom models** – recording only player-like entities isn't very fun. Blockbuster mod has support for custom models created in [McME](https://mchorse.github.io/mcme/) model editor or in-game with integrated model editor. Unleash your creativity with custom models!
-* **Mobs support** – thanks to [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s public API, Blockbuster is capable of using any morphs which Metamorph provides to be used with Blockbuster actors.
+* **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) for more information about limitations.
+* **Director blocks** – one actor is good, a crowd of them is even better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It allows you to record actors. It has also outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
+* **[Aperture](https://minecraft.curseforge.com/projects/aperture) support** – camera is how you present your machinima. Blockbuster mod has built-in Aperture integration. When Aperture is loaded, Blockbuster mod provides you with some features such as: ability to attach camera profiles to playback button, and previewing director block playback while editing cameras in the camera editor.
+* **Custom models** – recording only player-like entities limits the originality of your machinimas. Blockbuster mod let's you create custom models using [McME](https://mchorse.github.io/mcme/) model editor or in-game integrated model editor. Unleash your creativity with custom models!
+* **Mobs support** – thanks to [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s public API, Blockbuster is capable of using any morphs which Metamorph provides to be used by Blockbuster actors.
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
 
 ## Install
@@ -30,17 +30,17 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 ### Tutorial videos
 
-Feature videos for 1.4. This playlist shows how to use the mod features. Every update comes with a change log video which show out new features.
+Feature videos for 1.4. This playlist shows how to use the mod features. Almost every update comes with a change log video which show out new features.
 
 <a href="https://youtu.be/CoJ_6Byh6LA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a> 
 
-There's also a video that shows how to create a simple machinima with Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
+There's also a video that shows how to create a simple machinima using Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
 
 <a href="https://youtu.be/cVTIzKzWtqg?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/cVTIzKzWtqg/0.jpg"></a> 
 
 ### Machinima Examples
 
-This playlist consists out of videos that I've created during Blockbuster mod testings. Those videos are my lab experiments. Don't judge the quality of these machinimas yet, I'm still learning.
+This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Earlier of those videos are my lab experiments.
 
 <a href="https://youtu.be/FjED5qT80eM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/FjED5qT80eM/0.jpg"></a> 
 
@@ -69,22 +69,8 @@ Blockbuster mod's code is licensed under MIT, see file [LICENSE.md](./LICENSE.md
 
 ## For Devs
 
-Language files have to be compiled from YML to INI format using PHP. You need to have PHP 5 and [composer installed](https://getcomposer.org/download/). Once when you have PHP and composer, run:
+Language files are compiled from YML (which are located in `help/` folder) to INI format. 
 
-```sh
-# Go to "php" folder
-cd php
+If you're going to work with localization strings, modify the appropriate YML file, first. Then use the `./gradlew buildLangFiles` command to convert YML to INI format `.lang` files directly to `src/main/resources/assets/blockbuster/lang` folder. 
 
-# Install PHP dependencies (I assumed you installed composer in the root of repository)
-../composer.phar install
-
-# Go back
-cd ..
-
-# Or "make check"
-make build_lang
-```
-
-This should compile YML files into language files. Also, you'll have to refresh Eclipse or your IDE to get the changed file get into the app. Simply open `en_US.lang` in IDE and build the project again.
-
-Also download one of the [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s `-dev` jars (and optionally `-source`, for documentation) published in releases. Put the `-dev` mod into `run/mods` (for more information check `depenencies` block in `build.gradle`).
+Don't forget to refresh your IDE after building of YML files.

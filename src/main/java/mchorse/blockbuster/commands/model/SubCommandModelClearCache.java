@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -54,6 +55,8 @@ public class SubCommandModelClearCache extends CommandBase
 
                 if (entry.getKey().getResourceDomain().equals("blockbuster.actors") && entry.getValue() instanceof DynamicTexture)
                 {
+                    TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
+
                     it.remove();
                 }
             }
