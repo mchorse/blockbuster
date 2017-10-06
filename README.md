@@ -5,7 +5,7 @@
 
 Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors. This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.
 
-Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mode.
+Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mod.
 
 Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
