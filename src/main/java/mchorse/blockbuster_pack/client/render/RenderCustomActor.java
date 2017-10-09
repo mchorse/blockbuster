@@ -5,7 +5,6 @@ import mchorse.blockbuster_pack.client.render.layers.LayerActorArmor;
 import mchorse.blockbuster_pack.client.render.layers.LayerCustomHead;
 import mchorse.blockbuster_pack.client.render.layers.LayerElytra;
 import mchorse.blockbuster_pack.morphs.ActorMorph;
-import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.render.RenderCustomModel;
 import net.minecraft.client.Minecraft;
@@ -38,7 +37,7 @@ public class RenderCustomActor extends RenderCustomModel
     @Override
     protected ResourceLocation getEntityTexture(EntityLivingBase entity)
     {
-        AbstractMorph morph = EntityUtils.getMorph(entity);
+        AbstractMorph morph = this.current;
 
         if (morph != null && morph instanceof ActorMorph)
         {
