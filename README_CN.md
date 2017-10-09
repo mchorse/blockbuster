@@ -4,7 +4,7 @@
 
 Blockbuster 是一个可以让你在Minecraft单人模式使用NPC演员和摄像机来制作短片的mod。本mod适用于Forge版本的Minecraft 1.10.2，1.11.2 和 1.12。不适用于网易我的世界中国版。
 
-Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph)。每次更新日志会写上支持的Metamorph版本。
+Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph)。每次更新日志会写上支持的Metamorph版本。Blockbuster也可以 **自愿地** 选择与 [Aperture](https://minecraft.curseforge.com/projects/aperture) mod 搭配使用。
 
 录制动作基于 [EchebKeso](https://twitter.com/EchebKeso) 的Mocap录制代码并加以修改。
 
@@ -14,7 +14,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 
 * **演员和玩家动作录制** – 最重要的部分，创作短片的根本。使用Blockbuster你可以录制你自己的行动并以演员回放。 *录制部分的代码有些限制能录制的动作*。前往 [Blockbuster 百科](https://github.com/mchorse/blockbuster/wiki/Home) 了解限制的范围。
 * **导演方块** – 一个演员不是春，大量演员春满园。Blockbuster mod 提供一个装置叫做 *导演方块* 来控制已激活的演员。它也能被红石控制，使得链接到一些自定义的命令，红石电路的开始结束，或者是场景的结束更为方便。
-* **摄像机支持** – 摄像机是你表达短片的方式。 Blockbuster mod 有不同的相机类别支持，从简单的固定相机，到复杂的相机路径（还有FOV动作），甚至跟踪演员。
+* **[Aperture](https://minecraft.curseforge.com/projects/aperture) 摄像机支持** – 摄像机是你表达短片的方式。Blockbuster兼容了Aperture mod。当你加载了Aperture, Blockbuster mod 能提供给你一些功能，比如：将摄像机配置文件连接到播放按钮，以及在摄像机GUI编辑器里进行导演方块的预览。
 * **自定义模型** – 仅录制一些普通的玩意不怎么有趣。Blockbuster mod 支持在[McME](https://mchorse.github.io/mcme/) 模型编辑器创建的自定义模型，或者是游戏内模型编辑器。用自定义的模型释放出你异想天开的能力吧！
 * **动物支持** – 感谢 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的公开 API，Blockbuster 支持 Metamorph 所提供的任何活体模型作为 Blockbuster 的演员。
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) 兼容性** – 感谢基于帧和录制的mod，你可以通过一个按钮，让游戏内短片导出成视频文件。
@@ -39,7 +39,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 
 ### 实例短片
 
-这个播放列表展示了我测试 Blockbuster 时制作的短片。只是些试验品，请别判断这些短片的质量，我还只是个萌新。
+这个播放列表展示了我测试 Blockbuster 时制作的一系列自我感觉良好的短片。早点的短片是试验品。
 
 <a href="https://youtu.be/FjED5qT80eM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/FjED5qT80eM/0.jpg"></a>
 
@@ -52,7 +52,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 * 上传一个由你自己编译的版本，你编译的版本是你的锅。
 * 请提供来源链接。提供 [CurseForge](https://minecraft.curseforge.com/projects/blockbuster) 最棒。
 * 请提供一个链接到我的 [YouTube 频道](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w)。非常感谢！
-* 你可以使用 Blockbuster 的[banner](http://i.imgur.com/nqDKg1R.png) 或 [封面](http://i.imgur.com/XgU8Tvx.png) 当你转发时。不要加个水印，那很残忍。
+* 当你转发时你可以使用 Blockbuster 的[banner](http://i.imgur.com/nqDKg1R.png) 或 [封面](http://i.imgur.com/XgU8Tvx.png)。不要加个水印，那很残忍。
 
 如果你对此项目感兴趣，你可以关注我的社交媒体账号：
 
@@ -68,22 +68,8 @@ Blockbuster mod 的代码是MIT许可证, 查看 [LICENSE.md](./LICENSE.md) 了�
 
 ## 开发者请看
 
-语言文件需要通过PHP从 YML 格式转换到 INI 格式。你需要安装PHP 5 和 [composer](https://getcomposer.org/download/)。如果已经有了，就运行：
+语言文件是由 YML （在`help\`文件夹）编译成INI格式的。
 
-```sh
-# 前往 "php" 文件夹
-cd php
+如果你想翻译本Mod，你得先修改合适的YML文件。然后使用`./gradlew buildLangFiles`命令来将YML转换成INI的`.lang`文件，到`src/main/resources/assets/blockbuster/lang`文件夹。
 
-# 安装 PHP 依赖 (我假定你在仓库根目录放置了composer)
-../composer.phar install
-
-# 回到上一个文件夹
-cd ..
-
-# 或者 "make check"
-make build_lang
-```
-
-这应该就可以把YML转换成语言文件。同时你要刷新一下Eclipse或你的IDE来s让更改的文件导入。打开 `en_US.lang` 然后再gradle编译一遍就行了。
-
-并且别忘了下载一份 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的 `-dev` jars (自愿选择 `-source`，文档用) 在发布的版本中。将 `-dev` mod 放到 `run/mods` (查看 `build.gradle` 的 `depenencies` 部分了解更多)。
+转换完YML后，别忘了刷新你的IDE。
