@@ -31,7 +31,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 
 1.4版本的特性。这个播放列表教你如何使用。每次更新我都会发布一个更新日志视频讲解新版特性。
 
-<a href="https://youtu.be/CoJ_6Byh6LA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a>
+<a href="https://youtu.be/R-g6fIUBtR4?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/R-g6fIUBtR4/0.jpg"></a>
 
 还有个视频教你如何使用 Blockbuster mod 创作一个简单的短片。这个视频展示了导演方块的基础，如何链接演员到导演方块，以及设定摄像机：
 
@@ -41,7 +41,7 @@ Blockbuster mod 提供许多很酷的功能让你创作Minecraft短片：
 
 这个播放列表展示了我测试 Blockbuster 时制作的一系列自我感觉良好的短片。早点的短片是试验品。
 
-<a href="https://youtu.be/FjED5qT80eM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/FjED5qT80eM/0.jpg"></a>
+<a href="https://youtu.be/LmG1vWHgp-A?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/LmG1vWHgp-A/0.jpg"></a>
 
 ## mod 评测和转发者看这里
 
