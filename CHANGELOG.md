@@ -2,13 +2,15 @@
 
 Blockbuster's change log.
 
-## Version 1.4.9 (camera update)
+## Version 1.4.9 (OBJ and camera update)
 
 This patch that mainly aims at providing integration with my new [Aperture](https://minecraft.curseforge.com/projects/aperture) mod (a camera mod which camera creation process using GUI). This means that all old camera code in Blockbuster was removed.
 
 For exception of camera features, there are also some little tweaks made to other components of the mod. Mostly tweaks that fix some annoying stuff. Oh, and also OBJ support for custom models.
 
 **Compatible** with Metamorph `1.1.4` and Aperture `1.0.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions probably are incompatible.
+
+<a href="https://youtu.be/R-g6fIUBtR4"><img src="https://img.youtube.com/vi/R-g6fIUBtR4/0.jpg"></a> 
 
 #### General
 
@@ -55,7 +57,7 @@ Patch update. This update is focused on bringing [McME](https://mchorse.github.i
 
 **Important**: there's a new way of recording actions was implemented. Player recordings recorded in `1.4.8`, **can't** be used in 1.4.7 and below. However, you can use actions from `1.4.7` in `1.4.8`.
 
-<a href="https://youtu.be/CoJ_6Byh6LA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a> 
+<a href="https://youtu.be/CoJ_6Byh6LA"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a> 
 
 #### Camera
 
