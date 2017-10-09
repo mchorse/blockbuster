@@ -10,12 +10,13 @@ import mchorse.metamorph.api.morphs.CustomMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import mchorse.metamorph.client.model.ModelCustom;
+import mchorse.metamorph.client.render.RenderCustomModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext.EntityTarget;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -72,6 +73,41 @@ public class ActorMorph extends CustomMorph
                 GuiUtils.drawModel(model, player, x, y, scale, alpha);
             }
         }
+    }
+
+    /**
+     * TODO: move to Metamorph 
+     */
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean renderHand(EntityPlayer player, EnumHand hand)
+    {
+        if (this.renderer == null || !(this.renderer instanceof RenderCustomModel))
+        {
+            return false;
+        }
+
+        RenderCustomModel renderer = (RenderCustomModel) this.renderer;
+
+        /* This */
+        renderer.current = this;
+        renderer.setupModel(player);
+
+        if (renderer.getMainModel() == null)
+        {
+            return false;
+        }
+
+        if (hand.equals(EnumHand.MAIN_HAND))
+        {
+            renderer.renderRightArm(player);
+        }
+        else
+        {
+            renderer.renderLeftArm(player);
+        }
+
+        return true;
     }
 
     @Override

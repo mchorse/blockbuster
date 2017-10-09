@@ -5,7 +5,7 @@
 
 Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors. This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.
 
-Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mode.
+Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mod.
 
 Recording is based and rewritten from scratch on recording code from Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
@@ -32,7 +32,7 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 Feature videos for 1.4. This playlist shows how to use the mod features. Almost every update comes with a change log video which show out new features.
 
-<a href="https://youtu.be/CoJ_6Byh6LA?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CoJ_6Byh6LA/0.jpg"></a> 
+<a href="https://youtu.be/R-g6fIUBtR4?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/R-g6fIUBtR4/0.jpg"></a> 
 
 There's also a video that shows how to create a simple machinima using Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
 
@@ -42,7 +42,7 @@ There's also a video that shows how to create a simple machinima using Blockbust
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Earlier of those videos are my lab experiments.
 
-<a href="https://youtu.be/FjED5qT80eM?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/FjED5qT80eM/0.jpg"></a> 
+<a href="https://youtu.be/LmG1vWHgp-A?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/LmG1vWHgp-A/0.jpg"></a> 
 
 ## For mod reviewers and reposters
 
