@@ -34,6 +34,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
 
     public List<String> _replays = new ArrayList<String>();
     public List<Replay> replays = new ArrayList<Replay>();
+    public boolean loops;
 
     /**
      * This tick used for checking if actors still playing
@@ -53,6 +54,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         super.readFromNBT(compound);
         this.readListFromNBT(compound, "Actors", this.replays);
+        this.loops = compound.getBoolean("Loops");
     }
 
     @Override
@@ -60,6 +62,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.replays);
+        compound.setBoolean("Loops", this.loops);
 
         return compound;
     }
