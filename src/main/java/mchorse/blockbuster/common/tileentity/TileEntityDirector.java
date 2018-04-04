@@ -84,7 +84,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 firstActor = actor;
             }
 
-            actor.startPlaying(replay.id, tick, notAttached);
+            actor.startPlaying(replay.id, tick, notAttached && !this.loops);
 
             if (notAttached)
             {
@@ -325,8 +325,25 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
         if (count == this.replays.size())
         {
-            this.stopPlayback();
-            this.playBlock(false);
+            if (this.loops)
+            {
+                /* TODO: improve looping */
+                for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+                {
+                    Replay replay = entry.getKey();
+                    EntityActor actor = entry.getValue();
+                    boolean notAttached = replay.actor == null;
+
+                    actor.stopPlaying();
+                    actor.startPlaying(replay.id, 0, notAttached && !this.loops);
+                    actor.directorBlock = this.getPos();
+                }
+            }
+            else
+            {
+                this.stopPlayback();
+                this.playBlock(false);
+            }
         }
     }
 
