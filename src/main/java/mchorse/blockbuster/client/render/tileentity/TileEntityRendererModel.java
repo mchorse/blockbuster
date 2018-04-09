@@ -2,7 +2,9 @@ package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -12,6 +14,8 @@ public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntit
     public void renderTileEntityAt(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage)
     {
         super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+
+        Minecraft mc = Minecraft.getMinecraft();
 
         if (te.morph != null)
         {
@@ -31,6 +35,16 @@ public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.rotate(te.rotateX, 0, 1, 0);
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
+        }
+
+        /* Debug render (so people could find the block, lmao) */
+        if (mc.gameSettings.showDebugInfo)
+        {
+            GlStateManager.disableLighting();
+            GlStateManager.disableTexture2D();
+            RenderGlobal.drawBoundingBox(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 1, 1, 1, 1);
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
         }
     }
 }
