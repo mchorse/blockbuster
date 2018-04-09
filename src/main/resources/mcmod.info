@@ -5,7 +5,7 @@
         "description": "The Machinima Studio",
         "version": "${version}",
         "mcversion": "${mcversion}",
-        "url": "https://github.com/mchorse/blockbuster",
+        "url": "https://minecraft.curseforge.com/projects/blockbuster",
         "authorList": ["mchorse"],
         "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345 and The Minebox for feature suggesting and testing!",
         "requiredMods": ["metamorph"],
