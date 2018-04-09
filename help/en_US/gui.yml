@@ -42,7 +42,18 @@ blockbuster.gui:
         attached: Attached to actor
         yaw: Yaw 
         pitch: Pitch 
-        freeze: Freeze this actor?
+    
+    # Model block GUI strings
+    model_block:
+        title: Model block configuration
+        x: X
+        "y": "Y"
+        z: Z
+        body: Body yaw
+        entity: Entity
+        translate: Translate
+        rotate: Rotate
+        scale: Scale
 
     # Playback GUI
     playback:

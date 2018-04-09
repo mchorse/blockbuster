@@ -14,14 +14,7 @@ public class ClientHandlerModifyModelBlock extends ClientMessageHandler<PacketMo
 
         if (tile != null && tile instanceof TileEntityModel)
         {
-            TileEntityModel model = (TileEntityModel) tile;
-
-            model.rotateX = message.rotateX;
-            model.rotateY = message.rotateY;
-            model.x = message.x;
-            model.y = message.y;
-            model.z = message.z;
-            model.setMorph(message.morph);
+            ((TileEntityModel) tile).copyData(message);
         }
     }
 }

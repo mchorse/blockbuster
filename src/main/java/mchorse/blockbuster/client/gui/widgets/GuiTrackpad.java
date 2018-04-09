@@ -84,7 +84,7 @@ public class GuiTrackpad
     /**
      * Update the bounding box of this GUI field
      */
-    public void update(int x, int y, int w, int h)
+    public GuiTrackpad update(int x, int y, int w, int h)
     {
         this.area.set(x, y, w, h);
 
@@ -93,6 +93,18 @@ public class GuiTrackpad
         this.text.width = (int) (w / 1.5F) - 2;
         this.text.height = 9;
         this.text.setCursorPositionZero();
+
+        return this;
+    }
+
+    /**
+     * Set the title of this trackpad 
+     */
+    public GuiTrackpad setTitle(String title)
+    {
+        this.title = title;
+
+        return this;
     }
 
     /**
