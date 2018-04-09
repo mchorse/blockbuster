@@ -648,11 +648,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(AbstractMorph morph, boolean invisible, boolean freeze, boolean notify)
+    public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
         this.morph = morph;
         this.invisible = invisible;
-        this.noClip = freeze;
 
         if (!this.worldObj.isRemote && notify)
         {
@@ -665,7 +664,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void notifyPlayers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible, this.noClip));
+        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
     }
 
     /* Reading/writing to disk */
