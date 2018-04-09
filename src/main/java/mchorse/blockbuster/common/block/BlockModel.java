@@ -1,5 +1,7 @@
 package mchorse.blockbuster.common.block;
 
+import java.util.List;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -7,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,6 +29,12 @@ public class BlockModel extends Block implements ITileEntityProvider
         this.setResistance(6000000.0F);
         this.setRegistryName("model");
         this.setUnlocalizedName("blockbuster.model");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+    {
+        tooltip.add(I18n.format("blockbuster.info.model_block"));
     }
 
     @Override
