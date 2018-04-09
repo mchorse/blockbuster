@@ -10,6 +10,7 @@ import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.metamorph.client.gui.GuiCreativeMenu;
 import mchorse.metamorph.client.gui.GuiSurvivalMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -42,7 +43,9 @@ public class MainMenuHandler
     @SubscribeEvent
     public void onGuiInit(InitGuiEvent event)
     {
-        if (event.getGui() instanceof GuiMainMenu)
+        GuiScreen screen = event.getGui();
+
+        if (screen instanceof GuiMainMenu || screen instanceof GuiIngameMenu)
         {
             event.getButtonList().add(this.openModelEditor);
         }
@@ -51,9 +54,14 @@ public class MainMenuHandler
     @SubscribeEvent
     public void onActionPerformed(ActionPerformedEvent event)
     {
-        if (event.getGui() instanceof GuiMainMenu && event.getButton() == this.openModelEditor)
+        GuiScreen screen = event.getGui();
+
+        if (screen instanceof GuiMainMenu || screen instanceof GuiIngameMenu)
         {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiModelEditor(true));
+            if (event.getButton() == this.openModelEditor)
+            {
+                Minecraft.getMinecraft().displayGuiScreen(new GuiModelEditor(screen instanceof GuiMainMenu));
+            }
         }
     }
 
