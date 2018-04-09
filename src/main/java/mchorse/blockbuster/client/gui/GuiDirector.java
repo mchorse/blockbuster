@@ -62,6 +62,12 @@ public class GuiDirector extends GuiScreen implements IModalCallback
         this.replay = new GuiReplay(this, pos);
     }
 
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
     /**
      * This method is invoked by one of the client handlers, I guess
      */

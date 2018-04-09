@@ -56,6 +56,12 @@ public class GuiActor extends GuiScreen
         this.morphs = new GuiMorphsPopup(6, actor.getMorph(), Morphing.get(Minecraft.getMinecraft().thePlayer));
     }
 
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
     /* Actions */
 
     @Override
@@ -212,7 +218,7 @@ public class GuiActor extends GuiScreen
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, -40);
-            cell.current().morph.renderOnScreen(Minecraft.getMinecraft().thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            cell.current().morph.renderOnScreen(this.mc.thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
             this.drawCenteredString(this.fontRendererObj, cell.current().morph.name, center, 40, 0xffffffff);
