@@ -6,6 +6,7 @@ import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModels;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
+import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.director.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
@@ -20,6 +21,7 @@ import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketRequestModels;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
@@ -43,6 +45,7 @@ import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
+import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
@@ -122,6 +125,10 @@ public class Dispatcher
         register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
         register(PacketActorPause.class, ClientHandlerActorPause.class, Side.CLIENT);
         register(PacketActorRotate.class, ServerHandlerActorRotate.class, Side.SERVER);
+
+        /* Update model block properties */
+        register(PacketModifyModelBlock.class, ClientHandlerModifyModelBlock.class, Side.CLIENT);
+        register(PacketModifyModelBlock.class, ServerHandlerModifyModelBlock.class, Side.SERVER);
 
         /* Recording */
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);

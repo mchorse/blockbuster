@@ -15,6 +15,7 @@ itemGroup.blockbuster: Blockbuster
 
 # Block name
 tile.blockbuster.director.name: Director block
+tile.blockbuster.model.name: Model block
 
 # Item names
 item:

@@ -75,6 +75,7 @@ public class Blockbuster
 
     /* Blocks */
     public static Block directorBlock;
+    public static Block modelBlock;
 
     /* Forge stuff */
     @Mod.Instance
