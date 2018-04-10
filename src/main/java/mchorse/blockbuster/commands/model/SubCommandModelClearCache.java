@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -53,7 +52,7 @@ public class SubCommandModelClearCache extends CommandBase
             {
                 Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
 
-                if (entry.getKey().getResourceDomain().equals("blockbuster.actors") && entry.getValue() instanceof DynamicTexture)
+                if (entry.getKey().getResourceDomain().equals("blockbuster.actors"))
                 {
                     TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
 
