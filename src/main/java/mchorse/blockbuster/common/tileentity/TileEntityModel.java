@@ -32,7 +32,13 @@ public class TileEntityModel extends TileEntity implements ITickable
     public float sz = 1;
 
     public TileEntityModel()
-    {}
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setString("Name", "blockbuster.fred");
+
+        this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+    }
 
     public void setMorph(AbstractMorph morph)
     {
@@ -46,6 +52,11 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (this.entity != null)
         {
             this.entity.ticksExisted++;
+
+            if (this.morph != null)
+            {
+                this.morph.update(this.entity, null);
+            }
         }
     }
 
