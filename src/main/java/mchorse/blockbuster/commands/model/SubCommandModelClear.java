@@ -22,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
  * which were fetched from blockbuster.actors domains, and were cached as
  * dynamic texture (purple checkered).
  */
-public class SubCommandModelClearCache extends CommandBase
+public class SubCommandModelClear extends CommandBase
 {
     public static Field TEXTURE_MAP;
 

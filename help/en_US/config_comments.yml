@@ -1,6 +1,5 @@
 blockbuster.config.comments:
     general:
-        load_models_on_login: Send all server models and skins to the player who's logging in?
         clean_model_downloads: Remove all downloaded models after exiting a server?
         disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
         extra_wubs: This option does literally nothing. Or maybe it does...?

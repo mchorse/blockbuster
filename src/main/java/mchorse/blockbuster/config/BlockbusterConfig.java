@@ -19,11 +19,6 @@ public class BlockbusterConfig
     /* General */
 
     /**
-     * Send all server models and skins to the player who's logging in?
-     */
-    public boolean load_models_on_login;
-
-    /**
      * Remove all downloaded models after exiting a server?
      */
     public boolean clean_model_downloads;
@@ -150,7 +145,6 @@ public class BlockbusterConfig
         String damage = "damage_control";
 
         /* General */
-        this.load_models_on_login = this.getBoolean("load_models_on_login", general, false, "Send all server models and skins to the player who's logging in?");
         this.clean_model_downloads = this.getBoolean("clean_model_downloads", general, true, "Remove all downloaded models after exiting a server?");
         this.disable_teleport_playback_button = this.getBoolean("disable_teleport_playback_button", general, false, "Is teleport feature disabled when you sneak and using the playback button?");
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
