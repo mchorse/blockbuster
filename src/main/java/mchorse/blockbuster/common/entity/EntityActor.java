@@ -90,11 +90,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public RecordPlayer playback;
 
     /**
-     * Backward compatibility filename thing
-     */
-    public String _filename = "";
-
-    /**
      * Metamorph's morph for this actor
      */
     public AbstractMorph morph;
@@ -680,7 +675,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
-        this._filename = tag.getString("Filename");
 
         if (!this.worldObj.isRemote)
         {
