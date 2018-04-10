@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands;
 
 import mchorse.blockbuster.commands.model.SubCommandModelClearCache;
 import mchorse.blockbuster.commands.model.SubCommandModelExport;
+import mchorse.blockbuster.commands.model.SubCommandModelReload;
 import mchorse.blockbuster.commands.model.SubCommandModelReplaceTexture;
 import mchorse.blockbuster.commands.model.SubCommandModelRequest;
 
@@ -23,6 +24,7 @@ public class CommandModel extends SubCommandBase
         this.add(new SubCommandModelRequest());
         this.add(new SubCommandModelClearCache());
         this.add(new SubCommandModelReplaceTexture());
+        this.add(new SubCommandModelReload());
     }
 
     @Override

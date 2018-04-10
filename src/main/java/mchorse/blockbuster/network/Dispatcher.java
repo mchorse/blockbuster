@@ -22,6 +22,7 @@ import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModels;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.blockbuster.network.common.PacketReloadModels;
 import mchorse.blockbuster.network.common.PacketRequestModels;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
@@ -46,6 +47,7 @@ import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
+import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
@@ -169,6 +171,7 @@ public class Dispatcher
         /* Multiplayer */
         register(PacketModels.class, ClientHandlerModels.class, Side.CLIENT);
         register(PacketRequestModels.class, ServerHandlerRequestModels.class, Side.SERVER);
+        register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
 
         /* Miscellaneous */
         register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);

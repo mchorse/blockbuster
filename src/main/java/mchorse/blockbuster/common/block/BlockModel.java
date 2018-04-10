@@ -10,6 +10,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,10 +19,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class BlockModel extends Block implements ITileEntityProvider
 {
+    private float lastYaw;
+
     public BlockModel()
     {
         super(Material.ROCK);
@@ -45,10 +49,24 @@ public class BlockModel extends Block implements ITileEntityProvider
         return true;
     }
 
+    @SuppressWarnings("deprecation")
+    @Override
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        this.lastYaw = placer.rotationYaw;
+
+        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+    }
+
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new TileEntityModel();
+        TileEntityModel model = new TileEntityModel();
+
+        model.ry = MathHelper.wrapDegrees(180 - this.lastYaw);
+        this.lastYaw = 0;
+
+        return model;
     }
 
     public boolean isOpaqueCube(IBlockState state)

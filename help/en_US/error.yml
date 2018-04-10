@@ -27,9 +27,12 @@ blockbuster.error:
         empty_filename: "{f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}."
     
     # Errors for /model export
-    model.export:
-        error_save: "{f}Can't save exported model!"
-        wrong_type: "{f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer)."
+    model:
+        export:
+            error_save: "{f}Can't save exported model!"
+            wrong_type: "{f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer)."
+        
+        reload: You supposed to be an OP user in order to reload models!
     
     # Record command errors
     record:

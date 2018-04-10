@@ -64,7 +64,13 @@ blockbuster:
                 |
                     {l}{6}/{r}model {8}clear{r}
                     
-                    {r}Clears the texture cache from loaded skin textures.
+                    {r}Clears the texture cache from loaded Blockbuster's skin textures.
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r}
+                    
+                    {r}Forces the server to reload server-side models (only for OP users).
                     
             replace_texture:
                 |

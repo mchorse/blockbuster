@@ -48,6 +48,9 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *         Blockbuster mod</li>
  *     <li>daipenger for giving me consultation on how to make cameras and
  *         actors frame-based</li>
+        <li>TheImaginationCrafter for suggesting the OBJ feature which made
+            Blockbuster super popular and also more customizable (in terms 
+            of custom models)</li>
  * </ul>
  */
 @Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@1.1")
@@ -56,7 +59,7 @@ public class Blockbuster
     /* Mod info */
     public static final String MODID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
-    public static final String VERSION = "1.4.9";
+    public static final String VERSION = "1.4.10";
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
     public static final String METAMORPH = "1.1.4";
     public static final String APERTURE = "1.0.1";
@@ -95,6 +98,18 @@ public class Blockbuster
         return MODID + ":" + path;
     }
 
+    /**
+     * Reloads server side models 
+     */
+    public static void reloadServerModels()
+    {
+        String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
+
+        proxy.models.pack = proxy.getPack();
+        proxy.models.pack.addFolder(path);
+        proxy.loadModels(proxy.models.pack);
+    }
+
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
@@ -118,11 +133,7 @@ public class Blockbuster
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
-
-        proxy.models.pack = proxy.getPack();
-        proxy.models.pack.addFolder(path);
-        proxy.loadModels(proxy.models.pack);
+        reloadServerModels();
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());

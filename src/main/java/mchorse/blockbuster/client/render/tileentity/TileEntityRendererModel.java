@@ -42,13 +42,16 @@ public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntit
         }
 
         /* Debug render (so people could find the block, lmao) */
-        if (mc.gameSettings.showDebugInfo)
+        if (mc.gameSettings.showDebugInfo && !mc.gameSettings.hideGUI)
         {
+            GlStateManager.glLineWidth(1);
+            GlStateManager.disableDepth();
             GlStateManager.disableLighting();
             GlStateManager.disableTexture2D();
             RenderGlobal.drawBoundingBox(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 1, 1, 1, 1);
             GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
         }
     }
 }

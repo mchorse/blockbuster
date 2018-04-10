@@ -18,7 +18,7 @@ buildscript
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.9"
+version = "1.4.10"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
