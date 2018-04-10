@@ -337,7 +337,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         Gui.drawRect(0, 0, this.width, 30, 0x88000000);
 
         /* Draw labels: title */
-        this.drawString(this.fontRendererObj, this.stringTitle, 20, y + 1, 0xffffffff);
+        this.drawString(this.fontRendererObj, this.stringTitle, 10, y + 1, 0xffffffff);
 
         /* Draw entity in the center of the screen */
         int size = this.height / 3;
