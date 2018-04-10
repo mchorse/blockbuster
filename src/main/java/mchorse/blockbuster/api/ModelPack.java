@@ -121,9 +121,15 @@ public class ModelPack
             File model = new File(file.getAbsolutePath() + "/model.json");
             File objModel = new File(file.getAbsolutePath() + "/model.obj");
 
-            if (file.isDirectory() && model.isFile())
+            if (file.isDirectory())
             {
-                this.models.put(file.getName(), new ModelEntry(model, objModel.exists() ? objModel : null));
+                boolean objExists = objModel.exists();
+                boolean modelExists = model.exists();
+
+                if (modelExists || objExists)
+                {
+                    this.models.put(file.getName(), new ModelEntry(modelExists ? model : null, objExists ? objModel : null));
+                }
             }
         }
     }
