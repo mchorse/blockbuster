@@ -64,7 +64,13 @@ blockbuster.gui:
         nothing: Do nothing
         play: Play only
         load_profile: Load and play
-        
+    
+    builder:
+        pose_sneak: Pose will apply when sneaking
+        model: Model
+        skin: Skin
+        pose: Pose
+    
     aperture:
         config:
             title: Director

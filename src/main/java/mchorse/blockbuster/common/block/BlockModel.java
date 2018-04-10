@@ -22,8 +22,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+/**
+ * Block model
+ * 
+ * This block is responsible for providing a tile entity which is 
+ * responsible for rendering a morph. 
+ */
 public class BlockModel extends Block implements ITileEntityProvider
 {
+    /**
+     * Used to setup the yaw for the tile entity
+     */
     private float lastYaw;
 
     public BlockModel()
@@ -49,7 +58,6 @@ public class BlockModel extends Block implements ITileEntityProvider
         return true;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
@@ -61,13 +69,10 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        TileEntityModel model = new TileEntityModel();
-
-        model.ry = MathHelper.wrapDegrees(180 - this.lastYaw);
-        this.lastYaw = 0;
-
-        return model;
+        return new TileEntityModel(MathHelper.wrapDegrees(180 - this.lastYaw));
     }
+
+    /* Setting up visual properties and collision box */
 
     public boolean isOpaqueCube(IBlockState state)
     {
@@ -79,14 +84,14 @@ public class BlockModel extends Block implements ITileEntityProvider
         return false;
     }
 
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
     {
         return null;
-    }
-
-    public EnumBlockRenderType getRenderType(IBlockState state)
-    {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

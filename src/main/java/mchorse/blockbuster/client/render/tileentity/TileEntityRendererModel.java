@@ -8,6 +8,12 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
 
+/**
+ * Model tile entity renderer
+ * 
+ * This class is responsible for rendering a model based on given tile 
+ * entity data.
+ */
 public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntityModel>
 {
     @Override
@@ -26,11 +32,13 @@ public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntit
 
             EntityLivingBase entity = te.entity;
 
+            /* Apply entity rotations */
             entity.setPositionAndRotation(x, y, z, 0, 0);
             entity.rotationYawHead = entity.prevRotationYawHead = te.rotateYawHead;
             entity.rotationPitch = entity.prevRotationPitch = te.rotatePitch;
             entity.renderYawOffset = entity.prevRenderYawOffset = te.rotateBody;
 
+            /* Apply transformations */
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5F + te.x, y + te.y, z + 0.5F + te.z);
             GlStateManager.rotate(te.rx, 1, 0, 0);

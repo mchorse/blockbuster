@@ -10,34 +10,45 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 
+/**
+ * Model tile entity
+ * 
+ * This little guy is responsible for storing visual data about model's 
+ * rendering.
+ */
 public class TileEntityModel extends TileEntity implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
 
+    /* Entity rotations */
     public float rotateYawHead;
     public float rotatePitch;
     public float rotateBody;
 
+    /* Translation */
     public float x;
     public float y;
     public float z;
 
+    /* Rotation */
     public float rx;
     public float ry;
     public float rz;
 
+    /* Scale */
     public float sx = 1;
     public float sy = 1;
     public float sz = 1;
 
-    public TileEntityModel()
+    public TileEntityModel(float yaw)
     {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setString("Name", "blockbuster.fred");
 
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+        this.ry = yaw;
     }
 
     public void setMorph(AbstractMorph morph)
@@ -58,6 +69,67 @@ public class TileEntityModel extends TileEntity implements ITickable
                 this.morph.update(this.entity, null);
             }
         }
+    }
+
+    /**
+     * Infinite extend AABB allows to avoid frustum culling which can be 
+     * used for some interesting things (like placing a whole OBJ level 
+     * in the game)
+     */
+    @Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return TileEntity.INFINITE_EXTENT_AABB;
+    }
+
+    @Override
+    public double getMaxRenderDistanceSquared()
+    {
+        float range = Blockbuster.proxy.config.actor_rendering_range;
+
+        return range * range;
+    }
+
+    public void copyData(PacketModifyModelBlock message)
+    {
+        this.rotateYawHead = message.yaw;
+        this.rotatePitch = message.pitch;
+        this.rotateBody = message.body;
+        this.x = message.x;
+        this.y = message.y;
+        this.z = message.z;
+        this.rx = message.rx;
+        this.ry = message.ry;
+        this.rz = message.rz;
+        this.sx = message.sx;
+        this.sy = message.sy;
+        this.sz = message.sz;
+        this.setMorph(message.morph);
+    }
+
+    public void copyData(TileEntityModel model)
+    {
+        this.rotateYawHead = model.rotateYawHead;
+        this.rotatePitch = model.rotatePitch;
+        this.rotateBody = model.rotateBody;
+        this.x = model.x;
+        this.y = model.y;
+        this.z = model.z;
+        this.rx = model.rx;
+        this.ry = model.ry;
+        this.rz = model.rz;
+        this.sx = model.sx;
+        this.sy = model.sy;
+        this.sz = model.sz;
+        this.morph = model.morph;
+    }
+
+    /* NBT methods */
+
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
@@ -109,59 +181,5 @@ public class TileEntityModel extends TileEntity implements ITickable
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph"));
         }
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return this.writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public AxisAlignedBB getRenderBoundingBox()
-    {
-        return TileEntity.INFINITE_EXTENT_AABB;
-    }
-
-    @Override
-    public double getMaxRenderDistanceSquared()
-    {
-        float range = Blockbuster.proxy.config.actor_rendering_range;
-
-        return range * range;
-    }
-
-    public void copyData(PacketModifyModelBlock message)
-    {
-        this.rotateYawHead = message.yaw;
-        this.rotatePitch = message.pitch;
-        this.rotateBody = message.body;
-        this.x = message.x;
-        this.y = message.y;
-        this.z = message.z;
-        this.rx = message.rx;
-        this.ry = message.ry;
-        this.rz = message.rz;
-        this.sx = message.sx;
-        this.sy = message.sy;
-        this.sz = message.sz;
-        this.setMorph(message.morph);
-    }
-
-    public void copyData(TileEntityModel model)
-    {
-        this.rotateYawHead = model.rotateYawHead;
-        this.rotatePitch = model.rotatePitch;
-        this.rotateBody = model.rotateBody;
-        this.x = model.x;
-        this.y = model.y;
-        this.z = model.z;
-        this.rx = model.rx;
-        this.ry = model.ry;
-        this.rz = model.rz;
-        this.sx = model.sx;
-        this.sy = model.sy;
-        this.sz = model.sz;
-        this.morph = model.morph;
     }
 }

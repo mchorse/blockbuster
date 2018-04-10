@@ -18,6 +18,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
+/**
+ * Model block configuration GUI
+ * 
+ * This GUI allows users to configure the model block, which allows 
+ * people to place models/entities as static decorations. 
+ */
 public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 {
     /* Cached localization strings */
@@ -49,15 +55,12 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
     private GuiMorphsPopup morphs;
 
-    /**
-     * Constructor for director block and skin manager item
-     */
     public GuiModelBlock(TileEntityModel model)
     {
         ClientProxy.actorPack.pack.reload();
 
         this.model = model;
-        this.temp = new TileEntityModel();
+        this.temp = new TileEntityModel(0);
         this.temp.copyData(model);
 
         this.morphs = new GuiMorphsPopup(6, model.morph, Morphing.get(Minecraft.getMinecraft().thePlayer));
@@ -137,13 +140,6 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         }
     }
 
-    /**
-     * Save and quit this screen
-     *
-     * Depends on the fact where does this GUI was opened from, it either sends
-     * modify actor packet, which modifies entity's properties directly, or
-     * sends edit action to director map block
-     */
     private void saveAndQuit()
     {
         MorphCell morph = this.morphs.morphs.getSelected();
@@ -259,11 +255,6 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
     /* Initiating GUI and drawing */
 
-    /**
-     * I think Mojang should come up with something better than hardcoded
-     * positions and sizes for buttons. Something like HTML. Maybe I should
-     * write this library (for constructing minecraft GUIs). Hm...
-     */
     @Override
     public void initGui()
     {
