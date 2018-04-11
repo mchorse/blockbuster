@@ -135,6 +135,8 @@ public class TileEntityModel extends TileEntity implements ITickable
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
+        super.writeToNBT(compound);
+
         compound.setFloat("Yaw", this.rotateYawHead);
         compound.setFloat("Pitch", this.rotatePitch);
         compound.setFloat("Body", this.rotateBody);
@@ -148,7 +150,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         compound.setFloat("ScaleY", this.sy);
         compound.setFloat("ScaleZ", this.sz);
 
-        if (morph != null)
+        if (this.morph != null)
         {
             NBTTagCompound morph = new NBTTagCompound();
             this.morph.toNBT(morph);
