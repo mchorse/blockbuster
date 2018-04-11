@@ -14,13 +14,11 @@ import net.minecraft.entity.EntityLivingBase;
  * This class is responsible for rendering a model based on given tile 
  * entity data.
  */
-public class TileEntityRendererModel extends TileEntitySpecialRenderer<TileEntityModel>
+public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntityModel>
 {
     @Override
     public void renderTileEntityAt(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage)
     {
-        super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
-
         Minecraft mc = Minecraft.getMinecraft();
 
         if (te.morph != null)

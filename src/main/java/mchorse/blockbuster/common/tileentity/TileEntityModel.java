@@ -4,11 +4,16 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFlowerPot;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Model tile entity
@@ -16,7 +21,7 @@ import net.minecraft.util.math.AxisAlignedBB;
  * This little guy is responsible for storing visual data about model's 
  * rendering.
  */
-public class TileEntityModel extends TileEntity implements ITickable
+public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
@@ -49,6 +54,12 @@ public class TileEntityModel extends TileEntity implements ITickable
 
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
         this.ry = yaw;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return true;
     }
 
     public void setMorph(AbstractMorph morph)
@@ -127,6 +138,12 @@ public class TileEntityModel extends TileEntity implements ITickable
     /* NBT methods */
 
     @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        return new SPacketUpdateTileEntity(this.pos, 5, this.getUpdateTag());
+    }
+
+    @Override
     public NBTTagCompound getUpdateTag()
     {
         return this.writeToNBT(new NBTTagCompound());
@@ -135,8 +152,6 @@ public class TileEntityModel extends TileEntity implements ITickable
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
-        super.writeToNBT(compound);
-
         compound.setFloat("Yaw", this.rotateYawHead);
         compound.setFloat("Pitch", this.rotatePitch);
         compound.setFloat("Body", this.rotateBody);
