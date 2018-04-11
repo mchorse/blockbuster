@@ -46,13 +46,18 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public float sy = 1;
     public float sz = 1;
 
-    public TileEntityModel(float yaw)
+    public TileEntityModel()
     {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setString("Name", "blockbuster.fred");
 
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+    }
+
+    public TileEntityModel(float yaw)
+    {
+        this();
         this.ry = yaw;
     }
 
