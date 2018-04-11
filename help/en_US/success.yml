@@ -6,5 +6,8 @@ blockbuster.success:
         was_registered: "{f}This actor was successfully attached to director block!"
         attached_device: "{f}This registering device was successfully attached to director block!"
     
-    model.export:
-        saved: "{f}Entity model %s{f} was saved to %s{f}."
+    model:
+        export:
+            saved: "{f}Entity model %s{f} was saved to %s{f}."
+        
+        reload: "{f}Server has reloaded the models!"

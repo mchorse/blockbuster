@@ -13,7 +13,7 @@ buildscript
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.9"
+version = "1.4.10"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 
@@ -155,10 +155,10 @@ eclipse
             {
                 def ver = project.minecraft.version
                 def lib = entries.find { it.path.contains "metamorph-" + metamorph }
-                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + ver + "-source.jar"))
+                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + ver + "-sources.jar"))
                 
                 lib = entries.find { it.path.contains "aperture-" + aperture } 
-                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + ver + "-source.jar"))
+                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + ver + "-sources.jar"))
             }
         }
     }

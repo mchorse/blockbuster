@@ -1,36 +1,35 @@
 package mchorse.blockbuster.commands.model;
 
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketRequestModels;
+import mchorse.blockbuster.network.common.PacketReloadModels;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Sub-command /model request
- *
- * This sub-command is responsible for requesting models from the server. These
- * models include models which located in "blockbuster/models" in world's save
- * folder and host's config models (if on intergrated server).
+ * /model reload
+ * 
+ * Model subcommand which is responsible for forcing the server to reload 
+ * the models.
  */
-public class SubCommandModelRequest extends CommandBase
+public class SubCommandModelReload extends CommandBase
 {
     @Override
     public String getName()
     {
-        return "request";
+        return "reload";
     }
 
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "blockbuster.commands.model.request";
+        return "blockbuster.commands.model.reload";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        Dispatcher.sendToServer(new PacketRequestModels());
+        Dispatcher.sendToServer(new PacketReloadModels());
     }
 }

@@ -40,7 +40,6 @@ public class GuiActor extends GuiScreen
     private GuiButton done;
     private GuiButton pick;
     private GuiCheckBox invisible;
-    private GuiCheckBox freeze;
     private GuiSlider rotateX;
     private GuiSlider rotateY;
     private GuiMorphsPopup morphs;
@@ -54,6 +53,12 @@ public class GuiActor extends GuiScreen
 
         this.actor = actor;
         this.morphs = new GuiMorphsPopup(6, actor.getMorph(), Morphing.get(Minecraft.getMinecraft().player));
+    }
+
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
     }
 
     /* Actions */
@@ -86,9 +91,8 @@ public class GuiActor extends GuiScreen
         if (morph != null)
         {
             boolean invisible = !this.invisible.isChecked();
-            boolean freeze = this.freeze.isChecked();
 
-            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.current().morph, invisible, freeze));
+            Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), morph.current().morph, invisible));
         }
 
         /* Rotate the actor */
@@ -154,8 +158,7 @@ public class GuiActor extends GuiScreen
         int y2 = this.height - 30;
 
         /* Initializing all GUI fields first */
-        this.invisible = new GuiCheckBox(2, x, y2 - 40, I18n.format("blockbuster.gui.actor.invisible"), this.actor.invisible);
-        this.freeze = new GuiCheckBox(3, x, y2 - 20, I18n.format("blockbuster.gui.actor.freeze"), this.actor.noClip);
+        this.invisible = new GuiCheckBox(2, x, y2 - 20, I18n.format("blockbuster.gui.actor.invisible"), this.actor.invisible);
 
         /* Buttons */
         this.done = new GuiButton(0, x, y2, w, 20, I18n.format("blockbuster.gui.done"));
@@ -170,7 +173,6 @@ public class GuiActor extends GuiScreen
         this.buttonList.add(this.done);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.invisible);
-        this.buttonList.add(this.freeze);
 
         this.buttonList.add(this.rotateX);
         this.buttonList.add(this.rotateY);
@@ -181,7 +183,6 @@ public class GuiActor extends GuiScreen
     private void fillData()
     {
         this.invisible.setIsChecked(!this.actor.invisible);
-        this.freeze.setIsChecked(this.actor.noClip);
         this.morphs.morphs.setSelected(this.actor.getMorph());
     }
 
@@ -212,9 +213,7 @@ public class GuiActor extends GuiScreen
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, -40);
-
-            cell.current().morph.renderOnScreen(Minecraft.getMinecraft().player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
-
+            cell.current().morph.renderOnScreen(this.mc.player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
             this.drawCenteredString(this.fontRenderer, cell.current().morph.name, center, 40, 0xffffffff);

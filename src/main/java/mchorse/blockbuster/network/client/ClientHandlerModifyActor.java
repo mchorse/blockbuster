@@ -14,6 +14,6 @@ public class ClientHandlerModifyActor extends ClientMessageHandler<PacketModifyA
     {
         EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
 
-        actor.modify(message.morph, message.invisible, message.freeze, false);
+        actor.modify(message.morph, message.invisible, false);
     }
 }

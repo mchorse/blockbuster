@@ -9,12 +9,14 @@ blockbuster:
         actor_config: Use on actor
         register: Ties actors to director block
         director_block: Manages actors and replays
+        model_block: Allows to place morphs as static models
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 
 # Block name
 tile.blockbuster.director.name: Director block
+tile.blockbuster.model.name: Model block
 
 # Item names
 item:

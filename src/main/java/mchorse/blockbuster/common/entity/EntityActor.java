@@ -90,11 +90,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     public RecordPlayer playback;
 
     /**
-     * Backward compatibility filename thing
-     */
-    public String _filename = "";
-
-    /**
      * Metamorph's morph for this actor
      */
     public AbstractMorph morph;
@@ -649,11 +644,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * Takes four properties to modify: filename used as id for recording,
      * displayed name, rendering skin and invulnerability flag
      */
-    public void modify(AbstractMorph morph, boolean invisible, boolean freeze, boolean notify)
+    public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
         this.morph = morph;
         this.invisible = invisible;
-        this.noClip = freeze;
 
         if (!this.world.isRemote && notify)
         {
@@ -666,7 +660,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void notifyPlayers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible, this.noClip));
+        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
     }
 
     /* Reading/writing to disk */
@@ -682,7 +676,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         this.invisible = tag.getBoolean("Invisible");
 
         this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
-        this._filename = tag.getString("Filename");
 
         if (!this.world.isRemote)
         {

@@ -10,6 +10,7 @@ import mchorse.metamorph.client.gui.utils.GuiDropDownField.DropDownItem;
 import mchorse.metamorph.client.gui.utils.GuiDropDownField.IDropDownListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -24,13 +25,12 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
     {
         super();
 
-        /* TODO: extract strings */
         this.model = new GuiTextField(0, font, 0, 0, 0, 0);
         this.model.setMaxStringLength(200);
         this.texture = new GuiTextField(0, font, 0, 0, 0, 0);
         this.texture.setMaxStringLength(500);
         this.poses = new GuiDropDownField(this.font, this);
-        this.poseOnSneak = new GuiCheckBox(0, 0, 0, "Pose will apply when sneaking", false);
+        this.poseOnSneak = new GuiCheckBox(0, 0, 0, I18n.format("blockbuster.gui.builder.pose_sneak"), false);
     }
 
     @Override
@@ -190,9 +190,8 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
 
         this.poses.draw(mouseX, mouseY, mc.currentScreen.width, mc.currentScreen.height, partialTicks);
 
-        /* TODO: extract strings */
-        this.font.drawStringWithShadow("Model", this.x, this.y + 37, 0xffffff);
-        this.font.drawStringWithShadow("Skin", this.x, this.y + 67, 0xffffff);
-        this.font.drawStringWithShadow("Pose", this.x, this.y + 97, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.model"), this.x, this.y + 37, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.skin"), this.x, this.y + 67, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.x, this.y + 97, 0xffffff);
     }
 }

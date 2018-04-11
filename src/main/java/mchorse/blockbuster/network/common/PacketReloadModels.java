@@ -3,9 +3,9 @@ package mchorse.blockbuster.network.common;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketRequestModels implements IMessage
+public class PacketReloadModels implements IMessage
 {
-    public PacketRequestModels()
+    public PacketReloadModels()
     {}
 
     @Override
