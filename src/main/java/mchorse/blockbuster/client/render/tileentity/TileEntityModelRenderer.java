@@ -17,7 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntityModel>
 {
     @Override
-    public void renderTileEntityAt(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage)
+    public void render(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         Minecraft mc = Minecraft.getMinecraft();
 

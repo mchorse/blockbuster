@@ -88,8 +88,8 @@ public class GuiTrackpad
     {
         this.area.set(x, y, w, h);
 
-        this.text.xPosition = x + 4;
-        this.text.yPosition = y + h / 2 - 4;
+        this.text.x = x + 4;
+        this.text.y = y + h / 2 - 4;
         this.text.width = (int) (w / 1.5F) - 2;
         this.text.height = 9;
         this.text.setCursorPositionZero();

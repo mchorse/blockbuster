@@ -114,8 +114,8 @@ public class CommonProxy
         ForgeRegistries.BLOCKS.register(Blockbuster.directorBlock = director);
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
-        GameRegistry.register(Blockbuster.modelBlock = model);
-        GameRegistry.register(new ItemModelBlock(model).setRegistryName(model.getRegistryName()));
+        ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
+        ForgeRegistries.ITEMS.register(new ItemModelBlock(model).setRegistryName(model.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);

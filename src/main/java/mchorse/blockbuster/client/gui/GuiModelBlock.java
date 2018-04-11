@@ -268,27 +268,27 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         x = 10;
 
-        this.yaw = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.actor.yaw"));
-        this.pitch = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.actor.pitch"));
-        this.body = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.body"));
+        this.yaw = new GuiTrackpad(this, this.fontRenderer).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.actor.yaw"));
+        this.pitch = new GuiTrackpad(this, this.fontRenderer).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.actor.pitch"));
+        this.body = new GuiTrackpad(this, this.fontRenderer).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.body"));
 
         x += 90;
 
-        this.x = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
-        this.y = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
-        this.z = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
+        this.x = new GuiTrackpad(this, this.fontRenderer).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
+        this.y = new GuiTrackpad(this, this.fontRenderer).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
+        this.z = new GuiTrackpad(this, this.fontRenderer).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
 
         x = this.width - 180;
 
-        this.rx = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
-        this.ry = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
-        this.rz = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
+        this.rx = new GuiTrackpad(this, this.fontRenderer).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
+        this.ry = new GuiTrackpad(this, this.fontRenderer).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
+        this.rz = new GuiTrackpad(this, this.fontRenderer).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
 
         x += 90;
 
-        this.sx = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
-        this.sy = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
-        this.sz = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
+        this.sx = new GuiTrackpad(this, this.fontRenderer).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
+        this.sy = new GuiTrackpad(this, this.fontRenderer).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
+        this.sz = new GuiTrackpad(this, this.fontRenderer).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
 
         /* And then, we're configuring them and injecting input data */
         this.fillData();
@@ -328,7 +328,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         Gui.drawRect(0, 0, this.width, 30, 0x88000000);
 
         /* Draw labels: title */
-        this.drawString(this.fontRendererObj, this.stringTitle, 10, y + 1, 0xffffffff);
+        this.drawString(this.fontRenderer, this.stringTitle, 10, y + 1, 0xffffffff);
 
         /* Draw entity in the center of the screen */
         int size = this.height / 3;
@@ -347,7 +347,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
             cell.current().morph.renderOnScreen(this.mc.player, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
             GlStateManager.popMatrix();
 
-            this.drawCenteredString(this.fontRendererObj, cell.current().morph.name, center, 40, 0xffffffff);
+            this.drawCenteredString(this.fontRenderer, cell.current().morph.name, center, 40, 0xffffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -365,10 +365,10 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.sy.draw(mouseX, mouseY, partialTicks);
         this.sz.draw(mouseX, mouseY, partialTicks);
 
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xcccccc);
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xcccccc);
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 12, 0xcccccc);
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 12, 0xcccccc);
+        this.drawString(this.fontRenderer, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xcccccc);
+        this.drawString(this.fontRenderer, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xcccccc);
+        this.drawString(this.fontRenderer, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 12, 0xcccccc);
+        this.drawString(this.fontRenderer, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 12, 0xcccccc);
 
         /* Apply yaw and pitch on the actor */
         this.model.morph = cell == null ? null : cell.current().morph;
