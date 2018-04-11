@@ -35,6 +35,7 @@ public abstract class Action
     public static final byte COMMAND = 16;
     public static final byte BREAK_ANIMATION = 17;
     public static final byte USE_ITEM = 18;
+    public static final byte USE_ITEM_BLOCK = 19;
 
     /* Register actions */
     static
@@ -55,6 +56,7 @@ public abstract class Action
         TYPES.put("command", 16);
         TYPES.put("break_animation", 17);
         TYPES.put("use_item", 18);
+        TYPES.put("use_item_block", 19);
     }
 
     /**
@@ -80,6 +82,7 @@ public abstract class Action
         if (type == COMMAND) return new CommandAction();
         if (type == BREAK_ANIMATION) return new BreakBlockAnimation();
         if (type == USE_ITEM) return new ItemUseAction();
+        if (type == USE_ITEM_BLOCK) return new ItemUseBlockAction();
 
         throw new Exception("Action by type '" + type + "' doesn't exist!");
     }
