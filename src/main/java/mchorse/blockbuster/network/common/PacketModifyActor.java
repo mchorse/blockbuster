@@ -12,17 +12,15 @@ public class PacketModifyActor implements IMessage
     public int id;
     public AbstractMorph morph;
     public boolean invisible;
-    public boolean freeze;
 
     public PacketModifyActor()
     {}
 
-    public PacketModifyActor(int id, AbstractMorph morph, boolean invisible, boolean freeze)
+    public PacketModifyActor(int id, AbstractMorph morph, boolean invisible)
     {
         this.id = id;
         this.morph = morph;
         this.invisible = invisible;
-        this.freeze = freeze;
     }
 
     @Override
@@ -30,7 +28,6 @@ public class PacketModifyActor implements IMessage
     {
         this.id = buf.readInt();
         this.invisible = buf.readBoolean();
-        this.freeze = buf.readBoolean();
 
         if (buf.readBoolean())
         {
@@ -43,7 +40,6 @@ public class PacketModifyActor implements IMessage
     {
         buf.writeInt(this.id);
         buf.writeBoolean(this.invisible);
-        buf.writeBoolean(this.freeze);
         buf.writeBoolean(this.morph != null);
 
         if (this.morph != null)

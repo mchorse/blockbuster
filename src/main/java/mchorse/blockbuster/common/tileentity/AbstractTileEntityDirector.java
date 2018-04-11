@@ -1,7 +1,6 @@
 package mchorse.blockbuster.common.tileentity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +8,6 @@ import java.util.regex.Pattern;
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -272,11 +270,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         boolean isRemote = this.world.isRemote;
 
-        if (!isRemote && !this._replays.isEmpty())
-        {
-            this.convertOldReplays();
-        }
-
         if (isRemote || !this.isPlaying() || this.tick-- > 0)
         {
             return;
@@ -284,32 +277,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
 
         this.areActorsStillPlaying();
         this.tick = 4;
-    }
-
-    /**
-     * Convert old replays to the new format.
-     *
-     * Unfortunately, it's impossible to recover old data without hacks and
-     * workaround.
-     */
-    private void convertOldReplays()
-    {
-        Iterator<String> it = this._replays.iterator();
-
-        while (it.hasNext())
-        {
-            String uuid = it.next();
-            EntityActor actor = (EntityActor) EntityUtils.entityByUUID(this.world, uuid);
-
-            if (actor != null && !actor._filename.isEmpty())
-            {
-                Replay replay = new Replay(actor);
-                replay.id = actor._filename;
-
-                this.replays.add(replay);
-                it.remove();
-            }
-        }
     }
 
     /**

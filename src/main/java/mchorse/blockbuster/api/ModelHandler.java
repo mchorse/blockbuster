@@ -10,8 +10,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.network.server.ServerHandlerRequestModels;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.Metamorph;
 import mchorse.metamorph.api.models.Model;
@@ -57,10 +57,26 @@ public class ModelHandler
 
             try
             {
-                InputStream modelStream = new FileInputStream(pack.models.get(model).customModel);
+                ModelEntry entry = pack.models.get(model);
 
-                this.models.put("blockbuster." + model, Model.parse(modelStream));
-                modelStream.close();
+                if (entry.customModel == null)
+                {
+                    /* Generate custom model for an OBJ model */
+                    InputStream modelStream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/obj.json");
+                    Model data = Model.parse(modelStream);
+
+                    data.name = model;
+
+                    this.models.put("blockbuster." + model, data);
+                    modelStream.close();
+                }
+                else
+                {
+                    InputStream modelStream = new FileInputStream(entry.customModel);
+
+                    this.models.put("blockbuster." + model, Model.parse(modelStream));
+                    modelStream.close();
+                }
             }
             catch (Exception e)
             {
@@ -138,11 +154,6 @@ public class ModelHandler
     public void onPlayerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
-
-        if (Blockbuster.proxy.config.load_models_on_login)
-        {
-            ServerHandlerRequestModels.sendModels(this, player);
-        }
 
         if (!Metamorph.VERSION.equals(Blockbuster.METAMORPH))
         {

@@ -10,11 +10,14 @@ import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.common.block.BlockDirector;
+import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
+import mchorse.blockbuster.common.item.ItemModelBlock;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.ActionHandler;
@@ -105,15 +108,20 @@ public class CommonProxy
 
         /* Blocks */
         Block director = new BlockDirector();
+        Block model = new BlockModel();
 
         GameRegistry.register(Blockbuster.directorBlock = director);
         GameRegistry.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
+
+        GameRegistry.register(Blockbuster.modelBlock = model);
+        GameRegistry.register(new ItemModelBlock(model).setRegistryName(model.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
+        GameRegistry.registerTileEntity(TileEntityModel.class, "blockbuster_model_tile_entity");
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);

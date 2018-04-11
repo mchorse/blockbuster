@@ -5,7 +5,9 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
+import mchorse.blockbuster.client.gui.GuiModelBlock;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +26,7 @@ public class GuiHandler implements IGuiHandler
     public static final int PLAYBACK = 0;
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
+    public static final int MODEL_BLOCK = 3;
 
     /**
      * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
@@ -58,6 +61,10 @@ public class GuiHandler implements IGuiHandler
         else if (ID == DIRECTOR)
         {
             return new GuiDirector(new BlockPos(x, y, z));
+        }
+        else if (ID == MODEL_BLOCK)
+        {
+            return new GuiModelBlock((TileEntityModel) world.getTileEntity(new BlockPos(x, y, z)));
         }
 
         return null;

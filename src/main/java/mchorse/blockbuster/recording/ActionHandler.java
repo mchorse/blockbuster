@@ -19,6 +19,7 @@ import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
+import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MorphActionAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
@@ -40,6 +41,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -103,6 +105,21 @@ public class ActionHandler
         if (!player.world.isRemote && events != null)
         {
             events.add(new ItemUseAction(event.getHand()));
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemUseBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.world.isRemote && events != null)
+        {
+            Vec3d hit = event.getHitVec();
+            BlockPos pos = event.getPos();
+
+            events.add(new ItemUseBlockAction(pos, event.getHand(), event.getFace(), (float) hit.xCoord - pos.getX(), (float) hit.yCoord - pos.getY(), (float) hit.zCoord - pos.getZ()));
         }
     }
 

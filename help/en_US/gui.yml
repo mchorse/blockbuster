@@ -42,7 +42,18 @@ blockbuster.gui:
         attached: Attached to actor
         yaw: Yaw 
         pitch: Pitch 
-        freeze: Freeze this actor?
+    
+    # Model block GUI strings
+    model_block:
+        title: Model block configuration
+        x: X
+        "y": "Y"
+        z: Z
+        body: Body yaw
+        entity: Entity
+        translate: Translate
+        rotate: Rotate
+        scale: Scale
 
     # Playback GUI
     playback:
@@ -53,7 +64,13 @@ blockbuster.gui:
         nothing: Do nothing
         play: Play only
         load_profile: Load and play
-        
+    
+    builder:
+        pose_sneak: Pose will apply when sneaking
+        model: Model
+        skin: Skin
+        pose: Pose
+    
     aperture:
         config:
             title: Director

@@ -49,7 +49,7 @@ public class SubCommandModelReplaceTexture extends McCommandBase
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClearCache.getTextures(manager);
+        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
 
         if (map != null)
         {

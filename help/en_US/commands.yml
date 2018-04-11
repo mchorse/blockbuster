@@ -54,17 +54,17 @@ blockbuster:
                     
                     {r}{l}Attention{r}: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
             
-            request: 
-                |
-                    {l}{6}/{r}model {8}request{r}
-                    
-                    {r}Requests models from the server (including host's models in LAN game).
-            
             clear:
                 |
                     {l}{6}/{r}model {8}clear{r}
                     
-                    {r}Clears the texture cache from loaded skin textures.
+                    {r}Clears the texture cache from loaded Blockbuster's skin textures.
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r}
+                    
+                    {r}Forces the server to reload server-side models (only for OP users).
                     
             replace_texture:
                 |
