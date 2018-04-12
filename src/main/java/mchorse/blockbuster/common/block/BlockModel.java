@@ -67,6 +67,20 @@ public class BlockModel extends Block implements ITileEntityProvider
     }
 
     @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        if (world.isRemote && stack.hasTagCompound() && hasTileEntity(state) && stack.getTagCompound().hasKey("BlockEntityTag"))
+        {
+            TileEntity tileEntity = world.getTileEntity(pos);
+
+            if (tileEntity != null)
+            {
+                tileEntity.handleUpdateTag(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+            }
+        }
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
         return new TileEntityModel(MathHelper.wrapDegrees(180 - this.lastYaw));
