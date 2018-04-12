@@ -13,7 +13,6 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
-import mchorse.blockbuster.common.item.ItemModelBlock;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -115,7 +114,7 @@ public class CommonProxy
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
-        ForgeRegistries.ITEMS.register(new ItemModelBlock(model).setRegistryName(model.getRegistryName()));
+        ForgeRegistries.ITEMS.register(new ItemBlock(model).setRegistryName(model.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);

@@ -2,6 +2,24 @@
 
 Blockbuster's change log.
 
+## Version 1.4.10 (model block)
+
+This patch adds two nice features and also cleans up the code base a little bit (for next updates, basically, it's only the beginning).
+
+**Compatible** with Metamorph `1.1.4` and Aperture `1.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions probably are incompatible.
+
+* Added **model block** which allows to place morphs as blocks with some transformation configuration (basically replacement for freeze actor feature)
+* Added a feature which allows loading OBJ models without a JSON feature (see wiki for more information)
+* Added `item_use_block` action which allows to record firework placing, usage of bone meal, flint & steel, and etc.
+* Added `/model reload` command which allows to reload models on the server side
+* Added in-game model editor button to in-game pause menu (press ESC in the world)
+* Blockbuster GUIs won't pause the game anymore
+* Command `/model clear` now removes all textures from texture cache which are related to Blockbuster, instead of only the missing ones (purple checkered)
+* Removed freeze actor checkbox feature
+* Removed hacks for 1.3 compatibility
+* Removed code related to model  and `/model request` command
+* Updated 1.12 build to 1.12.2
+
 ## Version 1.4.9 (OBJ and camera update)
 
 This patch that mainly aims at providing integration with my new [Aperture](https://minecraft.curseforge.com/projects/aperture) mod (a camera mod which camera creation process using GUI). This means that all old camera code in Blockbuster was removed.
