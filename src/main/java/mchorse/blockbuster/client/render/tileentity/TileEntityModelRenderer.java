@@ -31,10 +31,13 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             EntityLivingBase entity = te.entity;
 
             /* Apply entity rotations */
-            entity.setPositionAndRotation(x, y, z, 0, 0);
+            entity.setPositionAndRotation(0, 0, 0, 0, 0);
+            entity.setLocationAndAngles(0, 0, 0, 0, 0);
             entity.rotationYawHead = entity.prevRotationYawHead = te.rotateYawHead;
+            entity.rotationYaw = entity.prevRotationYaw = 0;
             entity.rotationPitch = entity.prevRotationPitch = te.rotatePitch;
             entity.renderYawOffset = entity.prevRenderYawOffset = te.rotateBody;
+            entity.setVelocity(0, 0, 0);
 
             /* Apply transformations */
             GlStateManager.pushMatrix();
