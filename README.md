@@ -3,7 +3,7 @@
 [Planet Minecraft page](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge page](https://minecraft.curseforge.com/projects/blockbuster) – [Source code](https://github.com/mchorse/blockbuster) – [AdFly support link](http://adf.ly/15268913/blockbuster-curseforge) – [Wiki](https://github.com/mchorse/blockbuster/wiki)  
 [EchebKeso](https://twitter.com/EchebKeso) – [Mocap mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap's source code](https://github.com/EchebKeso/Mocap)
 
-Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors. This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.
+Blockbuster is a Minecraft mod which lets you create Minecraft machinimas in singleplayer using NPC body actors. This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.2.
 
 Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster is also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mod.
 
@@ -17,6 +17,7 @@ Blockbuster mod provides you with lots of features to make cool machinimas:
 * **Director blocks** – one actor is good, a crowd of them is even better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It allows you to record actors. It has also outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
 * **[Aperture](https://minecraft.curseforge.com/projects/aperture) support** – camera is how you present your machinima. Blockbuster mod has built-in Aperture integration. When Aperture is loaded, Blockbuster mod provides you with some features such as: ability to attach camera profiles to playback button, and previewing director block playback while editing cameras in the camera editor.
 * **Custom models** – recording only player-like entities limits the originality of your machinimas. Blockbuster mod let's you create custom models using [McME](https://mchorse.github.io/mcme/) model editor or in-game integrated model editor. Unleash your creativity with custom models!
+* **OBJ models** – beside custom models which can be created with in-game custom model editor, Blockbuster also supports OBJ models on top of custom JSON models!
 * **Mobs support** – thanks to [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s public API, Blockbuster is capable of using any morphs which Metamorph provides to be used by Blockbuster actors.
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
 
@@ -42,7 +43,7 @@ There's also a video that shows how to create a simple machinima using Blockbust
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Earlier of those videos are my lab experiments.
 
-<a href="https://youtu.be/LmG1vWHgp-A?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/LmG1vWHgp-A/0.jpg"></a> 
+<a href="https://youtu.be/3uMywkj1_Gs?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/3uMywkj1_Gs/0.jpg"></a> 
 
 ## For mod reviewers and reposters
 
@@ -73,4 +74,4 @@ Language files are compiled from YML (which are located in `help/` folder) to IN
 
 If you're going to work with localization strings, modify the appropriate YML file, first. Then use the `./gradlew buildLangFiles` command to convert YML to INI format `.lang` files directly to `src/main/resources/assets/blockbuster/lang` folder. 
 
-Don't forget to refresh your IDE after building of YML files.
+Don't forget to refresh your IDE after building the langauge files.

@@ -13,7 +13,6 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
-import mchorse.blockbuster.common.item.ItemModelBlock;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -114,7 +113,7 @@ public class CommonProxy
         GameRegistry.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         GameRegistry.register(Blockbuster.modelBlock = model);
-        GameRegistry.register(new ItemModelBlock(model).setRegistryName(model.getRegistryName()));
+        GameRegistry.register(new ItemBlock(model).setRegistryName(model.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
@@ -185,6 +184,20 @@ public class CommonProxy
     }
 
     /**
+    <<<<<<< HEAD
+    =======
+     * Register block (and also add register an item for the block)
+     */
+    protected void registerBlock(Block block)
+    {
+        ItemBlock item = new ItemBlock(block);
+
+        GameRegistry.register(block);
+        GameRegistry.register(item.setRegistryName(block.getRegistryName()));
+    }
+
+    /**
+    >>>>>>> master
      * Thanks to animal bikes mod for this wonderful example! Kids, wanna learn
      * how to mod minecraft with forge? That's simple. Find mods for specific
      * minecraft version and decompile the .jar files with JD-GUI. Isn't that
