@@ -20,6 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -48,6 +49,12 @@ public class BlockModel extends Block implements ITileEntityProvider
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.model_block"));
+    }
+
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    {
+        return true;
     }
 
     @Override
@@ -96,6 +103,12 @@ public class BlockModel extends Block implements ITileEntityProvider
     public boolean isFullCube(IBlockState state)
     {
         return false;
+    }
+
+    @Override
+    public boolean canSpawnInBlock()
+    {
+        return true;
     }
 
     public EnumBlockRenderType getRenderType(IBlockState state)
