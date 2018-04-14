@@ -1,0 +1,44 @@
+blockbuster.gui.me:
+    save_modal: "如要保存，妳應該為模型指定名稱。"
+    new_modal: "選擇一個妳想用來作為模版來編輯或使用的模型。"
+    add_limb_modal: "為妳的新肢體取個名字。"
+    model_props_modal: "這個模型提供一種方式來編輯模型的全局選項。"
+    limb_name_modal: "給目前編輯中的肢體取個名字。"
+    limb_parent_modal: "選擇一個妳想讓它成為妳選擇的肢體的父肢體。"
+    pose_title_modal: "{l}姿勢"
+
+    warning_skins: 看起來妳在編輯一個新的模型。妳至少要為這個 "%s" 模型指定一個皮膚。為了讓皮膚顯示到菜單，\n\n請前往 "config/models/%s/skins" 文件夾。
+
+    model_editor: "模型編輯器"
+    limbs: "肢體"
+
+    name: "更改名字"
+    parent: "更改父級"
+    mirror: "鏡像"
+    looking: "查看"
+    idle: "靜止狀態"
+    swinging: "晃悠狀態"
+    swiping: "打擊狀態"
+    invert: "反轉"
+
+    no_hands: "無頭"
+    left_hand: "左"
+    right_hand: "右"
+
+    no_limbs: "沒有肢體被選中..."
+    visual: "視覺"
+    gameplay: "遊玩"
+    pose: "姿勢"
+
+    pose_name: "新姿勢的名字..."
+    search: "搜索..."
+    search_texture: "搜索材質..."
+
+    none: "無"
+
+    model:
+        name: "名字"
+        scale: "伸縮"
+        texture_size: "材質大小"
+        texture: "默認材質"
+        provides_obj: "提供OBJ模型"

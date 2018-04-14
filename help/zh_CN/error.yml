@@ -27,9 +27,12 @@ blockbuster.error:
         empty_filename: "{f}导演方块有一个空白的{7}录制ID{f}。 请填充空白的{7}录制ID{f}."
     
     # Errors for /model export
-    model.export:
-        error_save: "{f}无法保存导出的模型！"
-        wrong_type: "{f}无法以形式 %s{f} 导出模型 (因为它没有渲染器，或者不是活的实体渲染器)。"
+    model:
+        export:
+            error_save: "{f}无法保存导出的模型！"
+            wrong_type: "{f}无法以形式 %s{f} 导出模型（因为它没有渲染器，或者不是活的实体渲染器）。"
+        
+        reload: 你需要成为 OP 用户才能重载模型！
     
     # Record command errors
     record:

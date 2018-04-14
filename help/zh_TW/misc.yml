@@ -1,0 +1,15 @@
+# Recording
+blockbuster:
+    # Parsing
+    parsing.lacks_pose: 解析的模型 "%s" 沒有姿勢 "%s" ！
+
+    marker: "{6}{l}|{r} 錄制 {7}%s{r} {8}({6}x%s{8}){r},目前已進行 {7}%s{6}t{r} {8}({r} 與上次標記間隔 {7}%s{6}t{8}){r}。"
+    recording: 錄制到 {7}%s{r}
+    "yes": "是"
+    "no": "否"
+    eggs:
+        yike: "{l}好吧{r}, {o}好吧{r}, 那是 {7}McHorse{r}的笑話！現在切換回 {6}YikeFilms{r}。"
+
+# Metamorph category
+morph.category.blockbuster: Blockbuster 模型
+metamorph.builder.blockbuster: 自定義模型制作器
