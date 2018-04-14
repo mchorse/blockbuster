@@ -2,7 +2,7 @@ package mchorse.blockbuster.client.gui.widgets;
 
 import org.lwjgl.input.Keyboard;
 
-import mchorse.aperture.utils.Area;
+import mchorse.blockbuster.utils.Area;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
