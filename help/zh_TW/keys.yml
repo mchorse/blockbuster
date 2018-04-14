@@ -1,0 +1,8 @@
+# Keys localization
+key:
+    blockbuster:
+        # Categories
+        category: Blockbuster
+
+        model_editor: 模型編輯器
+        marker: 創建tick時間標記

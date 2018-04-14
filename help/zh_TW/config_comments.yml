@@ -1,0 +1,27 @@
+blockbuster.config.comments:
+    general:
+        clean_model_downloads: 退出伺服器後，刪除下載的所有模型？
+        disable_teleport_playback_button: 當妳使用播放按鈕的時候，瞬移功能是否開啟？
+        extra_wubs: 這個選項可能沒有作用，或者有點用？
+        auto_refresh_models: 當進入Metamorph或Blockbuster的GUI時，自動刷新模型和皮膚？
+        debug_playback_ticks: 當導演方塊錄制時，將tick時間寫入日誌文件
+
+    recording:
+        recording_countdown: 錄制倒計時（秒）
+        recording_delay: 錄制的幀延遲
+        record_unload_time: 解除安裝一個錄制需要多久？（tick）
+        record_unload: 開啟自動解除安裝錄制？
+        record_sync_rate: 與伺服器同步一個回放的頻率是？
+        record_attack_on_swipe: 是否錄制揮手時，生物受到的傷害？
+        record_commands: 是否錄制玩家輸入的命令？
+
+    actor:
+        actor_fall_damage: 演員是否會掉落傷害？
+        actor_tracking_range: 演員跟蹤會多遠？需要重啟遊戲。
+        actor_rendering_range: 演員多遠可見？
+        actor_always_render_names: 開啟無條件渲染演員名稱
+        actor_swish_swipe: 當演員揮手時是否產生刷刷聲？
+
+    damage_control:
+        damage_control: 傷害控制是否開啟
+        damage_control_distance: 傷害控制效果的半徑範圍
