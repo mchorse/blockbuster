@@ -6,7 +6,7 @@
         "version": "${version}",
         "mcversion": "${mcversion}",
         "url": "https://minecraft.curseforge.com/projects/blockbuster",
-        "updateJSON": "https://raw.githubusercontent.com/ycwei982/blockbuster/master/version.json",
+        "updateJSON": "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json",
         "authorList": ["mchorse"],
         "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345 and The Minebox for feature suggesting and testing! Also TheImaginationCrafter for suggesting OBJ feature, and also all members of McHorse's Pub Discord server!",
         "requiredMods": ["metamorph"],
