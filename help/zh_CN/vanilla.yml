@@ -2,19 +2,21 @@
 blockbuster:
     info:
         playback_button: 切换导演方块
-        playback_director: 链接到({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_director: 链接到 ({r}%d{7}, {r}%d{7}, {r}%d{7})
         playback_profile: 回放配置文件 "{f}{o}%s{r}{7}"
         playback_play: 回放摄像机
 
         actor_config: 在演员上使用
         register: 关联演员到导演方块
         director_block: 管理回放和演员的方块
+        model_block: 以静态方式放置伪装实体
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 
 # Block name
 tile.blockbuster.director.name: 导演方块
+tile.blockbuster.model.name: 模型方块
 
 # Item names
 item:
