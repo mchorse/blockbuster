@@ -6,6 +6,8 @@ blockbuster.info:
 
     director:
         already_registered: "{f}这个演员已经链接到了这个导演方块上了！"
+        looped: "{f}给予的导演方块现在已开启重复播放！"
+        unlooped: "{f}给予的导演方块现在已关闭重复播放！"
 
     # General command infos
     commands:

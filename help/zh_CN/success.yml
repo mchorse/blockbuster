@@ -6,5 +6,8 @@ blockbuster.success:
         was_registered: "{f}这个演员已经链接到了导演方块！"
         attached_device: "{f}这个激活设备已经链接到了导演方块！"
     
-    model.export:
-        saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
+    model:
+        export:
+            saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
+        
+        reload: "{f}服务器已经重载了模型！"
