@@ -6,12 +6,15 @@ Blockbuster's change log.
 
 This patch adds two nice features and also cleans up the code base a little bit (for next updates, basically, it's only the beginning).
 
-**Compatible** with Metamorph `1.1.4` and Aperture `1.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions probably are incompatible.
+**Compatible** with Metamorph `1.1.5` and Aperture `1.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions probably are incompatible.
+
+<a href="https://youtu.be/r3BpwMBDxwk"><img src="https://img.youtube.com/vi/r3BpwMBDxwk/0.jpg"></a> 
 
 * Added **model block** which allows to place morphs as blocks with some transformation configuration (basically replacement for freeze actor feature)
 * Added a feature which allows loading OBJ models without a JSON feature (see wiki for more information)
 * Added `item_use_block` action which allows to record firework placing, usage of bone meal, flint & steel, and etc.
 * Added `/model reload` command which allows to reload models on the server side
+* Added `/director loops` command which allows making director block loopable
 * Added in-game model editor button to in-game pause menu (press ESC in the world)
 * Blockbuster GUIs won't pause the game anymore
 * Command `/model clear` now removes all textures from texture cache which are related to Blockbuster, instead of only the missing ones (purple checkered)

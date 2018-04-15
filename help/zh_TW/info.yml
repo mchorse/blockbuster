@@ -1,6 +1,4 @@
 blockbuster.info:
-    metamorph: "{f}妳正在使用 Metamorph %s{f}。建議妳升級到 Metamorph %s{f}，這個版本是正式版而且已經與當前版本的Blockbuster mod測試過了。感謝！"
-
     actor:
         playing: "{f}這個演員已經在播放了！"
 
