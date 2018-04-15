@@ -12,12 +12,8 @@ import org.apache.commons.io.FileUtils;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.utils.L10n;
-import mchorse.metamorph.Metamorph;
 import mchorse.metamorph.api.models.Model;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -144,20 +140,5 @@ public class ModelHandler
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
         Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack());
-    }
-
-    /**
-     * When player is logs in, send him all available models and skins. I think
-     * this should go to a separate server handler
-     */
-    @SubscribeEvent
-    public void onPlayerLogsIn(PlayerLoggedInEvent event)
-    {
-        EntityPlayerMP player = (EntityPlayerMP) event.player;
-
-        if (!Metamorph.VERSION.equals(Blockbuster.METAMORPH))
-        {
-            L10n.info(player, "metamorph", Metamorph.VERSION, Blockbuster.METAMORPH);
-        }
     }
 }
