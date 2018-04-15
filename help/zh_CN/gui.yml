@@ -12,7 +12,7 @@ blockbuster.gui:
     remove: 移除
     detach: 脱离
     record: 录制
-    pick: 选择生物...
+    pick: 选择生物…
     duplicate: 拷贝
     search: "搜索:"
     cancel: 取消
@@ -22,7 +22,7 @@ blockbuster.gui:
 
     confirm:
         title: 确认破坏导演方块
-        description: 在({7}%s{f}, {7}%s{f}, {7}%s{f})的导演方块总共含{7}%s{f}个回放。你真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
+        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的导演方块总共含 {7}%s{f} 个回放。你真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
 
     # Director block GUI strings
     director:
@@ -42,7 +42,18 @@ blockbuster.gui:
         attached: 演员链接
         yaw: 偏航
         pitch: 俯仰
-        freeze: 冻结这个演员？
+
+    # Model block GUI strings
+    model_block:
+        title: 模型方块设置
+        x: X
+        "y": "Y"
+        z: Z
+        body: 身体偏航
+        entity: 实体
+        translate: 翻译
+        rotate: 倾斜
+        scale: 缩放
 
     # Playback GUI
     playback:
@@ -53,6 +64,12 @@ blockbuster.gui:
         nothing: 什么都不做
         play: 仅播放
         load_profile: 读取并播放
+        
+    builder:
+        pose_sneak: 在潜行时姿势将会应用
+        model: 模型
+        skin: 皮肤
+        pose: 姿势
 
     aperture:
         config:

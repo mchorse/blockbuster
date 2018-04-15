@@ -1,0 +1,103 @@
+# Commands
+blockbuster:
+    commands:
+        # General commands (no SubCommandBase commands)
+        director: 
+            |
+                {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
+                
+                {r}開始，停止，或調整導演方塊的播放的位置在{7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (妳可以使用F3確定妳的當前位置)。 同時{7}spawn{r}命令會在{7}[tick]{r}tick後生成一個閑置演員 ({7}[tick]{r} 參數只會在本次命令有效)。
+
+        # Record's commands
+        record:
+            help: "{r}{o}錄制命令{r}。此命令提供一些次級命令來讓玩家熟練錄制操作。"
+            
+            add: 
+                |
+                    {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}添加一個動作，玩家通過{7}<filename>{r} 在 {7}<tick>{r}時間，和{7}<action_type>{r}的類別，加上在{7}[data_tag]{r}附加的的數據，導入錄制。
+            
+            get:
+                |
+                    {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
+                    
+                    {r}輸出數據在 {7}<tick>{r} 找到的動作在玩家錄制文件 {7}<filename>{r}。
+            
+            info:
+                |
+                    {l}{6}/{r}record {8}info{r} {7}<filename>{r}
+                    
+                    {r}以 {7}<filename>{r} 輸出玩家錄制的數據，例如已保存的錄制版本，錄制時長...
+            
+            remove:
+                |
+                    {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
+                    
+                    {r}移除 {7}<tick>{r} 時的所有動作，在玩家錄制文件 {7}<filename>{r}。如果妳指定 {7}[index]{r}，此命令只會移除在 {7}[index]{r} {7}<tick>{r}時的一個動作。
+            
+            search:
+                |
+                    {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
+                    
+                    {r}搜索動作，自願限制在 {7}[limit]{r}，給予的 {7}<action_type>{r} ，輸出tick時間，自願輸出數據標簽，在文件名 {7}<filename>{r} 裏所找到的。
+
+        # Model's commands
+        model:
+            help: "{r}{o}模型命令{r}。 本命令讓妳管理自定義模型。"
+            
+            export:
+                |
+                    {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
+                    
+                    {r}導出從 {7}<entity_name>{r} 為JSON的生物渲染器，能夠在演員上使用。模型將會導出在Blockbuster的config文件夾的exports文件夾。
+                    
+                    {r}{l}註意{r}: 這些自動生成的模型不完美，妳需要在McME進一步編輯獲得最佳效果。
+            
+            request: 
+                |
+                    {l}{6}/{r}model {8}request{r}
+                    
+                    {r}從伺服器上請求模型 (包括局域網遊戲主機上的)。
+            
+            clear:
+                |
+                    {l}{6}/{r}model {8}clear{r}
+                    
+                    {r}清除來自皮膚材質的緩存。
+                    
+            replace_texture:
+                |
+                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
+                    
+                    {r}以資源位置 {7}[replace]{r} 替換 {7}<target>{r} 材質。如果 {7}[replace]{r} 參數未指定，那麽 {7}<target>{r} 的原始材質會被恢復上去。
+
+        # Action's commands
+        action:
+            help: "{r}{o}動作命令{r}。本命令提供一些次級命令管理玩家錄制內容動作。"
+            
+            clear:
+                |
+                    {l}{6}/{r}action {8}clear{r}
+                    
+                    {r}移除客戶端上所有的錄制內容。 (用來強制解除安裝客戶端上的回放)。
+            play: 
+                |
+                    {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
+                    
+                    {r}播放文件名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}(模型) and {7}[skin]{r} and {7}[invincibility]{r}(是否隱身) 選項 ({7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 可用)。
+            record: 
+                |
+                    {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
+                    
+                    {r}從當前玩家錄制動作到 {7}<filename>{r}。妳也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 來指定妳想錄制到哪個導演方塊。提供導演方塊的坐標可以幫助同步演員。 
+            request: 
+                |
+                    {l}{6}/{r}action {8}request{r} {7}<filename>{r}
+                    
+                    {r}請求要從伺服器加載到本地客戶端，命名為 {7}<filename>{r} 的動作。
+            stop: 
+                |
+                    {l}{6}/{r}action {8}stop{r}
+                    
+                    {r}停止錄制動作。如果玩家沒有錄制任何東西，什麽都不會發生。

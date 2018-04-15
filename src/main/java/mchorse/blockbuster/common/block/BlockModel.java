@@ -51,6 +51,11 @@ public class BlockModel extends Block implements ITileEntityProvider
         tooltip.add(I18n.format("blockbuster.info.model_block"));
     }
 
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    {
+        return true;
+    }
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
@@ -97,6 +102,12 @@ public class BlockModel extends Block implements ITileEntityProvider
     public boolean isFullCube(IBlockState state)
     {
         return false;
+    }
+
+    @Override
+    public boolean canSpawnInBlock()
+    {
+        return true;
     }
 
     public EnumBlockRenderType getRenderType(IBlockState state)

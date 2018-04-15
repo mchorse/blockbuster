@@ -3,7 +3,6 @@ blockbuster.config:
     general:
         title: 通用
 
-        load_models_on_login: 发送模型
         clean_model_downloads: 清除模型的下载内容
         disable_teleport_playback_button: 关闭播放后瞬移功能
         extra_wubs: 附加的杂物

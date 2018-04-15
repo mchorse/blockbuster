@@ -1,0 +1,80 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: 完成
+    next: 下一個
+    previous: 上一個
+    restore: 恢復默認
+    reset: 初始化
+    add: 添加
+    edit: 編輯
+    remove: 移除
+    detach: 脫離
+    record: 錄制
+    pick: 選擇生物…
+    duplicate: 拷貝
+    search: "搜索:"
+    cancel: 取消
+    break: 破壞
+    select: 選擇
+    ok: 好
+
+    confirm:
+        title: 確認破壞導演方塊
+        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊總共含 {7}%s{f} 個回放。妳真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
+
+    # Director block GUI strings
+    director:
+        title: 導演方塊
+        add: 添加一個回放...
+        no_cast: 沒有回放！
+        reset_replays: 妳確定要把{l}這個{r}導演方塊裏的{o}所有{r}回放{o}移除{r}嗎？
+
+    # Actor configuration GUI strings
+    actor:
+        title: 演員設定
+        default: 默認
+        name: 名稱
+        filename: 錄制ID
+        invincible: 可死亡嗎？
+        invisible: 可見嗎？
+        attached: 演員鏈接
+        yaw: 偏航
+        pitch: 俯仰
+
+    # Model block GUI strings
+    model_block:
+        title: 模型方塊設定
+        x: X
+        "y": "Y"
+        z: Z
+        body: 身體偏航
+        entity: 實體
+        translate: 翻譯
+        rotate: 傾斜
+        scale: 縮放
+
+    # Playback GUI
+    playback:
+        title: 播放設定
+        camera_mode: 攝像機模式
+        profile: 檔案文件名稱
+
+        nothing: 什麽都不做
+        play: 僅播放
+        load_profile: 讀取並播放
+        
+    builder:
+        pose_sneak: 在潛行時姿勢將會應用
+        model: 模型
+        skin: 皮膚
+        pose: 姿勢
+
+    aperture:
+        config:
+            title: 演員
+
+            reload: 重載演員
+            actions: 預覽動作
+            reload_scene: 重載場景
