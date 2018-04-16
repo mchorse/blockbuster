@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.render.tileentity;
 
+import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.RenderingHandler.TEModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.client.Minecraft;
@@ -48,6 +50,19 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.scale(te.sx, te.sy, te.sz);
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
+
+            /* Stupid TEs getting culled when the chunk is getting 
+             * culled, so there is a workaround for that */
+            TEModel model = RenderingHandler.models.get(te.getPos());
+
+            if (model == null)
+            {
+                RenderingHandler.models.put(te.getPos(), new TEModel(te));
+            }
+            else
+            {
+                model.render = false;
+            }
         }
 
         /* Debug render (so people could find the block, lmao) */

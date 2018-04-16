@@ -62,6 +62,7 @@ public class ClientProxy extends CommonProxy
     public static RecordManager manager = new RecordManager();
 
     public static RenderCustomActor actorRenderer;
+    public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
 
     public static File config;
@@ -92,7 +93,7 @@ public class ClientProxy extends CommonProxy
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
 
         /* Tile entity */
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, new TileEntityModelRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, modelRenderer = new TileEntityModelRenderer());
 
         this.injectResourcePack(path);
     }
