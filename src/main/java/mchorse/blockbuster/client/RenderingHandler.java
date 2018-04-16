@@ -105,13 +105,13 @@ public class RenderingHandler
             double z = render.prevPosZ + (render.posZ - render.prevPosZ) * partial;
 
             /* Remove TE if it's too far away away or it was removed */
-            if (Math.abs(pos.getX() - x) > distance && Math.abs(pos.getZ() - z) > distance || mc.theWorld.getTileEntity(pos) != model.model)
+            if (Math.abs(pos.getX() - x) > distance && Math.abs(pos.getZ() - z) > distance || mc.world.getTileEntity(pos) != model.model)
             {
                 it.remove();
             }
             else if (model.render)
             {
-                int i = mc.theWorld.getCombinedLight(model.model.getPos(), 0);
+                int i = mc.world.getCombinedLight(model.model.getPos(), 0);
                 int j = i % 65536;
                 int k = i / 65536;
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
