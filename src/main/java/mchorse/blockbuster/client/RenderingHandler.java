@@ -121,7 +121,7 @@ public class RenderingHandler
                 y = pos.getY() - y;
                 z = pos.getZ() - z;
 
-                ClientProxy.modelRenderer.renderTileEntityAt(model.model, x, y, z, partial, 0);
+                ClientProxy.modelRenderer.render(model.model, x, y, z, partial, 0, 0);
             }
 
             model.render = true;
