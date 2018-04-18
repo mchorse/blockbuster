@@ -25,6 +25,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
+    public RotationOrder order = RotationOrder.ZYX;
 
     /* Entity rotations */
     public float rotateYawHead;
@@ -108,6 +109,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     public void copyData(PacketModifyModelBlock message)
     {
+        this.order = message.order;
         this.rotateYawHead = message.yaw;
         this.rotatePitch = message.pitch;
         this.rotateBody = message.body;
@@ -125,6 +127,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     public void copyData(TileEntityModel model)
     {
+        this.order = model.order;
         this.rotateYawHead = model.rotateYawHead;
         this.rotatePitch = model.rotatePitch;
         this.rotateBody = model.rotateBody;
@@ -157,6 +160,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
+        compound.setByte("Order", (byte) this.order.ordinal());
         compound.setFloat("Yaw", this.rotateYawHead);
         compound.setFloat("Pitch", this.rotatePitch);
         compound.setFloat("Body", this.rotateBody);
@@ -186,6 +190,11 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     {
         super.readFromNBT(compound);
 
+        if (compound.hasKey("Order"))
+        {
+            this.order = RotationOrder.values()[compound.getByte("Order")];
+        }
+
         this.rotateYawHead = compound.getFloat("Yaw");
         this.rotatePitch = compound.getFloat("Pitch");
         this.rotateBody = compound.getFloat("Body");
@@ -203,5 +212,13 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph"));
         }
+    }
+
+    /**
+     * Rotation order
+     */
+    public static enum RotationOrder
+    {
+        ZYX, XYZ;
     }
 }

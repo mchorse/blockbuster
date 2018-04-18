@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,7 @@ public class PacketModifyModelBlock implements IMessage
 {
     public BlockPos pos;
     public AbstractMorph morph;
+    public RotationOrder order = RotationOrder.ZYX;
 
     public float yaw;
     public float pitch;
@@ -74,10 +76,18 @@ public class PacketModifyModelBlock implements IMessage
         return this;
     }
 
+    public PacketModifyModelBlock setOrder(RotationOrder order)
+    {
+        this.order = order;
+
+        return this;
+    }
+
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.order = RotationOrder.values()[buf.readByte()];
 
         this.yaw = buf.readFloat();
         this.pitch = buf.readFloat();
@@ -105,6 +115,7 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());
+        buf.writeByte(this.order.ordinal());
 
         buf.writeFloat(this.yaw);
         buf.writeFloat(this.pitch);

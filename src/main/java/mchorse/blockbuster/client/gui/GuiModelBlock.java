@@ -5,8 +5,10 @@ import java.io.IOException;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad.ITrackpadListener;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.capabilities.morphing.Morphing;
@@ -36,6 +38,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
     /* GUI fields */
     private GuiButton done;
     private GuiButton pick;
+    private GuiCirculate order;
 
     private GuiTrackpad yaw;
     private GuiTrackpad pitch;
@@ -138,6 +141,11 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         {
             this.morphs.morphs.setHidden(false);
         }
+        else if (button.id == 2)
+        {
+            this.order.toggle();
+            this.model.order = RotationOrder.values()[this.order.getValue()];
+        }
     }
 
     private void saveAndQuit()
@@ -151,6 +159,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         packet.setPos(this.x.value, this.y.value, this.z.value);
         packet.setRot(this.rx.value, this.ry.value, this.rz.value);
         packet.setScale(this.sx.value, this.sy.value, this.sz.value);
+        packet.setOrder(RotationOrder.values()[this.order.getValue()]);
 
         Dispatcher.sendToServer(packet);
         Minecraft.getMinecraft().displayGuiScreen(null);
@@ -280,6 +289,9 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         x = this.width - 180;
 
+        this.order = new GuiCirculate(2, x + 40, y - 25, 40, 20);
+        this.order.addLabel("ZYX");
+        this.order.addLabel("XYZ");
         this.rx = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
         this.ry = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
         this.rz = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
@@ -295,6 +307,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         this.buttonList.add(this.done);
         this.buttonList.add(this.pick);
+        this.buttonList.add(this.order);
 
         this.morphs.updateRect(0, 30, this.width, this.height - 30);
     }
@@ -303,6 +316,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
     {
         this.morphs.morphs.setSelected(this.model.morph);
 
+        this.order.setValue(this.model.order.ordinal());
         this.yaw.setValue(this.model.rotateYawHead);
         this.pitch.setValue(this.model.rotatePitch);
         this.body.setValue(this.model.rotateBody);
@@ -367,8 +381,8 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xcccccc);
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xcccccc);
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 12, 0xcccccc);
-        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 12, 0xcccccc);
+        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 18, 0xcccccc);
+        this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 18, 0xcccccc);
 
         /* Apply yaw and pitch on the actor */
         this.model.morph = cell == null ? null : cell.current().morph;

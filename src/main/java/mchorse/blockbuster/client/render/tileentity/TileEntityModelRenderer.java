@@ -4,6 +4,7 @@ import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.RenderingHandler.TEModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -44,9 +45,20 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             /* Apply transformations */
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5F + te.x, y + te.y, z + 0.5F + te.z);
-            GlStateManager.rotate(te.rx, 1, 0, 0);
-            GlStateManager.rotate(te.ry, 0, 1, 0);
-            GlStateManager.rotate(te.rz, 0, 0, 1);
+
+            if (te.order == RotationOrder.ZYX)
+            {
+                GlStateManager.rotate(te.rx, 1, 0, 0);
+                GlStateManager.rotate(te.ry, 0, 1, 0);
+                GlStateManager.rotate(te.rz, 0, 0, 1);
+            }
+            else
+            {
+                GlStateManager.rotate(te.rz, 0, 0, 1);
+                GlStateManager.rotate(te.ry, 0, 1, 0);
+                GlStateManager.rotate(te.rx, 1, 0, 0);
+            }
+
             GlStateManager.scale(te.sx, te.sy, te.sz);
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
