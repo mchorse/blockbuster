@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
@@ -521,6 +523,15 @@ public class ActionHandler
             }
 
             recorder.record(player);
+        }
+
+        /* Update TEs in the model's TEISR */
+        if (player.world.isRemote)
+        {
+            for (TEModel model : TileEntityModelItemStackRenderer.models.values())
+            {
+                model.model.update();
+            }
         }
     }
 }

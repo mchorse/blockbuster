@@ -124,7 +124,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.2.2611"
+    version = "1.12.2-14.23.3.2655"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -141,8 +141,8 @@ minecraft {
 
 dependencies 
 {
-	compile files("run/mods/" + project.minecraft.version + "/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/mods/" + project.minecraft.version + "/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
 }
 
 eclipse

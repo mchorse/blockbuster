@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.RenderActor;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
@@ -88,6 +89,8 @@ public class ClientProxy extends CommonProxy
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.modelBlock, Blockbuster.path("model"));
+
+        Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
 
         /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());

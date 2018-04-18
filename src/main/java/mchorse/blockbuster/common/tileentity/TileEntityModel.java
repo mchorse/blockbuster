@@ -79,6 +79,8 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         if (this.entity != null)
         {
             this.entity.ticksExisted++;
+            this.entity.onGround = true;
+            this.entity.isAirBorne = false;
 
             if (this.morph != null)
             {

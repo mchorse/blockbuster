@@ -51,17 +51,20 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
-            /* Stupid TEs getting culled when the chunk is getting 
-             * culled, so there is a workaround for that */
-            TEModel model = RenderingHandler.models.get(te.getPos());
+            if (alpha != 0)
+            {
+                /* Stupid TEs getting culled when the chunk is getting 
+                 * culled, so there is a workaround for that */
+                TEModel model = RenderingHandler.models.get(te.getPos());
 
-            if (model == null)
-            {
-                RenderingHandler.models.put(te.getPos(), new TEModel(te));
-            }
-            else
-            {
-                model.render = false;
+                if (model == null)
+                {
+                    RenderingHandler.models.put(te.getPos(), new TEModel(te));
+                }
+                else
+                {
+                    model.render = false;
+                }
             }
         }
 
