@@ -3,12 +3,12 @@ package mchorse.blockbuster.model_editor.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
 import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
 import mchorse.blockbuster.model_editor.elements.modals.GuiParentModal;
-import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

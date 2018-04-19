@@ -12,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.metamorph.api.models.Model;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;

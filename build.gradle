@@ -151,8 +151,8 @@ minecraft
 
 dependencies 
 {
-	compile files("run/mods/" + project.minecraft.version + "/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/mods/" + project.minecraft.version + "/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/deps/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
+	compile files("run/deps/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
 }
 
 eclipse
@@ -165,10 +165,10 @@ eclipse
             {
                 def ver = project.minecraft.version
                 def lib = entries.find { it.path.contains "metamorph-" + metamorph }
-                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + ver + "-sources.jar"))
+                lib.sourcePath = fileReference(file("run/deps/metamorph-" + metamorph + "-" + ver + "-sources.jar"))
                 
                 lib = entries.find { it.path.contains "aperture-" + aperture } 
-                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + ver + "-sources.jar"))
+                lib.sourcePath = fileReference(file("run/deps/aperture-" + aperture + "-" + ver + "-sources.jar"))
             }
         }
     }
