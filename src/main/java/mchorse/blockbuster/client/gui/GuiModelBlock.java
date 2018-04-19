@@ -39,6 +39,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
     private GuiButton done;
     private GuiButton pick;
     private GuiCirculate order;
+    private GuiCirculate one;
 
     private GuiTrackpad yaw;
     private GuiTrackpad pitch;
@@ -146,6 +147,11 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
             this.order.toggle();
             this.model.order = RotationOrder.values()[this.order.getValue()];
         }
+        else if (button.id == 3)
+        {
+            this.one.toggle();
+            this.model.one = this.one.getValue() == 1;
+        }
     }
 
     private void saveAndQuit()
@@ -158,7 +164,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         packet.setBody(this.yaw.value, this.pitch.value, this.body.value);
         packet.setPos(this.x.value, this.y.value, this.z.value);
         packet.setRot(this.rx.value, this.ry.value, this.rz.value);
-        packet.setScale(this.sx.value, this.sy.value, this.sz.value);
+        packet.setScale(this.one.getValue() == 1, this.sx.value, this.sy.value, this.sz.value);
         packet.setOrder(RotationOrder.values()[this.order.getValue()]);
 
         Dispatcher.sendToServer(packet);
@@ -210,8 +216,12 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.ry.mouseClicked(mouseX, mouseY, mouseButton);
         this.rz.mouseClicked(mouseX, mouseY, mouseButton);
         this.sx.mouseClicked(mouseX, mouseY, mouseButton);
-        this.sy.mouseClicked(mouseX, mouseY, mouseButton);
-        this.sz.mouseClicked(mouseX, mouseY, mouseButton);
+
+        if (this.one.getValue() != 1)
+        {
+            this.sy.mouseClicked(mouseX, mouseY, mouseButton);
+            this.sz.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 
     @Override
@@ -234,8 +244,12 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.ry.mouseReleased(mouseX, mouseY, state);
         this.rz.mouseReleased(mouseX, mouseY, state);
         this.sx.mouseReleased(mouseX, mouseY, state);
-        this.sy.mouseReleased(mouseX, mouseY, state);
-        this.sz.mouseReleased(mouseX, mouseY, state);
+
+        if (this.one.getValue() != 1)
+        {
+            this.sy.mouseReleased(mouseX, mouseY, state);
+            this.sz.mouseReleased(mouseX, mouseY, state);
+        }
     }
 
     @Override
@@ -258,8 +272,12 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.ry.keyTyped(typedChar, keyCode);
         this.rz.keyTyped(typedChar, keyCode);
         this.sx.keyTyped(typedChar, keyCode);
-        this.sy.keyTyped(typedChar, keyCode);
-        this.sz.keyTyped(typedChar, keyCode);
+
+        if (this.one.getValue() != 1)
+        {
+            this.sy.keyTyped(typedChar, keyCode);
+            this.sz.keyTyped(typedChar, keyCode);
+        }
     }
 
     /* Initiating GUI and drawing */
@@ -298,6 +316,9 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         x += 90;
 
+        this.one = new GuiCirculate(3, x + 40, y - 25, 40, 20);
+        this.one.addLabel("3");
+        this.one.addLabel("1");
         this.sx = new GuiTrackpad(this, this.fontRendererObj).update(x, y, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.x"));
         this.sy = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
         this.sz = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
@@ -308,6 +329,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.buttonList.add(this.done);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.order);
+        this.buttonList.add(this.one);
 
         this.morphs.updateRect(0, 30, this.width, this.height - 30);
     }
@@ -326,6 +348,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.rx.setValue(this.model.rx);
         this.ry.setValue(this.model.ry);
         this.rz.setValue(this.model.rz);
+        this.one.setValue(this.model.one ? 1 : 0);
         this.sx.setValue(this.model.sx);
         this.sy.setValue(this.model.sy);
         this.sz.setValue(this.model.sz);
@@ -375,9 +398,14 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.rx.draw(mouseX, mouseY, partialTicks);
         this.ry.draw(mouseX, mouseY, partialTicks);
         this.rz.draw(mouseX, mouseY, partialTicks);
+
         this.sx.draw(mouseX, mouseY, partialTicks);
-        this.sy.draw(mouseX, mouseY, partialTicks);
-        this.sz.draw(mouseX, mouseY, partialTicks);
+
+        if (this.one.getValue() != 1)
+        {
+            this.sy.draw(mouseX, mouseY, partialTicks);
+            this.sz.draw(mouseX, mouseY, partialTicks);
+        }
 
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xcccccc);
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xcccccc);

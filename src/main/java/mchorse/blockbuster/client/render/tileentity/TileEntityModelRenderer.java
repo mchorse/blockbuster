@@ -59,7 +59,15 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 GlStateManager.rotate(te.rx, 1, 0, 0);
             }
 
-            GlStateManager.scale(te.sx, te.sy, te.sz);
+            if (te.one)
+            {
+                GlStateManager.scale(te.sx, te.sx, te.sx);
+            }
+            else
+            {
+                GlStateManager.scale(te.sx, te.sy, te.sz);
+            }
+
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 

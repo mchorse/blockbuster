@@ -43,6 +43,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public float rz;
 
     /* Scale */
+    public boolean one = false;
     public float sx = 1;
     public float sy = 1;
     public float sz = 1;
@@ -119,6 +120,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = message.rx;
         this.ry = message.ry;
         this.rz = message.rz;
+        this.one = message.one;
         this.sx = message.sx;
         this.sy = message.sy;
         this.sz = message.sz;
@@ -137,6 +139,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = model.rx;
         this.ry = model.ry;
         this.rz = model.rz;
+        this.one = model.one;
         this.sx = model.sx;
         this.sy = model.sy;
         this.sz = model.sz;
@@ -170,6 +173,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         compound.setFloat("RotateX", this.rx);
         compound.setFloat("RotateY", this.ry);
         compound.setFloat("RotateZ", this.rz);
+        compound.setBoolean("Scale", this.one);
         compound.setFloat("ScaleX", this.sx);
         compound.setFloat("ScaleY", this.sy);
         compound.setFloat("ScaleZ", this.sz);
@@ -204,6 +208,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = compound.getFloat("RotateX");
         this.ry = compound.getFloat("RotateY");
         this.rz = compound.getFloat("RotateZ");
+        this.one = compound.getBoolean("Scale");
         this.sx = compound.getFloat("ScaleX");
         this.sy = compound.getFloat("ScaleY");
         this.sz = compound.getFloat("ScaleZ");

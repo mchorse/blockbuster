@@ -27,6 +27,7 @@ public class PacketModifyModelBlock implements IMessage
     public float ry;
     public float rz;
 
+    public boolean one;
     public float sx;
     public float sy;
     public float sz;
@@ -67,8 +68,9 @@ public class PacketModifyModelBlock implements IMessage
         return this;
     }
 
-    public PacketModifyModelBlock setScale(float x, float y, float z)
+    public PacketModifyModelBlock setScale(boolean one, float x, float y, float z)
     {
+        this.one = one;
         this.sx = x;
         this.sy = y;
         this.sz = z;
@@ -99,6 +101,7 @@ public class PacketModifyModelBlock implements IMessage
         this.rx = buf.readFloat();
         this.ry = buf.readFloat();
         this.rz = buf.readFloat();
+        this.one = buf.readBoolean();
         this.sx = buf.readFloat();
         this.sy = buf.readFloat();
         this.sz = buf.readFloat();
@@ -127,6 +130,7 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeFloat(this.rx);
         buf.writeFloat(this.ry);
         buf.writeFloat(this.rz);
+        buf.writeBoolean(this.one);
         buf.writeFloat(this.sx);
         buf.writeFloat(this.sy);
         buf.writeFloat(this.sz);
