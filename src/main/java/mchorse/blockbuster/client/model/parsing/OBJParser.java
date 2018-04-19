@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.commands.SubCommandBase;
+
 /**
  * OBJ file parser and loader
  * 
@@ -92,7 +94,17 @@ public class OBJParser
             /* Collect faces */
             else if (first.equals("f"))
             {
-                mesh.faces.add(new Face(tokens[1], tokens[2], tokens[3]));
+                String[] faces = SubCommandBase.dropFirstArgument(tokens);
+
+                if (faces.length == 4)
+                {
+                    mesh.faces.add(new Face(new String[] {faces[0], faces[1], faces[2]}));
+                    mesh.faces.add(new Face(new String[] {faces[0], faces[2], faces[3]}));
+                }
+                else
+                {
+                    mesh.faces.add(new Face(faces));
+                }
             }
         }
 
@@ -121,6 +133,7 @@ public class OBJParser
 
             for (Face face : facesList)
             {
+                /* Quad support */
                 for (IdxGroup indValue : face.idxGroups)
                 {
                     processFaceVertex(i, indValue, posList, textCoordList, normList, posArr, textCoordArr, normArr);
@@ -177,11 +190,12 @@ public class OBJParser
          */
         public IdxGroup[] idxGroups = new IdxGroup[3];
 
-        public Face(String v1, String v2, String v3)
+        public Face(String[] lines)
         {
-            idxGroups[0] = parseLine(v1);
-            idxGroups[1] = parseLine(v2);
-            idxGroups[2] = parseLine(v3);
+            for (int i = 0; i < 3; i++)
+            {
+                this.idxGroups[i] = this.parseLine(lines[i]);
+            }
         }
 
         /**
