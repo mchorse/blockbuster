@@ -22,7 +22,7 @@ public class PlayerTracker
     public RecordRecorder recorder;
 
     /* Items to track */
-    private int[] items = new int[] {-1, -1, -1, -1, -1, -1};
+    private ItemStack[] items = new ItemStack[6];
 
     public PlayerTracker(RecordRecorder recorder)
     {
@@ -74,17 +74,17 @@ public class PlayerTracker
         {
             int id = Item.getIdFromItem(item.getItem());
 
-            if (id != this.items[slot])
+            if (item != this.items[slot])
             {
-                this.items[slot] = id;
+                this.items[slot] = item;
                 this.recorder.actions.add(new EquipAction((byte) slot, (short) id, item));
 
                 return true;
             }
         }
-        else if (this.items[slot] != -1)
+        else if (this.items[slot] != null)
         {
-            this.items[slot] = -1;
+            this.items[slot] = null;
             this.recorder.actions.add(new EquipAction((byte) slot, (short) -1, null));
 
             return true;
