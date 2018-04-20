@@ -44,7 +44,7 @@ public class GuiModelsView extends GuiScrollView
             ModelCell cell = new ModelCell(model.getValue(), model.getKey());
 
             /* Steve is always selected by default */
-            if (cell.key.equals("blockbuster.steve"))
+            if (cell.key.equals("steve"))
             {
                 this.selected = cell;
             }

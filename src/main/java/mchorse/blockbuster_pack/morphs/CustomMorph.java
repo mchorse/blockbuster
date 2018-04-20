@@ -53,6 +53,8 @@ public class CustomMorph extends AbstractMorph
      */
     public ResourceLocation skin;
 
+    private String key;
+
     /**
      * Make hands true!
      */
@@ -77,6 +79,16 @@ public class CustomMorph extends AbstractMorph
         this.pose = pose;
     }
 
+    public String getKey()
+    {
+        if (this.key == null)
+        {
+            this.key = this.name.replaceAll("^blockbuster\\.", "");
+        }
+
+        return this.key;
+    }
+
     /**
      * Render actor morph on the screen
      *
@@ -87,7 +99,7 @@ public class CustomMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
-        ModelCustom model = ModelCustom.MODELS.get(this.name);
+        ModelCustom model = ModelCustom.MODELS.get(this.getKey());
 
         if (model != null)
         {

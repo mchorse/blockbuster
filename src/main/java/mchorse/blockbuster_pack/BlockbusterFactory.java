@@ -6,6 +6,7 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.IMorphFactory;
@@ -54,9 +55,10 @@ public class BlockbusterFactory implements IMorphFactory
     private CustomMorph createMorph(String name)
     {
         CustomMorph morph = new CustomMorph();
+        ModelCell entry = this.models.models.get(name);
 
         morph.name = "blockbuster." + name;
-        morph.model = this.models.models.get(morph.name);
+        morph.model = entry == null ? null : entry.model;
 
         return morph;
     }

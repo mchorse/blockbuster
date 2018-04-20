@@ -129,7 +129,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (this.current != null)
         {
-            model = models.get(this.current.name);
+            model = models.get(this.current.getKey());
             pose = this.current.getPose(entity);
         }
 

@@ -8,7 +8,9 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelPack;
+import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
@@ -185,17 +187,24 @@ public class ClientProxy extends CommonProxy
     {
         super.loadModels(pack);
 
-        for (Map.Entry<String, Model> model : this.models.models.entrySet())
+        for (Map.Entry<String, ModelCell> model : this.models.models.entrySet())
         {
-            Model mod = model.getValue();
-            String key = model.getKey().replace("blockbuster.", "");
-            File objModel = null;
+            String key = model.getKey();
+            ModelCell cell = model.getValue();
+            ModelEntry entry = pack.models.get(key);
+            Model mod = cell.model;
 
+            if (entry != null && !cell.reload)
+            {
+                continue;
+            }
+
+            File objModel = null;
             boolean fallback = true;
 
             if (pack.models.containsKey(key))
             {
-                objModel = pack.models.get(key).objModel;
+                objModel = entry.objModel;
             }
 
             if (!mod.model.isEmpty())
@@ -204,7 +213,7 @@ public class ClientProxy extends CommonProxy
                 {
                     Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
 
-                    /* Parse custom custom (overcustomized) model */
+                    /* Parse custom custom model with a custom class */
                     ModelParser.parse(model.getKey(), mod, clazz, objModel);
 
                     fallback = false;
@@ -217,8 +226,10 @@ public class ClientProxy extends CommonProxy
 
             if (fallback)
             {
-                ModelParser.parse(model.getKey(), model.getValue(), objModel);
+                ModelParser.parse(model.getKey(), mod, objModel);
             }
+
+            cell.reload = false;
         }
 
         this.factory.registerClient(null);

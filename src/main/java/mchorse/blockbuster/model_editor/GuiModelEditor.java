@@ -237,7 +237,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.dummy = new DummyEntity(null);
 
         this.modelName = "steve";
-        this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
+        this.setupModel(ModelCustom.MODELS.get("steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
     }
 
@@ -598,8 +598,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.print(output);
             writer.close();
 
-            String key = "blockbuster." + name;
-            Model model = Blockbuster.proxy.models.models.get(key);
+            String key = name;
+            Model model = Blockbuster.proxy.models.models.get(key).model;
 
             if (model != null)
             {

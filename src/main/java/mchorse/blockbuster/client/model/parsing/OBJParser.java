@@ -98,6 +98,7 @@ public class OBJParser
 
                 if (faces.length == 4)
                 {
+                    /* Support for quads, yay! */
                     mesh.faces.add(new Face(new String[] {faces[0], faces[1], faces[2]}));
                     mesh.faces.add(new Face(new String[] {faces[0], faces[2], faces[3]}));
                 }
