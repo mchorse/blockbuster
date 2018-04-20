@@ -161,7 +161,7 @@ public class ModelHandler
     {
         public Model model;
         public long timestamp;
-        public boolean reload = true;
+        public boolean load = true;
 
         public ModelCell(Model model, long timestamp)
         {

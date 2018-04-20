@@ -243,6 +243,8 @@ public class Model
         public float[] color = new float[] {1.0F, 1.0F, 1.0F};
         public float opacity = 1.0F;
         public boolean mirror;
+        public boolean lighting = true;
+        public boolean shading = true;
 
         /* Game play */
         public String holding = "";
@@ -262,22 +264,24 @@ public class Model
         {
             Model.Limb b = new Model.Limb();
 
-            b.anchor = new float[] {this.anchor[0], this.anchor[1], this.anchor[2]};
-            b.size = new int[] {this.size[0], this.size[1], this.size[2]};
-            b.texture = new int[] {this.texture[0], this.texture[1]};
-            b.color = new float[] {this.color[0], this.color[1], this.color[2]};
-            b.opacity = this.opacity;
-
-            b.idle = this.idle;
-            b.invert = this.invert;
-            b.looking = this.looking;
-            b.mirror = this.mirror;
-            b.swinging = this.swinging;
-            b.swiping = this.swiping;
-
             b.name = this.name;
             b.parent = this.parent;
+
+            b.size = new int[] {this.size[0], this.size[1], this.size[2]};
+            b.texture = new int[] {this.texture[0], this.texture[1]};
+            b.anchor = new float[] {this.anchor[0], this.anchor[1], this.anchor[2]};
+            b.color = new float[] {this.color[0], this.color[1], this.color[2]};
+            b.opacity = this.opacity;
+            b.mirror = this.mirror;
+            b.lighting = this.lighting;
+            b.shading = this.shading;
+
             b.holding = this.holding;
+            b.swiping = this.swiping;
+            b.looking = this.looking;
+            b.swinging = this.swinging;
+            b.idle = this.idle;
+            b.invert = this.invert;
 
             return b;
         }

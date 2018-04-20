@@ -20,6 +20,8 @@ blockbuster.gui.me:
     swinging: "Swinging"
     swiping: "Swiping"
     invert: "Invert"
+    lighting: "Lighted"
+    shading: "Shaded"
     
     no_hands: "No hands"
     left_hand: "Left"

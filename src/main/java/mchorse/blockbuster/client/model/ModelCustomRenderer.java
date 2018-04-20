@@ -6,6 +6,8 @@ import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,6 +21,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelCustomRenderer extends ModelRenderer
 {
+    private static float lastBrightnessX;
+    private static float lastBrightnessY;
+
     public Model.Limb limb;
     public Model.Transform trasnform;
     public ModelCustomRenderer parent;
@@ -82,7 +87,10 @@ public class ModelCustomRenderer extends ModelRenderer
         super.addChild(renderer);
     }
 
-    protected void setupColor()
+    /**
+     * Setup state for current limb 
+     */
+    protected void setup()
     {
         GlStateManager.color(this.limb.color[0], this.limb.color[1], this.limb.color[2], this.limb.opacity);
 
@@ -97,6 +105,37 @@ public class ModelCustomRenderer extends ModelRenderer
             GlStateManager.disableNormalize();
             GlStateManager.disableBlend();
         }
+
+        if (!this.limb.lighting)
+        {
+            lastBrightnessX = OpenGlHelper.lastBrightnessX;
+            lastBrightnessY = OpenGlHelper.lastBrightnessY;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        }
+
+        if (!this.limb.shading)
+        {
+            RenderHelper.disableStandardItemLighting();
+        }
+    }
+
+    /**
+     * Roll back the state to the way it was 
+     */
+    protected void disable()
+    {
+        if (!this.limb.lighting)
+        {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        }
+
+        if (!this.limb.shading)
+        {
+            GlStateManager.enableLighting();
+            GlStateManager.enableLight(0);
+            GlStateManager.enableLight(1);
+            GlStateManager.enableColorMaterial();
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -106,7 +145,7 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             if (this.showModel)
             {
-                this.setupColor();
+                this.setup();
 
                 if (!this.compiled)
                 {
@@ -181,6 +220,8 @@ public class ModelCustomRenderer extends ModelRenderer
 
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
                 GlStateManager.popMatrix();
+
+                this.disable();
             }
         }
     }
@@ -192,7 +233,7 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             if (this.showModel)
             {
-                this.setupColor();
+                this.setup();
 
                 if (!this.compiled)
                 {
@@ -220,6 +261,8 @@ public class ModelCustomRenderer extends ModelRenderer
                 GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
                 GlStateManager.callList(this.displayList);
                 GlStateManager.popMatrix();
+
+                this.disable();
             }
         }
     }

@@ -179,7 +179,8 @@ public class ClientProxy extends CommonProxy
     /**
      * Load models into the game
      *
-     * This method is responsible for loading models on the client.
+     * This method is responsible for loading models on the client (i.e. 
+     * building {@link ModelCustom} out of {@link Model}.
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -194,7 +195,8 @@ public class ClientProxy extends CommonProxy
             ModelEntry entry = pack.models.get(key);
             Model mod = cell.model;
 
-            if (entry != null && !cell.reload)
+            /* Model should be rebuilt only if it was reloaded */
+            if (entry != null && !cell.load)
             {
                 continue;
             }
@@ -229,7 +231,7 @@ public class ClientProxy extends CommonProxy
                 ModelParser.parse(model.getKey(), mod, objModel);
             }
 
-            cell.reload = false;
+            cell.load = false;
         }
 
         this.factory.registerClient(null);

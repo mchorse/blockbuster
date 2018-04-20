@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * This factory is responsible for adding all custom modeled morphs provided by
  * a user (in his config folder), the server (in world save's blockbuster
- * folder) or added by API (steve and alex).
+ * folder) or added by API (steve, alex and fred).
  */
 public class BlockbusterFactory implements IMorphFactory
 {
