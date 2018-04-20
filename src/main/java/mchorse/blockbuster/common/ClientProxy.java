@@ -277,7 +277,17 @@ public class ClientProxy extends CommonProxy
      */
     @Override
     public void onConfigChange(Configuration config)
-    {}
+    {
+        if (Blockbuster.proxy.config == null)
+        {
+            return;
+        }
+
+        if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
+        {
+            RenderingHandler.models.clear();
+        }
+    }
 
     /**
      * Client version of get language string.

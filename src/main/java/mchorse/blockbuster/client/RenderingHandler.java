@@ -86,13 +86,19 @@ public class RenderingHandler
     @SubscribeEvent
     public void onLastRender(RenderWorldLastEvent event)
     {
-        /* TODO: make it so it would turn off */
+        if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
+        {
+            return;
+        }
+
         float partial = event.getPartialTicks();
         float distance = Blockbuster.proxy.config.actor_rendering_range;
 
         Iterator<TEModel> it = models.values().iterator();
         RenderHelper.enableStandardItemLighting();
         Minecraft mc = Minecraft.getMinecraft();
+
+        mc.entityRenderer.enableLightmap();
 
         while (it.hasNext())
         {
@@ -126,6 +132,10 @@ public class RenderingHandler
 
             model.render = true;
         }
+
+        mc.entityRenderer.disableLightmap();
+
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
     }
 
     /**
