@@ -10,8 +10,12 @@ import java.util.Map;
 import org.lwjgl.input.Mouse;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.blockbuster.model_editor.elements.GuiLimbsList;
@@ -27,10 +31,6 @@ import mchorse.blockbuster.model_editor.elements.modals.GuiPoseModal;
 import mchorse.blockbuster.model_editor.elements.scrolls.GuiModelsView.ModelCell;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
-import mchorse.metamorph.api.models.Model;
-import mchorse.metamorph.api.models.Model.Limb;
-import mchorse.metamorph.client.model.ModelCustom;
-import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -237,7 +237,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.dummy = new DummyEntity(null);
 
         this.modelName = "steve";
-        this.setupModel(ModelCustom.MODELS.get("blockbuster.steve"));
+        this.setupModel(ModelCustom.MODELS.get("steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
     }
 
@@ -598,8 +598,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.print(output);
             writer.close();
 
-            String key = "blockbuster." + name;
-            Model model = Blockbuster.proxy.models.models.get(key);
+            String key = name;
+            Model model = Blockbuster.proxy.models.models.get(key).model;
 
             if (model != null)
             {

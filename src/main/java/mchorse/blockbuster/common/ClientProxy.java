@@ -7,11 +7,16 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelPack;
+import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandLoadChunks;
@@ -23,10 +28,7 @@ import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.gui.GuiCustomModelMorphBuilder;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
-import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
-import mchorse.metamorph.client.model.ModelCustom;
-import mchorse.metamorph.client.model.parsing.ModelParser;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -177,7 +179,8 @@ public class ClientProxy extends CommonProxy
     /**
      * Load models into the game
      *
-     * This method is responsible for loading models on the client.
+     * This method is responsible for loading models on the client (i.e. 
+     * building {@link ModelCustom} out of {@link Model}.
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -185,17 +188,25 @@ public class ClientProxy extends CommonProxy
     {
         super.loadModels(pack);
 
-        for (Map.Entry<String, Model> model : this.models.models.entrySet())
+        for (Map.Entry<String, ModelCell> model : this.models.models.entrySet())
         {
-            Model mod = model.getValue();
-            String key = model.getKey().replace("blockbuster.", "");
-            File objModel = null;
+            String key = model.getKey();
+            ModelCell cell = model.getValue();
+            ModelEntry entry = pack.models.get(key);
+            Model mod = cell.model;
 
+            /* Model should be rebuilt only if it was reloaded */
+            if (entry != null && !cell.load)
+            {
+                continue;
+            }
+
+            File objModel = null;
             boolean fallback = true;
 
             if (pack.models.containsKey(key))
             {
-                objModel = pack.models.get(key).objModel;
+                objModel = entry.objModel;
             }
 
             if (!mod.model.isEmpty())
@@ -204,7 +215,7 @@ public class ClientProxy extends CommonProxy
                 {
                     Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
 
-                    /* Parse custom custom (overcustomized) model */
+                    /* Parse custom custom model with a custom class */
                     ModelParser.parse(model.getKey(), mod, clazz, objModel);
 
                     fallback = false;
@@ -217,8 +228,10 @@ public class ClientProxy extends CommonProxy
 
             if (fallback)
             {
-                ModelParser.parse(model.getKey(), model.getValue(), objModel);
+                ModelParser.parse(model.getKey(), mod, objModel);
             }
+
+            cell.load = false;
         }
 
         this.factory.registerClient(null);
@@ -264,7 +277,17 @@ public class ClientProxy extends CommonProxy
      */
     @Override
     public void onConfigChange(Configuration config)
-    {}
+    {
+        if (Blockbuster.proxy.config == null)
+        {
+            return;
+        }
+
+        if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
+        {
+            RenderingHandler.models.clear();
+        }
+    }
 
     /**
      * Client version of get language string.

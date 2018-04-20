@@ -1,6 +1,6 @@
 package mchorse.blockbuster_pack.client.render.layers;
 
-import mchorse.metamorph.client.model.ModelCustomBiped;
+import mchorse.blockbuster.client.model.ModelCustomBiped;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;

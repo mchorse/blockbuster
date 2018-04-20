@@ -24,10 +24,10 @@ public class RLUtils
         {
             String prefix = (skin.indexOf("/") == -1 ? model + "/" : "");
 
-            return new ResourceLocation("blockbuster.actors", prefix + skin);
+            return new TextureLocation("blockbuster.actors", prefix + skin);
         }
 
-        return new ResourceLocation(skin);
+        return new TextureLocation(skin);
     }
 
     /**

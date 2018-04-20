@@ -113,11 +113,6 @@ public class ModelPack
     {
         for (File file : folder.listFiles())
         {
-            if (IGNORED_MODELS.contains(file.getName()))
-            {
-                continue;
-            }
-
             File model = new File(file.getAbsolutePath() + "/model.json");
             File objModel = new File(file.getAbsolutePath() + "/model.obj");
 
@@ -188,6 +183,14 @@ public class ModelPack
         {
             this.customModel = customModel;
             this.objModel = objModel;
+        }
+
+        public long lastModified()
+        {
+            long a = this.customModel == null ? 0 : this.customModel.lastModified();
+            long b = this.objModel == null ? 0 : this.objModel.lastModified();
+
+            return Math.max(a, b);
         }
     }
 }

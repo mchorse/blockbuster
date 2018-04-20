@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 
-import mchorse.metamorph.api.json.ModelAdapter;
-import mchorse.metamorph.api.json.ModelLimbAdapter;
-import mchorse.metamorph.api.json.ModelPoseAdapter;
-import mchorse.metamorph.api.models.Model;
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.json.ModelAdapter;
+import mchorse.blockbuster.api.json.ModelLimbAdapter;
+import mchorse.blockbuster.api.json.ModelPoseAdapter;
 
 /**
  * Model utilities

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.modal.GuiScrollView;
-import mchorse.metamorph.client.model.ModelCustom;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -44,7 +44,7 @@ public class GuiModelsView extends GuiScrollView
             ModelCell cell = new ModelCell(model.getValue(), model.getKey());
 
             /* Steve is always selected by default */
-            if (cell.key.equals("blockbuster.steve"))
+            if (cell.key.equals("steve"))
             {
                 this.selected = cell;
             }

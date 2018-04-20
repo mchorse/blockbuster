@@ -25,6 +25,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
+    public RotationOrder order = RotationOrder.ZYX;
 
     /* Entity rotations */
     public float rotateYawHead;
@@ -42,6 +43,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public float rz;
 
     /* Scale */
+    public boolean one = false;
     public float sx = 1;
     public float sy = 1;
     public float sz = 1;
@@ -108,6 +110,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     public void copyData(PacketModifyModelBlock message)
     {
+        this.order = message.order;
         this.rotateYawHead = message.yaw;
         this.rotatePitch = message.pitch;
         this.rotateBody = message.body;
@@ -117,6 +120,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = message.rx;
         this.ry = message.ry;
         this.rz = message.rz;
+        this.one = message.one;
         this.sx = message.sx;
         this.sy = message.sy;
         this.sz = message.sz;
@@ -125,6 +129,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     public void copyData(TileEntityModel model)
     {
+        this.order = model.order;
         this.rotateYawHead = model.rotateYawHead;
         this.rotatePitch = model.rotatePitch;
         this.rotateBody = model.rotateBody;
@@ -134,6 +139,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = model.rx;
         this.ry = model.ry;
         this.rz = model.rz;
+        this.one = model.one;
         this.sx = model.sx;
         this.sy = model.sy;
         this.sz = model.sz;
@@ -157,6 +163,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
+        compound.setByte("Order", (byte) this.order.ordinal());
         compound.setFloat("Yaw", this.rotateYawHead);
         compound.setFloat("Pitch", this.rotatePitch);
         compound.setFloat("Body", this.rotateBody);
@@ -166,6 +173,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         compound.setFloat("RotateX", this.rx);
         compound.setFloat("RotateY", this.ry);
         compound.setFloat("RotateZ", this.rz);
+        compound.setBoolean("Scale", this.one);
         compound.setFloat("ScaleX", this.sx);
         compound.setFloat("ScaleY", this.sy);
         compound.setFloat("ScaleZ", this.sz);
@@ -186,6 +194,11 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     {
         super.readFromNBT(compound);
 
+        if (compound.hasKey("Order"))
+        {
+            this.order = RotationOrder.values()[compound.getByte("Order")];
+        }
+
         this.rotateYawHead = compound.getFloat("Yaw");
         this.rotatePitch = compound.getFloat("Pitch");
         this.rotateBody = compound.getFloat("Body");
@@ -195,6 +208,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.rx = compound.getFloat("RotateX");
         this.ry = compound.getFloat("RotateY");
         this.rz = compound.getFloat("RotateZ");
+        this.one = compound.getBoolean("Scale");
         this.sx = compound.getFloat("ScaleX");
         this.sy = compound.getFloat("ScaleY");
         this.sz = compound.getFloat("ScaleZ");
@@ -203,5 +217,13 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph"));
         }
+    }
+
+    /**
+     * Rotation order
+     */
+    public static enum RotationOrder
+    {
+        ZYX, XYZ;
     }
 }

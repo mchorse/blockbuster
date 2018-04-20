@@ -9,6 +9,11 @@ blockbuster.config:
         auto_refresh_models: Refresh models and skins
         debug_playback_ticks: Debug ticks
     
+    model_block:
+        title: Model block
+        
+        model_block_disable_culling_workaround: Disable culling workaround
+    
     recording:
         title: Recording
 
