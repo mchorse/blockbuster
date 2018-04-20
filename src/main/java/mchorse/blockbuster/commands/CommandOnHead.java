@@ -11,13 +11,13 @@ import net.minecraft.server.MinecraftServer;
 public class CommandOnHead extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "on_head";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.on_head.help";
     }
