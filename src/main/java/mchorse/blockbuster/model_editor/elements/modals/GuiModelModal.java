@@ -1,9 +1,9 @@
 package mchorse.blockbuster.model_editor.elements.modals;
 
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput;
 import mchorse.blockbuster.model_editor.elements.GuiTwoInput;
 import mchorse.blockbuster.model_editor.modal.GuiModal;
-import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

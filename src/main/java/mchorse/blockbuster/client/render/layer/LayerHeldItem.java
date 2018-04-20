@@ -1,23 +1,40 @@
-package mchorse.blockbuster.model_editor;
+package mchorse.blockbuster.client.render.layer;
 
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Item renderer in a model editor
+ * That's unbelievable!
  *
- * This class is responsible for only one thing, rendering items in the model
- * editor.
+ * - How many classes are you going to steal from Minecraft core?
+ * - As much as I want to. Duh!
+ *
+ * This is patched LayerHeldItem layer class. This class is responsible for
+ * rendering items in designated limbs in custom actor model. Lots of fun
+ * stuff going on here.
  */
-public class ItemRenderer
+@SideOnly(Side.CLIENT)
+public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 {
-    public static void renderItems(EntityLivingBase entity, ModelCustom model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    protected final RenderLivingBase<?> livingEntityRenderer;
+
+    public LayerHeldItem(RenderLivingBase<?> livingEntityRendererIn)
+    {
+        this.livingEntityRenderer = livingEntityRendererIn;
+    }
+
+    @Override
+    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         ItemStack itemstack1 = entity.getHeldItemMainhand();
         ItemStack itemstack = entity.getHeldItemOffhand();
@@ -25,8 +42,8 @@ public class ItemRenderer
         if (itemstack != null || itemstack1 != null)
         {
             GlStateManager.pushMatrix();
-            renderHeldItem(entity, model, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
-            renderHeldItem(entity, model, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
+            this.renderHeldItem(entity, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
+            this.renderHeldItem(entity, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
             GlStateManager.popMatrix();
         }
     }
@@ -36,10 +53,12 @@ public class ItemRenderer
      *
      * Items could be rendered to several limbs.
      */
-    private static void renderHeldItem(EntityLivingBase entity, ModelCustom model, ItemStack item, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
+    private void renderHeldItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
         if (item != null)
         {
+            ModelCustom model = ((ModelCustom) this.livingEntityRenderer.getMainModel());
+
             for (ModelCustomRenderer arm : model.getRenderForArm(handSide))
             {
                 boolean flag = handSide == EnumHandSide.LEFT;
@@ -54,6 +73,7 @@ public class ItemRenderer
                 }
 
                 GlStateManager.pushMatrix();
+
                 arm.postRender(0.0625F);
 
                 GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
@@ -66,8 +86,19 @@ public class ItemRenderer
                 }
 
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
+
                 GlStateManager.popMatrix();
             }
         }
+    }
+
+    /**
+     * Don't really understand how this method is going to affect the rendering
+     * of this layer.
+     */
+    @Override
+    public boolean shouldCombineTextures()
+    {
+        return false;
     }
 }

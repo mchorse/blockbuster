@@ -5,14 +5,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.metamorph.api.models.Model;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -28,7 +29,7 @@ public class ModelHandler
     /**
      * Cached models, they're loaded from stuffs
      */
-    public Map<String, Model> models = new HashMap<String, Model>();
+    public Map<String, ModelCell> models = new HashMap<String, ModelCell>();
 
     /**
      * Actors pack from which ModelHandler loads its models
@@ -40,21 +41,29 @@ public class ModelHandler
      */
     public void loadModels(ModelPack pack)
     {
-        this.models.clear();
         pack.reload();
+
+        /* Keys which are going to be used to determine whether the 
+         * model was removed */
+        Set<String> keys = new HashSet<String>(this.models.keySet());
 
         /* Load user provided models */
         for (String model : pack.getModels())
         {
-            if (ModelPack.IGNORED_MODELS.contains(model))
+            ModelEntry entry = pack.models.get(model);
+            ModelCell cell = this.models.get(model);
+            long timestamp = entry.lastModified();
+
+            keys.remove(model);
+
+            /* Whether the mod should be reloaded */
+            if (cell != null && timestamp <= cell.timestamp)
             {
                 continue;
             }
 
             try
             {
-                ModelEntry entry = pack.models.get(model);
-
                 if (entry.customModel == null)
                 {
                     /* Generate custom model for an OBJ model */
@@ -63,14 +72,14 @@ public class ModelHandler
 
                     data.name = model;
 
-                    this.models.put("blockbuster." + model, data);
+                    this.models.put(model, new ModelCell(data, timestamp));
                     modelStream.close();
                 }
                 else
                 {
                     InputStream modelStream = new FileInputStream(entry.customModel);
 
-                    this.models.put("blockbuster." + model, Model.parse(modelStream));
+                    this.models.put(model, new ModelCell(Model.parse(modelStream), timestamp));
                     modelStream.close();
                 }
             }
@@ -80,6 +89,12 @@ public class ModelHandler
             }
         }
 
+        for (String key : keys)
+        {
+            this.models.remove(key);
+            System.out.println("Removing '" + key + "' custom model!");
+        }
+
         /* Load default provided models */
         try
         {
@@ -87,22 +102,22 @@ public class ModelHandler
             ClassLoader loader = this.getClass().getClassLoader();
 
             /* Optionally load default models */
-            if (!this.models.containsKey("blockbuster.alex"))
+            if (!this.models.containsKey("alex"))
             {
-                this.models.put("blockbuster.alex", Model.parse(loader.getResourceAsStream(path + "alex.json")));
+                this.models.put("alex", new ModelCell(Model.parse(loader.getResourceAsStream(path + "alex.json")), 0));
             }
 
-            if (!this.models.containsKey("blockbuster.steve"))
+            if (!this.models.containsKey("steve"))
             {
-                this.models.put("blockbuster.steve", Model.parse(loader.getResourceAsStream(path + "steve.json")));
+                this.models.put("steve", new ModelCell(Model.parse(loader.getResourceAsStream(path + "steve.json")), 0));
             }
 
-            if (!this.models.containsKey("blockbuster.fred"))
+            if (!this.models.containsKey("fred"))
             {
-                this.models.put("blockbuster.fred", Model.parse(loader.getResourceAsStream(path + "fred.json")));
+                this.models.put("fred", new ModelCell(Model.parse(loader.getResourceAsStream(path + "fred.json")), 0));
             }
 
-            this.models.put("blockbuster.yike", Model.parse(loader.getResourceAsStream(path + "yike.json")));
+            this.models.put("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
         }
         catch (Exception e)
         {
@@ -140,5 +155,18 @@ public class ModelHandler
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
         Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack());
+    }
+
+    public static class ModelCell
+    {
+        public Model model;
+        public long timestamp;
+        public boolean load = true;
+
+        public ModelCell(Model model, long timestamp)
+        {
+            this.model = model;
+            this.timestamp = timestamp;
+        }
     }
 }

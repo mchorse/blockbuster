@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import mchorse.metamorph.api.models.Model;
-import mchorse.metamorph.api.models.Model.Limb;
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Limb;
 import mchorse.metamorph.client.gui.utils.GuiScrollPane;
 import net.minecraft.client.gui.Gui;
 

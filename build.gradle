@@ -11,17 +11,81 @@ buildscript
         classpath 'org.yaml:snakeyaml:1.18'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.10"
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
+sourceCompatibility = targetCompatibility = "1.8"
 
-/* Build language files */
+compileJava 
+{
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+/* Minecraft configuration */
+
+minecraft 
+{
+    version = "${mc_version}-${forge_version}"
+    runDir = "run"
+    mappings = snapshot
+    
+    clientJvmArgs = ["-Xmx1G"]
+    serverJvmArgs = ["-Xmx1G"]
+    
+    replace "@VERSION@", project.version
+}
+
+dependencies 
+{
+	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
+	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
+}
+
+eclipse
+{
+    classpath
+    {
+        file
+        {
+            whenMerged
+            {
+                def ver = project.minecraft.version
+                
+                def lib = entries.find { it.path.contains "metamorph-${metamorph}" }
+                lib.sourcePath = fileReference(file("run/libs/metamorph-${metamorph}-${ver}-sources.jar"))
+                
+                lib = entries.find { it.path.contains "aperture-${aperture}" } 
+                lib.sourcePath = fileReference(file("run/libs/aperture-${aperture}-${ver}-sources.jar"))
+            }
+        }
+    }
+}
+
+processResources
+{
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+	project.version += "-" + project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+/* Build language files from YML */
+
 task buildLangFiles {
     doLast {
         def help = file("help")
-        
         def flatten
         
         /**
@@ -117,72 +181,3 @@ task buildLangFiles {
 }
 
 tasks.processResources.dependsOn('buildLangFiles')
-    
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
-
-minecraft {
-    version = "1.12.2-14.23.3.2655"
-    runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
-    clientJvmArgs = ["-Xmx1G"]
-    serverJvmArgs = ["-Xmx1G"]
-}
-
-dependencies 
-{
-	compile files("run/metamorph-" + metamorph + "-" + project.minecraft.version + "-dev.jar")
-	compile files("run/aperture-" + aperture + "-" + project.minecraft.version + "-dev.jar")
-}
-
-eclipse
-{
-    classpath
-    {
-        file
-        {
-            whenMerged
-            {
-                def ver = project.minecraft.version
-                def lib = entries.find { it.path.contains "metamorph-" + metamorph }
-                lib.sourcePath = fileReference(file("run/metamorph-" + metamorph + "-" + ver + "-sources.jar"))
-                
-                lib = entries.find { it.path.contains "aperture-" + aperture } 
-                lib.sourcePath = fileReference(file("run/aperture-" + aperture + "-" + ver + "-sources.jar"))
-            }
-        }
-    }
-}
-
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-	// Append minecraft version to the build
-    project.version += "-" + project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}

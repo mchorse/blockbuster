@@ -1,19 +1,23 @@
-package mchorse.blockbuster_pack.client.model;
+package mchorse.metamorph.client.model.custom;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.parsing.IModelCustom;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 /**
- * Model for YikeFilms easter egg
+ * Model chicken class
+ * 
+ * Just adds wing flapping animation to this model.
  */
-public class ModelYike extends ModelCustom implements IModelCustom
+public class ModelChicken extends ModelCustom implements IModelCustom
 {
-    public ModelCustomRenderer anchor;
+    public ModelCustomRenderer left_arm;
+    public ModelCustomRenderer right_arm;
 
-    public ModelYike(Model model)
+    public ModelChicken(Model model)
     {
         super(model);
     }
@@ -27,6 +31,12 @@ public class ModelYike extends ModelCustom implements IModelCustom
     {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
 
-        this.anchor.rotateAngleZ = (ageInTicks % 360) * (entityIn.isSprinting() ? 0.7F : 0.5F);
+        if (!entityIn.onGround || Math.abs(entityIn.motionY) > 0.1)
+        {
+            float flap = MathHelper.sin(ageInTicks) + 1.0F;
+
+            this.right_arm.rotateAngleZ = flap;
+            this.left_arm.rotateAngleZ = -flap;
+        }
     }
 }

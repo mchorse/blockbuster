@@ -43,6 +43,13 @@ public class BlockbusterConfig
      */
     public boolean debug_playback_ticks;
 
+    /* Model block */
+
+    /**
+     * Whether model block culling workaround should be disabled 
+     */
+    public boolean model_block_disable_culling_workaround;
+
     /* Recording */
 
     /**
@@ -143,6 +150,7 @@ public class BlockbusterConfig
         String recording = "recording";
         String actor = "actor";
         String damage = "damage_control";
+        String model = "model_block";
 
         /* General */
         this.clean_model_downloads = this.getBoolean("clean_model_downloads", general, true, "Remove all downloaded models after exiting a server?");
@@ -150,6 +158,9 @@ public class BlockbusterConfig
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");
         this.debug_playback_ticks = this.getBoolean("debug_playback_ticks", general, false, "Write ticks in the log during director block recording");
+
+        /* Model block */
+        this.model_block_disable_culling_workaround = this.getBoolean("model_block_disable_culling_workaround", model, false, "Whether model block culling workaround should be disabled");
 
         /* Recording */
         this.recording_countdown = this.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown (in seconds)");

@@ -4,14 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
-import mchorse.blockbuster_pack.morphs.ActorMorph;
+import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
-import mchorse.metamorph.api.models.Model;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -23,11 +24,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * This factory is responsible for adding all custom modeled morphs provided by
  * a user (in his config folder), the server (in world save's blockbuster
- * folder) or added by API (steve and alex).
+ * folder) or added by API (steve, alex and fred).
  */
 public class BlockbusterFactory implements IMorphFactory
 {
-    public Map<String, ActorMorph> morphs = new HashMap<String, ActorMorph>();
+    public Map<String, CustomMorph> morphs = new HashMap<String, CustomMorph>();
     public ModelHandler models;
 
     @Override
@@ -50,12 +51,13 @@ public class BlockbusterFactory implements IMorphFactory
         }
     }
 
-    private ActorMorph createMorph(String name)
+    private CustomMorph createMorph(String name)
     {
-        ActorMorph morph = new ActorMorph();
+        CustomMorph morph = new CustomMorph();
+        ModelCell entry = this.models.models.get(name);
 
         morph.name = "blockbuster." + name;
-        morph.model = this.models.models.get(morph.name);
+        morph.model = entry == null ? null : entry.model;
 
         return morph;
     }
@@ -64,7 +66,7 @@ public class BlockbusterFactory implements IMorphFactory
     @SideOnly(Side.CLIENT)
     public void registerClient(MorphManager manager)
     {
-        for (ActorMorph morph : this.morphs.values())
+        for (CustomMorph morph : this.morphs.values())
         {
             morph.renderer = ClientProxy.actorRenderer;
         }
@@ -90,7 +92,7 @@ public class BlockbusterFactory implements IMorphFactory
     public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
     {
         String name = tag.getString("Name");
-        ActorMorph morph = (ActorMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone(Blockbuster.proxy.isClient());
+        CustomMorph morph = (CustomMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone(Blockbuster.proxy.isClient());
 
         morph.fromNBT(tag);
 
@@ -100,10 +102,10 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public void getMorphs(MorphList morphs, World world)
     {
-        for (Map.Entry<String, ActorMorph> morph : this.morphs.entrySet())
+        for (Map.Entry<String, CustomMorph> morph : this.morphs.entrySet())
         {
             String key = morph.getKey();
-            ActorMorph original = morph.getValue();
+            CustomMorph original = morph.getValue();
 
             if (key.equals("yike"))
             {
@@ -113,7 +115,7 @@ public class BlockbusterFactory implements IMorphFactory
             /* Morphs with default texture */
             if (original.model.defaultTexture != null)
             {
-                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
+                CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
 
@@ -126,7 +128,7 @@ public class BlockbusterFactory implements IMorphFactory
                         continue;
                     }
 
-                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
+                    CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
 
                     poseActor.currentPose = pose;
                     poseActor.setPose(entry.getValue());
@@ -137,7 +139,7 @@ public class BlockbusterFactory implements IMorphFactory
             /* Morphs with skins */
             for (String skin : this.models.pack.getSkins(key))
             {
-                ActorMorph actor = (ActorMorph) original.clone(world.isRemote);
+                CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
                 String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
 
                 actor.skin = new TextureLocation("blockbuster.actors", path);
@@ -152,7 +154,7 @@ public class BlockbusterFactory implements IMorphFactory
                         continue;
                     }
 
-                    ActorMorph poseActor = (ActorMorph) actor.clone(world.isRemote);
+                    CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
 
                     poseActor.currentPose = pose;
                     poseActor.setPose(entry.getValue());

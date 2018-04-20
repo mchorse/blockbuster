@@ -1,7 +1,7 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster_pack.morphs.ActorMorph;
+import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.builder.GuiAbstractMorphBuilder;
@@ -36,9 +36,9 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
     @Override
     public boolean fromMorph(AbstractMorph morph)
     {
-        if (morph instanceof ActorMorph)
+        if (morph instanceof CustomMorph)
         {
-            ActorMorph actor = (ActorMorph) morph;
+            CustomMorph actor = (CustomMorph) morph;
 
             this.model.setText(actor.name.replaceFirst("^blockbuster\\.", ""));
             this.model.setCursorPositionZero();
@@ -160,7 +160,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
 
         if (this.cached != null)
         {
-            ActorMorph morph = Blockbuster.proxy.factory.morphs.get(this.model.getText());
+            CustomMorph morph = Blockbuster.proxy.factory.morphs.get(this.model.getText());
 
             if (morph != null)
             {
@@ -169,7 +169,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
                     this.poses.values.add(new DropDownItem(pose, pose));
                 }
 
-                this.poses.setSelected(((ActorMorph) this.cached).currentPose);
+                this.poses.setSelected(((CustomMorph) this.cached).currentPose);
             }
         }
         else

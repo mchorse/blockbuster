@@ -1,16 +1,17 @@
 package mchorse.blockbuster_pack.morphs;
 
+import com.google.common.base.Objects;
+
+import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Pose;
+import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.metamorph.api.EntityUtils;
-import mchorse.metamorph.api.models.Model;
-import mchorse.metamorph.api.models.Model.Pose;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.api.morphs.CustomMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
-import mchorse.metamorph.client.model.ModelCustom;
-import mchorse.metamorph.client.render.RenderCustomModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,24 +22,72 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Actor morph
+ * Custom morph
  *
- * This is a simple extension of {@link CustomMorph} which adds skin property
- * for customization of a rendered skin.
+ * This is a morph which allows players to use Blockbuster's custom 
+ * models as morphs.
  */
-public class ActorMorph extends CustomMorph
+public class CustomMorph extends AbstractMorph
 {
+    /**
+     * Morph's model
+     */
+    public Model model;
+
+    /**
+     * Current pose 
+     */
+    protected Pose pose;
+
+    /**
+     * Current custom pose
+     */
+    public String currentPose = "";
+
+    /**
+     * Apply current pose on sneaking
+     */
+    public boolean currentPoseOnSneak = false;
+
     /**
      * Skin for custom morph
      */
     public ResourceLocation skin;
 
+    private String key;
+
     /**
      * Make hands true!
      */
-    public ActorMorph()
+    public CustomMorph()
     {
+        this.settings = this.settings.clone();
         this.settings.hands = true;
+    }
+
+    /**
+     * Get a pose for rendering
+     */
+    public Pose getPose(EntityLivingBase target)
+    {
+        String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
+
+        return model.getPose(poseName);
+    }
+
+    public void setPose(Pose pose)
+    {
+        this.pose = pose;
+    }
+
+    public String getKey()
+    {
+        if (this.key == null)
+        {
+            this.key = this.name.replaceAll("^blockbuster\\.", "");
+        }
+
+        return this.key;
     }
 
     /**
@@ -51,7 +100,7 @@ public class ActorMorph extends CustomMorph
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
-        ModelCustom model = ModelCustom.MODELS.get(this.name);
+        ModelCustom model = ModelCustom.MODELS.get(this.getKey());
 
         if (model != null)
         {
@@ -75,9 +124,6 @@ public class ActorMorph extends CustomMorph
         }
     }
 
-    /**
-     * TODO: move to Metamorph 
-     */
     @Override
     @SideOnly(Side.CLIENT)
     public boolean renderHand(EntityPlayer player, EnumHand hand)
@@ -111,6 +157,30 @@ public class ActorMorph extends CustomMorph
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
+    {
+        RenderCustomModel render = (RenderCustomModel) this.renderer;
+
+        render.current = this;
+        render.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
+
+    /**
+     * Update the player based on its morph abilities and properties. This 
+     * method also responsible for updating AABB size. 
+     */
+    @Override
+    public void update(EntityLivingBase target, IMorphing cap)
+    {
+        this.updateSize(target, cap);
+
+        super.update(target, cap);
+    }
+
+    /**
+     * Update size of the player based on the given morph.
+     */
     public void updateSize(EntityLivingBase target, IMorphing cap)
     {
         String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
@@ -131,22 +201,21 @@ public class ActorMorph extends CustomMorph
     }
 
     @Override
-    public Pose getPose(EntityLivingBase target)
+    public float getWidth(EntityLivingBase target)
     {
-        String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
+        return this.pose != null ? this.pose.size[0] : 0.6F;
+    }
 
-        if (target instanceof EntityActor)
-        {
-            poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
-        }
-
-        return model.getPose(poseName);
+    @Override
+    public float getHeight(EntityLivingBase target)
+    {
+        return this.pose != null ? this.pose.size[1] : 1.8F;
     }
 
     /**
      * Check whether given object equals to this object
      *
-     * This method is responsible for checking whether other {@link ActorMorph}
+     * This method is responsible for checking whether other {@link CustomMorph}
      * has the same skin as this morph. This method plays very big role in
      * morphing and morph acquiring.
      */
@@ -155,15 +224,18 @@ public class ActorMorph extends CustomMorph
     {
         boolean result = super.equals(object);
 
-        if (object instanceof ActorMorph)
+        if (object instanceof CustomMorph)
         {
-            ActorMorph actor = (ActorMorph) object;
+            CustomMorph morph = (CustomMorph) object;
 
-            if (this.skin == null && actor.skin == null)
+            result = result && Objects.equal(this.currentPose, morph.currentPose);
+            result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
+
+            if (this.skin == null && morph.skin == null)
             {
                 return result;
             }
-            else if (this.skin != null && actor.skin != null && actor.skin.equals(this.skin))
+            else if (this.skin != null && morph.skin != null && morph.skin.equals(this.skin))
             {
                 return result;
             }
@@ -179,7 +251,7 @@ public class ActorMorph extends CustomMorph
     @Override
     public AbstractMorph clone(boolean isRemote)
     {
-        ActorMorph morph = new ActorMorph();
+        CustomMorph morph = new CustomMorph();
 
         morph.name = this.name;
         morph.skin = this.skin;
@@ -207,6 +279,9 @@ public class ActorMorph extends CustomMorph
         {
             tag.setString("Skin", this.skin.toString());
         }
+
+        tag.setString("Pose", this.currentPose);
+        tag.setBoolean("Sneak", this.currentPoseOnSneak);
     }
 
     @Override
@@ -218,5 +293,8 @@ public class ActorMorph extends CustomMorph
         {
             this.skin = new TextureLocation(tag.getString("Skin"));
         }
+
+        this.currentPose = tag.getString("Pose");
+        this.currentPoseOnSneak = tag.getBoolean("Sneak");
     }
 }

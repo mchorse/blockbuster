@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster_pack.morphs.ActorMorph;
-import mchorse.metamorph.api.models.Model;
+import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -58,9 +58,9 @@ public class RenderActor extends RenderLiving<EntityActor>
 
             float shadow = 0.5F;
 
-            if (morph instanceof ActorMorph)
+            if (morph instanceof CustomMorph)
             {
-                Model model = ((ActorMorph) morph).model;
+                Model model = ((CustomMorph) morph).model;
 
                 if (model != null)
                 {

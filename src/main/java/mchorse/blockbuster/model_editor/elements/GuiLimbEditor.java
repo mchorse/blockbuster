@@ -3,12 +3,12 @@ package mchorse.blockbuster.model_editor.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
 import mchorse.blockbuster.model_editor.elements.modals.GuiInputModal;
 import mchorse.blockbuster.model_editor.elements.modals.GuiParentModal;
-import mchorse.metamorph.api.models.Model;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -44,6 +44,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private static final int ANCHOR = 5;
     private static final int COLOR = 6;
     private static final int OPACITY = 7;
+    private static final int LIGHTING = 18;
+    private static final int SHADING = 19;
 
     /* Gameplay properties */
     private static final int LOOKING = 8;
@@ -100,6 +102,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private GuiThreeInput anchor;
     private GuiThreeInput color;
     private GuiTextField opacity;
+    private GuiCheckBox lighting;
+    private GuiCheckBox shading;
 
     /* Gameplay features */
     private GuiCheckBox looking;
@@ -148,6 +152,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.color = new GuiThreeInput(COLOR, font, 0, 0, 0, this);
         this.opacity = new GuiTextField(OPACITY, font, 0, 0, 0, 16);
         this.opacity.setGuiResponder(this);
+        this.lighting = new GuiCheckBox(LIGHTING, 0, 0, I18n.format("blockbuster.gui.me.lighting"), false);
+        this.shading = new GuiCheckBox(SHADING, 0, 0, I18n.format("blockbuster.gui.me.shading"), false);
 
         /* Gameplay */
         this.looking = new GuiCheckBox(LOOKING, 0, 0, I18n.format("blockbuster.gui.me.looking"), false);
@@ -249,6 +255,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.color.b.setText(String.valueOf(limb.color[1]));
         this.color.c.setText(String.valueOf(limb.color[2]));
         this.opacity.setText(String.valueOf(limb.opacity));
+        this.lighting.setIsChecked(limb.lighting);
+        this.shading.setIsChecked(limb.shading);
 
         /* Gameplay */
         this.looking.setIsChecked(limb.looking);
@@ -334,6 +342,12 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.mirror.x = x;
             this.mirror.y = y;
             y += 15;
+            this.lighting.x = x;
+            this.lighting.y = y;
+            y += 15;
+            this.shading.x = x;
+            this.shading.y = y;
+            y += 15;
             this.texture.update(x, y, width);
             y += 20;
             this.size.update(x, y, width);
@@ -348,6 +362,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             y += 23;
 
             this.buttons.add(this.mirror);
+            this.buttons.add(this.lighting);
+            this.buttons.add(this.shading);
         }
 
         if (this.category == 1 || full)
@@ -615,6 +631,14 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             {
                 this.limb.mirror = this.mirror.isChecked();
                 this.editor.rebuildModel();
+            }
+            if (button.id == LIGHTING)
+            {
+                this.limb.lighting = this.lighting.isChecked();
+            }
+            if (button.id == SHADING)
+            {
+                this.limb.shading = this.shading.isChecked();
             }
         }
 

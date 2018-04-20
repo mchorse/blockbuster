@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,7 @@ public class PacketModifyModelBlock implements IMessage
 {
     public BlockPos pos;
     public AbstractMorph morph;
+    public RotationOrder order = RotationOrder.ZYX;
 
     public float yaw;
     public float pitch;
@@ -25,6 +27,7 @@ public class PacketModifyModelBlock implements IMessage
     public float ry;
     public float rz;
 
+    public boolean one;
     public float sx;
     public float sy;
     public float sz;
@@ -65,11 +68,19 @@ public class PacketModifyModelBlock implements IMessage
         return this;
     }
 
-    public PacketModifyModelBlock setScale(float x, float y, float z)
+    public PacketModifyModelBlock setScale(boolean one, float x, float y, float z)
     {
+        this.one = one;
         this.sx = x;
         this.sy = y;
         this.sz = z;
+
+        return this;
+    }
+
+    public PacketModifyModelBlock setOrder(RotationOrder order)
+    {
+        this.order = order;
 
         return this;
     }
@@ -78,6 +89,7 @@ public class PacketModifyModelBlock implements IMessage
     public void fromBytes(ByteBuf buf)
     {
         this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.order = RotationOrder.values()[buf.readByte()];
 
         this.yaw = buf.readFloat();
         this.pitch = buf.readFloat();
@@ -89,6 +101,7 @@ public class PacketModifyModelBlock implements IMessage
         this.rx = buf.readFloat();
         this.ry = buf.readFloat();
         this.rz = buf.readFloat();
+        this.one = buf.readBoolean();
         this.sx = buf.readFloat();
         this.sy = buf.readFloat();
         this.sz = buf.readFloat();
@@ -105,6 +118,7 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());
+        buf.writeByte(this.order.ordinal());
 
         buf.writeFloat(this.yaw);
         buf.writeFloat(this.pitch);
@@ -116,6 +130,7 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeFloat(this.rx);
         buf.writeFloat(this.ry);
         buf.writeFloat(this.rz);
+        buf.writeBoolean(this.one);
         buf.writeFloat(this.sx);
         buf.writeFloat(this.sy);
         buf.writeFloat(this.sz);
