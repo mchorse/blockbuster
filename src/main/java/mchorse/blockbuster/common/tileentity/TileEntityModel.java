@@ -1,12 +1,16 @@
 package mchorse.blockbuster.common.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFlowerPot;
@@ -25,9 +29,10 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
-    public RotationOrder order = RotationOrder.ZYX;
+    public ItemStack[] slots = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
 
     /* Entity rotations */
+    public RotationOrder order = RotationOrder.ZYX;
     public float rotateYawHead;
     public float rotatePitch;
     public float rotateBody;
@@ -73,6 +78,20 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     {
         this.morph = morph;
         this.markDirty();
+    }
+
+    public void createEntity()
+    {
+        this.entity = new EntityActor(this.getWorld());
+        this.updateEntity();
+    }
+
+    public void updateEntity()
+    {
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            this.entity.setItemStackToSlot(EntityEquipmentSlot.values()[i], this.slots[i]);
+        }
     }
 
     @Override
@@ -124,6 +143,14 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.sx = message.sx;
         this.sy = message.sy;
         this.sz = message.sz;
+
+        for (int i = 0; i < message.slots.length; i++)
+        {
+            ItemStack stack = message.slots[i];
+
+            this.slots[i] = stack.copy();
+        }
+
         this.setMorph(message.morph);
     }
 
@@ -144,6 +171,13 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.sy = model.sy;
         this.sz = model.sz;
         this.morph = model.morph;
+
+        for (int i = 0; i < model.slots.length; i++)
+        {
+            ItemStack stack = model.slots[i];
+
+            this.slots[i] = stack.copy();
+        }
     }
 
     /* NBT methods */
@@ -177,6 +211,23 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         compound.setFloat("ScaleX", this.sx);
         compound.setFloat("ScaleY", this.sy);
         compound.setFloat("ScaleZ", this.sz);
+
+        NBTTagList list = new NBTTagList();
+
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            ItemStack stack = this.slots[i];
+
+            if (stack.isEmpty())
+            {
+                stack.writeToNBT(tag);
+            }
+
+            list.appendTag(tag);
+        }
+
+        compound.setTag("Items", list);
 
         if (this.morph != null)
         {
@@ -212,6 +263,19 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.sx = compound.getFloat("ScaleX");
         this.sy = compound.getFloat("ScaleY");
         this.sz = compound.getFloat("ScaleZ");
+
+        if (compound.hasKey("Items", 9))
+        {
+            NBTTagList items = compound.getTagList("Items", 10);
+
+            for (int i = 0, c = items.tagCount(); i < c; i++)
+            {
+                NBTTagCompound tag = items.getCompoundTagAt(i);
+                ItemStack stack = new ItemStack(tag);
+
+                this.slots[i] = stack;
+            }
+        }
 
         if (compound.hasKey("Morph", 10))
         {

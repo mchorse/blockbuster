@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -14,6 +15,7 @@ public class PacketModifyModelBlock implements IMessage
     public BlockPos pos;
     public AbstractMorph morph;
     public RotationOrder order = RotationOrder.ZYX;
+    public ItemStack[] slots = new ItemStack[6];
 
     public float yaw;
     public float pitch;
@@ -85,6 +87,16 @@ public class PacketModifyModelBlock implements IMessage
         return this;
     }
 
+    public PacketModifyModelBlock setSlots(ItemStack[] stacks)
+    {
+        for (int i = 0; i < stacks.length; i++)
+        {
+            this.slots[i] = stacks[i].copy();
+        }
+
+        return this;
+    }
+
     @Override
     public void fromBytes(ByteBuf buf)
     {
@@ -105,6 +117,11 @@ public class PacketModifyModelBlock implements IMessage
         this.sx = buf.readFloat();
         this.sy = buf.readFloat();
         this.sz = buf.readFloat();
+
+        for (int i = 0; i < 6; i++)
+        {
+            this.slots[i] = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : ItemStack.EMPTY;
+        }
 
         if (buf.readBoolean())
         {
@@ -134,6 +151,19 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeFloat(this.sx);
         buf.writeFloat(this.sy);
         buf.writeFloat(this.sz);
+
+        for (int i = 0; i < 6; i++)
+        {
+            ItemStack stack = this.slots[i];
+
+            buf.writeBoolean(!stack.isEmpty());
+
+            if (!stack.isEmpty())
+            {
+                ByteBufUtils.writeItemStack(buf, stack);
+            }
+        }
+
         buf.writeBoolean(this.morph != null);
 
         if (this.morph != null)
