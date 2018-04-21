@@ -3,7 +3,6 @@ package mchorse.blockbuster.client.render.tileentity;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.RenderingHandler.TEModel;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
@@ -29,7 +28,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
         {
             if (te.entity == null)
             {
-                te.entity = new EntityActor(this.getWorld());
+                te.createEntity();
             }
 
             EntityLivingBase entity = te.entity;

@@ -2,6 +2,9 @@ package mchorse.blockbuster.client.gui;
 
 import java.io.IOException;
 
+import org.lwjgl.opengl.GL11;
+
+import mchorse.blockbuster.client.gui.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad.ITrackpadListener;
@@ -11,14 +14,18 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.blockbuster.utils.Area;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
+import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 /**
  * Model block configuration GUI
@@ -26,7 +33,7 @@ import net.minecraft.client.resources.I18n;
  * This GUI allows users to configure the model block, which allows 
  * people to place models/entities as static decorations. 
  */
-public class GuiModelBlock extends GuiScreen implements ITrackpadListener
+public class GuiModelBlock extends GuiScreen implements ITrackpadListener, IInventoryPicker
 {
     /* Cached localization strings */
     private String stringTitle = I18n.format("blockbuster.gui.model_block.title");
@@ -58,6 +65,9 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
     private GuiTrackpad rz;
 
     private GuiMorphsPopup morphs;
+    private GuiInventory inventory;
+    private GuiSlot[] slots = new GuiSlot[6];
+    private GuiSlot active;
 
     public GuiModelBlock(TileEntityModel model)
     {
@@ -67,13 +77,15 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.temp = new TileEntityModel(0);
         this.temp.copyData(model);
 
-        this.morphs = new GuiMorphsPopup(6, model.morph, Morphing.get(Minecraft.getMinecraft().thePlayer));
-    }
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return false;
+        this.morphs = new GuiMorphsPopup(6, model.morph, Morphing.get(player));
+        this.inventory = new GuiInventory(this, player);
+
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            this.slots[i] = new GuiSlot(i);
+        }
     }
 
     @Override
@@ -129,6 +141,24 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         }
     }
 
+    @Override
+    public void pickItem(GuiInventory inventory, ItemStack stack)
+    {
+        if (this.active != null)
+        {
+            this.active.stack = stack == null ? null : stack.copy();
+            this.model.slots[this.active.slot] = this.active.stack;
+            this.model.updateEntity();
+            this.inventory.visible = false;
+        }
+    }
+
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
     /* Actions */
 
     @Override
@@ -166,6 +196,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         packet.setRot(this.rx.value, this.ry.value, this.rz.value);
         packet.setScale(this.one.getValue() == 1, this.sx.value, this.sy.value, this.sz.value);
         packet.setOrder(RotationOrder.values()[this.order.getValue()]);
+        packet.setSlots(this.model.slots);
 
         Dispatcher.sendToServer(packet);
         Minecraft.getMinecraft().displayGuiScreen(null);
@@ -216,6 +247,18 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.ry.mouseClicked(mouseX, mouseY, mouseButton);
         this.rz.mouseClicked(mouseX, mouseY, mouseButton);
         this.sx.mouseClicked(mouseX, mouseY, mouseButton);
+        this.inventory.mouseClicked(mouseX, mouseY, mouseButton);
+
+        this.active = null;
+
+        for (GuiSlot slot : this.slots)
+        {
+            if (slot.area.isInside(mouseX, mouseY))
+            {
+                this.active = slot;
+                this.inventory.visible = true;
+            }
+        }
 
         if (this.one.getValue() != 1)
         {
@@ -258,6 +301,7 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         if (keyCode == 1)
         {
             this.model.copyData(this.temp);
+            this.model.updateEntity();
 
             super.keyTyped(typedChar, keyCode);
         }
@@ -323,6 +367,23 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         this.sy = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 25, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.y"));
         this.sz = new GuiTrackpad(this, this.fontRendererObj).update(x, y + 50, w, 20).setTitle(I18n.format("blockbuster.gui.model_block.z"));
 
+        this.inventory.update(170, 80);
+        this.inventory.visible = false;
+        this.active = null;
+
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            this.slots[i].stack = this.model.slots[i];
+        }
+
+        this.slots[0].update(10, 40);
+        this.slots[1].update(10, 70);
+        this.slots[2].update(10, 100);
+
+        this.slots[3].update(40, 40);
+        this.slots[4].update(40, 70);
+        this.slots[5].update(40, 100);
+
         /* And then, we're configuring them and injecting input data */
         this.fillData();
 
@@ -361,8 +422,8 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
         int y = 10;
 
         /* Draw background */
-        this.drawDefaultBackground();
         Gui.drawRect(0, 0, this.width, 30, 0x88000000);
+        Gui.drawRect(0, this.height - 110, this.width, this.height, 0x88000000);
 
         /* Draw labels: title */
         this.drawString(this.fontRendererObj, this.stringTitle, 10, y + 1, 0xffffffff);
@@ -377,14 +438,15 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
 
         if (cell != null)
         {
-            int center = this.width / 2;
+            // Gui.drawRect(0, 30, 80, 110, 0x88000000);
+            GuiUtils.scissor(this.width - 80, 30, 80, 80, this.width, this.height);
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, -40);
-            cell.current().morph.renderOnScreen(this.mc.thePlayer, center, this.height / 2 + this.height / 6, this.height / 4, 1.0F);
+            cell.current().morph.renderOnScreen(this.mc.thePlayer, this.width - 40, 90, 30, 1.0F);
             GlStateManager.popMatrix();
 
-            this.drawCenteredString(this.fontRendererObj, cell.current().morph.name, center, 40, 0xffffffff);
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -406,6 +468,20 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener
             this.sy.draw(mouseX, mouseY, partialTicks);
             this.sz.draw(mouseX, mouseY, partialTicks);
         }
+
+        for (GuiSlot slot : this.slots)
+        {
+            slot.draw(mouseX, mouseY, partialTicks);
+        }
+
+        if (this.active != null)
+        {
+            Area a = this.active.area;
+
+            Gui.drawRect(a.x, a.y, a.x + a.w, a.y + a.h, 0x880088ff);
+        }
+
+        this.inventory.draw(mouseX, mouseY, partialTicks);
 
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xcccccc);
         this.drawString(this.fontRendererObj, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xcccccc);
