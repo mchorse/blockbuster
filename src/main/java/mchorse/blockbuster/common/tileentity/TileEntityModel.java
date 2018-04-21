@@ -6,6 +6,7 @@ import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -82,12 +83,17 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     public void createEntity()
     {
-        this.entity = new EntityActor(this.getWorld());
+        this.entity = new EntityActor(Minecraft.getMinecraft().world);
         this.updateEntity();
     }
 
     public void updateEntity()
     {
+        if (this.entity == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < this.slots.length; i++)
         {
             this.entity.setItemStackToSlot(EntityEquipmentSlot.values()[i], this.slots[i]);
@@ -152,6 +158,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         }
 
         this.setMorph(message.morph);
+        this.updateEntity();
     }
 
     public void copyData(TileEntityModel model)
@@ -178,6 +185,8 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
             this.slots[i] = stack.copy();
         }
+
+        this.updateEntity();
     }
 
     /* NBT methods */
@@ -219,7 +228,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
             NBTTagCompound tag = new NBTTagCompound();
             ItemStack stack = this.slots[i];
 
-            if (stack.isEmpty())
+            if (!stack.isEmpty())
             {
                 stack.writeToNBT(tag);
             }
