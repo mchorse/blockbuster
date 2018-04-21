@@ -45,6 +45,20 @@ public class RenderingHandler
      * Renders recording overlay during HUD rendering
      */
     @SubscribeEvent
+    public void onHUDRender(RenderGameOverlayEvent.Pre event)
+    {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+        {
+            Minecraft.getMinecraft().entityRenderer.enableLightmap();
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+            Minecraft.getMinecraft().entityRenderer.disableLightmap();
+        }
+    }
+
+    /**
+     * Renders recording overlay during HUD rendering
+     */
+    @SubscribeEvent
     public void onHUDRender(RenderGameOverlayEvent.Post event)
     {
         ScaledResolution resolution = event.getResolution();
@@ -133,9 +147,8 @@ public class RenderingHandler
             model.render = true;
         }
 
-        mc.entityRenderer.disableLightmap();
-
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        mc.entityRenderer.disableLightmap();
     }
 
     /**

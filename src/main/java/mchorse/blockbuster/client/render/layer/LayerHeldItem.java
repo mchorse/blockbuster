@@ -28,6 +28,14 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 {
     protected final RenderLivingBase<?> livingEntityRenderer;
 
+    private float limbSwing;
+    private float limbSwingAmount;
+    private float partialTicks;
+    private float ageInTicks;
+    private float netHeadYaw;
+    private float headPitch;
+    private float scale;
+
     public LayerHeldItem(RenderLivingBase<?> livingEntityRendererIn)
     {
         this.livingEntityRenderer = livingEntityRendererIn;
@@ -39,8 +47,16 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
         ItemStack itemstack1 = entity.getHeldItemMainhand();
         ItemStack itemstack = entity.getHeldItemOffhand();
 
-        if (itemstack != null || itemstack1 != null)
+        if (!itemstack.isEmpty() || !itemstack1.isEmpty())
         {
+            this.limbSwing = limbSwing;
+            this.limbSwingAmount = limbSwingAmount;
+            this.partialTicks = partialTicks;
+            this.ageInTicks = ageInTicks;
+            this.netHeadYaw = netHeadYaw;
+            this.headPitch = headPitch;
+            this.scale = scale;
+
             GlStateManager.pushMatrix();
             this.renderHeldItem(entity, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
             this.renderHeldItem(entity, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
@@ -55,7 +71,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
      */
     private void renderHeldItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
-        if (item != null)
+        if (!item.isEmpty())
         {
             ModelCustom model = ((ModelCustom) this.livingEntityRenderer.getMainModel());
 
@@ -63,32 +79,36 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
             {
                 boolean flag = handSide == EnumHandSide.LEFT;
 
-                float x = 0.0F;
-                float y = arm.limb.size[1] * (arm.limb.size[1] * (1 - arm.limb.anchor[1]) / arm.limb.size[1]) * -0.0625F;
-                float z = arm.limb.size[2] / 2 * 0.0625F;
-
-                if (arm.limb.size[0] > arm.limb.size[1])
-                {
-                    x = arm.limb.size[0] * (10.0F / 12.0F) * 0.0625F;
-                }
-
+                model.setRotationAngles(this.limbSwing, this.limbSwingAmount, this.ageInTicks, this.netHeadYaw, this.headPitch, this.scale, entity);
                 GlStateManager.pushMatrix();
-
-                arm.postRender(0.0625F);
-
-                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
-                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.translate(x, z, y);
-
-                if (arm.limb.size[0] > arm.limb.size[1])
-                {
-                    GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-                }
+                this.applyTransform(arm);
 
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
-
                 GlStateManager.popMatrix();
             }
+        }
+    }
+
+    private void applyTransform(ModelCustomRenderer arm)
+    {
+        float x = 0.0F;
+        float y = arm.limb.size[1] * (arm.limb.size[1] * (1 - arm.limb.anchor[1]) / arm.limb.size[1]) * -0.0625F;
+        float z = arm.limb.size[2] / 2 * 0.0625F;
+
+        if (arm.limb.size[0] > arm.limb.size[1])
+        {
+            x = arm.limb.size[0] * (10.0F / 12.0F) * 0.0625F;
+        }
+
+        arm.postRender(0.0625F);
+
+        GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(x, z, y);
+
+        if (arm.limb.size[0] > arm.limb.size[1])
+        {
+            GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         }
     }
 

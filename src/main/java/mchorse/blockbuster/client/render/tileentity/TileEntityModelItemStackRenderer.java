@@ -32,6 +32,9 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
     {
         if (stack.getItem() == Blockbuster.modelBlockItem)
         {
+            float lastX = OpenGlHelper.lastBrightnessX;
+            float lastY = OpenGlHelper.lastBrightnessY;
+
             if (this.def == null)
             {
                 this.def = new TileEntityModel();
@@ -70,15 +73,14 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
                 if (model != null)
                 {
                     model.timer = 20;
+
                     ClientProxy.modelRenderer.render(model.model, 0, 0, 0, partialTicks, 0, 0);
-                    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
                     return;
                 }
             }
 
             ClientProxy.modelRenderer.render(this.def, 0, 0, 0, partialTicks, 0, 0);
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
         }
     }
 
