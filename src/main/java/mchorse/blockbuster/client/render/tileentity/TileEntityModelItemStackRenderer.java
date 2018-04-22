@@ -7,13 +7,16 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- *  
+ * Model block's TEISR
+ * 
+ * This class is responsible for rendering model blocks in inventory
  */
 public class TileEntityModelItemStackRenderer extends TileEntityItemStackRenderer
 {
@@ -32,9 +35,6 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
     {
         if (stack.getItem() == Blockbuster.modelBlockItem)
         {
-            float lastX = OpenGlHelper.lastBrightnessX;
-            float lastY = OpenGlHelper.lastBrightnessY;
-
             if (this.def == null)
             {
                 this.def = new TileEntityModel();
@@ -81,6 +81,10 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
             }
 
             ClientProxy.modelRenderer.render(this.def, 0, 0, 0, partialTicks, 0, 0);
+
+            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, true);
+            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
         }
     }
 

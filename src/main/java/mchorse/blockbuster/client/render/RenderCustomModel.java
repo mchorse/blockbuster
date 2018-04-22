@@ -44,6 +44,12 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         return this.mainModel == null ? null : ((ModelCustom) this.mainModel).model.defaultTexture;
     }
 
+    @Override
+    protected boolean setDoRenderBrightness(EntityLivingBase entityLivingBaseIn, float partialTicks)
+    {
+        return false;
+    }
+
     /**
      * Render morph's name only if the player is pointed at the entity
      */
