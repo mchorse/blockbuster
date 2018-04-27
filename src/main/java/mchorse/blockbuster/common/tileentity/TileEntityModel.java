@@ -19,6 +19,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Model tile entity
@@ -81,12 +83,14 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.markDirty();
     }
 
+    @SideOnly(Side.CLIENT)
     public void createEntity()
     {
         this.entity = new EntityActor(Minecraft.getMinecraft().world);
         this.updateEntity();
     }
 
+    @SideOnly(Side.CLIENT)
     public void updateEntity()
     {
         if (this.entity == null)
