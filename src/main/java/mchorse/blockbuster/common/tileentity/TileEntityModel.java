@@ -90,7 +90,6 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         this.updateEntity();
     }
 
-    @SideOnly(Side.CLIENT)
     public void updateEntity()
     {
         if (this.entity == null)
