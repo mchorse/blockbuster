@@ -161,6 +161,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
         }
 
         this.setMorph(message.morph);
+        this.updateEntity();
     }
 
     public void copyData(TileEntityModel model)
@@ -187,6 +188,8 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
             this.slots[i] = stack == null ? null : stack.copy();
         }
+
+        this.updateEntity();
     }
 
     /* NBT methods */
