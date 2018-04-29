@@ -57,6 +57,16 @@ public class ItemUseBlockAction extends Action
     }
 
     @Override
+    public void changeOrigin(double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
+    {
+        newX += this.pos.getX() - firstX;
+        newY += this.pos.getY() - firstY;
+        newZ += this.pos.getZ() - firstZ;
+
+        this.pos = new BlockPos(newX, newY, newZ);
+    }
+
+    @Override
     public void fromNBT(NBTTagCompound tag)
     {
         this.pos = new BlockPos(tag.getInteger("PosX"), tag.getInteger("PosY"), tag.getInteger("PosZ"));
