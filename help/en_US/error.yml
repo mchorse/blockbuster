@@ -43,6 +43,8 @@ blockbuster.error:
         already_empty: "{f}There are no actions at index %s{r} in player recording %s{r}!"
         wrong_action: "{f}Action of type %s{f} doesn't exist!"
         add: "{f}Action of type %s{f} couldn't be added due to error: %s"
+        already_exists: "{f}Player recording by filename %s{f} already exists!"
+        couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
     
     # Recording errors
     recording:

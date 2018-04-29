@@ -106,6 +106,14 @@ public class Utils
     }
 
     /**
+     * Checks whether player recording exists
+     */
+    public static boolean isReplayExists(String filename)
+    {
+        return replayFile(filename).exists() || CommonProxy.manager.records.containsKey(filename);
+    }
+
+    /**
      * Get path to replay file (located in current world save's folder)
      */
     public static File replayFile(String filename)

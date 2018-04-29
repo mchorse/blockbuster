@@ -58,7 +58,7 @@ public class RecordPlayer
      */
     public boolean isFinished()
     {
-        return this.record != null && this.tick >= this.record.getLength();
+        return this.record != null && this.tick + this.record.postDelay >= this.record.getLength();
     }
 
     /**

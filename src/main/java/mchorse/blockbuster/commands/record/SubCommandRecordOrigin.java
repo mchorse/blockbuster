@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands.record;
 
 import java.util.List;
 
+import mchorse.aperture.utils.L10n;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.actions.Action;
@@ -95,5 +96,6 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
         record.dirty = true;
 
         Utils.unloadRecord(record);
+        L10n.success(sender, "record.changed_origin", args[0], firstX, firstY, firstZ, x, y, z);
     }
 }

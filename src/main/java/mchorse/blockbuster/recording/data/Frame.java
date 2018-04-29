@@ -185,6 +185,46 @@ public class Frame
         }
     }
 
+    /**
+     * Create a copy of this frame 
+     */
+    public Frame clone()
+    {
+        Frame frame = new Frame();
+
+        frame.x = this.x;
+        frame.y = this.y;
+        frame.z = this.z;
+
+        frame.yaw = this.yaw;
+        frame.yawHead = this.yawHead;
+        frame.pitch = this.pitch;
+
+        frame.isMounted = this.isMounted;
+
+        if (frame.isMounted)
+        {
+            frame.mountYaw = this.mountYaw;
+            frame.mountPitch = this.mountPitch;
+        }
+
+        frame.motionX = this.motionX;
+        frame.motionY = this.motionY;
+        frame.motionZ = this.motionZ;
+
+        frame.fallDistance = this.fallDistance;
+
+        frame.isAirBorne = this.isAirBorne;
+        frame.isSneaking = this.isSneaking;
+        frame.isSprinting = this.isSprinting;
+        frame.onGround = this.onGround;
+        frame.flyingElytra = this.flyingElytra;
+
+        frame.activeHands = this.activeHands;
+
+        return frame;
+    }
+
     /* Save/load frame instance */
 
     /**

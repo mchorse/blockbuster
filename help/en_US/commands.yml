@@ -46,7 +46,13 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}origin{r} {7}<filename> [x] [y] [z]{r}
                     
-                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. 
+                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position.
+                    
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.  
 
         # Model's commands
         model:

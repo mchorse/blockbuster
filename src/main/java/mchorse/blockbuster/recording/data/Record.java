@@ -50,6 +50,17 @@ public class Record
     public int delay = 1;
 
     /**
+     * Pre-delay same thing as post-delay but less useful
+     */
+    public int preDelay = 0;
+
+    /**
+     * Post-delay allows actors to stay longer on the screen before 
+     * whoosing into void
+     */
+    public int postDelay = 0;
+
+    /**
      * Recorded actions
      */
     public List<List<Action>> actions = new ArrayList<List<Action>>();
@@ -99,7 +110,7 @@ public class Record
      */
     public void applyFrame(int tick, EntityActor actor, boolean force)
     {
-        if (tick >= this.frames.size())
+        if (tick >= this.frames.size() || tick < 0)
         {
             return;
         }
@@ -123,7 +134,7 @@ public class Record
      */
     public void applyAction(int tick, EntityActor actor)
     {
-        if (tick >= this.actions.size())
+        if (tick >= this.actions.size() || tick < 0)
         {
             return;
         }
@@ -257,6 +268,57 @@ public class Record
     }
 
     /**
+     * Create a copy of this record
+     */
+    public Record clone()
+    {
+        Record record = new Record(this.filename);
+
+        record.version = this.version;
+        record.delay = this.delay;
+        record.preDelay = this.preDelay;
+        record.postDelay = this.postDelay;
+
+        for (Frame frame : this.frames)
+        {
+            record.frames.add(frame.clone());
+        }
+
+        for (List<Action> actions : this.actions)
+        {
+            if (actions == null || actions.isEmpty())
+            {
+                record.actions.add(null);
+            }
+            else
+            {
+                List<Action> newActions = new ArrayList<Action>();
+
+                for (Action action : actions)
+                {
+                    try
+                    {
+                        NBTTagCompound tag = new NBTTagCompound();
+
+                        action.toNBT(tag);
+                        tag.setByte("Type", action.getType());
+                        newActions.add(this.actionFromNBT(tag));
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Failed to clone an action!");
+                        e.printStackTrace();
+                    }
+                }
+
+                record.actions.add(newActions);
+            }
+        }
+
+        return record;
+    }
+
+    /**
      * Save a recording to given file.
      *
      * This method basically writes the signature of the current version,
@@ -270,6 +332,8 @@ public class Record
         /* Version of the recording */
         compound.setShort("Version", SIGNATURE);
         compound.setByte("Delay", (byte) this.delay);
+        compound.setInteger("PreDelay", this.preDelay);
+        compound.setInteger("PostDelay", this.postDelay);
 
         int c = this.frames.size();
         int d = this.actions.size() - this.frames.size();
@@ -300,7 +364,6 @@ public class Record
 
                     action.toNBT(actionTag);
                     actionTag.setByte("Type", action.getType());
-
                     actionsTag.appendTag(actionTag);
                 }
 
@@ -327,6 +390,8 @@ public class Record
 
         this.version = compound.getShort("Version");
         this.delay = compound.getByte("Delay");
+        this.preDelay = compound.getInteger("PreDelay");
+        this.postDelay = compound.getInteger("PostDelay");
 
         NBTTagList frames = (NBTTagList) compound.getTag("Frames");
 

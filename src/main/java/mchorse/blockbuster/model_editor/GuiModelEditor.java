@@ -248,9 +248,6 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     {
         this.data = model.model.clone();
 
-        /* TODO: Move to Metamorph ASAP */
-        this.data.providesObj = model.model.providesObj;
-
         for (Map.Entry<String, Model.Limb> limb : model.model.limbs.entrySet())
         {
             this.data.limbs.get(limb.getKey()).origin = limb.getValue().origin;
