@@ -28,13 +28,13 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "origin";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.origin";
     }
