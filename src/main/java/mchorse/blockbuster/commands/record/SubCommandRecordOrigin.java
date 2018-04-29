@@ -2,12 +2,12 @@ package mchorse.blockbuster.commands.record;
 
 import java.util.List;
 
-import mchorse.aperture.utils.L10n;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

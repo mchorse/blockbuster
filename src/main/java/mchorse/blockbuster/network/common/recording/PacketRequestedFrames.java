@@ -12,9 +12,9 @@ public class PacketRequestedFrames extends PacketFrames
     public PacketRequestedFrames()
     {}
 
-    public PacketRequestedFrames(int id, String filename, List<Frame> frames)
+    public PacketRequestedFrames(int id, String filename, int preDelay, int postDelay, List<Frame> frames)
     {
-        super(filename, frames);
+        super(filename, preDelay, postDelay, frames);
 
         this.id = id;
     }

@@ -194,7 +194,7 @@ public class Utils
         {
             record.resetUnload();
 
-            Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), player);
+            Dispatcher.sendTo(new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames), player);
         }
     }
 
@@ -209,7 +209,7 @@ public class Utils
         {
             record.resetUnload();
 
-            Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.frames), player);
+            Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.preDelay, record.postDelay, record.frames), player);
         }
         else if (record == null)
         {

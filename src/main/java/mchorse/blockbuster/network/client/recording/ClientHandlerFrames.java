@@ -22,6 +22,8 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
     {
         Record record = new Record(message.filename);
         record.frames = message.frames;
+        record.preDelay = message.preDelay;
+        record.postDelay = message.postDelay;
 
         ClientProxy.manager.records.put(message.filename, record);
     }

@@ -17,14 +17,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public abstract class PacketFrames implements IMessage
 {
     public String filename;
+    public int preDelay;
+    public int postDelay;
     public List<Frame> frames;
 
     public PacketFrames()
     {}
 
-    public PacketFrames(String filename, List<Frame> frames)
+    public PacketFrames(String filename, int preDelay, int postDelay, List<Frame> frames)
     {
         this.filename = filename;
+        this.preDelay = preDelay;
+        this.postDelay = postDelay;
         this.frames = frames;
     }
 
@@ -37,6 +41,8 @@ public abstract class PacketFrames implements IMessage
         try
         {
             this.filename = input.readUTF();
+            this.preDelay = input.readInt();
+            this.postDelay = input.readInt();
             int count = input.readInt();
 
             for (int i = 0; i < count; i++)
@@ -63,6 +69,8 @@ public abstract class PacketFrames implements IMessage
         try
         {
             output.writeUTF(this.filename);
+            output.writeInt(this.preDelay);
+            output.writeInt(this.postDelay);
             output.writeInt(this.frames.size());
 
             for (Frame frame : this.frames)

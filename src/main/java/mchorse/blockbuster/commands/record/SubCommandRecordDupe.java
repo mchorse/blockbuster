@@ -12,7 +12,8 @@ import net.minecraft.server.MinecraftServer;
 /**
  * Command /record dupe
  * 
- * This command is responsible for duplicating player recording
+ * This command is responsible for duplicating player recording to a new 
+ * player recording file
  */
 public class SubCommandRecordDupe extends SubCommandRecordBase
 {

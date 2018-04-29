@@ -15,7 +15,7 @@ public class PacketFramesChunk extends PacketFrames
 
     public PacketFramesChunk(int index, int count, String filename, List<Frame> frames)
     {
-        super(filename, frames);
+        super(filename, 0, 0, frames);
 
         this.index = index;
         this.count = count;
