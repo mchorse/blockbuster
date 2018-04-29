@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
 import mchorse.blockbuster.commands.record.SubCommandRecordGet;
 import mchorse.blockbuster.commands.record.SubCommandRecordInfo;
+import mchorse.blockbuster.commands.record.SubCommandRecordOrigin;
 import mchorse.blockbuster.commands.record.SubCommandRecordRemove;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
 import mchorse.blockbuster.common.CommonProxy;
@@ -27,6 +28,7 @@ public class CommandRecord extends SubCommandBase
         this.add(new SubCommandRecordInfo());
         this.add(new SubCommandRecordRemove());
         this.add(new SubCommandRecordSearch());
+        this.add(new SubCommandRecordOrigin());
     }
 
     @Override

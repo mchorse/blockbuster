@@ -210,19 +210,20 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
-        compound.setFloat("Yaw", this.rotateYawHead);
-        compound.setFloat("Pitch", this.rotatePitch);
-        compound.setFloat("Body", this.rotateBody);
-        compound.setFloat("ShiftX", this.x);
-        compound.setFloat("ShiftY", this.y);
-        compound.setFloat("ShiftZ", this.z);
-        compound.setFloat("RotateX", this.rx);
-        compound.setFloat("RotateY", this.ry);
-        compound.setFloat("RotateZ", this.rz);
-        compound.setBoolean("Scale", this.one);
-        compound.setFloat("ScaleX", this.sx);
-        compound.setFloat("ScaleY", this.sy);
-        compound.setFloat("ScaleZ", this.sz);
+        if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
+        if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
+        if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
+        if (this.x != 0) compound.setFloat("ShiftX", this.x);
+        if (this.y != 0) compound.setFloat("ShiftY", this.y);
+        if (this.z != 0) compound.setFloat("ShiftZ", this.z);
+        if (this.rx != 0) compound.setFloat("RotateX", this.rx);
+        if (this.ry != 0) compound.setFloat("RotateY", this.ry);
+        if (this.rz != 0) compound.setFloat("RotateZ", this.rz);
+        if (this.one == true) compound.setBoolean("Scale", this.one);
+
+        if (this.sx != 1) compound.setFloat("ScaleX", this.sx);
+        if (this.sy != 1) compound.setFloat("ScaleY", this.sy);
+        if (this.sz != 1) compound.setFloat("ScaleZ", this.sz);
 
         NBTTagList list = new NBTTagList();
 
