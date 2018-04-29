@@ -41,6 +41,12 @@ blockbuster:
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
                     
                     {r}Searches for actions, optionally limited by {7}[limit]{r}, of given {7}<action_type>{r} and outputs the tick and, optionally output data tag, found in player recording by filename {7}<filename>{r}.
+                    
+            origin:
+                |
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [x] [y] [z]{r}
+                    
+                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. 
 
         # Model's commands
         model:
