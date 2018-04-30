@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class ItemUseBlockAction extends Action
 {
@@ -57,11 +58,36 @@ public class ItemUseBlockAction extends Action
     }
 
     @Override
-    public void changeOrigin(double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
+    public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {
-        newX += this.pos.getX() - firstX;
-        newY += this.pos.getY() - firstY;
-        newZ += this.pos.getZ() - firstZ;
+        /* I don't like wasting variables */
+        firstX = this.pos.getX() - firstX;
+        firstX = this.pos.getY() - firstY;
+        firstX = this.pos.getZ() - firstZ;
+
+        if (rotation != 0)
+        {
+            Vec3d vec = new Vec3d(this.hitX, this.hitY, this.hitZ);
+
+            vec = vec.rotateYaw((float) (rotation / 180 * Math.PI));
+
+            this.hitX = (float) vec.xCoord;
+            this.hitY = (float) vec.yCoord;
+            this.hitZ = (float) vec.zCoord;
+
+            float cos = (float) Math.cos(rotation / 180 * Math.PI);
+            float sin = (float) Math.sin(rotation / 180 * Math.PI);
+
+            double xx = firstX * cos - firstZ * sin;
+            double zz = firstX * sin + firstZ * cos;
+
+            firstX = xx;
+            firstZ = zz;
+        }
+
+        newX += firstX;
+        newY += firstY;
+        newZ += firstZ;
 
         this.pos = new BlockPos(newX, newY, newZ);
     }

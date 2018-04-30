@@ -58,11 +58,28 @@ public class InteractBlockAction extends Action
     }
 
     @Override
-    public void changeOrigin(double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
+    public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {
-        newX += this.pos.getX() - firstX;
-        newY += this.pos.getY() - firstY;
-        newZ += this.pos.getZ() - firstZ;
+        /* I don't like wasting variables */
+        firstX = this.pos.getX() - firstX;
+        firstX = this.pos.getY() - firstY;
+        firstX = this.pos.getZ() - firstZ;
+
+        if (rotation != 0)
+        {
+            float cos = (float) Math.cos(rotation / 180 * Math.PI);
+            float sin = (float) Math.sin(rotation / 180 * Math.PI);
+
+            double xx = firstX * cos - firstZ * sin;
+            double zz = firstX * sin + firstZ * cos;
+
+            firstX = xx;
+            firstZ = zz;
+        }
+
+        newX += firstX;
+        newY += firstY;
+        newZ += firstZ;
 
         this.pos = new BlockPos(newX, newY, newZ);
     }

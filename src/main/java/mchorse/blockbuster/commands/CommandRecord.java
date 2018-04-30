@@ -3,9 +3,11 @@ package mchorse.blockbuster.commands;
 import java.io.FileNotFoundException;
 
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
+import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
 import mchorse.blockbuster.commands.record.SubCommandRecordGet;
 import mchorse.blockbuster.commands.record.SubCommandRecordInfo;
 import mchorse.blockbuster.commands.record.SubCommandRecordOrigin;
+import mchorse.blockbuster.commands.record.SubCommandRecordProlong;
 import mchorse.blockbuster.commands.record.SubCommandRecordRemove;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
 import mchorse.blockbuster.common.CommonProxy;
@@ -24,11 +26,13 @@ public class CommandRecord extends SubCommandBase
     {
         /* Register sub-commands */
         this.add(new SubCommandRecordAdd());
+        this.add(new SubCommandRecordDupe());
         this.add(new SubCommandRecordGet());
         this.add(new SubCommandRecordInfo());
+        this.add(new SubCommandRecordOrigin());
+        this.add(new SubCommandRecordProlong());
         this.add(new SubCommandRecordRemove());
         this.add(new SubCommandRecordSearch());
-        this.add(new SubCommandRecordOrigin());
     }
 
     @Override

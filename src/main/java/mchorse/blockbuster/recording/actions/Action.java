@@ -101,7 +101,7 @@ public abstract class Action
     public void apply(EntityActor actor)
     {}
 
-    public void changeOrigin(double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
+    public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {}
 
     /* TODO: Action method which were responsible for writing and reading data

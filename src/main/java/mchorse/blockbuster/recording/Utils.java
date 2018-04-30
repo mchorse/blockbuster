@@ -106,6 +106,14 @@ public class Utils
     }
 
     /**
+     * Checks whether player recording exists
+     */
+    public static boolean isReplayExists(String filename)
+    {
+        return replayFile(filename).exists() || CommonProxy.manager.records.containsKey(filename);
+    }
+
+    /**
      * Get path to replay file (located in current world save's folder)
      */
     public static File replayFile(String filename)
@@ -186,7 +194,7 @@ public class Utils
         {
             record.resetUnload();
 
-            Dispatcher.sendTo(new PacketFramesLoad(filename, record.frames), player);
+            Dispatcher.sendTo(new PacketFramesLoad(filename, record.preDelay, record.postDelay, record.frames), player);
         }
     }
 
@@ -201,7 +209,7 @@ public class Utils
         {
             record.resetUnload();
 
-            Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.frames), player);
+            Dispatcher.sendTo(new PacketRequestedFrames(id, record.filename, record.preDelay, record.postDelay, record.frames), player);
         }
         else if (record == null)
         {

@@ -198,6 +198,7 @@ public class Model
         b.model = this.model;
 
         b.defaultTexture = this.defaultTexture == null ? null : new ResourceLocation(this.defaultTexture.toString());
+        b.providesObj = this.providesObj;
 
         for (Map.Entry<String, Model.Limb> entry : this.limbs.entrySet())
         {
