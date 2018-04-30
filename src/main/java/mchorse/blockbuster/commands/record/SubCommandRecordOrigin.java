@@ -52,11 +52,13 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
         double y = player.posY;
         double z = player.posZ;
 
-        if (args.length >= 4)
+        double rotation = args.length >= 2 ? CommandBase.parseDouble(args[1]) : 0;
+
+        if (args.length >= 5)
         {
-            x = CommandBase.parseDouble(args[1]);
-            y = CommandBase.parseDouble(args[2]);
-            z = CommandBase.parseDouble(args[3]);
+            x = CommandBase.parseDouble(args[2]);
+            y = CommandBase.parseDouble(args[3]);
+            z = CommandBase.parseDouble(args[4]);
         }
 
         double firstX = 0;
@@ -73,9 +75,28 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
                 firstZ = frame.z;
             }
 
-            frame.x = x + (frame.x - firstX);
-            frame.y = y + (frame.y - firstY);
-            frame.z = z + (frame.z - firstZ);
+            double frameX = frame.x - firstX;
+            double frameY = frame.y - firstY;
+            double frameZ = frame.z - firstZ;
+
+            if (rotation != 0)
+            {
+                float cos = (float) Math.cos(rotation / 180 * Math.PI);
+                float sin = (float) Math.sin(rotation / 180 * Math.PI);
+
+                double xx = frameX * cos - frameZ * sin;
+                double zz = frameX * sin + frameZ * cos;
+
+                frameX = xx;
+                frameZ = zz;
+
+                frame.yaw += rotation;
+                frame.yawHead += rotation;
+            }
+
+            frame.x = x + frameX;
+            frame.y = y + frameY;
+            frame.z = z + frameZ;
 
             i++;
         }
@@ -89,7 +110,7 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
 
             for (Action action : actions)
             {
-                action.changeOrigin(x, y, z, firstX, firstY, firstZ);
+                action.changeOrigin(rotation, x, y, z, firstX, firstY, firstZ);
             }
         }
 
