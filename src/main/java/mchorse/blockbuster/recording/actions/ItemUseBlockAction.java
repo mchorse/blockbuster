@@ -71,9 +71,9 @@ public class ItemUseBlockAction extends Action
 
             vec = vec.rotateYaw((float) (rotation / 180 * Math.PI));
 
-            this.hitX = (float) vec.xCoord;
-            this.hitY = (float) vec.yCoord;
-            this.hitZ = (float) vec.zCoord;
+            this.hitX = (float) vec.x;
+            this.hitY = (float) vec.y;
+            this.hitZ = (float) vec.z;
 
             float cos = (float) Math.cos(rotation / 180 * Math.PI);
             float sin = (float) Math.sin(rotation / 180 * Math.PI);
