@@ -24,13 +24,13 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "dupe";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.dupe";
     }
