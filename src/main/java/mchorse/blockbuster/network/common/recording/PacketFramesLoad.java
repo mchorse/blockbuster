@@ -9,8 +9,8 @@ public class PacketFramesLoad extends PacketFrames
     public PacketFramesLoad()
     {}
 
-    public PacketFramesLoad(String filename, List<Frame> frames)
+    public PacketFramesLoad(String filename, int preDelay, int postDelay, List<Frame> frames)
     {
-        super(filename, frames);
+        super(filename, preDelay, postDelay, frames);
     }
 }

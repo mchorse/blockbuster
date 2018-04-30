@@ -23,6 +23,8 @@ public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketReq
     {
         Record record = new Record(message.filename);
         record.frames = message.frames;
+        record.preDelay = message.preDelay;
+        record.postDelay = message.postDelay;
 
         ClientProxy.manager.records.put(record.filename, record);
         EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);

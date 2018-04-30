@@ -58,7 +58,7 @@ public class RecordPlayer
      */
     public boolean isFinished()
     {
-        return this.record != null && this.tick >= this.record.getLength();
+        return this.record != null && this.tick - this.record.preDelay - this.record.postDelay >= this.record.getLength();
     }
 
     /**
@@ -75,8 +75,8 @@ public class RecordPlayer
         {
             boolean both = this.mode == Mode.BOTH;
 
-            if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick, actor);
-            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick, actor, false);
+            if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick - this.record.preDelay, actor);
+            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick - this.record.preDelay, actor, false);
 
             this.delay = this.record.delay;
             this.record.resetUnload();

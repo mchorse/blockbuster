@@ -44,9 +44,21 @@ blockbuster:
                     
             origin:
                 |
-                    {l}{6}/{r}record {8}origin{r} {7}<filename> [x] [y] [z]{r}
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
                     
-                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. 
+                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame. 
+                    
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.  
+                    
+            prolong:
+                |
+                    {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
+                    
+                    {r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording. 
 
         # Model's commands
         model:
