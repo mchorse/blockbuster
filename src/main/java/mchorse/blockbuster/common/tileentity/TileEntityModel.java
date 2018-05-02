@@ -263,19 +263,19 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
             this.order = RotationOrder.values()[compound.getByte("Order")];
         }
 
-        this.rotateYawHead = compound.getFloat("Yaw");
-        this.rotatePitch = compound.getFloat("Pitch");
-        this.rotateBody = compound.getFloat("Body");
-        this.x = compound.getFloat("ShiftX");
-        this.y = compound.getFloat("ShiftY");
-        this.z = compound.getFloat("ShiftZ");
-        this.rx = compound.getFloat("RotateX");
-        this.ry = compound.getFloat("RotateY");
-        this.rz = compound.getFloat("RotateZ");
-        this.one = compound.getBoolean("Scale");
-        this.sx = compound.getFloat("ScaleX");
-        this.sy = compound.getFloat("ScaleY");
-        this.sz = compound.getFloat("ScaleZ");
+        if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
+        if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
+        if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
+        if (compound.hasKey("ShiftX")) this.x = compound.getFloat("ShiftX");
+        if (compound.hasKey("ShiftY")) this.y = compound.getFloat("ShiftY");
+        if (compound.hasKey("ShiftZ")) this.z = compound.getFloat("ShiftZ");
+        if (compound.hasKey("RotateX")) this.rx = compound.getFloat("RotateX");
+        if (compound.hasKey("RotateY")) this.ry = compound.getFloat("RotateY");
+        if (compound.hasKey("RotateZ")) this.rz = compound.getFloat("RotateZ");
+        if (compound.hasKey("Scale")) this.one = compound.getBoolean("Scale");
+        if (compound.hasKey("ScaleX")) this.sx = compound.getFloat("ScaleX");
+        if (compound.hasKey("ScaleY")) this.sy = compound.getFloat("ScaleY");
+        if (compound.hasKey("ScaleZ")) this.sz = compound.getFloat("ScaleZ");
 
         if (compound.hasKey("Items", 9))
         {
