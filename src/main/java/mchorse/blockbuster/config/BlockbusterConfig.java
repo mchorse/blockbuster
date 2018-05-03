@@ -19,11 +19,6 @@ public class BlockbusterConfig
     /* General */
 
     /**
-     * Remove all downloaded models after exiting a server?
-     */
-    public boolean clean_model_downloads;
-
-    /**
      * Is teleport feature disabled when you sneak and using the playback button?
      */
     public boolean disable_teleport_playback_button;
@@ -153,7 +148,6 @@ public class BlockbusterConfig
         String model = "model_block";
 
         /* General */
-        this.clean_model_downloads = this.getBoolean("clean_model_downloads", general, true, "Remove all downloaded models after exiting a server?");
         this.disable_teleport_playback_button = this.getBoolean("disable_teleport_playback_button", general, false, "Is teleport feature disabled when you sneak and using the playback button?");
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");

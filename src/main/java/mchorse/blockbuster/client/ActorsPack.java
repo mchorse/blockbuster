@@ -32,10 +32,16 @@ public class ActorsPack implements IResourcePack
 {
     public ModelPack pack = new ModelPack();
 
+    /**
+     * Cached last file from {@link #resourceExists(ResourceLocation)} 
+     * method
+     */
+    private File lastFile;
+
     /* IResourcePack implementation */
 
     /**
-     * Read a JSON model or skin for an actor
+     * Read a resource from model pack
      */
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException
@@ -43,24 +49,42 @@ public class ActorsPack implements IResourcePack
         String path = location.getResourcePath();
         String[] splits = path.split("/");
 
-        if (splits.length == 1 && path.indexOf("/") == -1)
-        {
-            return new FileInputStream(this.pack.models.get(splits[0]).customModel);
-        }
-        else if (splits.length == 2)
+        if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
         {
             return new FileInputStream(this.pack.skins.get(splits[0]).get(splits[1]));
+        }
+
+        File fileFile = this.lastFile;
+
+        /* In case this pack was used without checking for resource 
+         * in other method first, find the file */
+        if (fileFile != null)
+        {
+            for (File file : this.pack.folders)
+            {
+                File packFile = new File(file, path);
+
+                if (packFile.exists())
+                {
+                    fileFile = packFile;
+                    break;
+                }
+            }
+        }
+
+        if (fileFile != null)
+        {
+            this.lastFile = null;
+
+            return new FileInputStream(fileFile);
         }
 
         return null;
     }
 
     /**
-     * Check if model or skin (texture mapped on the model) is existing
-     * in the actor's pack. Uses a pretty ugly hack to remap those:
-     *
-     * - $model/model.json -> $model
-     * - $model/skins/$skin.png -> $model/$skin
+     * Check if resource is available in the model pack. This method 
+     * also supports old mapping method for model skins
      */
     @Override
     public boolean resourceExists(ResourceLocation location)
@@ -68,16 +92,24 @@ public class ActorsPack implements IResourcePack
         String path = location.getResourcePath();
         String[] splits = path.split("/");
 
-        if (splits.length == 1 && path.indexOf("/") == -1)
-        {
-            return this.pack.models.containsKey(splits[0]);
-        }
-        else if (splits.length == 2)
+        if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
         {
             Map<String, File> skins = this.pack.skins.get(splits[0]);
 
             return skins != null && skins.containsKey(splits[1]);
         }
+
+        for (File file : this.pack.folders)
+        {
+            this.lastFile = new File(file, path);
+
+            if (this.lastFile.exists())
+            {
+                return true;
+            }
+        }
+
+        this.lastFile = null;
 
         return false;
     }

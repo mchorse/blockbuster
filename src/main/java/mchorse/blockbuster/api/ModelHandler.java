@@ -1,19 +1,14 @@
 package mchorse.blockbuster.api;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
-import mchorse.blockbuster.common.ClientProxy;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -132,19 +127,6 @@ public class ModelHandler
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
     {
         this.models.clear();
-
-        if (Blockbuster.proxy.config.clean_model_downloads)
-        {
-            try
-            {
-                File models = new File(ClientProxy.config + "/downloads");
-                FileUtils.cleanDirectory(models);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**

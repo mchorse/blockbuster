@@ -120,7 +120,6 @@ public class ClientProxy extends CommonProxy
             packs.add(actorPack = new ActorsPack());
 
             actorPack.pack.addFolder(path + "/models");
-            actorPack.pack.addFolder(path + "/downloads");
             actorPack.pack.reload();
 
             /* Create steve, alex and fred skins folders */
