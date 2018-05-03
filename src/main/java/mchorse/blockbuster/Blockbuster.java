@@ -133,7 +133,7 @@ public class Blockbuster
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        reloadServerModels();
+        Blockbuster.reloadServerModels();
 
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
