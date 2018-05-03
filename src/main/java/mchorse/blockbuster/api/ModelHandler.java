@@ -67,14 +67,14 @@ public class ModelHandler
 
                     data.name = model;
 
-                    this.models.put(model, new ModelCell(data, timestamp));
+                    this.addModel(model, new ModelCell(data, timestamp));
                     modelStream.close();
                 }
                 else
                 {
                     InputStream modelStream = new FileInputStream(entry.customModel);
 
-                    this.models.put(model, new ModelCell(Model.parse(modelStream), timestamp));
+                    this.addModel(model, new ModelCell(Model.parse(modelStream), timestamp));
                     modelStream.close();
                 }
             }
@@ -99,25 +99,33 @@ public class ModelHandler
             /* Optionally load default models */
             if (!this.models.containsKey("alex"))
             {
-                this.models.put("alex", new ModelCell(Model.parse(loader.getResourceAsStream(path + "alex.json")), 0));
+                this.addModel("alex", new ModelCell(Model.parse(loader.getResourceAsStream(path + "alex.json")), 0));
             }
 
             if (!this.models.containsKey("steve"))
             {
-                this.models.put("steve", new ModelCell(Model.parse(loader.getResourceAsStream(path + "steve.json")), 0));
+                this.addModel("steve", new ModelCell(Model.parse(loader.getResourceAsStream(path + "steve.json")), 0));
             }
 
             if (!this.models.containsKey("fred"))
             {
-                this.models.put("fred", new ModelCell(Model.parse(loader.getResourceAsStream(path + "fred.json")), 0));
+                this.addModel("fred", new ModelCell(Model.parse(loader.getResourceAsStream(path + "fred.json")), 0));
             }
 
-            this.models.put("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
+            this.addModel("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Add model to the model handler 
+     */
+    protected void addModel(String name, ModelCell cell)
+    {
+        this.models.put(name, cell);
     }
 
     /**
@@ -143,7 +151,6 @@ public class ModelHandler
     {
         public Model model;
         public long timestamp;
-        public boolean load = true;
 
         public ModelCell(Model model, long timestamp)
         {
