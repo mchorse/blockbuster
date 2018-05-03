@@ -146,7 +146,7 @@ public class CommonProxy
     }
 
     /**
-     *  
+     * Post load
      */
     public void postLoad(FMLPostInitializationEvent event)
     {}

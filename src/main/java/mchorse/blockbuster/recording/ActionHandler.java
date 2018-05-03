@@ -43,6 +43,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.CommandEvent;
@@ -93,6 +94,11 @@ public class ActionHandler
             MinecraftForge.EVENT_BUS.register(listener);
 
             SoundEventListener.INSTANCE = listener;
+        }
+
+        if (world instanceof WorldServer && ((WorldServer) world).provider.getDimension() == 0)
+        {
+            Blockbuster.reloadServerModels();
         }
     }
 
