@@ -43,6 +43,7 @@ public class SubCommandModelClear extends CommandBase
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
         Map<ResourceLocation, ITextureObject> map = getTextures(manager);
+        String prefix = args.length == 0 ? "" : args[0];
 
         if (map != null)
         {
@@ -51,8 +52,9 @@ public class SubCommandModelClear extends CommandBase
             while (it.hasNext())
             {
                 Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
+                ResourceLocation key = entry.getKey();
 
-                if (entry.getKey().getResourceDomain().equals("blockbuster.actors"))
+                if (key.getResourceDomain().equals("blockbuster.actors") && key.getResourcePath().startsWith(prefix))
                 {
                     TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
 
