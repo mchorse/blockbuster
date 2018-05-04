@@ -1,6 +1,5 @@
 blockbuster.config.comments:
     general:
-        clean_model_downloads: Remove all downloaded models after exiting a server?
         disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
         extra_wubs: This option does literally nothing. Or maybe it does...?
         auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?

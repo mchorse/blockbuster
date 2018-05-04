@@ -3,20 +3,16 @@ package mchorse.blockbuster.common;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.ModelHandler.ModelCell;
+import mchorse.blockbuster.api.ModelClientHandler;
+import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandLoadChunks;
@@ -120,7 +116,6 @@ public class ClientProxy extends CommonProxy
             packs.add(actorPack = new ActorsPack());
 
             actorPack.pack.addFolder(path + "/models");
-            actorPack.pack.addFolder(path + "/downloads");
             actorPack.pack.reload();
 
             /* Create steve, alex and fred skins folders */
@@ -176,63 +171,10 @@ public class ClientProxy extends CommonProxy
         }
     }
 
-    /**
-     * Load models into the game
-     *
-     * This method is responsible for loading models on the client (i.e. 
-     * building {@link ModelCustom} out of {@link Model}.
-     */
     @Override
-    @SuppressWarnings("unchecked")
     public void loadModels(ModelPack pack)
     {
         super.loadModels(pack);
-
-        for (Map.Entry<String, ModelCell> model : this.models.models.entrySet())
-        {
-            String key = model.getKey();
-            ModelCell cell = model.getValue();
-            ModelEntry entry = pack.models.get(key);
-            Model mod = cell.model;
-
-            /* Model should be rebuilt only if it was reloaded */
-            if (entry != null && !cell.load)
-            {
-                continue;
-            }
-
-            File objModel = null;
-            boolean fallback = true;
-
-            if (pack.models.containsKey(key))
-            {
-                objModel = entry.objModel;
-            }
-
-            if (!mod.model.isEmpty())
-            {
-                try
-                {
-                    Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
-
-                    /* Parse custom custom model with a custom class */
-                    ModelParser.parse(model.getKey(), mod, clazz, objModel);
-
-                    fallback = false;
-                }
-                catch (ClassNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
-            if (fallback)
-            {
-                ModelParser.parse(model.getKey(), mod, objModel);
-            }
-
-            cell.load = false;
-        }
 
         this.factory.registerClient(null);
     }
@@ -289,6 +231,12 @@ public class ClientProxy extends CommonProxy
         }
     }
 
+    @Override
+    public ModelHandler getHandler()
+    {
+        return new ModelClientHandler();
+    }
+
     /**
      * Client version of get language string.
      */
@@ -299,5 +247,6 @@ public class ClientProxy extends CommonProxy
 
         return comment;
         // return comment.equals(key) ? defaultComment : key;
+        // ??? ^
     }
 }

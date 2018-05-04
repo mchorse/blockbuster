@@ -129,7 +129,7 @@ public class CommonProxy
         MorphManager.INSTANCE.factories.add(this.factory = new BlockbusterFactory());
 
         /* Load models */
-        this.models = new ModelHandler();
+        this.models = this.getHandler();
         this.loadModels(this.getPack());
     }
 
@@ -160,8 +160,8 @@ public class CommonProxy
      */
     public void loadModels(ModelPack pack)
     {
-        this.models.loadModels(pack);
         this.models.pack = pack;
+        this.models.loadModels(pack);
 
         this.factory.models = this.models;
         this.factory.registerModels();
@@ -223,6 +223,14 @@ public class CommonProxy
      */
     public void onConfigChange(Configuration config)
     {}
+
+    /**
+     * Get model handler
+     */
+    public ModelHandler getHandler()
+    {
+        return new ModelHandler();
+    }
 
     /**
      * Get language string

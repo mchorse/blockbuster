@@ -12,6 +12,7 @@ import org.lwjgl.input.Mouse;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -281,13 +282,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         try
         {
             File objModel = null;
+            File mtlFile = null;
+            ModelEntry entry = ClientProxy.actorPack.pack.models.get(this.modelName);
 
-            if (ClientProxy.actorPack.pack.models.containsKey(this.modelName))
+            if (entry != null)
             {
-                objModel = ClientProxy.actorPack.pack.models.get(this.modelName).objModel;
+                objModel = entry.objModel;
+                mtlFile = entry.mtlFile;
             }
 
-            return new ModelParser(objModel).parseModel(this.data, ModelCustom.class);
+            return new ModelParser(this.modelName, objModel, mtlFile).parseModel(this.data, ModelCustom.class);
         }
         catch (Exception e)
         {

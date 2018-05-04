@@ -3,7 +3,6 @@ blockbuster.config:
     general:
         title: General
         
-        clean_model_downloads: Clean model downloads
         disable_teleport_playback_button: Disable playback button teleport
         extra_wubs: Extra Wubs
         auto_refresh_models: Refresh models and skins

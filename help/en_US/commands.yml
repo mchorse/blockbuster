@@ -74,9 +74,9 @@ blockbuster:
             
             clear:
                 |
-                    {l}{6}/{r}model {8}clear{r}
+                    {l}{6}/{r}model {8}clear{r} {7}[path]{r}
                     
-                    {r}Clears the texture cache from loaded Blockbuster's skin textures.
+                    {r}Clears the texture cache from loaded Blockbuster's skin textures. If {7}[path]{r} specified, the command will only clear the textures which begins with {7}[path]{r}.
             
             reload:
                 |
