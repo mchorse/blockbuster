@@ -13,9 +13,12 @@ import mchorse.blockbuster.api.Model.Transform;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.ModelOBJRenderer;
+import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.metamorph.Metamorph;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,33 +31,35 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelParser
 {
+    public String key;
     public File objModel;
+    public File mtlFile;
 
     /**
      * Parse with default class 
      */
     public static void parse(String key, Model data)
     {
-        parse(key, data, ModelCustom.class, null);
+        parse(key, data, ModelCustom.class, null, null);
     }
 
     /**
      * Parse with default class 
      */
-    public static void parse(String key, Model data, File objModel)
+    public static void parse(String key, Model data, File objModel, File mtlFile)
     {
-        parse(key, data, ModelCustom.class, objModel);
+        parse(key, data, ModelCustom.class, objModel, mtlFile);
     }
 
     /**
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
      */
-    public static void parse(String key, Model data, Class<? extends ModelCustom> clazz, File objModel)
+    public static void parse(String key, Model data, Class<? extends ModelCustom> clazz, File objModel, File mtlFile)
     {
         try
         {
-            ModelCustom model = new ModelParser(objModel).parseModel(data, clazz);
+            ModelCustom model = new ModelParser(key, objModel, mtlFile).parseModel(data, clazz);
             ModelCustom.MODELS.put(key, model);
         }
         catch (Exception e)
@@ -64,9 +69,11 @@ public class ModelParser
         }
     }
 
-    public ModelParser(File objModel)
+    public ModelParser(String key, File objModel, File mtlFile)
     {
+        this.key = key;
         this.objModel = objModel;
+        this.mtlFile = mtlFile;
     }
 
     /**
@@ -102,13 +109,26 @@ public class ModelParser
         Model.Pose standing = data.poses.get("standing");
 
         /* OBJ model support */
-        Map<String, OBJParser.Mesh> meshes = new HashMap<String, OBJParser.Mesh>();
+        Map<String, OBJParser.MeshObject> meshes = new HashMap<String, OBJParser.MeshObject>();
 
         if (this.objModel != null && this.objModel.isFile() && data.providesObj)
         {
             try
             {
-                meshes = OBJParser.loadMeshes(this.objModel);
+                OBJParser parser = new OBJParser(this.objModel, this.mtlFile);
+
+                parser.read();
+                meshes = parser.compile();
+
+                /* Create a texture location for materials */
+                for (OBJMaterial material : parser.materials.values())
+                {
+                    if (material.useTexture)
+                    {
+                        /* TODO: don't forget about 1.11.2+ branches */
+                        material.texture = new ResourceLocation("blockbuster.actors", this.key + "/skins/" + material.name + "/default.png");
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -175,7 +195,7 @@ public class ModelParser
     /**
      * Create limb renderer for the model
      */
-    protected ModelCustomRenderer createRenderer(ModelBase model, Map<String, OBJParser.Mesh> meshes, Model data, Limb limb, Transform transform)
+    protected ModelCustomRenderer createRenderer(ModelBase model, Map<String, OBJParser.MeshObject> meshes, Model data, Limb limb, Transform transform)
     {
         ModelCustomRenderer renderer;
 

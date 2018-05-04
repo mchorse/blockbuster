@@ -115,6 +115,12 @@ public class ModelPack
         {
             File model = new File(file.getAbsolutePath() + "/model.json");
             File objModel = new File(file.getAbsolutePath() + "/model.obj");
+            File mtlFile = new File(file.getAbsolutePath() + "/model.mtl");
+
+            if (!mtlFile.exists())
+            {
+                mtlFile = null;
+            }
 
             if (file.isDirectory())
             {
@@ -123,7 +129,7 @@ public class ModelPack
 
                 if (modelExists || objExists)
                 {
-                    this.models.put(file.getName(), new ModelEntry(modelExists ? model : null, objExists ? objModel : null));
+                    this.models.put(file.getName(), new ModelEntry(modelExists ? model : null, objExists ? objModel : null, mtlFile));
                 }
             }
         }
@@ -178,19 +184,22 @@ public class ModelPack
     {
         public File customModel;
         public File objModel;
+        public File mtlFile;
 
-        public ModelEntry(File customModel, File objModel)
+        public ModelEntry(File customModel, File objModel, File mtlFile)
         {
             this.customModel = customModel;
             this.objModel = objModel;
+            this.mtlFile = mtlFile;
         }
 
         public long lastModified()
         {
             long a = this.customModel == null ? 0 : this.customModel.lastModified();
             long b = this.objModel == null ? 0 : this.objModel.lastModified();
+            long c = this.mtlFile == null ? 0 : this.mtlFile.lastModified();
 
-            return Math.max(a, b);
+            return Math.max(Math.max(a, b), c);
         }
     }
 }

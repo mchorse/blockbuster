@@ -24,11 +24,13 @@ public class ModelClientHandler extends ModelHandler
         Model mod = cell.model;
 
         File objModel = null;
+        File mtlFile = null;
         boolean fallback = true;
 
-        if (this.pack.models.containsKey(name))
+        if (entry != null)
         {
             objModel = entry.objModel;
+            mtlFile = entry.mtlFile;
         }
 
         if (!mod.model.isEmpty())
@@ -38,7 +40,7 @@ public class ModelClientHandler extends ModelHandler
                 Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
 
                 /* Parse custom custom model with a custom class */
-                ModelParser.parse(name, mod, clazz, objModel);
+                ModelParser.parse(name, mod, clazz, objModel, mtlFile);
 
                 fallback = false;
             }
@@ -50,7 +52,7 @@ public class ModelClientHandler extends ModelHandler
 
         if (fallback)
         {
-            ModelParser.parse(name, mod, objModel);
+            ModelParser.parse(name, mod, objModel, mtlFile);
         }
     }
 }

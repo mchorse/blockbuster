@@ -51,7 +51,7 @@ public class ModelHandler
 
             keys.remove(model);
 
-            /* Whether the mod should be reloaded */
+            /* Whether the model should be reloaded */
             if (cell != null && timestamp <= cell.timestamp)
             {
                 continue;

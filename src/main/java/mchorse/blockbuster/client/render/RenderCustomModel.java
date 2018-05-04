@@ -23,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 {
+    public static ResourceLocation lastTexture;
+
     /**
      * Currently used morph 
      */
@@ -200,6 +202,18 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         {
             super.rotateCorpse(entity, pitch, yaw, partialTicks);
         }
+    }
+
+    /**
+     * Override method in order to save the last texture. Used by OBJ 
+     * renderer with materials to bind texture back 
+     */
+    @Override
+    public void bindTexture(ResourceLocation location)
+    {
+        lastTexture = location;
+
+        super.bindTexture(location);
     }
 
     /**
