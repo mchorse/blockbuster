@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.model;
 
+import org.lwjgl.opengl.GL11;
+
 import mchorse.blockbuster.api.Model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
@@ -160,7 +162,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
                     {
                         GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                        GlStateManager.callList(this.displayList);
+                        this.renderDisplayList();
 
                         if (this.childModels != null)
                         {
@@ -174,7 +176,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     {
                         GlStateManager.translate(this.rotationPointX * scale, this.rotationPointY * scale, this.rotationPointZ * scale);
                         GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                        GlStateManager.callList(this.displayList);
+                        this.renderDisplayList();
 
                         if (this.childModels != null)
                         {
@@ -207,7 +209,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     }
 
                     GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                    GlStateManager.callList(this.displayList);
+                    this.renderDisplayList();
 
                     if (this.childModels != null)
                     {
@@ -322,7 +324,6 @@ public class ModelCustomRenderer extends ModelRenderer
     /**
      * Compiles a GL display list for this model
      */
-    @SideOnly(Side.CLIENT)
     protected void compileDisplayList(float scale)
     {
         this.displayList = GLAllocation.generateDisplayLists(1);
@@ -336,5 +337,13 @@ public class ModelCustomRenderer extends ModelRenderer
 
         GlStateManager.glEndList();
         this.compiled = true;
+    }
+
+    /**
+     * Render display list 
+     */
+    protected void renderDisplayList()
+    {
+        GL11.glCallList(this.displayList);
     }
 }
