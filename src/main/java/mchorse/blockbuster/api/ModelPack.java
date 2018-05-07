@@ -99,6 +99,7 @@ public class ModelPack
 
         for (File folder : this.folders)
         {
+            /* TODO: rewrite into one loop */
             this.reloadModels(folder);
             this.reloadSkins(folder);
         }
@@ -113,6 +114,11 @@ public class ModelPack
     {
         for (File file : folder.listFiles())
         {
+            if (file.getName().startsWith("__"))
+            {
+                continue;
+            }
+
             File model = new File(file.getAbsolutePath() + "/model.json");
             File objModel = new File(file.getAbsolutePath() + "/model.obj");
             File mtlFile = new File(file.getAbsolutePath() + "/model.mtl");
@@ -146,6 +152,11 @@ public class ModelPack
     {
         for (File file : folder.listFiles())
         {
+            if (file.getName().startsWith("__"))
+            {
+                continue;
+            }
+
             File skins = new File(file.getAbsolutePath() + "/skins/");
 
             if (file.isDirectory())
