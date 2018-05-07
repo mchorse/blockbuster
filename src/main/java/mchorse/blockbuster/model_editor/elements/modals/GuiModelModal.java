@@ -22,6 +22,7 @@ public class GuiModelModal extends GuiModal
 {
     private final String strName = I18n.format("blockbuster.gui.me.model.name");
     private final String strScale = I18n.format("blockbuster.gui.me.model.scale");
+    private final String strScaleGui = I18n.format("blockbuster.gui.me.model.scale_gui");
     private final String strTextureSize = I18n.format("blockbuster.gui.me.model.texture_size");
     private final String strTexture = I18n.format("blockbuster.gui.me.model.texture");
 
@@ -42,6 +43,11 @@ public class GuiModelModal extends GuiModal
     public GuiThreeInput scale;
 
     /**
+     * Name of the model
+     */
+    public GuiTextField scaleGui;
+
+    /**
      * Texture size of the model
      */
     public GuiTwoInput textureSize;
@@ -57,6 +63,11 @@ public class GuiModelModal extends GuiModal
     public GuiCheckBox providesObj;
 
     /**
+     * Whether this model provides OBJ model 
+     */
+    public GuiCheckBox providesMtl;
+
+    /**
      * Button which activates saving of the model
      */
     private GuiButton done;
@@ -64,7 +75,7 @@ public class GuiModelModal extends GuiModal
     public GuiModelModal(int id, GuiScreen parent, FontRenderer font)
     {
         super(parent, font);
-        this.height = 200;
+        this.height = 230;
         this.id = id;
     }
 
@@ -88,7 +99,10 @@ public class GuiModelModal extends GuiModal
         /* Some dirty way to make things dynamically adjust or so */
         y -= 30;
         this.done = new GuiButton(this.id, x - this.buttonWidth - 10, y, this.buttonWidth, 20, I18n.format("blockbuster.gui.done"));
-        y -= 25;
+        y -= 15;
+        this.providesMtl = new GuiCheckBox(0, x, y, I18n.format("blockbuster.gui.me.model.provides_mtl"), false);
+        this.providesMtl.xPosition -= this.providesMtl.width + 12;
+        y -= 15;
         this.providesObj = new GuiCheckBox(0, x, y, I18n.format("blockbuster.gui.me.model.provides_obj"), false);
         this.providesObj.xPosition -= this.providesObj.width + 12;
         y -= 25;
@@ -97,6 +111,9 @@ public class GuiModelModal extends GuiModal
         y -= 25;
         w = this.width - this.font.getStringWidth(this.strTextureSize) - 24;
         this.textureSize = new GuiTwoInput(0, this.font, x - 10 - w, y, w, null);
+        y -= 25;
+        w = this.width - this.font.getStringWidth(this.strScaleGui) - 24;
+        this.scaleGui = new GuiTextField(0, this.font, x - 10 - w + 1, y, w - 2, 18);
         y -= 25;
         w = this.width - this.font.getStringWidth(this.strScale) - 24;
         this.scale = new GuiThreeInput(0, this.font, x - 10 - w, y, w, null);
@@ -115,6 +132,8 @@ public class GuiModelModal extends GuiModal
             this.scale.b.setText(String.valueOf(this.model.scale[1]));
             this.scale.c.setText(String.valueOf(this.model.scale[2]));
 
+            this.scaleGui.setText(String.valueOf(this.model.scaleGui));
+
             this.textureSize.a.setText(String.valueOf(this.model.texture[0]));
             this.textureSize.b.setText(String.valueOf(this.model.texture[1]));
 
@@ -127,6 +146,7 @@ public class GuiModelModal extends GuiModal
 
             this.texture.setCursorPosition(0);
             this.providesObj.setIsChecked(this.model.providesObj);
+            this.providesMtl.setIsChecked(this.model.providesMtl);
         }
     }
 
@@ -135,6 +155,7 @@ public class GuiModelModal extends GuiModal
     {
         this.name.textboxKeyTyped(typedChar, keyCode);
         this.scale.keyTyped(typedChar, keyCode);
+        this.scaleGui.textboxKeyTyped(typedChar, keyCode);
         this.textureSize.keyTyped(typedChar, keyCode);
         this.texture.textboxKeyTyped(typedChar, keyCode);
     }
@@ -144,12 +165,18 @@ public class GuiModelModal extends GuiModal
     {
         this.name.mouseClicked(mouseX, mouseY, mouseButton);
         this.scale.mouseClicked(mouseX, mouseY, mouseButton);
+        this.scaleGui.mouseClicked(mouseX, mouseY, mouseButton);
         this.textureSize.mouseClicked(mouseX, mouseY, mouseButton);
         this.texture.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (this.providesObj.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY))
         {
             this.model.providesObj = this.providesObj.isChecked();
+        }
+
+        if (this.providesMtl.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY))
+        {
+            this.model.providesMtl = this.providesMtl.isChecked();
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -162,16 +189,20 @@ public class GuiModelModal extends GuiModal
 
         this.name.drawTextBox();
         this.scale.draw();
+        this.scaleGui.drawTextBox();
         this.textureSize.draw();
         this.texture.drawTextBox();
         this.providesObj.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
+        this.providesMtl.drawButton(Minecraft.getMinecraft(), mouseX, mouseY);
 
         int x = this.x + 10;
-        int y = this.y + this.height - 75;
+        int y = this.y + this.height - 90 + 10;
 
         this.font.drawStringWithShadow(this.strTexture, x, y, 0xffffffff);
         y -= 25;
         this.font.drawStringWithShadow(this.strTextureSize, x, y, 0xffffffff);
+        y -= 25;
+        this.font.drawStringWithShadow(this.strScaleGui, x, y, 0xffffffff);
         y -= 25;
         this.font.drawStringWithShadow(this.strScale, x, y, 0xffffffff);
         y -= 25;

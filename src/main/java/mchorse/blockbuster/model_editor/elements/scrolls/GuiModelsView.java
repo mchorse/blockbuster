@@ -157,15 +157,19 @@ public class GuiModelsView extends GuiScrollView
 
             boolean selected = this.selected == model;
 
-            if (model.texture != null)
+            if (model.texture != null || model.model.model.providesMtl)
             {
-                this.mc.renderEngine.bindTexture(model.texture);
+                if (model.texture != null)
+                {
+                    this.mc.renderEngine.bindTexture(model.texture);
+                }
+
                 model.model.pose = model.model.model.getPose("standing");
 
                 float scale = selected ? w / 1.8F : w / 2.5F;
                 int mY = y + (int) (w * 0.8F);
 
-                this.drawModel(model.model, this.dummy, x + w / 2, mY, scale);
+                this.drawModel(model.model, this.dummy, x + w / 2, mY, scale * model.model.model.scaleGui);
             }
 
             if (selected)
