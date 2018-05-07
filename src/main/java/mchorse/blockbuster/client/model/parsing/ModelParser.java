@@ -127,6 +127,9 @@ public class ModelParser
                     {
                         /* TODO: don't forget about 1.11.2+ branches */
                         material.texture = new ResourceLocation("blockbuster.actors", this.key + "/skins/" + material.name + "/default.png");
+
+                        /* Create folder for every material */
+                        new File(objModel.getParentFile(), "skins/" + material.name + "/").mkdirs();
                     }
                 }
             }

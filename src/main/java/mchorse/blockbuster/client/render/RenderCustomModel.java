@@ -47,6 +47,18 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     }
 
     /**
+     * Override method in order to save the last texture. Used by OBJ 
+     * renderer with materials to bind texture back 
+     */
+    @Override
+    public void bindTexture(ResourceLocation location)
+    {
+        lastTexture = location;
+
+        super.bindTexture(location);
+    }
+
+    /**
      * Render morph's name only if the player is pointed at the entity
      */
     @Override
@@ -202,18 +214,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         {
             super.rotateCorpse(entity, pitch, yaw, partialTicks);
         }
-    }
-
-    /**
-     * Override method in order to save the last texture. Used by OBJ 
-     * renderer with materials to bind texture back 
-     */
-    @Override
-    public void bindTexture(ResourceLocation location)
-    {
-        lastTexture = location;
-
-        super.bindTexture(location);
     }
 
     /**

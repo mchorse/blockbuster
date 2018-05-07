@@ -127,14 +127,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 GlStateManager.disableTexture2D();
             }
 
-            if (hasTexture)
+            if (hasTexture && list.material.texture != null)
             {
                 Minecraft.getMinecraft().renderEngine.bindTexture(list.material.texture);
             }
 
             GL11.glCallList(list.id);
 
-            if (hasTexture)
+            if (hasTexture && RenderCustomModel.lastTexture != null)
             {
                 Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
             }
