@@ -117,10 +117,7 @@ public class RenderingHandler
             }
             else if (model.render)
             {
-                int i = mc.theWorld.getCombinedLight(model.model.getPos(), 0);
-                int j = i % 65536;
-                int k = i / 65536;
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, model.lastX, model.lastY);
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                 x = pos.getX() - x;
@@ -147,12 +144,16 @@ public class RenderingHandler
     public static class TEModel
     {
         public TileEntityModel model;
+        public float lastX;
+        public float lastY;
         public boolean render;
 
-        public TEModel(TileEntityModel model)
+        public TEModel(TileEntityModel model, float lastX, float lastY)
         {
             this.model = model;
             this.render = false;
+            this.lastX = lastX;
+            this.lastY = lastY;
         }
     }
 }
