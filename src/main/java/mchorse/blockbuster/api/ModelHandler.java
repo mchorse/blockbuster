@@ -34,7 +34,7 @@ public class ModelHandler
     /**
      * Load user and default provided models into model map
      */
-    public void loadModels(ModelPack pack)
+    public void loadModels(ModelPack pack, boolean force)
     {
         pack.reload();
 
@@ -52,7 +52,7 @@ public class ModelHandler
             keys.remove(model);
 
             /* Whether the model should be reloaded */
-            if (cell != null && timestamp <= cell.timestamp)
+            if (!force && cell != null && timestamp <= cell.timestamp)
             {
                 continue;
             }
@@ -144,7 +144,7 @@ public class ModelHandler
     @SideOnly(Side.CLIENT)
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
-        Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack());
+        Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack(), false);
     }
 
     public static class ModelCell

@@ -7,6 +7,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
@@ -79,11 +80,13 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
                 if (model == null)
                 {
-                    RenderingHandler.models.put(te.getPos(), new TEModel(te));
+                    RenderingHandler.models.put(te.getPos(), new TEModel(te, OpenGlHelper.lastBrightnessX, OpenGlHelper.lastBrightnessY));
                 }
                 else
                 {
                     model.render = false;
+                    model.lastX = OpenGlHelper.lastBrightnessX;
+                    model.lastY = OpenGlHelper.lastBrightnessY;
                 }
             }
         }

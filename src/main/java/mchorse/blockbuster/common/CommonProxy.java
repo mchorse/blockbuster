@@ -130,7 +130,7 @@ public class CommonProxy
 
         /* Load models */
         this.models = this.getHandler();
-        this.loadModels(this.getPack());
+        this.loadModels(this.getPack(), true);
     }
 
     /**
@@ -158,10 +158,10 @@ public class CommonProxy
      * data). For client models, you should look up {@link ClientProxy}'s
      * {@link #loadModels(ModelPack)} method.
      */
-    public void loadModels(ModelPack pack)
+    public void loadModels(ModelPack pack, boolean force)
     {
         this.models.pack = pack;
-        this.models.loadModels(pack);
+        this.models.loadModels(pack, force);
 
         this.factory.models = this.models;
         this.factory.registerModels();

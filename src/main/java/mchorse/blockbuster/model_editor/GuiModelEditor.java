@@ -228,10 +228,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      */
     private boolean mainMenu;
 
-    public GuiModelEditor(boolean mainMenu)
+    public GuiModelEditor()
     {
-        this.mainMenu = mainMenu;
-
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
         this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
@@ -240,6 +238,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.modelName = "steve";
         this.setupModel(ModelCustom.MODELS.get("steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
+    }
+
+    /**
+     * Set main menu 
+     */
+    public GuiModelEditor setMainMenu(boolean mainMenu)
+    {
+        this.mainMenu = mainMenu;
+
+        return this;
     }
 
     /**
@@ -288,7 +296,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             if (entry != null)
             {
                 objModel = entry.objModel;
-                mtlFile = entry.mtlFile;
+                mtlFile = this.data.providesMtl ? entry.mtlFile : null;
             }
 
             return new ModelParser(this.modelName, objModel, mtlFile).parseModel(this.data, ModelCustom.class);
@@ -545,6 +553,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         {
             String name = modal.name.getText();
             float[] scale = new float[] {Float.parseFloat(modal.scale.a.getText()), Float.parseFloat(modal.scale.b.getText()), Float.parseFloat(modal.scale.c.getText())};
+            float scaleGui = Float.parseFloat(modal.scaleGui.getText());
             int[] texture = new int[] {Integer.parseInt(modal.textureSize.a.getText()), Integer.parseInt(modal.textureSize.b.getText())};
 
             if (name.isEmpty() || scale[0] <= 0 || scale[1] <= 0 || scale[2] <= 0 || texture[0] <= 0 || texture[1] <= 0)
@@ -557,6 +566,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
             this.data.name = name;
             this.data.scale = scale;
+            this.data.scaleGui = scaleGui;
             this.data.texture = texture;
             this.data.defaultTexture = defaultTexture.isEmpty() ? null : new ResourceLocation(defaultTexture);
             this.rebuildModel();
@@ -600,11 +610,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.close();
 
             String key = name;
-            Model model = Blockbuster.proxy.models.models.get(key).model;
+            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(key);
 
             if (model != null)
             {
-                ModelUtils.copy(this.data.clone(), model);
+                ModelUtils.copy(this.data.clone(), model.model);
             }
 
             ModelCustom.MODELS.put(key, this.buildModel());
@@ -952,7 +962,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         float factor = 0.0625F;
         float oldSwing = this.model.swingProgress;
 
-        this.mc.renderEngine.bindTexture(this.textureRL);
+        if (this.textureRL != null)
+        {
+            this.mc.renderEngine.bindTexture(this.textureRL);
+        }
 
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();

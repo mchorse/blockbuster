@@ -3,6 +3,7 @@
     "name": "",
     "scale": [1, 1, 1],
     "providesObj": true,
+    "providesMtl": true,
     "poses": {
         "standing": {
             "size": [ 1, 1, 1 ],
