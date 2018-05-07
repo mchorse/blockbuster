@@ -608,11 +608,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             writer.close();
 
             String key = name;
-            Model model = Blockbuster.proxy.models.models.get(key).model;
+            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(key);
 
             if (model != null)
             {
-                ModelUtils.copy(this.data.clone(), model);
+                ModelUtils.copy(this.data.clone(), model.model);
             }
 
             ModelCustom.MODELS.put(key, this.buildModel());
