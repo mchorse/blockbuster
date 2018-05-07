@@ -61,7 +61,7 @@ public class MainMenuHandler
         {
             if (event.getButton() == this.openModelEditor)
             {
-                Minecraft.getMinecraft().displayGuiScreen(new GuiModelEditor(screen instanceof GuiMainMenu));
+                Minecraft.getMinecraft().displayGuiScreen(ClientProxy.getEditor(screen instanceof GuiMainMenu));
             }
         }
     }

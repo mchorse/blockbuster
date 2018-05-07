@@ -228,10 +228,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
      */
     private boolean mainMenu;
 
-    public GuiModelEditor(boolean mainMenu)
+    public GuiModelEditor()
     {
-        this.mainMenu = mainMenu;
-
         this.limbs = new GuiLimbsList(this);
         this.limbEditor = new GuiLimbEditor(this);
         this.texturePicker = new GuiTexturePicker(this, Blockbuster.proxy.models.pack);
@@ -240,6 +238,16 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         this.modelName = "steve";
         this.setupModel(ModelCustom.MODELS.get("steve"));
         this.setTexture("blockbuster:textures/entity/actor.png");
+    }
+
+    /**
+     * Set main menu 
+     */
+    public GuiModelEditor setMainMenu(boolean mainMenu)
+    {
+        this.mainMenu = mainMenu;
+
+        return this;
     }
 
     /**

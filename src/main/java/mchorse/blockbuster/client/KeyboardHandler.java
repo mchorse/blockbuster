@@ -3,7 +3,6 @@ package mchorse.blockbuster.client;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import net.minecraft.client.Minecraft;
@@ -63,7 +62,7 @@ public class KeyboardHandler
 
         if (this.modelEditor.isPressed())
         {
-            this.mc.displayGuiScreen(new GuiModelEditor(false));
+            this.mc.displayGuiScreen(ClientProxy.getEditor(false));
         }
     }
 }
