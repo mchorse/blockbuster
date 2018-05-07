@@ -4,9 +4,9 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|toggle|stop>{r} {7}<x> <y> <z>{r}
+                {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
                 
-                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates).
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There are also {7}loop{r} and {7}disable_state{r} which allow to change looping and ability to change redstone sides with {7}[flag]{r} argument ({7}true{r} or {7}false{r}).
 
         # Record's commands
         record:

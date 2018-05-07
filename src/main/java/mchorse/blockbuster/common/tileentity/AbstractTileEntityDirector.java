@@ -30,9 +30,9 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     public static final Pattern NUMBERED_SUFFIX = Pattern.compile("_(\\d+)$");
 
-    public List<String> _replays = new ArrayList<String>();
     public List<Replay> replays = new ArrayList<Replay>();
     public boolean loops;
+    public boolean disableStates;
 
     /**
      * This tick used for checking if actors still playing
@@ -52,7 +52,9 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         super.readFromNBT(compound);
         this.readListFromNBT(compound, "Actors", this.replays);
+
         this.loops = compound.getBoolean("Loops");
+        this.disableStates = compound.getBoolean("DisableState");
     }
 
     @Override
@@ -60,7 +62,9 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         super.writeToNBT(compound);
         this.saveListToNBT(compound, "Actors", this.replays);
+
         compound.setBoolean("Loops", this.loops);
+        compound.setBoolean("DisableState", this.disableStates);
 
         return compound;
     }
@@ -74,18 +78,6 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     {
         NBTTagList tagList = compound.getTagList(key, 10);
         list.clear();
-
-        if (tagList.tagCount() == 0)
-        {
-            NBTTagList ids = compound.getTagList(key, 8);
-
-            for (int i = 0; i < ids.tagCount(); i++)
-            {
-                this._replays.add(ids.getStringTagAt(i));
-            }
-
-            return;
-        }
 
         for (int i = 0; i < tagList.tagCount(); i++)
         {
@@ -290,6 +282,11 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
      */
     protected void playBlock(boolean isPlaying)
     {
+        if (this.disableStates)
+        {
+            isPlaying = false;
+        }
+
         this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(AbstractBlockDirector.PLAYING, isPlaying));
     }
 
