@@ -63,6 +63,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         map.remove("model");
         map.remove("defaultTexture");
         map.remove("scale");
+        map.remove("scaleGui");
         map.remove("limbs");
         map.remove("poses");
         map.remove("providesObj");
@@ -86,6 +87,11 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
             array.add(new JsonPrimitive(src.scale[2]));
 
             map.add("scale", array);
+        }
+
+        if (src.scaleGui != 1)
+        {
+            map.addProperty("scaleGui", src.scaleGui);
         }
 
         if (src.providesObj)

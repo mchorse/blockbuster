@@ -56,6 +56,11 @@ public class Model
     public float[] scale = new float[] {1, 1, 1};
 
     /**
+     * Scale to be displayed in GUI 
+     */
+    public float scaleGui = 1;
+
+    /**
      * Class for the custom model 
      */
     public String model = "";
@@ -192,6 +197,7 @@ public class Model
 
         b.texture = new int[] {this.texture[0], this.texture[1]};
         b.scale = new float[] {this.scale[0], this.scale[1], this.scale[2]};
+        b.scaleGui = this.scaleGui;
 
         b.name = this.name;
         b.scheme = this.scheme;

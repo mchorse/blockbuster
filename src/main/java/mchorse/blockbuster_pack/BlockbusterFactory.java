@@ -133,7 +133,7 @@ public class BlockbusterFactory implements IMorphFactory
 
                     poseActor.currentPose = pose;
                     poseActor.setPose(entry.getValue());
-                    morphs.addMorphVariant(actor.name, "blockbuster", "pose " + pose, poseActor);
+                    morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", "pose " + pose, poseActor);
                 }
             }
 

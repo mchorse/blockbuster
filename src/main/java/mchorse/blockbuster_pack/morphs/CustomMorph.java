@@ -118,7 +118,7 @@ public class CustomMorph extends AbstractMorph
                 model.swingProgress = 0;
 
                 Minecraft.getMinecraft().renderEngine.bindTexture(this.skin == null ? data.defaultTexture : this.skin);
-                GuiUtils.drawModel(model, player, x, y, scale, alpha);
+                GuiUtils.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
             }
         }
     }
