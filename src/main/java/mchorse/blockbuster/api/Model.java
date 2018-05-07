@@ -56,6 +56,11 @@ public class Model
     public float[] scale = new float[] {1, 1, 1};
 
     /**
+     * Scale to be displayed in GUI 
+     */
+    public float scaleGui = 1;
+
+    /**
      * Class for the custom model 
      */
     public String model = "";
@@ -64,6 +69,11 @@ public class Model
      * Does this model provides OBJ model
      */
     public boolean providesObj = false;
+
+    /**
+     * Does this model provides MTL file
+     */
+    public boolean providesMtl = false;
 
     public Map<String, Limb> limbs = new HashMap<String, Limb>();
     public Map<String, Pose> poses = new HashMap<String, Pose>();
@@ -192,6 +202,7 @@ public class Model
 
         b.texture = new int[] {this.texture[0], this.texture[1]};
         b.scale = new float[] {this.scale[0], this.scale[1], this.scale[2]};
+        b.scaleGui = this.scaleGui;
 
         b.name = this.name;
         b.scheme = this.scheme;
@@ -199,6 +210,7 @@ public class Model
 
         b.defaultTexture = this.defaultTexture == null ? null : new ResourceLocation(this.defaultTexture.toString());
         b.providesObj = this.providesObj;
+        b.providesMtl = this.providesMtl;
 
         for (Map.Entry<String, Model.Limb> entry : this.limbs.entrySet())
         {

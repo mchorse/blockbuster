@@ -43,6 +43,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         super(model, limb, transform);
 
         this.mesh = mesh;
+        this.compiled = false;
     }
 
     /**
@@ -62,6 +63,16 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             for (Mesh mesh : this.mesh.meshes)
             {
                 OBJMaterial material = mesh.material;
+
+                if (material != null && material.useTexture && material.texture != null)
+                {
+                    Minecraft.getMinecraft().renderEngine.bindTexture(material.texture);
+
+                    int mod = material.linear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
+
+                    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, mod);
+                    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mod);
+                }
 
                 int id = GLAllocation.generateDisplayLists(1);
                 boolean hasColor = material != null && !mesh.material.useTexture;
@@ -127,14 +138,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 GlStateManager.disableTexture2D();
             }
 
-            if (hasTexture)
+            if (hasTexture && list.material.texture != null)
             {
                 Minecraft.getMinecraft().renderEngine.bindTexture(list.material.texture);
             }
 
             GL11.glCallList(list.id);
 
-            if (hasTexture)
+            if (hasTexture && RenderCustomModel.lastTexture != null)
             {
                 Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
             }

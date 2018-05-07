@@ -100,7 +100,7 @@ public class ActionHandler
 
         if (world instanceof WorldServer && ((WorldServer) world).provider.getDimension() == 0)
         {
-            Blockbuster.reloadServerModels();
+            Blockbuster.reloadServerModels(true);
         }
     }
 

@@ -41,6 +41,8 @@ blockbuster.gui.me:
     model:
         name: "Name"
         scale: "Scale"
+        scale_gui: "GUI scale"
         texture_size: "Texture size"
         texture: "Default texture"
         provides_obj: "Provides OBJ model"
+        provides_mtl: "Provides MTL file"

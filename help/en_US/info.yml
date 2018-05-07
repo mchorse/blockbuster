@@ -6,6 +6,9 @@ blockbuster.info:
         already_registered: "{f}This actor is already registered by this director block!"
         looped: "{f}Now given director block is looped!"
         unlooped: "{f}Now given director block is unlooped!"
+        
+        enabled_state: "{f}Now given director block changes state of the block!"
+        disabled_state: "{f}Now given director block doesn't change the state of the block!"
     
     # General command infos
     commands:

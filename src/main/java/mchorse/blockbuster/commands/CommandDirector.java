@@ -91,6 +91,13 @@ public class CommandDirector extends CommandBase
 
             L10n.info(sender, "director." + (director.loops ? "looped" : "unlooped"));
         }
+        else if (action.equals("disable_state") && args.length >= 5)
+        {
+            director.disableStates = CommandBase.parseBoolean(args[4]);
+            director.markDirty();
+
+            L10n.info(sender, "director." + (director.disableStates ? "disabled_state" : "enabled_state"));
+        }
         else if (action.equals("toggle"))
         {
             boolean isPlaying = director.togglePlayback();
@@ -118,7 +125,7 @@ public class CommandDirector extends CommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle", "spawn", "loop");
+            return getListOfStringsMatchingLastWord(args, "play", "stop", "toggle", "loop", "disable_state");
         }
 
         return super.getTabCompletions(server, sender, args, pos);

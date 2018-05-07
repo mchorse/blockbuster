@@ -16,5 +16,6 @@ public class OBJMaterial
     public float b;
 
     public boolean useTexture;
+    public boolean linear = false;
     public ResourceLocation texture;
 }

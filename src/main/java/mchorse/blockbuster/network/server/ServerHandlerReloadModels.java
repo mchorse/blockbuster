@@ -12,7 +12,7 @@ public class ServerHandlerReloadModels extends ServerMessageHandler<PacketReload
     {
         if (player.canUseCommand(2, ""))
         {
-            Blockbuster.reloadServerModels();
+            Blockbuster.reloadServerModels(message.force);
 
             L10n.success(player, "model.reload");
         }

@@ -20,6 +20,7 @@ import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.MainMenuHandler;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
@@ -57,6 +58,7 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
+    public static GuiModelEditor editor;
 
     public static RecordManager manager = new RecordManager();
 
@@ -65,6 +67,19 @@ public class ClientProxy extends CommonProxy
     public static KeyboardHandler keys;
 
     public static File config;
+
+    /**
+     * Create model editor GUI dynamically 
+     */
+    public static GuiModelEditor getEditor(boolean mainMenu)
+    {
+        if (editor == null)
+        {
+            editor = new GuiModelEditor();
+        }
+
+        return editor.setMainMenu(mainMenu);
+    }
 
     /**
      * Register mod items, blocks, tile entites and entities, load item,
@@ -178,9 +193,9 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-    public void loadModels(ModelPack pack)
+    public void loadModels(ModelPack pack, boolean force)
     {
-        super.loadModels(pack);
+        super.loadModels(pack, force);
 
         this.factory.registerClient(null);
     }
