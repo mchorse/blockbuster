@@ -105,7 +105,7 @@ public class CustomMorph extends AbstractMorph
         {
             Model data = model.model;
 
-            if (data != null && (data.defaultTexture != null || this.skin != null))
+            if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
                 if (this.pose == null)
                 {
@@ -117,7 +117,13 @@ public class CustomMorph extends AbstractMorph
                 model.pose = this.pose == null ? model.model.poses.get("standing") : this.pose;
                 model.swingProgress = 0;
 
-                Minecraft.getMinecraft().renderEngine.bindTexture(this.skin == null ? data.defaultTexture : this.skin);
+                ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
+
+                if (texture != null)
+                {
+                    Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+                }
+
                 GuiUtils.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
             }
         }

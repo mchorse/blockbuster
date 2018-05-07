@@ -43,6 +43,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         super(model, limb, transform);
 
         this.mesh = mesh;
+        this.compiled = false;
     }
 
     /**

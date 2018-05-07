@@ -46,6 +46,17 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         return this.mainModel == null ? null : ((ModelCustom) this.mainModel).model.defaultTexture;
     }
 
+    @Override
+    protected boolean bindEntityTexture(EntityLivingBase entity)
+    {
+        if (this.mainModel != null && ((ModelCustom) this.mainModel).model.providesMtl)
+        {
+            return true;
+        }
+
+        return super.bindEntityTexture(entity);
+    }
+
     /**
      * Override method in order to save the last texture. Used by OBJ 
      * renderer with materials to bind texture back 
@@ -221,7 +232,13 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public void renderRightArm(EntityPlayer player)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(this.getEntityTexture(player));
+        ResourceLocation texture = this.getEntityTexture(player);
+
+        if (texture != null)
+        {
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        }
+
         this.mainModel.swingProgress = 0.0F;
         this.mainModel.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
 
@@ -245,7 +262,13 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public void renderLeftArm(EntityPlayer player)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(this.getEntityTexture(player));
+        ResourceLocation texture = this.getEntityTexture(player);
+
+        if (texture != null)
+        {
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        }
+
         this.mainModel.swingProgress = 0.0F;
         this.mainModel.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
 
