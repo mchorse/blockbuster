@@ -124,6 +124,10 @@ public class OBJParser
             {
                 material.useTexture = true;
             }
+            else if (first.equals("map_Kd_linear"))
+            {
+                material.linear = true;
+            }
         }
     }
 
