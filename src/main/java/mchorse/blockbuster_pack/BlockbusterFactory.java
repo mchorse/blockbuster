@@ -114,7 +114,7 @@ public class BlockbusterFactory implements IMorphFactory
             }
 
             /* Morphs with default texture */
-            if (original.model.defaultTexture != null)
+            if (original.model.defaultTexture != null || original.model.providesMtl)
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 

@@ -115,7 +115,7 @@ public class ModelParser
         {
             try
             {
-                OBJParser parser = new OBJParser(this.objModel, this.mtlFile);
+                OBJParser parser = new OBJParser(this.objModel, data.providesMtl ? this.mtlFile : null);
 
                 parser.read();
                 meshes = parser.compile();
