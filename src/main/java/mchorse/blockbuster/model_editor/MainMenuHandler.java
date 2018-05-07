@@ -99,7 +99,7 @@ public class MainMenuHandler
                 }
             }
 
-            Blockbuster.proxy.loadModels(pack);
+            Blockbuster.proxy.loadModels(pack, false);
             ClientProxy.actorPack.pack.reload();
         }
     }

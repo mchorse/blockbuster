@@ -187,9 +187,9 @@ public class ClientProxy extends CommonProxy
     }
 
     @Override
-    public void loadModels(ModelPack pack)
+    public void loadModels(ModelPack pack, boolean force)
     {
-        super.loadModels(pack);
+        super.loadModels(pack, force);
 
         this.factory.registerClient(null);
     }

@@ -80,9 +80,9 @@ blockbuster:
             
             reload:
                 |
-                    {l}{6}/{r}model {8}reload{r}
+                    {l}{6}/{r}model {8}reload{r} {7}[force]{r}
                     
-                    {r}Forces the server to reload server-side models (only for OP users).
+                    {r}Forces the client and server to reload models (server-side only for OP users) with optional {7}[force]{r} argument which if is {7}true{r} will reload all models surpassing cached non-modified files timestamp.
                     
             replace_texture:
                 |

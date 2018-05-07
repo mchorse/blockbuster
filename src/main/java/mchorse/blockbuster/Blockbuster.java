@@ -100,13 +100,13 @@ public class Blockbuster
     /**
      * Reloads server side models 
      */
-    public static void reloadServerModels()
+    public static void reloadServerModels(boolean force)
     {
         String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
 
         proxy.models.pack = proxy.getPack();
         proxy.models.pack.addFolder(path);
-        proxy.loadModels(proxy.models.pack);
+        proxy.loadModels(proxy.models.pack, force);
     }
 
     @EventHandler
@@ -132,8 +132,6 @@ public class Blockbuster
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
-        Blockbuster.reloadServerModels();
-
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
         event.registerServerCommand(new CommandRecord());
