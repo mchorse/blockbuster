@@ -8,7 +8,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
@@ -89,12 +88,12 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
     {
         ClientProxy.modelRenderer.render(model, 0, 0, 0, partialTicks, 0, 0);
 
-        TextureManager manager = Minecraft.getMinecraft().getTextureManager();
-        ITextureObject texture = manager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft mc = Minecraft.getMinecraft();
+        TextureManager manager = mc.getTextureManager();
 
         manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        texture.setBlurMipmap(false, false);
-        texture.setBlurMipmap(false, true);
+        mc.getTextureMapBlocks().setBlurMipmapDirect(false, true);
+        mc.getTextureMapBlocks().setBlurMipmap(false, false);
     }
 
     /**
