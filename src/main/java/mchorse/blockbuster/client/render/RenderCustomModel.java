@@ -46,12 +46,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         return this.mainModel == null ? null : ((ModelCustom) this.mainModel).model.defaultTexture;
     }
 
-    @Override
-    protected boolean setDoRenderBrightness(EntityLivingBase entityLivingBaseIn, float partialTicks)
-    {
-        return false;
-    }
-
     protected boolean bindEntityTexture(EntityLivingBase entity)
     {
         if (this.mainModel != null && ((ModelCustom) this.mainModel).model.providesMtl)

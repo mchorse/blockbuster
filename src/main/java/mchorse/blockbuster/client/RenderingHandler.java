@@ -42,7 +42,7 @@ public class RenderingHandler
     }
 
     /**
-     * Renders recording overlay during HUD rendering
+     * Fixes lightmap for TEISR
      */
     @SubscribeEvent
     public void onHUDRender(RenderGameOverlayEvent.Pre event)

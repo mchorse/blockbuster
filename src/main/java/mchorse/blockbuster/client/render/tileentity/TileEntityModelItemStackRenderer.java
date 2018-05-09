@@ -8,6 +8,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
@@ -73,19 +75,26 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
                 if (model != null)
                 {
                     model.timer = 20;
-
-                    ClientProxy.modelRenderer.render(model.model, 0, 0, 0, partialTicks, 0, 0);
+                    this.renderModel(model.model, partialTicks);
 
                     return;
                 }
             }
 
-            ClientProxy.modelRenderer.render(this.def, 0, 0, 0, partialTicks, 0, 0);
-
-            Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, true);
-            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+            this.renderModel(this.def, partialTicks);
         }
+    }
+
+    public void renderModel(TileEntityModel model, float partialTicks)
+    {
+        ClientProxy.modelRenderer.render(model, 0, 0, 0, partialTicks, 0, 0);
+
+        TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+        ITextureObject texture = manager.getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+        manager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        texture.setBlurMipmap(false, false);
+        texture.setBlurMipmap(false, true);
     }
 
     /**
