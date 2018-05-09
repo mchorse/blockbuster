@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -45,6 +46,8 @@ public class ItemUseAction extends Action
             actor.fakePlayer.rotationYaw = frame.yaw;
             actor.fakePlayer.rotationYawHead = frame.yawHead;
             actor.fakePlayer.rotationPitch = frame.pitch;
+            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
             item.getItem().onItemRightClick(item, actor.worldObj, actor.fakePlayer, this.hand);
         }
