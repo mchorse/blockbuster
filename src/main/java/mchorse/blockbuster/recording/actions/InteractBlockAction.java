@@ -4,6 +4,7 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -53,6 +54,8 @@ public class InteractBlockAction extends Action
         actor.fakePlayer.posZ = actor.posZ;
         actor.fakePlayer.rotationYaw = frame.yaw;
         actor.fakePlayer.rotationPitch = frame.pitch;
+        actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+        actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
         state.getBlock().onBlockActivated(actor.world, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }

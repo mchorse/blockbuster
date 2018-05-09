@@ -46,6 +46,8 @@ public class ItemUseAction extends Action
             actor.fakePlayer.rotationYaw = frame.yaw;
             actor.fakePlayer.rotationYawHead = frame.yawHead;
             actor.fakePlayer.rotationPitch = frame.pitch;
+            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
             actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
             actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
