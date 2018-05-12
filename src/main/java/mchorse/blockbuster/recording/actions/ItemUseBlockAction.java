@@ -56,7 +56,13 @@ public class ItemUseBlockAction extends Action
             actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
             actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
+            ItemStack stack = actor.getHeldItem(this.hand);
+
+            int meta = stack.getMetadata();
+            int size = stack.getCount();
             item.getItem().onItemUse(actor.fakePlayer, actor.world, this.pos, this.hand, this.facing, this.hitX, this.hitY, this.hitZ);
+            stack.setItemDamage(meta);
+            stack.setCount(size);
         }
     }
 
