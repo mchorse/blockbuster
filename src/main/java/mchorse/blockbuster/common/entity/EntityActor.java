@@ -333,7 +333,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (!this.worldObj.isRemote && Blockbuster.proxy.config.actor_fall_damage && this.playback != null)
         {
-            int tick = this.playback.tick;
+            int tick = this.playback.getTick();
 
             /* Override onGround field */
             if (tick >= 1 && tick < this.playback.record.frames.size())
@@ -568,7 +568,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             for (int i = min; i < max; i++)
             {
-                this.playback.record.applyAction(i, this);
+                this.playback.record.applyAction(i - this.playback.record.preDelay, this);
             }
         }
 

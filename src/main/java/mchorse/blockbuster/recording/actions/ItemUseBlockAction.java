@@ -45,7 +45,7 @@ public class ItemUseBlockAction extends Action
 
         if (item != null)
         {
-            Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+            Frame frame = actor.playback.getCurrentFrame();
 
             actor.fakePlayer.posX = actor.posX;
             actor.fakePlayer.posY = actor.posY;

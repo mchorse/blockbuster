@@ -39,7 +39,7 @@ public class ShootArrowAction extends Action
     public void apply(EntityActor actor)
     {
         World world = actor.worldObj;
-        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+        Frame frame = actor.playback.getCurrentFrame();
 
         EntityTippedArrow arrow = new EntityTippedArrow(world, actor);
         float f = ItemBow.getArrowVelocity(this.charge);
