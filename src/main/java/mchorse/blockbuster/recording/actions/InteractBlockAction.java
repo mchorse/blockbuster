@@ -47,7 +47,7 @@ public class InteractBlockAction extends Action
             return;
         }
 
-        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+        Frame frame = actor.playback.getCurrentFrame();
 
         actor.fakePlayer.posX = actor.posX;
         actor.fakePlayer.posY = actor.posY;

@@ -25,7 +25,7 @@ public class AttackAction extends Action
     @Override
     public void apply(EntityActor actor)
     {
-        Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+        Frame frame = actor.playback.getCurrentFrame();
         float yaw = actor.rotationYaw;
         float pitch = actor.rotationPitch;
         float yawHead = actor.rotationYawHead;

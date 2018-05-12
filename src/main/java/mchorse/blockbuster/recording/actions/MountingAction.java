@@ -42,7 +42,7 @@ public class MountingAction extends Action
 
         if (mount == null)
         {
-            Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+            Frame frame = actor.playback.getCurrentFrame();
             float yaw = actor.rotationYaw;
             float pitch = actor.rotationPitch;
             float yawHead = actor.rotationYawHead;
