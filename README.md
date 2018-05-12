@@ -1,4 +1,3 @@
-<!-- Piñata! -->
 ![Blockbuster](http://i.imgur.com/nqDKg1R.png)
 
 [Planet Minecraft page](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge page](https://minecraft.curseforge.com/projects/blockbuster) – [Source code](https://github.com/mchorse/blockbuster) – [AdFly support link](http://adf.ly/15268913/blockbuster-curseforge) – [Wiki](https://github.com/mchorse/blockbuster/wiki)  
