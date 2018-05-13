@@ -5,6 +5,7 @@ import java.util.List;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.block.AbstractBlockDirector;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
 import net.minecraft.block.state.IBlockState;
@@ -46,7 +47,7 @@ public class WorldEventListener implements IWorldEventListener
 
             for (DamageControl damage : CommonProxy.manager.damage.values())
             {
-                damage.addBlock(new BlockPos(pos), oldState);
+                damage.addBlock(new BlockPos(pos), oldState, worldIn);
             }
         }
     }
@@ -72,8 +73,18 @@ public class WorldEventListener implements IWorldEventListener
     {}
 
     @Override
-    public void onEntityAdded(Entity entityIn)
-    {}
+    public void onEntityAdded(Entity entity)
+    {
+        if (entity instanceof EntityActor || entity instanceof EntityPlayer)
+        {
+            return;
+        }
+
+        for (DamageControl damage : CommonProxy.manager.damage.values())
+        {
+            damage.entities.add(entity);
+        }
+    }
 
     @Override
     public void onEntityRemoved(Entity entityIn)
