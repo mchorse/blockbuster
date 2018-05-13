@@ -24,7 +24,7 @@ public class MorphActionAction extends Action
     {
         if (actor.morph != null)
         {
-            Frame frame = actor.playback.record.frames.get(actor.playback.tick);
+            Frame frame = actor.playback.getCurrentFrame();
 
             float yaw = actor.rotationYaw;
             float yawHead = actor.rotationYaw;

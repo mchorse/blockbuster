@@ -299,7 +299,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
 
             if (actor.playback != null)
             {
-                Blockbuster.LOGGER.info("Director tick: " + actor.playback.tick);
+                Blockbuster.LOGGER.info("Director tick: " + actor.playback.getTick());
             }
         }
 

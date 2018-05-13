@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 
@@ -59,6 +60,23 @@ public class RecordPlayer
     public boolean isFinished()
     {
         return this.record != null && this.tick - this.record.preDelay - this.record.postDelay >= this.record.getLength();
+    }
+
+    /**
+     * Get appropriate amount of real ticks (for accessing current 
+     * action or something like this)
+     */
+    public int getTick()
+    {
+        return Math.max(0, this.record == null ? this.tick : this.tick - this.record.preDelay);
+    }
+
+    /**
+     * Get current frame 
+     */
+    public Frame getCurrentFrame()
+    {
+        return this.record.frames.get(this.getTick());
     }
 
     /**
