@@ -54,13 +54,6 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
 
         double rotation = args.length >= 2 ? CommandBase.parseDouble(args[1]) : 0;
 
-        if (args.length >= 5)
-        {
-            x = CommandBase.parseDouble(args[2]);
-            y = CommandBase.parseDouble(args[3]);
-            z = CommandBase.parseDouble(args[4]);
-        }
-
         double firstX = 0;
         double firstY = 0;
         double firstZ = 0;
@@ -73,6 +66,13 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
                 firstX = frame.x;
                 firstY = frame.y;
                 firstZ = frame.z;
+
+                if (args.length >= 5)
+                {
+                    x = CommandBase.parseDouble(firstX, args[2], false);
+                    y = CommandBase.parseDouble(firstY, args[3], false);
+                    z = CommandBase.parseDouble(firstZ, args[4], false);
+                }
             }
 
             double frameX = frame.x - firstX;

@@ -172,23 +172,36 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     /**
      * Duplicate a replay by given index
      *
-     * Also increments the numerical suffix, if it's not there suffix "_1" is
-     * added.
+     * Also increments the numerical suffix
      */
     public void duplicate(int index)
     {
         Replay replay = this.replays.get(index).clone(this.world.isRemote);
         Matcher matcher = NUMBERED_SUFFIX.matcher(replay.id);
 
-        if (matcher.find())
+        String prefix = replay.id;
+        boolean found = matcher.find();
+        int max = 0;
+
+        if (found)
         {
-            replay.id = replay.id.substring(0, matcher.start()) + "_" + (Integer.parseInt(matcher.group(1)) + 1);
-        }
-        else
-        {
-            replay.id = replay.id + "_1";
+            prefix = replay.id.substring(0, matcher.start());
         }
 
+        for (Replay other : this.replays)
+        {
+            if (other.id.startsWith(prefix))
+            {
+                matcher = NUMBERED_SUFFIX.matcher(other.id);
+
+                if (matcher.find() && other.id.substring(0, matcher.start()).equals(prefix))
+                {
+                    max = Math.max(max, Integer.parseInt(matcher.group(1)));
+                }
+            }
+        }
+
+        replay.id = prefix + "_" + (max + 1);
         this.replays.add(replay);
     }
 

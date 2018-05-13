@@ -37,6 +37,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -77,6 +78,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  */
 public class ActionHandler
 {
+    /**
+     * Last TE was spotted during block breaking action (used for 
+     * damage control of tile entities) 
+     */
+    public static TileEntity lastTE;
+
     /**
      * Adds a world event listener
      */
@@ -137,6 +144,11 @@ public class ActionHandler
     {
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (Blockbuster.proxy.config.damage_control)
+        {
+            lastTE = player.world.getTileEntity(event.getPos());
+        }
 
         if (!player.world.isRemote && events != null && player.isCreative())
         {
