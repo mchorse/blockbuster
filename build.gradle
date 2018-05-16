@@ -160,6 +160,13 @@ task buildLangFiles {
                 }
             }
             
+            def parentFile = output_file.getParentFile()
+            
+            if (!parentFile.exists())
+            {
+                parentFile.mkdirs();
+            }
+            
             def writer = new PrintWriter(output_file)
             
             writer.println(output.trim())
