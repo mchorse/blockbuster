@@ -18,6 +18,18 @@ blockbuster:
                     
                     {r}Adds an action to player recording by {7}<filename>{r} at {7}<tick>{r} of type {7}<action_type>{r} with additional data specified in {7}[data_tag]{r}.
             
+            clean:
+                |
+                    {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [from] [to]{r}
+                    
+                    {r}This command cleans given {7}<property>{r} in {7}<filename>{r} player recording from {7}[from]{r} tick to {7}[to]{r} (not including {7}[to]{r}) tick.
+            
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
@@ -46,19 +58,19 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
                     
-                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame. 
-                    
-            dupe:
-                |
-                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
-                    
-                    {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.  
+                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame.   
                     
             prolong:
                 |
                     {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
                     
-                    {r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording. 
+                    {r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording.
+                                
+            tp:
+                |
+                    {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
+                    
+                    {r}This command teleports player to first frame or frame at {7}[tick]{r} frame, if specified, {7}<filename>{r} player recording.
 
         # Model's commands
         model:

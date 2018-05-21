@@ -13,6 +13,9 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -128,6 +131,15 @@ public class CustomMorph extends AbstractMorph
                 GuiUtils.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
             }
         }
+        else
+        {
+            FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+            int width = font.getStringWidth(this.name);
+            String error = "No model found";
+
+            font.drawStringWithShadow(error, x - font.getStringWidth(error) / 2, y - (int) (font.FONT_HEIGHT * 2.5), 0xff2222);
+            font.drawStringWithShadow(this.name, x - width / 2, y - font.FONT_HEIGHT, 0xffffff);
+        }
     }
 
     @Override
@@ -166,10 +178,21 @@ public class CustomMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        RenderCustomModel render = (RenderCustomModel) this.renderer;
+        if (this.model != null)
+        {
+            RenderCustomModel render = (RenderCustomModel) this.renderer;
 
-        render.current = this;
-        render.doRender(entity, x, y, z, entityYaw, partialTicks);
+            render.current = this;
+            render.doRender(entity, x, y, z, entityYaw, partialTicks);
+        }
+        else
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            FontRenderer font = mc.fontRenderer;
+            RenderManager manager = mc.getRenderManager();
+
+            EntityRenderer.drawNameplate(font, this.name.replace("blockbuster.", ""), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+        }
     }
 
     /**
@@ -179,7 +202,10 @@ public class CustomMorph extends AbstractMorph
     @Override
     public void update(EntityLivingBase target, IMorphing cap)
     {
-        this.updateSize(target, cap);
+        if (this.model != null)
+        {
+            this.updateSize(target, cap);
+        }
 
         super.update(target, cap);
     }

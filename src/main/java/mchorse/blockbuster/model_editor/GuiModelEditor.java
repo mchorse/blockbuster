@@ -42,7 +42,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -78,7 +77,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     /**
      * Dummy entity for rendering
      */
-    public EntityLivingBase dummy;
+    public DummyEntity dummy;
 
     /**
      * Compiled data model which we are currently editing
@@ -476,6 +475,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         else if (button.id == 9)
         {
             this.items = !this.items;
+            this.dummy.toggleItems(this.items);
         }
         else if (button.id == 10)
         {
@@ -959,8 +959,32 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
 
+        Model.Limb limb = this.limbEditor.limb;
+
         float factor = 0.0625F;
         float oldSwing = this.model.swingProgress;
+
+        float lastOpacity = 0;
+        float lastRed = 0;
+        float lastGreen = 0;
+        float lastBlue = 0;
+
+        if (limb != null)
+        {
+            lastOpacity = limb.opacity;
+            lastRed = limb.color[0];
+            lastGreen = limb.color[1];
+            lastBlue = limb.color[2];
+
+            limb.opacity = 0.75F;
+
+            if (limb.color[0] >= 1 && limb.color[1] >= 1 && limb.color[2] >= 1)
+            {
+                limb.color[0] = 0F;
+                limb.color[1] = 0.5F;
+                limb.color[2] = 1F;
+            }
+        }
 
         if (this.textureRL != null)
         {
@@ -1030,6 +1054,14 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
         this.model.swingProgress = oldSwing;
+
+        if (limb != null)
+        {
+            limb.opacity = lastOpacity;
+            limb.color[0] = lastRed;
+            limb.color[1] = lastGreen;
+            limb.color[2] = lastBlue;
+        }
     }
 
     /**
