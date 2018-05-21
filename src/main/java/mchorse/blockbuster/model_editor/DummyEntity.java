@@ -23,11 +23,10 @@ public class DummyEntity extends EntityLivingBase
     {
         super(worldIn);
 
-        /* TODO: Fix that shit */
         this.sword = new ItemStack(Items.DIAMOND_SWORD);
         this.ingot = new ItemStack(Items.IRON_INGOT);
 
-        this.held = new ItemStack[] {null, null};
+        this.held = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY};
     }
 
     public void toggleItems(boolean toggle)
@@ -39,7 +38,7 @@ public class DummyEntity extends EntityLivingBase
         }
         else
         {
-            this.held[0] = this.held[1] = null;
+            this.held[0] = this.held[1] = ItemStack.EMPTY;
         }
     }
 
