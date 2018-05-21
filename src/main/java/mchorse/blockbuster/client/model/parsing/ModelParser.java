@@ -15,10 +15,10 @@ import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.ModelOBJRenderer;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.metamorph.Metamorph;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -125,8 +125,7 @@ public class ModelParser
                 {
                     if (material.useTexture)
                     {
-                        /* TODO: don't forget about 1.11.2+ branches */
-                        material.texture = new ResourceLocation("blockbuster.actors", this.key + "/skins/" + material.name + "/default.png");
+                        material.texture = new TextureLocation("blockbuster.actors", this.key + "/skins/" + material.name + "/default.png");
 
                         /* Create folder for every material */
                         new File(objModel.getParentFile(), "skins/" + material.name + "/").mkdirs();

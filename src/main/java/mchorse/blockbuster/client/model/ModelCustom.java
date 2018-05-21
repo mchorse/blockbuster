@@ -101,7 +101,7 @@ public class ModelCustom extends ModelBiped
         ModelBiped.ArmPose right = ModelBiped.ArmPose.EMPTY;
         ModelBiped.ArmPose left = ModelBiped.ArmPose.EMPTY;
 
-        if (rightItem != null)
+        if (!rightItem.isEmpty())
         {
             right = ModelBiped.ArmPose.ITEM;
 
@@ -120,7 +120,7 @@ public class ModelCustom extends ModelBiped
             }
         }
 
-        if (leftItem != null)
+        if (!leftItem.isEmpty())
         {
             left = ModelBiped.ArmPose.ITEM;
 
