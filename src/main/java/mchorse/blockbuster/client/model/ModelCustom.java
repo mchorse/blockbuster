@@ -8,6 +8,8 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,10 +74,69 @@ public class ModelCustom extends ModelBiped
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
+        if (entityIn instanceof EntityLivingBase)
+        {
+            this.setHands((EntityLivingBase) entityIn);
+        }
+        else
+        {
+            this.leftArmPose = ArmPose.EMPTY;
+            this.rightArmPose = ArmPose.EMPTY;
+        }
+
         for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
         }
+    }
+
+    /**
+     * Set hands postures
+     */
+    public void setHands(EntityLivingBase entity)
+    {
+        ItemStack rightItem = entity.getHeldItemMainhand();
+        ItemStack leftItem = entity.getHeldItemOffhand();
+
+        ModelBiped.ArmPose right = ModelBiped.ArmPose.EMPTY;
+        ModelBiped.ArmPose left = ModelBiped.ArmPose.EMPTY;
+
+        if (rightItem != null)
+        {
+            right = ModelBiped.ArmPose.ITEM;
+
+            if (entity.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction = rightItem.getItemUseAction();
+
+                if (enumaction == EnumAction.BLOCK)
+                {
+                    right = ModelBiped.ArmPose.BLOCK;
+                }
+                else if (enumaction == EnumAction.BOW)
+                {
+                    right = ModelBiped.ArmPose.BOW_AND_ARROW;
+                }
+            }
+        }
+
+        if (leftItem != null)
+        {
+            left = ModelBiped.ArmPose.ITEM;
+
+            if (entity.getItemInUseCount() > 0)
+            {
+                EnumAction enumaction1 = leftItem.getItemUseAction();
+
+                if (enumaction1 == EnumAction.BLOCK)
+                {
+                    left = ModelBiped.ArmPose.BLOCK;
+                }
+            }
+        }
+
+        this.rightArmPose = right;
+        this.leftArmPose = left;
     }
 
     /**
