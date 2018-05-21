@@ -48,7 +48,7 @@ public class SubCommandRecordGet extends SubCommandRecordBase
 
         if (tick <= 0 || tick >= record.actions.size())
         {
-            throw new CommandException("record.tick_out_range", tick);
+            throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
         }
 
         List<Action> actions = record.actions.get(tick);

@@ -86,8 +86,7 @@ public class ModelHandler
 
         for (String key : keys)
         {
-            this.models.remove(key);
-            System.out.println("Removing '" + key + "' custom model!");
+            this.removeModel(key);
         }
 
         /* Load default provided models */
@@ -113,6 +112,7 @@ public class ModelHandler
             }
 
             this.addModel("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
+            keys.remove("yike");
         }
         catch (Exception e)
         {
@@ -126,6 +126,15 @@ public class ModelHandler
     protected void addModel(String name, ModelCell cell)
     {
         this.models.put(name, cell);
+    }
+
+    /**
+     * Remove model from model handler 
+     */
+    protected void removeModel(String key)
+    {
+        this.models.remove(key);
+        System.out.println("Removing '" + key + "' custom model!");
     }
 
     /**

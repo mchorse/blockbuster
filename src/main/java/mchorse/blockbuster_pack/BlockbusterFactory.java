@@ -92,9 +92,19 @@ public class BlockbusterFactory implements IMorphFactory
     public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
     {
         String name = tag.getString("Name");
-        CustomMorph morph = (CustomMorph) this.morphs.get(name.substring(name.indexOf(".") + 1)).clone(Blockbuster.proxy.isClient());
+        name = name.substring(name.indexOf(".") + 1);
+        CustomMorph morph = this.morphs.get(name);
 
-        morph.fromNBT(tag);
+        if (morph != null)
+        {
+            morph = (CustomMorph) morph.clone(Blockbuster.proxy.isClient());
+            morph.fromNBT(tag);
+        }
+        else
+        {
+            morph = new CustomMorph();
+            morph.fromNBT(tag);
+        }
 
         return morph;
     }
@@ -167,6 +177,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return this.morphs.containsKey(morph.substring(morph.indexOf(".") + 1));
+        return morph.startsWith("blockbuster.");
     }
 }
