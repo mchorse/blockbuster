@@ -45,6 +45,11 @@ public class BlockbusterConfig
      */
     public boolean model_block_disable_culling_workaround;
 
+    /**
+     * Whether model block item rendering should be disabled 
+     */
+    public boolean model_block_disable_item_rendering;
+
     /* Recording */
 
     /**
@@ -155,6 +160,7 @@ public class BlockbusterConfig
 
         /* Model block */
         this.model_block_disable_culling_workaround = this.getBoolean("model_block_disable_culling_workaround", model, false, "Whether model block culling workaround should be disabled");
+        this.model_block_disable_item_rendering = this.getBoolean("model_block_disable_item_rendering", model, false, "Whether model block item rendering should be disabled");
 
         /* Recording */
         this.recording_countdown = this.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown (in seconds)");

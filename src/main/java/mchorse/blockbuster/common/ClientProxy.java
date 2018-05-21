@@ -101,7 +101,7 @@ public class ClientProxy extends CommonProxy
 
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
-        this.registerItemModel(Blockbuster.modelBlock, Blockbuster.path("model"));
+        this.registerItemModel(Blockbuster.modelBlock, Blockbuster.path(Blockbuster.proxy.config.model_block_disable_item_rendering ? "model_static" : "model"));
 
         Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
 

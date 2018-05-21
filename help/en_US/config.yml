@@ -12,6 +12,7 @@ blockbuster.config:
         title: Model block
         
         model_block_disable_culling_workaround: Disable culling workaround
+        model_block_disable_item_rendering: Disable item rendering
     
     recording:
         title: Recording
