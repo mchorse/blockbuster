@@ -25,13 +25,13 @@ public class SubCommandRecordTP extends SubCommandRecordBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "tp";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.tp";
     }
