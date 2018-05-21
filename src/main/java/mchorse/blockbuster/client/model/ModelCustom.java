@@ -74,16 +74,6 @@ public class ModelCustom extends ModelBiped
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        if (entityIn instanceof EntityLivingBase)
-        {
-            this.setHands((EntityLivingBase) entityIn);
-        }
-        else
-        {
-            this.leftArmPose = ArmPose.EMPTY;
-            this.rightArmPose = ArmPose.EMPTY;
-        }
-
         for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
@@ -146,6 +136,16 @@ public class ModelCustom extends ModelBiped
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     {
+        if (entityIn instanceof EntityLivingBase)
+        {
+            this.setHands((EntityLivingBase) entityIn);
+        }
+        else
+        {
+            this.leftArmPose = ArmPose.EMPTY;
+            this.rightArmPose = ArmPose.EMPTY;
+        }
+
         for (ModelCustomRenderer limb : this.limbs)
         {
             boolean mirror = limb.limb.mirror;
