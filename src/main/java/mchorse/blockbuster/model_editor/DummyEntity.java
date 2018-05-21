@@ -16,15 +16,31 @@ import net.minecraft.world.World;
 public class DummyEntity extends EntityLivingBase
 {
     private final ItemStack[] held;
+    private final ItemStack sword;
+    private final ItemStack ingot;
 
     public DummyEntity(World worldIn)
     {
         super(worldIn);
 
-        ItemStack iron = new ItemStack(Items.IRON_INGOT);
-        ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
+        /* TODO: Fix that shit */
+        this.sword = new ItemStack(Items.DIAMOND_SWORD);
+        this.ingot = new ItemStack(Items.IRON_INGOT);
 
-        this.held = new ItemStack[] {sword, iron};
+        this.held = new ItemStack[] {null, null};
+    }
+
+    public void toggleItems(boolean toggle)
+    {
+        if (toggle)
+        {
+            this.held[0] = this.sword;
+            this.held[1] = this.ingot;
+        }
+        else
+        {
+            this.held[0] = this.held[1] = null;
+        }
     }
 
     @Override

@@ -102,7 +102,7 @@ public class SubCommandModelExport extends CommandBase
         /* Save exported model */
         try
         {
-            File destination = new File(ClientProxy.config.getAbsolutePath() + "/export/" + type + ".json");
+            File destination = new File(ClientProxy.config.getAbsolutePath() + "/export/" + type.replaceAll("[^\\w\\d_-]", "_") + ".json");
             PrintWriter writer = new PrintWriter(destination);
 
             writer.print(output);
@@ -128,6 +128,6 @@ public class SubCommandModelExport extends CommandBase
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList()) : Collections.<String> emptyList();
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, EntityList.getEntityNameList()) : Collections.<String>emptyList();
     }
 }

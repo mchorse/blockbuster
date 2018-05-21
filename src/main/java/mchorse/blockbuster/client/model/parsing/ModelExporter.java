@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.model_editor.ModelUtils;
 import net.minecraft.client.model.ModelBase;
@@ -36,6 +33,7 @@ public class ModelExporter
 {
     private EntityLivingBase entity;
     private RenderLivingBase<EntityLivingBase> render;
+    private int limbId;
 
     public ModelExporter(EntityLivingBase entity, RenderLivingBase<EntityLivingBase> render)
     {
@@ -60,6 +58,7 @@ public class ModelExporter
     {
         Model data = new Model();
 
+        this.limbId = 0;
         this.render.doRender(this.entity, 0, -420, 0, 0, 0);
         ModelBase model = this.getModel();
 
@@ -85,6 +84,7 @@ public class ModelExporter
     /**
      * Tries to set default texture
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void setDefaultTexture(Model data)
     {
         Class<?> clazz = Render.class;
@@ -111,19 +111,6 @@ public class ModelExporter
                 break;
             }
         }
-    }
-
-    /**
-     * Create GSON instance
-     */
-    private Gson createGson()
-    {
-        GsonBuilder builder = new GsonBuilder();
-
-        builder.setPrettyPrinting();
-        builder.serializeSpecialFloatingPointValues();
-
-        return builder.create();
     }
 
     /**
@@ -179,7 +166,7 @@ public class ModelExporter
             }
             else
             {
-                x = y = z = 0;
+                y *= -1;
             }
 
             transform.rotate = new float[] {rx, ry, rz};
@@ -206,42 +193,13 @@ public class ModelExporter
     private Map<String, ModelRenderer> generateLimbs(Model data, ModelBase model)
     {
         Map<String, ModelRenderer> limbs = new HashMap<String, ModelRenderer>();
-        int i = 0;
 
         int width = 0;
         int height = 0;
 
         for (ModelRenderer renderer : this.getModelRenderers(model))
         {
-            int j = 0;
-            String firstName = "";
-
-            for (ModelBox box : renderer.cubeList)
-            {
-                Model.Limb limb = new Model.Limb();
-                String boxName = box.boxName != null ? box.boxName : "";
-                String name = boxName.isEmpty() ? "limb_" + i : boxName;
-
-                if (j == 0)
-                {
-                    limb.mirror = renderer.mirror;
-                    firstName = name;
-                }
-                else
-                {
-                    limb.parent = firstName;
-                }
-
-                limb.size = this.getModelSize(box);
-                limb.texture = this.getModelOffset(box, renderer, model);
-                limb.anchor = this.getAnchor(box, limb.size);
-
-                data.limbs.put(name, limb);
-                limbs.put(name, renderer);
-
-                j++;
-                i++;
-            }
+            this.generateLimbs(limbs, renderer, data, model, "");
 
             width = Math.max(width, (int) renderer.textureWidth);
             height = Math.max(height, (int) renderer.textureHeight);
@@ -268,6 +226,53 @@ public class ModelExporter
         }
 
         return limbs;
+    }
+
+    /**
+     * Recursive method for generating limbs 
+     */
+    private void generateLimbs(Map<String, ModelRenderer> limbs, ModelRenderer renderer, Model data, ModelBase model, String parentName)
+    {
+        int j = 0;
+        String firstName = "";
+
+        for (ModelBox box : renderer.cubeList)
+        {
+            Model.Limb limb = new Model.Limb();
+            String boxName = box.boxName != null ? box.boxName : "";
+            String name = boxName.isEmpty() ? "limb_" + this.limbId : boxName;
+
+            if (j == 0)
+            {
+                limb.mirror = renderer.mirror;
+                limb.parent = parentName;
+                firstName = name;
+                limbs.put(name, renderer);
+            }
+            else
+            {
+                limb.parent = firstName;
+            }
+
+            limb.size = this.getModelSize(box);
+            limb.texture = this.getModelOffset(box, renderer, model);
+            limb.anchor = this.getAnchor(box, limb.size);
+
+            data.limbs.put(name, limb);
+
+            this.limbId++;
+            j++;
+        }
+
+        if (renderer.childModels == null)
+        {
+            return;
+        }
+
+        for (ModelRenderer child : renderer.childModels)
+        {
+            this.generateLimbs(limbs, child, data, model, firstName);
+        }
     }
 
     /**
@@ -393,7 +398,30 @@ public class ModelExporter
             }
         }
 
-        return renderers;
+        /* Eliminate any children model renderers */
+        List<ModelRenderer> roots = new ArrayList<ModelRenderer>();
+
+        for (ModelRenderer child : renderers)
+        {
+            boolean isChild = false;
+
+            for (ModelRenderer parent : renderers)
+            {
+                if (parent.childModels != null && parent.childModels.contains(child))
+                {
+                    isChild = true;
+
+                    break;
+                }
+            }
+
+            if (!isChild)
+            {
+                roots.add(child);
+            }
+        }
+
+        return roots;
     }
 
     /**

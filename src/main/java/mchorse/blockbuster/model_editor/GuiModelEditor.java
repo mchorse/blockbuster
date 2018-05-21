@@ -42,7 +42,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -78,7 +77,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
     /**
      * Dummy entity for rendering
      */
-    public EntityLivingBase dummy;
+    public DummyEntity dummy;
 
     /**
      * Compiled data model which we are currently editing
@@ -476,6 +475,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         else if (button.id == 9)
         {
             this.items = !this.items;
+            this.dummy.toggleItems(this.items);
         }
         else if (button.id == 10)
         {
