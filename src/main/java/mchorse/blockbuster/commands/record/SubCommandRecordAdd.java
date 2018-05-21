@@ -48,7 +48,7 @@ public class SubCommandRecordAdd extends SubCommandRecordBase
 
         if (tick < 0 || tick >= record.actions.size())
         {
-            throw new CommandException("record.tick_out_range", tick);
+            throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
         }
 
         if (!Action.TYPES.containsKey(args[2]))

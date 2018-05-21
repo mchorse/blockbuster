@@ -6,6 +6,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -23,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class SubCommandRecordClean extends SubCommandRecordBase
 {
-    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "pitch");
+    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch");
 
     @Override
     public int getRequiredArgs()
@@ -75,6 +76,9 @@ public class SubCommandRecordClean extends SubCommandRecordBase
             this.set(property, record.frames.get(i), original);
         }
 
+        record.dirty = true;
+
+        Utils.unloadRecord(record);
         L10n.success(sender, "record.clean", filename, property, start, end);
     }
 
@@ -86,19 +90,23 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         }
         else if (property.equals("y"))
         {
-            return (float) frame.x;
+            return (float) frame.y;
         }
         else if (property.equals("z"))
         {
-            return (float) frame.x;
+            return (float) frame.z;
         }
         else if (property.equals("yaw"))
         {
-            return (float) frame.x;
+            return (float) frame.yaw;
+        }
+        else if (property.equals("yaw_head"))
+        {
+            return (float) frame.yawHead;
         }
         else if (property.equals("pitch"))
         {
-            return (float) frame.x;
+            return (float) frame.pitch;
         }
 
         return 0;
@@ -121,6 +129,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("yaw"))
         {
             frame.yaw = value;
+        }
+        else if (property.equals("yaw_head"))
+        {
+            frame.yawHead = value;
         }
         else if (property.equals("pitch"))
         {

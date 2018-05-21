@@ -7,6 +7,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 /**
@@ -44,17 +45,12 @@ public class SubCommandRecordTP extends SubCommandRecordBase
 
         if (tick < 0 || tick >= record.actions.size())
         {
-            throw new CommandException("record.tick_out_range", tick);
+            throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
         }
 
         EntityPlayer player = getCommandSenderAsPlayer(sender);
         Frame frame = record.frames.get(tick);
 
-        player.setPositionAndRotation(frame.x, frame.x, frame.x, frame.yaw, frame.pitch);
-
-        if (player.isCreative())
-        {
-            player.capabilities.isFlying = true;
-        }
+        ((EntityPlayerMP) player).connection.setPlayerLocation(frame.x, frame.y, frame.z, frame.yaw, frame.pitch);
     }
 }
