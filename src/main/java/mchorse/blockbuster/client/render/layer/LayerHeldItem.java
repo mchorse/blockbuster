@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.render.layer;
 
+import java.util.Stack;
+
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
@@ -28,13 +30,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 {
     protected final RenderLivingBase<?> livingEntityRenderer;
 
-    private float limbSwing;
-    private float limbSwingAmount;
-    private float partialTicks;
-    private float ageInTicks;
-    private float netHeadYaw;
-    private float headPitch;
-    private float scale;
+    private Stack<HeldModel> models = new Stack<HeldModel>();
 
     public LayerHeldItem(RenderLivingBase<?> livingEntityRendererIn)
     {
@@ -49,18 +45,19 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
         if (!itemstack.isEmpty() || !itemstack1.isEmpty())
         {
-            this.limbSwing = limbSwing;
-            this.limbSwingAmount = limbSwingAmount;
-            this.partialTicks = partialTicks;
-            this.ageInTicks = ageInTicks;
-            this.netHeadYaw = netHeadYaw;
-            this.headPitch = headPitch;
-            this.scale = scale;
+            HeldModel model = new HeldModel(((ModelCustom) this.livingEntityRenderer.getMainModel()));
 
-            GlStateManager.pushMatrix();
+            model.limbSwing = limbSwing;
+            model.limbSwingAmount = limbSwingAmount;
+            model.ageInTicks = ageInTicks;
+            model.netHeadYaw = netHeadYaw;
+            model.headPitch = headPitch;
+            model.scale = scale;
+
+            this.models.push(model);
             this.renderHeldItem(entity, itemstack1, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
             this.renderHeldItem(entity, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
-            GlStateManager.popMatrix();
+            this.models.pop();
         }
     }
 
@@ -73,19 +70,21 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     {
         if (!item.isEmpty())
         {
-            ModelCustom model = ((ModelCustom) this.livingEntityRenderer.getMainModel());
+            HeldModel model = this.models.pop();
 
-            for (ModelCustomRenderer arm : model.getRenderForArm(handSide))
+            for (ModelCustomRenderer arm : model.model.getRenderForArm(handSide))
             {
                 boolean flag = handSide == EnumHandSide.LEFT;
 
-                model.setRotationAngles(this.limbSwing, this.limbSwingAmount, this.ageInTicks, this.netHeadYaw, this.headPitch, this.scale, entity);
+                model.model.setRotationAngles(model.limbSwing, model.limbSwingAmount, model.ageInTicks, model.netHeadYaw, model.headPitch, model.scale, entity);
                 GlStateManager.pushMatrix();
                 this.applyTransform(arm);
 
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
                 GlStateManager.popMatrix();
             }
+
+            this.models.push(model);
         }
     }
 
@@ -120,5 +119,21 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     public boolean shouldCombineTextures()
     {
         return false;
+    }
+
+    public static class HeldModel
+    {
+        public float limbSwing;
+        public float limbSwingAmount;
+        public float ageInTicks;
+        public float netHeadYaw;
+        public float headPitch;
+        public float scale;
+        public ModelCustom model;
+
+        public HeldModel(ModelCustom model)
+        {
+            this.model = model;
+        }
     }
 }
