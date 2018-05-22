@@ -252,6 +252,7 @@ public class Model
         public boolean mirror;
         public boolean lighting = true;
         public boolean shading = true;
+        public boolean is3D = false;
 
         /* Game play */
         public String holding = "";
@@ -282,6 +283,7 @@ public class Model
             b.mirror = this.mirror;
             b.lighting = this.lighting;
             b.shading = this.shading;
+            b.is3D = this.is3D;
 
             b.holding = this.holding;
             b.swiping = this.swiping;

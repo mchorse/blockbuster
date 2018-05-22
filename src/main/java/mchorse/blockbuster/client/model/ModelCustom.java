@@ -22,13 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * been loaded from config folder or from server and also render a custom model
  * itself.
  */
-/**
- * Custom Model class
- *
- * This class is responsible for managing available custom models that have
- * been loaded from config folder or from server and also render a custom model
- * itself.
- */
 @SideOnly(Side.CLIENT)
 public class ModelCustom extends ModelBiped
 {
