@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.Map;
 
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -58,9 +59,19 @@ public class SubCommandModelClear extends CommandBase
                 {
                     TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
 
+                    if (!prefix.isEmpty())
+                    {
+                        ModelExtrudedLayer.clearByTexture(key);
+                    }
+
                     it.remove();
                 }
             }
+        }
+
+        if (prefix.isEmpty())
+        {
+            ModelExtrudedLayer.clear();
         }
     }
 

@@ -125,6 +125,7 @@ public class CustomMorph extends AbstractMorph
 
                 if (texture != null)
                 {
+                    RenderCustomModel.lastTexture = texture;
                     Minecraft.getMinecraft().renderEngine.bindTexture(texture);
                 }
 
