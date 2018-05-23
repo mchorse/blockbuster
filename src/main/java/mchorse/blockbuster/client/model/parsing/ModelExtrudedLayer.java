@@ -13,10 +13,10 @@ import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -282,7 +282,7 @@ public class ModelExtrudedLayer
      */
     private static void generateGeometry(Chunk chunk, ModelCustomRenderer renderer)
     {
-        VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
         int w = renderer.limb.size[0];
         int h = renderer.limb.size[1];

@@ -352,8 +352,8 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.shading.x = x;
             this.shading.y = y;
             y += 15;
-            this.is3D.xPosition = x;
-            this.is3D.yPosition = y;
+            this.is3D.x = x;
+            this.is3D.y = y;
             y += 15;
             this.texture.update(x, y, width);
             y += 20;
