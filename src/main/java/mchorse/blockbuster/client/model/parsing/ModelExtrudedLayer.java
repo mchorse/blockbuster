@@ -172,7 +172,7 @@ public class ModelExtrudedLayer
         }
 
         x = (offsetX + d * 2 + w) * stepX;
-        y = (offsetY + d * stepY) * stepY;
+        y = (offsetY + d) * stepY;
 
         for (int i = 0; i < w; i++)
         {
