@@ -46,6 +46,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private static final int OPACITY = 7;
     private static final int LIGHTING = 18;
     private static final int SHADING = 19;
+    private static final int IS3D = 20;
 
     /* Gameplay properties */
     private static final int LOOKING = 8;
@@ -104,6 +105,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
     private GuiTextField opacity;
     private GuiCheckBox lighting;
     private GuiCheckBox shading;
+    private GuiCheckBox is3D;
 
     /* Gameplay features */
     private GuiCheckBox looking;
@@ -154,6 +156,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.opacity.setGuiResponder(this);
         this.lighting = new GuiCheckBox(LIGHTING, 0, 0, I18n.format("blockbuster.gui.me.lighting"), false);
         this.shading = new GuiCheckBox(SHADING, 0, 0, I18n.format("blockbuster.gui.me.shading"), false);
+        this.is3D = new GuiCheckBox(IS3D, 0, 0, I18n.format("blockbuster.gui.me.is3d"), false);
 
         /* Gameplay */
         this.looking = new GuiCheckBox(LOOKING, 0, 0, I18n.format("blockbuster.gui.me.looking"), false);
@@ -257,6 +260,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.opacity.setText(String.valueOf(limb.opacity));
         this.lighting.setIsChecked(limb.lighting);
         this.shading.setIsChecked(limb.shading);
+        this.is3D.setIsChecked(limb.is3D);
 
         /* Gameplay */
         this.looking.setIsChecked(limb.looking);
@@ -348,6 +352,9 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.shading.x = x;
             this.shading.y = y;
             y += 15;
+            this.is3D.xPosition = x;
+            this.is3D.yPosition = y;
+            y += 15;
             this.texture.update(x, y, width);
             y += 20;
             this.size.update(x, y, width);
@@ -364,6 +371,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             this.buttons.add(this.mirror);
             this.buttons.add(this.lighting);
             this.buttons.add(this.shading);
+            this.buttons.add(this.is3D);
         }
 
         if (this.category == 1 || full)
@@ -639,6 +647,10 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             if (button.id == SHADING)
             {
                 this.limb.shading = this.shading.isChecked();
+            }
+            if (button.id == IS3D)
+            {
+                this.limb.is3D = this.is3D.isChecked();
             }
         }
 

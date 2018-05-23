@@ -4,6 +4,7 @@ import java.io.File;
 
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,6 +44,9 @@ public class ModelClientHandler extends ModelHandler
             {
                 Class<? extends ModelCustom> clazz = (Class<? extends ModelCustom>) Class.forName(mod.model);
 
+                /* GC the old model */
+                ModelExtrudedLayer.clearByModel(ModelCustom.MODELS.get(name));
+
                 /* Parse custom custom model with a custom class */
                 ModelParser.parse(name, mod, clazz, objModel, mtlFile);
 
@@ -65,6 +69,6 @@ public class ModelClientHandler extends ModelHandler
     {
         super.removeModel(key);
 
-        ModelCustom.MODELS.remove(key);
+        ModelExtrudedLayer.clearByModel(ModelCustom.MODELS.remove(key));
     }
 }

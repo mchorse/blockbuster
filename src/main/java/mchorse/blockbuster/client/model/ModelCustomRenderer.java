@@ -3,6 +3,8 @@ package mchorse.blockbuster.client.model;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
+import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -344,6 +346,13 @@ public class ModelCustomRenderer extends ModelRenderer
      */
     protected void renderDisplayList()
     {
-        GL11.glCallList(this.displayList);
+        if (this.limb.is3D)
+        {
+            ModelExtrudedLayer.render3DLayer(this, RenderCustomModel.lastTexture);
+        }
+        else
+        {
+            GL11.glCallList(this.displayList);
+        }
     }
 }
