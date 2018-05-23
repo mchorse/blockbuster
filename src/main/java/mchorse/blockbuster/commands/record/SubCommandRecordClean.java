@@ -59,17 +59,22 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         int start = 0;
         int end = record.getLength();
 
-        if (args.length >= 3)
-        {
-            start = CommandBase.parseInt(args[2], start, end);
-        }
-
         if (args.length >= 4)
         {
-            end = CommandBase.parseInt(args[3], start, end);
+            start = CommandBase.parseInt(args[3], start, end);
+        }
+
+        if (args.length >= 5)
+        {
+            end = CommandBase.parseInt(args[4], start, end);
         }
 
         float original = this.get(property, record.frames.get(start));
+
+        if (args.length >= 3)
+        {
+            original = (float) CommandBase.parseDouble(original, args[2], false);
+        }
 
         for (int i = start; i < end; i++)
         {
