@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.model.parsing;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -9,6 +10,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
@@ -33,7 +35,12 @@ public class ModelExtrudedLayer
     /**
      * Storage for extruded layers 
      */
-    private static Map<ModelCustomRenderer, Map<ResourceLocation, Integer>> layers = new HashMap<>();
+    protected static Map<ModelCustomRenderer, Map<ResourceLocation, Integer>> layers = new HashMap<>();
+
+    /**
+     * Cached textures 
+     */
+    protected static Map<ResourceLocation, CachedImage> images = new HashMap<>();
 
     /**
      * Render the extruded 3D layer. If extruded layer wasn't generated 
@@ -67,7 +74,32 @@ public class ModelExtrudedLayer
 
         if (id != -1)
         {
+            // GlStateManager.disableTexture2D();
+            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+
             GL11.glCallList(id);
+
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            GlStateManager.enableTexture2D();
+        }
+
+        /* Clean up cache */
+        if (!images.isEmpty())
+        {
+            Iterator<CachedImage> it = images.values().iterator();
+
+            while (it.hasNext())
+            {
+                CachedImage image = it.next();
+
+                if (image.timer <= 0)
+                {
+                    image.image.flush();
+                    it.remove();
+                }
+
+                image.timer -= 1;
+            }
         }
     }
 
@@ -81,14 +113,19 @@ public class ModelExtrudedLayer
 
         try
         {
-            BufferedImage image = ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
+            CachedImage image = images.get(texture);
+
+            if (image == null)
+            {
+                image = new CachedImage(ImageIO.read(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
+                images.put(texture, image);
+            }
 
             Limb limb = renderer.limb;
             Chunk chunk = new Chunk(limb.size[0], limb.size[1], limb.size[2]);
 
-            fillChunk(chunk, image, renderer);
+            fillChunk(chunk, image.image, renderer);
             id = generateDisplayList(chunk, renderer);
-            image.flush();
         }
         catch (Exception e)
         {
@@ -110,7 +147,7 @@ public class ModelExtrudedLayer
      */
     private static void fillChunk(Chunk chunk, BufferedImage image, ModelCustomRenderer renderer)
     {
-        final int threshold = 0xff;
+        final int threshold = 0x80;
 
         int stepX = (int) (image.getWidth() / renderer.textureWidth);
         int stepY = (int) (image.getHeight() / renderer.textureHeight);
@@ -240,6 +277,8 @@ public class ModelExtrudedLayer
      * compile the geometry.
      * 
      * TODO: Add support for byte flag voxels, i.e. multiside
+     * TODO: Fix UV mapping on non primary sides to match the edges (for
+     * high-res textures, primarily)
      */
     private static void generateGeometry(Chunk chunk, ModelCustomRenderer renderer)
     {
@@ -296,7 +335,7 @@ public class ModelExtrudedLayer
                     /* Back */
                     else if (block == 4)
                     {
-                        offX = offsetX + d * 2 + w + x;
+                        offX = offsetX + d * 2 + w * 2 - x - 1;
                         offY = offsetY + d + h - y - 1;
                     }
                     /* Left */
@@ -331,35 +370,35 @@ public class ModelExtrudedLayer
                     /* Front & back */
                     if (!chunk.hasBlock(x, y, z + 1))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(0, 0, -1).endVertex();
                     }
 
                     if (!chunk.hasBlock(x, y, z - 1))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offMY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offMY).normal(0, 0, 1).endVertex();
                     }
 
                     /* Left & Right */
                     if (!chunk.hasBlock(x + 1, y, z))
                     {
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(x - 1, y, z))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
                     }
                 }
             }
@@ -373,6 +412,14 @@ public class ModelExtrudedLayer
      */
     public static void clear()
     {
+        for (Map<ResourceLocation, Integer> map : layers.values())
+        {
+            for (Integer i : map.values())
+            {
+                GL11.glDeleteLists(i.intValue(), 1);
+            }
+        }
+
         layers.clear();
     }
 
@@ -385,9 +432,48 @@ public class ModelExtrudedLayer
         {
             if (map.containsKey(texture))
             {
-                GL11.glDeleteLists(map.get(texture).intValue(), 1);
-                map.remove(texture);
+                GL11.glDeleteLists(map.remove(texture).intValue(), 1);
             }
+        }
+    }
+
+    /**
+     * Clean up layers by model
+     */
+    public static void clearByModel(ModelCustom model)
+    {
+        if (model == null)
+        {
+            return;
+        }
+
+        for (ModelCustomRenderer renderer : model.limbs)
+        {
+            if (!renderer.limb.is3D)
+            {
+                continue;
+            }
+
+            Map<ResourceLocation, Integer> map = layers.remove(renderer);
+
+            for (Integer i : map.values())
+            {
+                GL11.glDeleteLists(i.intValue(), 1);
+            }
+        }
+    }
+
+    /**
+     * Cached image class
+     */
+    public static class CachedImage
+    {
+        public BufferedImage image;
+        public int timer = 10;
+
+        public CachedImage(BufferedImage image)
+        {
+            this.image = image;
         }
     }
 

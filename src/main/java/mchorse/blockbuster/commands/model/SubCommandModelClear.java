@@ -59,6 +59,11 @@ public class SubCommandModelClear extends CommandBase
                 {
                     TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
 
+                    if (!prefix.isEmpty())
+                    {
+                        ModelExtrudedLayer.clearByTexture(key);
+                    }
+
                     it.remove();
                 }
             }
