@@ -25,7 +25,6 @@ import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
-import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.common.director.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.director.PacketDirectorEdit;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
@@ -49,8 +48,6 @@ import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorAdd;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDetach;
-import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDetach;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDuplicate;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
@@ -159,7 +156,6 @@ public class Dispatcher
         register(PacketDirectorDuplicate.class, ServerHandlerDirectorDuplicate.class, Side.SERVER);
         register(PacketDirectorEdit.class, ServerHandlerDirectorEdit.class, Side.SERVER);
         register(PacketDirectorRemove.class, ServerHandlerDirectorRemove.class, Side.SERVER);
-        register(PacketDirectorDetach.class, ServerHandlerDirectorDetach.class, Side.SERVER);
 
         register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
         register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);

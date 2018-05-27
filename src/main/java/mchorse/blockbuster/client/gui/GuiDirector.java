@@ -13,7 +13,6 @@ import mchorse.blockbuster.model_editor.modal.GuiModal;
 import mchorse.blockbuster.model_editor.modal.IModalCallback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorAdd;
-import mchorse.blockbuster.network.common.director.PacketDirectorDetach;
 import mchorse.blockbuster.network.common.director.PacketDirectorDuplicate;
 import mchorse.blockbuster.network.common.director.PacketDirectorRemove;
 import mchorse.blockbuster.network.common.director.PacketDirectorReset;
@@ -274,10 +273,5 @@ public class GuiDirector extends GuiScreen implements IModalCallback
     public void duplicate(int index)
     {
         Dispatcher.sendToServer(new PacketDirectorDuplicate(this.pos, index));
-    }
-
-    public void detach(int index)
-    {
-        Dispatcher.sendToServer(new PacketDirectorDetach(this.pos, index));
     }
 }
