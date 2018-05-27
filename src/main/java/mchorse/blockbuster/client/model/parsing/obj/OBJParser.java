@@ -147,7 +147,8 @@ public class OBJParser
             String[] tokens = line.split("\\s+");
             String first = tokens[0];
 
-            if (first.equals("o"))
+            /* Blender uses "o" for objects, while C4D uses "g" */
+            if (first.equals("o") || first.equals("g"))
             {
                 mesh = new OBJDataMesh();
                 mesh.name = tokens[1];
