@@ -1,20 +1,35 @@
 package mchorse.blockbuster.client.model;
 
+import java.awt.image.BufferedImage;
+import java.io.Closeable;
+import java.nio.ByteBuffer;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL14;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser.Mesh;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.commands.model.SubCommandModelClear;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Like {@link ModelCustomRenderer}, this model renders 
@@ -66,12 +81,30 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                 if (material != null && material.useTexture && material.texture != null)
                 {
-                    Minecraft.getMinecraft().renderEngine.bindTexture(material.texture);
+                    TextureManager manager = Minecraft.getMinecraft().renderEngine;
+                    ITextureObject texture = manager.getTexture(material.texture);
+                    boolean loaded = false;
 
-                    int mod = material.linear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
+                    if (texture != null)
+                    {
+                        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+                        GlStateManager.deleteTexture(map.remove(material.texture).getGlTextureId());
+
+                        /* Load texture manually */
+                        texture = new SimpleTexture(material.texture);
+                        this.createTexture(texture, material.texture);
+                        loaded = true;
+
+                        map.put(material.texture, texture);
+                    }
+
+                    manager.bindTexture(material.texture);
+
+                    int mod = material.linear ? (loaded ? GL11.GL_LINEAR_MIPMAP_LINEAR : GL11.GL_LINEAR) : GL11.GL_NEAREST;
+                    int mag = material.linear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
                     GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, mod);
-                    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mod);
+                    GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mag);
                 }
 
                 int id = GLAllocation.generateDisplayLists(1);
@@ -122,6 +155,63 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     }
 
     /**
+     * This method is responsible for manually creating a texture with 
+     * mipmap levels
+     */
+    private void createTexture(ITextureObject texture, ResourceLocation location)
+    {
+        IResource resource = null;
+
+        try
+        {
+            resource = Minecraft.getMinecraft().getResourceManager().getResource(location);
+            BufferedImage image = TextureUtil.readBufferedImage(resource.getInputStream());
+
+            int id = texture.getGlTextureId();
+            int w = image.getWidth();
+            int h = image.getHeight();
+
+            GlStateManager.bindTexture(id);
+            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 3);
+            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MIN_LOD, 0);
+            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LOD, 3);
+            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0.0F);
+            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+
+            ByteBuffer buffer = GLAllocation.createDirectByteBuffer(w * h * 4);
+            int[] pixels = new int[w * h];
+
+            image.getRGB(0, 0, w, h, pixels, 0, w);
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int pixel = pixels[y * w + x];
+
+                    buffer.put((byte) ((pixel >> 16) & 0xFF));
+                    buffer.put((byte) ((pixel >> 8) & 0xFF));
+                    buffer.put((byte) (pixel & 0xFF));
+                    buffer.put((byte) ((pixel >> 24) & 0xFF));
+                }
+            }
+
+            buffer.flip();
+
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+        }
+        catch (Exception e)
+        {
+            System.err.println("There was an error loading texture '" + location + "' manually!");
+            e.printStackTrace();
+        }
+        finally
+        {
+            IOUtils.closeQuietly((Closeable) resource);
+        }
+    }
+
+    /**
      * Instead of rendering one default display list, this method 
      * renders the meshes  
      */
@@ -132,6 +222,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         {
             boolean hasColor = list.material != null && !list.material.useTexture;
             boolean hasTexture = list.material != null && list.material.useTexture;
+
+            GlStateManager.enableBlend();
 
             if (hasColor)
             {
@@ -154,6 +246,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             {
                 GlStateManager.enableTexture2D();
             }
+
+            GlStateManager.disableBlend();
         }
     }
 

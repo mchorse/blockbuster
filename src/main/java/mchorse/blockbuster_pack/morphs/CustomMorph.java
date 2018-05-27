@@ -75,6 +75,11 @@ public class CustomMorph extends AbstractMorph
     {
         String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
 
+        if (target instanceof EntityActor)
+        {
+            poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
+        }
+
         return model.getPose(poseName);
     }
 
@@ -216,14 +221,7 @@ public class CustomMorph extends AbstractMorph
      */
     public void updateSize(EntityLivingBase target, IMorphing cap)
     {
-        String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
-
-        if (target instanceof EntityActor)
-        {
-            poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
-        }
-
-        this.pose = this.model.getPose(poseName);
+        this.pose = this.getPose(target);
 
         if (this.pose != null)
         {
