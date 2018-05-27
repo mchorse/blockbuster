@@ -10,7 +10,6 @@ blockbuster.gui:
     add: Add
     edit: Edit
     remove: Remove
-    detach: Detach
     record: Record
     pick: Pick morph...
     duplicate: Duplicate
