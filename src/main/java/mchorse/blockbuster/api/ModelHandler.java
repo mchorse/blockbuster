@@ -68,6 +68,11 @@ public class ModelHandler
 
                     data.name = model;
 
+                    if (entry.mtlFile == null)
+                    {
+                        data.providesMtl = false;
+                    }
+
                     this.addModel(model, new ModelCell(data, timestamp));
                     modelStream.close();
                 }
