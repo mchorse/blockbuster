@@ -57,7 +57,6 @@ public class GuiReplay extends GuiScreen
     private GuiMorphsPopup morphs;
 
     /* Buttons */
-    private GuiButton detach;
     private GuiButton remove;
     private GuiButton record;
     private GuiButton pick;
@@ -114,11 +113,6 @@ public class GuiReplay extends GuiScreen
         if (button.id == 2)
         {
             this.parent.remove(this.index);
-        }
-        else if (button.id == 3)
-        {
-            this.replay.actor = null;
-            this.parent.detach(this.index);
         }
         else if (button.id == 4)
         {
@@ -280,7 +274,6 @@ public class GuiReplay extends GuiScreen
         this.filename = new GuiTextField(-1, this.fontRenderer, x + 1, y2 - 19, w - 2, 18);
 
         /* Buttons */
-        this.detach = new GuiButton(3, this.width - margin - 80, margin, 80, 20, I18n.format("blockbuster.gui.detach"));
         this.remove = new GuiButton(2, this.width - margin - 80, margin + 25, 80, 20, I18n.format("blockbuster.gui.remove"));
         this.pick = new GuiButton(6, x, margin + 25, 80, 20, I18n.format("blockbuster.gui.pick"));
         this.duplicate = new GuiButton(7, x, margin + 50, 80, 20, I18n.format("blockbuster.gui.duplicate"));
@@ -290,7 +283,6 @@ public class GuiReplay extends GuiScreen
         this.fillData();
 
         this.buttonList.add(this.remove);
-        this.buttonList.add(this.detach);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.duplicate);
         this.buttonList.add(this.record);
