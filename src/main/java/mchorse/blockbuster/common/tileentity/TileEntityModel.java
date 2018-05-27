@@ -87,6 +87,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public void createEntity()
     {
         this.entity = new EntityActor(Minecraft.getMinecraft().theWorld);
+        this.entity.onGround = true;
         this.updateEntity();
     }
 

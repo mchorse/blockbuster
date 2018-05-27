@@ -68,7 +68,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 {
                     Minecraft.getMinecraft().renderEngine.bindTexture(material.texture);
 
-                    int mod = material.linear ? GL11.GL_LINEAR_MIPMAP_LINEAR : GL11.GL_NEAREST;
+                    int mod = material.linear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
                     GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, mod);
                     GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mod);
