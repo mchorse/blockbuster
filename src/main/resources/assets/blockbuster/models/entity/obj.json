@@ -6,7 +6,7 @@
     "providesMtl": true,
     "poses": {
         "standing": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.8, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 0, 0 ]
@@ -14,7 +14,7 @@
             }
         },
         "riding": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.8, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 0, 0 ]
@@ -22,7 +22,7 @@
             }
         },
         "sneaking": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.8, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 0, 0 ]
@@ -30,7 +30,7 @@
             }
         },
         "sleeping": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.8, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 0, 0 ]
@@ -38,7 +38,7 @@
             }
         },
         "flying": {
-            "size": [ 1, 1, 1 ],
+            "size": [ 0.6, 0.8, 0.6 ],
             "limbs": {
                 "body": {
                     "translate": [ 0, 0, 0 ]
