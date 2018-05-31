@@ -46,4 +46,10 @@ public class GuiDashboard extends GuiBase
     {
         return false;
     }
+
+    public void openPanel(GuiElement element)
+    {
+        this.panel.delegate = element;
+        this.panel.resize(this.width, this.height);
+    }
 }

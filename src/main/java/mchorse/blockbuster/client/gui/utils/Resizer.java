@@ -56,14 +56,18 @@ public class Resizer
     {
         int value = (int) this.x.value;
 
-        if (this.parent != null && this.x.unit == UnitMeasurement.PERCENTAGE)
-        {
-            value = (int) (this.parent.w * this.x.value);
-        }
-
         if (this.relative != null)
         {
             value += this.relative.getX();
+        }
+        else if (this.parent != null)
+        {
+            value += this.parent.x;
+
+            if (this.x.unit == UnitMeasurement.PERCENTAGE)
+            {
+                value = (int) (this.parent.w * this.x.value);
+            }
         }
 
         return value + this.x.padding;
@@ -73,14 +77,18 @@ public class Resizer
     {
         int value = (int) this.y.value;
 
-        if (this.parent != null && this.y.unit == UnitMeasurement.PERCENTAGE)
-        {
-            value = (int) (this.parent.h * this.y.value);
-        }
-
         if (this.relative != null)
         {
             value += this.relative.getY();
+        }
+        else if (this.parent != null)
+        {
+            value += this.parent.y;
+
+            if (this.x.unit == UnitMeasurement.PERCENTAGE)
+            {
+                value = (int) (this.parent.h * this.y.value);
+            }
         }
 
         return value + this.y.padding;
@@ -92,10 +100,10 @@ public class Resizer
 
         if (this.parent != null && this.w.unit == UnitMeasurement.PERCENTAGE)
         {
-            value = (int) (this.parent.w * this.w.value) + this.w.padding;
+            value = (int) (this.parent.w * this.w.value);
         }
 
-        return value;
+        return value + this.w.padding;
     }
 
     public int getH()
@@ -104,10 +112,10 @@ public class Resizer
 
         if (this.parent != null && this.h.unit == UnitMeasurement.PERCENTAGE)
         {
-            value = (int) (this.parent.h * this.h.value) + this.h.padding;
+            value = (int) (this.parent.h * this.h.value);
         }
 
-        return value;
+        return value + this.h.padding;
     }
 
     /**

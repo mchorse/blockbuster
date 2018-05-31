@@ -47,20 +47,17 @@ public class GuiDashboardSidebar extends GuiElement
     {
         if (this.mainArea.isInside(mouseX, mouseY))
         {
-            this.dashboard.panel.delegate = this.dashboard.mainPanel;
-            this.dashboard.panel.resize(this.dashboard.width, this.dashboard.height);
+            this.dashboard.openPanel(this.dashboard.mainPanel);
         }
 
         if (this.directorArea.isInside(mouseX, mouseY))
         {
-            this.dashboard.panel.delegate = this.dashboard.directorPanel;
-            this.dashboard.panel.resize(this.dashboard.width, this.dashboard.height);
+            this.dashboard.openPanel(this.dashboard.directorPanel);
         }
 
         if (this.modelArea.isInside(mouseX, mouseY))
         {
-            this.dashboard.panel.delegate = this.dashboard.modelPanel;
-            this.dashboard.panel.resize(this.dashboard.width, this.dashboard.height);
+            this.dashboard.openPanel(this.dashboard.modelPanel);
         }
     }
 

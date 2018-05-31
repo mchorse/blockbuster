@@ -39,9 +39,11 @@ public abstract class GuiElement extends Gui implements IGuiElement
         this.font = mc.fontRendererObj;
     }
 
-    public void setArea(int x, int y, int w, int h)
+    public GuiElement setResizer(Resizer resizer)
     {
-        this.area.set(x, y, w, h);
+        this.resizer = resizer;
+
+        return this;
     }
 
     @Override
