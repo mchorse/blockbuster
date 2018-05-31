@@ -45,6 +45,7 @@ public class GuiButtonElement extends GuiElement
     {
         if (this.button.mousePressed(this.mc, mouseX, mouseY) && this.callback != null)
         {
+            this.button.playPressSound(this.mc.getSoundHandler());
             this.callback.accept(this);
         }
     }

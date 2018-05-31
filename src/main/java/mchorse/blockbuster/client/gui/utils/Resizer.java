@@ -66,7 +66,7 @@ public class Resizer
 
             if (this.x.unit == UnitMeasurement.PERCENTAGE)
             {
-                value = (int) (this.parent.w * this.x.value);
+                value = this.parent.x + (int) (this.parent.w * this.x.value);
             }
         }
 
@@ -85,9 +85,9 @@ public class Resizer
         {
             value += this.parent.y;
 
-            if (this.x.unit == UnitMeasurement.PERCENTAGE)
+            if (this.y.unit == UnitMeasurement.PERCENTAGE)
             {
-                value = (int) (this.parent.h * this.y.value);
+                value = this.parent.y + (int) (this.parent.h * this.y.value);
             }
         }
 
