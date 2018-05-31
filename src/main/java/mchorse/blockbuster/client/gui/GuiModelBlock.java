@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
+import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad.ITrackpadListener;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
@@ -14,7 +15,6 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
-import mchorse.blockbuster.utils.Area;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;

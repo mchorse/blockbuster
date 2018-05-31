@@ -12,6 +12,11 @@ public interface IGuiElement
     public void resize(int width, int height);
 
     /**
+     * Whether this element is enabled (and can accept any input) 
+     */
+    public boolean isEnabled();
+
+    /**
      * Mouse was clicked
      */
     public void mouseClicked(int mouseX, int mouseY, int mouseButton);

@@ -1,18 +1,20 @@
 package mchorse.blockbuster.client.gui.framework;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Delegated {@link GuiElement}
+ * Delegated {@link IGuiElement}
  */
 @SideOnly(Side.CLIENT)
 public class GuiDelegateElement extends GuiElement
 {
     public GuiElement delegate;
 
-    public GuiDelegateElement(GuiElement element)
+    public GuiDelegateElement(Minecraft mc, GuiElement element)
     {
+        super(mc);
         this.delegate = element;
     }
 
@@ -21,6 +23,7 @@ public class GuiDelegateElement extends GuiElement
     {
         if (this.delegate != null)
         {
+            this.delegate.resizer = this.resizer;
             this.delegate.resize(width, height);
         }
     }

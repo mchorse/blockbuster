@@ -1,9 +1,10 @@
 package mchorse.blockbuster.client.gui.framework;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
+import mchorse.blockbuster.client.gui.utils.Area;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,57 +15,51 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBase extends GuiScreen
 {
-    public List<GuiElement> elements = new ArrayList<GuiElement>();
+    public GuiElements elements = new GuiElements();
+    public Area area = new Area();
 
     @Override
     public void initGui()
     {
-        for (GuiElement element : this.elements)
+        this.area.set(0, 0, this.width, this.height);
+        this.elements.resize(this.width, this.height);
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException
+    {
+        super.handleMouseInput();
+
+        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+        int scroll = -Mouse.getEventDWheel();
+
+        if (scroll == 0)
         {
-            element.resize(this.width, this.height);
+            return;
         }
+
+        this.elements.mouseScrolled(x, y, scroll);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        for (GuiElement element : this.elements)
-        {
-            if (element.isEnabled())
-            {
-                element.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-        }
+        this.elements.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        for (GuiElement element : this.elements)
-        {
-            if (element.isEnabled())
-            {
-                element.mouseReleased(mouseX, mouseY, state);
-            }
-        }
+        this.elements.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        boolean anyActive = true;
+        this.elements.keyTyped(typedChar, keyCode);
 
-        for (GuiElement element : this.elements)
-        {
-            if (element.isEnabled())
-            {
-                element.keyTyped(typedChar, keyCode);
-
-                anyActive = anyActive && element.hasActiveTextfields();
-            }
-        }
-
-        if (!anyActive)
+        if (!this.elements.hasActiveTextfields())
         {
             this.keyPressed(typedChar, keyCode);
         }
@@ -82,9 +77,7 @@ public class GuiBase extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        for (GuiElement element : this.elements)
-        {
-            element.draw(mouseX, mouseY, partialTicks);
-        }
+        this.drawDefaultBackground();
+        this.elements.draw(mouseX, mouseY, partialTicks);
     }
 }

@@ -1,4 +1,4 @@
-package mchorse.blockbuster.utils;
+package mchorse.blockbuster.client.gui.utils;
 
 /**
  * Utility class for boxes

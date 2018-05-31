@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.gui;
 
-import mchorse.blockbuster.utils.Area;
+import mchorse.blockbuster.client.gui.utils.Area;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
