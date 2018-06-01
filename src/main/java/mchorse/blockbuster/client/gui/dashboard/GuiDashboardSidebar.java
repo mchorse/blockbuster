@@ -1,64 +1,44 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.GuiInventory;
-import mchorse.blockbuster.client.gui.framework.GuiElement;
-import mchorse.blockbuster.client.gui.utils.Area;
+import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.client.gui.utils.Resizer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiDashboardSidebar extends GuiElement
 {
     public GuiDashboard dashboard;
-    public ItemStack register;
-    public ItemStack director;
-    public ItemStack model;
-
-    public Area mainArea = new Area();
-    public Area directorArea = new Area();
-    public Area modelArea = new Area();
 
     public GuiDashboardSidebar(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc);
 
+        this.createChildren();
         this.dashboard = dashboard;
-        this.register = new ItemStack(Blockbuster.registerItem);
-        this.director = new ItemStack(Blockbuster.directorBlock);
-        this.model = new ItemStack(Blockbuster.modelBlock);
-    }
 
-    @Override
-    public void resize(int width, int height)
-    {
-        super.resize(width, height);
+        GuiElement element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel));
+        Resizer resizer = new Resizer().set(4, 4, 24, 24).setParent(this.area);
+        this.children.add(element.setResizer(resizer));
 
-        this.mainArea.set(this.area.x + 8, this.area.y + 8, 16, 16);
-        this.directorArea.set(this.area.x + 8, this.area.y + 32, 16, 16);
-        this.modelArea.set(this.area.x + 8, this.area.y + 32 + 24, 16, 16);
-    }
+        element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel));
+        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        this.children.add(element.setResizer(resizer));
 
-    @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
-    {
-        if (this.mainArea.isInside(mouseX, mouseY))
-        {
-            this.dashboard.openPanel(this.dashboard.mainPanel);
-        }
+        element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        this.children.add(element.setResizer(resizer));
 
-        if (this.directorArea.isInside(mouseX, mouseY))
-        {
-            this.dashboard.openPanel(this.dashboard.directorPanel);
-        }
+        element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        this.children.add(element.setResizer(resizer));
 
-        if (this.modelArea.isInside(mouseX, mouseY))
-        {
-            this.dashboard.openPanel(this.dashboard.modelPanel);
-        }
+        element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_CHIRP)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        this.children.add(element.setResizer(resizer));
     }
 
     @Override
@@ -72,15 +52,6 @@ public class GuiDashboardSidebar extends GuiElement
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000, 0x00000000, 0);
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);
 
-        GlStateManager.enableDepth();
-        RenderHelper.enableGUIStandardItemLighting();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-
-        GuiInventory.drawItemStack(this.register, this.area.x + 8, this.area.y + 8, null);
-        GuiInventory.drawItemStack(this.director, this.area.x + 8, this.area.y + 32, null);
-        GuiInventory.drawItemStack(this.model, this.area.x + 8, this.area.y + 32 + 24, null);
-
-        GlStateManager.disableDepth();
-        RenderHelper.disableStandardItemLighting();
+        super.draw(mouseX, mouseY, partialTicks);
     }
 }

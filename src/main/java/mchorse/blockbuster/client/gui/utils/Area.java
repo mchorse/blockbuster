@@ -61,4 +61,31 @@ public class Area
         this.w = w;
         this.h = h;
     }
+
+    /**
+     * Copy properties from other area 
+     */
+    public void copy(Area area)
+    {
+        this.x = area.x;
+        this.y = area.y;
+        this.w = area.w;
+        this.h = area.h;
+    }
+
+    /**
+     * Calculate X based on anchor value
+     */
+    public int getX(float anchor)
+    {
+        return this.x + (int) (this.w * anchor);
+    }
+
+    /**
+     * Calculate Y based on anchor value
+     */
+    public int getY(float anchor)
+    {
+        return this.h + (int) (this.h * anchor);
+    }
 }

@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.framework;
+package mchorse.blockbuster.client.gui.framework.elements;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;

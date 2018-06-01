@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.gui.utils;
 
-import mchorse.blockbuster.client.gui.framework.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 
 /**
  * Resizer class

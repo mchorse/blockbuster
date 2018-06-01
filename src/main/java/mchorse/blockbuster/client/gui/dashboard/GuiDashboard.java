@@ -1,8 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiDirectorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiModelPanel;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
-import mchorse.blockbuster.client.gui.framework.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.UnitMeasurement;
 import net.minecraft.client.Minecraft;
@@ -15,9 +18,9 @@ public class GuiDashboard extends GuiBase
     public GuiDelegateElement panel;
     public GuiDashboardSidebar sidebar;
 
-    public GuiElement mainPanel;
-    public GuiElement directorPanel;
-    public GuiElement modelPanel;
+    public GuiMainPanel mainPanel;
+    public GuiDirectorPanel directorPanel;
+    public GuiModelPanel modelPanel;
 
     public GuiDashboard()
     {
@@ -50,6 +53,10 @@ public class GuiDashboard extends GuiBase
     public void openPanel(GuiElement element)
     {
         this.panel.delegate = element;
-        this.panel.resize(this.width, this.height);
+
+        if (this.width != 0 && this.height != 0)
+        {
+            this.panel.resize(this.width, this.height);
+        }
     }
 }

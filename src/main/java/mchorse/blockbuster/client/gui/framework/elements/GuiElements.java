@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.framework;
+package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.util.ArrayList;
 import java.util.List;

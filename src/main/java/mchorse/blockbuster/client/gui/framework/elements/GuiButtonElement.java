@@ -1,14 +1,27 @@
-package mchorse.blockbuster.client.gui.framework;
+package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiButtonElement extends GuiElement
 {
     public GuiButton button;
     public Consumer<GuiButtonElement> callback;
+
+    public static GuiButtonElement checkbox(Minecraft mc, String label, boolean value, Consumer<GuiButtonElement> callback)
+    {
+        return new GuiButtonElement(mc, new GuiCheckBox(0, 0, 0, label, value), callback);
+    }
+
+    public static GuiButtonElement icon(Minecraft mc, ResourceLocation texture, int tx, int ty, int ax, int ay, Consumer<GuiButtonElement> callback)
+    {
+        return new GuiButtonElement(mc, new GuiTextureButton(0, 0, 0, texture).setTexPos(tx, ty).setActiveTexPos(ax, ay), callback);
+    }
 
     public GuiButtonElement(Minecraft mc, String label, Consumer<GuiButtonElement> callback)
     {

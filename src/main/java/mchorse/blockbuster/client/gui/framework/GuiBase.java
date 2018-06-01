@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
+import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.utils.Area;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
