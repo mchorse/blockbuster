@@ -15,7 +15,7 @@ import net.minecraft.client.Minecraft;
  * This panel is basically used as information section and also as 
  * configuration panel for commonly used config options.
  */
-public class GuiMainPanel extends GuiElement
+public class GuiMainPanel extends GuiDashboardPanel
 {
     /**
      * Open web link in browser 
@@ -45,14 +45,14 @@ public class GuiMainPanel extends GuiElement
     {
         super(mc);
 
-        this.createChildren();
-
         GuiElement element = new GuiButtonElement(mc, "Wiki", (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
-        Resizer resizer = null;
-        this.children.add(element.setResizer(new Resizer().set(10, 25, 80, 20).setParent(this.area)));
+        Resizer resizer = new Resizer().set(10, 25, 80, 20).setParent(this.area);
+
+        resizer.x.set(1, UnitMeasurement.PERCENTAGE, -90);
+        this.children.add(element.setResizer(resizer));
 
         element = new GuiButtonElement(mc, "Discord", (button) -> openWebLink("https://discord.gg/qfxrqUF"));
-        this.children.add(element.setResizer(new Resizer().set(10, 50, 80, 20).setParent(this.area)));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 80, 20).setRelative(resizer)));
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
         resizer = new Resizer().set(0, 0, 16, 16).setParent(this.area);
@@ -68,7 +68,7 @@ public class GuiMainPanel extends GuiElement
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawStringWithShadow("Resources", this.area.x + 10, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow("Resources", this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
 
         super.draw(mouseX, mouseY, partialTicks);
     }

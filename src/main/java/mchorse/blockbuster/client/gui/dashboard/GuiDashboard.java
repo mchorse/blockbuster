@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiModelPanel;
@@ -58,5 +59,16 @@ public class GuiDashboard extends GuiBase
         {
             this.panel.resize(this.width, this.height);
         }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    {
+        if (this.panel.delegate != null && ((GuiDashboardPanel) this.panel.delegate).needsBackground())
+        {
+            this.drawDefaultBackground();
+        }
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

@@ -78,7 +78,6 @@ public class GuiBase extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
         this.elements.draw(mouseX, mouseY, partialTicks);
     }
 }

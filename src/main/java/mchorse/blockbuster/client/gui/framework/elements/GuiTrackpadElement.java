@@ -16,6 +16,7 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
         super(mc);
 
         this.trackpad = new GuiTrackpad(this, this.font);
+        this.trackpad.setTitle(label);
         this.callback = callback;
     }
 
@@ -33,7 +34,7 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
     {
         super.resize(width, height);
 
-        this.trackpad.area.copy(this.area);
+        this.trackpad.update(this.area.x, this.area.y, this.area.w, this.area.h);
     }
 
     @Override

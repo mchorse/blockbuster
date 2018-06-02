@@ -86,6 +86,6 @@ public class Area
      */
     public int getY(float anchor)
     {
-        return this.h + (int) (this.h * anchor);
+        return this.y + (int) (this.h * anchor);
     }
 }
