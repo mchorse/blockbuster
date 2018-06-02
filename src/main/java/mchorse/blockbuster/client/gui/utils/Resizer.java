@@ -30,16 +30,18 @@ public class Resizer
         return this;
     }
 
-    public Resizer setRelative(Resizer relative)
+    public Resizer relative(Resizer relative)
     {
         this.relative = relative;
+        this.parent = null;
 
         return this;
     }
 
-    public Resizer setParent(Area parent)
+    public Resizer parent(Area parent)
     {
         this.parent = parent;
+        this.relative = null;
 
         return this;
     }
@@ -64,7 +66,7 @@ public class Resizer
         {
             value += this.parent.x;
 
-            if (this.x.unit == UnitMeasurement.PERCENTAGE)
+            if (this.x.unit == Measure.RELATIVE)
             {
                 value = this.parent.x + (int) (this.parent.w * this.x.value);
             }
@@ -85,7 +87,7 @@ public class Resizer
         {
             value += this.parent.y;
 
-            if (this.y.unit == UnitMeasurement.PERCENTAGE)
+            if (this.y.unit == Measure.RELATIVE)
             {
                 value = this.parent.y + (int) (this.parent.h * this.y.value);
             }
@@ -98,7 +100,7 @@ public class Resizer
     {
         int value = (int) this.w.value;
 
-        if (this.parent != null && this.w.unit == UnitMeasurement.PERCENTAGE)
+        if (this.parent != null && this.w.unit == Measure.RELATIVE)
         {
             value = (int) (this.parent.w * this.w.value);
         }
@@ -110,7 +112,7 @@ public class Resizer
     {
         int value = (int) this.h.value;
 
-        if (this.parent != null && this.h.unit == UnitMeasurement.PERCENTAGE)
+        if (this.parent != null && this.h.unit == Measure.RELATIVE)
         {
             value = (int) (this.parent.h * this.h.value);
         }
@@ -126,27 +128,36 @@ public class Resizer
         public float value;
         public int padding;
         public boolean enabled = true;
-        public UnitMeasurement unit = UnitMeasurement.PIXELS;
+        public Measure unit = Measure.PIXELS;
 
-        public void set(float value, UnitMeasurement unit)
+        public void set(float value, Measure unit)
         {
             this.set(value, unit, 0);
         }
 
-        public void set(float value, UnitMeasurement unit, int padding)
+        public void set(float value, Measure unit, int padding)
         {
             this.value = value;
             this.unit = unit;
             this.padding = padding;
+        }
+
+        public void disable()
+        {
+            this.enabled = false;
         }
     }
 
     /**
      * Unit measurement for sizer class. This determines logic for 
      * calculating units.
+     * 
+     * {@link Measure#PIXELS} are absolute. Meanwhile 
+     * {@link Measure#RELATIVE} are percentage (or rather a scalar 
+     * between 0 and 1 equaling to 0% to 100%). 
      */
-    public static enum UnitMeasurement
+    public static enum Measure
     {
-        PIXELS, PERCENTAGE;
+        PIXELS, RELATIVE;
     }
 }

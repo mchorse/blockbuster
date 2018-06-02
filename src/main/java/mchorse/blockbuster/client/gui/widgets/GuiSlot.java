@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui;
+package mchorse.blockbuster.client.gui.widgets;
 
 import mchorse.blockbuster.client.gui.utils.Area;
 import net.minecraft.client.Minecraft;

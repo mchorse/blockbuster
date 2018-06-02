@@ -15,4 +15,7 @@ public class GuiDashboardPanel extends GuiElement
     {
         return true;
     }
+
+    public void close()
+    {}
 }

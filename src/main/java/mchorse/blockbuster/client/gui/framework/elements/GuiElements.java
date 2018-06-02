@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.framework.elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * 
  * This class is responsible for handling a collection of elements
  */
-public class GuiElements implements IGuiElement
+public class GuiElements implements IGuiElement, IGuiLegacy
 {
     public List<IGuiElement> elements = new ArrayList<IGuiElement>();
 
@@ -30,6 +31,23 @@ public class GuiElements implements IGuiElement
     public boolean isEnabled()
     {
         return true;
+    }
+
+    @Override
+    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
+    {
+        for (IGuiElement element : this.elements)
+        {
+            if (element instanceof IGuiLegacy)
+            {
+                if (((IGuiLegacy) element).handleMouseInput(mouseX, mouseY))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -76,6 +94,23 @@ public class GuiElements implements IGuiElement
             if (element.isEnabled() && element.hasActiveTextfields())
             {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean handleKeyboardInput() throws IOException
+    {
+        for (IGuiElement element : this.elements)
+        {
+            if (element instanceof IGuiLegacy)
+            {
+                if (((IGuiLegacy) element).handleKeyboardInput())
+                {
+                    return true;
+                }
             }
         }
 

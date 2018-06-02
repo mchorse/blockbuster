@@ -29,10 +29,14 @@ public class GuiBase extends GuiScreen
     @Override
     public void handleMouseInput() throws IOException
     {
-        super.handleMouseInput();
-
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+        if (!this.elements.handleMouseInput(x, y))
+        {
+            super.handleMouseInput();
+        }
+
         int scroll = -Mouse.getEventDWheel();
 
         if (scroll == 0)
@@ -56,6 +60,14 @@ public class GuiBase extends GuiScreen
     }
 
     @Override
+    public void handleKeyboardInput() throws IOException
+    {
+        super.handleKeyboardInput();
+
+        this.elements.handleKeyboardInput();
+    }
+
+    @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         this.elements.keyTyped(typedChar, keyCode);
@@ -65,7 +77,10 @@ public class GuiBase extends GuiScreen
             this.keyPressed(typedChar, keyCode);
         }
 
-        super.keyTyped(typedChar, keyCode);
+        if (keyCode == 1)
+        {
+            this.closeScreen();
+        }
     }
 
     /**
@@ -74,6 +89,19 @@ public class GuiBase extends GuiScreen
      */
     public void keyPressed(char typedChar, int keyCode)
     {}
+
+    /**
+     * This method is called when this screen is about to get closed
+     */
+    protected void closeScreen()
+    {
+        this.mc.displayGuiScreen((GuiScreen) null);
+
+        if (this.mc.currentScreen == null)
+        {
+            this.mc.setIngameFocus();
+        }
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)

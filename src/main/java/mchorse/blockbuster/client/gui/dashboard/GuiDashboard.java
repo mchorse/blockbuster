@@ -8,7 +8,7 @@ import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
-import mchorse.blockbuster.client.gui.utils.Resizer.UnitMeasurement;
+import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,9 +26,9 @@ public class GuiDashboard extends GuiBase
     public GuiDashboard()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        Resizer panelResizer = new Resizer().set(32, 0, 1, 1).setParent(this.area);
-        panelResizer.w.set(1, UnitMeasurement.PERCENTAGE, -32);
-        panelResizer.h.set(1, UnitMeasurement.PERCENTAGE);
+        Resizer panelResizer = new Resizer().set(32, 0, 1, 1).parent(this.area);
+        panelResizer.w.set(1, Measure.RELATIVE, -32);
+        panelResizer.h.set(1, Measure.RELATIVE);
 
         this.mainPanel = new GuiMainPanel(mc);
         this.directorPanel = new GuiDirectorPanel(mc);
@@ -38,8 +38,8 @@ public class GuiDashboard extends GuiBase
         this.panel.resizer = panelResizer;
 
         this.sidebar = new GuiDashboardSidebar(mc, this);
-        this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).setParent(this.area);
-        this.sidebar.resizer.h.set(1, UnitMeasurement.PERCENTAGE);
+        this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area);
+        this.sidebar.resizer.h.set(1, Measure.RELATIVE);
 
         this.elements.add(this.panel);
         this.elements.add(this.sidebar);
@@ -49,6 +49,15 @@ public class GuiDashboard extends GuiBase
     public boolean doesGuiPauseGame()
     {
         return false;
+    }
+
+    @Override
+    protected void closeScreen()
+    {
+        /* Should I assume it's not null? :thonk: */
+        ((GuiDashboardPanel) this.panel.delegate).close();
+
+        super.closeScreen();
     }
 
     public void openPanel(GuiElement element)
@@ -67,6 +76,11 @@ public class GuiDashboard extends GuiBase
         if (this.panel.delegate != null && ((GuiDashboardPanel) this.panel.delegate).needsBackground())
         {
             this.drawDefaultBackground();
+        }
+        else
+        {
+            this.drawGradientRect(0, 0, this.width, this.height / 8, 0x44000000, 0x00000000);
+            this.drawGradientRect(0, this.height - this.height / 8, this.width, this.height, 0x00000000, 0x44000000);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

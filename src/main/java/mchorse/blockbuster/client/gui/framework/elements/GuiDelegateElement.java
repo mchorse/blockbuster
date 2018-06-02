@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.gui.framework.elements;
 
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -8,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Delegated {@link IGuiElement}
  */
 @SideOnly(Side.CLIENT)
-public class GuiDelegateElement extends GuiElement
+public class GuiDelegateElement extends GuiElement implements IGuiLegacy
 {
     public GuiElement delegate;
 
@@ -26,6 +28,17 @@ public class GuiDelegateElement extends GuiElement
             this.delegate.resizer = this.resizer;
             this.delegate.resize(width, height);
         }
+    }
+
+    @Override
+    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
+    {
+        if (this.delegate instanceof IGuiLegacy)
+        {
+            return ((IGuiLegacy) this.delegate).handleMouseInput(mouseX, mouseY);
+        }
+
+        return false;
     }
 
     @Override
@@ -59,6 +72,17 @@ public class GuiDelegateElement extends GuiElement
     public boolean hasActiveTextfields()
     {
         return this.delegate != null ? this.delegate.hasActiveTextfields() : false;
+    }
+
+    @Override
+    public boolean handleKeyboardInput() throws IOException
+    {
+        if (this.delegate instanceof IGuiLegacy)
+        {
+            return ((IGuiLegacy) this.delegate).handleKeyboardInput();
+        }
+
+        return false;
     }
 
     @Override

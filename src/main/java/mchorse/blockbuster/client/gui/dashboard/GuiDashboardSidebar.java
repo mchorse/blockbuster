@@ -21,23 +21,23 @@ public class GuiDashboardSidebar extends GuiElement
         this.dashboard = dashboard;
 
         GuiElement element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel));
-        Resizer resizer = new Resizer().set(4, 4, 24, 24).setParent(this.area);
+        Resizer resizer = new Resizer().set(4, 4, 24, 24).parent(this.area);
         this.children.add(element.setResizer(resizer));
 
         element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel));
-        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
         element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel));
-        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
         element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelPanel));
-        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
         element = new GuiButtonElement(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.modelPanel));
-        resizer = new Resizer().set(0, 24, 24, 24).setRelative(resizer);
+        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }
 

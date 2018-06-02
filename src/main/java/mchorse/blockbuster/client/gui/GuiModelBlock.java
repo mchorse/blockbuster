@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.client.gui.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.utils.Area;
+import mchorse.blockbuster.client.gui.widgets.GuiInventory;
+import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
+import mchorse.blockbuster.client.gui.widgets.GuiSlot;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad.ITrackpadListener;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
@@ -174,12 +176,10 @@ public class GuiModelBlock extends GuiScreen implements ITrackpadListener, IInve
         }
         else if (button.id == 2)
         {
-            this.order.toggle();
             this.model.order = RotationOrder.values()[this.order.getValue()];
         }
         else if (button.id == 3)
         {
-            this.one.toggle();
             this.model.one = this.one.getValue() == 1;
         }
     }

@@ -8,27 +8,27 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiButtonElement extends GuiElement
+public class GuiButtonElement<T extends GuiButton> extends GuiElement
 {
-    public GuiButton button;
-    public Consumer<GuiButtonElement> callback;
+    public T button;
+    public Consumer<GuiButtonElement<T>> callback;
 
-    public static GuiButtonElement checkbox(Minecraft mc, String label, boolean value, Consumer<GuiButtonElement> callback)
+    public static GuiButtonElement<GuiCheckBox> checkbox(Minecraft mc, String label, boolean value, Consumer<GuiButtonElement<GuiCheckBox>> callback)
     {
-        return new GuiButtonElement(mc, new GuiCheckBox(0, 0, 0, label, value), callback);
+        return new GuiButtonElement<GuiCheckBox>(mc, new GuiCheckBox(0, 0, 0, label, value), callback);
     }
 
-    public static GuiButtonElement icon(Minecraft mc, ResourceLocation texture, int tx, int ty, int ax, int ay, Consumer<GuiButtonElement> callback)
+    public static GuiButtonElement<GuiTextureButton> icon(Minecraft mc, ResourceLocation texture, int tx, int ty, int ax, int ay, Consumer<GuiButtonElement<GuiTextureButton>> callback)
     {
-        return new GuiButtonElement(mc, new GuiTextureButton(0, 0, 0, texture).setTexPos(tx, ty).setActiveTexPos(ax, ay), callback);
+        return new GuiButtonElement<GuiTextureButton>(mc, new GuiTextureButton(0, 0, 0, texture).setTexPos(tx, ty).setActiveTexPos(ax, ay), callback);
     }
 
-    public GuiButtonElement(Minecraft mc, String label, Consumer<GuiButtonElement> callback)
+    public static GuiButtonElement<GuiButton> button(Minecraft mc, String label, Consumer<GuiButtonElement<GuiButton>> callback)
     {
-        this(mc, new GuiButton(0, 0, 0, label), callback);
+        return new GuiButtonElement<GuiButton>(mc, new GuiButton(0, 0, 0, label), callback);
     }
 
-    public GuiButtonElement(Minecraft mc, GuiButton button, Consumer<GuiButtonElement> callback)
+    public GuiButtonElement(Minecraft mc, T button, Consumer<GuiButtonElement<T>> callback)
     {
         super(mc);
         this.button = button;
