@@ -34,6 +34,12 @@ public class GuiElements implements IGuiElement, IGuiLegacy
     }
 
     @Override
+    public boolean isVisible()
+    {
+        return true;
+    }
+
+    @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
         for (IGuiElement element : this.elements)
@@ -134,7 +140,10 @@ public class GuiElements implements IGuiElement, IGuiLegacy
     {
         for (IGuiElement element : this.elements)
         {
-            element.draw(mouseX, mouseY, partialTicks);
+            if (element.isVisible())
+            {
+                element.draw(mouseX, mouseY, partialTicks);
+            }
         }
     }
 }

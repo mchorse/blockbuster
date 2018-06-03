@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
@@ -21,14 +23,16 @@ import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
 {
+    public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
+
     private TileEntityModel model;
     private TileEntityModel temp = new TileEntityModel();
 
@@ -110,7 +114,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.children.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.morphs.morphs.setHidden(false)));
         element.resizer().set(0, 10, 70, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -35);
 
-        this.children.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.model.one = button.button.isChecked()));
+        this.children.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.toggleOne()));
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
 
         GuiCirculate button = new GuiCirculate(0, 0, 0, 0, 0);
@@ -226,11 +230,22 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
             this.one.button.setIsChecked(this.model.one);
             this.order.button.setValue(this.model.order.ordinal());
 
+            this.toggleOne();
+
             for (int i = 0; i < this.slots.length; i++)
             {
                 this.slots[i].stack = this.model.slots[i];
             }
         }
+    }
+
+    private void toggleOne()
+    {
+        boolean checked = this.one.button.isChecked();
+
+        this.model.one = checked;
+        this.sy.setVisible(!checked);
+        this.sz.setVisible(!checked);
     }
 
     @Override
@@ -277,9 +292,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
             int x = this.area.getX(0.5F);
             int y = this.area.getY(0.65F);
 
-            GlStateManager.pushMatrix();
             cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
-            GlStateManager.popMatrix();
         }
 
         if (this.model != null)

@@ -17,6 +17,11 @@ public interface IGuiElement
     public boolean isEnabled();
 
     /**
+     * Whether this element is visible
+     */
+    public boolean isVisible();
+
+    /**
      * Mouse was clicked
      */
     public void mouseClicked(int mouseX, int mouseY, int mouseButton);

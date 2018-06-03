@@ -31,6 +31,11 @@ public abstract class GuiElement extends Gui implements IGuiElement
      */
     protected boolean enabled = true;
 
+    /**
+     * Whether this element is visible 
+     */
+    protected boolean visible = true;
+
     /* Useful references */
     protected Minecraft mc;
     protected FontRenderer font;
@@ -75,12 +80,23 @@ public abstract class GuiElement extends Gui implements IGuiElement
     @Override
     public boolean isEnabled()
     {
-        return enabled;
+        return this.enabled && this.visible;
     }
 
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isVisible()
+    {
+        return this.visible;
+    }
+
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
     }
 
     /* Overriding those methods so it would be much easier to 
