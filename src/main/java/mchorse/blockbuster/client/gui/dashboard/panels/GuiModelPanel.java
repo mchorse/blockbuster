@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
@@ -27,10 +28,10 @@ import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -62,9 +63,27 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     private GuiButtonElement<GuiCheckBox> one;
     private GuiButtonElement<GuiCirculate> order;
 
+    private GuiModelBlockList list;
+
     private GuiInventory inventory;
     private GuiSlot[] slots = new GuiSlot[6];
     private GuiSlot active;
+
+    /**
+     * Try adding a block position, if it doesn't exist in list already 
+     */
+    public static void tryAddingBlock(BlockPos pos)
+    {
+        for (BlockPos stored : lastBlocks)
+        {
+            if (pos.equals(stored))
+            {
+                return;
+            }
+        }
+
+        lastBlocks.add(pos);
+    }
 
     public GuiModelPanel(Minecraft mc)
     {
@@ -129,6 +148,13 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.children.add(this.order = new GuiButtonElement<GuiCirculate>(mc, button, (b) -> this.model.order = RotationOrder.values()[b.button.getValue()]));
         this.order.resizer().set(40, -22, 40, 20).relative(this.rx.resizer);
 
+        this.children.add(this.list = new GuiModelBlockList(mc, "Model blocks", (tile) ->
+        {
+            this.setModelBlock(tile);
+            this.list.setVisible(false);
+        }));
+        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+
         /* Inventory */
         this.inventory = new GuiInventory(this, player);
 
@@ -157,27 +183,46 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     }
 
     @Override
+    public void init()
+    {
+        this.updateList();
+    }
+
+    @Override
     public void close()
     {
-        MorphCell morph = this.morphs.morphs.getSelected();
+        if (this.model != null)
+        {
+            MorphCell morph = this.morphs.morphs.getSelected();
 
-        /* Update model's morph */
-        PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), morph == null ? null : morph.current().morph);
+            /* Update model's morph */
+            PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), morph == null ? null : morph.current().morph);
 
-        packet.setBody(this.yaw.trackpad.value, this.pitch.trackpad.value, this.body.trackpad.value);
-        packet.setPos(this.x.trackpad.value, this.y.trackpad.value, this.z.trackpad.value);
-        packet.setRot(this.rx.trackpad.value, this.ry.trackpad.value, this.rz.trackpad.value);
-        packet.setScale(this.one.button.isChecked(), this.sx.trackpad.value, this.sy.trackpad.value, this.sz.trackpad.value);
-        packet.setOrder(RotationOrder.values()[this.order.button.getValue()]);
-        packet.setSlots(this.model.slots);
+            packet.setBody(this.yaw.trackpad.value, this.pitch.trackpad.value, this.body.trackpad.value);
+            packet.setPos(this.x.trackpad.value, this.y.trackpad.value, this.z.trackpad.value);
+            packet.setRot(this.rx.trackpad.value, this.ry.trackpad.value, this.rz.trackpad.value);
+            packet.setScale(this.one.button.isChecked(), this.sx.trackpad.value, this.sy.trackpad.value, this.sz.trackpad.value);
+            packet.setOrder(RotationOrder.values()[this.order.button.getValue()]);
+            packet.setSlots(this.model.slots);
 
-        Dispatcher.sendToServer(packet);
+            Dispatcher.sendToServer(packet);
+        }
+    }
+
+    public GuiModelPanel openModelBlock(TileEntityModel model)
+    {
+        tryAddingBlock(model.getPos());
+
+        this.updateList();
+
+        return this.setModelBlock(model);
     }
 
     public GuiModelPanel setModelBlock(TileEntityModel model)
     {
         this.model = model;
         this.temp.copyData(model);
+        this.fillData();
 
         return this;
     }
@@ -212,6 +257,21 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
         this.morphs.setWorldAndResolution(this.mc, width, height);
 
+        this.fillData();
+    }
+
+    private void updateList()
+    {
+        this.list.elements.clear();
+
+        for (BlockPos pos : lastBlocks)
+        {
+            this.list.addBlock(pos);
+        }
+    }
+
+    private void fillData()
+    {
         if (this.model != null)
         {
             this.morphs.morphs.setSelected(this.model.morph);
@@ -299,12 +359,9 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
             GuiScreen screen = this.mc.currentScreen;
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0, 0, -400);
             GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
             cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
-            GlStateManager.popMatrix();
         }
 
         if (this.model != null)
@@ -333,5 +390,48 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
         this.inventory.draw(mouseX, mouseY, partialTicks);
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    /**
+     * Model block list 
+     */
+    public static class GuiModelBlockList extends GuiBlockList<TileEntityModel>
+    {
+        public GuiModelBlockList(Minecraft mc, String title, Consumer<TileEntityModel> callback)
+        {
+            super(mc, title, callback);
+        }
+
+        @Override
+        public void addBlock(BlockPos pos)
+        {
+            TileEntity tile = this.mc.theWorld.getTileEntity(pos);
+
+            if (tile instanceof TileEntityModel)
+            {
+                this.elements.add((TileEntityModel) tile);
+            }
+
+            this.scroll.setSize(this.elements.size());
+            this.scroll.clamp();
+        }
+
+        @Override
+        public void render(int x, int y, TileEntityModel item, boolean hovered)
+        {
+            if (item.morph != null)
+            {
+                GuiScreen screen = this.mc.currentScreen;
+
+                GuiUtils.scissor(x + this.area.w - 50, y, 40, 20, screen.width, screen.height);
+                item.morph.renderOnScreen(this.mc.thePlayer, x + this.area.w - 30, y + 30, 20, 1);
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            }
+
+            BlockPos pos = item.getPos();
+            String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
+
+            this.font.drawStringWithShadow(label, x, y + 6, hovered ? 16777120 : 0xffffff);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.utils;
 
-import mchorse.aperture.utils.Area;
 import net.minecraft.util.math.MathHelper;
 
 /**

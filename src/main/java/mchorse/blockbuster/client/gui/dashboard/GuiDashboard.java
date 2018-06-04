@@ -43,6 +43,12 @@ public class GuiDashboard extends GuiBase
 
         this.elements.add(this.panel);
         this.elements.add(this.sidebar);
+
+        if (mc.theWorld != null)
+        {
+            this.directorPanel.init();
+            this.modelPanel.init();
+        }
     }
 
     @Override
