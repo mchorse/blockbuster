@@ -32,7 +32,7 @@ public abstract class GuiBlockList<T> extends GuiElement
         this.callback = callback;
     }
 
-    public abstract void addBlock(BlockPos pos);
+    public abstract boolean addBlock(BlockPos pos);
 
     public abstract void render(int x, int y, T item, boolean hovered);
 

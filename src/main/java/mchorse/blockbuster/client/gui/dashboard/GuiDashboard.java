@@ -6,7 +6,6 @@ import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiModelPanel;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
@@ -46,8 +45,8 @@ public class GuiDashboard extends GuiBase
 
         if (mc.theWorld != null)
         {
-            this.directorPanel.init();
-            this.modelPanel.init();
+            this.directorPanel.open();
+            this.modelPanel.open();
         }
     }
 
@@ -61,14 +60,21 @@ public class GuiDashboard extends GuiBase
     protected void closeScreen()
     {
         /* Should I assume it's not null? :thonk: */
-        ((GuiDashboardPanel) this.panel.delegate).close();
+        this.directorPanel.close();
+        this.modelPanel.close();
 
         super.closeScreen();
     }
 
-    public void openPanel(GuiElement element)
+    public void openPanel(GuiDashboardPanel element)
     {
+        if (this.panel.delegate != null)
+        {
+            ((GuiDashboardPanel) this.panel.delegate).disappear();
+        }
+
         this.panel.delegate = element;
+        element.appear();
 
         if (this.width != 0 && this.height != 0)
         {

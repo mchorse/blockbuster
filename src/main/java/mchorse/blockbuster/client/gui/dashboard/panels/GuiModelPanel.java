@@ -187,7 +187,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     }
 
     @Override
-    public void init()
+    public void open()
     {
         this.updateList();
     }
@@ -429,17 +429,21 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         }
 
         @Override
-        public void addBlock(BlockPos pos)
+        public boolean addBlock(BlockPos pos)
         {
             TileEntity tile = this.mc.theWorld.getTileEntity(pos);
 
             if (tile instanceof TileEntityModel)
             {
                 this.elements.add((TileEntityModel) tile);
+
+                this.scroll.setSize(this.elements.size());
+                this.scroll.clamp();
+
+                return true;
             }
 
-            this.scroll.setSize(this.elements.size());
-            this.scroll.clamp();
+            return false;
         }
 
         @Override
