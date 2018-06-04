@@ -43,6 +43,13 @@ public class GuiButtonElement<T extends GuiButton> extends GuiElement
     }
 
     @Override
+    public void setVisible(boolean visible)
+    {
+        super.setVisible(visible);
+        this.button.visible = visible;
+    }
+
+    @Override
     public void resize(int width, int height)
     {
         super.resize(width, height);
@@ -54,13 +61,21 @@ public class GuiButtonElement<T extends GuiButton> extends GuiElement
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        if (this.button.mousePressed(this.mc, mouseX, mouseY) && this.callback != null)
+        if (this.button.mousePressed(this.mc, mouseX, mouseY))
         {
             this.button.playPressSound(this.mc.getSoundHandler());
-            this.callback.accept(this);
+
+            if (this.callback != null)
+            {
+                this.callback.accept(this);
+            }
+
+            return true;
         }
+
+        return false;
     }
 
     @Override

@@ -24,12 +24,12 @@ public interface IGuiElement
     /**
      * Mouse was clicked
      */
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton);
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton);
 
     /**
      * Mouse wheel was scrolled
      */
-    public void mouseScrolled(int mouseX, int mouseY, int scroll);
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll);
 
     /**
      * Mouse was released

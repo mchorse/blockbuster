@@ -45,7 +45,7 @@ public abstract class GuiBlockList<T> extends GuiElement
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
@@ -63,7 +63,11 @@ public abstract class GuiBlockList<T> extends GuiElement
             {
                 this.callback.accept(this.elements.get(index));
             }
+
+            return true;
         }
+
+        return false;
     }
 
     @Override

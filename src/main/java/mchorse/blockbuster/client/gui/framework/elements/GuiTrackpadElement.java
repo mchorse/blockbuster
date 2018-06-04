@@ -38,9 +38,11 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         this.trackpad.mouseClicked(mouseX, mouseY, mouseButton);
+
+        return this.area.isInside(mouseX, mouseY);
     }
 
     @Override

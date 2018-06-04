@@ -42,21 +42,25 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.delegate != null)
         {
-            this.delegate.mouseClicked(mouseX, mouseY, mouseButton);
+            return this.delegate.mouseClicked(mouseX, mouseY, mouseButton);
         }
+
+        return false;
     }
 
     @Override
-    public void mouseScrolled(int mouseX, int mouseY, int scroll)
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
     {
         if (this.delegate != null)
         {
-            this.delegate.mouseScrolled(mouseX, mouseY, scroll);
+            return this.delegate.mouseScrolled(mouseX, mouseY, scroll);
         }
+
+        return false;
     }
 
     @Override

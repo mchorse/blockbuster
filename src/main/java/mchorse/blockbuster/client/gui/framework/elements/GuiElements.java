@@ -11,7 +11,20 @@ import java.util.List;
  */
 public class GuiElements implements IGuiElement, IGuiLegacy
 {
+    /**
+     * List of elements 
+     */
     public List<IGuiElement> elements = new ArrayList<IGuiElement>();
+
+    /**
+     * Whether this element is enabled (can handle any input) 
+     */
+    protected boolean enabled = true;
+
+    /**
+     * Whether this element is visible 
+     */
+    protected boolean visible = true;
 
     public void add(IGuiElement element)
     {
@@ -30,13 +43,23 @@ public class GuiElements implements IGuiElement, IGuiLegacy
     @Override
     public boolean isEnabled()
     {
-        return true;
+        return this.enabled && this.visible;
+    }
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
     }
 
     @Override
     public boolean isVisible()
     {
-        return true;
+        return this.visible;
+    }
+
+    public void setVisible(boolean visible)
+    {
+        this.visible = visible;
     }
 
     @Override
@@ -57,34 +80,44 @@ public class GuiElements implements IGuiElement, IGuiLegacy
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        for (IGuiElement element : this.elements)
+        for (int i = this.elements.size() - 1; i >= 0; i--)
         {
-            if (element.isEnabled())
+            IGuiElement element = this.elements.get(i);
+
+            if (element.isEnabled() && element.mouseClicked(mouseX, mouseY, mouseButton))
             {
-                element.mouseClicked(mouseX, mouseY, mouseButton);
+                return true;
             }
         }
+
+        return false;
     }
 
     @Override
-    public void mouseScrolled(int mouseX, int mouseY, int scroll)
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
     {
-        for (IGuiElement element : this.elements)
+        for (int i = this.elements.size() - 1; i >= 0; i--)
         {
-            if (element.isEnabled())
+            IGuiElement element = this.elements.get(i);
+
+            if (element.isEnabled() && element.mouseScrolled(mouseX, mouseY, scroll))
             {
-                element.mouseScrolled(mouseX, mouseY, scroll);
+                return true;
             }
         }
+
+        return false;
     }
 
     @Override
     public void mouseReleased(int mouseX, int mouseY, int state)
     {
-        for (IGuiElement element : this.elements)
+        for (int i = this.elements.size() - 1; i >= 0; i--)
         {
+            IGuiElement element = this.elements.get(i);
+
             if (element.isEnabled())
             {
                 element.mouseReleased(mouseX, mouseY, state);

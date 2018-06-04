@@ -117,21 +117,25 @@ public abstract class GuiElement extends Gui implements IGuiElement
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         if (this.children != null)
         {
-            this.children.mouseClicked(mouseX, mouseY, mouseButton);
+            return this.children.mouseClicked(mouseX, mouseY, mouseButton);
         }
+
+        return false;
     }
 
     @Override
-    public void mouseScrolled(int mouseX, int mouseY, int scroll)
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
     {
         if (this.children != null)
         {
-            this.children.mouseScrolled(mouseX, mouseY, scroll);
+            return this.children.mouseScrolled(mouseX, mouseY, scroll);
         }
+
+        return false;
     }
 
     @Override
