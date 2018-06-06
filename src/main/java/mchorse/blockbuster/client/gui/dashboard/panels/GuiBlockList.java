@@ -15,12 +15,36 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * GUI block list
+ * 
+ * This GUI module is responsible for rendering and selecting 
+ */
 public abstract class GuiBlockList<T> extends GuiElement
 {
+    /**
+     * List of elements 
+     */
     public List<T> elements = new ArrayList<T>();
+
+    /**
+     * Currently selected element 
+     */
     public T current;
+
+    /**
+     * Callback which gets invoked when user selects a block
+     */
     public Consumer<T> callback;
+
+    /**
+     * Title of this panel 
+     */
     public String title;
+
+    /**
+     * Scrolling section where block entries are getting rendered 
+     */
     public ScrollArea scroll;
 
     public GuiBlockList(Minecraft mc, String title, Consumer<T> callback)
@@ -67,7 +91,8 @@ public abstract class GuiBlockList<T> extends GuiElement
 
             if (this.callback != null && index >= 0 && index < size && size != 0)
             {
-                this.callback.accept(this.elements.get(index));
+                this.current = this.elements.get(index);
+                this.callback.accept(this.current);
             }
 
             return true;
