@@ -4,5 +4,6 @@ key:
         # Categories
         category: Blockbuster
         
+        dashboard: Dashboard
         model_editor: Model Editor
         marker: Tick marker

@@ -178,6 +178,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             boolean hasTexture = list.material != null && list.material.useTexture;
 
             GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
             if (hasColor)
             {

@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.widgets.buttons;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,5 +44,18 @@ public class GuiCirculate extends GuiButton
     public void toggle()
     {
         this.setValue(this.value + 1);
+    }
+
+    @Override
+    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY)
+    {
+        boolean result = super.mousePressed(mc, mouseX, mouseY);
+
+        if (result)
+        {
+            this.toggle();
+        }
+
+        return result;
     }
 }

@@ -2,6 +2,7 @@ package mchorse.blockbuster.client;
 
 import org.lwjgl.input.Keyboard;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
@@ -23,6 +24,7 @@ public class KeyboardHandler
     private Minecraft mc = Minecraft.getMinecraft();
 
     /* Misc. */
+    private KeyBinding dashboard;
     private KeyBinding modelEditor;
     private KeyBinding cameraMarker;
 
@@ -35,9 +37,11 @@ public class KeyboardHandler
         String category = "key.blockbuster.category";
 
         /* Misc */
+        this.dashboard = new KeyBinding("key.blockbuster.dashboard", Keyboard.KEY_0, category);
         this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, category);
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, category);
 
+        ClientRegistry.registerKeyBinding(this.dashboard);
         ClientRegistry.registerKeyBinding(this.cameraMarker);
         ClientRegistry.registerKeyBinding(this.modelEditor);
     }
@@ -55,6 +59,11 @@ public class KeyboardHandler
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event)
     {
+        if (this.dashboard.isPressed())
+        {
+            this.mc.displayGuiScreen(new GuiDashboard());
+        }
+
         if (this.cameraMarker.isPressed())
         {
             Dispatcher.sendToServer(new PacketTickMarker());
