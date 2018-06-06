@@ -41,13 +41,19 @@ public abstract class GuiBlockList<T> extends GuiElement
     {
         super.resize(width, height);
 
-        this.scroll.set(this.area.x + 10, this.area.y + 30, this.area.w - 20, this.area.h - 40);
+        this.scroll.set(this.area.x, this.area.y + 30, this.area.w, this.area.h - 30);
+        this.scroll.clamp();
     }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        if (this.scroll.mouseClicked(mouseX, mouseY))
+        {
+            return true;
+        }
 
         if (this.scroll.isInside(mouseX, mouseY))
         {
@@ -71,11 +77,17 @@ public abstract class GuiBlockList<T> extends GuiElement
     }
 
     @Override
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
+    {
+        return super.mouseScrolled(mouseX, mouseY, scroll) || this.scroll.mouseScroll(mouseX, mouseY, scroll);
+    }
+
+    @Override
     public void mouseReleased(int mouseX, int mouseY, int state)
     {
         super.mouseReleased(mouseX, mouseY, state);
 
-        this.scroll.dragging = false;
+        this.scroll.mouseReleased(mouseX, mouseY);
     }
 
     @Override
@@ -84,7 +96,9 @@ public abstract class GuiBlockList<T> extends GuiElement
         this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 64, this.area.w, this.area.h, 32, 32, 0, 0);
 
-        this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 10, 0xcccccc);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 30, 0x44000000);
+        this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 11, 0xcccccc);
+        this.scroll.drag(mouseX, mouseY);
 
         GuiScreen screen = this.mc.currentScreen;
         GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
@@ -95,18 +109,19 @@ public abstract class GuiBlockList<T> extends GuiElement
         for (T element : this.elements)
         {
             int x = this.scroll.x;
-            int y = this.scroll.y + i * 20;
+            int y = this.scroll.y + i * 20 - this.scroll.scroll;
 
             boolean hovered = mouseX >= x && mouseX <= this.area.getX(1) - 10;
             hovered = hovered && mouseY >= y && mouseY < y + h;
 
             this.render(x, y, element, hovered);
-            Gui.drawRect(x - 5, y + h - 1, x + this.area.w - 15, y + h, 0xaa181818);
+            Gui.drawRect(x, y + h - 1, x + this.area.w, y + h, 0xaa181818);
 
             i++;
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        this.scroll.drawScrollbar();
 
         super.draw(mouseX, mouseY, partialTicks);
     }

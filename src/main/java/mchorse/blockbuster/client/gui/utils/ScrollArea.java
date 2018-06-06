@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.utils;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -125,6 +126,61 @@ public class ScrollArea extends Area
         }
 
         return (int) ((1.0F - ((this.scrollSize - maxSize) / (float) this.scrollSize)) * size);
+    }
+
+    /* GUI code */
+
+    public boolean mouseClicked(int x, int y)
+    {
+        boolean isInside = this.isInside(x, y) && this.scrollSize > this.h && x >= this.getX(1) - 4;
+
+        if (isInside)
+        {
+            this.dragging = true;
+        }
+
+        return isInside;
+    }
+
+    public boolean mouseScroll(int x, int y, int scroll)
+    {
+        boolean isInside = this.isInside(x, y);
+
+        if (isInside)
+        {
+            this.scrollBy(scroll);
+        }
+
+        return isInside;
+    }
+
+    public void mouseReleased(int x, int y)
+    {
+        this.dragging = false;
+    }
+
+    public void drag(int x, int y)
+    {
+        if (this.dragging)
+        {
+            float progress = (float) (y - this.y) / (float) this.h;
+
+            this.scrollTo((int) (progress * (this.scrollSize - this.h + 4)));
+        }
+    }
+
+    public void drawScrollbar()
+    {
+        if (this.scrollSize <= this.h)
+        {
+            return;
+        }
+
+        int h = this.getScrollBar(this.h / 2);
+        int x = this.getX(1) - 4;
+        int y = this.y + (int) ((this.scroll / (float) (this.scrollSize - this.h)) * (this.h - h));
+
+        Gui.drawRect(x, y, x + 4, y + h, -6250336);
     }
 
     /**

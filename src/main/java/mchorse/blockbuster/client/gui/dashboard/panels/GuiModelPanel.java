@@ -36,6 +36,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
@@ -453,15 +454,21 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
             {
                 GuiScreen screen = this.mc.currentScreen;
 
-                GuiUtils.scissor(x + this.area.w - 50, y, 40, 20, screen.width, screen.height);
-                item.morph.renderOnScreen(this.mc.thePlayer, x + this.area.w - 30, y + 30, 20, 1);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                int mny = MathHelper.clamp_int(y, this.scroll.y, this.scroll.getY(1));
+                int mxy = MathHelper.clamp_int(y + 20, this.scroll.y, this.scroll.getY(1));
+
+                if (mxy - mny > 0)
+                {
+                    GuiUtils.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, screen.width, screen.height);
+                    item.morph.renderOnScreen(this.mc.thePlayer, x + this.scroll.w - 20, y + 30, 20, 1);
+                    GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
+                }
             }
 
             BlockPos pos = item.getPos();
             String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
 
-            this.font.drawStringWithShadow(label, x, y + 6, hovered ? 16777120 : 0xffffff);
+            this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
         }
     }
 }
