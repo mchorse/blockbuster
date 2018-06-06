@@ -677,8 +677,6 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             }
             if (button.id == HOLDING)
             {
-                this.holding.toggle();
-
                 int value = this.holding.getValue();
                 this.limb.holding = value == 0 ? "" : (value == 1 ? "right" : "left");
                 this.editor.rebuildModel();

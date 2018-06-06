@@ -98,7 +98,6 @@ public class GuiPlayback extends GuiScreen
 
         if (id == 1)
         {
-            this.cameraMode.toggle();
             this.setValue(this.cameraMode.getValue());
         }
         else if (id == 2)

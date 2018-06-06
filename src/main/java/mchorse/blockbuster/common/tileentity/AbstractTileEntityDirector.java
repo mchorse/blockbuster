@@ -42,7 +42,7 @@ public abstract class AbstractTileEntityDirector extends TileEntity implements I
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-        return false;
+        return oldState.getBlock() != newSate.getBlock();
     }
 
     /* Read/write this TE to disk */

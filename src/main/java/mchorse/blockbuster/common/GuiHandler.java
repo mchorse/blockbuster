@@ -5,7 +5,7 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.GuiDirector;
-import mchorse.blockbuster.client.gui.GuiModelBlock;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.entity.Entity;
@@ -27,6 +27,7 @@ public class GuiHandler implements IGuiHandler
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int MODEL_BLOCK = 3;
+    public static final int DASHBOARD = 4;
 
     /**
      * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
@@ -64,7 +65,18 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODEL_BLOCK)
         {
-            return new GuiModelBlock((TileEntityModel) world.getTileEntity(new BlockPos(x, y, z)));
+            // return new GuiModelBlock((TileEntityModel) world.getTileEntity(new BlockPos(x, y, z)));
+
+            TileEntityModel model = (TileEntityModel) world.getTileEntity(new BlockPos(x, y, z));
+            GuiDashboard dashboard = new GuiDashboard();
+
+            dashboard.openPanel(dashboard.modelPanel.openModelBlock(model));
+
+            return dashboard;
+        }
+        else if (ID == DASHBOARD)
+        {
+            return new GuiDashboard();
         }
 
         return null;
