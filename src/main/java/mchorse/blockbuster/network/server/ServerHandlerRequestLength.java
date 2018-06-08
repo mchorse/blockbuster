@@ -16,7 +16,7 @@ public class ServerHandlerRequestLength extends ServerMessageHandler<PacketReque
 
         if (tile != null && tile instanceof TileEntityDirector)
         {
-            Dispatcher.sendTo(new PacketSceneLength(((TileEntityDirector) tile).getMaxLength()), player);
+            Dispatcher.sendTo(new PacketSceneLength(((TileEntityDirector) tile).director.getMaxLength()), player);
         }
     }
 }

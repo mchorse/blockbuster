@@ -1,16 +1,15 @@
 package mchorse.blockbuster.common.tileentity.director;
 
-import java.util.UUID;
-
 import com.google.common.base.Objects;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.MorphUtils;
+import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
@@ -30,15 +29,12 @@ public class Replay
     public AbstractMorph morph;
     public boolean invisible = false;
 
-    /* UUID */
-    public UUID actor;
-
     public Replay()
     {}
 
-    public Replay(EntityActor actor)
+    public Replay(String id)
     {
-        this.copy(actor);
+        this.id = id;
     }
 
     /**
@@ -48,31 +44,17 @@ public class Replay
     {
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
-
-        if (this.morph != null)
-        {
-            actor.morph = this.morph.clone(actor.worldObj.isRemote);
-        }
-
+        actor.morph = this.morph == null ? null : this.morph.clone(actor.worldObj.isRemote);
         actor.invisible = this.invisible;
         actor.notifyPlayers();
     }
 
     /**
-     * Copy possible properties from entity actor
+     * Apply replay on a player 
      */
-    public void copy(EntityActor actor)
+    public void apply(EntityPlayer player)
     {
-        this.name = actor.getCustomNameTag();
-        this.invincible = actor.isEntityInvulnerable(DamageSource.anvil);
-
-        if (actor.morph != null && this.morph == null)
-        {
-            this.morph = actor.getMorph().clone(actor.worldObj.isRemote);
-        }
-
-        this.invisible = actor.invisible;
-        this.actor = actor.getUniqueID();
+        MorphAPI.morph(player, this.morph, true);
     }
 
     /* to / from NBT */
@@ -86,11 +68,6 @@ public class Replay
         MorphUtils.morphToNBT(tag, this.morph);
 
         tag.setBoolean("Invisible", this.invisible);
-
-        if (this.actor != null)
-        {
-            tag.setString("UUID", this.actor.toString());
-        }
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -102,13 +79,6 @@ public class Replay
         this.morph = MorphUtils.morphFromNBT(tag);
 
         this.invisible = tag.getBoolean("Invisible");
-
-        String uuid = tag.getString("UUID");
-
-        if (!uuid.isEmpty())
-        {
-            this.actor = UUID.fromString(uuid);
-        }
     }
 
     /* to / from ByteBuf */
@@ -129,12 +99,6 @@ public class Replay
         }
 
         buf.writeBoolean(this.invisible);
-        buf.writeBoolean(this.actor != null);
-
-        if (this.actor != null)
-        {
-            ByteBufUtils.writeUTF8String(buf, this.actor.toString());
-        }
     }
 
     public void fromBuf(ByteBuf buf)
@@ -149,11 +113,6 @@ public class Replay
         }
 
         this.invisible = buf.readBoolean();
-
-        if (buf.readBoolean())
-        {
-            this.actor = UUID.fromString(ByteBufUtils.readUTF8String(buf));
-        }
     }
 
     @Override

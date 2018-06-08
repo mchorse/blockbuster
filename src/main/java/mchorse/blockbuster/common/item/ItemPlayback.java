@@ -146,18 +146,18 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
 
-            TileEntity tile = worldIn.getTileEntity(pos);
+            TileEntity te = worldIn.getTileEntity(pos);
 
-            if (tile == null || !(tile instanceof TileEntityDirector))
+            if (te == null || !(te instanceof TileEntityDirector))
             {
                 L10n.error(player, "director.missing", pos.getX(), pos.getY(), pos.getZ());
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            TileEntityDirector director = (TileEntityDirector) tile;
+            TileEntityDirector tile = (TileEntityDirector) te;
 
-            if (director.togglePlayback() && CameraHandler.isApertureLoaded())
+            if (tile.director.togglePlayback() && CameraHandler.isApertureLoaded())
             {
                 CameraHandler.handlePlaybackItem(player, tag);
             }

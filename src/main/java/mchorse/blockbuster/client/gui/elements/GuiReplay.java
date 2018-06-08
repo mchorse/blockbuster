@@ -43,7 +43,6 @@ public class GuiReplay extends GuiScreen
     private String stringFilename = I18n.format("blockbuster.gui.actor.filename");
     private String stringInvincible = I18n.format("blockbuster.gui.actor.invincible");
     private String stringInvisible = I18n.format("blockbuster.gui.actor.invisible");
-    private String stringAttached = I18n.format("blockbuster.gui.actor.attached");
     private String stringClickhere = I18n.format("blockbuster.info.recording.clickhere");
 
     /* Domain objects, they provide data */
@@ -189,8 +188,6 @@ public class GuiReplay extends GuiScreen
         value.morph = cell == null ? this.replay.morph : cell.current().morph.clone(true);
         value.invisible = this.invisible.getValue();
 
-        value.actor = this.replay.actor;
-
         if (this.replay.equals(value))
         {
             return;
@@ -331,11 +328,6 @@ public class GuiReplay extends GuiScreen
         /* Draw labels for meta properties */
         this.drawString(this.fontRendererObj, this.stringName, x, y - 65, 0xffcccccc);
         this.drawString(this.fontRendererObj, this.stringFilename, x, y - 30, this.filename.getText().isEmpty() ? 0xffff3355 : 0xffcccccc);
-
-        if (this.replay.actor != null)
-        {
-            this.drawCenteredString(this.fontRendererObj, this.stringAttached, 120 + (this.width - 120) / 2, 24, 0xffaaaaaa);
-        }
 
         /* Draw entity in the center of the screen */
         int size = this.height / 4;

@@ -17,6 +17,7 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -158,6 +159,7 @@ public class RecordManager
 
             this.records.put(filename, record);
             this.recorders.remove(player);
+            MorphAPI.demorph(player);
 
             if (notify)
             {

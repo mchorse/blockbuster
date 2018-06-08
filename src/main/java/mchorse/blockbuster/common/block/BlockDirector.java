@@ -8,8 +8,6 @@ import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -20,7 +18,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -124,6 +121,8 @@ public class BlockDirector extends Block implements ITileEntityProvider
         return true;
     }
 
+    /* Item handling */
+
     protected boolean handleItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
         return this.handlePlaybackItem(item, world, pos, player) || this.handleRegisterItem(item, world, pos, player);
@@ -131,20 +130,15 @@ public class BlockDirector extends Block implements ITileEntityProvider
 
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        if (!(item.getItem() instanceof ItemRegister))
+        if (item.getItem() instanceof ItemRegister && world.isRemote)
         {
-            return false;
-        }
+            ((ItemRegister) item.getItem()).registerStack(item, pos);
+            L10n.success(player, "director.attached_device");
 
-        if (world.isRemote)
-        {
             return true;
         }
 
-        ((ItemRegister) item.getItem()).registerStack(item, pos);
-        L10n.success(player, "director.attached_device");
-
-        return true;
+        return world.isRemote;
     }
 
     /**
@@ -167,10 +161,12 @@ public class BlockDirector extends Block implements ITileEntityProvider
         return true;
     }
 
+    /**
+     * Display director block GUI to the player 
+     */
     protected void displayCast(EntityPlayer player, World worldIn, BlockPos pos)
     {
-        TileEntityDirector tile = (TileEntityDirector) worldIn.getTileEntity(pos);
-        Dispatcher.sendTo(new PacketDirectorCast(tile.getPos(), tile.replays), (EntityPlayerMP) player);
+        ((TileEntityDirector) worldIn.getTileEntity(pos)).open(player, pos);
     }
 
     @Override

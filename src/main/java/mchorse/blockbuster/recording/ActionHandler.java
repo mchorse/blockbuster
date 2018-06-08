@@ -435,7 +435,7 @@ public class ActionHandler
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
-        if (!CommonProxy.manager.records.isEmpty() && Blockbuster.proxy.config.record_unload)
+        if (Blockbuster.proxy.config.record_unload && !CommonProxy.manager.records.isEmpty())
         {
             this.checkAndUnloadRecords();
         }

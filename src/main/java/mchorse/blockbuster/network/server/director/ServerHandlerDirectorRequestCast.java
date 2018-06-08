@@ -1,8 +1,6 @@
 package mchorse.blockbuster.network.server.director;
 
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,6 +15,6 @@ public class ServerHandlerDirectorRequestCast extends ServerMessageHandler<Packe
     {
         TileEntityDirector tile = ((TileEntityDirector) player.worldObj.getTileEntity(message.pos));
 
-        Dispatcher.sendTo(new PacketDirectorCast(message.pos, tile.replays), player);
+        tile.open(player, message.pos);
     }
 }

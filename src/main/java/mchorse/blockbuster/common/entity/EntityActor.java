@@ -10,8 +10,6 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
-import mchorse.blockbuster.common.item.ItemRegister;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketModifyActor;
@@ -21,8 +19,6 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
-import mchorse.blockbuster.utils.L10n;
-import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -38,7 +34,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -65,12 +60,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData, IMorphProvider
 {
-    /**
-     * Position of director's block (needed to start the playback of other
-     * actors while recording this actor).
-     */
-    public BlockPos directorBlock;
-
     /**
      * This field is needed to make actors invisible. This is helpful for
      * scenes with different characters, which isn't needed to be seen.
@@ -427,7 +416,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         ItemStack item = player.getHeldItemMainhand();
 
-        if (item != null && (this.handleRegisterItem(item, player) || this.handleSkinItem(item, player)))
+        if (item != null && this.handleConfigurationItem(item, player))
         {
             return true;
         }
@@ -435,11 +424,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             if (!this.worldObj.isRemote)
             {
-                if (player.isSneaking())
-                {
-                    this.startRecording(player);
-                }
-                else
+                if (!player.isSneaking())
                 {
                     player.startRiding(this);
                 }
@@ -452,52 +437,9 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Set actor's id on register item (while using register item on this actor)
+     * Open actor configuration GUI by using skin managing item
      */
-    private boolean handleRegisterItem(ItemStack stack, EntityPlayer player)
-    {
-        boolean holdsRegisterItem = stack.getItem() instanceof ItemRegister;
-
-        if (!this.worldObj.isRemote && holdsRegisterItem)
-        {
-            ItemRegister item = (ItemRegister) stack.getItem();
-            BlockPos pos = item.getBlockPos(stack);
-
-            if (pos == null)
-            {
-                L10n.error(player, "actor.not_attached");
-
-                return false;
-            }
-
-            TileEntity tile = this.worldObj.getTileEntity(pos);
-
-            if (tile != null && tile instanceof TileEntityDirector)
-            {
-                TileEntityDirector director = (TileEntityDirector) tile;
-
-                if (!director.add(this))
-                {
-                    L10n.info(player, "director.already_registered");
-                }
-                else
-                {
-                    L10n.success(player, "director.was_registered");
-                }
-            }
-            else
-            {
-                L10n.error(player, "director.missing", pos.getX(), pos.getY(), pos.getZ());
-            }
-        }
-
-        return holdsRegisterItem;
-    }
-
-    /**
-     * Open skin choosing GUI by using skin managing item
-     */
-    private boolean handleSkinItem(ItemStack stack, EntityPlayer player)
+    private boolean handleConfigurationItem(ItemStack stack, EntityPlayer player)
     {
         boolean holdsSkinItem = stack.getItem() instanceof ItemActorConfig;
 
@@ -620,24 +562,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Start recording the player's actions for this actor
-     */
-    private void startRecording(EntityPlayer player)
-    {
-        if (this.directorBlock == null)
-        {
-            return;
-        }
-
-        TileEntity tile = player.worldObj.getTileEntity(this.directorBlock);
-
-        if (tile != null && tile instanceof TileEntityDirector)
-        {
-            ((TileEntityDirector) tile).startRecording(this, player);
-        }
-    }
-
-    /**
      * Configure this actor
      *
      * Takes four properties to modify: filename used as id for recording,
@@ -670,11 +594,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         super.readEntityFromNBT(tag);
 
         this.morph = MorphUtils.morphFromNBT(tag);
-
-        this.wasAttached = tag.getBoolean("WasAttached");
         this.invisible = tag.getBoolean("Invisible");
-
-        this.directorBlock = NBTUtils.getBlockPos("Dir", tag);
+        this.wasAttached = tag.getBoolean("WasAttached");
 
         if (!this.worldObj.isRemote)
         {
@@ -688,12 +609,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         super.writeEntityToNBT(tag);
 
         MorphUtils.morphToNBT(tag, this.morph);
-
-        if (this.directorBlock != null)
-        {
-            NBTUtils.saveBlockPos("Dir", tag, this.directorBlock);
-        }
-
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("WasAttached", this.wasAttached);
     }
@@ -776,8 +691,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     /**
      * Is actor in range in render distance
      *
-     * This method is responsible for checking if this entity is available for
-     * rendering. Rendering range is configurable.
+     * This method is responsible for checking if this entity is 
+     * available for rendering. Rendering range is configurable.
      */
     @SideOnly(Side.CLIENT)
     @Override

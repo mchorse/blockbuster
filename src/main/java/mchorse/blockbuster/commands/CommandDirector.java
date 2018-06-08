@@ -51,9 +51,9 @@ public class CommandDirector extends CommandBase
 
         String action = args[0];
         BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
-        TileEntityDirector director = this.getDirector(server, pos);
+        TileEntityDirector tile = this.getDirector(server, pos);
 
-        if (director == null)
+        if (tile == null)
         {
             L10n.error(sender, "director.no_director", pos.getX(), pos.getY(), pos.getZ());
             return;
@@ -64,43 +64,43 @@ public class CommandDirector extends CommandBase
 
         if (action.equals("play"))
         {
-            if (director.isPlaying())
+            if (tile.isPlaying())
             {
                 L10n.error(sender, "director.playing", args[1], args[2], args[3]);
                 return;
             }
 
-            director.startPlayback();
+            tile.director.startPlayback(0);
             L10n.success(sender, play, args[1], args[2], args[3]);
         }
         else if (action.equals("stop"))
         {
-            if (!director.isPlaying())
+            if (!tile.isPlaying())
             {
                 L10n.error(sender, "director.stopped", args[1], args[2], args[3]);
                 return;
             }
 
-            director.stopPlayback();
+            tile.director.stopPlayback();
             L10n.success(sender, stop, args[1], args[2], args[3]);
         }
         else if (action.equals("loop") && args.length >= 5)
         {
-            director.loops = CommandBase.parseBoolean(args[4]);
-            director.markDirty();
+            tile.director.loops = CommandBase.parseBoolean(args[4]);
+            tile.markDirty();
 
-            L10n.info(sender, "director." + (director.loops ? "looped" : "unlooped"));
+            L10n.info(sender, "director." + (tile.director.loops ? "looped" : "unlooped"));
         }
         else if (action.equals("disable_state") && args.length >= 5)
         {
-            director.disableStates = CommandBase.parseBoolean(args[4]);
-            director.markDirty();
+            tile.director.disableStates = CommandBase.parseBoolean(args[4]);
+            tile.markDirty();
 
-            L10n.info(sender, "director." + (director.disableStates ? "disabled_state" : "enabled_state"));
+            L10n.info(sender, "director." + (tile.director.disableStates ? "disabled_state" : "enabled_state"));
         }
         else if (action.equals("toggle"))
         {
-            boolean isPlaying = director.togglePlayback();
+            boolean isPlaying = tile.director.togglePlayback();
             L10n.success(sender, isPlaying ? play : stop, args[1], args[2], args[3]);
         }
     }

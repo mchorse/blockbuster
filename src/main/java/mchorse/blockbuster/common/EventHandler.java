@@ -2,9 +2,6 @@ package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -34,13 +31,9 @@ public class EventHandler
 
             if (tile instanceof TileEntityDirector)
             {
-                TileEntityDirector director = (TileEntityDirector) tile;
-
-                if (!director.replays.isEmpty())
+                if (((TileEntityDirector) tile).sendConfirm(event.getPos(), event.getPlayer()))
                 {
                     event.setCanceled(true);
-
-                    Dispatcher.sendTo(new PacketConfirmBreak(event.getPos(), director.replays.size()), (EntityPlayerMP) event.getPlayer());
                 }
             }
         }
