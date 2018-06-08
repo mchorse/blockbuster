@@ -2,7 +2,7 @@ package mchorse.blockbuster.commands;
 
 import java.util.List;
 
-import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -51,7 +51,7 @@ public class CommandDirector extends CommandBase
 
         String action = args[0];
         BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
-        AbstractTileEntityDirector director = this.getDirector(server, pos);
+        TileEntityDirector director = this.getDirector(server, pos);
 
         if (director == null)
         {
@@ -108,13 +108,13 @@ public class CommandDirector extends CommandBase
     /**
      * Get abstract director from block pos
      */
-    protected AbstractTileEntityDirector getDirector(MinecraftServer server, BlockPos pos)
+    protected TileEntityDirector getDirector(MinecraftServer server, BlockPos pos)
     {
         TileEntity entity = server.getEntityWorld().getTileEntity(pos);
 
-        if (entity instanceof AbstractTileEntityDirector)
+        if (entity instanceof TileEntityDirector)
         {
-            return (AbstractTileEntityDirector) entity;
+            return (TileEntityDirector) entity;
         }
 
         return null;

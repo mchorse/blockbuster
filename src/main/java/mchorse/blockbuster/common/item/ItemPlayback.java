@@ -6,7 +6,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.common.tileentity.AbstractTileEntityDirector;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.resources.I18n;
@@ -148,14 +148,14 @@ public class ItemPlayback extends Item
 
             TileEntity tile = worldIn.getTileEntity(pos);
 
-            if (tile == null || !(tile instanceof AbstractTileEntityDirector))
+            if (tile == null || !(tile instanceof TileEntityDirector))
             {
                 L10n.error(player, "director.missing", pos.getX(), pos.getY(), pos.getZ());
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            AbstractTileEntityDirector director = (AbstractTileEntityDirector) tile;
+            TileEntityDirector director = (TileEntityDirector) tile;
 
             if (director.togglePlayback() && CameraHandler.isApertureLoaded())
             {

@@ -1,6 +1,6 @@
 package mchorse.blockbuster.common;
 
-import mchorse.blockbuster.common.block.AbstractBlockDirector;
+import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
@@ -28,7 +28,7 @@ public class EventHandler
     {
         World world = event.getWorld();
 
-        if (!world.isRemote && event.getState().getBlock() instanceof AbstractBlockDirector)
+        if (!world.isRemote && event.getState().getBlock() instanceof BlockDirector)
         {
             TileEntity tile = world.getTileEntity(event.getPos());
 

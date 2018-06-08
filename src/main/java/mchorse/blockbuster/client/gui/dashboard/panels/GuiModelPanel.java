@@ -46,8 +46,6 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     private TileEntityModel model;
     private TileEntityModel temp = new TileEntityModel();
 
-    private GuiMorphsPopup morphs;
-
     private GuiTrackpadElement yaw;
     private GuiTrackpadElement pitch;
     private GuiTrackpadElement body;
@@ -70,6 +68,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     private GuiModelBlockList list;
     private GuiElements subChildren;
 
+    private GuiMorphsPopup morphs;
     private GuiInventory inventory;
     private GuiSlot[] slots = new GuiSlot[6];
     private GuiSlot active;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
-import mchorse.blockbuster.common.block.AbstractBlockDirector;
+import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
@@ -40,7 +40,7 @@ public class WorldEventListener implements IWorldEventListener
     {
         if (Blockbuster.proxy.config.damage_control)
         {
-            if (oldState.getBlock() instanceof AbstractBlockDirector)
+            if (oldState.getBlock() instanceof BlockDirector)
             {
                 return;
             }
