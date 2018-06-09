@@ -1,23 +1,20 @@
 package mchorse.blockbuster.network.common.director;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.common.tileentity.director.Director;
 import net.minecraft.util.math.BlockPos;
 
 public class PacketDirectorCast extends PacketDirector
 {
-    public List<Replay> actors = new ArrayList<Replay>();
+    public Director director = new Director(null);
 
     public PacketDirectorCast()
     {}
 
-    public PacketDirectorCast(BlockPos pos, List<Replay> actors)
+    public PacketDirectorCast(BlockPos pos, Director director)
     {
         super(pos);
-        this.actors.addAll(actors);
+        this.director = director;
     }
 
     @Override
@@ -25,7 +22,7 @@ public class PacketDirectorCast extends PacketDirector
     {
         super.fromBytes(buf);
 
-        this.replaysFromBytes(buf, this.actors);
+        this.director.fromBuf(buf);
     }
 
     @Override
@@ -33,29 +30,6 @@ public class PacketDirectorCast extends PacketDirector
     {
         super.toBytes(buf);
 
-        this.replaysToBytes(buf, this.actors);
-    }
-
-    public void replaysFromBytes(ByteBuf buf, List<Replay> list)
-    {
-        int count = buf.readInt();
-
-        for (int i = 0; i < count; i++)
-        {
-            Replay replay = new Replay();
-
-            replay.fromBuf(buf);
-            list.add(replay);
-        }
-    }
-
-    public void replaysToBytes(ByteBuf buf, List<Replay> list)
-    {
-        buf.writeInt(list.size());
-
-        for (Replay replay : list)
-        {
-            replay.toBuf(buf);
-        }
+        this.director.toBuf(buf);
     }
 }

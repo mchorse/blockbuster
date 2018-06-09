@@ -28,7 +28,15 @@ public class GuiElements implements IGuiElement, IGuiLegacy
 
     public void add(IGuiElement element)
     {
-        this.elements.add(element);
+        if (element != null) this.elements.add(element);
+    }
+
+    public void add(IGuiElement... elements)
+    {
+        for (IGuiElement element : elements)
+        {
+            if (element != null) this.elements.add(element);
+        }
     }
 
     @Override

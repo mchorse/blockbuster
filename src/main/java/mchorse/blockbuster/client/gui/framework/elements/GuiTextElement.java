@@ -14,14 +14,27 @@ import net.minecraft.client.gui.GuiTextField;
 public class GuiTextElement extends GuiElement implements GuiResponder
 {
     public GuiTextField field;
-    public Consumer<GuiTextElement> callback;
+    public Consumer<String> callback;
 
-    public GuiTextElement(Minecraft mc, Consumer<GuiTextElement> callback)
+    public GuiTextElement(Minecraft mc, Consumer<String> callback, int maxLength)
+    {
+        this(mc, callback);
+        this.field.setMaxStringLength(maxLength);
+    }
+
+    public GuiTextElement(Minecraft mc, Consumer<String> callback)
     {
         super(mc);
 
         this.field = new GuiTextField(0, this.font, 0, 0, 0, 0);
+        this.field.setGuiResponder(this);
         this.callback = callback;
+    }
+
+    public void setText(String text)
+    {
+        this.field.setText(text);
+        this.field.setCursorPositionZero();
     }
 
     @Override
@@ -37,7 +50,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     {
         if (this.callback != null)
         {
-            this.callback.accept(this);
+            this.callback.accept(value);
         }
     }
 
@@ -76,14 +89,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
             return true;
         }
 
-        boolean wasFocused = this.field.isFocused();
-
         this.field.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if (wasFocused != this.field.isFocused())
-        {
-            return true;
-        }
 
         return false;
     }

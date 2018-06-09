@@ -28,6 +28,9 @@ public class Replay
     /* Visual data */
     public AbstractMorph morph;
     public boolean invisible = false;
+    public boolean enabled = true;
+    public boolean fakePlayer = false;
+    public int health = 20;
 
     public Replay()
     {}
@@ -46,6 +49,7 @@ public class Replay
         actor.setEntityInvulnerable(this.invincible);
         actor.morph = this.morph == null ? null : this.morph.clone(actor.worldObj.isRemote);
         actor.invisible = this.invisible;
+        actor.setHealth(this.health);
         actor.notifyPlayers();
     }
 

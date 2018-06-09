@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.client.director;
 
 import mchorse.blockbuster.client.gui.GuiDirector;
-import mchorse.blockbuster.common.GuiHandler;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import net.minecraft.client.Minecraft;
@@ -24,18 +24,17 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
     {
         if (Minecraft.getMinecraft().currentScreen == null)
         {
-            int x = message.pos.getX();
-            int y = message.pos.getY();
-            int z = message.pos.getZ();
+            GuiDashboard dashboard = new GuiDashboard();
+            dashboard.openPanel(dashboard.directorPanel);
 
-            GuiHandler.open(player, GuiHandler.DIRECTOR, x, y, z);
+            Minecraft.getMinecraft().displayGuiScreen(dashboard);
         }
 
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GuiDirector)
+        if (screen instanceof GuiDashboard)
         {
-            ((GuiDirector) screen).setCast(message.actors);
+            ((GuiDashboard) screen).directorPanel.openDirector(message.director, message.pos);
         }
     }
 }

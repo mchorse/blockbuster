@@ -6,6 +6,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.tileentity.director.Director;
+import mchorse.blockbuster.common.tileentity.director.DirectorSender;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
@@ -33,12 +34,18 @@ public class TileEntityDirector extends TileEntity implements ITickable
      * Director instance which is responsible for managing and storing 
      * director block information and actors
      */
-    public Director director = new Director(this);
+    public Director director;
 
     /**
      * This tick used for checking if actors still playing
      */
     private int tick = 0;
+
+    public TileEntityDirector()
+    {
+        this.director = new Director(this);
+        this.director.setSender(new DirectorSender(this.director));
+    }
 
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
@@ -202,7 +209,7 @@ public class TileEntityDirector extends TileEntity implements ITickable
      */
     public void open(EntityPlayer player, BlockPos pos)
     {
-        Dispatcher.sendTo(new PacketDirectorCast(pos, this.director.replays), (EntityPlayerMP) player);
+        Dispatcher.sendTo(new PacketDirectorCast(pos, this.director), (EntityPlayerMP) player);
     }
 
     /**

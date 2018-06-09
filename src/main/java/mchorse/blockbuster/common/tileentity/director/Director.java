@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -15,6 +16,7 @@ import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Director data class
@@ -70,12 +72,33 @@ public class Director
      */
     private TileEntityDirector tile;
 
+    /**
+     * Director command sender 
+     */
+    private DirectorSender sender;
+
     public Director(TileEntityDirector tile)
     {
         this.tile = tile;
     }
 
     /* Info accessors */
+
+    /**
+     * Get tile entity 
+     */
+    public TileEntityDirector getTile()
+    {
+        return this.tile;
+    }
+
+    /**
+     * Set director command sender 
+     */
+    public void setSender(DirectorSender sender)
+    {
+        this.sender = sender;
+    }
 
     /**
      * Get a replay by actor. Comparison is based on actor's UUID.
@@ -209,6 +232,7 @@ public class Director
         }
 
         this.setPlaying(true);
+        this.sendCommand(this.startCommand);
 
         CommonProxy.manager.addDamageControl(this, firstActor);
     }
@@ -252,11 +276,12 @@ public class Director
         }
 
         this.setPlaying(true);
+        this.sendCommand(this.startCommand);
     }
 
     /**
-     * Spawns actors at given tick in idle mode. This is pretty useful for
-     * positioning cameras for exact positions.
+     * Spawns actors at given tick in idle mode. This is pretty useful 
+     * for positioning cameras for exact positions.
      */
     public boolean spawn(int tick)
     {
@@ -343,6 +368,7 @@ public class Director
 
         this.actors.clear();
         this.setPlaying(false);
+        this.sendCommand(this.stopCommand);
     }
 
     /**
@@ -470,6 +496,17 @@ public class Director
     }
 
     /**
+     * Send a command 
+     */
+    public void sendCommand(String command)
+    {
+        if (this.sender != null && !command.isEmpty())
+        {
+            this.tile.getWorld().getMinecraftServer().commandManager.executeCommand(this.sender, command);
+        }
+    }
+
+    /**
      * Log first actor's ticks (for debug purposes) 
      */
     public void logTicks()
@@ -485,6 +522,17 @@ public class Director
         {
             Blockbuster.LOGGER.info("Director tick: " + actor.playback.getTick());
         }
+    }
+
+    public void copy(Director director)
+    {
+        this.replays.clear();
+        this.replays.addAll(director.replays);
+
+        this.loops = director.loops;
+        this.disableStates = director.disableStates;
+        this.startCommand = director.startCommand;
+        this.stopCommand = director.stopCommand;
     }
 
     /* NBT methods */
@@ -503,10 +551,10 @@ public class Director
             this.replays.add(replay);
         }
 
-        this.startCommand = compound.getString("StartCommand");
-        this.stopCommand = compound.getString("StopCommand");
         this.loops = compound.getBoolean("Loops");
         this.disableStates = compound.getBoolean("DisableState");
+        this.startCommand = compound.getString("StartCommand");
+        this.stopCommand = compound.getString("StopCommand");
     }
 
     public void toNBT(NBTTagCompound compound)
@@ -522,9 +570,44 @@ public class Director
         }
 
         compound.setTag("Actors", tagList);
-        compound.setString("StartCommand", this.startCommand);
-        compound.setString("StopCommand", this.stopCommand);
         compound.setBoolean("Loops", this.loops);
         compound.setBoolean("DisableState", this.disableStates);
+        compound.setString("StartCommand", this.startCommand);
+        compound.setString("StopCommand", this.stopCommand);
+    }
+
+    /* ByteBuf methods */
+
+    public void fromBuf(ByteBuf buffer)
+    {
+        this.replays.clear();
+
+        for (int i = 0, c = buffer.readInt(); i < c; i++)
+        {
+            Replay replay = new Replay();
+
+            this.replays.add(replay);
+            replay.fromBuf(buffer);
+        }
+
+        this.loops = buffer.readBoolean();
+        this.disableStates = buffer.readBoolean();
+        this.startCommand = ByteBufUtils.readUTF8String(buffer);
+        this.stopCommand = ByteBufUtils.readUTF8String(buffer);
+    }
+
+    public void toBuf(ByteBuf buffer)
+    {
+        buffer.writeInt(this.replays.size());
+
+        for (Replay replay : this.replays)
+        {
+            replay.toBuf(buffer);
+        }
+
+        buffer.writeBoolean(this.loops);
+        buffer.writeBoolean(this.disableStates);
+        ByteBufUtils.writeUTF8String(buffer, this.startCommand);
+        ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
     }
 }

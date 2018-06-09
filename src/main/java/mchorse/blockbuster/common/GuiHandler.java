@@ -65,8 +65,6 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == MODEL_BLOCK)
         {
-            // return new GuiModelBlock((TileEntityModel) world.getTileEntity(new BlockPos(x, y, z)));
-
             TileEntityModel model = (TileEntityModel) world.getTileEntity(new BlockPos(x, y, z));
             GuiDashboard dashboard = new GuiDashboard();
 

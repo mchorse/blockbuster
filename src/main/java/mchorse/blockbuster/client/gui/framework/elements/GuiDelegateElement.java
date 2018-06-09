@@ -12,9 +12,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDelegateElement extends GuiElement implements IGuiLegacy
 {
-    public GuiElement delegate;
+    public IGuiElement delegate;
 
-    public GuiDelegateElement(Minecraft mc, GuiElement element)
+    public GuiDelegateElement(Minecraft mc, IGuiElement element)
     {
         super(mc);
         this.delegate = element;
@@ -23,10 +23,12 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     @Override
     public void resize(int width, int height)
     {
-        if (this.delegate != null)
+        if (this.delegate instanceof GuiElement)
         {
-            this.delegate.resizer = this.resizer;
-            this.delegate.resize(width, height);
+            GuiElement element = (GuiElement) this.delegate;
+
+            element.resizer = this.resizer;
+            element.resize(width, height);
         }
     }
 
