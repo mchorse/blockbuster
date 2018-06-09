@@ -75,10 +75,10 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     {
         super.resize(width, height);
 
-        this.field.xPosition = this.area.x;
-        this.field.yPosition = this.area.y;
-        this.field.width = this.area.w;
-        this.field.height = this.area.h;
+        this.field.xPosition = this.area.x + 1;
+        this.field.yPosition = this.area.y + 1;
+        this.field.width = this.area.w - 2;
+        this.field.height = this.area.h - 2;
     }
 
     @Override

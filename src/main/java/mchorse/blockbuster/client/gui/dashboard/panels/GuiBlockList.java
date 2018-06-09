@@ -81,11 +81,6 @@ public abstract class GuiBlockList<T> extends GuiElement
 
         if (this.scroll.isInside(mouseX, mouseY))
         {
-            if (mouseX >= this.scroll.getX(1) - 4)
-            {
-                this.scroll.dragging = true;
-            }
-
             int index = this.scroll.getIndex(mouseX, mouseY);
             int size = this.elements.size();
 

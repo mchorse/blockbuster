@@ -401,6 +401,11 @@ public class Director
 
         for (Replay replay : this.replays)
         {
+            if (!replay.enabled)
+            {
+                continue;
+            }
+
             EntityActor actor = null;
 
             if (actor == null)
@@ -455,9 +460,9 @@ public class Director
     /**
      * Duplicate  
      */
-    public void dupe(int index)
+    public void dupe(int index, boolean isRemote)
     {
-        Replay replay = this.replays.get(index).clone(this.tile.getWorld().isRemote);
+        Replay replay = this.replays.get(index).clone(isRemote);
         Matcher matcher = NUMBERED_SUFFIX.matcher(replay.id);
 
         String prefix = replay.id;

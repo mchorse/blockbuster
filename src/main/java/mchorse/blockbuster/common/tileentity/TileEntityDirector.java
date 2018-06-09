@@ -131,7 +131,7 @@ public class TileEntityDirector extends TileEntity implements ITickable
      */
     public void duplicate(int index)
     {
-        this.director.dupe(index);
+        this.director.dupe(index, this.worldObj.isRemote);
         this.markDirty();
     }
 

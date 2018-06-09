@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiModelPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelPanel;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;

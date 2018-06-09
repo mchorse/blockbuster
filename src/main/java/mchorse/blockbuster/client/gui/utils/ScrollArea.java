@@ -74,7 +74,7 @@ public class ScrollArea extends Area
      */
     public void clamp()
     {
-        int size = this.direction == ScrollDirection.VERTICAL ? this.h : this.w;
+        int size = this.direction.getSide(this);
 
         if (this.scrollSize <= size)
         {
@@ -96,23 +96,7 @@ public class ScrollArea extends Area
             return -1;
         }
 
-        int axis = 0;
-
-        if (this.direction == ScrollDirection.VERTICAL)
-        {
-            y -= this.y;
-            y += this.scroll;
-
-            axis = y;
-        }
-        else
-        {
-            x -= this.x;
-            x += this.scroll;
-
-            axis = x;
-        }
-
+        int axis = this.direction.getScroll(this, x, y);
         int index = axis / this.scrollItemSize;
 
         return index > this.scrollSize / this.scrollItemSize ? -1 : index;
@@ -123,7 +107,7 @@ public class ScrollArea extends Area
      */
     public int getScrollBar(int size)
     {
-        int maxSize = this.direction == ScrollDirection.VERTICAL ? this.h : this.w;
+        int maxSize = this.direction.getSide(this);
 
         if (this.scrollSize < size)
         {
@@ -140,7 +124,7 @@ public class ScrollArea extends Area
      */
     public boolean mouseClicked(int x, int y)
     {
-        boolean isInside = this.isInside(x, y) && this.scrollSize > this.h && x >= this.getX(1) - 4;
+        boolean isInside = this.isInside(x, y) && this.scrollSize > this.h && (this.direction == ScrollDirection.VERTICAL ? x >= this.getX(1) - 4 : y >= this.getY(1) - 4);
 
         if (isInside)
         {
@@ -181,9 +165,9 @@ public class ScrollArea extends Area
     {
         if (this.dragging)
         {
-            float progress = (float) (y - this.y) / (float) this.h;
+            float progress = this.direction.getProgress(this, x, y);
 
-            this.scrollTo((int) (progress * (this.scrollSize - this.h + 4)));
+            this.scrollTo((int) (progress * (this.scrollSize - this.direction.getSide(this) + 4)));
         }
     }
 
@@ -192,18 +176,30 @@ public class ScrollArea extends Area
      */
     public void drawScrollbar()
     {
-        if (this.scrollSize <= this.h)
+        int side = this.direction.getSide(this);
+
+        if (this.scrollSize <= side)
         {
             return;
         }
 
-        int h = this.getScrollBar(this.h / 2);
+        int h = this.getScrollBar(side / 2);
         int x = this.getX(1) - 4;
         /* Sometimes I don't understand how I come up with such clever
          * formulas, but it's all ratios, y'all */
         int y = this.y + (int) ((this.scroll / (float) (this.scrollSize - this.h)) * (this.h - h));
 
-        Gui.drawRect(x, y, x + 4, y + h, -6250336);
+        if (this.direction == ScrollDirection.HORIZONTAL)
+        {
+            y = this.getY(1) - 4;
+            x = this.x + (int) ((this.scroll / (float) (this.scrollSize - this.w)) * (this.w - h));
+
+            Gui.drawRect(x, y, x + h, y + 4, -6250336);
+        }
+        else
+        {
+            Gui.drawRect(x, y, x + 4, y + h, -6250336);
+        }
     }
 
     /**
@@ -211,6 +207,61 @@ public class ScrollArea extends Area
      */
     public static enum ScrollDirection
     {
-        VERTICAL, HORIZONTAL;
+        VERTICAL()
+        {
+            @Override
+            public int getSide(ScrollArea area)
+            {
+                return area.h;
+            }
+
+            @Override
+            public int getScroll(ScrollArea area, int x, int y)
+            {
+                return y - area.y + area.scroll;
+            }
+
+            @Override
+            public float getProgress(ScrollArea area, int x, int y)
+            {
+                return (y - area.y) / (float) area.h;
+            }
+        },
+        HORIZONTAL()
+        {
+            @Override
+            public int getSide(ScrollArea area)
+            {
+                return area.w;
+            }
+
+            @Override
+            public int getScroll(ScrollArea area, int x, int y)
+            {
+                return x - area.x + area.scroll;
+            }
+
+            @Override
+            public float getProgress(ScrollArea area, int x, int y)
+            {
+                return (x - area.x) / (float) area.w;
+            }
+        };
+
+        /**
+         * Get dominant side for this scrolling direction 
+         */
+        public abstract int getSide(ScrollArea area);
+
+        /**
+         * Get scrolled amount for given mouse position 
+         */
+        public abstract int getScroll(ScrollArea area, int x, int y);
+
+        /**
+         * Get progress scalar between 0 and 1 which identifies how much 
+         * it is near the maximum side 
+         */
+        public abstract float getProgress(ScrollArea area, int x, int y);
     }
 }

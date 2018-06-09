@@ -67,22 +67,28 @@ public class Replay
     {
         tag.setString("Id", this.id);
         tag.setString("Name", this.name);
-        tag.setBoolean("Invincible", this.invincible);
 
         MorphUtils.morphToNBT(tag, this.morph);
 
+        tag.setBoolean("Invincible", this.invincible);
         tag.setBoolean("Invisible", this.invisible);
+        tag.setBoolean("Enabled", this.enabled);
     }
 
     public void fromNBT(NBTTagCompound tag)
     {
         this.id = tag.getString("Id");
         this.name = tag.getString("Name");
-        this.invincible = tag.getBoolean("Invincible");
 
         this.morph = MorphUtils.morphFromNBT(tag);
 
+        this.invincible = tag.getBoolean("Invincible");
         this.invisible = tag.getBoolean("Invisible");
+
+        if (tag.hasKey("Enabled"))
+        {
+            this.enabled = tag.getBoolean("Enabled");
+        }
     }
 
     /* to / from ByteBuf */
@@ -91,7 +97,6 @@ public class Replay
     {
         ByteBufUtils.writeUTF8String(buf, this.id);
         ByteBufUtils.writeUTF8String(buf, this.name);
-        buf.writeBoolean(this.invincible);
         buf.writeBoolean(this.morph != null);
 
         if (this.morph != null)
@@ -102,21 +107,24 @@ public class Replay
             ByteBufUtils.writeTag(buf, tag);
         }
 
+        buf.writeBoolean(this.invincible);
         buf.writeBoolean(this.invisible);
+        buf.writeBoolean(this.enabled);
     }
 
     public void fromBuf(ByteBuf buf)
     {
         this.id = ByteBufUtils.readUTF8String(buf);
         this.name = ByteBufUtils.readUTF8String(buf);
-        this.invincible = buf.readBoolean();
 
         if (buf.readBoolean())
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
         }
 
+        this.invincible = buf.readBoolean();
         this.invisible = buf.readBoolean();
+        this.enabled = buf.readBoolean();
     }
 
     @Override

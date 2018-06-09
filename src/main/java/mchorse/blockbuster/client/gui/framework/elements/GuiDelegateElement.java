@@ -25,10 +25,12 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     {
         if (this.delegate instanceof GuiElement)
         {
-            GuiElement element = (GuiElement) this.delegate;
+            ((GuiElement) this.delegate).resizer = this.resizer;
+        }
 
-            element.resizer = this.resizer;
-            element.resize(width, height);
+        if (this.delegate != null)
+        {
+            this.delegate.resize(width, height);
         }
     }
 

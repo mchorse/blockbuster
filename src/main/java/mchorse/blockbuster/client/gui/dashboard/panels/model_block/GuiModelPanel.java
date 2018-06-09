@@ -1,14 +1,14 @@
-package mchorse.blockbuster.client.gui.dashboard.panels;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -34,9 +34,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
@@ -416,58 +414,5 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         super.draw(mouseX, mouseY, partialTicks);
 
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    /**
-     * Model block list 
-     */
-    public static class GuiModelBlockList extends GuiBlockList<TileEntityModel>
-    {
-        public GuiModelBlockList(Minecraft mc, String title, Consumer<TileEntityModel> callback)
-        {
-            super(mc, title, callback);
-        }
-
-        @Override
-        public boolean addBlock(BlockPos pos)
-        {
-            TileEntity tile = this.mc.theWorld.getTileEntity(pos);
-
-            if (tile instanceof TileEntityModel)
-            {
-                this.elements.add((TileEntityModel) tile);
-
-                this.scroll.setSize(this.elements.size());
-                this.scroll.clamp();
-
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
-        public void render(int x, int y, TileEntityModel item, boolean hovered)
-        {
-            if (item.morph != null)
-            {
-                GuiScreen screen = this.mc.currentScreen;
-
-                int mny = MathHelper.clamp_int(y, this.scroll.y, this.scroll.getY(1));
-                int mxy = MathHelper.clamp_int(y + 20, this.scroll.y, this.scroll.getY(1));
-
-                if (mxy - mny > 0)
-                {
-                    GuiUtils.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, screen.width, screen.height);
-                    item.morph.renderOnScreen(this.mc.thePlayer, x + this.scroll.w - 20, y + 30, 20, 1);
-                    GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
-                }
-            }
-
-            BlockPos pos = item.getPos();
-            String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
-
-            this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
-        }
     }
 }
