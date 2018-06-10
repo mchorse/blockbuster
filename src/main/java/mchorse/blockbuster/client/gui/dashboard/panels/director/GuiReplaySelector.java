@@ -139,6 +139,7 @@ public class GuiReplaySelector extends GuiElement
                 }
                 else
                 {
+                    GlStateManager.color(1, 1, 1);
                     GlStateManager.enableAlpha();
                     this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
                     this.drawTexturedModalRect(x - 8, this.area.getY(0.5F) - 8, 32, active ? 16 : 0, 16, 16);

@@ -22,6 +22,11 @@ public class GuiDashboard extends GuiBase
     public GuiDirectorPanel directorPanel;
     public GuiModelPanel modelPanel;
 
+    public static void reset()
+    {
+        GuiModelPanel.lastBlocks.clear();
+    }
+
     public GuiDashboard()
     {
         Minecraft mc = Minecraft.getMinecraft();

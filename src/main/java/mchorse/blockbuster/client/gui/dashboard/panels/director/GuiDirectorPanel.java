@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -18,13 +19,23 @@ import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.utils.L10n;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.ClickEvent.Action;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
@@ -50,7 +61,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     public GuiMorphsPopup morphs;
 
-    Director director;
+    private Director director;
     private Replay replay;
     private BlockPos pos;
 
@@ -61,7 +72,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.subChildren = new GuiElements();
         this.replayEditor = new GuiElements();
         this.configOptions = new GuiElements();
-        this.mainView = new GuiDelegateElement(mc, this.configOptions);
+        this.mainView = new GuiDelegateElement(mc, this.replayEditor);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w.set(1, Measure.RELATIVE);
 
@@ -69,10 +80,10 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.subChildren.add(this.mainView);
 
         /* Config options */
-        this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
-        this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
         this.startCommand = new GuiTextElement(mc, (str) -> this.director.startCommand = str, 4000);
         this.stopCommand = new GuiTextElement(mc, (str) -> this.director.stopCommand = str, 4000);
+        this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
+        this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
 
         this.startCommand.resizer().set(10, 50, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
         this.stopCommand.resizer().set(10, 90, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
@@ -97,7 +108,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled);
         this.replayEditor.add(this.selector);
 
-        /* Additional controls */
+        /* Toggle view button */
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
@@ -110,41 +121,31 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.subChildren.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) ->
-        {
-            Replay replay = new Replay("");
-
-            this.director.replays.add(replay);
-            this.setReplay(replay);
-            this.selector.update();
-        });
+        /* Add, duplicate and remove replay buttons */
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
         element.resizer().set(0, 8, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) ->
-        {
-            this.director.dupe(this.director.replays.indexOf(this.replay), true);
-            this.selector.update();
-        });
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
         element.resizer().set(0, 24, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) ->
-        {
-            this.director.replays.remove(this.replay);
-            int size = this.director.replays.size();
-
-            this.setReplay(size == 0 ? null : this.director.replays.get(size - 1));
-            this.selector.update();
-        });
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
         element.resizer().set(0, 40, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
+        /* Additional utility buttons */
         element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.morphs.setHidden(false));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
+        element.resizer().y.set(1, Measure.RELATIVE, -26);
+
+        this.replayEditor.add(element);
+
+        element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
+        element.resizer().set(10, 0, 60, 20).parent(this.area);
         element.resizer().y.set(1, Measure.RELATIVE, -26);
 
         this.replayEditor.add(element);
@@ -162,14 +163,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             this.setReplay(this.director.replays.get(0));
         }
-        else
-        {
-            this.mainView.delegate = this.configOptions;
-        }
 
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-        this.mainView.delegate.resize(screen.width, screen.height);
         this.fillData();
 
         return this;
@@ -230,6 +224,74 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.selector.setReplay(this.replay);
     }
 
+    /**
+     * Add an empty replay 
+     */
+    private void addReplay()
+    {
+        Replay replay = new Replay("");
+
+        this.director.replays.add(replay);
+        this.setReplay(replay);
+        this.selector.update();
+    }
+
+    /**
+     * Duplicate a replay 
+     */
+    private void dupeReplay()
+    {
+        this.director.dupe(this.director.replays.indexOf(this.replay), true);
+        this.selector.update();
+    }
+
+    /**
+     * Remove replay 
+     */
+    private void removeReplay()
+    {
+        this.director.replays.remove(this.replay);
+        int size = this.director.replays.size();
+
+        this.setReplay(size == 0 ? null : this.director.replays.get(size - 1));
+        this.selector.update();
+    }
+
+    /**
+     * Send record message to the player
+     */
+    private void sendRecordMessage()
+    {
+        EntityPlayer player = this.mc.thePlayer;
+
+        if (this.replay.id.isEmpty())
+        {
+            L10n.error(player, "recording.fill_filename");
+
+            return;
+        }
+
+        String command = "/action record " + this.replay.id + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
+
+        ITextComponent component = new TextComponentString(I18n.format("blockbuster.info.recording.clickhere"));
+        component.getStyle().setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
+        component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
+        component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
+
+        L10n.info(player, "recording.message", this.replay.id, component);
+
+        /* Add the command to the history */
+        List<String> messages = this.mc.ingameGUI.getChatGUI().getSentMessages();
+
+        boolean empty = messages.isEmpty();
+        boolean lastMessageIsntCommand = !empty && !messages.get(messages.size() - 1).equals(command);
+
+        if (lastMessageIsntCommand || empty)
+        {
+            messages.add(command);
+        }
+    }
+
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
@@ -260,23 +322,35 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
+        /* Draw additional stuff */
         if (this.mainView.delegate == this.replayEditor)
         {
-            MorphCell cell = this.morphs.morphs.getSelected();
-
-            if (cell != null)
+            if (this.replay != null)
             {
-                int x = this.area.getX(0.5F);
-                int y = this.area.getY(0.75F);
+                MorphCell cell = this.morphs.morphs.getSelected();
+                AbstractMorph morph = this.replay.morph;
 
-                GuiScreen screen = this.mc.currentScreen;
+                if (morph == null && cell != null)
+                {
+                    morph = cell.current().morph;
+                }
 
-                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-                cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 3.5F, 1.0F);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                if (morph != null)
+                {
+                    int x = this.area.getX(0.5F);
+                    int y = this.area.getY(0.75F);
+
+                    GuiScreen screen = this.mc.currentScreen;
+
+                    GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+                    morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 3.5F, 1.0F);
+                    GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                }
             }
 
-            this.font.drawStringWithShadow("Recording ID", this.id.area.x, this.id.area.y - 12, 0xcccccc);
+            boolean error = this.replay == null ? false : this.replay.id.isEmpty();
+
+            this.font.drawStringWithShadow("Recording ID", this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
             this.font.drawStringWithShadow("Name tag", this.name.area.x, this.name.area.y - 12, 0xcccccc);
         }
         else

@@ -4,7 +4,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.client.gui.GuiActor;
-import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -61,7 +60,7 @@ public class GuiHandler implements IGuiHandler
         }
         else if (ID == DIRECTOR)
         {
-            return new GuiDirector(new BlockPos(x, y, z));
+            return null;
         }
         else if (ID == MODEL_BLOCK)
         {

@@ -1,6 +1,5 @@
 package mchorse.blockbuster.network.client.director;
 
-import mchorse.blockbuster.client.gui.GuiDirector;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
