@@ -11,9 +11,9 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
 import mchorse.aperture.client.gui.GuiCameraEditor;
-import mchorse.aperture.utils.ScrollArea;
 import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
+import mchorse.blockbuster.client.gui.utils.ScrollArea;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -71,7 +71,7 @@ public class GuiPlayback extends GuiScreen
 
             if (scroll != 0)
             {
-                this.area.scrollBy((int) Math.copySign(2, scroll));
+                this.area.mouseScroll(x, y, scroll);
             }
         }
     }
@@ -81,12 +81,25 @@ public class GuiPlayback extends GuiScreen
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
+        if (this.area.mouseClicked(mouseX, mouseY))
+        {
+            return;
+        }
+
         if (this.area.isInside(mouseX, mouseY))
         {
             int index = this.area.getIndex(mouseX, mouseY);
 
             this.index = index;
         }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        super.mouseReleased(mouseX, mouseY, state);
+
+        this.area.mouseReleased(mouseX, mouseY);
     }
 
     /* Actions */
@@ -221,6 +234,8 @@ public class GuiPlayback extends GuiScreen
 
         if (isCameraProfile)
         {
+            this.area.drag(mouseX, mouseY);
+
             int x = this.area.x;
             int y = this.area.y;
             int w = this.area.w;
@@ -253,16 +268,8 @@ public class GuiPlayback extends GuiScreen
             }
 
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        }
 
-        if (this.area.scrollSize > this.area.h && isCameraProfile)
-        {
-            int mh = this.area.h - 4;
-            int x = this.area.x + this.area.w - 4;
-            int h = this.area.getScrollBar(mh);
-            int y = this.area.y + (int) (this.area.scroll / (float) (this.area.scrollSize - this.area.h) * (mh - h)) + 2;
-
-            Gui.drawRect(x, y, x + 2, y + h, 0x88ffffff);
+            this.area.drawScrollbar();
         }
     }
 }

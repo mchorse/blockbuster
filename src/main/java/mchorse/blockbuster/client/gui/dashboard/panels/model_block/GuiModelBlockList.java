@@ -52,7 +52,7 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
             if (mxy - mny > 0)
             {
                 GuiUtils.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, screen.width, screen.height);
-                item.morph.renderOnScreen(this.mc.thePlayer, x + this.scroll.w - 20, y + 30, 20, 1);
+                item.morph.renderOnScreen(this.mc.thePlayer, x + this.scroll.w - 16, y + 30, 20, 1);
                 GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
             }
         }
