@@ -9,7 +9,6 @@ import java.util.Set;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
-import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -150,7 +149,9 @@ public class ModelHandler
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
     {
         this.models.clear();
-        ModelExtrudedLayer.clear();
+
+        // TODO: remake
+        // ModelExtrudedLayer.clear();
     }
 
     /**

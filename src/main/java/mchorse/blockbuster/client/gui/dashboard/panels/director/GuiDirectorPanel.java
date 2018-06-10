@@ -1,11 +1,14 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
@@ -19,6 +22,7 @@ import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.Morphing;
@@ -29,6 +33,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -40,6 +45,8 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 {
+    public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
+
     private GuiElements subChildren;
     private GuiDelegateElement mainView;
     private GuiElements replayEditor;
@@ -60,10 +67,27 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> enabled;
 
     public GuiMorphsPopup morphs;
+    public GuiDirectorBlockList list;
 
     private Director director;
     private Replay replay;
     private BlockPos pos;
+
+    /**
+     * Try adding a block position, if it doesn't exist in list already 
+     */
+    public static void tryAddingBlock(BlockPos pos)
+    {
+        for (BlockPos stored : lastBlocks)
+        {
+            if (pos.equals(stored))
+            {
+                return;
+            }
+        }
+
+        lastBlocks.add(pos);
+    }
 
     public GuiDirectorPanel(Minecraft mc)
     {
@@ -75,6 +99,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.mainView = new GuiDelegateElement(mc, this.replayEditor);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w.set(1, Measure.RELATIVE);
+        this.selector.resizer().y.set(1, Measure.RELATIVE, -60);
 
         this.children.add(this.subChildren);
         this.subChildren.add(this.mainView);
@@ -99,7 +124,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
 
-        this.id.resizer().set(10, 90, 120, 20).parent(this.area);
+        this.id.resizer().set(10, 20, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
         this.invincible.resizer().set(0, 30, 80, 11).relative(this.name.resizer());
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
@@ -116,45 +141,67 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.mainView.delegate = this.mainView.delegate == this.configOptions ? this.replayEditor : this.configOptions;
             this.mainView.delegate.resize(screen.width, screen.height);
         });
-        element.resizer().set(0, 0, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
-        element.resizer().y.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 6, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -48);
 
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
-        element.resizer().set(0, 8, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
-        element.resizer().set(0, 24, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
-        element.resizer().set(0, 40, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
         this.replayEditor.add(element);
 
         /* Additional utility buttons */
         element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.morphs.setHidden(false));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
-        element.resizer().y.set(1, Measure.RELATIVE, -26);
+        element.resizer().y.set(1, Measure.RELATIVE, -86);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
         element.resizer().set(10, 0, 60, 20).parent(this.area);
-        element.resizer().y.set(1, Measure.RELATIVE, -26);
+        element.resizer().y.set(1, Measure.RELATIVE, -86);
 
         this.replayEditor.add(element);
 
         this.morphs = new GuiMorphsPopup(6, null, Morphing.get(this.mc.thePlayer));
         this.morphs.callback = (morph) -> this.setMorph(morph);
+
+        /* Model blocks */
+        this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (pos) -> this.pickDirector(pos)));
+        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+        this.list.resizer().x.set(1, Measure.RELATIVE, -120);
+
+        this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.setVisible(!this.list.isVisible())));
+        element.resizer().set(0, 2, 24, 24).parent(this.area).x.set(1, Measure.RELATIVE, -28);
+    }
+
+    private void pickDirector(BlockPos pos)
+    {
+        this.close();
+
+        Dispatcher.sendToServer(new PacketDirectorRequestCast(pos));
     }
 
     public GuiDirectorPanel openDirector(Director director, BlockPos pos)
+    {
+        tryAddingBlock(pos);
+        this.list.setVisible(false);
+
+        return this.setDirector(director, pos);
+    }
+
+    public GuiDirectorPanel setDirector(Director director, BlockPos pos)
     {
         this.director = director;
         this.pos = pos;
@@ -164,10 +211,21 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             this.setReplay(this.director.replays.get(0));
         }
+        else
+        {
+            this.setReplay(null);
+        }
 
+        this.updateList();
         this.fillData();
 
         return this;
+    }
+
+    @Override
+    public void open()
+    {
+        this.updateList();
     }
 
     @Override
@@ -256,6 +314,16 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         }
     }
 
+    private void updateList()
+    {
+        this.list.elements.clear();
+
+        for (BlockPos pos : lastBlocks)
+        {
+            this.list.addBlock(pos);
+        }
+    }
+
     /**
      * Send record message to the player
      */
@@ -337,7 +405,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
                 if (morph != null)
                 {
                     int x = this.area.getX(0.5F);
-                    int y = this.area.getY(0.75F);
+                    int y = this.area.getY(0.55F);
 
                     GuiScreen screen = this.mc.currentScreen;
 

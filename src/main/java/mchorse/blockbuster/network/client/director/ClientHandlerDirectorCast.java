@@ -21,19 +21,30 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketDirectorCast message)
     {
+        boolean opened = false;
+
         if (Minecraft.getMinecraft().currentScreen == null)
         {
             GuiDashboard dashboard = new GuiDashboard();
-            dashboard.openPanel(dashboard.directorPanel);
 
             Minecraft.getMinecraft().displayGuiScreen(dashboard);
+            opened = true;
         }
 
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
         if (screen instanceof GuiDashboard)
         {
-            ((GuiDashboard) screen).directorPanel.openDirector(message.director, message.pos);
+            GuiDashboard dashboard = (GuiDashboard) screen;
+
+            if (opened)
+            {
+                dashboard.openPanel(dashboard.directorPanel.openDirector(message.director, message.pos));
+            }
+            else
+            {
+                dashboard.openPanel(dashboard.directorPanel.setDirector(message.director, message.pos));
+            }
         }
     }
 }

@@ -25,6 +25,7 @@ public class GuiDashboard extends GuiBase
     public static void reset()
     {
         GuiModelPanel.lastBlocks.clear();
+        GuiDirectorPanel.lastBlocks.clear();
     }
 
     public GuiDashboard()

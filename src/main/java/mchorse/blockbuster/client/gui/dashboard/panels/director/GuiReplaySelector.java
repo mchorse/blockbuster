@@ -115,7 +115,7 @@ public class GuiReplaySelector extends GuiElement
 
         /* Background and shadows */
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        this.drawGradientRect(this.area.x, this.area.getY(1), this.area.getX(1), this.area.getY(1) + 16, 0x88000000, 0x00000000);
+        this.drawGradientRect(this.area.x, this.area.y - 16, this.area.getX(1), this.area.y, 0x00000000, 0x88000000);
 
         this.scroll.drag(mouseX, mouseY);
 
@@ -135,7 +135,7 @@ public class GuiReplaySelector extends GuiElement
 
                 if (replay.morph != null)
                 {
-                    replay.morph.renderOnScreen(this.mc.thePlayer, x, this.area.getY(active ? 0.85F : 0.8F), active ? 32 : 24, 1);
+                    replay.morph.renderOnScreen(this.mc.thePlayer, x, this.area.getY(active ? 0.9F : 0.8F), active ? 32 : 24, 1);
                 }
                 else
                 {
