@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.elements;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 
@@ -27,6 +28,8 @@ public class GuiMorphsPopup extends GuiScreen
     public GuiTextField search;
     public GuiButton close;
     public GuiCreativeMorphs morphs;
+    public Consumer<AbstractMorph> callback;
+    private AbstractMorph lastMorph;
 
     /* Area rect */
     protected int x;
@@ -78,8 +81,19 @@ public class GuiMorphsPopup extends GuiScreen
     @Override
     public void handleMouseInput() throws IOException
     {
+        MorphCell cell = this.morphs.getSelected();
+        this.lastMorph = cell == null ? null : cell.current().morph;
+
         super.handleMouseInput();
         this.morphs.handleMouseInput();
+
+        cell = this.morphs.getSelected();
+        AbstractMorph morph = cell == null ? null : cell.current().morph;
+
+        if (this.lastMorph != morph && this.callback != null)
+        {
+            this.callback.accept(morph);
+        }
     }
 
     /**

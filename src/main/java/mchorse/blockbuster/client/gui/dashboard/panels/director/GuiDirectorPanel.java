@@ -151,6 +151,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         this.morphs = new GuiMorphsPopup(6, null, Morphing.get(this.mc.thePlayer));
+        this.morphs.callback = (morph) -> this.setMorph(morph);
     }
 
     public GuiDirectorPanel openDirector(Director director, BlockPos pos)
@@ -180,16 +181,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private void setReplay(Replay replay)
     {
-        if (this.replay != null)
-        {
-            MorphCell cell = this.morphs.morphs.getSelected();
-
-            if (cell != null)
-            {
-                this.replay.morph = cell.current().morph;
-            }
-        }
-
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
         this.replay = replay;
@@ -255,6 +246,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.setReplay(size == 0 ? null : this.director.replays.get(size - 1));
         this.selector.update();
+    }
+
+    private void setMorph(AbstractMorph morph)
+    {
+        if (this.replay != null)
+        {
+            this.replay.morph = morph;
+        }
     }
 
     /**
