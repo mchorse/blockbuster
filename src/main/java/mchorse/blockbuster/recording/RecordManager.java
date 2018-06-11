@@ -112,6 +112,16 @@ public class RecordManager
         player.writeEntityToNBT(tag);
         recorder.record.playerData = tag;
 
+        if (MPMHelper.isLoaded())
+        {
+            tag = MPMHelper.getMPMData(player);
+
+            if (tag != null)
+            {
+                recorder.record.playerData.setTag("MPMData", tag);
+            }
+        }
+
         if (!player.worldObj.isRemote)
         {
             this.addDamageControl(recorder, player);
@@ -215,6 +225,11 @@ public class RecordManager
             if (actor instanceof EntityPlayer && record.playerData != null)
             {
                 actor.readEntityFromNBT(record.playerData);
+
+                if (MPMHelper.isLoaded() && record.playerData.hasKey("MPMData", 10))
+                {
+                    MPMHelper.setMPMData((EntityPlayer) actor, record.playerData.getCompoundTag("MPMData"));
+                }
             }
 
             playback.tick = tick;
