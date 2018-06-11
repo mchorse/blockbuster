@@ -22,6 +22,7 @@ import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
@@ -106,6 +107,10 @@ public class RecordManager
         }
 
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
+        NBTTagCompound tag = new NBTTagCompound();
+
+        player.writeEntityToNBT(tag);
+        recorder.record.playerData = tag;
 
         if (!player.worldObj.isRemote)
         {
@@ -206,6 +211,11 @@ public class RecordManager
             }
 
             RecordPlayer playback = new RecordPlayer(record, mode, actor);
+
+            if (actor instanceof EntityPlayer && record.playerData != null)
+            {
+                actor.readEntityFromNBT(record.playerData);
+            }
 
             playback.tick = tick;
             playback.kill = kill;

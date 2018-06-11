@@ -72,6 +72,11 @@ public class Record
     public List<Frame> frames = new ArrayList<Frame>();
 
     /**
+     * Player data which was recorded when player started recording 
+     */
+    public NBTTagCompound playerData;
+
+    /**
      * Unload timer. Used only on server side.
      */
     public int unload;
@@ -335,6 +340,11 @@ public class Record
         compound.setInteger("PreDelay", this.preDelay);
         compound.setInteger("PostDelay", this.postDelay);
 
+        if (this.playerData != null)
+        {
+            compound.setTag("PlayerData", this.playerData);
+        }
+
         int c = this.frames.size();
         int d = this.actions.size() - this.frames.size();
 
@@ -392,6 +402,11 @@ public class Record
         this.delay = compound.getByte("Delay");
         this.preDelay = compound.getInteger("PreDelay");
         this.postDelay = compound.getInteger("PostDelay");
+
+        if (compound.hasKey("PlayerData", 10))
+        {
+            this.playerData = compound.getCompoundTag("PlayerData");
+        }
 
         NBTTagList frames = (NBTTagList) compound.getTag("Frames");
 
