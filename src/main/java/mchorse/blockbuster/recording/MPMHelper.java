@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Loader;
  * MPM helper class
  * 
  * This class is responsible for setting and getting current MPM model data for 
- * given player
+ * given player. Reden (Charles) helped me to figure out this stuff.
  */
 public class MPMHelper
 {
