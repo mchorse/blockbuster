@@ -4,18 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.common.tileentity.director.fake.FakeContext;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.EnumPacketDirection;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
@@ -65,7 +79,13 @@ public class Director
     /**
      * Map of currently playing actors 
      */
-    private Map<Replay, EntityActor> actors = new HashMap<Replay, EntityActor>();
+    public Map<Replay, RecordPlayer> actors = new HashMap<Replay, RecordPlayer>();
+
+    /**
+     * Count of actors which were spawned (used to check whether actors 
+     * are still playing) 
+     */
+    public int actorsCount = 0;
 
     /**
      * Reference to owning tile entity 
@@ -150,15 +170,15 @@ public class Director
     {
         int count = 0;
 
-        for (EntityActor actor : this.actors.values())
+        for (RecordPlayer record : this.actors.values())
         {
-            if (actor.playback == null || actor.isDead)
+            if (record.isFinished())
             {
                 count++;
             }
         }
 
-        return count == this.replays.size();
+        return count == this.actorsCount;
     }
 
     /* Playback and editing */
@@ -174,14 +194,15 @@ public class Director
             if (this.loops)
             {
                 /* TODO: improve looping */
-                for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+                for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
                 {
                     Replay replay = entry.getKey();
-                    EntityActor actor = entry.getValue();
+                    RecordPlayer actor = entry.getValue();
                     boolean notAttached = true;
 
-                    actor.stopPlaying();
-                    actor.startPlaying(replay.id, 0, notAttached && !this.loops);
+                    // TODO: come back later
+                    // actor.stopPlaying();
+                    // actor.startPlaying(replay.id, 0, !this.loops);
                 }
             }
             else
@@ -214,21 +235,19 @@ public class Director
 
         this.collectActors();
 
-        EntityActor firstActor = null;
+        EntityLivingBase firstActor = null;
 
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
+            RecordPlayer actor = entry.getValue();
 
             if (firstActor == null)
             {
-                firstActor = actor;
+                firstActor = actor.actor;
             }
 
             actor.startPlaying(replay.id, tick, !this.loops);
-
-            this.tile.getWorld().spawnEntityInWorld(actor);
         }
 
         this.setPlaying(true);
@@ -252,27 +271,14 @@ public class Director
 
         this.collectActors();
 
-        EntityActor firstActor = null;
-
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
-            boolean notAttached = true;
+            RecordPlayer actor = entry.getValue();
 
             if (replay.id.equals(exception)) continue;
 
-            if (firstActor == null)
-            {
-                firstActor = actor;
-            }
-
-            actor.startPlaying(replay.id, notAttached);
-
-            if (notAttached)
-            {
-                this.tile.getWorld().spawnEntityInWorld(actor);
-            }
+            actor.startPlaying(replay.id, true);
         }
 
         this.setPlaying(true);
@@ -310,34 +316,26 @@ public class Director
 
         int j = 0;
 
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
+            RecordPlayer actor = entry.getValue();
             boolean notAttached = true;
 
             if (j == 0)
             {
-                CommonProxy.manager.addDamageControl(this, actor);
+                CommonProxy.manager.addDamageControl(this, actor.actor);
             }
 
             actor.startPlaying(replay.id, notAttached);
 
-            if (actor.playback != null)
-            {
-                actor.playback.playing = false;
-                actor.playback.record.applyFrame(tick, actor, true);
-                actor.noClip = true;
+            actor.playing = false;
+            actor.record.applyFrame(tick, actor.actor, true);
+            actor.actor.noClip = true;
 
-                for (int i = 0; i <= tick; i++)
-                {
-                    actor.playback.record.applyAction(i, actor);
-                }
-            }
-
-            if (notAttached)
+            for (int i = 0; i <= tick; i++)
             {
-                this.tile.getWorld().spawnEntityInWorld(actor);
+                actor.record.applyAction(i, actor.actor);
             }
 
             j++;
@@ -356,12 +354,11 @@ public class Director
             return;
         }
 
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
-            EntityActor actor = entry.getValue();
+            RecordPlayer actor = entry.getValue();
 
             actor.stopPlaying();
-            actor.noClip = false;
         }
 
         CommonProxy.manager.restoreDamageControl(this, this.tile.getWorld());
@@ -398,6 +395,7 @@ public class Director
     private void collectActors()
     {
         this.actors.clear();
+        this.actorsCount = 0;
 
         for (Replay replay : this.replays)
         {
@@ -406,16 +404,41 @@ public class Director
                 continue;
             }
 
-            EntityActor actor = null;
+            World world = this.tile.getWorld();
+            EntityLivingBase actor = null;
 
-            if (actor == null)
+            if (replay.fake)
             {
-                actor = new EntityActor(this.tile.getWorld());
-                actor.wasAttached = true;
+                EntityPlayerMP player = new EntityPlayerMP(world.getMinecraftServer(), (WorldServer) world, new GameProfile(new UUID(0, this.actorsCount), "McHorseYT"), new PlayerInteractionManager(world));
+                NetworkManager manager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
+
+                try
+                {
+                    manager.channelActive(new FakeContext());
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                player.connection = new NetHandlerPlayServer(world.getMinecraftServer(), manager, player);
+                actor = player;
+            }
+            else
+            {
+                EntityActor act = new EntityActor(this.tile.getWorld());
+                act.wasAttached = true;
+                actor = act;
             }
 
-            replay.apply(actor);
-            this.actors.put(replay, actor);
+            RecordPlayer player = CommonProxy.manager.startPlayback(replay.id, actor, Mode.BOTH, 0, true, true);
+
+            if (player != null)
+            {
+                this.actorsCount++;
+                replay.apply(actor);
+                this.actors.put(replay, player);
+            }
         }
     }
 
@@ -424,7 +447,7 @@ public class Director
      */
     public void pause()
     {
-        for (EntityActor actor : this.actors.values())
+        for (RecordPlayer actor : this.actors.values())
         {
             actor.pause();
         }
@@ -435,7 +458,7 @@ public class Director
      */
     public void resume(int tick)
     {
-        for (EntityActor actor : this.actors.values())
+        for (RecordPlayer actor : this.actors.values())
         {
             actor.resume(tick);
         }
@@ -446,11 +469,11 @@ public class Director
      */
     public void goTo(int tick, boolean actions)
     {
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
             if (tick == 0)
             {
-                entry.getKey().apply(entry.getValue());
+                entry.getKey().apply(entry.getValue().actor);
             }
 
             entry.getValue().goTo(tick, actions);
@@ -521,11 +544,11 @@ public class Director
             return;
         }
 
-        EntityActor actor = this.actors.values().iterator().next();
+        RecordPlayer actor = this.actors.values().iterator().next();
 
-        if (actor.playback != null)
+        if (actor != null)
         {
-            Blockbuster.LOGGER.info("Director tick: " + actor.playback.getTick());
+            Blockbuster.LOGGER.info("Director tick: " + actor.getTick());
         }
     }
 

@@ -1,6 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 
@@ -29,7 +29,7 @@ public class DamageAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         actor.attackEntityFrom(DamageSource.outOfWorld, this.damage);
     }

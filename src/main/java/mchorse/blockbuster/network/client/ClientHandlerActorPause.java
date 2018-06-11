@@ -1,8 +1,10 @@
 package mchorse.blockbuster.network.client;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketActorPause;
+import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,13 +14,14 @@ public class ClientHandlerActorPause extends ClientMessageHandler<PacketActorPau
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketActorPause message)
     {
-        EntityActor actor = (EntityActor) player.worldObj.getEntityByID(message.id);
+        EntityLivingBase actor = (EntityLivingBase) player.worldObj.getEntityByID(message.id);
+        RecordPlayer playback = EntityUtils.getRecordPlayer(actor);
 
-        if (actor.playback != null)
+        if (playback != null)
         {
-            actor.playback.tick = message.tick;
-            actor.playback.playing = !message.pause;
-            actor.playback.record.applyFrame(message.tick, actor, true);
+            playback.tick = message.tick;
+            playback.playing = !message.pause;
+            playback.record.applyFrame(message.tick, actor, true);
         }
     }
 }

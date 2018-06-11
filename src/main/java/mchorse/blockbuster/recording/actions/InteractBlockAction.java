@@ -3,7 +3,10 @@ package mchorse.blockbuster.recording.actions;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +41,7 @@ public class InteractBlockAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         IBlockState state = actor.worldObj.getBlockState(this.pos);
 
@@ -48,17 +51,18 @@ public class InteractBlockAction extends Action
             return;
         }
 
-        Frame frame = actor.playback.getCurrentFrame();
+        Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
+        EntityPlayer player = actor instanceof EntityActor ? ((EntityActor) actor).fakePlayer : (EntityPlayer) actor;
 
-        actor.fakePlayer.posX = actor.posX;
-        actor.fakePlayer.posY = actor.posY;
-        actor.fakePlayer.posZ = actor.posZ;
-        actor.fakePlayer.rotationYaw = frame.yaw;
-        actor.fakePlayer.rotationPitch = frame.pitch;
-        actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
-        actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+        player.posX = actor.posX;
+        player.posY = actor.posY;
+        player.posZ = actor.posZ;
+        player.rotationYaw = frame.yaw;
+        player.rotationPitch = frame.pitch;
+        player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+        player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
-        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, actor.fakePlayer, EnumHand.MAIN_HAND, actor.getHeldItemMainhand(), EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        state.getBlock().onBlockActivated(actor.worldObj, this.pos, state, player, EnumHand.MAIN_HAND, actor.getHeldItemMainhand(), EnumFacing.UP, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }
 
     @Override

@@ -1,9 +1,18 @@
 package mchorse.blockbuster.recording;
 
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketActorPause;
+import mchorse.blockbuster.network.common.recording.PacketPlayback;
+import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Record player class
@@ -22,6 +31,11 @@ public class RecordPlayer
      * Play mode
      */
     public Mode mode;
+
+    /**
+     * Entity which is used by this record player to replay the action 
+     */
+    public EntityLivingBase actor;
 
     /**
      * Current tick
@@ -48,10 +62,11 @@ public class RecordPlayer
      */
     public boolean playing = true;
 
-    public RecordPlayer(Record record, Mode mode)
+    public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
         this.record = record;
         this.mode = mode;
+        this.actor = actor;
     }
 
     /**
@@ -79,10 +94,15 @@ public class RecordPlayer
         return this.record.frames.get(this.getTick());
     }
 
+    public void next()
+    {
+        this.next(this.actor);
+    }
+
     /**
      * Apply current frame and advance to the next one
      */
-    public void next(EntityActor actor)
+    public void next(EntityLivingBase actor)
     {
         if (this.isFinished() || --this.delay > 0)
         {
@@ -111,5 +131,105 @@ public class RecordPlayer
         }
 
         this.tick++;
+    }
+
+    /**
+     * Pause the playing actor
+     */
+    public void pause()
+    {
+        this.playing = false;
+        this.actor.noClip = true;
+
+        if (this.actor.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), true, this.tick));
+        }
+    }
+
+    /**
+     * Resume the paused actor
+     */
+    public void resume(int tick)
+    {
+        this.tick = tick;
+        this.playing = true;
+        this.actor.noClip = false;
+
+        if (this.actor.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), false, this.tick));
+        }
+    }
+
+    /**
+     * Make an actor go to the given tick
+     */
+    public void goTo(int tick, boolean actions)
+    {
+        int min = Math.min(this.tick, tick);
+        int max = Math.max(this.tick, tick);
+
+        if (actions)
+        {
+            for (int i = min; i < max; i++)
+            {
+                this.record.applyAction(i - this.record.preDelay, this.actor);
+            }
+        }
+
+        this.tick = tick;
+        this.record.resetUnload();
+        this.record.applyFrame(tick, this.actor, true);
+
+        if (actions)
+        {
+            this.record.applyAction(tick, this.actor);
+        }
+
+        if (this.actor.isServerWorld())
+        {
+            Dispatcher.sendToTracked(this.actor, new PacketSyncTick(this.actor.getEntityId(), tick));
+        }
+    }
+
+    /**
+     * Start the playback, but with default tick argument
+     */
+    public void startPlaying(String filename, boolean kill)
+    {
+        this.startPlaying(filename, 0, kill);
+    }
+
+    /**
+     * Start the playback, invoked by director block (more specifically by
+     * DirectorTileEntity).
+     */
+    public void startPlaying(String filename, int tick, boolean kill)
+    {
+        this.tick = tick;
+        this.kill = kill;
+
+        if (actor instanceof EntityActor)
+        {
+            actor.worldObj.spawnEntityInWorld(actor);
+        }
+        else if (actor instanceof EntityPlayer)
+        {
+            actor.worldObj.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) actor);
+        }
+
+        EntityUtils.setRecordPlayer(actor, this);
+        Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
+    }
+
+    /**
+     * Stop playing
+     */
+    public void stopPlaying()
+    {
+        CommonProxy.manager.stopPlayback(this);
+
+        this.actor.noClip = false;
     }
 }

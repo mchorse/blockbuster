@@ -12,6 +12,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -108,14 +109,14 @@ public class Record
      * less than 0, otherwise you might experience <s>tranquility</s> game
      * crash.
      */
-    public void applyFrame(int tick, EntityActor actor, boolean force)
+    public void applyFrame(int tick, EntityLivingBase actor, boolean force)
     {
         if (tick >= this.frames.size() || tick < 0)
         {
             return;
         }
 
-        this.frames.get(tick).applyOnActor(actor, force);
+        this.frames.get(tick).apply(actor, force);
 
         if (tick != 0)
         {
@@ -132,7 +133,7 @@ public class Record
      * Apply an action at the given tick on the given actor. Don't pass tick
      * value less than 0, otherwise you might experience game crash.
      */
-    public void applyAction(int tick, EntityActor actor)
+    public void applyAction(int tick, EntityLivingBase actor)
     {
         if (tick >= this.actions.size() || tick < 0)
         {
@@ -153,7 +154,7 @@ public class Record
     /**
      * Reset the actor based on this record
      */
-    public void reset(EntityActor actor)
+    public void reset(EntityLivingBase actor)
     {
         if (actor.isRiding())
         {
@@ -165,7 +166,6 @@ public class Record
             this.applyFrame(0, actor, true);
 
             /* Reseting actor's state */
-            actor.isMounted = false;
             actor.setSneaking(false);
             actor.setSprinting(false);
             actor.setItemStackToSlot(EntityEquipmentSlot.HEAD, null);
@@ -180,7 +180,7 @@ public class Record
     /**
      * Reset actor's mount
      */
-    protected void resetMount(EntityActor actor)
+    protected void resetMount(EntityLivingBase actor)
     {
         int index = -1;
 

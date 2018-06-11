@@ -8,6 +8,7 @@ import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -29,7 +30,7 @@ public class Replay
     public AbstractMorph morph;
     public boolean invisible = false;
     public boolean enabled = true;
-    public boolean fakePlayer = false;
+    public boolean fake = false;
     public int health = 20;
 
     public Replay()
@@ -38,6 +39,21 @@ public class Replay
     public Replay(String id)
     {
         this.id = id;
+    }
+
+    /**
+     * Apply replay on an entity 
+     */
+    public void apply(EntityLivingBase entity)
+    {
+        if (entity instanceof EntityActor)
+        {
+            this.apply((EntityActor) entity);
+        }
+        else if (entity instanceof EntityPlayer)
+        {
+            this.apply((EntityPlayer) entity);
+        }
     }
 
     /**
@@ -73,6 +89,7 @@ public class Replay
         tag.setBoolean("Invincible", this.invincible);
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("Enabled", this.enabled);
+        tag.setBoolean("Fake", this.fake);
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -89,6 +106,8 @@ public class Replay
         {
             this.enabled = tag.getBoolean("Enabled");
         }
+
+        this.fake = tag.getBoolean("Fake");
     }
 
     /* to / from ByteBuf */
@@ -110,6 +129,7 @@ public class Replay
         buf.writeBoolean(this.invincible);
         buf.writeBoolean(this.invisible);
         buf.writeBoolean(this.enabled);
+        buf.writeBoolean(this.fake);
     }
 
     public void fromBuf(ByteBuf buf)
@@ -125,6 +145,7 @@ public class Replay
         this.invincible = buf.readBoolean();
         this.invisible = buf.readBoolean();
         this.enabled = buf.readBoolean();
+        this.fake = buf.readBoolean();
     }
 
     @Override

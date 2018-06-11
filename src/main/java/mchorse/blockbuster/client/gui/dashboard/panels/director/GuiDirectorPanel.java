@@ -65,6 +65,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> invincible;
     public GuiButtonElement<GuiCheckBox> invisible;
     public GuiButtonElement<GuiCheckBox> enabled;
+    public GuiButtonElement<GuiCheckBox> fake;
 
     public GuiMorphsPopup morphs;
     public GuiDirectorBlockList list;
@@ -123,14 +124,16 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invincible = GuiButtonElement.checkbox(mc, "Invincible", false, (b) -> this.replay.invincible = b.button.isChecked());
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
+        this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
 
         this.id.resizer().set(10, 20, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
         this.invincible.resizer().set(0, 30, 80, 11).relative(this.name.resizer());
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
         this.enabled.resizer().set(0, 16, 80, 11).relative(this.invisible.resizer());
+        this.fake.resizer().set(0, 16, 80, 11).relative(this.enabled.resizer());
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled);
+        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake);
         this.replayEditor.add(this.selector);
 
         /* Toggle view button */
@@ -268,6 +271,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invincible.button.setIsChecked(this.replay.invincible);
         this.invisible.button.setIsChecked(this.replay.invisible);
         this.enabled.button.setIsChecked(this.replay.enabled);
+        this.fake.button.setIsChecked(this.replay.fake);
 
         this.morphs.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);

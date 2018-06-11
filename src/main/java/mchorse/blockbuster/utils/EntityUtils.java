@@ -7,8 +7,13 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.RecordPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -42,6 +47,42 @@ public class EntityUtils
         }
 
         return "standing";
+    }
+
+    /**
+     * Get record player 
+     */
+    public static RecordPlayer getRecordPlayer(EntityLivingBase entity)
+    {
+        if (entity instanceof EntityActor)
+        {
+            return ((EntityActor) entity).playback;
+        }
+        else if (entity instanceof EntityPlayer)
+        {
+            IRecording record = Recording.get((EntityPlayer) entity);
+
+            return record.getRecordPlayer();
+        }
+
+        return null;
+    }
+
+    /**
+     * Set record player 
+     */
+    public static void setRecordPlayer(EntityLivingBase entity, RecordPlayer playback)
+    {
+        if (entity instanceof EntityActor)
+        {
+            ((EntityActor) entity).playback = playback;
+        }
+        else if (entity instanceof EntityPlayer)
+        {
+            IRecording record = Recording.get((EntityPlayer) entity);
+
+            record.setRecordPlayer(playback);
+        }
     }
 
     /**

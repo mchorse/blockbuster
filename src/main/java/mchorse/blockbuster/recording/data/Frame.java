@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
@@ -102,9 +103,9 @@ public class Frame
      * Apply frame properties on actor. Different actions will be made
      * depending on which side this method was invoked.
      *
-     * Use second argument to force things to be .
+     * Use second argument to force things to be cool.
      */
-    public void applyOnActor(EntityActor actor, boolean force)
+    public void apply(EntityLivingBase actor, boolean force)
     {
         boolean isRemote = actor.worldObj.isRemote;
 
@@ -115,7 +116,10 @@ public class Frame
             mount = actor;
         }
 
-        actor.isMounted = this.isMounted;
+        if (actor instanceof EntityActor)
+        {
+            ((EntityActor) actor).isMounted = this.isMounted;
+        }
 
         /* This is most important part of the code that makes the recording
          * super smooth.
@@ -166,7 +170,11 @@ public class Frame
         {
             mount.setSprinting(this.isSprinting);
             actor.setSneaking(this.isSneaking);
-            actor.setElytraFlying(this.flyingElytra);
+
+            if (actor instanceof EntityActor)
+            {
+                ((EntityActor) actor).setElytraFlying(this.flyingElytra);
+            }
         }
 
         mount.isAirBorne = this.isAirBorne;

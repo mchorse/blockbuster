@@ -1,7 +1,8 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,10 +37,10 @@ public class ShootArrowAction extends Action
      * remember
      */
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         World world = actor.worldObj;
-        Frame frame = actor.playback.getCurrentFrame();
+        Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
 
         EntityTippedArrow arrow = new EntityTippedArrow(world, actor);
         float f = ItemBow.getArrowVelocity(this.charge);

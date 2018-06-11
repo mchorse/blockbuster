@@ -1,7 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
@@ -23,7 +23,7 @@ public class SwipeAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         actor.swingArm(EnumHand.MAIN_HAND);
 

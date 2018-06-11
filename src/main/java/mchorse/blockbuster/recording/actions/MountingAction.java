@@ -2,10 +2,10 @@ package mchorse.blockbuster.recording.actions;
 
 import java.util.UUID;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -36,13 +36,13 @@ public class MountingAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         Entity mount = EntityUtils.entityByUUID(actor.worldObj, this.target);
 
         if (mount == null)
         {
-            Frame frame = actor.playback.getCurrentFrame();
+            Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
             float yaw = actor.rotationYaw;
             float pitch = actor.rotationPitch;
             float yawHead = actor.rotationYawHead;

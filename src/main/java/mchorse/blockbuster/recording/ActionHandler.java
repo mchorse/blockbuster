@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
@@ -519,12 +521,12 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-        EntityPlayer player = event.player;
-
         if (event.phase == Phase.START)
         {
             return;
         }
+
+        EntityPlayer player = event.player;
 
         if (!player.worldObj.isRemote && CommonProxy.manager.recorders.containsKey(player))
         {
@@ -534,11 +536,19 @@ public class ActionHandler
             {
                 CommonProxy.manager.stopRecording(player, true, true);
                 Utils.broadcastInfo("recording.dead", recorder.record.filename);
-
-                return;
             }
+            else
+            {
+                recorder.record(player);
+            }
+        }
 
-            recorder.record(player);
+        IRecording recording = Recording.get(player);
+        RecordPlayer record = recording.getRecordPlayer();
+
+        if (record != null)
+        {
+            record.next();
         }
     }
 }

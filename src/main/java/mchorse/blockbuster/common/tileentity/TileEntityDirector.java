@@ -11,6 +11,7 @@ import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,13 +66,24 @@ public class TileEntityDirector extends TileEntity implements ITickable
 
         boolean isRemote = this.worldObj.isRemote;
 
-        if (isRemote || !this.isPlaying() || this.tick-- > 0)
+        if (isRemote || !this.isPlaying())
         {
             return;
         }
 
-        this.director.checkActors();
-        this.tick = 4;
+        for (RecordPlayer player : this.director.actors.values())
+        {
+            if (player.actor instanceof EntityPlayer)
+            {
+                ((EntityPlayerMP) player.actor).onUpdateEntity();
+            }
+        }
+
+        if (this.tick-- == 0)
+        {
+            this.director.checkActors();
+            this.tick = 4;
+        }
     }
 
     /* Read/write this TE to disk */

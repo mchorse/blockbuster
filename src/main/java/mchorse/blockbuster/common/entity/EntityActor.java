@@ -11,12 +11,10 @@ import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
-import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster_pack.MorphUtils;
@@ -253,7 +251,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         if (this.playback != null && this.playback.playing)
         {
-            this.playback.next(this);
+            this.playback.next();
         }
 
         if (!this.worldObj.isRemote && this.playback != null && this.playback.playing)
@@ -454,114 +452,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     /* Public API */
 
     /**
-     * Pause the playing actor
-     */
-    public void pause()
-    {
-        if (this.playback == null)
-        {
-            return;
-        }
-
-        this.playback.playing = false;
-        this.noClip = true;
-
-        if (this.isServerWorld())
-        {
-            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), true, this.playback.tick));
-        }
-    }
-
-    /**
-     * Resume the paused actor
-     */
-    public void resume(int tick)
-    {
-        if (this.playback == null)
-        {
-            return;
-        }
-
-        this.playback.tick = tick;
-        this.playback.playing = true;
-        this.noClip = false;
-
-        if (this.isServerWorld())
-        {
-            Dispatcher.sendToTracked(this, new PacketActorPause(this.getEntityId(), false, this.playback.tick));
-        }
-    }
-
-    /**
-     * Make an actor go to the given tick
-     * @param actions 
-     */
-    public void goTo(int tick, boolean actions)
-    {
-        if (this.playback == null)
-        {
-            return;
-        }
-
-        int min = Math.min(this.playback.tick, tick);
-        int max = Math.max(this.playback.tick, tick);
-
-        if (actions)
-        {
-            for (int i = min; i < max; i++)
-            {
-                this.playback.record.applyAction(i - this.playback.record.preDelay, this);
-            }
-        }
-
-        this.playback.tick = tick;
-        this.playback.record.resetUnload();
-        this.playback.record.applyFrame(tick, this, true);
-
-        if (actions)
-        {
-            this.playback.record.applyAction(tick, this);
-        }
-
-        if (this.isServerWorld())
-        {
-            Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
-        }
-    }
-
-    /**
-     * Start the playback, but with default tick argument
-     */
-    public void startPlaying(String filename, boolean kill)
-    {
-        this.startPlaying(filename, 0, kill);
-    }
-
-    /**
-     * Start the playback, invoked by director block (more specifically by
-     * DirectorTileEntity).
-     */
-    public void startPlaying(String filename, int tick, boolean kill)
-    {
-        if (CommonProxy.manager.players.containsKey(this))
-        {
-            Utils.broadcastMessage("blockbuster.info.actor.playing");
-
-            return;
-        }
-
-        CommonProxy.manager.startPlayback(filename, this, Mode.BOTH, tick, kill, true);
-    }
-
-    /**
-     * Stop playing
-     */
-    public void stopPlaying()
-    {
-        CommonProxy.manager.stopPlayback(this);
-    }
-
-    /**
      * Configure this actor
      *
      * Takes four properties to modify: filename used as id for recording,
@@ -659,11 +549,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             {
                 if (ClientProxy.manager.records.containsKey(filename))
                 {
-                    this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES);
+                    this.playback = new RecordPlayer(ClientProxy.manager.records.get(filename), Mode.FRAMES, this);
                 }
                 else
                 {
-                    this.playback = new RecordPlayer(null, Mode.FRAMES);
+                    this.playback = new RecordPlayer(null, Mode.FRAMES, this);
 
                     Dispatcher.sendToServer(new PacketRequestFrames(this.getEntityId(), filename));
                 }

@@ -1,7 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.WorldEventListener;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
@@ -31,7 +31,7 @@ public class BreakBlockAnimation extends InteractBlockAction
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         if (this.progress >= 10)
         {
