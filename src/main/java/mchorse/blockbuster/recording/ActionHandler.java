@@ -527,8 +527,9 @@ public class ActionHandler
         }
 
         EntityPlayer player = event.player;
+        boolean server = !player.worldObj.isRemote;
 
-        if (!player.worldObj.isRemote && CommonProxy.manager.recorders.containsKey(player))
+        if (server && CommonProxy.manager.recorders.containsKey(player))
         {
             RecordRecorder recorder = CommonProxy.manager.recorders.get(player);
 
@@ -549,6 +550,11 @@ public class ActionHandler
         if (record != null)
         {
             record.next();
+
+            if (record.isFinished() && server)
+            {
+                record.stopPlaying();
+            }
         }
     }
 }

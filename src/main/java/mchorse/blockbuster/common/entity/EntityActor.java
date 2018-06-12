@@ -7,7 +7,6 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.network.Dispatcher;
@@ -183,14 +182,6 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Brutally stolen from EntityPlayer class
-     */
-    public void setElytraFlying(boolean isFlying)
-    {
-        this.setFlag(7, isFlying);
-    }
-
-    /**
      * Give a morph to an actor
      *
      * Also contains some extra wubs and easter eggs
@@ -260,7 +251,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
             if (this.playback.isFinished() && !this.noClip)
             {
-                CommonProxy.manager.stopPlayback(this);
+                this.playback.stopPlaying();
             }
             else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
             {

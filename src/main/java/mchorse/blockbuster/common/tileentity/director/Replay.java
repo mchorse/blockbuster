@@ -8,6 +8,7 @@ import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +53,10 @@ public class Replay
         }
         else if (entity instanceof EntityPlayer)
         {
-            this.apply((EntityPlayer) entity);
+            if (!(this.morph instanceof PlayerMorph))
+            {
+                this.apply((EntityPlayer) entity);
+            }
         }
     }
 
@@ -75,6 +79,7 @@ public class Replay
     public void apply(EntityPlayer player)
     {
         MorphAPI.morph(player, this.morph, true);
+        player.setHealth(this.health);
     }
 
     /* to / from NBT */

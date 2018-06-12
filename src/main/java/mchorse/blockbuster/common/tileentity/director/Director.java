@@ -20,14 +20,18 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer.EnumChatVisibility;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.client.CPacketClientSettings;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -201,8 +205,8 @@ public class Director
                     boolean notAttached = true;
 
                     // TODO: come back later
-                    // actor.stopPlaying();
-                    // actor.startPlaying(replay.id, 0, !this.loops);
+                    actor.stopPlaying();
+                    actor.startPlaying(replay.id, 0, !this.loops);
                 }
             }
             else
@@ -233,7 +237,7 @@ public class Director
             }
         }
 
-        this.collectActors();
+        this.collectActors(null);
 
         EntityLivingBase firstActor = null;
 
@@ -269,14 +273,12 @@ public class Director
             return;
         }
 
-        this.collectActors();
+        this.collectActors(this.getByFile(exception));
 
         for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
             Replay replay = entry.getKey();
             RecordPlayer actor = entry.getValue();
-
-            if (replay.id.equals(exception)) continue;
 
             actor.startPlaying(replay.id, true);
         }
@@ -311,7 +313,7 @@ public class Director
             }
         }
 
-        this.collectActors();
+        this.collectActors(null);
         this.setPlaying(true);
 
         int j = 0;
@@ -392,14 +394,14 @@ public class Director
      * world and also the ones that doesn't exist (they will be created and
      * spawned later on).
      */
-    private void collectActors()
+    private void collectActors(Replay exception)
     {
         this.actors.clear();
         this.actorsCount = 0;
 
         for (Replay replay : this.replays)
         {
-            if (!replay.enabled)
+            if (replay == exception || !replay.enabled)
             {
                 continue;
             }
@@ -409,7 +411,14 @@ public class Director
 
             if (replay.fake)
             {
-                EntityPlayerMP player = new EntityPlayerMP(world.getMinecraftServer(), (WorldServer) world, new GameProfile(new UUID(0, this.actorsCount), "McHorseYT"), new PlayerInteractionManager(world));
+                GameProfile profile = new GameProfile(new UUID(0, this.actorsCount), replay.name.isEmpty() ? "Player" : replay.name);
+
+                if (replay.morph instanceof PlayerMorph)
+                {
+                    profile = ((PlayerMorph) replay.morph).profile;
+                }
+
+                EntityPlayerMP player = new EntityPlayerMP(world.getMinecraftServer(), (WorldServer) world, profile, new PlayerInteractionManager(world));
                 NetworkManager manager = new NetworkManager(EnumPacketDirection.SERVERBOUND);
 
                 try
@@ -421,6 +430,9 @@ public class Director
                     e.printStackTrace();
                 }
 
+                /* Skins layers don't show up by default, for some 
+                 * reason, thus I have to manually set it myself */
+                player.handleClientSettings(new CPacketClientSettings("en_US", 10, EnumChatVisibility.FULL, true, 127, EnumHandSide.RIGHT));
                 player.connection = new NetHandlerPlayServer(world.getMinecraftServer(), manager, player);
                 actor = player;
             }

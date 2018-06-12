@@ -3,12 +3,16 @@ package mchorse.blockbuster.recording.data;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.EnumHand;
 
 /**
@@ -19,6 +23,8 @@ import net.minecraft.util.EnumHand;
  */
 public class Frame
 {
+    public static DataParameter<Byte> FLAGS;
+
     /* Position */
     public double x;
     public double y;
@@ -171,10 +177,7 @@ public class Frame
             mount.setSprinting(this.isSprinting);
             actor.setSneaking(this.isSneaking);
 
-            if (actor instanceof EntityActor)
-            {
-                ((EntityActor) actor).setElytraFlying(this.flyingElytra);
-            }
+            this.setFlag(actor, 7, this.flyingElytra);
         }
 
         mount.isAirBorne = this.isAirBorne;
@@ -190,6 +193,47 @@ public class Frame
             {
                 actor.stopActiveHand();
             }
+        }
+    }
+
+    /**
+     * Set entity flags... if only vanilla could expose that shit 
+     */
+    private void setFlag(EntityLivingBase actor, int i, boolean flag)
+    {
+        if (FLAGS == null)
+        {
+            Field field = null;
+
+            for (Field f : Entity.class.getDeclaredFields())
+            {
+                int mod = f.getModifiers();
+                Type type = f.getGenericType();
+
+                if (Modifier.isProtected(mod) && Modifier.isStatic(mod) && Modifier.isFinal(mod) && f.getType() == DataParameter.class)
+                {
+                    field = f;
+                    break;
+                }
+            }
+
+            if (field != null)
+            {
+                try
+                {
+                    field.setAccessible(true);
+                    FLAGS = (DataParameter<Byte>) field.get(null);
+                }
+                catch (Exception e)
+                {}
+            }
+        }
+
+        if (FLAGS != null)
+        {
+            byte flags = ((Byte) actor.getDataManager().get(FLAGS)).byteValue();
+
+            actor.getDataManager().set(FLAGS, (byte) (flag ? flags | (1 << i) : flags & ~(1 << i)));
         }
     }
 

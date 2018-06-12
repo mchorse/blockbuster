@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -253,35 +252,6 @@ public class RecordManager
         }
 
         return null;
-    }
-
-    /**
-     * Stop playback for the given actor. If the actor doesn't exist in players,
-     * it simply does nothing.
-     */
-    public void stopPlayback(EntityActor actor)
-    {
-        if (!this.players.containsKey(actor))
-        {
-            return;
-        }
-
-        actor.playback.record.reset(actor);
-
-        if (actor.getHealth() > 0.0F)
-        {
-            if (actor.playback.kill)
-            {
-                actor.setDead();
-            }
-            else
-            {
-                Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false, ""));
-            }
-        }
-
-        this.players.remove(actor);
-        actor.playback = null;
     }
 
     /**
