@@ -141,7 +141,6 @@ public class BlockbusterFactory implements IMorphFactory
                     CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
 
                     poseActor.currentPose = pose;
-                    poseActor.setPose(entry.getValue());
                     morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", "pose " + pose, poseActor);
                 }
             }
@@ -167,7 +166,6 @@ public class BlockbusterFactory implements IMorphFactory
                     CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
 
                     poseActor.currentPose = pose;
-                    poseActor.setPose(entry.getValue());
                     morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", skin, poseActor);
                 }
             }
