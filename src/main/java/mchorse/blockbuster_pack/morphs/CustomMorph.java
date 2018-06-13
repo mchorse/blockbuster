@@ -92,16 +92,6 @@ public class CustomMorph extends AbstractMorph
         return model.getPose(poseName);
     }
 
-    public Pose getPose()
-    {
-        return this.pose;
-    }
-
-    public void setPose(Pose pose)
-    {
-        this.pose = pose;
-    }
-
     public String getKey()
     {
         if (this.key == null)
