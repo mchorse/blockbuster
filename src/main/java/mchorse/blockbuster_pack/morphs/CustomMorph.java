@@ -56,6 +56,11 @@ public class CustomMorph extends AbstractMorph
      */
     public ResourceLocation skin;
 
+    /**
+     * Custom pose 
+     */
+    public Pose customPose = null;
+
     private String key;
 
     /**
@@ -74,12 +79,22 @@ public class CustomMorph extends AbstractMorph
     {
         String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
 
+        if (this.customPose != null)
+        {
+            return this.customPose;
+        }
+
         if (target instanceof EntityActor)
         {
             poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
         }
 
         return model.getPose(poseName);
+    }
+
+    public Pose getPose()
+    {
+        return this.pose;
     }
 
     public void setPose(Pose pose)
@@ -312,6 +327,11 @@ public class CustomMorph extends AbstractMorph
 
         tag.setString("Pose", this.currentPose);
         tag.setBoolean("Sneak", this.currentPoseOnSneak);
+
+        if (this.customPose != null)
+        {
+            tag.setTag("CustomPose", this.customPose.toNBT(new NBTTagCompound()));
+        }
     }
 
     @Override
@@ -326,5 +346,11 @@ public class CustomMorph extends AbstractMorph
 
         this.currentPose = tag.getString("Pose");
         this.currentPoseOnSneak = tag.getBoolean("Sneak");
+
+        if (tag.hasKey("CustomPose", 10))
+        {
+            this.customPose = new Model.Pose();
+            this.customPose.fromNBT(tag.getCompoundTag("CustomPose"));
+        }
     }
 }

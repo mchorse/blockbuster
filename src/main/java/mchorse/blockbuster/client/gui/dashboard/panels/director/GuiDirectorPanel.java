@@ -165,7 +165,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         /* Additional utility buttons */
-        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.morphs.setHidden(false));
+        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.hide(false));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
         element.resizer().y.set(1, Measure.RELATIVE, -86);
 
@@ -273,7 +273,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
 
-        this.morphs.morphs.setSelected(this.replay.morph);
+        this.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
     }
 
@@ -366,7 +366,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        boolean result = !this.morphs.morphs.getHidden() && this.morphs.isInside(mouseX, mouseY);
+        boolean result = !this.morphs.isHidden() && this.morphs.isInside(mouseX, mouseY);
 
         this.morphs.handleMouseInput();
 
@@ -378,7 +378,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         this.morphs.handleKeyboardInput();
 
-        return !this.morphs.morphs.getHidden();
+        return !this.morphs.isHidden();
     }
 
     @Override
@@ -398,7 +398,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             if (this.replay != null)
             {
-                MorphCell cell = this.morphs.morphs.getSelected();
+                MorphCell cell = this.morphs.getSelected();
                 AbstractMorph morph = this.replay.morph;
 
                 if (morph == null && cell != null)

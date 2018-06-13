@@ -136,7 +136,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.sz.resizer().set(0, 25, 80, 20).relative(this.sy.resizer);
 
         /* Buttons */
-        this.subChildren.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.morphs.morphs.setHidden(false)));
+        this.subChildren.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.morphs.hide(false)));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.toggleOne()));
 
         element.resizer().set(0, 10, 70, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -35);
@@ -195,7 +195,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         if (this.model != null)
         {
-            MorphCell morph = this.morphs.morphs.getSelected();
+            MorphCell morph = this.morphs.getSelected();
 
             /* Update model's morph */
             PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), morph == null ? null : morph.current().morph);
@@ -288,7 +288,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         if (this.model != null)
         {
-            this.morphs.morphs.setSelected(this.model.morph);
+            this.morphs.setSelected(this.model.morph);
 
             this.yaw.trackpad.setValue(this.model.rotateYawHead);
             this.pitch.trackpad.setValue(this.model.rotatePitch);
@@ -330,9 +330,11 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
+        boolean result = !this.morphs.isHidden() && this.morphs.isInside(mouseX, mouseY);
+
         this.morphs.handleMouseInput();
 
-        return !this.morphs.morphs.getHidden() && this.morphs.isInside(mouseX, mouseY);
+        return result;
     }
 
     @Override
@@ -360,13 +362,13 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         this.morphs.handleKeyboardInput();
 
-        return !this.morphs.morphs.getHidden();
+        return !this.morphs.isHidden();
     }
 
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        MorphCell cell = this.morphs.morphs.getSelected();
+        MorphCell cell = this.morphs.getSelected();
 
         if (cell != null)
         {
