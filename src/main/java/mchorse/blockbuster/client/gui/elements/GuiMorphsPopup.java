@@ -209,7 +209,7 @@ public class GuiMorphsPopup extends GuiScreen
 
                 if (morph.customPose == null)
                 {
-                    this.pose = morph.getPose(this.mc.thePlayer).clone();
+                    this.pose = morph.getPose(this.mc.player).clone();
                     morph.customPose = this.pose;
                 }
                 else
