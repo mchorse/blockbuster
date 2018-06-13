@@ -502,6 +502,11 @@ public class Director
      */
     public void dupe(int index, boolean isRemote)
     {
+        if (index < 0 || index >= this.replays.size())
+        {
+            return;
+        }
+
         Replay replay = this.replays.get(index).clone(isRemote);
         Matcher matcher = NUMBERED_SUFFIX.matcher(replay.id);
 
