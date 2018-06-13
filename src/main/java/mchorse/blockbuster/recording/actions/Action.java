@@ -3,7 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import java.util.HashMap;
 import java.util.Map;
 
-import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -98,7 +98,7 @@ public abstract class Action
      * Some action doesn't necessarily should have apply method (that's why this
      * method is empty)
      */
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {}
 
     public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)

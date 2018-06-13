@@ -1,10 +1,11 @@
 package mchorse.blockbuster.network.client.recording;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,8 +20,8 @@ public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketSyncTick message)
     {
-        EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
-        RecordPlayer playback = actor.playback;
+        EntityLivingBase actor = (EntityLivingBase) player.world.getEntityByID(message.id);
+        RecordPlayer playback = EntityUtils.getRecordPlayer(actor);
 
         if (playback != null && playback.record != null)
         {

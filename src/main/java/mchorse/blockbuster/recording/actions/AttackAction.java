@@ -1,9 +1,10 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
 /**
@@ -23,9 +24,9 @@ public class AttackAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
-        Frame frame = actor.playback.getCurrentFrame();
+        Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
         float yaw = actor.rotationYaw;
         float pitch = actor.rotationPitch;
         float yawHead = actor.rotationYawHead;
@@ -44,9 +45,11 @@ public class AttackAction extends Action
         {
             target.attackEntityFrom(DamageSource.causeMobDamage(actor), 2.0F);
 
-            if (actor.morph != null)
+            AbstractMorph morph = mchorse.metamorph.api.EntityUtils.getMorph(actor);
+
+            if (morph != null)
             {
-                actor.morph.attack(target, actor);
+                morph.attack(target, actor);
             }
         }
     }

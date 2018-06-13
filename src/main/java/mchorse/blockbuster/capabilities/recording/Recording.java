@@ -3,6 +3,7 @@ package mchorse.blockbuster.capabilities.recording;
 import java.util.HashMap;
 import java.util.Map;
 
+import mchorse.blockbuster.recording.RecordPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
@@ -13,6 +14,7 @@ public class Recording implements IRecording
 {
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
     public BlockPos teleportPos;
+    public RecordPlayer player;
 
     public static IRecording get(EntityPlayer player)
     {
@@ -75,6 +77,18 @@ public class Recording implements IRecording
     public BlockPos getLastTeleportedBlockPos()
     {
         return this.teleportPos;
+    }
+
+    @Override
+    public void setRecordPlayer(RecordPlayer player)
+    {
+        this.player = player;
+    }
+
+    @Override
+    public RecordPlayer getRecordPlayer()
+    {
+        return this.player;
     }
 
     /**

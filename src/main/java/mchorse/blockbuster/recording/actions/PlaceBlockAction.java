@@ -1,9 +1,9 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -38,7 +38,7 @@ public class PlaceBlockAction extends InteractBlockAction
 
     @SuppressWarnings("deprecation")
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
         IBlockState state = block.getStateFromMeta(this.metadata);

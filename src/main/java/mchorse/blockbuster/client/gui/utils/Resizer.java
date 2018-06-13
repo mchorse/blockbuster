@@ -61,6 +61,11 @@ public class Resizer
         if (this.relative != null)
         {
             value += this.relative.getX();
+
+            if (this.x.unit == Measure.RELATIVE)
+            {
+                value = this.relative.getX() + (int) (this.relative.getW() * this.x.value);
+            }
         }
         else if (this.parent != null)
         {
@@ -82,6 +87,11 @@ public class Resizer
         if (this.relative != null)
         {
             value += this.relative.getY();
+
+            if (this.y.unit == Measure.RELATIVE)
+            {
+                value = this.relative.getY() + (int) (this.relative.getH() * this.y.value);
+            }
         }
         else if (this.parent != null)
         {

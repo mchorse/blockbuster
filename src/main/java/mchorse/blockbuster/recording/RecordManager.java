@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -17,9 +16,12 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.MorphAPI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
@@ -49,7 +51,7 @@ public class RecordManager
     /**
      * No, not {@link EntityPlayer}s, say record pla-yers, pla-yers...
      */
-    public Map<EntityActor, RecordPlayer> players = new HashMap<EntityActor, RecordPlayer>();
+    public Map<EntityLivingBase, RecordPlayer> players = new HashMap<EntityLivingBase, RecordPlayer>();
 
     /**
      * Scheduled recordings
@@ -104,6 +106,20 @@ public class RecordManager
         }
 
         RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
+        NBTTagCompound tag = new NBTTagCompound();
+
+        player.writeEntityToNBT(tag);
+        recorder.record.playerData = tag;
+
+        if (MPMHelper.isLoaded())
+        {
+            tag = MPMHelper.getMPMData(player);
+
+            if (tag != null)
+            {
+                recorder.record.playerData.setTag("MPMData", tag);
+            }
+        }
 
         if (!player.world.isRemote)
         {
@@ -158,6 +174,7 @@ public class RecordManager
 
             this.records.put(filename, record);
             this.recorders.remove(player);
+            MorphAPI.demorph(player);
 
             if (notify)
             {
@@ -175,7 +192,7 @@ public class RecordManager
     /**
      * Version with default tick parameter
      */
-    public boolean startPlayback(String filename, EntityActor actor, Mode mode, boolean kill, boolean notify)
+    public RecordPlayer startPlayback(String filename, EntityLivingBase actor, Mode mode, boolean kill, boolean notify)
     {
         return this.startPlayback(filename, actor, mode, 0, kill, notify);
     }
@@ -184,11 +201,11 @@ public class RecordManager
      * Start playback from given filename and given actor. You also have to
      * specify the mode of playback.
      */
-    public boolean startPlayback(String filename, EntityActor actor, Mode mode, int tick, boolean kill, boolean notify)
+    public RecordPlayer startPlayback(String filename, EntityLivingBase actor, Mode mode, int tick, boolean kill, boolean notify)
     {
         if (this.players.containsKey(actor))
         {
-            return false;
+            return null;
         }
 
         try
@@ -199,24 +216,30 @@ public class RecordManager
             {
                 Utils.broadcastError("recording.empty_record", filename);
 
-                return false;
+                return null;
             }
 
-            RecordPlayer player = new RecordPlayer(record, mode);
+            RecordPlayer playback = new RecordPlayer(record, mode, actor);
 
-            actor.playback = player;
-            actor.playback.tick = tick;
-            actor.playback.record.applyFrame(tick, actor, true);
-            actor.playback.kill = kill;
-
-            if (notify)
+            if (actor instanceof EntityPlayer && record.playerData != null)
             {
-                Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
+                actor.readEntityFromNBT(record.playerData);
+
+                if (MPMHelper.isLoaded() && record.playerData.hasKey("MPMData", 10))
+                {
+                    MPMHelper.setMPMData((EntityPlayer) actor, record.playerData.getCompoundTag("MPMData"));
+                }
             }
 
-            this.players.put(actor, player);
+            playback.tick = tick;
+            playback.kill = kill;
+            playback.record.applyFrame(tick, actor, true);
 
-            return true;
+            EntityUtils.setRecordPlayer(actor, playback);
+
+            this.players.put(actor, playback);
+
+            return playback;
         }
         catch (FileNotFoundException e)
         {
@@ -228,36 +251,39 @@ public class RecordManager
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * Stop playback for the given actor. If the actor doesn't exist in players,
-     * it simply does nothing.
+     * Stop playback for the given record player
      */
-    public void stopPlayback(EntityActor actor)
+    public void stopPlayback(RecordPlayer actor)
     {
-        if (!this.players.containsKey(actor))
+        if (!this.players.containsKey(actor.actor))
         {
             return;
         }
 
-        actor.playback.record.reset(actor);
+        actor.record.reset(actor.actor);
 
-        if (actor.getHealth() > 0.0F)
+        if (actor.actor.getHealth() > 0.0F)
         {
-            if (actor.playback.kill)
+            if (actor.kill)
             {
-                actor.setDead();
+                actor.actor.setDead();
+
+                if (actor.actor instanceof EntityPlayer)
+                {
+                    actor.actor.world.getMinecraftServer().getPlayerList().playerLoggedOut((EntityPlayerMP) actor.actor);
+                }
             }
             else
             {
-                Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), false, ""));
+                Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), false, ""));
             }
         }
 
-        this.players.remove(actor);
-        actor.playback = null;
+        this.players.remove(actor.actor);
     }
 
     /**

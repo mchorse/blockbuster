@@ -15,7 +15,7 @@ public class ServerHandlerDirectorGoto extends ServerMessageHandler<PacketDirect
 
         if (tile instanceof TileEntityDirector)
         {
-            ((TileEntityDirector) tile).goTo(message.tick, message.actions);
+            ((TileEntityDirector) tile).director.goTo(message.tick, message.actions);
         }
     }
 }

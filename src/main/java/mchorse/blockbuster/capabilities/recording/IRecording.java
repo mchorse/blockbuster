@@ -1,5 +1,6 @@
 package mchorse.blockbuster.capabilities.recording;
 
+import mchorse.blockbuster.recording.RecordPlayer;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -52,4 +53,14 @@ public interface IRecording
      * Get last teleported block position 
      */
     public BlockPos getLastTeleportedBlockPos();
+
+    /**
+     * Set record player which will animate this player 
+     */
+    public void setRecordPlayer(RecordPlayer player);
+
+    /**
+     * Get the record player which animates this player 
+     */
+    public RecordPlayer getRecordPlayer();
 }

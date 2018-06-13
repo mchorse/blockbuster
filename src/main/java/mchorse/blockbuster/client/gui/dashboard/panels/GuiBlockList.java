@@ -72,20 +72,13 @@ public abstract class GuiBlockList<T> extends GuiElement
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if (this.scroll.mouseClicked(mouseX, mouseY))
+        if (super.mouseClicked(mouseX, mouseY, mouseButton) || this.scroll.mouseClicked(mouseX, mouseY))
         {
             return true;
         }
 
         if (this.scroll.isInside(mouseX, mouseY))
         {
-            if (mouseX >= this.scroll.getX(1) - 4)
-            {
-                this.scroll.dragging = true;
-            }
-
             int index = this.scroll.getIndex(mouseX, mouseY);
             int size = this.elements.size();
 
@@ -98,7 +91,7 @@ public abstract class GuiBlockList<T> extends GuiElement
             return true;
         }
 
-        return false;
+        return this.area.isInside(mouseX, mouseY);
     }
 
     @Override

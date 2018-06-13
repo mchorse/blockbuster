@@ -2,6 +2,9 @@ package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,28 +42,28 @@ public class ItemUseBlockAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         ItemStack item = actor.getHeldItem(this.hand);
 
         if (item != null)
         {
-            Frame frame = actor.playback.getCurrentFrame();
+            Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
+            EntityPlayer player = actor instanceof EntityActor ? ((EntityActor) actor).fakePlayer : (EntityPlayer) actor;
 
-            actor.fakePlayer.posX = actor.posX;
-            actor.fakePlayer.posY = actor.posY;
-            actor.fakePlayer.posZ = actor.posZ;
-            actor.fakePlayer.rotationYaw = frame.yaw;
-            actor.fakePlayer.rotationYawHead = frame.yawHead;
-            actor.fakePlayer.rotationPitch = frame.pitch;
-            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
-            actor.fakePlayer.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+            player.posX = actor.posX;
+            player.posY = actor.posY;
+            player.posZ = actor.posZ;
+            player.rotationYaw = frame.yaw;
+            player.rotationPitch = frame.pitch;
+            player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+            player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
 
             ItemStack stack = actor.getHeldItem(this.hand);
 
             int meta = stack.getMetadata();
             int size = stack.getCount();
-            item.getItem().onItemUse(actor.fakePlayer, actor.world, this.pos, this.hand, this.facing, this.hitX, this.hitY, this.hitZ);
+            item.getItem().onItemUse(player, actor.world, this.pos, this.hand, this.facing, this.hitX, this.hitY, this.hitZ);
             stack.setItemDamage(meta);
             stack.setCount(size);
         }

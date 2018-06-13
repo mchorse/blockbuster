@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.server.director.sync;
 
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,15 +12,16 @@ public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirect
     @Override
     public void run(EntityPlayerMP player, PacketDirectorPlay message)
     {
-        TileEntity tile = player.world.getTileEntity(message.pos);
+        TileEntity te = player.world.getTileEntity(message.pos);
 
-        if (tile instanceof TileEntityDirector)
+        if (te instanceof TileEntityDirector)
         {
-            TileEntityDirector director = (TileEntityDirector) tile;
+            TileEntityDirector tile = (TileEntityDirector) te;
+            Director director = tile.director;
 
             if (message.isPlay())
             {
-                if (!director.isPlaying())
+                if (!tile.isPlaying())
                 {
                     director.spawn(message.tick);
                 }

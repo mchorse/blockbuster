@@ -2,7 +2,11 @@ package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.MorphUtils;
+import mchorse.metamorph.api.EntityUtils;
+import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -31,18 +35,26 @@ public class MorphAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
+        AbstractMorph morph = EntityUtils.getMorph(actor);
+
         if (this.morph != null)
         {
-            actor.morph = this.morph.clone(false);
-        }
-        else
-        {
-            actor.morph = null;
+            morph = morph.clone(false);
         }
 
-        actor.notifyPlayers();
+        if (actor instanceof EntityPlayer)
+        {
+            MorphAPI.morph((EntityPlayer) actor, morph, true);
+        }
+        else if (actor instanceof EntityActor)
+        {
+            EntityActor act = (EntityActor) actor;
+
+            act.morph = morph;
+            act.notifyPlayers();
+        }
     }
 
     @Override

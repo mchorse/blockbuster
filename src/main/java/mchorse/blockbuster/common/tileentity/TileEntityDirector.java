@@ -1,18 +1,26 @@
 package mchorse.blockbuster.common.tileentity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.CommonProxy;
-import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.block.BlockDirector;
+import mchorse.blockbuster.common.tileentity.director.Director;
+import mchorse.blockbuster.common.tileentity.director.DirectorSender;
 import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
-import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.utils.EntityUtils;
-import mchorse.metamorph.api.MorphAPI;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 /**
  * Director tile entity
@@ -21,359 +29,141 @@ import net.minecraft.entity.player.EntityPlayer;
  * it's the best way to implement activation of the redstone (See update method
  * for more information).
  */
-public class TileEntityDirector extends AbstractTileEntityDirector
+public class TileEntityDirector extends TileEntity implements ITickable
 {
-    private Map<Replay, EntityActor> actors = new HashMap<Replay, EntityActor>();
+    /**
+     * Director instance which is responsible for managing and storing 
+     * director block information and actors
+     */
+    public Director director;
+
+    /**
+     * This tick used for checking if actors still playing
+     */
+    private int tick = 0;
+
+    public TileEntityDirector()
+    {
+        this.director = new Director(this);
+        this.director.setSender(new DirectorSender(this.director));
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return oldState.getBlock() != newSate.getBlock();
+    }
+
+    /**
+     * Debug ticks and check whether actors are still playing 
+     */
+    public void update()
+    {
+        if (Blockbuster.proxy.config.debug_playback_ticks)
+        {
+            this.director.logTicks();
+        }
+
+        boolean isRemote = this.world.isRemote;
+
+        if (isRemote || !this.isPlaying())
+        {
+            return;
+        }
+
+        for (RecordPlayer player : this.director.actors.values())
+        {
+            if (player.actor instanceof EntityPlayer)
+            {
+                ((EntityPlayerMP) player.actor).onUpdateEntity();
+            }
+        }
+
+        if (this.tick-- == 0)
+        {
+            this.director.checkActors();
+            this.tick = 4;
+        }
+    }
+
+    /* Read/write this TE to disk */
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound)
+    {
+        super.readFromNBT(compound);
+
+        this.director.fromNBT(compound);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
+
+        this.director.toNBT(compound);
+
+        return compound;
+    }
+
+    /* Getters */
+
+    /**
+     * Get the cast
+     *
+     * Basically, return all entities/entity ids for display
+     */
+    public List<Replay> getCast()
+    {
+        return this.director.replays;
+    }
 
     /* Public API */
 
     /**
-     * Start a playback (make actors play their roles from the files)
+     * Remove everything
      */
-    @Override
-    public void startPlayback()
+    public void reset()
     {
-        this.startPlayback((EntityActor) null);
-    }
-
-    public void startPlayback(EntityActor exception)
-    {
-        this.startPlayback(exception, 0);
+        this.director.replays.clear();
+        this.markDirty();
     }
 
     /**
-     * The same thing as startPlayback, but don't play the actor that is passed
-     * in the arguments (because he might be recorded by the player)
+     * Add a replay with given recording id
      */
-    public void startPlayback(EntityActor exception, int tick)
+    public void add(String id)
     {
-        if (this.world.isRemote || this.isPlaying())
-        {
-            return;
-        }
-
-        if (this.replays.isEmpty())
-        {
-            return;
-        }
-
-        for (Replay replay : this.replays)
-        {
-            if (replay.id.isEmpty())
-            {
-                Utils.broadcastError("director.empty_filename");
-
-                return;
-            }
-        }
-
-        this.collectActors();
-
-        EntityActor firstActor = null;
-
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-        {
-            Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
-            boolean notAttached = replay.actor == null;
-
-            if (actor == exception) continue;
-
-            if (firstActor == null)
-            {
-                firstActor = actor;
-            }
-
-            actor.startPlaying(replay.id, tick, notAttached && !this.loops);
-
-            if (notAttached)
-            {
-                this.world.spawnEntity(actor);
-            }
-            else
-            {
-                actor.directorBlock = this.getPos();
-            }
-        }
-
-        this.playBlock(true);
-
-        CommonProxy.manager.addDamageControl(this, firstActor);
+        this.director.replays.add(new Replay(id));
+        this.markDirty();
     }
 
     /**
-     * The same thing as startPlayback, but don't play the replay that is passed
-     * in the arguments (because he might be recorded by the player)
-     *
-     * Used by recording code.
+     * Duplicate a replay on given index
      */
-    public void startPlayback(String exception)
+    public void duplicate(int index)
     {
-        if (this.world.isRemote || this.isPlaying())
-        {
-            return;
-        }
-
-        this.collectActors();
-
-        EntityActor firstActor = null;
-
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-        {
-            Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
-            boolean notAttached = replay.actor == null;
-
-            if (replay.id.equals(exception)) continue;
-
-            if (firstActor == null)
-            {
-                firstActor = actor;
-            }
-
-            actor.startPlaying(replay.id, notAttached);
-
-            if (notAttached)
-            {
-                this.world.spawnEntity(actor);
-            }
-        }
-
-        this.playBlock(true);
+        this.director.dupe(index, this.world.isRemote);
+        this.markDirty();
     }
 
     /**
-     * Collect actors.
-     *
-     * This method is responsible for collecting actors the ones that in the
-     * world and also the ones that doesn't exist (they will be created and
-     * spawned later on).
+     * Edit a replay, find similar from given old replay and change it to a
+     * new value.
      */
-    private void collectActors()
+    public void edit(int index, Replay replay)
     {
-        boolean dirty = false;
-
-        this.actors.clear();
-
-        for (Replay replay : this.replays)
-        {
-            EntityActor actor = null;
-
-            if (replay.actor != null)
-            {
-                actor = (EntityActor) EntityUtils.entityByUUID(this.world, replay.actor);
-
-                if (actor == null)
-                {
-                    replay.actor = null;
-                    dirty = true;
-                }
-            }
-
-            if (actor == null)
-            {
-                actor = new EntityActor(this.world);
-                actor.wasAttached = true;
-            }
-
-            replay.apply(actor);
-            actor.notifyPlayers();
-            this.actors.put(replay, actor);
-        }
-
-        if (dirty)
-        {
-            this.markDirty();
-        }
+        this.director.replays.set(index, replay);
+        this.markDirty();
     }
 
     /**
-     * Force stop playback
+     * Remove an actor by id.
      */
-    @Override
-    public void stopPlayback()
+    public void remove(int id)
     {
-        this.stopPlayback(null);
-    }
-
-    /**
-     * Force stop playback (except one actor)
-     */
-    public void stopPlayback(EntityActor exception)
-    {
-        if (this.world.isRemote || !this.isPlaying())
-        {
-            return;
-        }
-
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-        {
-            EntityActor actor = entry.getValue();
-
-            if (actor == exception) continue;
-
-            actor.stopPlaying();
-            actor.noClip = false;
-        }
-
-        CommonProxy.manager.restoreDamageControl(this, this.world);
-
-        this.actors.clear();
-        this.playBlock(false);
-    }
-
-    /**
-     * Spawns actors at given tick in idle mode. This is pretty useful for
-     * positioning cameras for exact positions.
-     */
-    @Override
-    public boolean spawn(int tick)
-    {
-        if (this.replays.isEmpty())
-        {
-            return false;
-        }
-
-        if (!this.actors.isEmpty())
-        {
-            this.stopPlayback();
-        }
-
-        for (Replay replay : this.replays)
-        {
-            if (replay.id.isEmpty())
-            {
-                Utils.broadcastError("director.empty_filename");
-
-                return false;
-            }
-        }
-
-        this.collectActors();
-        this.playBlock(true);
-
-        int j = 0;
-
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-        {
-            Replay replay = entry.getKey();
-            EntityActor actor = entry.getValue();
-            boolean notAttached = replay.actor == null;
-
-            if (j == 0)
-            {
-                CommonProxy.manager.addDamageControl(this, actor);
-            }
-
-            actor.startPlaying(replay.id, notAttached);
-
-            if (actor.playback != null)
-            {
-                actor.playback.playing = false;
-                actor.playback.record.applyFrame(tick, actor, true);
-                actor.noClip = true;
-
-                for (int i = 0; i <= tick; i++)
-                {
-                    actor.playback.record.applyAction(i, actor);
-                }
-            }
-
-            if (notAttached)
-            {
-                this.world.spawnEntity(actor);
-            }
-
-            j++;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void update()
-    {
-        if (Blockbuster.proxy.config.debug_playback_ticks && !this.actors.isEmpty())
-        {
-            EntityActor actor = this.actors.values().iterator().next();
-
-            if (actor.playback != null)
-            {
-                Blockbuster.LOGGER.info("Director tick: " + actor.playback.getTick());
-            }
-        }
-
-        super.update();
-    }
-
-    /**
-     * Checks if are actors are still playing. This method gets invoked from
-     * abstract parent in the tick method.
-     */
-    @Override
-    protected void areActorsStillPlaying()
-    {
-        int count = 0;
-
-        for (EntityActor actor : this.actors.values())
-        {
-            if (actor.playback == null || actor.isDead)
-            {
-                count++;
-            }
-        }
-
-        if (count == this.replays.size())
-        {
-            if (this.loops)
-            {
-                /* TODO: improve looping */
-                for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-                {
-                    Replay replay = entry.getKey();
-                    EntityActor actor = entry.getValue();
-                    boolean notAttached = replay.actor == null;
-
-                    actor.stopPlaying();
-                    actor.startPlaying(replay.id, 0, notAttached && !this.loops);
-                    actor.directorBlock = this.getPos();
-                }
-            }
-            else
-            {
-                this.stopPlayback();
-                this.playBlock(false);
-            }
-        }
-    }
-
-    /**
-     * Start recording player
-     */
-    public void startRecording(final EntityActor actor, final EntityPlayer player)
-    {
-        final Replay replay = this.byActor(actor);
-
-        if (replay != null)
-        {
-            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    if (!CommonProxy.manager.recorders.containsKey(player))
-                    {
-                        TileEntityDirector.this.startPlayback(actor);
-                    }
-                    else
-                    {
-                        TileEntityDirector.this.stopPlayback(actor);
-                    }
-
-                    TileEntityDirector.this.applyReplay(replay, player);
-                }
-            });
-        }
+        this.director.replays.remove(id);
+        this.markDirty();
     }
 
     /**
@@ -381,7 +171,7 @@ public class TileEntityDirector extends AbstractTileEntityDirector
      */
     public void startRecording(final String filename, final EntityPlayer player)
     {
-        final Replay replay = this.byFile(filename);
+        final Replay replay = this.director.getByFile(filename);
 
         if (replay != null)
         {
@@ -392,117 +182,69 @@ public class TileEntityDirector extends AbstractTileEntityDirector
                 {
                     if (!CommonProxy.manager.recorders.containsKey(player))
                     {
-                        TileEntityDirector.this.startPlayback(filename);
+                        TileEntityDirector.this.director.startPlayback(filename);
                     }
                     else
                     {
-                        TileEntityDirector.this.stopPlayback();
+                        TileEntityDirector.this.director.stopPlayback();
                     }
 
-                    TileEntityDirector.this.applyReplay(replay, player);
+                    replay.apply(player);
                 }
             });
         }
     }
 
     /**
-     * Start recording player
+     * Set the state of the block playing (needed to update redstone 
+     * thingy-stuff)
      */
-    public void applyReplay(Replay replay, EntityPlayer player)
+    public void playBlock(boolean isPlaying)
     {
-        if (replay == null) return;
+        IBlockState state = this.world.getBlockState(this.pos);
 
-        MorphAPI.morph(player, replay.morph, true);
+        if (!this.director.disableStates)
+        {
+            state = state.withProperty(BlockDirector.PLAYING, isPlaying);
+        }
+
+        state = state.withProperty(BlockDirector.HIDDEN, this.director.hide ? isPlaying : false);
+
+        this.world.setBlockState(this.getPos(), state);
     }
 
     /**
-     * Get a replay by actor. Comparison is based on actor's UUID.
+     * Checks if block's state isPlaying is true
      */
-    public Replay byActor(EntityActor actor)
+    public boolean isPlaying()
     {
-        for (Replay replay : this.replays)
-        {
-            if (replay.actor != null && replay.actor.equals(actor.getUniqueID())) return replay;
-        }
+        return this.director.playing;
+    }
 
-        return null;
+    /* Packet methods */
+
+    /**
+     * Open the GUI for the player 
+     */
+    public void open(EntityPlayer player, BlockPos pos)
+    {
+        Dispatcher.sendTo(new PacketDirectorCast(pos, this.director), (EntityPlayerMP) player);
     }
 
     /**
-     * Get a replay by actor. Comparison is based on actor's UUID.
+     * Send break block confirmation GUI 
      */
-    public Replay byFile(String filename)
+    public boolean sendConfirm(BlockPos pos, EntityPlayer player)
     {
-        for (Replay replay : this.replays)
+        int size = this.director.replays.size();
+
+        if (size == 0)
         {
-            if (replay.id.equals(filename)) return replay;
+            return false;
         }
 
-        return null;
-    }
+        Dispatcher.sendTo(new PacketConfirmBreak(pos, size), (EntityPlayerMP) player);
 
-    /**
-     * Pause the director block playback (basically, pause all actors)
-     */
-    public void pause()
-    {
-        for (EntityActor actor : this.actors.values())
-        {
-            actor.pause();
-        }
-    }
-
-    /**
-     * Resume paused director block playback (basically, resume all actors)
-     */
-    public void resume(int tick)
-    {
-        for (EntityActor actor : this.actors.values())
-        {
-            actor.resume(tick);
-        }
-    }
-
-    /**
-     * Make actors go to the given tick
-     */
-    public void goTo(int tick, boolean actions)
-    {
-        for (Map.Entry<Replay, EntityActor> entry : this.actors.entrySet())
-        {
-            if (tick == 0)
-            {
-                entry.getKey().apply(entry.getValue());
-            }
-
-            entry.getValue().goTo(tick, actions);
-        }
-    }
-
-    /**
-     * Get maximum length of current director block
-     */
-    public int getMaxLength()
-    {
-        int max = 0;
-
-        for (Replay replay : this.replays)
-        {
-            Record record = null;
-
-            try
-            {
-                record = CommonProxy.manager.getRecord(replay.id);
-            }
-            catch (Exception e)
-            {}
-
-            if (record != null)
-            {
-                max = Math.max(max, record.getLength());
-            }
-        }
-
-        return max;
+        return true;
     }
 }

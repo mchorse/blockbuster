@@ -1,7 +1,9 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.entity.EntityLivingBase;
 
 /**
  * Morph's action action
@@ -20,11 +22,13 @@ public class MorphActionAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
-        if (actor.morph != null)
+        AbstractMorph morph = mchorse.metamorph.api.EntityUtils.getMorph(actor);
+
+        if (morph != null)
         {
-            Frame frame = actor.playback.getCurrentFrame();
+            Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
 
             float yaw = actor.rotationYaw;
             float yawHead = actor.rotationYaw;
@@ -38,7 +42,7 @@ public class MorphActionAction extends Action
             actor.rotationYawHead = actor.prevRotationYawHead = frame.yawHead;
             actor.rotationPitch = actor.prevRotationPitch = frame.pitch;
 
-            actor.morph.action(actor);
+            morph.action(actor);
 
             actor.rotationYaw = yaw;
             actor.rotationYawHead = yawHead;

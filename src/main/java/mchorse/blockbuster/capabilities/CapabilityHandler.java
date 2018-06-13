@@ -5,7 +5,9 @@ import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -66,6 +68,17 @@ public class CapabilityHandler
             if (actor.isPlaying())
             {
                 Utils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
+            }
+        }
+
+        if (target instanceof EntityPlayer)
+        {
+            EntityPlayer other = (EntityPlayer) target;
+            RecordPlayer playback = EntityUtils.getRecordPlayer(other);
+
+            if (playback != null)
+            {
+                Utils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
             }
         }
     }

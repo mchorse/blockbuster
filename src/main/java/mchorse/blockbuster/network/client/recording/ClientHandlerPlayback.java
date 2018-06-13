@@ -1,7 +1,6 @@
 package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -9,7 +8,9 @@ import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,12 +33,12 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketPlayback message)
     {
-        EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
+        EntityLivingBase actor = (EntityLivingBase) player.world.getEntityByID(message.id);
 
         if (message.state)
         {
             Record record = ClientProxy.manager.records.get(message.filename);
-            actor.playback = new RecordPlayer(record, Mode.FRAMES);
+            EntityUtils.setRecordPlayer(actor, new RecordPlayer(record, Mode.FRAMES, actor));
 
             if (record == null)
             {
@@ -46,7 +47,7 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
         }
         else
         {
-            actor.playback = null;
+            EntityUtils.setRecordPlayer(actor, null);
         }
     }
 }

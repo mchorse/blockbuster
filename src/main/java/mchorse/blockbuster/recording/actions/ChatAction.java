@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.recording.Utils;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -29,7 +30,7 @@ public class ChatAction extends Action
     }
 
     @Override
-    public void apply(mchorse.blockbuster.common.entity.EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         Utils.broadcastMessage(this.message.replace('[', '§'));
     }
