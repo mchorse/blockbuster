@@ -1,6 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
@@ -29,7 +29,7 @@ public class BreakBlockAction extends InteractBlockAction
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         actor.world.destroyBlock(this.pos, this.drop);
         actor.world.sendBlockBreakProgress(actor.getEntityId(), this.pos, -1);

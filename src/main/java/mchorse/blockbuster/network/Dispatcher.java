@@ -48,6 +48,7 @@ import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorAdd;
+import mchorse.blockbuster.network.server.director.ServerHandlerDirectorCast;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorDuplicate;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorEdit;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRemove;
@@ -149,8 +150,9 @@ public class Dispatcher
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
-
+        register(PacketDirectorCast.class, ServerHandlerDirectorCast.class, Side.SERVER);
         register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
+
         register(PacketDirectorReset.class, ServerHandlerDirectorReset.class, Side.SERVER);
         register(PacketDirectorAdd.class, ServerHandlerDirectorAdd.class, Side.SERVER);
         register(PacketDirectorDuplicate.class, ServerHandlerDirectorDuplicate.class, Side.SERVER);

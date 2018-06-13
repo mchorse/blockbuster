@@ -2,8 +2,9 @@ package mchorse.blockbuster.recording.actions;
 
 import java.util.Random;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
+import mchorse.blockbuster.utils.EntityUtils;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,11 +38,11 @@ public class DropAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         final float PI = 3.1415927F;
 
-        Frame frame = actor.playback.getCurrentFrame();
+        Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
         ItemStack items = new ItemStack(this.itemData);
 
         EntityItem item = new EntityItem(actor.world, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);

@@ -14,6 +14,9 @@ import com.google.gson.GsonBuilder;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -329,6 +332,80 @@ public class Model
             }
 
             return b;
+        }
+
+        public void fromNBT(NBTTagCompound tag)
+        {
+            if (tag.hasKey("Size", 9))
+            {
+                NBTTagList list = tag.getTagList("Size", 5);
+
+                if (list.tagCount() >= 3)
+                {
+                    this.readFloatList(list, this.size);
+                }
+            }
+
+            if (tag.hasKey("Poses", 10))
+            {
+                this.limbs.clear();
+
+                NBTTagCompound poses = tag.getCompoundTag("Poses");
+
+                for (String key : poses.getKeySet())
+                {
+                    NBTTagCompound pose = poses.getCompoundTag(key);
+                    Transform trans = new Transform();
+
+                    this.readFloatList(pose.getTagList("P", 5), trans.translate);
+                    this.readFloatList(pose.getTagList("S", 5), trans.scale);
+                    this.readFloatList(pose.getTagList("R", 5), trans.rotate);
+
+                    this.limbs.put(key, trans);
+                }
+            }
+        }
+
+        public NBTTagCompound toNBT(NBTTagCompound tag)
+        {
+            NBTTagCompound poses = new NBTTagCompound();
+
+            tag.setTag("Size", this.writeFloatList(new NBTTagList(), this.size));
+            tag.setTag("Poses", poses);
+
+            for (Map.Entry<String, Transform> entry : this.limbs.entrySet())
+            {
+                NBTTagCompound pose = new NBTTagCompound();
+                Transform trans = entry.getValue();
+
+                pose.setTag("P", this.writeFloatList(new NBTTagList(), trans.translate));
+                pose.setTag("S", this.writeFloatList(new NBTTagList(), trans.scale));
+                pose.setTag("R", this.writeFloatList(new NBTTagList(), trans.rotate));
+
+                poses.setTag(entry.getKey(), pose);
+            }
+
+            return tag;
+        }
+
+        public void readFloatList(NBTTagList list, float[] array)
+        {
+            int count = Math.min(array.length, list.tagCount());
+
+            for (int i = 0; i < count; i++)
+            {
+                array[i] = list.getFloatAt(i);
+            }
+        }
+
+        public NBTTagList writeFloatList(NBTTagList list, float[] array)
+        {
+            for (int i = 0; i < array.length; i++)
+            {
+                list.appendTag(new NBTTagFloat(array[i]));
+            }
+
+            return list;
         }
 
         @Override

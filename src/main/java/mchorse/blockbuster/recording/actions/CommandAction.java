@@ -1,11 +1,11 @@
 package mchorse.blockbuster.recording.actions;
 
-import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.CommandResultStats.Type;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +41,7 @@ public class CommandAction extends Action
     }
 
     @Override
-    public void apply(EntityActor actor)
+    public void apply(EntityLivingBase actor)
     {
         if (!this.command.isEmpty())
         {
@@ -76,9 +76,9 @@ public class CommandAction extends Action
      */
     public static class CommandSender implements ICommandSender
     {
-        public EntityActor actor;
+        public EntityLivingBase actor;
 
-        public CommandSender(EntityActor actor)
+        public CommandSender(EntityLivingBase actor)
         {
             this.actor = actor;
         }

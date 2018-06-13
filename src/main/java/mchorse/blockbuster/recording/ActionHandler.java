@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
 import mchorse.blockbuster.common.CommonProxy;
@@ -437,7 +439,7 @@ public class ActionHandler
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
-        if (!CommonProxy.manager.records.isEmpty() && Blockbuster.proxy.config.record_unload)
+        if (Blockbuster.proxy.config.record_unload && !CommonProxy.manager.records.isEmpty())
         {
             this.checkAndUnloadRecords();
         }
@@ -521,14 +523,15 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerTick(PlayerTickEvent event)
     {
-        EntityPlayer player = event.player;
-
         if (event.phase == Phase.START)
         {
             return;
         }
 
-        if (!player.world.isRemote && CommonProxy.manager.recorders.containsKey(player))
+        EntityPlayer player = event.player;
+        boolean server = !player.world.isRemote;
+
+        if (server && CommonProxy.manager.recorders.containsKey(player))
         {
             RecordRecorder recorder = CommonProxy.manager.recorders.get(player);
 
@@ -536,11 +539,24 @@ public class ActionHandler
             {
                 CommonProxy.manager.stopRecording(player, true, true);
                 Utils.broadcastInfo("recording.dead", recorder.record.filename);
-
-                return;
             }
+            else
+            {
+                recorder.record(player);
+            }
+        }
 
-            recorder.record(player);
+        IRecording recording = Recording.get(player);
+        RecordPlayer record = recording.getRecordPlayer();
+
+        if (record != null)
+        {
+            record.next();
+
+            if (record.isFinished() && server)
+            {
+                record.stopPlaying();
+            }
         }
 
         /* Update TEs in the model's TEISR */

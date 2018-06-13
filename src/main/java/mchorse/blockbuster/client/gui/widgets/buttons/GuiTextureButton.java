@@ -48,10 +48,12 @@ public class GuiTextureButton extends GuiButton
     {
         if (this.visible)
         {
+            GlStateManager.enableAlpha();
             mc.renderEngine.bindTexture(this.texture);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             this.drawTexturedModalRect(this.x, this.y, this.hovered ? this.atx : this.tx, this.hovered ? this.aty : this.ty, this.width, this.height);
+            GlStateManager.disableAlpha();
         }
     }
 }

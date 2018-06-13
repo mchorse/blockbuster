@@ -57,6 +57,11 @@ public class CustomMorph extends AbstractMorph
      */
     public ResourceLocation skin;
 
+    /**
+     * Custom pose 
+     */
+    public Pose customPose = null;
+
     private String key;
 
     /**
@@ -73,6 +78,11 @@ public class CustomMorph extends AbstractMorph
      */
     public Pose getPose(EntityLivingBase target)
     {
+        if (this.customPose != null)
+        {
+            return this.customPose;
+        }
+
         String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);
 
         if (target instanceof EntityActor)
@@ -81,6 +91,11 @@ public class CustomMorph extends AbstractMorph
         }
 
         return model.getPose(poseName);
+    }
+
+    public Pose getPose()
+    {
+        return this.pose;
     }
 
     public void setPose(Pose pose)
@@ -116,14 +131,7 @@ public class CustomMorph extends AbstractMorph
 
             if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
-                if (this.pose == null)
-                {
-                    String poseName = EntityUtils.getPose(player, this.currentPose, this.currentPoseOnSneak);
-
-                    this.pose = data.getPose(poseName);
-                }
-
-                model.pose = this.pose == null ? model.model.poses.get("standing") : this.pose;
+                model.pose = this.getPose(player);
                 model.swingProgress = 0;
 
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
@@ -290,6 +298,11 @@ public class CustomMorph extends AbstractMorph
         morph.currentPose = this.currentPose;
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
 
+        if (this.customPose != null)
+        {
+            morph.customPose = this.customPose.clone();
+        }
+
         morph.settings = settings;
         morph.model = this.model;
 
@@ -313,6 +326,11 @@ public class CustomMorph extends AbstractMorph
 
         tag.setString("Pose", this.currentPose);
         tag.setBoolean("Sneak", this.currentPoseOnSneak);
+
+        if (this.customPose != null)
+        {
+            tag.setTag("CustomPose", this.customPose.toNBT(new NBTTagCompound()));
+        }
     }
 
     @Override
@@ -327,5 +345,11 @@ public class CustomMorph extends AbstractMorph
 
         this.currentPose = tag.getString("Pose");
         this.currentPoseOnSneak = tag.getBoolean("Sneak");
+
+        if (tag.hasKey("CustomPose", 10))
+        {
+            this.customPose = new Model.Pose();
+            this.customPose.fromNBT(tag.getCompoundTag("CustomPose"));
+        }
     }
 }

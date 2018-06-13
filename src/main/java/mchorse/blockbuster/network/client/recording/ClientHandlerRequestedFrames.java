@@ -1,11 +1,13 @@
 package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
+import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,11 +29,12 @@ public class ClientHandlerRequestedFrames extends ClientMessageHandler<PacketReq
         record.postDelay = message.postDelay;
 
         ClientProxy.manager.records.put(record.filename, record);
-        EntityActor actor = (EntityActor) player.world.getEntityByID(message.id);
+        EntityLivingBase actor = (EntityLivingBase) player.world.getEntityByID(message.id);
+        RecordPlayer playback = EntityUtils.getRecordPlayer(actor);
 
-        if (actor != null && actor.playback != null)
+        if (actor != null && playback != null)
         {
-            actor.playback.record = record;
+            playback.record = record;
         }
     }
 }

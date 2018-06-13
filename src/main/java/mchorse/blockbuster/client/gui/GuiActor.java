@@ -72,7 +72,7 @@ public class GuiActor extends GuiScreen
         }
         else if (button.id == 1)
         {
-            this.morphs.morphs.setHidden(false);
+            this.morphs.hide(false);
         }
     }
 
@@ -85,7 +85,7 @@ public class GuiActor extends GuiScreen
      */
     private void saveAndQuit()
     {
-        MorphCell morph = this.morphs.morphs.getSelected();
+        MorphCell morph = this.morphs.getSelected();
 
         /* Update actor's morph */
         if (morph != null)
@@ -183,7 +183,7 @@ public class GuiActor extends GuiScreen
     private void fillData()
     {
         this.invisible.setIsChecked(!this.actor.invisible);
-        this.morphs.morphs.setSelected(this.actor.getMorph());
+        this.morphs.setSelected(this.actor.getMorph());
     }
 
     @Override
@@ -205,7 +205,7 @@ public class GuiActor extends GuiScreen
         y = this.height / 2 + (int) (size * 1.2);
         x = this.width / 2;
 
-        MorphCell cell = this.morphs.morphs.getSelected();
+        MorphCell cell = this.morphs.getSelected();
 
         if (cell != null)
         {

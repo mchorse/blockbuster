@@ -49,6 +49,7 @@ public class KeyboardHandler
     @SubscribeEvent
     public void onUserLogOut(ClientDisconnectionFromServerEvent event)
     {
+        GuiDashboard.reset();
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
     }

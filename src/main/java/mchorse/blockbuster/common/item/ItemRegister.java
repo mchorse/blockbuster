@@ -4,12 +4,9 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -84,9 +81,7 @@ public class ItemRegister extends Item
 
                 if (tile instanceof TileEntityDirector)
                 {
-                    TileEntityDirector director = (TileEntityDirector) tile;
-
-                    Dispatcher.sendTo(new PacketDirectorCast(pos, director.replays), (EntityPlayerMP) player);
+                    ((TileEntityDirector) tile).open(player, pos);
                 }
             }
 
