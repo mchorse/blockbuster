@@ -196,14 +196,21 @@ public class TileEntityDirector extends TileEntity implements ITickable
     }
 
     /**
-     * Set the state of the block playing (needed to update redstone thingy-stuff)
+     * Set the state of the block playing (needed to update redstone 
+     * thingy-stuff)
      */
     public void playBlock(boolean isPlaying)
     {
+        IBlockState state = this.worldObj.getBlockState(this.pos);
+
         if (!this.director.disableStates)
         {
-            this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(BlockDirector.PLAYING, isPlaying));
+            state = state.withProperty(BlockDirector.PLAYING, isPlaying);
         }
+
+        state = state.withProperty(BlockDirector.HIDDEN, this.director.hide ? isPlaying : false);
+
+        this.worldObj.setBlockState(this.getPos(), state);
     }
 
     /**

@@ -81,6 +81,11 @@ public class Director
     public boolean disableStates;
 
     /**
+     * Whether director block should be hidden when playback starts 
+     */
+    public boolean hide;
+
+    /**
      * Map of currently playing actors 
      */
     public Map<Replay, RecordPlayer> actors = new HashMap<Replay, RecordPlayer>();
@@ -571,6 +576,7 @@ public class Director
 
         this.loops = director.loops;
         this.disableStates = director.disableStates;
+        this.hide = director.hide;
         this.startCommand = director.startCommand;
         this.stopCommand = director.stopCommand;
     }
@@ -593,6 +599,7 @@ public class Director
 
         this.loops = compound.getBoolean("Loops");
         this.disableStates = compound.getBoolean("DisableState");
+        this.hide = compound.getBoolean("Hide");
         this.startCommand = compound.getString("StartCommand");
         this.stopCommand = compound.getString("StopCommand");
     }
@@ -612,6 +619,7 @@ public class Director
         compound.setTag("Actors", tagList);
         compound.setBoolean("Loops", this.loops);
         compound.setBoolean("DisableState", this.disableStates);
+        compound.setBoolean("Hide", this.hide);
         compound.setString("StartCommand", this.startCommand);
         compound.setString("StopCommand", this.stopCommand);
     }
@@ -632,6 +640,7 @@ public class Director
 
         this.loops = buffer.readBoolean();
         this.disableStates = buffer.readBoolean();
+        this.hide = buffer.readBoolean();
         this.startCommand = ByteBufUtils.readUTF8String(buffer);
         this.stopCommand = ByteBufUtils.readUTF8String(buffer);
     }
@@ -647,6 +656,7 @@ public class Director
 
         buffer.writeBoolean(this.loops);
         buffer.writeBoolean(this.disableStates);
+        buffer.writeBoolean(this.hide);
         ByteBufUtils.writeUTF8String(buffer, this.startCommand);
         ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
     }

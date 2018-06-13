@@ -54,10 +54,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     private GuiReplaySelector selector;
 
     /* Config fields */
-    public GuiButtonElement<GuiCheckBox> loops;
-    public GuiButtonElement<GuiCheckBox> disableStates;
     public GuiTextElement startCommand;
     public GuiTextElement stopCommand;
+    public GuiButtonElement<GuiCheckBox> loops;
+    public GuiButtonElement<GuiCheckBox> disableStates;
+    public GuiButtonElement<GuiCheckBox> hide;
 
     /* Replay fields */
     public GuiTextElement id;
@@ -110,13 +111,15 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.stopCommand = new GuiTextElement(mc, (str) -> this.director.stopCommand = str, 4000);
         this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
+        this.hide = GuiButtonElement.checkbox(mc, "Hide during playback", false, (b) -> this.director.hide = b.button.isChecked());
 
         this.startCommand.resizer().set(10, 50, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
         this.stopCommand.resizer().set(10, 90, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
-        this.disableStates.resizer().set(0, 20, 60, 11).relative(this.loops.resizer());
+        this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
+        this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
 
-        this.configOptions.add(this.loops, this.disableStates, this.startCommand, this.stopCommand);
+        this.configOptions.add(this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, (str) -> this.replay.id = str, 80);
@@ -253,10 +256,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private void fillData()
     {
-        this.loops.button.setIsChecked(this.director.loops);
-        this.disableStates.button.setIsChecked(this.director.disableStates);
         this.startCommand.setText(this.director.startCommand);
         this.stopCommand.setText(this.director.stopCommand);
+        this.loops.button.setIsChecked(this.director.loops);
+        this.disableStates.button.setIsChecked(this.director.disableStates);
+        this.hide.button.setIsChecked(this.director.hide);
     }
 
     private void fillReplayData()

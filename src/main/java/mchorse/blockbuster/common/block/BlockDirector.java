@@ -20,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -34,14 +35,19 @@ import net.minecraft.world.World;
 public class BlockDirector extends Block implements ITileEntityProvider
 {
     /**
-     * The only property of director block (playing state) 
+     * The playing state property of director block 
      */
     public static final PropertyBool PLAYING = PropertyBool.create("playing");
+
+    /**
+     * The hidden state property of director block 
+     */
+    public static final PropertyBool HIDDEN = PropertyBool.create("hidden");
 
     public BlockDirector()
     {
         super(Material.ROCK);
-        this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false));
+        this.setDefaultState(this.getDefaultState().withProperty(PLAYING, false).withProperty(HIDDEN, false));
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setBlockUnbreakable();
         this.setResistance(6000000.0F);
@@ -61,24 +67,44 @@ public class BlockDirector extends Block implements ITileEntityProvider
         return true;
     }
 
+    @Override
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return !state.getValue(HIDDEN);
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state)
+    {
+        return !state.getValue(HIDDEN);
+    }
+
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return state.getValue(HIDDEN) ? EnumBlockRenderType.ENTITYBLOCK_ANIMATED : super.getRenderType(state);
+    }
+
     /* States */
 
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(PLAYING) ? 1 : 0;
+        int meta = state.getValue(PLAYING) ? 0 : 1;
+        meta |= state.getValue(HIDDEN) ? 0b01 : 0;
+
+        return meta;
     }
 
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(PLAYING, meta == 1);
+        return this.getDefaultState().withProperty(PLAYING, (meta & 0b1) == 0b1).withProperty(HIDDEN, (meta & 0b01) == 0b01);
     }
 
     @Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {PLAYING});
+        return new BlockStateContainer(this, new IProperty[] {PLAYING, HIDDEN});
     }
 
     /* Redstone */
