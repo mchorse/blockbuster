@@ -2,7 +2,7 @@
     "variants": {
         "hidden=false,playing=true": { "model": "blockbuster:director_play" },
         "hidden=false,playing=false": { "model": "blockbuster:director_stop" },
-        "hidden=true,playing=true": { "model": "blockbuster:director_empty" },
-        "hidden=true,playing=false": { "model": "blockbuster:director_empty" }
+        "hidden=true,playing=true": { "model": "blockbuster:director_play" },
+        "hidden=true,playing=false": { "model": "blockbuster:director_stop" }
     }
 }
