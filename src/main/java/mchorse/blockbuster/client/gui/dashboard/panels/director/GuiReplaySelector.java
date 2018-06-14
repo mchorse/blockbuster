@@ -119,7 +119,7 @@ public class GuiReplaySelector extends GuiElement
 
         this.scroll.drag(mouseX, mouseY);
 
-        if (this.director != null)
+        if (this.director != null && !this.director.replays.isEmpty())
         {
             int i = 0;
             int h = this.scroll.scrollItemSize;
@@ -158,6 +158,10 @@ public class GuiReplaySelector extends GuiElement
             }
 
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        }
+        else
+        {
+            this.drawCenteredString(this.font, "Create a replay...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
         this.scroll.drawScrollbar();

@@ -49,6 +49,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private GuiElements subChildren;
     private GuiDelegateElement mainView;
+    private GuiElements replays;
     private GuiElements replayEditor;
     private GuiElements configOptions;
     private GuiReplaySelector selector;
@@ -96,9 +97,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         super(mc);
 
         this.subChildren = new GuiElements();
+        this.subChildren.setVisible(false);
+        this.replays = new GuiElements();
         this.replayEditor = new GuiElements();
+        this.replayEditor.setVisible(false);
         this.configOptions = new GuiElements();
-        this.mainView = new GuiDelegateElement(mc, this.replayEditor);
+        this.mainView = new GuiDelegateElement(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w.set(1, Measure.RELATIVE);
         this.selector.resizer().y.set(1, Measure.RELATIVE, -60);
@@ -137,14 +141,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.fake.resizer().set(0, 16, 80, 11).relative(this.enabled.resizer());
 
         this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake);
-        this.replayEditor.add(this.selector);
+        this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-            this.mainView.delegate = this.mainView.delegate == this.configOptions ? this.replayEditor : this.configOptions;
+            this.mainView.delegate = this.mainView.delegate == this.configOptions ? this.replays : this.configOptions;
             this.mainView.delegate.resize(screen.width, screen.height);
         });
         element.resizer().set(0, 6, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -48);
@@ -155,17 +159,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
         element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
-        this.replayEditor.add(element);
+        this.replays.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
         element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
-        this.replayEditor.add(element);
+        this.replays.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
         element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
 
-        this.replayEditor.add(element);
+        this.replays.add(element);
 
         /* Additional utility buttons */
         element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.hide(false));
@@ -212,6 +216,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.director = director;
         this.pos = pos;
         this.selector.setDirector(director);
+        this.subChildren.setVisible(director != null);
 
         if (!this.director.replays.isEmpty())
         {
@@ -248,7 +253,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
         this.replay = replay;
-        this.mainView.delegate = this.replayEditor;
+        this.replayEditor.setVisible(this.replay != null);
+        this.mainView.delegate = this.replays;
         this.mainView.delegate.resize(screen.width, screen.height);
         this.selector.setReplay(replay);
         this.fillReplayData();
@@ -398,7 +404,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         /* Draw additional stuff */
-        if (this.mainView.delegate == this.replayEditor)
+        if (this.mainView.delegate == this.replays)
         {
             if (this.replay != null)
             {
@@ -425,8 +431,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
             boolean error = this.replay == null ? false : this.replay.id.isEmpty();
 
-            this.font.drawStringWithShadow("Recording ID", this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
-            this.font.drawStringWithShadow("Name tag", this.name.area.x, this.name.area.y - 12, 0xcccccc);
+            if (this.replayEditor.isVisible())
+            {
+                this.font.drawStringWithShadow("Recording ID", this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
+                this.font.drawStringWithShadow("Name tag", this.name.area.x, this.name.area.y - 12, 0xcccccc);
+            }
         }
         else
         {
@@ -440,6 +449,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         }
 
         super.draw(mouseX, mouseY, partialTicks);
+
+        if (this.director == null)
+        {
+            String no = "Select a director block...";
+            int w = this.font.getStringWidth(no);
+
+            this.font.drawStringWithShadow(no, this.area.getX(0.5F) - w / 2, this.area.getY(0.5F) - 6, 0xffffff);
+        }
 
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
