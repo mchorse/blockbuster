@@ -21,6 +21,18 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     }
 
     @Override
+    public boolean isEnabled()
+    {
+        return this.delegate == null ? false : this.delegate.isEnabled();
+    }
+
+    @Override
+    public boolean isVisible()
+    {
+        return this.delegate == null ? true : this.delegate.isVisible();
+    }
+
+    @Override
     public void resize(int width, int height)
     {
         if (this.delegate instanceof GuiElement)
