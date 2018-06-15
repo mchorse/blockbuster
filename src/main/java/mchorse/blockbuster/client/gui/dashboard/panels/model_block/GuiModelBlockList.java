@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +29,9 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
 
         if (tile instanceof TileEntityModel)
         {
-            this.elements.add((TileEntityModel) tile);
+            this.list.add((TileEntityModel) tile);
 
-            this.scroll.setSize(this.elements.size());
+            this.scroll.setSize(this.list.size());
             this.scroll.clamp();
 
             return true;
@@ -40,8 +41,10 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
     }
 
     @Override
-    public void render(int x, int y, TileEntityModel item, boolean hovered)
+    public void drawElement(TileEntityModel item, int i, int x, int y, boolean hovered)
     {
+        int h = this.scroll.scrollItemSize;
+
         if (item.morph != null)
         {
             GuiScreen screen = this.mc.currentScreen;
@@ -61,5 +64,6 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
         String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
 
         this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
+        Gui.drawRect(x, y + h - 1, x + this.area.w, y + h, 0x88181818);
     }
 }

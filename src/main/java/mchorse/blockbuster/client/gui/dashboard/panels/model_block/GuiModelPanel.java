@@ -276,7 +276,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
     private void updateList()
     {
-        this.list.elements.clear();
+        this.list.clear();
 
         for (BlockPos pos : lastBlocks)
         {

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
@@ -956,7 +958,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         /* Extending model's rendering range, otherwise it gets clipped */
         GlStateManager.matrixMode(5889);
         GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
+        Project.gluPerspective(70, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, 1000);
         GlStateManager.matrixMode(5888);
 
         Model.Limb limb = this.limbEditor.limb;
@@ -991,10 +993,13 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             this.mc.renderEngine.bindTexture(this.textureRL);
         }
 
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0.0F);
-        GlStateManager.scale((-scale), scale, scale);
+        GlStateManager.loadIdentity();
+        GlStateManager.translate(0, 0, -this.scale / 400);
+        GlStateManager.scale(1, -1, 1);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(180.0F + this.prevYaw + this.yaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(this.prevPitch + this.pitch, 1.0F, 0.0F, 0.0F);
@@ -1062,6 +1067,11 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             limb.color[1] = lastGreen;
             limb.color[2] = lastBlue;
         }
+
+        GlStateManager.matrixMode(5889);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0D, this.width, this.height, 0.0D, 1000.0D, 3000000.0D);
+        GlStateManager.matrixMode(5888);
     }
 
     /**

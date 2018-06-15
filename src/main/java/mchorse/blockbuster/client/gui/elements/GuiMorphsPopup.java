@@ -12,8 +12,8 @@ import mchorse.blockbuster.api.Model.Transform;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
-import mchorse.blockbuster.client.gui.framework.elements.GuiListElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -61,7 +61,7 @@ public class GuiMorphsPopup extends GuiScreen
     private GuiTrackpadElement ry;
     private GuiTrackpadElement rz;
 
-    private GuiListElement list;
+    private GuiStringListElement list;
 
     private Pose pose;
     private Transform trans;
@@ -108,7 +108,7 @@ public class GuiMorphsPopup extends GuiScreen
         element.resizer().y.set(1, Measure.RELATIVE, -30);
         this.elements.add(element);
 
-        element = this.list = new GuiListElement(mc, (str) -> this.setTransform(this.pose.limbs.get(str)));
+        element = this.list = new GuiStringListElement(mc, (str) -> this.setTransform(this.pose.limbs.get(str)));
         element.resizer().parent(this.area).set(5, 30, 80, 90).h.set(1, Measure.RELATIVE, -40);
         this.elements.add(element);
 
@@ -221,10 +221,9 @@ public class GuiMorphsPopup extends GuiScreen
 
                 this.setTransform(entry.getValue());
 
-                this.list.list.clear();
-                this.list.list.addAll(this.pose.limbs.keySet());
-                this.list.scroll.setSize(this.list.list.size());
-                this.list.current = this.list.list.indexOf(entry.getKey());
+                this.list.clear();
+                this.list.add(this.pose.limbs.keySet());
+                this.list.setCurrent(entry.getKey());
             }
         }
     }
