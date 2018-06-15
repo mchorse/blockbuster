@@ -142,9 +142,15 @@ public abstract class GuiListElement<T> extends GuiElement
             int x = this.scroll.x;
             int y = this.scroll.y + i * h - this.scroll.scroll;
 
-            if (y + h < this.scroll.y || y >= this.scroll.getY(1))
+            if (y + h < this.scroll.y)
             {
+                i++;
                 continue;
+            }
+
+            if (y >= this.scroll.getY(1))
+            {
+                break;
             }
 
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + this.scroll.w && mouseY < y + this.scroll.scrollItemSize;
