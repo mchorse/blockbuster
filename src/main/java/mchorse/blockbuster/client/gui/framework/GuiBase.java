@@ -62,9 +62,10 @@ public class GuiBase extends GuiScreen
     @Override
     public void handleKeyboardInput() throws IOException
     {
-        super.handleKeyboardInput();
-
-        this.elements.handleKeyboardInput();
+        if (!this.elements.handleKeyboardInput())
+        {
+            super.handleKeyboardInput();
+        }
     }
 
     @Override
