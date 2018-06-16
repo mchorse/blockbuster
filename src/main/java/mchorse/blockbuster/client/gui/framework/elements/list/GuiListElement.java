@@ -49,6 +49,7 @@ public abstract class GuiListElement<T> extends GuiElement
 
     public void clear()
     {
+        this.current = -1;
         this.list.clear();
         this.update();
     }

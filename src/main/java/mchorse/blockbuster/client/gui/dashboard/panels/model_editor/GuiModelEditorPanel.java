@@ -1,15 +1,18 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
+import java.io.File;
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
-import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -31,6 +34,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     /* GUI stuff */
     private GuiButtonElement<GuiTextureButton> openModel;
     private GuiStringListElement modelList;
+    private GuiStringListElement limbList;
 
     /* Current data */
     private Model model;
@@ -49,18 +53,30 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private int swipe;
     private int timer;
 
+    private boolean dragging;
+    private float yaw;
+    private float pitch;
+
+    private float lastX;
+    private float lastY;
+
     public GuiModelEditorPanel(Minecraft mc)
     {
         super(mc);
 
         this.dummy = new DummyEntity(null);
-        this.setModel("steve");
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.setModel(str));
-        this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
+        this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+        this.modelList.add(ModelCustom.MODELS.keySet());
         this.children.add(this.modelList);
 
-        this.modelList.add(ModelCustom.MODELS.keySet());
+        this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
+        this.limbList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+        this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
+        this.children.add(this.limbList);
+
+        this.setModel("steve");
     }
 
     public void setModel(String name)
@@ -77,9 +93,47 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (this.texture == null)
             {
+                Map<String, File> skins = Blockbuster.proxy.models.pack.skins.get(name);
+
+                if (skins != null && !skins.isEmpty())
+                {
+                    this.texture = new ResourceLocation("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
+                }
+            }
+
+            if (this.texture == null)
+            {
                 this.texture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
             }
+
+            this.limbList.clear();
+            this.limbList.add(this.model.limbs.keySet());
         }
+    }
+
+    public void setLimb(String str)
+    {
+        Limb limb = this.model.limbs.get(str);
+
+        if (limb != null)
+        {
+            this.limb = limb;
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        if (super.mouseClicked(mouseX, mouseY, mouseButton))
+        {
+            return true;
+        }
+
+        this.dragging = true;
+        this.lastX = mouseX;
+        this.lastY = mouseY;
+
+        return false;
     }
 
     @Override
@@ -90,16 +144,33 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             return true;
         }
 
-        this.scale += Math.copySign(1, scroll);
-        this.scale = MathHelper.clamp_float(this.scale, -1, 15);
+        this.scale += Math.copySign(0.25F, scroll);
+        this.scale = MathHelper.clamp_float(this.scale, -1.5F, 30);
 
         return false;
+    }
+
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        if (this.dragging)
+        {
+            this.yaw -= this.lastX - mouseX;
+            this.pitch += this.lastY - mouseY;
+        }
+
+        this.dragging = false;
+
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         this.update(mouseX, mouseY);
-        this.drawModel(partialTicks, 0, 0, 0);
+        this.drawModel(partialTicks, mouseX, mouseY, 0);
+
+        this.limbList.setVisible(false);
+        this.modelList.setVisible(false);
 
         super.draw(mouseX, mouseY, partialTicks);
     }
@@ -131,10 +202,6 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     /**
      * Draw currently edited model
-     *
-     * Totally stole it from Metamorph's code from {@link GuiUtils}. I hate to
-     * copy and paste code like this, but unfortunately, there are too much
-     * lines of code that depend on each other and cannot be separated.
      */
     private void drawModel(float scale, float yaw, float pitch, float ticks)
     {
@@ -152,8 +219,14 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         float factor = 0.0625F;
         float oldSwing = this.renderModel.swingProgress;
 
-        float newYaw = 0;
-        float newPitch = 0;
+        float newYaw = this.yaw;
+        float newPitch = this.pitch;
+
+        if (this.dragging)
+        {
+            newYaw -= this.lastX - yaw;
+            newPitch += this.lastY - pitch;
+        }
 
         RenderHelper.enableStandardItemLighting();
 
@@ -167,7 +240,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         GlStateManager.rotate(180.0F + newYaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(newPitch, 1.0F, 0.0F, 0.0F);
 
-        pitch += newPitch;
+        // pitch += newPitch;
 
         this.renderGround();
 
@@ -178,7 +251,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.renderModel.pose = this.pose;
         this.renderModel.setLivingAnimations(this.dummy, 0, 0, ticks);
-        this.renderModel.setRotationAngles(limbSwing, this.swingAmount, this.timer, yaw, pitch, factor, this.dummy);
+        this.renderModel.setRotationAngles(limbSwing, this.swingAmount, this.timer, 0, 0, factor, this.dummy);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
