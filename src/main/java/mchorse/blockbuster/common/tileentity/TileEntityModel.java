@@ -53,6 +53,8 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public float sy = 1;
     public float sz = 1;
 
+    public boolean shadow;
+
     public TileEntityModel()
     {
         NBTTagCompound tag = new NBTTagCompound();
@@ -202,6 +204,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
+        if (compound.hasKey("Shadow") || this.shadow) compound.setBoolean("Shadow", this.shadow);
         if (compound.hasKey("Yaw") || this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (compound.hasKey("Pitch") || this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (compound.hasKey("Body") || this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
@@ -255,6 +258,7 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
             this.order = RotationOrder.values()[compound.getByte("Order")];
         }
 
+        if (compound.hasKey("Shadow")) this.shadow = compound.getBoolean("Shadow");
         if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
         if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
         if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
