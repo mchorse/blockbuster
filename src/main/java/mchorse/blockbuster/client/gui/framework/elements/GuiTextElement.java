@@ -91,7 +91,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
 
         this.field.mouseClicked(mouseX, mouseY, mouseButton);
 
-        return false;
+        return this.area.isInside(mouseX, mouseY);
     }
 
     @Override

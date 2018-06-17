@@ -45,4 +45,10 @@ public class GuiTwoElement extends GuiElement
         this.a.trackpad.min = this.b.trackpad.min = min;
         this.a.trackpad.max = this.b.trackpad.max = max;
     }
+
+    public void setValues(float a, float b)
+    {
+        this.a.trackpad.setValue(a);
+        this.b.trackpad.setValue(b);
+    }
 }

@@ -40,6 +40,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiStringListElement posesList;
     private GuiStringListElement limbList;
 
+    /* Model options */
     private GuiElements options;
     private GuiTextElement name;
     private GuiTwoElement texture;
@@ -81,7 +82,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.limbList);
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(100, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
         this.posesList.setVisible(false);
         this.children.add(this.posesList);
 
@@ -294,6 +295,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             this.posesList.clear();
             this.posesList.add(this.model.poses.keySet());
+
+            this.fillData();
         }
     }
 
@@ -316,5 +319,21 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             this.pose = pose;
             this.renderModel.pose = pose;
         }
+    }
+
+    private void fillData()
+    {
+        if (this.model == null)
+        {
+            return;
+        }
+
+        this.name.field.setText(this.model.name);
+        this.texture.setValues(this.model.texture[0], this.model.texture[1]);
+        this.scale.setValues(this.model.scale[0], this.model.scale[1], this.model.scale[2]);
+        this.scaleGui.trackpad.setValue(this.model.scaleGui);
+        this.defaultTexture.field.setText(this.model.defaultTexture == null ? "" : this.model.defaultTexture.toString());
+        this.providesObj.button.setIsChecked(this.model.providesObj);
+        this.providesMtl.button.setIsChecked(this.model.providesMtl);
     }
 }

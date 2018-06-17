@@ -180,8 +180,8 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
+        GlStateManager.scale(model.model.scale[0], model.model.scale[1], model.model.scale[2]);
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
-        /* TODO: bring back scale */
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
         if (this.panel.renderTexture != null)

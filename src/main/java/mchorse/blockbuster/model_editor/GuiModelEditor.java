@@ -789,8 +789,8 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         /* Zooming the model */
         if (x > 120 && x < this.width - 120 && this.texturePicker.getHidden() && scroll != 0 && !inModal)
         {
-            this.scale += Math.copySign(2.0, scroll);
-            this.scale = MathHelper.clamp_float(this.scale, -100, 500);
+            this.scale += Math.copySign(0.5F, scroll);
+            this.scale = MathHelper.clamp_float(this.scale, -2, 25);
         }
 
         if (scroll != 0 && inModal)
@@ -908,10 +908,10 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
             float scale = this.height / 3;
             float x = this.width / 2;
             float y = this.height / 2;
-            float yaw = (x - mouseX) / this.width * 90;
+            float yaw = -(x - mouseX) / this.width * 90;
             float pitch = (y + scale + mouseY) / this.height * 90 - 135;
 
-            this.drawModel(x, y, MathHelper.clamp_float(scale + this.scale, 20, 1000), yaw, pitch, partialTicks);
+            this.drawModel(x, y, this.scale, yaw, pitch, partialTicks);
         }
         catch (Exception e)
         {
@@ -930,7 +930,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
 
         if (this.dragging)
         {
-            this.yaw = -(this.prevX - mouseX);
+            this.yaw = this.prevX - mouseX;
             this.pitch = this.prevY - mouseY;
         }
 
@@ -998,7 +998,7 @@ public class GuiModelEditor extends GuiScreen implements IModalCallback, ILimbPi
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
-        GlStateManager.translate(0, 0, -this.scale / 400);
+        GlStateManager.translate(0, 0, -3 - this.scale);
         GlStateManager.scale(1, -1, 1);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(180.0F + this.prevYaw + this.yaw, 0.0F, 1.0F, 0.0F);
