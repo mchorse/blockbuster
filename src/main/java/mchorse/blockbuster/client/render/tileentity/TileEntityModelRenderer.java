@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntityModel>
 {
     /**
-     * Entity renderer used for shadow rendering  
+     * Entity shadow rendering  
      */
     public RenderShadow renderer;
 
@@ -133,7 +133,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     }
 
     /**
-     * Used for rendering shadow 
+     * Used for rendering entity shadow 
      */
     public static class RenderShadow extends Render<Entity>
     {

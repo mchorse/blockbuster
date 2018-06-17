@@ -42,6 +42,7 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
     {
         this.trackpad.mouseClicked(mouseX, mouseY, mouseButton);
 
+        /* TODO: started dragging? */
         return false;
     }
 

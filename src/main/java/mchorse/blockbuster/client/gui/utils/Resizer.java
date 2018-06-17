@@ -30,6 +30,16 @@ public class Resizer
         return this;
     }
 
+    public Resizer set(float x, float y, float w, float h, Measure measure)
+    {
+        this.x.unit = measure;
+        this.y.unit = measure;
+        this.w.unit = measure;
+        this.h.unit = measure;
+
+        return this.set(x, y, w, h);
+    }
+
     public Resizer relative(Resizer relative)
     {
         this.relative = relative;
