@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiElement extends Gui implements IGuiElement
+public class GuiElement extends Gui implements IGuiElement
 {
     /**
      * Area of this element (i.e. position and size) 

@@ -22,10 +22,10 @@ public class GuiThreeElement extends GuiTwoElement
         });
         this.children.add(this.c);
 
-        this.c.resizer().parent(this.area).set(0.333F, 0, 0.333F, 1, Measure.RELATIVE);
+        this.c.resizer().parent(this.area).set(0.666F, 0, 0.333F, 1, Measure.RELATIVE);
 
         this.a.resizer().w.value = this.b.resizer().w.value = 0.333F;
-        this.b.resizer().x.value = 0.666F;
+        this.b.resizer().x.set(0.333F, Measure.RELATIVE, 0);
     }
 
     public void setLimit(int min, int max)
@@ -39,5 +39,7 @@ public class GuiThreeElement extends GuiTwoElement
     {
         this.setValues(a, b);
         this.c.trackpad.setValue(c);
+
+        this.array[2] = c;
     }
 }

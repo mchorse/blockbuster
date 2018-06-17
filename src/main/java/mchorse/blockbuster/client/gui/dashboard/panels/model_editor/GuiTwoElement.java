@@ -50,5 +50,8 @@ public class GuiTwoElement extends GuiElement
     {
         this.a.trackpad.setValue(a);
         this.b.trackpad.setValue(b);
+
+        this.array[0] = a;
+        this.array[1] = b;
     }
 }
