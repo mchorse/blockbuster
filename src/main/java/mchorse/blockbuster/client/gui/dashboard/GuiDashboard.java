@@ -4,13 +4,17 @@ import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiDashboard extends GuiBase
 {
     public static final ResourceLocation ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
@@ -18,9 +22,10 @@ public class GuiDashboard extends GuiBase
     public GuiDelegateElement panel;
     public GuiDashboardSidebar sidebar;
 
-    public GuiMainPanel mainPanel;
     public GuiDirectorPanel directorPanel;
     public GuiModelPanel modelPanel;
+    public GuiModelEditorPanel modelEditorPanel;
+    public GuiMainPanel mainPanel;
 
     public static void reset()
     {
@@ -35,9 +40,10 @@ public class GuiDashboard extends GuiBase
         panelResizer.w.set(1, Measure.RELATIVE, -32);
         panelResizer.h.set(1, Measure.RELATIVE);
 
-        this.mainPanel = new GuiMainPanel(mc);
         this.directorPanel = new GuiDirectorPanel(mc);
         this.modelPanel = new GuiModelPanel(mc);
+        this.modelEditorPanel = new GuiModelEditorPanel(mc);
+        this.mainPanel = new GuiMainPanel(mc);
 
         this.panel = new GuiDelegateElement(mc, this.mainPanel);
         this.panel.resizer = panelResizer;

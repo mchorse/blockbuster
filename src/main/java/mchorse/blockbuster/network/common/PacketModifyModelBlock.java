@@ -34,6 +34,8 @@ public class PacketModifyModelBlock implements IMessage
     public float sy;
     public float sz;
 
+    public boolean shadow;
+
     public PacketModifyModelBlock()
     {}
 
@@ -118,6 +120,8 @@ public class PacketModifyModelBlock implements IMessage
         this.sy = buf.readFloat();
         this.sz = buf.readFloat();
 
+        this.shadow = buf.readBoolean();
+
         for (int i = 0; i < 6; i++)
         {
             this.slots[i] = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : ItemStack.EMPTY;
@@ -151,6 +155,8 @@ public class PacketModifyModelBlock implements IMessage
         buf.writeFloat(this.sx);
         buf.writeFloat(this.sy);
         buf.writeFloat(this.sz);
+
+        buf.writeBoolean(this.shadow);
 
         for (int i = 0; i < 6; i++)
         {

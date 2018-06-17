@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 public class DummyEntity extends EntityLivingBase
 {
     private final ItemStack[] held;
-    private final ItemStack sword;
-    private final ItemStack ingot;
+    private ItemStack sword;
+    private ItemStack ingot;
 
     public DummyEntity(World worldIn)
     {

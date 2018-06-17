@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Gui handler class
@@ -46,6 +48,7 @@ public class GuiHandler implements IGuiHandler
      * IGuiHandler is used to centralize GUI invocations
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
         Entity entity = world.getEntityByID(x);
