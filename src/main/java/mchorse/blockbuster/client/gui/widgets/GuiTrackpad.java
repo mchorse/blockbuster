@@ -54,6 +54,14 @@ public class GuiTrackpad
     }
 
     /**
+     * Whether this trackpad is dragging 
+     */
+    public boolean isDragging()
+    {
+        return this.dragging;
+    }
+
+    /**
      * Set the value of the field. The input value would be rounded up to 3
      * decimal places.
      */

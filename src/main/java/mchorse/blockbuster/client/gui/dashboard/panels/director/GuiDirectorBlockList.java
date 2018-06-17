@@ -25,9 +25,9 @@ public class GuiDirectorBlockList extends GuiBlockList<BlockPos>
 
         if (tile instanceof TileEntityDirector)
         {
-            this.elements.add(pos);
+            this.list.add(pos);
 
-            this.scroll.setSize(this.elements.size());
+            this.scroll.setSize(this.list.size());
             this.scroll.clamp();
 
             return true;
@@ -37,7 +37,7 @@ public class GuiDirectorBlockList extends GuiBlockList<BlockPos>
     }
 
     @Override
-    public void render(int x, int y, BlockPos item, boolean hovered)
+    public void drawElement(BlockPos item, int i, int x, int y, boolean hovered)
     {
         BlockPos pos = item;
         String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());

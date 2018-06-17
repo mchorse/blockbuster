@@ -330,7 +330,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private void updateList()
     {
-        this.list.elements.clear();
+        this.list.clear();
 
         for (BlockPos pos : lastBlocks)
         {

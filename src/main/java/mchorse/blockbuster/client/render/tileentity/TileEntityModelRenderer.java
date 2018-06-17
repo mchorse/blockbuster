@@ -9,8 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Model tile entity renderer
@@ -20,6 +25,11 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntityModel>
 {
+    /**
+     * Entity shadow rendering  
+     */
+    public RenderShadow renderer;
+
     @Override
     public void render(TileEntityModel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
@@ -27,6 +37,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
         if (te.morph != null)
         {
+            if (this.renderer == null)
+            {
+                this.renderer = new RenderShadow(mc.getRenderManager());
+            }
+
             if (te.entity == null)
             {
                 te.createEntity();
@@ -40,17 +55,23 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             EntityLivingBase entity = te.entity;
 
             /* Apply entity rotations */
-            entity.setPositionAndRotation(0, 0, 0, 0, 0);
-            entity.setLocationAndAngles(0, 0, 0, 0, 0);
+            BlockPos pos = te.getPos();
+
+            entity.setPositionAndRotation(pos.getX() + 0.5F, pos.getY() + te.y, pos.getZ() + 0.5F, 0, 0);
+            entity.setLocationAndAngles(pos.getX() + 0.5F, pos.getY() + te.y, pos.getZ() + 0.5F, 0, 0);
             entity.rotationYawHead = entity.prevRotationYawHead = te.rotateYawHead;
             entity.rotationYaw = entity.prevRotationYaw = 0;
             entity.rotationPitch = entity.prevRotationPitch = te.rotatePitch;
             entity.renderYawOffset = entity.prevRenderYawOffset = te.rotateBody;
             entity.setVelocity(0, 0, 0);
 
+            float xx = (float) x + 0.5F + te.x;
+            float yy = (float) y + te.y;
+            float zz = (float) z + 0.5F + te.z;
+
             /* Apply transformations */
             GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 0.5F + te.x, y + te.y, z + 0.5F + te.z);
+            GlStateManager.translate(xx, yy, zz);
 
             if (te.order == RotationOrder.ZYX)
             {
@@ -76,6 +97,12 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
+
+            if (te.shadow)
+            {
+                this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);
+                this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
+            }
 
             if (!Blockbuster.proxy.config.model_block_disable_culling_workaround && alpha != 0)
             {
@@ -107,6 +134,28 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
+        }
+    }
+
+    /**
+     * Used for rendering entity shadow 
+     */
+    public static class RenderShadow extends Render<Entity>
+    {
+        protected RenderShadow(RenderManager renderManager)
+        {
+            super(renderManager);
+        }
+
+        @Override
+        protected ResourceLocation getEntityTexture(Entity entity)
+        {
+            return null;
+        }
+
+        public void setShadowSize(float size)
+        {
+            this.shadowSize = size;
         }
     }
 }

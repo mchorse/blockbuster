@@ -62,6 +62,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
     private GuiButtonElement<GuiCheckBox> one;
     private GuiButtonElement<GuiCirculate> order;
+    private GuiButtonElement<GuiCheckBox> shadow;
 
     private GuiModelBlockList list;
     private GuiElements subChildren;
@@ -138,8 +139,10 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         /* Buttons */
         this.subChildren.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.morphs.hide(false)));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.toggleOne()));
+        this.subChildren.add(this.shadow = GuiButtonElement.checkbox(mc, "Shadow", false, (button) -> this.model.shadow = button.button.isChecked()));
 
         element.resizer().set(0, 10, 70, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -35);
+        this.shadow.resizer().set(80, 4, 30, 11).relative(element.resizer);
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
 
         GuiCirculate button = new GuiCirculate(0, 0, 0, 0, 0);
@@ -276,7 +279,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
     private void updateList()
     {
-        this.list.elements.clear();
+        this.list.clear();
 
         for (BlockPos pos : lastBlocks)
         {
@@ -308,6 +311,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
             this.one.button.setIsChecked(this.model.one);
             this.order.button.setValue(this.model.order.ordinal());
+            this.shadow.button.setIsChecked(this.model.shadow);
 
             this.toggleOne();
 

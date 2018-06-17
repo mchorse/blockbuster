@@ -160,7 +160,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
 
     private boolean handleRegisterItem(ItemStack item, World world, BlockPos pos, EntityPlayer player)
     {
-        if (item.getItem() instanceof ItemRegister && world.isRemote)
+        if (item.getItem() instanceof ItemRegister && !world.isRemote)
         {
             ((ItemRegister) item.getItem()).registerStack(item, pos);
             L10n.success(player, "director.attached_device");
