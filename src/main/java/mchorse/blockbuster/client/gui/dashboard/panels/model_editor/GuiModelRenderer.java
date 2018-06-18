@@ -33,8 +33,11 @@ public class GuiModelRenderer extends GuiElement
     private int timer;
 
     private boolean dragging;
+    private boolean position;
     private float yaw;
     private float pitch;
+    private float x;
+    private float y;
 
     private float lastX;
     private float lastY;
@@ -59,6 +62,11 @@ public class GuiModelRenderer extends GuiElement
         this.lastX = mouseX;
         this.lastY = mouseY;
 
+        if (this.mc.currentScreen.isShiftKeyDown())
+        {
+            this.position = true;
+        }
+
         return false;
     }
 
@@ -81,11 +89,20 @@ public class GuiModelRenderer extends GuiElement
     {
         if (this.dragging)
         {
-            this.yaw -= this.lastX - mouseX;
-            this.pitch += this.lastY - mouseY;
+            if (this.position)
+            {
+                this.x -= (this.lastX - mouseX) / 60;
+                this.y += (this.lastY - mouseY) / 60;
+            }
+            else
+            {
+                this.yaw -= this.lastX - mouseX;
+                this.pitch += this.lastY - mouseY;
+            }
         }
 
         this.dragging = false;
+        this.position = false;
 
         super.mouseReleased(mouseX, mouseY, state);
     }
@@ -147,10 +164,21 @@ public class GuiModelRenderer extends GuiElement
         float newYaw = this.yaw;
         float newPitch = this.pitch;
 
+        float x = this.x;
+        float y = this.y;
+
         if (this.dragging)
         {
-            newYaw -= this.lastX - yaw;
-            newPitch += this.lastY - pitch;
+            if (this.position)
+            {
+                x -= (this.lastX - yaw) / 60;
+                y += (this.lastY - pitch) / 60;
+            }
+            else
+            {
+                newYaw -= this.lastX - yaw;
+                newPitch += this.lastY - pitch;
+            }
         }
 
         RenderHelper.enableStandardItemLighting();
@@ -159,7 +187,7 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.disableCull();
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
-        GlStateManager.translate(0, -1, -2 - this.scale);
+        GlStateManager.translate(0 + x, -1 + y, -2 - this.scale);
         GlStateManager.scale(-1, -1, 1);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(180.0F + newYaw, 0.0F, 1.0F, 0.0F);

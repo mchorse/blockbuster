@@ -58,7 +58,6 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     public void setEnabled(boolean enabled)
     {
         super.setEnabled(enabled);
-
         this.field.setEnabled(enabled);
     }
 
@@ -66,7 +65,6 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     public void setVisible(boolean visible)
     {
         super.setVisible(visible);
-
         this.field.setVisible(visible);
     }
 
@@ -91,7 +89,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
 
         this.field.mouseClicked(mouseX, mouseY, mouseButton);
 
-        return this.area.isInside(mouseX, mouseY);
+        return false;
     }
 
     @Override

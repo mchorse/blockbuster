@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiElement extends Gui implements IGuiElement
+public class GuiElement extends Gui implements IGuiElement
 {
     /**
      * Area of this element (i.e. position and size) 
@@ -97,6 +97,11 @@ public abstract class GuiElement extends Gui implements IGuiElement
     public void setVisible(boolean visible)
     {
         this.visible = visible;
+    }
+
+    public void toggleVisible()
+    {
+        this.visible = !this.visible;
     }
 
     /* Overriding those methods so it would be much easier to 

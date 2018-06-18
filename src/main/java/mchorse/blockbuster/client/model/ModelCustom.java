@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Limb.Holding;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -174,7 +175,7 @@ public class ModelCustom extends ModelBiped
                 }
 
                 float f2 = mirror ^ invert ? 1 : 0;
-                float f3 = limb.limb.holding.isEmpty() ? 1.4F : 1.0F;
+                float f3 = limb.limb.holding == Holding.NONE ? 1.4F : 1.0F;
 
                 limb.rotateAngleX += MathHelper.cos(limbSwing * 0.6662F + PI * f2) * f3 * limbSwingAmount / f;
             }
@@ -202,9 +203,9 @@ public class ModelCustom extends ModelBiped
                 limb.rotateAngleZ += MathHelper.sin(this.swingProgress * PI) * -0.4F * factor;
             }
 
-            if (!limb.limb.holding.isEmpty() && limb.limb.parent.isEmpty())
+            if (limb.limb.holding != Holding.NONE && limb.limb.parent.isEmpty())
             {
-                boolean right = limb.limb.holding.equals("right");
+                boolean right = limb.limb.holding == Holding.RIGHT;
                 ModelBiped.ArmPose pose = right ? this.rightArmPose : this.leftArmPose;
                 ModelBiped.ArmPose opposite = right ? this.leftArmPose : this.rightArmPose;
 

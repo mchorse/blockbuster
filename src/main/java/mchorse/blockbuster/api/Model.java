@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
+import mchorse.blockbuster.api.json.ModelLimbAdapter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
@@ -100,7 +101,7 @@ public class Model
      */
     public static Model parse(String json) throws Exception
     {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).registerTypeAdapter(Limb.class, new ModelLimbAdapter()).create();
         Model data = gson.fromJson(json, Model.class);
 
         for (String key : REQUIRED_POSES)
@@ -258,7 +259,7 @@ public class Model
         public boolean is3D = false;
 
         /* Game play */
-        public String holding = "";
+        public Holding holding = Holding.NONE;
         public boolean swiping;
         public boolean looking;
         public boolean swinging;
@@ -304,6 +305,11 @@ public class Model
         public String toString()
         {
             return Objects.toStringHelper(this).add("parent", this.parent).add("size", Arrays.toString(this.size)).add("texture", Arrays.toString(this.texture)).add("anchor", Arrays.toString(this.anchor)).add("mirror", this.mirror).toString();
+        }
+
+        public static enum Holding
+        {
+            NONE, RIGHT, LEFT;
         }
     }
 

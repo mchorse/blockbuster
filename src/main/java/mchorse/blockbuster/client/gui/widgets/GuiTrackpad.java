@@ -33,6 +33,7 @@ public class GuiTrackpad
     public float amplitude = 0.25F;
     public float min = Float.NEGATIVE_INFINITY;
     public float max = Float.POSITIVE_INFINITY;
+    public boolean integer;
 
     /* Value dragging fields */
     private boolean dragging;
@@ -70,8 +71,13 @@ public class GuiTrackpad
         value = Math.round(value * 1000F) / 1000F;
         value = MathHelper.clamp(value, this.min, this.max);
 
+        if (this.integer)
+        {
+            value = (int) value;
+        }
+
         this.value = value;
-        this.text.setText(String.valueOf(value));
+        this.text.setText(this.integer ? String.valueOf((int) value) : String.valueOf(value));
         this.text.setCursorPositionZero();
     }
 

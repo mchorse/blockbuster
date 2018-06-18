@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Objects;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
@@ -12,9 +13,7 @@ import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
-import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -23,8 +22,8 @@ import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.model_editor.ModelUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelEditorPanel extends GuiDashboardPanel
 {
@@ -35,20 +34,14 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiButtonElement<GuiTextureButton> saveModel;
     private GuiButtonElement<GuiTextureButton> openPoses;
     private GuiButtonElement<GuiTextureButton> openOptions;
+    private GuiButtonElement<GuiTextureButton> openLimbs;
 
     private GuiStringListElement modelList;
-    private GuiStringListElement posesList;
-    private GuiStringListElement limbList;
+    private GuiModelPoses poses;
+    private GuiModelLimbs limbs;
 
     /* Model options */
-    private GuiElements options;
-    private GuiTextElement name;
-    private GuiTwoElement texture;
-    private GuiThreeElement scale;
-    private GuiTrackpadElement scaleGui;
-    private GuiTextElement defaultTexture;
-    private GuiButtonElement<GuiCheckBox> providesObj;
-    private GuiButtonElement<GuiCheckBox> providesMtl;
+    private GuiModelOptions options;
 
     /* Limb props */
 
@@ -76,93 +69,53 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelList.setVisible(false);
         this.children.add(this.modelList);
 
-        this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
-        this.children.add(this.limbList);
+        /* Popups */
+        this.limbs = new GuiModelLimbs(mc, this);
+        this.limbs.resizer().set(0, 0, 220, 258).parent(this.area).x.set(1, Measure.RELATIVE, -240);
+        this.limbs.setVisible(false);
+        this.children.add(this.limbs);
 
-        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.posesList.setVisible(false);
-        this.children.add(this.posesList);
+        this.poses = new GuiModelPoses(mc, this);
+        this.poses.setVisible(false);
+        this.poses.resizer().set(0, 20, 220, 140).parent(this.area);
+        this.children.add(this.poses);
 
-        /* Model options */
-        this.options = new GuiElements();
+        this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
-        this.name = new GuiTextElement(mc, (str) -> this.model.name = str);
-        this.texture = new GuiTwoElement(mc, (value) ->
-        {
-            this.model.texture[0] = value[0].intValue();
-            this.model.texture[1] = value[1].intValue();
-        });
-        this.texture.setLimit(1, 8196);
-        this.scale = new GuiThreeElement(mc, (value) ->
-        {
-            this.model.scale[0] = value[0];
-            this.model.scale[1] = value[1];
-            this.model.scale[2] = value[2];
-        });
-        this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.model.scaleGui = value);
-        this.defaultTexture = new GuiTextElement(mc, (str) -> this.model.defaultTexture = new ResourceLocation(str));
-        this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) -> this.model.providesObj = b.button.isChecked());
-        this.providesMtl = GuiButtonElement.checkbox(mc, "Provides MTL", false, (b) -> this.model.providesMtl = b.button.isChecked());
-
-        this.name.resizer().parent(this.area).set(0, 30, 100, 20).x.set(1, Measure.RELATIVE, -110);
-        this.texture.resizer().set(0, 25, 100, 20).relative(this.name.resizer());
-        this.scale.resizer().set(0, 25, 100, 20).relative(this.texture.resizer());
-        this.scaleGui.resizer().set(0, 25, 100, 20).relative(this.scale.resizer());
-        this.defaultTexture.resizer().set(0, 25, 100, 20).relative(this.scaleGui.resizer());
-        this.providesObj.resizer().set(0, 25, 80, 11).relative(this.defaultTexture.resizer());
-        this.providesMtl.resizer().set(0, 16, 80, 11).relative(this.providesObj.resizer());
-
-        this.options.add(this.name, this.texture, this.scale, this.scaleGui, this.defaultTexture, this.providesObj, this.providesMtl);
+        this.options.resizer().set(0, 0, 140, 225).parent(this.area).x.set(1, Measure.RELATIVE, -160);
         this.children.add(this.options);
 
         /* Top bar buttons */
-
-        this.openModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggleModels());
+        this.openModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.modelList, this.poses));
         this.saveModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveCurrentModel());
-        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.togglePoses());
-        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggleOptions());
+        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.modelList));
+        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs));
+        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options));
 
         this.openModel.resizer().set(2, 2, 16, 16).parent(this.area);
         this.saveModel.resizer().set(20, 0, 16, 16).relative(this.openModel.resizer());
         this.openPoses.resizer().set(20, 0, 16, 16).relative(this.saveModel.resizer());
         this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
+        this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
 
-        this.children.add(this.openModel, this.saveModel, this.openPoses, this.openOptions);
+        this.children.add(this.openModel, this.saveModel, this.openPoses, this.openOptions, this.openLimbs);
 
         this.setModel("steve");
     }
 
-    private void toggleModels()
+    private void toggle(GuiElement main, GuiElement secondary)
     {
-        this.modelList.setVisible(!this.modelList.isVisible());
+        main.toggleVisible();
 
-        if (this.modelList.isVisible())
+        if (main.isVisible())
         {
-            this.posesList.setVisible(false);
+            secondary.setVisible(false);
         }
     }
 
     public void saveCurrentModel()
     {
         this.saveModel(this.modelName);
-    }
-
-    private void togglePoses()
-    {
-        this.posesList.setVisible(!this.posesList.isVisible());
-
-        if (this.posesList.isVisible())
-        {
-            this.modelList.setVisible(false);
-        }
-    }
-
-    private void toggleOptions()
-    {
-        this.options.setVisible(!this.options.isVisible());
     }
 
     /**
@@ -290,13 +243,13 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
                 this.renderTexture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
             }
 
-            this.limbList.clear();
-            this.limbList.add(this.model.limbs.keySet());
+            this.limbs.fillData(this.model);
 
-            this.posesList.clear();
-            this.posesList.add(this.model.poses.keySet());
+            this.options.fillData(this.model);
+            this.poses.fillData(this.model);
+            this.poses.setCurrent("standing");
 
-            this.fillData();
+            this.setLimb(this.model.limbs.keySet().iterator().next());
         }
     }
 
@@ -307,6 +260,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (limb != null)
         {
             this.limb = limb;
+            this.limbs.setCurrent(str);
+            this.poses.setLimb(str);
         }
     }
 
@@ -318,22 +273,47 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             this.pose = pose;
             this.renderModel.pose = pose;
+            this.poses.setLimb(this.getKey(this.limb, this.model.limbs));
         }
     }
 
-    private void fillData()
+    @Override
+    public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model == null)
+        if (this.options.isVisible())
         {
-            return;
+            int x = this.area.getX(1) - 20;
+
+            Gui.drawRect(x, 0, x + 20, 20, 0x88000000);
         }
 
-        this.name.field.setText(this.model.name);
-        this.texture.setValues(this.model.texture[0], this.model.texture[1]);
-        this.scale.setValues(this.model.scale[0], this.model.scale[1], this.model.scale[2]);
-        this.scaleGui.trackpad.setValue(this.model.scaleGui);
-        this.defaultTexture.field.setText(this.model.defaultTexture == null ? "" : this.model.defaultTexture.toString());
-        this.providesObj.button.setIsChecked(this.model.providesObj);
-        this.providesMtl.button.setIsChecked(this.model.providesMtl);
+        if (this.limbs.isVisible())
+        {
+            int x = this.area.getX(1) - 20;
+
+            Gui.drawRect(x, 20, x + 20, 40, 0x88000000);
+        }
+
+        if (this.poses.isVisible())
+        {
+            int x = this.openPoses.area.x - 2;
+
+            Gui.drawRect(x, 0, x + 20, 20, 0x88000000);
+        }
+
+        super.draw(mouseX, mouseY, partialTicks);
+    }
+
+    private <T> String getKey(T value, Map<String, T> map)
+    {
+        for (Map.Entry<String, T> entry : map.entrySet())
+        {
+            if (Objects.equals(value, entry.getValue()))
+            {
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 }
