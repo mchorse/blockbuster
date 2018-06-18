@@ -63,7 +63,7 @@ public class GuiModelOptions extends GuiElement
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        return super.mouseClicked(mouseX, mouseY, mouseButton) || this.isVisible() && this.area.isInside(mouseX, mouseY);
+        return super.mouseClicked(mouseX, mouseY, mouseButton) || this.area.isInside(mouseX, mouseY);
     }
 
     public void fillData(Model model)

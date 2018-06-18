@@ -99,6 +99,11 @@ public class GuiElement extends Gui implements IGuiElement
         this.visible = visible;
     }
 
+    public void toggleVisible()
+    {
+        this.visible = !this.visible;
+    }
+
     /* Overriding those methods so it would be much easier to 
      * override only needed methods in subclasses */
 

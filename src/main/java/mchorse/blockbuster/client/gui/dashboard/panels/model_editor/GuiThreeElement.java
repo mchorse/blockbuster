@@ -22,7 +22,7 @@ public class GuiThreeElement extends GuiTwoElement
         });
         this.children.add(this.c);
 
-        this.c.resizer().parent(this.area).set(0.666F, 0, 0.333F, 1, Measure.RELATIVE);
+        this.c.resizer().parent(this.area).set(0.667F, 0, 0.333F, 1, Measure.RELATIVE);
 
         this.a.resizer().w.value = this.b.resizer().w.value = 0.333F;
         this.b.resizer().x.set(0.333F, Measure.RELATIVE, 0);

@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Objects;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
@@ -34,8 +35,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiButtonElement<GuiTextureButton> openOptions;
 
     private GuiStringListElement modelList;
-    private GuiStringListElement posesList;
     private GuiStringListElement limbList;
+    private GuiModelPoses poses;
 
     /* Model options */
     private GuiModelOptions options;
@@ -71,12 +72,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
         this.children.add(this.limbList);
 
-        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.posesList.setVisible(false);
-        this.children.add(this.posesList);
+        /* Popups */
+        this.poses = new GuiModelPoses(mc, this);
+        this.poses.setVisible(false);
+        this.poses.resizer().set(0, 20, 220, 140).parent(this.area);
+        this.children.add(this.poses);
 
-        /* Model options */
         this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
         this.options.resizer().set(0, 0, 140, 225).parent(this.area).x.set(1, Measure.RELATIVE, -160);
@@ -100,11 +101,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     private void toggleModels()
     {
-        this.modelList.setVisible(!this.modelList.isVisible());
+        this.modelList.toggleVisible();
 
         if (this.modelList.isVisible())
         {
-            this.posesList.setVisible(false);
+            this.poses.setVisible(false);
         }
     }
 
@@ -115,9 +116,9 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     private void togglePoses()
     {
-        this.posesList.setVisible(!this.posesList.isVisible());
+        this.poses.toggleVisible();
 
-        if (this.posesList.isVisible())
+        if (this.poses.isVisible())
         {
             this.modelList.setVisible(false);
         }
@@ -125,7 +126,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     private void toggleOptions()
     {
-        this.options.setVisible(!this.options.isVisible());
+        this.options.toggleVisible();
     }
 
     /**
@@ -256,10 +257,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             this.limbList.clear();
             this.limbList.add(this.model.limbs.keySet());
 
-            this.posesList.clear();
-            this.posesList.add(this.model.poses.keySet());
+            this.options.fillData(this.model);
+            this.poses.fillData(this.model);
+            this.poses.setCurrent("standing");
 
-            this.fillData();
+            this.setLimb(this.model.limbs.keySet().iterator().next());
         }
     }
 
@@ -270,6 +272,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (limb != null)
         {
             this.limb = limb;
+            this.poses.setLimb(str);
         }
     }
 
@@ -281,17 +284,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             this.pose = pose;
             this.renderModel.pose = pose;
+            this.poses.setLimb(this.getKey(this.limb, this.model.limbs));
         }
-    }
-
-    private void fillData()
-    {
-        if (this.model == null)
-        {
-            return;
-        }
-
-        this.options.fillData(this.model);
     }
 
     @Override
@@ -304,6 +298,26 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             Gui.drawRect(x, 0, x + 20, 20, 0x88000000);
         }
 
+        if (this.poses.isVisible())
+        {
+            int x = this.openPoses.area.x - 2;
+
+            Gui.drawRect(x, 0, x + 20, 20, 0x88000000);
+        }
+
         super.draw(mouseX, mouseY, partialTicks);
+    }
+
+    private <T> String getKey(T value, Map<String, T> map)
+    {
+        for (Map.Entry<String, T> entry : map.entrySet())
+        {
+            if (Objects.equals(value, entry.getValue()))
+            {
+                return entry.getKey();
+            }
+        }
+
+        return null;
     }
 }
