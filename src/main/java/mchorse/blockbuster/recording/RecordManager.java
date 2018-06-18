@@ -221,16 +221,6 @@ public class RecordManager
 
             RecordPlayer playback = new RecordPlayer(record, mode, actor);
 
-            if (actor instanceof EntityPlayer && record.playerData != null)
-            {
-                actor.readEntityFromNBT(record.playerData);
-
-                if (MPMHelper.isLoaded() && record.playerData.hasKey("MPMData", 10))
-                {
-                    MPMHelper.setMPMData((EntityPlayer) actor, record.playerData.getCompoundTag("MPMData"));
-                }
-            }
-
             playback.tick = tick;
             playback.kill = kill;
             playback.record.applyFrame(tick, actor, true);

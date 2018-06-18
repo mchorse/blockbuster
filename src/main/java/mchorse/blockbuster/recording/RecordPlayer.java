@@ -210,14 +210,26 @@ public class RecordPlayer
         this.tick = tick;
         this.kill = kill;
 
-        if (actor instanceof EntityActor)
+        if (this.actor instanceof EntityActor)
         {
-            actor.worldObj.spawnEntityInWorld(actor);
+            this.actor.worldObj.spawnEntityInWorld(this.actor);
         }
-        else if (actor instanceof EntityPlayer)
+        else if (this.actor instanceof EntityPlayer)
         {
-            actor.worldObj.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) actor);
+            this.actor.worldObj.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
+
+            if (this.actor instanceof EntityPlayer && this.record.playerData != null)
+            {
+                this.actor.readEntityFromNBT(this.record.playerData);
+
+                if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", 10))
+                {
+                    MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
+                }
+            }
         }
+
+        this.record.applyFrame(tick, actor, true);
 
         EntityUtils.setRecordPlayer(actor, this);
         Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
