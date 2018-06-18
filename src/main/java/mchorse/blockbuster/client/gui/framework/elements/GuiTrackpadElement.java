@@ -29,6 +29,12 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
         }
     }
 
+    public void setLimit(float min, float max)
+    {
+        this.trackpad.min = min;
+        this.trackpad.max = max;
+    }
+
     @Override
     public void resize(int width, int height)
     {

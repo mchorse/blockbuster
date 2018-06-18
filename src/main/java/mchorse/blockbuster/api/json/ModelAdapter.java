@@ -1,7 +1,9 @@
 package mchorse.blockbuster.api.json;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -37,6 +39,12 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
     {
         Model model = plainGSON.fromJson(json, Model.class);
         JsonObject object = json.getAsJsonObject();
+
+        if (object.has("limbs"))
+        {
+            model.limbs = context.deserialize(object.get("limbs"), new TypeToken<Map<String, Model.Limb>>()
+            {}.getType());
+        }
 
         if (object.has("default"))
         {

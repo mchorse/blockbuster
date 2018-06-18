@@ -157,7 +157,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
         this.list.resizer().x.set(1, Measure.RELATIVE, -120);
 
-        this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (b) -> this.list.setVisible(!this.list.isVisible())));
+        this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (b) -> this.list.toggleVisible()));
         element.resizer().set(0, 2, 24, 24).parent(this.area).x.set(1, Measure.RELATIVE, -28);
 
         /* Inventory */

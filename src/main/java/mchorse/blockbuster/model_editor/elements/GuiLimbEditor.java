@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Limb.Holding;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.model_editor.elements.GuiThreeInput.IMultiInputListener;
@@ -268,7 +269,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
         this.swinging.setIsChecked(limb.swinging);
         this.swiping.setIsChecked(limb.swiping);
         this.invert.setIsChecked(limb.invert);
-        this.holding.setValue(limb.holding.isEmpty() ? 0 : (limb.holding.equals("right") ? 1 : 2));
+        this.holding.setValue(limb.holding.ordinal());
 
         /* OBJ origin */
         this.origin.a.setText(String.valueOf(limb.origin[0]));
@@ -679,7 +680,7 @@ public class GuiLimbEditor implements IMultiInputListener, GuiResponder
             if (button.id == HOLDING)
             {
                 int value = this.holding.getValue();
-                this.limb.holding = value == 0 ? "" : (value == 1 ? "right" : "left");
+                this.limb.holding = Holding.values()[value];
                 this.editor.rebuildModel();
             }
         }
