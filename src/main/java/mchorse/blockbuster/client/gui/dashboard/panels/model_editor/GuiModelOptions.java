@@ -34,8 +34,9 @@ public class GuiModelOptions extends GuiElement
         {
             this.panel.model.texture[0] = value[0].intValue();
             this.panel.model.texture[1] = value[1].intValue();
+            this.panel.rebuildModel();
         });
-        this.texture.setLimit(1, 8196);
+        this.texture.setLimit(1, 8196, true);
         this.scale = new GuiThreeElement(mc, (value) ->
         {
             this.panel.model.scale[0] = value[0];

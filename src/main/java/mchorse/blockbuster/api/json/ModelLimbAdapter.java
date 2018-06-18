@@ -2,18 +2,22 @@ package mchorse.blockbuster.api.json;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.Model.Limb.Holding;
 
 /**
  * Model limb adapter
  */
-public class ModelLimbAdapter implements JsonSerializer<Model.Limb>
+public class ModelLimbAdapter implements JsonSerializer<Model.Limb>, JsonDeserializer<Model.Limb>
 {
     @Override
     public JsonElement serialize(Limb src, Type typeOfSrc, JsonSerializationContext context)
@@ -27,9 +31,9 @@ public class ModelLimbAdapter implements JsonSerializer<Model.Limb>
         map.remove("opacity");
         map.remove("color");
 
-        if (!src.holding.isEmpty())
+        if (src.holding != Holding.NONE)
         {
-            map.addProperty("holding", src.holding);
+            map.addProperty("holding", src.holding == Holding.RIGHT ? "right" : "left");
         }
 
         if (!src.parent.isEmpty())
@@ -64,6 +68,35 @@ public class ModelLimbAdapter implements JsonSerializer<Model.Limb>
         }
 
         return map;
+    }
+
+    @Override
+    public Limb deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+    {
+        Limb limb = ModelAdapter.plainGSON.fromJson(json, Limb.class);
+        JsonObject object = json.getAsJsonObject();
+
+        /* Only due to holding */
+        if (object.has("holding"))
+        {
+            String holding = object.get("holding").getAsString();
+
+            if (holding.equals("right"))
+            {
+                limb.holding = Holding.RIGHT;
+            }
+            else if (holding.equals("left"))
+            {
+                limb.holding = Holding.LEFT;
+            }
+        }
+
+        if (limb.holding == null)
+        {
+            limb.holding = Holding.NONE;
+        }
+
+        return limb;
     }
 
     /**

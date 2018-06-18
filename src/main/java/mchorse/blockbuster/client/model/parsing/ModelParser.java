@@ -9,6 +9,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.Model.Limb.Holding;
 import mchorse.blockbuster.api.Model.Transform;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
@@ -148,8 +149,8 @@ public class ModelParser
 
             ModelCustomRenderer renderer = this.createRenderer(model, meshes, data, limb, transform);
 
-            if (limb.holding.equals("left")) left.add(renderer);
-            if (limb.holding.equals("right")) right.add(renderer);
+            if (limb.holding == Holding.LEFT) left.add(renderer);
+            if (limb.holding == Holding.RIGHT) right.add(renderer);
 
             limbs.put(entry.getKey(), renderer);
         }

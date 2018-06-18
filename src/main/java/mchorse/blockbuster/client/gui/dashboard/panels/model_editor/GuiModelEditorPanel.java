@@ -13,6 +13,7 @@ import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -33,10 +34,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiButtonElement<GuiTextureButton> saveModel;
     private GuiButtonElement<GuiTextureButton> openPoses;
     private GuiButtonElement<GuiTextureButton> openOptions;
+    private GuiButtonElement<GuiTextureButton> openLimbs;
 
     private GuiStringListElement modelList;
-    private GuiStringListElement limbList;
     private GuiModelPoses poses;
+    private GuiModelLimbs limbs;
 
     /* Model options */
     private GuiModelOptions options;
@@ -67,12 +69,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelList.setVisible(false);
         this.children.add(this.modelList);
 
-        this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
-        this.children.add(this.limbList);
-
         /* Popups */
+        this.limbs = new GuiModelLimbs(mc, this);
+        this.limbs.resizer().set(0, 0, 220, 258).parent(this.area).x.set(1, Measure.RELATIVE, -240);
+        this.limbs.setVisible(false);
+        this.children.add(this.limbs);
+
         this.poses = new GuiModelPoses(mc, this);
         this.poses.setVisible(false);
         this.poses.resizer().set(0, 20, 220, 140).parent(this.area);
@@ -84,49 +86,36 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.options);
 
         /* Top bar buttons */
-        this.openModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggleModels());
+        this.openModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.modelList, this.poses));
         this.saveModel = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveCurrentModel());
-        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.togglePoses());
-        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggleOptions());
+        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.modelList));
+        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs));
+        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options));
 
         this.openModel.resizer().set(2, 2, 16, 16).parent(this.area);
         this.saveModel.resizer().set(20, 0, 16, 16).relative(this.openModel.resizer());
         this.openPoses.resizer().set(20, 0, 16, 16).relative(this.saveModel.resizer());
         this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
+        this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
 
-        this.children.add(this.openModel, this.saveModel, this.openPoses, this.openOptions);
+        this.children.add(this.openModel, this.saveModel, this.openPoses, this.openOptions, this.openLimbs);
 
         this.setModel("steve");
     }
 
-    private void toggleModels()
+    private void toggle(GuiElement main, GuiElement secondary)
     {
-        this.modelList.toggleVisible();
+        main.toggleVisible();
 
-        if (this.modelList.isVisible())
+        if (main.isVisible())
         {
-            this.poses.setVisible(false);
+            secondary.setVisible(false);
         }
     }
 
     public void saveCurrentModel()
     {
         this.saveModel(this.modelName);
-    }
-
-    private void togglePoses()
-    {
-        this.poses.toggleVisible();
-
-        if (this.poses.isVisible())
-        {
-            this.modelList.setVisible(false);
-        }
-    }
-
-    private void toggleOptions()
-    {
-        this.options.toggleVisible();
     }
 
     /**
@@ -254,8 +243,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
                 this.renderTexture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
             }
 
-            this.limbList.clear();
-            this.limbList.add(this.model.limbs.keySet());
+            this.limbs.fillData(this.model);
 
             this.options.fillData(this.model);
             this.poses.fillData(this.model);
@@ -272,6 +260,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (limb != null)
         {
             this.limb = limb;
+            this.limbs.setCurrent(str);
             this.poses.setLimb(str);
         }
     }
@@ -296,6 +285,13 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             int x = this.area.getX(1) - 20;
 
             Gui.drawRect(x, 0, x + 20, 20, 0x88000000);
+        }
+
+        if (this.limbs.isVisible())
+        {
+            int x = this.area.getX(1) - 20;
+
+            Gui.drawRect(x, 20, x + 20, 40, 0x88000000);
         }
 
         if (this.poses.isVisible())
