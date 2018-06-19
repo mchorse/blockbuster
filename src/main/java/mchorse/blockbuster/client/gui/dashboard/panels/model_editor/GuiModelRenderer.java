@@ -6,6 +6,7 @@ import org.lwjgl.util.glu.Project;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.model_editor.DummyEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -214,6 +215,7 @@ public class GuiModelRenderer extends GuiElement
 
         if (this.panel.renderTexture != null)
         {
+            RenderCustomModel.lastTexture = this.panel.renderTexture;
             this.mc.renderEngine.bindTexture(this.panel.renderTexture);
         }
 
