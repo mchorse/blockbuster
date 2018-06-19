@@ -54,6 +54,11 @@ public abstract class GuiListElement<T> extends GuiElement
         this.update();
     }
 
+    public void remove(T element)
+    {
+        this.list.remove(element);
+    }
+
     public void add(T element)
     {
         this.list.add(element);

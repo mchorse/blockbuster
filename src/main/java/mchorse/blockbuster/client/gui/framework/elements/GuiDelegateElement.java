@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.framework.elements;
 import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,6 +19,14 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     {
         super(mc);
         this.delegate = element;
+    }
+
+    public void setDelegate(IGuiElement element)
+    {
+        GuiScreen screen = this.mc.currentScreen;
+
+        this.delegate = element;
+        this.resize(screen.width, screen.height);
     }
 
     @Override

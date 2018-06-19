@@ -70,15 +70,15 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.modelList);
 
         /* Popups */
+        this.poses = new GuiModelPoses(mc, this);
+        this.poses.setVisible(false);
+        this.poses.resizer().set(0, 20, 210, 150).parent(this.area);
+        this.children.add(this.poses);
+
         this.limbs = new GuiModelLimbs(mc, this);
         this.limbs.resizer().set(0, 0, 220, 258).parent(this.area).x.set(1, Measure.RELATIVE, -240);
         this.limbs.setVisible(false);
         this.children.add(this.limbs);
-
-        this.poses = new GuiModelPoses(mc, this);
-        this.poses.setVisible(false);
-        this.poses.resizer().set(0, 20, 220, 140).parent(this.area);
-        this.children.add(this.poses);
 
         this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
@@ -273,7 +273,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             this.pose = pose;
             this.renderModel.pose = pose;
-            this.poses.setLimb(this.getKey(this.limb, this.model.limbs));
+            this.poses.setLimb(getKey(this.limb, this.model.limbs));
         }
     }
 
@@ -304,7 +304,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         super.draw(mouseX, mouseY, partialTicks);
     }
 
-    private <T> String getKey(T value, Map<String, T> map)
+    public static <T> String getKey(T value, Map<String, T> map)
     {
         for (Map.Entry<String, T> entry : map.entrySet())
         {

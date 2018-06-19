@@ -200,9 +200,12 @@ public class GuiModelRenderer extends GuiElement
 
         float limbSwing = this.swing + partialTicks;
 
+        float headYaw = newYaw;
+        float headPitch = newPitch;
+
         model.pose = this.panel.pose;
-        model.setLivingAnimations(this.dummy, 0, 0, partialTicks);
-        model.setRotationAngles(limbSwing, this.swingAmount, this.timer, 0, 0, factor, this.dummy);
+        model.setLivingAnimations(this.dummy, headYaw, headPitch, partialTicks);
+        model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
 
         GlStateManager.enableDepth();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -217,7 +220,7 @@ public class GuiModelRenderer extends GuiElement
             this.mc.renderEngine.bindTexture(this.panel.renderTexture);
         }
 
-        model.render(this.dummy, 0, 0, this.timer, yaw, pitch, factor);
+        model.render(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
 
         /*
         if (this.items)

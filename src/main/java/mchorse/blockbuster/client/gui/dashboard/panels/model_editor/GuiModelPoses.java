@@ -1,10 +1,17 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.api.Model.Transform;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
+import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -12,12 +19,16 @@ public class GuiModelPoses extends GuiElement
 {
     public GuiModelEditorPanel panel;
 
+    private GuiButtonElement<GuiTextureButton> addPose;
+    private GuiButtonElement<GuiTextureButton> removePose;
+    private GuiDelegateElement modal;
+
     private GuiStringListElement posesList;
     private GuiThreeElement translate;
     private GuiThreeElement scale;
     private GuiThreeElement rotation;
-
     private GuiTwoElement hitbox;
+
     private Transform transform;
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
@@ -28,7 +39,7 @@ public class GuiModelPoses extends GuiElement
         this.panel = panel;
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(10, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -30);
+        this.posesList.resizer().set(0, 0, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
         this.children.add(this.posesList);
 
         this.translate = new GuiThreeElement(mc, (values) ->
@@ -56,12 +67,58 @@ public class GuiModelPoses extends GuiElement
             this.panel.pose.size[1] = values[1];
         });
 
-        this.translate.resizer().set(100, 20, 110, 20).parent(this.area);
+        this.translate.resizer().set(90, 10, 110, 20).parent(this.area);
         this.scale.resizer().set(0, 25, 110, 20).relative(this.translate.resizer());
         this.rotation.resizer().set(0, 25, 110, 20).relative(this.scale.resizer());
 
         this.hitbox.resizer().set(0, 40, 110, 20).relative(this.rotation.resizer());
         this.children.add(this.translate, this.scale, this.rotation, this.hitbox);
+
+        this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
+        this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
+
+        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area);
+        this.addPose.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
+        this.children.add(this.addPose, this.removePose);
+
+        this.modal = new GuiDelegateElement(mc, null);
+        this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
+        this.children.add(this.modal);
+    }
+
+    private void addPose()
+    {
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new pose:", (text) -> this.addPose(text)));
+    }
+
+    private void addPose(String text)
+    {
+        Pose pose = this.panel.pose.clone();
+
+        this.panel.model.poses.put(text, pose);
+        this.posesList.add(text);
+        this.posesList.setCurrent(text);
+    }
+
+    private void removePose()
+    {
+        String pose = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
+
+        if (Model.REQUIRED_POSES.contains(pose))
+        {
+            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You can't remove one of the standard poses..."));
+        }
+        else
+        {
+            this.panel.model.poses.remove(pose);
+
+            String newPose = this.panel.model.poses.keySet().iterator().next();
+
+            this.setPose(newPose);
+            this.posesList.remove(pose);
+            this.posesList.setCurrent(newPose);
+        }
     }
 
     public void setPose(String str)
@@ -110,10 +167,13 @@ public class GuiModelPoses extends GuiElement
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-
-        super.draw(mouseX, mouseY, partialTicks);
+        Gui.drawRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x88000000);
 
         this.font.drawStringWithShadow("Hitbox", this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Poses", this.posesList.area.x, this.posesList.area.y - 12, 0xeeeeee);
+
+        int w = this.font.getStringWidth("Poses");
+        this.font.drawStringWithShadow("Poses", this.area.getX(1) - 5 - w, this.area.getY(1) - 14, 0xffffff);
+
+        super.draw(mouseX, mouseY, partialTicks);
     }
 }

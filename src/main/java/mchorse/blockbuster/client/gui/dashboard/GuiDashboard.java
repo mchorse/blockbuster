@@ -85,13 +85,8 @@ public class GuiDashboard extends GuiBase
             ((GuiDashboardPanel) this.panel.delegate).disappear();
         }
 
-        this.panel.delegate = element;
         element.appear();
-
-        if (this.width != 0 && this.height != 0)
-        {
-            this.panel.resize(this.width, this.height);
-        }
+        this.panel.setDelegate(element);
     }
 
     @Override
