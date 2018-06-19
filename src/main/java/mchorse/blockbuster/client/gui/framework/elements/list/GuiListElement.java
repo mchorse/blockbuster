@@ -76,6 +76,16 @@ public abstract class GuiListElement<T> extends GuiElement
         }
     }
 
+    public T getCurrent()
+    {
+        if (this.current >= 0 && this.current < this.list.size())
+        {
+            return this.list.get(this.current);
+        }
+
+        return null;
+    }
+
     public void setCurrent(T element)
     {
         this.current = this.list.indexOf(element);

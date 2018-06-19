@@ -62,10 +62,7 @@ public class GuiModelRenderer extends GuiElement
         this.lastX = mouseX;
         this.lastY = mouseY;
 
-        if (this.mc.currentScreen.isShiftKeyDown())
-        {
-            this.position = true;
-        }
+        this.position = GuiScreen.isShiftKeyDown() || mouseButton == 2;
 
         return false;
     }

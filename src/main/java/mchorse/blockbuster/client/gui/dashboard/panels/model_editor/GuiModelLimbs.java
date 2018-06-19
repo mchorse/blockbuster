@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Limb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiParentModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
@@ -83,6 +84,13 @@ public class GuiModelLimbs extends GuiElement
             this.panel.limb.anchor[2] = values[2];
             this.panel.rebuildModel();
         });
+        this.origin = new GuiThreeElement(mc, (values) ->
+        {
+            this.panel.limb.origin[0] = values[0];
+            this.panel.limb.origin[1] = values[1];
+            this.panel.limb.origin[2] = values[2];
+            this.panel.rebuildModel();
+        });
         this.color = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.color[0] = values[0];
@@ -104,7 +112,8 @@ public class GuiModelLimbs extends GuiElement
         this.size.resizer().parent(this.area).set(10, 10, 120, 20);
         this.texture.resizer().relative(this.size.resizer()).set(0, 25, 120, 20);
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 25, 120, 20);
-        this.color.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
+        this.origin.resizer().relative(this.anchor.resizer()).set(0, 25, 120, 20);
+        this.color.resizer().relative(this.origin.resizer()).set(0, 35, 120, 20);
         this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
 
         this.mirror.resizer().relative(this.opacity.resizer()).set(0, 25, 60, 11);
@@ -113,7 +122,7 @@ public class GuiModelLimbs extends GuiElement
         this.lighting.resizer().relative(this.opacity.resizer()).set(60, 25, 60, 11);
         this.shading.resizer().relative(this.lighting.resizer()).set(0, 16, 60, 11);
 
-        this.children.add(this.size, this.texture, this.anchor, this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D);
+        this.children.add(this.size, this.texture, this.anchor, this.origin, this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D);
 
         /* Animation and shit */
         this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]);
@@ -204,6 +213,12 @@ public class GuiModelLimbs extends GuiElement
 
     private void parentLimb()
     {
+        this.modal.setDelegate(new GuiParentModal(mc, this.modal, this.panel.model, "Choose the parent limb for currently selected limb...", (text) -> this.parentLimb(text)).setValue(this.panel.limb.parent));
+    }
+
+    private void parentLimb(String text)
+    {
+        this.panel.limb.parent = text;
         this.panel.rebuildModel();
     }
 
@@ -230,6 +245,7 @@ public class GuiModelLimbs extends GuiElement
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
         this.texture.setValues(limb.texture[0], limb.texture[1]);
         this.anchor.setValues(limb.anchor[0], limb.anchor[1], limb.anchor[2]);
+        this.origin.setValues(limb.origin[0], limb.origin[1], limb.origin[2]);
         this.color.setValues(limb.color[0], limb.color[1], limb.color[2]);
         this.opacity.trackpad.setValue(limb.opacity);
         this.mirror.button.setIsChecked(limb.mirror);
