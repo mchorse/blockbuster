@@ -76,7 +76,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.poses);
 
         this.limbs = new GuiModelLimbs(mc, this);
-        this.limbs.resizer().set(0, 0, 220, 258).parent(this.area).x.set(1, Measure.RELATIVE, -240);
+        this.limbs.resizer().set(0, 0, 220, 268).parent(this.area).x.set(1, Measure.RELATIVE, -240);
         this.limbs.setVisible(false);
         this.children.add(this.limbs);
 
@@ -273,7 +273,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             this.pose = pose;
             this.renderModel.pose = pose;
-            this.poses.setLimb(getKey(this.limb, this.model.limbs));
+            this.poses.setLimb(this.limb.name);
         }
     }
 

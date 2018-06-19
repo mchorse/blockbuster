@@ -74,6 +74,7 @@ public class GuiModelPoses extends GuiElement
         this.hitbox.resizer().set(0, 40, 110, 20).relative(this.rotation.resizer());
         this.children.add(this.translate, this.scale, this.rotation, this.hitbox);
 
+        /* Buttons */
         this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
         this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
 
@@ -89,7 +90,9 @@ public class GuiModelPoses extends GuiElement
 
     private void addPose()
     {
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new pose:", (text) -> this.addPose(text)));
+        String key = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
+
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new pose:", (text) -> this.addPose(text)).setValue(key));
     }
 
     private void addPose(String text)

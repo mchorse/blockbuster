@@ -2,18 +2,21 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
 import java.util.function.Consumer;
 
-import org.lwjgl.input.Keyboard;
-
+import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 
 public class GuiPromptModal extends GuiModal
 {
-    public GuiTextElement text;
     public String label;
     public Consumer<String> callback;
+
+    public GuiTextElement text;
+    public GuiButtonElement<GuiButton> confirm;
+    public GuiButtonElement<GuiButton> cancel;
 
     public GuiPromptModal(Minecraft mc, GuiDelegateElement parent, String label, Consumer<String> callback)
     {
@@ -23,11 +26,18 @@ public class GuiPromptModal extends GuiModal
         this.callback = callback;
 
         this.text = new GuiTextElement(mc, null);
-        this.text.resizer().parent(this.area).set(0, 0, 80, 20);
-        this.text.resizer().x.set(0.5F, Measure.RELATIVE, -40);
+        this.text.resizer().parent(this.area).set(0, 0, 90, 20);
+        this.text.resizer().x.set(0.5F, Measure.RELATIVE, -45);
         this.text.resizer().y.set(0.5F, Measure.RELATIVE, 10);
+        this.text.field.setFocused(true);
 
-        this.children.add(this.text);
+        this.confirm = GuiButtonElement.button(mc, "Ok", (b) -> this.send());
+        this.confirm.resizer().set(60, 25, 30, 20).relative(this.text.resizer());
+
+        this.cancel = GuiButtonElement.button(mc, "Cancel", (b) -> this.parent.setDelegate(null));
+        this.cancel.resizer().set(0, 25, 55, 20).relative(this.text.resizer());
+
+        this.children.add(this.text, this.confirm, this.cancel);
     }
 
     public GuiPromptModal setValue(String value)
@@ -37,20 +47,14 @@ public class GuiPromptModal extends GuiModal
         return this;
     }
 
-    @Override
-    public void keyTyped(char typedChar, int keyCode)
+    private void send()
     {
-        super.keyTyped(typedChar, keyCode);
+        String text = this.text.field.getText();
 
-        if (this.text.field.isFocused() && keyCode == Keyboard.KEY_RETURN)
+        if (!text.isEmpty())
         {
-            String text = this.text.field.getText();
-
-            if (!text.isEmpty())
-            {
-                this.parent.setDelegate(null);
-                this.callback.accept(text);
-            }
+            this.parent.setDelegate(null);
+            this.callback.accept(text);
         }
     }
 

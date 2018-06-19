@@ -3,12 +3,17 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Limb.Holding;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -16,6 +21,12 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiModelLimbs extends GuiElement
 {
     public GuiModelEditorPanel panel;
+
+    private GuiButtonElement<GuiTextureButton> addLimb;
+    private GuiButtonElement<GuiTextureButton> removeLimb;
+    private GuiButtonElement<GuiTextureButton> renameLimb;
+    private GuiButtonElement<GuiTextureButton> parentLimb;
+    private GuiDelegateElement modal;
 
     private GuiStringListElement limbList;
 
@@ -46,7 +57,7 @@ public class GuiModelLimbs extends GuiElement
         this.panel = panel;
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbList.resizer().set(0, 0, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE);
+        this.limbList.resizer().set(0, 0, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
         this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
         this.children.add(this.limbList);
 
@@ -90,7 +101,7 @@ public class GuiModelLimbs extends GuiElement
         this.shading = GuiButtonElement.checkbox(mc, "Shading", false, (b) -> this.panel.limb.shading = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
-        this.size.resizer().parent(this.area).set(10, 20, 120, 20);
+        this.size.resizer().parent(this.area).set(10, 10, 120, 20);
         this.texture.resizer().relative(this.size.resizer()).set(0, 25, 120, 20);
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 25, 120, 20);
         this.color.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
@@ -124,6 +135,76 @@ public class GuiModelLimbs extends GuiElement
         this.invert.resizer().relative(this.swinging.resizer()).set(60, 0, 60, 11);
 
         this.children.add(this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert);
+
+        /* Buttons */
+        this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
+        this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
+        this.renameLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 64, 32, 80, (b) -> this.renameLimb());
+        this.parentLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 64, 48, 80, (b) -> this.parentLimb());
+
+        this.addLimb.resizer().set(0, 0, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -78);
+        this.addLimb.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
+        this.renameLimb.resizer().set(20, 0, 16, 16).relative(this.removeLimb.resizer());
+        this.parentLimb.resizer().set(20, 0, 16, 16).relative(this.renameLimb.resizer());
+        this.children.add(this.addLimb, this.removeLimb, this.renameLimb, this.parentLimb);
+
+        this.modal = new GuiDelegateElement(mc, null);
+        this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
+        this.children.add(this.modal);
+    }
+
+    private void addLimb()
+    {
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new limb:", (text) -> this.addLimb(text)).setValue(this.panel.limb.name));
+    }
+
+    private void addLimb(String text)
+    {
+        this.panel.model.addLimb(text);
+        this.panel.setLimb(text);
+        this.limbList.add(text);
+        this.limbList.setCurrent(text);
+        this.panel.rebuildModel();
+    }
+
+    private void removeLimb()
+    {
+        int size = this.panel.model.limbs.size();
+
+        if (size == this.panel.model.getLimbCount(this.panel.limb))
+        {
+            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You can't remove last limb..."));
+        }
+        else
+        {
+            this.panel.model.removeLimb(this.panel.limb);
+
+            String newLimb = this.panel.model.limbs.keySet().iterator().next();
+
+            this.fillData(this.panel.model);
+            this.setLimb(newLimb);
+            this.panel.rebuildModel();
+        }
+    }
+
+    private void renameLimb()
+    {
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Rename current limb to a new name:", (text) -> this.renameLimb(text)).setValue(this.panel.limb.name));
+    }
+
+    private void renameLimb(String text)
+    {
+        if (this.panel.model.renameLimb(this.panel.limb, text))
+        {
+            this.limbList.replace(text);
+            this.panel.rebuildModel();
+        }
+    }
+
+    private void parentLimb()
+    {
+        this.panel.rebuildModel();
     }
 
     private void setLimb(String str)
@@ -168,9 +249,10 @@ public class GuiModelLimbs extends GuiElement
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x88000000);
+
+        this.font.drawStringWithShadow("Limbs", this.area.x + 6, this.area.getY(1) - 14, 0xeeeeee);
 
         super.draw(mouseX, mouseY, partialTicks);
-
-        this.font.drawStringWithShadow("Limbs", this.area.x + 10, this.area.y + 10, 0xeeeeee);
     }
 }

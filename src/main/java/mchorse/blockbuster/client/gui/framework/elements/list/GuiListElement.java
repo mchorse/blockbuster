@@ -54,11 +54,6 @@ public abstract class GuiListElement<T> extends GuiElement
         this.update();
     }
 
-    public void remove(T element)
-    {
-        this.list.remove(element);
-    }
-
     public void add(T element)
     {
         this.list.add(element);
@@ -71,9 +66,24 @@ public abstract class GuiListElement<T> extends GuiElement
         this.update();
     }
 
-    public void setCurrent(String element)
+    public void replace(T element)
+    {
+        int size = this.list.size();
+
+        if (this.current >= 0 && this.current < size)
+        {
+            this.list.set(this.current, element);
+        }
+    }
+
+    public void setCurrent(T element)
     {
         this.current = this.list.indexOf(element);
+    }
+
+    public void remove(T element)
+    {
+        this.list.remove(element);
     }
 
     public void update()
