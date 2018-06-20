@@ -4,6 +4,7 @@ blockbuster.config.comments:
         extra_wubs: This option does literally nothing. Or maybe it does...?
         auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
         debug_playback_ticks: Write ticks in the log during director block recording
+        green_screen_sky: Makes the sky fully green for chroma keying purposes
 
     model_block:
         model_block_disable_culling_workaround: Whether model block culling workaround should be disabled

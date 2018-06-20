@@ -132,7 +132,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         ITextureObject texture = manager.getTexture(material.texture);
         Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
 
-        if (!(texture instanceof MipmapTexture))
+        if (texture != null && !(texture instanceof MipmapTexture))
         {
             GlStateManager.deleteTexture(map.remove(material.texture).getGlTextureId());
             texture = null;
