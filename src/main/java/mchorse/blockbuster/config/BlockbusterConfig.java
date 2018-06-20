@@ -39,7 +39,8 @@ public class BlockbusterConfig
     public boolean debug_playback_ticks;
 
     /**
-     * Makes the sky fully green for chroma keying purposes 
+     * Makes the sky fully green for chroma keying purposes (suggested 
+     * by Andruxioid)
      */
     public boolean green_screen_sky;
 

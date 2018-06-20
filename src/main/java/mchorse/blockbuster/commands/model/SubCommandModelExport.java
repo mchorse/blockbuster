@@ -94,7 +94,7 @@ public class SubCommandModelExport extends CommandBase
         /* Export the model */
         ModelExporter exporter = new ModelExporter((EntityLivingBase) entity, (RenderLivingBase) render);
 
-        String output = exporter.export(type);
+        String output = exporter.exportJSON(type);
         File exportFolder = new File(ClientProxy.config.getAbsolutePath() + "/export");
 
         exportFolder.mkdirs();

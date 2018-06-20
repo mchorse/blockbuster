@@ -4,8 +4,8 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Limb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiParentModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
@@ -213,7 +213,7 @@ public class GuiModelLimbs extends GuiElement
 
     private void parentLimb()
     {
-        this.modal.setDelegate(new GuiParentModal(mc, this.modal, this.panel.model, "Choose the parent limb for currently selected limb...", (text) -> this.parentLimb(text)).setValue(this.panel.limb.parent));
+        this.modal.setDelegate(new GuiListModal(mc, this.modal, "Choose the parent limb for currently selected limb...", (text) -> this.parentLimb(text)).addValues(this.panel.model.limbs.keySet()).setValue(this.panel.limb.parent));
     }
 
     private void parentLimb(String text)
@@ -238,6 +238,7 @@ public class GuiModelLimbs extends GuiElement
     {
         this.limbList.clear();
         this.limbList.add(model.limbs.keySet());
+        this.limbList.sort();
     }
 
     public void fillLimbData(Limb limb)

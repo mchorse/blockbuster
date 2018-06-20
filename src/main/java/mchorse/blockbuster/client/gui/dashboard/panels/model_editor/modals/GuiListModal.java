@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
@@ -10,15 +10,16 @@ import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
-public class GuiParentModal extends GuiModal
+public class GuiListModal extends GuiModal
 {
     public Consumer<String> callback;
     public String label;
 
     private GuiButtonElement<GuiButton> pick;
+    private GuiButtonElement<GuiButton> cancel;
     private GuiStringListElement limbs;
 
-    public GuiParentModal(Minecraft mc, GuiDelegateElement parent, Model model, String label, Consumer<String> callback)
+    public GuiListModal(Minecraft mc, GuiDelegateElement parent, String label, Consumer<String> callback)
     {
         super(mc, parent);
 
@@ -26,23 +27,25 @@ public class GuiParentModal extends GuiModal
         this.label = label;
 
         this.pick = GuiButtonElement.button(mc, "Pick", (b) -> this.send());
+        this.cancel = GuiButtonElement.button(mc, "Cancel", (b) -> this.parent.setDelegate(null));
         this.limbs = new GuiStringListElement(mc, null);
 
-        this.pick.resizer().set(0, 0, 60, 20).parent(this.area);
-        this.pick.resizer().x.set(0.5F, Measure.RELATIVE, -30);
+        this.pick.resizer().set(0, 0, 50, 20).parent(this.area);
+        this.pick.resizer().x.set(0.5F, Measure.RELATIVE, -55);
         this.pick.resizer().y.set(0.7F, Measure.RELATIVE, 10);
+        this.cancel.resizer().set(60, 0, 50, 20).relative(this.pick.resizer());
 
-        this.limbs.resizer().set(0, 0, 80, 0).parent(this.area);
-        this.limbs.resizer().x.set(0.5F, Measure.RELATIVE, -40);
+        this.limbs.resizer().set(0, 0, 100, 0).parent(this.area);
+        this.limbs.resizer().x.set(0.5F, Measure.RELATIVE, -50);
         this.limbs.resizer().y.set(0.4F, Measure.RELATIVE);
         this.limbs.resizer().h.set(0.3F, Measure.RELATIVE);
         this.limbs.add("(none)");
-        this.limbs.add(model.limbs.keySet());
+        this.limbs.current = 0;
 
-        this.children.add(this.pick, this.limbs);
+        this.children.add(this.pick, this.cancel, this.limbs);
     }
 
-    public GuiParentModal setValue(String parent)
+    public GuiListModal setValue(String parent)
     {
         if (parent.isEmpty())
         {
@@ -52,6 +55,13 @@ public class GuiParentModal extends GuiModal
         {
             this.limbs.setCurrent(parent);
         }
+
+        return this;
+    }
+
+    public GuiListModal addValues(Collection<String> values)
+    {
+        this.limbs.add(values);
 
         return this;
     }
@@ -78,6 +88,6 @@ public class GuiParentModal extends GuiModal
     {
         super.draw(mouseX, mouseY, partialTicks);
 
-        this.font.drawSplitString(this.label, this.area.getX(0.2F), this.area.getY(0.1F), (int) (this.area.w * 0.6), 0xffffff);
+        this.font.drawSplitString(this.label, this.area.getX(0.15F), this.area.getY(0.1F), (int) (this.area.w * 0.7), 0xffffff);
     }
 }

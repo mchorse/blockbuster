@@ -54,7 +54,7 @@ public class ModelExporter
      *
      * See private methods for more information about this export process.
      */
-    public String export(String name)
+    public Model exportModel(String name)
     {
         Model data = new Model();
 
@@ -78,7 +78,12 @@ public class ModelExporter
 
         this.setDefaultTexture(data);
 
-        return ModelUtils.toJson(data);
+        return data;
+    }
+
+    public String exportJSON(String name)
+    {
+        return ModelUtils.toJson(this.exportModel(name));
     }
 
     /**

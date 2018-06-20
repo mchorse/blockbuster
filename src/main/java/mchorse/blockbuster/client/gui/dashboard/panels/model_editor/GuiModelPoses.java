@@ -146,6 +146,7 @@ public class GuiModelPoses extends GuiElement
     {
         this.posesList.clear();
         this.posesList.add(model.poses.keySet());
+        this.posesList.sort();
     }
 
     public void fillPoseData()
