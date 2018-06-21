@@ -74,8 +74,7 @@ public class KeyboardHandler
         {
             GuiDashboard dashboard = ClientProxy.getDashboard(false);
 
-            dashboard.openPanel(dashboard.modelEditorPanel);
-            dashboard.mc.displayGuiScreen(dashboard);
+            dashboard.open().openPanel(dashboard.modelEditorPanel);
         }
     }
 }

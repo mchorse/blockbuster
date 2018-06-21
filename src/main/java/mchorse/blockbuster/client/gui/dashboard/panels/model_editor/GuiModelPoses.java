@@ -39,7 +39,8 @@ public class GuiModelPoses extends GuiElement
         this.panel = panel;
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 0, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
+        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
+        this.posesList.resizer().x.set(1, Measure.RELATIVE, -80);
         this.children.add(this.posesList);
 
         this.translate = new GuiThreeElement(mc, (values) ->
@@ -67,7 +68,7 @@ public class GuiModelPoses extends GuiElement
             this.panel.pose.size[1] = values[1];
         });
 
-        this.translate.resizer().set(90, 10, 110, 20).parent(this.area);
+        this.translate.resizer().set(10, 30, 110, 20).parent(this.area);
         this.scale.resizer().set(0, 25, 110, 20).relative(this.translate.resizer());
         this.rotation.resizer().set(0, 25, 110, 20).relative(this.scale.resizer());
 
@@ -79,7 +80,7 @@ public class GuiModelPoses extends GuiElement
         this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
 
         this.addPose.resizer().set(2, 2, 16, 16).parent(this.area);
-        this.addPose.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.addPose.resizer().x.set(1, Measure.RELATIVE, -38);
         this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
         this.children.add(this.addPose, this.removePose);
 
@@ -110,7 +111,7 @@ public class GuiModelPoses extends GuiElement
 
         if (Model.REQUIRED_POSES.contains(pose))
         {
-            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You can't remove one of the standard poses..."));
+            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You cannot remove one of the standard poses..."));
         }
         else
         {
@@ -171,12 +172,10 @@ public class GuiModelPoses extends GuiElement
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        Gui.drawRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
 
         this.font.drawStringWithShadow("Hitbox", this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
-
-        int w = this.font.getStringWidth("Poses");
-        this.font.drawStringWithShadow("Poses", this.area.getX(1) - 5 - w, this.area.getY(1) - 14, 0xffffff);
+        this.font.drawStringWithShadow("Poses", this.area.x + 6, this.area.y + 6, 0xffffff);
 
         super.draw(mouseX, mouseY, partialTicks);
     }

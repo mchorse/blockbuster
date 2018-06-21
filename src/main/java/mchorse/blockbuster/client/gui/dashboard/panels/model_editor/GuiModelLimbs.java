@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPr
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
@@ -17,6 +18,7 @@ import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelLimbs extends GuiElement
@@ -25,15 +27,24 @@ public class GuiModelLimbs extends GuiElement
 
     private GuiButtonElement<GuiTextureButton> addLimb;
     private GuiButtonElement<GuiTextureButton> removeLimb;
-    private GuiButtonElement<GuiTextureButton> renameLimb;
-    private GuiButtonElement<GuiTextureButton> parentLimb;
+    private GuiButtonElement<GuiButton> renameLimb;
+    private GuiButtonElement<GuiButton> parentLimb;
     private GuiDelegateElement modal;
 
     private GuiStringListElement limbList;
 
+    private GuiElements first;
+    private GuiElements second;
+
+    private GuiButtonElement<GuiButton> toggle;
+
+    /* First category */
     private GuiThreeElement size;
     private GuiTwoElement texture;
     private GuiThreeElement anchor;
+    private GuiThreeElement origin;
+
+    /* Second category */
     private GuiThreeElement color;
     private GuiTrackpadElement opacity;
     private GuiButtonElement<GuiCheckBox> mirror;
@@ -48,8 +59,6 @@ public class GuiModelLimbs extends GuiElement
     private GuiButtonElement<GuiCheckBox> idle;
     private GuiButtonElement<GuiCheckBox> invert;
 
-    public GuiThreeElement origin;
-
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
         super(mc);
@@ -58,10 +67,12 @@ public class GuiModelLimbs extends GuiElement
         this.panel = panel;
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbList.resizer().set(0, 0, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
-        this.limbList.resizer().x.set(1, Measure.RELATIVE, -80);
+        this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h.set(1, Measure.RELATIVE, -42);
+        this.limbList.resizer().x.set(1, Measure.RELATIVE, -100);
         this.children.add(this.limbList);
 
+        /* First category */
+        this.first = new GuiElements();
         this.size = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.size[0] = values[0].intValue();
@@ -91,6 +102,16 @@ public class GuiModelLimbs extends GuiElement
             this.panel.limb.origin[2] = values[2];
             this.panel.rebuildModel();
         });
+
+        this.size.resizer().parent(this.area).set(10, 40, 120, 20);
+        this.texture.resizer().relative(this.size.resizer()).set(0, 35, 120, 20);
+        this.anchor.resizer().relative(this.texture.resizer()).set(0, 35, 120, 20);
+        this.origin.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
+
+        this.first.add(this.size, this.texture, this.anchor, this.origin);
+
+        /* Second category */
+        this.second = new GuiElements();
         this.color = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.color[0] = values[0];
@@ -109,22 +130,6 @@ public class GuiModelLimbs extends GuiElement
         this.shading = GuiButtonElement.checkbox(mc, "Shading", false, (b) -> this.panel.limb.shading = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
-        this.size.resizer().parent(this.area).set(10, 10, 120, 20);
-        this.texture.resizer().relative(this.size.resizer()).set(0, 25, 120, 20);
-        this.anchor.resizer().relative(this.texture.resizer()).set(0, 25, 120, 20);
-        this.origin.resizer().relative(this.anchor.resizer()).set(0, 25, 120, 20);
-        this.color.resizer().relative(this.origin.resizer()).set(0, 35, 120, 20);
-        this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
-
-        this.mirror.resizer().relative(this.opacity.resizer()).set(0, 25, 60, 11);
-        this.is3D.resizer().relative(this.mirror.resizer()).set(0, 16, 60, 11);
-
-        this.lighting.resizer().relative(this.opacity.resizer()).set(60, 25, 60, 11);
-        this.shading.resizer().relative(this.lighting.resizer()).set(0, 16, 60, 11);
-
-        this.children.add(this.size, this.texture, this.anchor, this.origin, this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D);
-
-        /* Animation and shit */
         this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]);
         this.holding.button.addLabel("None");
         this.holding.button.addLabel("Right");
@@ -135,6 +140,15 @@ public class GuiModelLimbs extends GuiElement
         this.idle = GuiButtonElement.checkbox(mc, "Idle", false, (b) -> this.panel.limb.idle = b.button.isChecked());
         this.invert = GuiButtonElement.checkbox(mc, "Invert", false, (b) -> this.panel.limb.invert = b.button.isChecked());
 
+        this.color.resizer().parent(this.area).set(10, 40, 120, 20);
+        this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
+
+        this.mirror.resizer().relative(this.opacity.resizer()).set(0, 25, 60, 11);
+        this.is3D.resizer().relative(this.mirror.resizer()).set(0, 16, 60, 11);
+
+        this.lighting.resizer().relative(this.opacity.resizer()).set(60, 25, 60, 11);
+        this.shading.resizer().relative(this.lighting.resizer()).set(0, 16, 60, 11);
+
         this.holding.resizer().relative(this.is3D.resizer()).set(0, 25, 56, 20);
         this.swiping.resizer().relative(this.holding.resizer()).set(60, 6, 60, 11);
 
@@ -143,20 +157,30 @@ public class GuiModelLimbs extends GuiElement
         this.swinging.resizer().relative(this.looking.resizer()).set(0, 16, 60, 11);
         this.invert.resizer().relative(this.swinging.resizer()).set(60, 0, 60, 11);
 
-        this.children.add(this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert);
+        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert);
+        this.second.setVisible(false);
+        this.children.add(this.first, this.second);
 
         /* Buttons */
         this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
         this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
-        this.renameLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 64, 32, 80, (b) -> this.renameLimb());
-        this.parentLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 64, 48, 80, (b) -> this.parentLimb());
+        this.renameLimb = GuiButtonElement.button(mc, "Rename", (b) -> this.renameLimb());
+        this.parentLimb = GuiButtonElement.button(mc, "Parent", (b) -> this.parentLimb());
 
-        this.addLimb.resizer().set(0, 0, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -78);
-        this.addLimb.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.toggle = GuiButtonElement.button(mc, "<", (b) ->
+        {
+            this.first.setVisible(!this.first.isVisible());
+            this.second.setVisible(!this.first.isVisible());
+        });
+
+        this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -38);
         this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
-        this.renameLimb.resizer().set(20, 0, 16, 16).relative(this.removeLimb.resizer());
-        this.parentLimb.resizer().set(20, 0, 16, 16).relative(this.renameLimb.resizer());
-        this.children.add(this.addLimb, this.removeLimb, this.renameLimb, this.parentLimb);
+
+        this.toggle.resizer().set(10, 0, 20, 20).parent(this.area).y.set(1, Measure.RELATIVE, -30);
+        this.renameLimb.resizer().set(23, 0, 44, 20).relative(this.toggle.resizer());
+        this.parentLimb.resizer().set(47, 0, 50, 20).relative(this.renameLimb.resizer());
+
+        this.children.add(this.addLimb, this.removeLimb, this.renameLimb, this.parentLimb, this.toggle);
 
         this.modal = new GuiDelegateElement(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
@@ -266,9 +290,21 @@ public class GuiModelLimbs extends GuiElement
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        Gui.drawRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
 
-        this.font.drawStringWithShadow("Limbs", this.area.x + 6, this.area.getY(1) - 14, 0xeeeeee);
+        this.font.drawStringWithShadow("Limbs", this.area.x + 6, this.area.y + 6, 0xeeeeee);
+
+        if (this.first.isVisible())
+        {
+            this.font.drawStringWithShadow("Limb size", this.size.area.x, this.size.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("Texture offset", this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("Anchor point", this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("OBJ origin", this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
+        }
+        else if (this.second.isVisible())
+        {
+            this.font.drawStringWithShadow("Color", this.color.area.x, this.color.area.y - 10, 0xeeeeee);
+        }
 
         super.draw(mouseX, mouseY, partialTicks);
     }

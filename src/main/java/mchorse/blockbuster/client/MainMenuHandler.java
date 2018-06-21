@@ -64,8 +64,7 @@ public class MainMenuHandler
             {
                 GuiDashboard dashboard = ClientProxy.getDashboard(screen instanceof GuiMainMenu);
 
-                dashboard.openPanel(dashboard.modelEditorPanel);
-                dashboard.mc.displayGuiScreen(dashboard);
+                dashboard.open().openPanel(dashboard.modelEditorPanel);
             }
         }
     }

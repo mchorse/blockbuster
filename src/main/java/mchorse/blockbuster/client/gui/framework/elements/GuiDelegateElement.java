@@ -26,7 +26,11 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
         GuiScreen screen = this.mc.currentScreen;
 
         this.delegate = element;
-        this.resize(screen.width, screen.height);
+
+        if (screen != null)
+        {
+            this.resize(screen.width, screen.height);
+        }
     }
 
     @Override

@@ -69,9 +69,7 @@ public class GuiHandler implements IGuiHandler
             TileEntityModel model = (TileEntityModel) world.getTileEntity(new BlockPos(x, y, z));
             GuiDashboard dashboard = ClientProxy.getDashboard(false);
 
-            dashboard.openPanel(dashboard.modelPanel.openModelBlock(model));
-
-            return dashboard;
+            return dashboard.openPanel(dashboard.modelPanel.openModelBlock(model));
         }
 
         return null;

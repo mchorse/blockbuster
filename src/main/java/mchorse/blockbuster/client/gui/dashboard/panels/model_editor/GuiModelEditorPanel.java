@@ -23,6 +23,7 @@ import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiModelEditorPanel extends GuiDashboardPanel
@@ -62,18 +63,18 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         /* Popups */
         this.models = new GuiModelModels(mc, this);
-        this.models.resizer().set(0, 20, 120, 180).parent(this.area);
+        this.models.resizer().set(20, 0, 120, 180).parent(this.area);
         this.models.setVisible(false);
         this.children.add(this.models);
 
         this.poses = new GuiModelPoses(mc, this);
         this.poses.setVisible(false);
-        this.poses.resizer().set(0, 20, 210, 150).parent(this.area);
+        this.poses.resizer().set(20, 0, 210, 150).parent(this.area);
         this.children.add(this.poses);
 
         this.limbs = new GuiModelLimbs(mc, this);
         this.limbs.setVisible(false);
-        this.limbs.resizer().set(0, 0, 220, 300).parent(this.area).x.set(1, Measure.RELATIVE, -240);
+        this.limbs.resizer().set(0, 0, 240, 220).parent(this.area).x.set(1, Measure.RELATIVE, -260);
         this.children.add(this.limbs);
 
         this.options = new GuiModelOptions(mc, this);
@@ -88,7 +89,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options));
 
         this.openModels.resizer().set(2, 2, 16, 16).parent(this.area);
-        this.openPoses.resizer().set(20, 0, 16, 16).relative(this.openModels.resizer());
+        this.openPoses.resizer().set(0, 20, 16, 16).relative(this.openModels.resizer());
 
         this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
         this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
@@ -284,6 +285,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
+        GlStateManager.enableAlpha();
+
         if (this.options.isVisible()) this.drawIconBackground(this.openOptions.area);
         if (this.limbs.isVisible()) this.drawIconBackground(this.openLimbs.area);
         if (this.poses.isVisible()) this.drawIconBackground(this.openPoses.area);

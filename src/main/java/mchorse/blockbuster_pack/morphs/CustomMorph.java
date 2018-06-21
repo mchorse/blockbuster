@@ -124,12 +124,7 @@ public class CustomMorph extends AbstractMorph
                 model.swingProgress = 0;
 
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
-
-                if (texture != null)
-                {
-                    RenderCustomModel.lastTexture = texture;
-                    Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-                }
+                RenderCustomModel.bindLastTexture(texture);
 
                 GuiUtils.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
             }

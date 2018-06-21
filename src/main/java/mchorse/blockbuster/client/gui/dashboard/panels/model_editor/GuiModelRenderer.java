@@ -189,6 +189,7 @@ public class GuiModelRenderer extends GuiElement
 
         GlStateManager.enableColorMaterial();
         GlStateManager.disableCull();
+        GlStateManager.enableAlpha();
         GlStateManager.pushMatrix();
         GlStateManager.loadIdentity();
         GlStateManager.translate(0 + x, -1 + y, -2 - this.scale);
@@ -309,6 +310,9 @@ public class GuiModelRenderer extends GuiElement
         minZ -= d * limb.anchor[2] + 0.1F * f;
         maxZ -= d * limb.anchor[2] - 0.1F * f;
 
+        minX *= -1;
+        maxX *= -1;
+
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
 
@@ -358,7 +362,18 @@ public class GuiModelRenderer extends GuiElement
 
         if (this.aabb)
         {
-            GL11.glLineWidth(4);
+            GL11.glLineWidth(5);
+            GL11.glBegin(GL11.GL_LINES);
+            GL11.glColor3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0.25, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0.25, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0.25);
+            GL11.glEnd();
+
+            GL11.glLineWidth(3);
             GL11.glBegin(GL11.GL_LINES);
             GL11.glColor3d(1, 0, 0);
             GL11.glVertex3d(0, 0, 0);
@@ -373,6 +388,12 @@ public class GuiModelRenderer extends GuiElement
             GL11.glVertex3d(0, 0, 0.25);
             GL11.glEnd();
             GL11.glLineWidth(1);
+
+            GL11.glPointSize(12);
+            GL11.glBegin(GL11.GL_POINTS);
+            GL11.glColor3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glEnd();
 
             GL11.glPointSize(10);
             GL11.glBegin(GL11.GL_POINTS);
@@ -423,6 +444,7 @@ public class GuiModelRenderer extends GuiElement
     {
         Minecraft mc = Minecraft.getMinecraft();
 
+        GlStateManager.enableDepth();
         BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, -0.5F, 0);
@@ -433,5 +455,6 @@ public class GuiModelRenderer extends GuiElement
         blockrendererdispatcher.renderBlockBrightness(this.block, 1.0F);
         GlStateManager.translate(0.0F, 0.0F, 1.0F);
         GlStateManager.popMatrix();
+        GlStateManager.disableDepth();
     }
 }

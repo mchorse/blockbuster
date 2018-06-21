@@ -25,6 +25,7 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -181,7 +182,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.replayEditor.add(element);
 
-        this.morphs = new GuiMorphsPopup(6, null, Morphing.get(this.mc.thePlayer));
+        IMorphing morphing = this.mc.thePlayer == null ? null : Morphing.get(this.mc.thePlayer);
+        
+        this.morphs = new GuiMorphsPopup(6, null, morphing);
         this.morphs.callback = (morph) -> this.setMorph(morph);
 
         /* Model blocks */

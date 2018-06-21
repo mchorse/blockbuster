@@ -44,7 +44,7 @@ public class GuiModelOptions extends GuiElement
             this.panel.model.scale[2] = value[2];
         });
         this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.panel.model.scaleGui = value);
-        this.defaultTexture = new GuiTextElement(mc, (str) -> this.panel.model.defaultTexture = new ResourceLocation(str), 1000);
+        this.defaultTexture = new GuiTextElement(mc, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str), 1000);
         this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) ->
         {
             this.panel.model.providesObj = b.button.isChecked();

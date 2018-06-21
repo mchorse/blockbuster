@@ -26,9 +26,7 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
 
         if (Minecraft.getMinecraft().currentScreen == null)
         {
-            GuiDashboard dashboard = ClientProxy.getDashboard(false);
-
-            Minecraft.getMinecraft().displayGuiScreen(dashboard);
+            ClientProxy.getDashboard(false).open();
             opened = true;
         }
 

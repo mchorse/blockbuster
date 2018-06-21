@@ -39,17 +39,15 @@ public class GuiDashboard extends GuiBase
     public GuiDashboard()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        Resizer panelResizer = new Resizer().set(32, 0, 1, 1).parent(this.area);
-        panelResizer.w.set(1, Measure.RELATIVE, -32);
-        panelResizer.h.set(1, Measure.RELATIVE);
 
-        this.directorPanel = new GuiDirectorPanel(mc);
-        this.modelPanel = new GuiModelPanel(mc);
+        this.createWorldPanels(mc);
         this.modelEditorPanel = new GuiModelEditorPanel(mc);
         this.mainPanel = new GuiMainPanel(mc);
 
         this.panel = new GuiDelegateElement(mc, this.mainPanel);
-        this.panel.resizer = panelResizer;
+        this.panel.resizer().set(32, 0, 1, 1).parent(this.area);
+        this.panel.resizer().w.set(1, Measure.RELATIVE, -32);
+        this.panel.resizer().h.set(1, Measure.RELATIVE);
 
         this.sidebar = new GuiDashboardSidebar(mc, this);
         this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area);
@@ -65,11 +63,13 @@ public class GuiDashboard extends GuiBase
         }
     }
 
-    public GuiDashboard setMainMenu(boolean main)
+    private void createWorldPanels(Minecraft mc)
     {
-        this.mainMenu = main;
-
-        return this;
+        if (mc != null && mc.theWorld != null && this.directorPanel == null)
+        {
+            this.directorPanel = new GuiDirectorPanel(mc);
+            this.modelPanel = new GuiModelPanel(mc);
+        }
     }
 
     @Override
@@ -82,13 +82,31 @@ public class GuiDashboard extends GuiBase
     protected void closeScreen()
     {
         /* Should I assume it's not null? :thonk: */
-        this.directorPanel.close();
-        this.modelPanel.close();
+        if (!this.mainMenu)
+        {
+            this.directorPanel.close();
+            this.modelPanel.close();
+        }
 
         this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
     }
 
-    public void openPanel(GuiDashboardPanel element)
+    public GuiDashboard setMainMenu(boolean main)
+    {
+        this.createWorldPanels(mc);
+        this.mainMenu = main;
+
+        return this;
+    }
+
+    public GuiDashboard open()
+    {
+        Minecraft.getMinecraft().displayGuiScreen(this);
+
+        return this;
+    }
+
+    public GuiDashboard openPanel(GuiDashboardPanel element)
     {
         if (this.panel.delegate != null)
         {
@@ -97,6 +115,18 @@ public class GuiDashboard extends GuiBase
 
         element.appear();
         this.panel.setDelegate(element);
+
+        return this;
+    }
+
+    @Override
+    public void initGui()
+    {
+        this.sidebar.setVisible(!this.mainMenu);
+        this.panel.resizer().w.padding = this.mainMenu ? 0 : -32;
+        this.panel.resizer().x.value = this.mainMenu ? 0 : 32;
+
+        super.initGui();
     }
 
     @Override

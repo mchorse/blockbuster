@@ -194,7 +194,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             if (hasTexture && RenderCustomModel.lastTexture != null)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
+                try
+                {
+                    Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
+                }
+                catch (Exception e)
+                {
+                    System.out.println(RenderCustomModel.lastTexture);
+                }
             }
 
             if (hasColor)

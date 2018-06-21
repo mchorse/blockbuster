@@ -27,6 +27,20 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public CustomMorph current;
 
+    public static void bindLastTexture(ResourceLocation location)
+    {
+        lastTexture = location;
+        bindLastTexture();
+    }
+
+    public static void bindLastTexture()
+    {
+        if (lastTexture != null)
+        {
+            Minecraft.getMinecraft().renderEngine.bindTexture(lastTexture);
+        }
+    }
+
     public RenderCustomModel(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
     {
         super(renderManagerIn, null, shadowSizeIn);

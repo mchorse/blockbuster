@@ -71,11 +71,11 @@ public class ClientProxy extends CommonProxy
     public static RenderGlobal original;
 
     /**
-     * Create model editor GUI dynamically 
+     * Create dashboard GUI dynamically 
      */
     public static GuiDashboard getDashboard(boolean mainMenu)
     {
-        if (dashboard == null)
+        if (dashboard != null || dashboard == null)
         {
             dashboard = new GuiDashboard();
         }
