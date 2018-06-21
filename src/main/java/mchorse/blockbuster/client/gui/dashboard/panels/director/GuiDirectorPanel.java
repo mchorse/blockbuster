@@ -25,6 +25,7 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -146,10 +147,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         /* Toggle view button */
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
-            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-            this.mainView.delegate = this.mainView.delegate == this.configOptions ? this.replays : this.configOptions;
-            this.mainView.delegate.resize(screen.width, screen.height);
+            this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
         });
         element.resizer().set(0, 6, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -48);
 
@@ -184,7 +182,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.replayEditor.add(element);
 
-        this.morphs = new GuiMorphsPopup(6, null, Morphing.get(this.mc.player));
+        IMorphing morphing = this.mc.player == null ? null : Morphing.get(this.mc.player);
+
+        this.morphs = new GuiMorphsPopup(6, null, morphing);
         this.morphs.callback = (morph) -> this.setMorph(morph);
 
         /* Model blocks */
@@ -250,12 +250,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private void setReplay(Replay replay)
     {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
         this.replay = replay;
         this.replayEditor.setVisible(this.replay != null);
-        this.mainView.delegate = this.replays;
-        this.mainView.delegate.resize(screen.width, screen.height);
+        this.mainView.setDelegate(this.replays);
         this.selector.setReplay(replay);
         this.fillReplayData();
     }

@@ -1,19 +1,18 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiModelOptions extends GuiElement
+public class GuiModelOptions extends GuiModelEditorTab
 {
-    public GuiModelEditorPanel panel;
-
     private GuiTextElement name;
     private GuiTwoElement texture;
     private GuiThreeElement scale;
@@ -24,10 +23,9 @@ public class GuiModelOptions extends GuiElement
 
     public GuiModelOptions(Minecraft mc, GuiModelEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
-        this.createChildren();
-        this.panel = panel;
+        this.title = "";
 
         this.name = new GuiTextElement(mc, (str) -> this.panel.model.name = str, 120);
         this.texture = new GuiTwoElement(mc, (value) ->
@@ -44,9 +42,17 @@ public class GuiModelOptions extends GuiElement
             this.panel.model.scale[2] = value[2];
         });
         this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.panel.model.scaleGui = value);
-        this.defaultTexture = new GuiTextElement(mc, (str) -> this.panel.model.defaultTexture = new ResourceLocation(str), 1000);
-        this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) -> this.panel.model.providesObj = b.button.isChecked());
-        this.providesMtl = GuiButtonElement.checkbox(mc, "Provides MTL", false, (b) -> this.panel.model.providesMtl = b.button.isChecked());
+        this.defaultTexture = new GuiTextElement(mc, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str), 1000);
+        this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) ->
+        {
+            this.panel.model.providesObj = b.button.isChecked();
+            this.panel.rebuildModel();
+        });
+        this.providesMtl = GuiButtonElement.checkbox(mc, "Provides MTL", false, (b) ->
+        {
+            this.panel.model.providesMtl = b.button.isChecked();
+            this.panel.rebuildModel();
+        });
 
         int w = 120;
 
@@ -79,12 +85,8 @@ public class GuiModelOptions extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    protected void drawLabels()
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-
-        super.draw(mouseX, mouseY, partialTicks);
-
         this.font.drawStringWithShadow("Display name", this.name.area.x, this.name.area.y - 12, 0xeeeeee);
         this.font.drawStringWithShadow("Texture size", this.texture.area.x, this.texture.area.y - 12, 0xeeeeee);
         this.font.drawStringWithShadow("Global scale", this.scale.area.x, this.scale.area.y - 12, 0xeeeeee);

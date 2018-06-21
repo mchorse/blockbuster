@@ -69,6 +69,7 @@ public class GuiMainPanel extends GuiDashboardPanel
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         this.font.drawStringWithShadow("Resources", this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
 
         super.draw(mouseX, mouseY, partialTicks);
     }

@@ -6,14 +6,13 @@ import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.model_editor.GuiModelEditor;
-import mchorse.blockbuster.model_editor.elements.GuiLimbEditor;
 import mchorse.metamorph.client.gui.GuiCreativeMenu;
 import mchorse.metamorph.client.gui.GuiSurvivalMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -30,6 +29,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class MainMenuHandler
 {
+    public static final ResourceLocation TEXTURES = new ResourceLocation("blockbuster:textures/gui/model_editor.png");
+
     /**
      * Button in the main menu to get into model editor
      */
@@ -37,7 +38,7 @@ public class MainMenuHandler
 
     public MainMenuHandler()
     {
-        this.openModelEditor = new GuiTextureButton(-300, 5, 5, GuiLimbEditor.GUI);
+        this.openModelEditor = new GuiTextureButton(-300, 5, 5, TEXTURES);
         this.openModelEditor.setTexPos(0, 0).setActiveTexPos(0, 16);
     }
 
@@ -61,7 +62,9 @@ public class MainMenuHandler
         {
             if (event.getButton() == this.openModelEditor)
             {
-                Minecraft.getMinecraft().displayGuiScreen(ClientProxy.getEditor(screen instanceof GuiMainMenu));
+                GuiDashboard dashboard = ClientProxy.getDashboard(screen instanceof GuiMainMenu);
+
+                dashboard.open().openPanel(dashboard.modelEditorPanel);
             }
         }
     }
@@ -82,7 +85,7 @@ public class MainMenuHandler
 
         boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
         boolean isBlockbuster = gui instanceof GuiDashboard || gui instanceof GuiActor;
-        boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiModelEditor;
+        boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiDashboard;
 
         if (isMetamorph || isBlockbuster || exitME)
         {
