@@ -16,7 +16,6 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiMode
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelModels;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelViewOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -30,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelEditorPanel extends GuiDashboardPanel
 {
@@ -40,13 +40,17 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiButtonElement<GuiTextureButton> openPoses;
     private GuiButtonElement<GuiTextureButton> openOptions;
     private GuiButtonElement<GuiTextureButton> openLimbs;
-    private GuiButtonElement<GuiTextureButton> openVIewLimbs;
 
     private GuiModelModels models;
     private GuiModelPoses poses;
     private GuiModelLimbs limbs;
     private GuiModelOptions options;
-    private GuiModelViewOptions viewOptions;
+
+    private GuiButtonElement<GuiTextureButton> swipe;
+    private GuiButtonElement<GuiTextureButton> running;
+    private GuiButtonElement<GuiTextureButton> items;
+    private GuiButtonElement<GuiCheckBox> hitbox;
+    private GuiButtonElement<GuiCheckBox> looking;
 
     /* Limb props */
 
@@ -68,7 +72,6 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelRenderer.resizer().h.set(1, Measure.RELATIVE);
         this.children.add(this.modelRenderer);
 
-        /* Popups */
         this.models = new GuiModelModels(mc, this);
         this.models.resizer().set(20, 0, 120, 180).parent(this.area);
         this.models.setVisible(false);
@@ -97,11 +100,26 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.openModels.resizer().set(2, 2, 16, 16).parent(this.area);
         this.openPoses.resizer().set(0, 20, 16, 16).relative(this.openModels.resizer());
-
         this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
         this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
 
         this.children.add(this.openModels, this.openPoses, this.openOptions, this.openLimbs);
+
+        /* Buttons */
+        this.swipe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe());
+        this.running = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging);
+        this.items = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems());
+        this.hitbox = GuiButtonElement.checkbox(mc, "Hitbox", this.modelRenderer.aabb, (b) -> this.modelRenderer.aabb = b.button.isChecked());
+        this.looking = GuiButtonElement.checkbox(mc, "Looking", this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.button.isChecked());
+
+        this.swipe.resizer().set(0, 0, 16, 16).parent(this.area).x.set(0.5F, Measure.RELATIVE, -38);
+        this.swipe.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.running.resizer().set(20, 0, 16, 16).relative(this.swipe.resizer());
+        this.items.resizer().set(20, 0, 16, 16).relative(this.running.resizer());
+        this.hitbox.resizer().set(6, 0, 40, 11).parent(this.area).y.set(1, Measure.RELATIVE, -16);
+        this.looking.resizer().set(50, 0, 40, 11).relative(this.hitbox.resizer());
+
+        this.children.add(this.swipe, this.running, this.items, this.hitbox, this.looking);
 
         this.setModel("steve");
     }
@@ -293,6 +311,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.enableAlpha();
+        this.drawGradientRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x00000000, 0x88000000);
 
         if (this.options.isVisible()) this.drawIconBackground(this.openOptions.area);
         if (this.limbs.isVisible()) this.drawIconBackground(this.openLimbs.area);
