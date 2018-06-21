@@ -1,15 +1,17 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Limb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
@@ -17,14 +19,11 @@ import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiModelLimbs extends GuiElement
+public class GuiModelLimbs extends GuiModelEditorTab
 {
-    public GuiModelEditorPanel panel;
-
     private GuiButtonElement<GuiTextureButton> addLimb;
     private GuiButtonElement<GuiTextureButton> removeLimb;
     private GuiButtonElement<GuiButton> renameLimb;
@@ -61,10 +60,7 @@ public class GuiModelLimbs extends GuiElement
 
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
-        super(mc);
-
-        this.createChildren();
-        this.panel = panel;
+        super(mc, panel);
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h.set(1, Measure.RELATIVE, -42);
@@ -284,28 +280,5 @@ public class GuiModelLimbs extends GuiElement
         this.swinging.button.setIsChecked(limb.swinging);
         this.idle.button.setIsChecked(limb.idle);
         this.invert.button.setIsChecked(limb.invert);
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
-    {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
-
-        this.font.drawStringWithShadow("Limbs", this.area.x + 6, this.area.y + 6, 0xeeeeee);
-
-        if (this.first.isVisible())
-        {
-            this.font.drawStringWithShadow("Limb size", this.size.area.x, this.size.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("Texture offset", this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("Anchor point", this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("OBJ origin", this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
-        }
-        else if (this.second.isVisible())
-        {
-            this.font.drawStringWithShadow("Color", this.color.area.x, this.color.area.y - 10, 0xeeeeee);
-        }
-
-        super.draw(mouseX, mouseY, partialTicks);
     }
 }

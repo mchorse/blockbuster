@@ -16,16 +16,15 @@ import net.minecraft.world.World;
 public class DummyEntity extends EntityLivingBase
 {
     private final ItemStack[] held;
-    private ItemStack sword;
-    private ItemStack ingot;
+    private ItemStack right;
+    private ItemStack left;
 
     public DummyEntity(World worldIn)
     {
         super(worldIn);
 
-        /* TODO: Fix that shit */
-        this.sword = new ItemStack(Items.DIAMOND_SWORD);
-        this.ingot = new ItemStack(Items.IRON_INGOT);
+        this.right = new ItemStack(Items.DIAMOND_SWORD);
+        this.left = new ItemStack(Items.GOLDEN_SWORD);
 
         this.held = new ItemStack[] {null, null};
     }
@@ -34,8 +33,8 @@ public class DummyEntity extends EntityLivingBase
     {
         if (toggle)
         {
-            this.held[0] = this.sword;
-            this.held[1] = this.ingot;
+            this.held[0] = this.right;
+            this.held[1] = this.left;
         }
         else
         {

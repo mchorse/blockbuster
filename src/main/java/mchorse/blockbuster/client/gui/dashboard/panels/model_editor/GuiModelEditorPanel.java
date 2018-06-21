@@ -12,6 +12,11 @@ import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelModels;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelViewOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -29,17 +34,19 @@ import net.minecraft.util.ResourceLocation;
 public class GuiModelEditorPanel extends GuiDashboardPanel
 {
     /* GUI stuff */
-    private GuiModelRenderer modelRenderer;
+    public GuiModelRenderer modelRenderer;
 
     private GuiButtonElement<GuiTextureButton> openModels;
     private GuiButtonElement<GuiTextureButton> openPoses;
     private GuiButtonElement<GuiTextureButton> openOptions;
     private GuiButtonElement<GuiTextureButton> openLimbs;
+    private GuiButtonElement<GuiTextureButton> openVIewLimbs;
 
     private GuiModelModels models;
     private GuiModelPoses poses;
     private GuiModelLimbs limbs;
     private GuiModelOptions options;
+    private GuiModelViewOptions viewOptions;
 
     /* Limb props */
 

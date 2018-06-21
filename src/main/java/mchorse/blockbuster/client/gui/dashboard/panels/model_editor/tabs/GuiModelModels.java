@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,29 +7,26 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 
-public class GuiModelModels extends GuiElement
+public class GuiModelModels extends GuiModelEditorTab
 {
-    public GuiModelEditorPanel panel;
-
     private GuiStringListElement modelList;
     private GuiButtonElement<GuiTextureButton> save;
     private GuiButtonElement<GuiTextureButton> export;
@@ -37,10 +34,9 @@ public class GuiModelModels extends GuiElement
 
     public GuiModelModels(Minecraft mc, GuiModelEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
-        this.createChildren();
-        this.panel = panel;
+        this.title = "Models";
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str));
         this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
@@ -120,16 +116,5 @@ public class GuiModelModels extends GuiElement
             this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "Whoops, couldn't create a model, because an error happened: " + e.getMessage()));
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
-    {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
-
-        this.font.drawStringWithShadow("Models", this.area.x + 6, this.area.y + 6, 0xffffff);
-
-        super.draw(mouseX, mouseY, partialTicks);
     }
 }

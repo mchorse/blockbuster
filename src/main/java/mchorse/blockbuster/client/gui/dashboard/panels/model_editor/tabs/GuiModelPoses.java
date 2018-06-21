@@ -1,24 +1,23 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.api.Model.Transform;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 
-public class GuiModelPoses extends GuiElement
+public class GuiModelPoses extends GuiModelEditorTab
 {
-    public GuiModelEditorPanel panel;
-
     private GuiButtonElement<GuiTextureButton> addPose;
     private GuiButtonElement<GuiTextureButton> removePose;
     private GuiDelegateElement modal;
@@ -33,10 +32,9 @@ public class GuiModelPoses extends GuiElement
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
-        this.createChildren();
-        this.panel = panel;
+        this.title = "Poses";
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
         this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
@@ -169,14 +167,10 @@ public class GuiModelPoses extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    protected void drawLabels()
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
+        super.drawLabels();
 
         this.font.drawStringWithShadow("Hitbox", this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Poses", this.area.x + 6, this.area.y + 6, 0xffffff);
-
-        super.draw(mouseX, mouseY, partialTicks);
     }
 }

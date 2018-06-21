@@ -32,7 +32,7 @@ public class GuiModelRenderer extends GuiElement
     public DummyEntity dummy;
     private IBlockState block = Blocks.GRASS.getDefaultState();
 
-    private boolean swinging;
+    public boolean swinging;
     private float swing;
     private float swingAmount;
     private float scale;
@@ -57,6 +57,11 @@ public class GuiModelRenderer extends GuiElement
 
         this.panel = panel;
         this.dummy = new DummyEntity(null);
+    }
+
+    public void swipe()
+    {
+        this.swipe = 6;
     }
 
     @Override
