@@ -3,9 +3,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
-import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.model_editor.DummyEntity;
 import net.minecraft.block.state.IBlockState;
@@ -14,8 +16,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,6 +48,8 @@ public class GuiModelRenderer extends GuiElement
 
     private float lastX;
     private float lastY;
+
+    private boolean aabb;
 
     public GuiModelRenderer(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -155,8 +163,6 @@ public class GuiModelRenderer extends GuiElement
         Project.gluPerspective(70, (float) this.mc.displayWidth / (float) this.mc.displayHeight, 0.05F, 1000);
         GlStateManager.matrixMode(5888);
 
-        Model.Limb limb = null;
-
         float factor = 0.0625F;
 
         float newYaw = this.yaw;
@@ -221,6 +227,24 @@ public class GuiModelRenderer extends GuiElement
 
         model.render(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
 
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableDepth();
+        GlStateManager.disableLighting();
+
+        for (ModelCustomRenderer limb : model.limbs)
+        {
+            if (limb.limb.name.equals(this.panel.limb.name))
+            {
+                limb.postRender(1F / 16F);
+            }
+        }
+
+        this.renderLimbHighlight(this.panel.limb);
+
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+
         /*
         if (this.items)
         {
@@ -230,12 +254,11 @@ public class GuiModelRenderer extends GuiElement
 
         GlStateManager.popMatrix();
 
-        /*
+        this.aabb = true;
         if (this.aabb)
         {
             this.renderAABB();
         }
-        */
 
         GlStateManager.disableDepth();
 
@@ -259,6 +282,140 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.loadIdentity();
         GlStateManager.ortho(0.0D, screen.width, screen.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
+    }
+
+    public void renderLimbHighlight(Limb limb)
+    {
+        float f = 1F / 16F;
+        float w = limb.size[0] * f;
+        float h = limb.size[1] * f;
+        float d = limb.size[2] * f;
+
+        float minX = 0;
+        float minY = 0;
+        float minZ = 0;
+        float maxX = w;
+        float maxY = h;
+        float maxZ = d;
+        float alpha = 0.2F;
+
+        minX -= w * limb.anchor[0] + 0.1F * f;
+        maxX -= w * limb.anchor[0] - 0.1F * f;
+        minY -= h * limb.anchor[1] + 0.1F * f;
+        maxY -= h * limb.anchor[1] - 0.1F * f;
+        minZ -= d * limb.anchor[2] + 0.1F * f;
+        maxZ -= d * limb.anchor[2] - 0.1F * f;
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        /* Top */
+        buffer.pos(minX, maxY, minZ).color(0, 0.6F, 1, alpha).endVertex();
+        buffer.pos(maxX, maxY, minZ).color(0, 0.6F, 1, alpha).endVertex();
+        buffer.pos(maxX, maxY, maxZ).color(0, 0.6F, 1, alpha).endVertex();
+        buffer.pos(minX, maxY, maxZ).color(0, 0.6F, 1, alpha).endVertex();
+
+        /* Bottom */
+        buffer.pos(minX, minY, minZ).color(0, 0.4F, 1, alpha).endVertex();
+        buffer.pos(maxX, minY, minZ).color(0, 0.4F, 1, alpha).endVertex();
+        buffer.pos(maxX, minY, maxZ).color(0, 0.4F, 1, alpha).endVertex();
+        buffer.pos(minX, minY, maxZ).color(0, 0.4F, 1, alpha).endVertex();
+
+        /* Left */
+        buffer.pos(minX, maxY, minZ).color(0.2F, 0.5F, 1, alpha).endVertex();
+        buffer.pos(minX, maxY, maxZ).color(0.2F, 0.5F, 1, alpha).endVertex();
+        buffer.pos(minX, minY, maxZ).color(0.2F, 0.5F, 1, alpha).endVertex();
+        buffer.pos(minX, minY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+
+        /* Right */
+        buffer.pos(maxX, maxY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(maxX, maxY, maxZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(maxX, minY, maxZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(maxX, minY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+
+        /* Front */
+        buffer.pos(minX, maxY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(maxX, maxY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(maxX, minY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+        buffer.pos(minX, minY, minZ).color(0, 0.5F, 1, alpha).endVertex();
+
+        /* Back */
+        buffer.pos(minX, maxY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
+        buffer.pos(maxX, maxY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
+        buffer.pos(maxX, minY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
+        buffer.pos(minX, minY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
+        tessellator.draw();
+
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+
+        if (this.aabb)
+        {
+            GL11.glLineWidth(4);
+            GL11.glBegin(GL11.GL_LINES);
+            GL11.glColor3d(1, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0.25, 0, 0);
+
+            GL11.glColor3d(0, 1, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0.25, 0);
+
+            GL11.glColor3d(0, 0, 1);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0.25);
+            GL11.glEnd();
+            GL11.glLineWidth(1);
+
+            GL11.glPointSize(10);
+            GL11.glBegin(GL11.GL_POINTS);
+            GL11.glColor3d(1, 1, 1);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glEnd();
+            GL11.glPointSize(1);
+        }
+    }
+
+    /**
+     * Render model's hit box
+     *
+     * Just like in Minecraft's world when you hit F3 + H. This method renders
+     * similar box, but in model editor.
+     */
+    private void renderAABB()
+    {
+        Pose current = this.panel.pose;
+
+        if (current == null)
+        {
+            return;
+        }
+
+        float minX = -current.size[0] / 2.0F;
+        float maxX = current.size[0] / 2.0F;
+        float minY = 0.0F;
+        float maxY = current.size[1];
+        float minZ = -current.size[0] / 2.0F;
+        float maxZ = current.size[0] / 2.0F;
+
+        GlStateManager.depthMask(false);
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+
+        RenderGlobal.drawBoundingBox(minX, minY, minZ, maxX, maxY, maxZ, 1.0F, 1.0F, 1.0F, 1.0F);
+
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
+        GlStateManager.disableBlend();
+        GlStateManager.depthMask(true);
     }
 
     public void renderGround()

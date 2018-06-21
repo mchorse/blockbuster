@@ -226,6 +226,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.pose = this.renderModel.pose;
         this.renderTexture = this.model.defaultTexture;
 
+        if (this.renderTexture != null && this.renderTexture.getResourcePath().isEmpty())
+        {
+            this.renderTexture = null;
+        }
+
         if (this.renderTexture == null)
         {
             Blockbuster.proxy.models.pack.reload();
