@@ -228,7 +228,7 @@ public class GuiModelRenderer extends GuiElement
         }
 
         model.pose = this.panel.pose;
-        model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * partialTicks) / 6.0F, 0.0F, 1.0F);
+        model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * partialTicks) / 6.0F, 0.0F, 1.0F);
         model.setLivingAnimations(this.dummy, headYaw, headPitch, partialTicks);
         model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
 
