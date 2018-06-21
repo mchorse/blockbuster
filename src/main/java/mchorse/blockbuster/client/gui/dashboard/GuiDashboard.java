@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,6 +27,8 @@ public class GuiDashboard extends GuiBase
     public GuiModelPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
     public GuiMainPanel mainPanel;
+
+    private boolean mainMenu;
 
     public static void reset()
     {
@@ -62,6 +65,13 @@ public class GuiDashboard extends GuiBase
         }
     }
 
+    public GuiDashboard setMainMenu(boolean main)
+    {
+        this.mainMenu = main;
+
+        return this;
+    }
+
     @Override
     public boolean doesGuiPauseGame()
     {
@@ -75,7 +85,7 @@ public class GuiDashboard extends GuiBase
         this.directorPanel.close();
         this.modelPanel.close();
 
-        super.closeScreen();
+        this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
     }
 
     public void openPanel(GuiDashboardPanel element)

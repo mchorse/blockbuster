@@ -5,11 +5,11 @@ import org.lwjgl.util.glu.Project;
 
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Pose;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
-import mchorse.blockbuster.model_editor.DummyEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -49,7 +49,7 @@ public class GuiModelRenderer extends GuiElement
     private float lastX;
     private float lastY;
 
-    private boolean aabb;
+    public boolean aabb;
 
     public GuiModelRenderer(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -284,6 +284,9 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.matrixMode(5888);
     }
 
+    /**
+     * Render limb highlight and the anchor and origin point of the limb 
+     */
     public void renderLimbHighlight(Limb limb)
     {
         float f = 1F / 16F;
@@ -381,19 +384,11 @@ public class GuiModelRenderer extends GuiElement
     }
 
     /**
-     * Render model's hit box
-     *
-     * Just like in Minecraft's world when you hit F3 + H. This method renders
-     * similar box, but in model editor.
+     * Render model's hitbox
      */
     private void renderAABB()
     {
         Pose current = this.panel.pose;
-
-        if (current == null)
-        {
-            return;
-        }
 
         float minX = -current.size[0] / 2.0F;
         float maxX = current.size[0] / 2.0F;
@@ -407,6 +402,8 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.disableBlend();
+        /* This is necessary to hid / lines which are used to reduce 
+         * amount of drawing operations */
         GlStateManager.enableAlpha();
 
         RenderGlobal.drawBoundingBox(minX, minY, minZ, maxX, maxY, maxZ, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -418,6 +415,10 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.depthMask(true);
     }
 
+    /**
+     * Render block of grass under the model (which signify where 
+     * located the ground below the model) 
+     */
     public void renderGround()
     {
         Minecraft mc = Minecraft.getMinecraft();

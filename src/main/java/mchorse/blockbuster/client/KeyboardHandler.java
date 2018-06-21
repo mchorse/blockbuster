@@ -62,7 +62,7 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            this.mc.displayGuiScreen(new GuiDashboard());
+            this.mc.displayGuiScreen(ClientProxy.getDashboard(false));
         }
 
         if (this.cameraMarker.isPressed())
@@ -72,7 +72,10 @@ public class KeyboardHandler
 
         if (this.modelEditor.isPressed())
         {
-            this.mc.displayGuiScreen(ClientProxy.getEditor(false));
+            GuiDashboard dashboard = ClientProxy.getDashboard(false);
+
+            dashboard.openPanel(dashboard.modelEditorPanel);
+            dashboard.mc.displayGuiScreen(dashboard);
         }
     }
 }

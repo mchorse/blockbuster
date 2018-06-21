@@ -28,7 +28,6 @@ public class GuiHandler implements IGuiHandler
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int MODEL_BLOCK = 3;
-    public static final int DASHBOARD = 4;
 
     /**
      * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
@@ -68,15 +67,11 @@ public class GuiHandler implements IGuiHandler
         else if (ID == MODEL_BLOCK)
         {
             TileEntityModel model = (TileEntityModel) world.getTileEntity(new BlockPos(x, y, z));
-            GuiDashboard dashboard = new GuiDashboard();
+            GuiDashboard dashboard = ClientProxy.getDashboard(false);
 
             dashboard.openPanel(dashboard.modelPanel.openModelBlock(model));
 
             return dashboard;
-        }
-        else if (ID == DASHBOARD)
-        {
-            return new GuiDashboard();
         }
 
         return null;

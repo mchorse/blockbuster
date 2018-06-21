@@ -14,6 +14,7 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.MainMenuHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderCustomGlobal;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
@@ -21,7 +22,6 @@ import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.gui.GuiCustomModelMorphBuilder;
@@ -59,7 +59,7 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-    public static GuiModelEditor editor;
+    public static GuiDashboard dashboard;
 
     public static RecordManager manager = new RecordManager();
 
@@ -73,14 +73,14 @@ public class ClientProxy extends CommonProxy
     /**
      * Create model editor GUI dynamically 
      */
-    public static GuiModelEditor getEditor(boolean mainMenu)
+    public static GuiDashboard getDashboard(boolean mainMenu)
     {
-        if (editor == null)
+        if (dashboard == null)
         {
-            editor = new GuiModelEditor();
+            dashboard = new GuiDashboard();
         }
 
-        return editor.setMainMenu(mainMenu);
+        return dashboard.setMainMenu(mainMenu);
     }
 
     /**

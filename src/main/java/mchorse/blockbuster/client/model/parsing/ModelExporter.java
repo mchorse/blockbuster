@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.model_editor.ModelUtils;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
