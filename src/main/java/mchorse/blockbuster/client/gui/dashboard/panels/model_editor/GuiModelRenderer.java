@@ -6,6 +6,7 @@ import org.lwjgl.util.glu.Project;
 import mchorse.blockbuster.api.Model.Limb;
 import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRenderer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
@@ -49,7 +50,9 @@ public class GuiModelRenderer extends GuiElement
     private float lastX;
     private float lastY;
 
+    public boolean items;
     public boolean aabb;
+    public boolean looking = true;
 
     public GuiModelRenderer(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -62,6 +65,12 @@ public class GuiModelRenderer extends GuiElement
     public void swipe()
     {
         this.swipe = 6;
+    }
+
+    public void toggleItems()
+    {
+        this.items = !this.items;
+        this.dummy.toggleItems(this.items);
     }
 
     @Override
@@ -213,7 +222,13 @@ public class GuiModelRenderer extends GuiElement
         float headYaw = newYaw;
         float headPitch = newPitch;
 
+        if (!this.looking)
+        {
+            headYaw = headPitch = 0;
+        }
+
         model.pose = this.panel.pose;
+        model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * partialTicks) / 6.0F, 0.0F, 1.0F);
         model.setLivingAnimations(this.dummy, headYaw, headPitch, partialTicks);
         model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
 
@@ -233,6 +248,11 @@ public class GuiModelRenderer extends GuiElement
 
         model.render(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
 
+        if (this.items)
+        {
+            ItemRenderer.renderItems(this.dummy, this.panel.renderModel, limbSwing, this.swingAmount, partialTicks, this.timer, yaw, pitch, factor);
+        }
+
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
@@ -251,16 +271,8 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
 
-        /*
-        if (this.items)
-        {
-            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, ticks, this.timer, yaw, pitch, factor);
-        }
-        */
-
         GlStateManager.popMatrix();
 
-        this.aabb = true;
         if (this.aabb)
         {
             this.renderAABB();

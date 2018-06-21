@@ -281,4 +281,22 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.idle.button.setIsChecked(limb.idle);
         this.invert.button.setIsChecked(limb.invert);
     }
+
+    @Override
+    protected void drawLabels()
+    {
+        super.drawLabels();
+
+        if (this.first.isVisible())
+        {
+            this.font.drawStringWithShadow("Limb size", this.size.area.x, this.size.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("Texture offset", this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("Anchor point", this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow("OBJ origin", this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
+        }
+        else if (this.second.isVisible())
+        {
+            this.font.drawStringWithShadow("Color", this.color.area.x, this.color.area.y - 10, 0xeeeeee);
+        }
+    }
 }
