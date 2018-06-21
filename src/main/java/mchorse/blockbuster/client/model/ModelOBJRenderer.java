@@ -132,7 +132,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         ITextureObject texture = manager.getTexture(material.texture);
         Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
 
-        if (texture instanceof MipmapTexture)
+        if (texture != null && !(texture instanceof MipmapTexture))
         {
             GlStateManager.deleteTexture(map.remove(material.texture).getGlTextureId());
             texture = null;
@@ -158,7 +158,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         boolean loaded = texture instanceof MipmapTexture;
         manager.bindTexture(material.texture);
 
-        int mod = material.linear ? (loaded ? GL11.GL_LINEAR_MIPMAP_LINEAR : GL11.GL_LINEAR) : GL11.GL_NEAREST;
+        int mod = material.linear ? (loaded ? GL11.GL_LINEAR_MIPMAP_LINEAR : GL11.GL_LINEAR) : (loaded ? GL11.GL_NEAREST_MIPMAP_LINEAR : GL11.GL_NEAREST);
         int mag = material.linear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
         GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, mod);
@@ -194,7 +194,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             if (hasTexture && RenderCustomModel.lastTexture != null)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
+                try
+                {
+                    Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
+                }
+                catch (Exception e)
+                {
+                    System.out.println(RenderCustomModel.lastTexture);
+                }
             }
 
             if (hasColor)

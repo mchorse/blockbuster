@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.framework.elements.list;
 
+import java.util.Collections;
 import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,18 @@ public class GuiStringListElement extends GuiListElement<String>
         super(mc, callback);
 
         this.scroll.scrollItemSize = 16;
+    }
+
+    public void sort()
+    {
+        String current = this.getCurrent();
+
+        Collections.sort(this.list);
+
+        if (current != null)
+        {
+            this.setCurrent(current);
+        }
     }
 
     @Override

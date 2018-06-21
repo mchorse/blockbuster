@@ -167,6 +167,60 @@ public class Model
     }
 
     /**
+     * Rename given limb (this limb should already exist in this model)
+     * @return 
+     */
+    public boolean renameLimb(Model.Limb limb, String newName)
+    {
+        if (this.limbs.containsKey(newName) || !this.limbs.containsValue(limb))
+        {
+            return false;
+        }
+
+        /* Rename limb name in poses */
+        for (Model.Pose pose : this.poses.values())
+        {
+            Model.Transform transform = pose.limbs.remove(limb.name);
+
+            pose.limbs.put(newName, transform);
+        }
+
+        /* Rename all children limbs */
+        for (Model.Limb child : this.limbs.values())
+        {
+            if (child.parent.equals(limb.name))
+            {
+                child.parent = newName;
+            }
+        }
+
+        /* And finally remap the limb name to the new name */
+        this.limbs.remove(limb.name);
+        this.limbs.put(newName, limb);
+        limb.name = newName;
+
+        return true;
+    }
+
+    /**
+     * Returns amount of limbs given limb hosts
+     */
+    public int getLimbCount(Model.Limb parent)
+    {
+        int count = 1;
+
+        for (Model.Limb child : this.limbs.values())
+        {
+            if (child.parent.equals(parent.name))
+            {
+                count += this.getLimbCount(child);
+            }
+        }
+
+        return count;
+    }
+
+    /**
      * Fill in missing transforms and assign name to every limb
      */
     public void fillInMissing()

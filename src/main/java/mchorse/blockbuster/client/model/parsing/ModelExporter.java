@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.model_editor.ModelUtils;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
@@ -54,7 +54,7 @@ public class ModelExporter
      *
      * See private methods for more information about this export process.
      */
-    public String export(String name)
+    public Model exportModel(String name)
     {
         Model data = new Model();
 
@@ -78,7 +78,12 @@ public class ModelExporter
 
         this.setDefaultTexture(data);
 
-        return ModelUtils.toJson(data);
+        return data;
+    }
+
+    public String exportJSON(String name)
+    {
+        return ModelUtils.toJson(this.exportModel(name));
     }
 
     /**

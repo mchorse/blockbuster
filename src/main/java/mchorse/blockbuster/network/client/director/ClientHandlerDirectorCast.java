@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.client.director;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import net.minecraft.client.Minecraft;
@@ -25,9 +26,7 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
 
         if (Minecraft.getMinecraft().currentScreen == null)
         {
-            GuiDashboard dashboard = new GuiDashboard();
-
-            Minecraft.getMinecraft().displayGuiScreen(dashboard);
+            ClientProxy.getDashboard(false).open();
             opened = true;
         }
 

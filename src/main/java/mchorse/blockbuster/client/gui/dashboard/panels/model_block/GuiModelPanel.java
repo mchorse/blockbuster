@@ -25,6 +25,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -94,8 +95,9 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
         EntityPlayer player = Minecraft.getMinecraft().player;
         GuiElement element = null;
+        IMorphing morphing = player == null ? null : Morphing.get(player);
 
-        this.morphs = new GuiMorphsPopup(6, null, Morphing.get(player));
+        this.morphs = new GuiMorphsPopup(6, null, morphing);
         this.subChildren = new GuiElements();
         this.subChildren.setVisible(false);
         this.children.add(this.subChildren);

@@ -14,14 +14,15 @@ import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.MainMenuHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
+import mchorse.blockbuster.client.render.RenderCustomGlobal;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.model_editor.GuiModelEditor;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster_pack.client.gui.GuiCustomModelMorphBuilder;
@@ -29,6 +30,7 @@ import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourcePack;
@@ -58,7 +60,7 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-    public static GuiModelEditor editor;
+    public static GuiDashboard dashboard;
 
     public static RecordManager manager = new RecordManager();
 
@@ -67,18 +69,19 @@ public class ClientProxy extends CommonProxy
     public static KeyboardHandler keys;
 
     public static File config;
+    public static RenderGlobal original;
 
     /**
-     * Create model editor GUI dynamically 
+     * Create dashboard GUI dynamically 
      */
-    public static GuiModelEditor getEditor(boolean mainMenu)
+    public static GuiDashboard getDashboard(boolean mainMenu)
     {
-        if (editor == null)
+        if (dashboard != null || dashboard == null)
         {
-            editor = new GuiModelEditor();
+            dashboard = new GuiDashboard();
         }
 
-        return editor.setMainMenu(mainMenu);
+        return dashboard.setMainMenu(mainMenu);
     }
 
     /**
@@ -246,9 +249,37 @@ public class ClientProxy extends CommonProxy
             return;
         }
 
+        Minecraft mc = Minecraft.getMinecraft();
+        boolean greenScreen = Blockbuster.proxy.config.green_screen_sky;
+
         if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
         {
             RenderingHandler.models.clear();
+        }
+
+        /* Toggle green screen */
+        if (greenScreen && !(mc.renderGlobal instanceof RenderCustomGlobal))
+        {
+            if (original == null)
+            {
+                original = mc.renderGlobal;
+            }
+
+            mc.renderGlobal = new RenderCustomGlobal(mc);
+
+            if (mc.world != null)
+            {
+                mc.renderGlobal.setWorldAndLoadRenderers(mc.world);
+            }
+        }
+        else if (!greenScreen && original != null && mc.renderGlobal != original)
+        {
+            mc.renderGlobal = original;
+
+            if (mc.world != null)
+            {
+                mc.renderGlobal.setWorldAndLoadRenderers(mc.world);
+            }
         }
     }
 

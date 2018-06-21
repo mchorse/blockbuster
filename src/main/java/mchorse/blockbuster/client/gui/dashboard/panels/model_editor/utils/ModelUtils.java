@@ -1,4 +1,4 @@
-package mchorse.blockbuster.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
 import java.io.StringWriter;
 

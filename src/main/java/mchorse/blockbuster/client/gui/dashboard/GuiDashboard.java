@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,6 +28,8 @@ public class GuiDashboard extends GuiBase
     public GuiModelEditorPanel modelEditorPanel;
     public GuiMainPanel mainPanel;
 
+    private boolean mainMenu;
+
     public static void reset()
     {
         GuiModelPanel.lastBlocks.clear();
@@ -36,17 +39,15 @@ public class GuiDashboard extends GuiBase
     public GuiDashboard()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        Resizer panelResizer = new Resizer().set(32, 0, 1, 1).parent(this.area);
-        panelResizer.w.set(1, Measure.RELATIVE, -32);
-        panelResizer.h.set(1, Measure.RELATIVE);
 
-        this.directorPanel = new GuiDirectorPanel(mc);
-        this.modelPanel = new GuiModelPanel(mc);
+        this.createWorldPanels(mc);
         this.modelEditorPanel = new GuiModelEditorPanel(mc);
         this.mainPanel = new GuiMainPanel(mc);
 
         this.panel = new GuiDelegateElement(mc, this.mainPanel);
-        this.panel.resizer = panelResizer;
+        this.panel.resizer().set(32, 0, 1, 1).parent(this.area);
+        this.panel.resizer().w.set(1, Measure.RELATIVE, -32);
+        this.panel.resizer().h.set(1, Measure.RELATIVE);
 
         this.sidebar = new GuiDashboardSidebar(mc, this);
         this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area);
@@ -62,6 +63,15 @@ public class GuiDashboard extends GuiBase
         }
     }
 
+    private void createWorldPanels(Minecraft mc)
+    {
+        if (mc != null && mc.world != null && this.directorPanel == null)
+        {
+            this.directorPanel = new GuiDirectorPanel(mc);
+            this.modelPanel = new GuiModelPanel(mc);
+        }
+    }
+
     @Override
     public boolean doesGuiPauseGame()
     {
@@ -72,26 +82,51 @@ public class GuiDashboard extends GuiBase
     protected void closeScreen()
     {
         /* Should I assume it's not null? :thonk: */
-        this.directorPanel.close();
-        this.modelPanel.close();
+        if (!this.mainMenu)
+        {
+            this.directorPanel.close();
+            this.modelPanel.close();
+        }
 
-        super.closeScreen();
+        this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
     }
 
-    public void openPanel(GuiDashboardPanel element)
+    public GuiDashboard setMainMenu(boolean main)
+    {
+        this.createWorldPanels(mc);
+        this.mainMenu = main;
+
+        return this;
+    }
+
+    public GuiDashboard open()
+    {
+        Minecraft.getMinecraft().displayGuiScreen(this);
+
+        return this;
+    }
+
+    public GuiDashboard openPanel(GuiDashboardPanel element)
     {
         if (this.panel.delegate != null)
         {
             ((GuiDashboardPanel) this.panel.delegate).disappear();
         }
 
-        this.panel.delegate = element;
         element.appear();
+        this.panel.setDelegate(element);
 
-        if (this.width != 0 && this.height != 0)
-        {
-            this.panel.resize(this.width, this.height);
-        }
+        return this;
+    }
+
+    @Override
+    public void initGui()
+    {
+        this.sidebar.setVisible(!this.mainMenu);
+        this.panel.resizer().w.padding = this.mainMenu ? 0 : -32;
+        this.panel.resizer().x.value = this.mainMenu ? 0 : 32;
+
+        super.initGui();
     }
 
     @Override

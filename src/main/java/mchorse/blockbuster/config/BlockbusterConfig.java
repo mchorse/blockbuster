@@ -38,6 +38,12 @@ public class BlockbusterConfig
      */
     public boolean debug_playback_ticks;
 
+    /**
+     * Makes the sky fully green for chroma keying purposes (suggested 
+     * by Andruxioid)
+     */
+    public boolean green_screen_sky;
+
     /* Model block */
 
     /**
@@ -157,6 +163,7 @@ public class BlockbusterConfig
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");
         this.debug_playback_ticks = this.getBoolean("debug_playback_ticks", general, false, "Write ticks in the log during director block recording");
+        this.green_screen_sky = this.getBoolean("green_screen_sky", general, false, "Makes the sky fully green for chroma keying purposes");
 
         /* Model block */
         this.model_block_disable_culling_workaround = this.getBoolean("model_block_disable_culling_workaround", model, false, "Whether model block culling workaround should be disabled");

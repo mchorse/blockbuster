@@ -41,7 +41,7 @@ public class MorphAction extends Action
 
         if (this.morph != null)
         {
-            morph = morph.clone(false);
+            morph = this.morph.clone(false);
         }
 
         if (actor instanceof EntityPlayer)
