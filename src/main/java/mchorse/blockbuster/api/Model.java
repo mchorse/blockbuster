@@ -15,9 +15,6 @@ import com.google.gson.GsonBuilder;
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -79,8 +76,8 @@ public class Model
      */
     public boolean providesMtl = false;
 
-    public Map<String, Limb> limbs = new HashMap<String, Limb>();
-    public Map<String, Pose> poses = new HashMap<String, Pose>();
+    public Map<String, ModelLimb> limbs = new HashMap<String, ModelLimb>();
+    public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
 
     /**
      * Parse model from input stream
@@ -101,7 +98,7 @@ public class Model
      */
     public static Model parse(String json) throws Exception
     {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).registerTypeAdapter(Limb.class, new ModelLimbAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).registerTypeAdapter(ModelLimb.class, new ModelLimbAdapter()).create();
         Model data = gson.fromJson(json, Model.class);
 
         for (String key : REQUIRED_POSES)
@@ -125,16 +122,16 @@ public class Model
     /**
      * Add a limb into a model
      */
-    public Model.Limb addLimb(String name)
+    public ModelLimb addLimb(String name)
     {
-        Model.Limb limb = new Model.Limb();
+        ModelLimb limb = new ModelLimb();
 
         limb.name = name;
         this.limbs.put(name, limb);
 
-        for (Model.Pose pose : this.poses.values())
+        for (ModelPose pose : this.poses.values())
         {
-            pose.limbs.put(name, new Model.Transform());
+            pose.limbs.put(name, new ModelTransform());
         }
 
         return limb;
@@ -146,13 +143,13 @@ public class Model
      * If given any limb in the model is child of this limb, then they're
      * also getting removed.
      */
-    public void removeLimb(Model.Limb limb)
+    public void removeLimb(ModelLimb limb)
     {
         this.limbs.remove(limb.name);
 
-        List<Model.Limb> limbsToRemove = new ArrayList<Model.Limb>();
+        List<ModelLimb> limbsToRemove = new ArrayList<ModelLimb>();
 
-        for (Model.Limb child : this.limbs.values())
+        for (ModelLimb child : this.limbs.values())
         {
             if (child.parent.equals(limb.name))
             {
@@ -160,12 +157,12 @@ public class Model
             }
         }
 
-        for (Model.Pose pose : this.poses.values())
+        for (ModelPose pose : this.poses.values())
         {
             pose.limbs.remove(limb.name);
         }
 
-        for (Model.Limb limbToRemove : limbsToRemove)
+        for (ModelLimb limbToRemove : limbsToRemove)
         {
             this.removeLimb(limbToRemove);
         }
@@ -175,7 +172,7 @@ public class Model
      * Rename given limb (this limb should already exist in this model)
      * @return 
      */
-    public boolean renameLimb(Model.Limb limb, String newName)
+    public boolean renameLimb(ModelLimb limb, String newName)
     {
         if (this.limbs.containsKey(newName) || !this.limbs.containsValue(limb))
         {
@@ -183,15 +180,15 @@ public class Model
         }
 
         /* Rename limb name in poses */
-        for (Model.Pose pose : this.poses.values())
+        for (ModelPose pose : this.poses.values())
         {
-            Model.Transform transform = pose.limbs.remove(limb.name);
+            ModelTransform transform = pose.limbs.remove(limb.name);
 
             pose.limbs.put(newName, transform);
         }
 
         /* Rename all children limbs */
-        for (Model.Limb child : this.limbs.values())
+        for (ModelLimb child : this.limbs.values())
         {
             if (child.parent.equals(limb.name))
             {
@@ -210,11 +207,11 @@ public class Model
     /**
      * Returns amount of limbs given limb hosts
      */
-    public int getLimbCount(Model.Limb parent)
+    public int getLimbCount(ModelLimb parent)
     {
         int count = 1;
 
-        for (Model.Limb child : this.limbs.values())
+        for (ModelLimb child : this.limbs.values())
         {
             if (child.parent.equals(parent.name))
             {
@@ -230,15 +227,15 @@ public class Model
      */
     public void fillInMissing()
     {
-        for (Map.Entry<String, Limb> entry : this.limbs.entrySet())
+        for (Map.Entry<String, ModelLimb> entry : this.limbs.entrySet())
         {
             String key = entry.getKey();
 
-            for (Pose pose : this.poses.values())
+            for (ModelPose pose : this.poses.values())
             {
                 if (!pose.limbs.containsKey(key))
                 {
-                    pose.limbs.put(key, new Transform());
+                    pose.limbs.put(key, new ModelTransform());
                 }
             }
 
@@ -249,9 +246,9 @@ public class Model
     /**
      * Get pose, or return default pose (which is the "standing" pose)
      */
-    public Pose getPose(String key)
+    public ModelPose getPose(String key)
     {
-        Pose pose = this.poses.get(key);
+        ModelPose pose = this.poses.get(key);
 
         return pose == null ? this.poses.get("standing") : pose;
     }
@@ -275,12 +272,12 @@ public class Model
         b.providesObj = this.providesObj;
         b.providesMtl = this.providesMtl;
 
-        for (Map.Entry<String, Model.Limb> entry : this.limbs.entrySet())
+        for (Map.Entry<String, ModelLimb> entry : this.limbs.entrySet())
         {
             b.limbs.put(entry.getKey(), entry.getValue().clone());
         }
 
-        for (Map.Entry<String, Model.Pose> entry : this.poses.entrySet())
+        for (Map.Entry<String, ModelPose> entry : this.poses.entrySet())
         {
             b.poses.put(entry.getKey(), entry.getValue().clone());
         }
@@ -292,225 +289,5 @@ public class Model
     public String toString()
     {
         return Objects.toStringHelper(this).add("scheme", this.scheme).add("name", this.name).add("texture", Arrays.toString(this.texture)).add("limbs", this.limbs).add("poses", this.poses).toString();
-    }
-
-    /**
-     * Limb class
-     *
-     * This class is responsible for holding data that describing the limb.
-     * It contains meta data and data about visuals and game play.
-     */
-    public static class Limb
-    {
-        /* Meta data */
-        public String name = "";
-        public String parent = "";
-
-        /* Visuals */
-        public int[] size = new int[] {4, 4, 4};
-        public int[] texture = new int[] {0, 0};
-        public float[] anchor = new float[] {0.5F, 0.5F, 0.5F};
-        public float[] color = new float[] {1.0F, 1.0F, 1.0F};
-        public float opacity = 1.0F;
-        public boolean mirror;
-        public boolean lighting = true;
-        public boolean shading = true;
-        public boolean is3D = false;
-
-        /* Game play */
-        public Holding holding = Holding.NONE;
-        public boolean swiping;
-        public boolean looking;
-        public boolean swinging;
-        public boolean idle;
-        public boolean invert;
-
-        /* OBJ */
-        public float[] origin = new float[] {0F, 0F, 0F};
-
-        /**
-         * Clone a model limb
-         */
-        public Model.Limb clone()
-        {
-            Model.Limb b = new Model.Limb();
-
-            b.name = this.name;
-            b.parent = this.parent;
-
-            b.size = new int[] {this.size[0], this.size[1], this.size[2]};
-            b.texture = new int[] {this.texture[0], this.texture[1]};
-            b.anchor = new float[] {this.anchor[0], this.anchor[1], this.anchor[2]};
-            b.color = new float[] {this.color[0], this.color[1], this.color[2]};
-            b.opacity = this.opacity;
-            b.mirror = this.mirror;
-            b.lighting = this.lighting;
-            b.shading = this.shading;
-            b.is3D = this.is3D;
-
-            b.holding = this.holding;
-            b.swiping = this.swiping;
-            b.looking = this.looking;
-            b.swinging = this.swinging;
-            b.idle = this.idle;
-            b.invert = this.invert;
-
-            b.origin = new float[] {this.origin[0], this.origin[1], this.origin[2]};
-
-            return b;
-        }
-
-        @Override
-        public String toString()
-        {
-            return Objects.toStringHelper(this).add("parent", this.parent).add("size", Arrays.toString(this.size)).add("texture", Arrays.toString(this.texture)).add("anchor", Arrays.toString(this.anchor)).add("mirror", this.mirror).toString();
-        }
-
-        public static enum Holding
-        {
-            NONE, RIGHT, LEFT;
-        }
-    }
-
-    /**
-     * Pose class
-     *
-     * This class is responsible for holding transformation about every limb
-     * available in the main model. Model parser should put default transforms
-     * for limbs that don't have transformations.
-     */
-    public static class Pose
-    {
-        public float[] size = new float[] {1, 1, 1};
-        public Map<String, Transform> limbs = new HashMap<String, Transform>();
-
-        /**
-         * Clone a model pose
-         */
-        public Model.Pose clone()
-        {
-            Model.Pose b = new Model.Pose();
-
-            b.size = new float[] {this.size[0], this.size[1], this.size[2]};
-
-            for (Map.Entry<String, Model.Transform> entry : this.limbs.entrySet())
-            {
-                b.limbs.put(entry.getKey(), entry.getValue().clone());
-            }
-
-            return b;
-        }
-
-        public void fromNBT(NBTTagCompound tag)
-        {
-            if (tag.hasKey("Size", 9))
-            {
-                NBTTagList list = tag.getTagList("Size", 5);
-
-                if (list.tagCount() >= 3)
-                {
-                    this.readFloatList(list, this.size);
-                }
-            }
-
-            if (tag.hasKey("Poses", 10))
-            {
-                this.limbs.clear();
-
-                NBTTagCompound poses = tag.getCompoundTag("Poses");
-
-                for (String key : poses.getKeySet())
-                {
-                    NBTTagCompound pose = poses.getCompoundTag(key);
-                    Transform trans = new Transform();
-
-                    this.readFloatList(pose.getTagList("P", 5), trans.translate);
-                    this.readFloatList(pose.getTagList("S", 5), trans.scale);
-                    this.readFloatList(pose.getTagList("R", 5), trans.rotate);
-
-                    this.limbs.put(key, trans);
-                }
-            }
-        }
-
-        public NBTTagCompound toNBT(NBTTagCompound tag)
-        {
-            NBTTagCompound poses = new NBTTagCompound();
-
-            tag.setTag("Size", this.writeFloatList(new NBTTagList(), this.size));
-            tag.setTag("Poses", poses);
-
-            for (Map.Entry<String, Transform> entry : this.limbs.entrySet())
-            {
-                NBTTagCompound pose = new NBTTagCompound();
-                Transform trans = entry.getValue();
-
-                pose.setTag("P", this.writeFloatList(new NBTTagList(), trans.translate));
-                pose.setTag("S", this.writeFloatList(new NBTTagList(), trans.scale));
-                pose.setTag("R", this.writeFloatList(new NBTTagList(), trans.rotate));
-
-                poses.setTag(entry.getKey(), pose);
-            }
-
-            return tag;
-        }
-
-        public void readFloatList(NBTTagList list, float[] array)
-        {
-            int count = Math.min(array.length, list.tagCount());
-
-            for (int i = 0; i < count; i++)
-            {
-                array[i] = list.getFloatAt(i);
-            }
-        }
-
-        public NBTTagList writeFloatList(NBTTagList list, float[] array)
-        {
-            for (int i = 0; i < array.length; i++)
-            {
-                list.appendTag(new NBTTagFloat(array[i]));
-            }
-
-            return list;
-        }
-
-        @Override
-        public String toString()
-        {
-            return Objects.toStringHelper(this).add("size", this.size).add("limbs", this.limbs).toString();
-        }
-    }
-
-    /**
-     * Transform class
-     *
-     * This class simply holds basic transformation data for every limb.
-     */
-    public static class Transform
-    {
-        public float[] translate = new float[] {0, 0, 0};
-        public float[] scale = new float[] {1, 1, 1};
-        public float[] rotate = new float[] {0, 0, 0};
-
-        /**
-         * Clone a model transform
-         */
-        public Model.Transform clone()
-        {
-            Model.Transform b = new Model.Transform();
-
-            b.translate = new float[] {this.translate[0], this.translate[1], this.translate[2]};
-            b.rotate = new float[] {this.rotate[0], this.rotate[1], this.rotate[2]};
-            b.scale = new float[] {this.scale[0], this.scale[1], this.scale[2]};
-
-            return b;
-        }
-
-        @Override
-        public String toString()
-        {
-            return Objects.toStringHelper(this).add("translate", this.translate).add("scale", this.scale).add("rotate", this.rotate).toString();
-        }
     }
 }

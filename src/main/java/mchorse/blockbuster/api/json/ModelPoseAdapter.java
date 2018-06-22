@@ -10,16 +10,16 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Pose;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 
 /**
  * Model limb adapter
  */
-public class ModelPoseAdapter implements JsonSerializer<Model.Pose>
+public class ModelPoseAdapter implements JsonSerializer<ModelPose>
 {
     @Override
-    public JsonElement serialize(Pose src, Type typeOfSrc, JsonSerializationContext context)
+    public JsonElement serialize(ModelPose src, Type typeOfSrc, JsonSerializationContext context)
     {
         JsonElement serial = ModelAdapter.plainGSON.toJsonTree(src, typeOfSrc);
         JsonObject map = serial.getAsJsonObject();
@@ -27,9 +27,9 @@ public class ModelPoseAdapter implements JsonSerializer<Model.Pose>
 
         map.remove("limbs");
 
-        for (Map.Entry<String, Model.Transform> limb : src.limbs.entrySet())
+        for (Map.Entry<String, ModelTransform> limb : src.limbs.entrySet())
         {
-            Model.Transform trans = limb.getValue();
+            ModelTransform trans = limb.getValue();
             JsonObject transform = new JsonObject();
             boolean empty = true;
 

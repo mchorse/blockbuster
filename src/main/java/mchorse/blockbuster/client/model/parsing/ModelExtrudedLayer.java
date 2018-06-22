@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
@@ -121,7 +121,7 @@ public class ModelExtrudedLayer
                 images.put(texture, image);
             }
 
-            Limb limb = renderer.limb;
+            ModelLimb limb = renderer.limb;
             Chunk chunk = new Chunk(limb.size[0], limb.size[1], limb.size[2]);
 
             fillChunk(chunk, image.image, renderer);

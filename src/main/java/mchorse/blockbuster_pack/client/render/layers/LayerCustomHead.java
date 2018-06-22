@@ -4,7 +4,8 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
@@ -58,9 +59,9 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
         {
             ModelCustom model = (ModelCustom) base;
 
-            for (ModelCustomRenderer limb : model.limbs)
+            for (ModelCustomRenderer limb : model.armor)
             {
-                if (!limb.limb.looking)
+                if (limb.limb.slot != ArmorSlot.HEAD)
                 {
                     continue;
                 }
@@ -81,7 +82,7 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
      * {@link net.minecraft.client.renderer.entity.layers.LayerCustomHead} 
      * in order to make blocks rendering available for usage. 
      */
-    protected void renderItem(EntityLivingBase entity, ItemStack stack, Limb limb, float limbSwing)
+    protected void renderItem(EntityLivingBase entity, ItemStack stack, ModelLimb limb, float limbSwing)
     {
         Item item = stack.getItem();
         Minecraft mc = Minecraft.getMinecraft();

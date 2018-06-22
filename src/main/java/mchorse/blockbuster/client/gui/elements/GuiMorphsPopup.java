@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import mchorse.blockbuster.api.Model.Pose;
-import mchorse.blockbuster.api.Model.Transform;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
@@ -63,8 +63,8 @@ public class GuiMorphsPopup extends GuiScreen
 
     private GuiStringListElement list;
 
-    private Pose pose;
-    private Transform trans;
+    private ModelPose pose;
+    private ModelTransform trans;
 
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
@@ -144,7 +144,7 @@ public class GuiMorphsPopup extends GuiScreen
         }
     }
 
-    public void setTransform(Transform trans)
+    public void setTransform(ModelTransform trans)
     {
         this.trans = trans;
 
@@ -217,7 +217,7 @@ public class GuiMorphsPopup extends GuiScreen
                     this.pose = morph.customPose;
                 }
 
-                Map.Entry<String, Transform> entry = this.pose.limbs.entrySet().iterator().next();
+                Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
 
                 this.setTransform(entry.getValue());
 

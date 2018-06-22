@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Limb;
-import mchorse.blockbuster.api.Model.Limb.Holding;
-import mchorse.blockbuster.api.Model.Transform;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
+import mchorse.blockbuster.api.ModelLimb.Holding;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.ModelOBJRenderer;
@@ -104,8 +106,9 @@ public class ModelParser
 
         List<ModelRenderer> left = new ArrayList<ModelRenderer>();
         List<ModelRenderer> right = new ArrayList<ModelRenderer>();
+        List<ModelRenderer> armor = new ArrayList<ModelRenderer>();
 
-        Model.Pose standing = data.poses.get("standing");
+        ModelPose standing = data.poses.get("standing");
 
         /* OBJ model support */
         Map<String, OBJParser.MeshObject> meshes = new HashMap<String, OBJParser.MeshObject>();
@@ -128,15 +131,16 @@ public class ModelParser
         }
 
         /* First, iterate to create every limb */
-        for (Map.Entry<String, Model.Limb> entry : data.limbs.entrySet())
+        for (Map.Entry<String, ModelLimb> entry : data.limbs.entrySet())
         {
-            Model.Limb limb = entry.getValue();
-            Model.Transform transform = standing.limbs.get(entry.getKey());
+            ModelLimb limb = entry.getValue();
+            ModelTransform transform = standing.limbs.get(entry.getKey());
 
             ModelCustomRenderer renderer = this.createRenderer(model, meshes, data, limb, transform);
 
             if (limb.holding == Holding.LEFT) left.add(renderer);
             if (limb.holding == Holding.RIGHT) right.add(renderer);
+            if (limb.slot != ArmorSlot.NONE) armor.add(renderer);
 
             limbs.put(entry.getKey(), renderer);
         }
@@ -144,7 +148,7 @@ public class ModelParser
         /* Then, iterate to attach child to their parents */
         for (Map.Entry<String, ModelCustomRenderer> entry : limbs.entrySet())
         {
-            Model.Limb limb = data.limbs.get(entry.getKey());
+            ModelLimb limb = data.limbs.get(entry.getKey());
 
             if (!limb.parent.isEmpty())
             {
@@ -177,6 +181,7 @@ public class ModelParser
         /* Assign values */
         model.left = left.toArray(new ModelCustomRenderer[left.size()]);
         model.right = right.toArray(new ModelCustomRenderer[right.size()]);
+        model.armor = armor.toArray(new ModelCustomRenderer[armor.size()]);
 
         model.limbs = limbs.values().toArray(new ModelCustomRenderer[limbs.size()]);
         model.renderable = renderable.toArray(new ModelCustomRenderer[renderable.size()]);
@@ -185,7 +190,7 @@ public class ModelParser
     /**
      * Create limb renderer for the model
      */
-    protected ModelCustomRenderer createRenderer(ModelBase model, Map<String, OBJParser.MeshObject> meshes, Model data, Limb limb, Transform transform)
+    protected ModelCustomRenderer createRenderer(ModelBase model, Map<String, OBJParser.MeshObject> meshes, Model data, ModelLimb limb, ModelTransform transform)
     {
         ModelCustomRenderer renderer;
 

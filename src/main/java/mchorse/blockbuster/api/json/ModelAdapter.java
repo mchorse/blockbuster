@@ -16,6 +16,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
 import net.minecraft.util.ResourceLocation;
 
@@ -42,7 +43,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
 
         if (object.has("limbs"))
         {
-            model.limbs = context.deserialize(object.get("limbs"), new TypeToken<Map<String, Model.Limb>>()
+            model.limbs = context.deserialize(object.get("limbs"), new TypeToken<Map<String, ModelLimb>>()
             {}.getType());
         }
 

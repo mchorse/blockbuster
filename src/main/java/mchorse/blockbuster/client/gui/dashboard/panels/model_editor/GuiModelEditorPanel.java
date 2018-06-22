@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Objects;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Limb;
-import mchorse.blockbuster.api.Model.Pose;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
@@ -57,8 +57,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     /* Current data */
     public String modelName;
     public Model model;
-    public Pose pose;
-    public Limb limb;
+    public ModelPose pose;
+    public ModelLimb limb;
 
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
@@ -194,7 +194,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
      */
     public void rebuildModel()
     {
-        Model.Pose oldPose = this.renderModel.pose;
+        ModelPose oldPose = this.renderModel.pose;
 
         this.renderModel = this.buildModel();
 
@@ -285,7 +285,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     public void setLimb(String str)
     {
-        Limb limb = this.model.limbs.get(str);
+        ModelLimb limb = this.model.limbs.get(str);
 
         if (limb != null)
         {
@@ -297,7 +297,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
     public void setPose(String str)
     {
-        Pose pose = this.model.poses.get(str);
+        ModelPose pose = this.model.poses.get(str);
 
         if (pose != null)
         {

@@ -1,8 +1,9 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Limb;
-import mchorse.blockbuster.api.Model.Limb.Holding;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
+import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
@@ -52,6 +53,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiButtonElement<GuiCheckBox> is3D;
 
     private GuiButtonElement<GuiCirculate> holding;
+    private GuiButtonElement<GuiCirculate> slot;
     private GuiButtonElement<GuiCheckBox> swiping;
     private GuiButtonElement<GuiCheckBox> looking;
     private GuiButtonElement<GuiCheckBox> swinging;
@@ -98,13 +100,20 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.origin[2] = values[2];
             this.panel.rebuildModel();
         });
+        this.slot = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.slot = ArmorSlot.values()[b.button.getValue()]);
+
+        for (ArmorSlot slot : ArmorSlot.values())
+        {
+            this.slot.button.addLabel(slot.name);
+        }
 
         this.size.resizer().parent(this.area).set(10, 40, 120, 20);
         this.texture.resizer().relative(this.size.resizer()).set(0, 35, 120, 20);
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 35, 120, 20);
         this.origin.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
+        this.slot.resizer().relative(this.origin.resizer()).set(0, 25, 120, 20);
 
-        this.first.add(this.size, this.texture, this.anchor, this.origin);
+        this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot);
 
         /* Second category */
         this.second = new GuiElements();
@@ -130,6 +139,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.holding.button.addLabel("None");
         this.holding.button.addLabel("Right");
         this.holding.button.addLabel("Left");
+
         this.swiping = GuiButtonElement.checkbox(mc, "Swiping", false, (b) -> this.panel.limb.swiping = b.button.isChecked());
         this.looking = GuiButtonElement.checkbox(mc, "Looking", false, (b) -> this.panel.limb.looking = b.button.isChecked());
         this.swinging = GuiButtonElement.checkbox(mc, "Swinging", false, (b) -> this.panel.limb.swinging = b.button.isChecked());
@@ -146,8 +156,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.shading.resizer().relative(this.lighting.resizer()).set(0, 16, 60, 11);
 
         this.holding.resizer().relative(this.is3D.resizer()).set(0, 25, 56, 20);
-        this.swiping.resizer().relative(this.holding.resizer()).set(60, 6, 60, 11);
 
+        this.swiping.resizer().relative(this.holding.resizer()).set(60, 6, 60, 11);
         this.looking.resizer().relative(this.holding.resizer()).set(0, 25, 60, 11);
         this.idle.resizer().relative(this.looking.resizer()).set(60, 0, 60, 11);
         this.swinging.resizer().relative(this.looking.resizer()).set(0, 16, 60, 11);
@@ -261,7 +271,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.limbList.sort();
     }
 
-    public void fillLimbData(Limb limb)
+    public void fillLimbData(ModelLimb limb)
     {
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
         this.texture.setValues(limb.texture[0], limb.texture[1]);
@@ -275,6 +285,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.is3D.button.setIsChecked(limb.is3D);
 
         this.holding.button.setValue(limb.holding.ordinal());
+        this.slot.button.setValue(limb.slot.ordinal());
         this.swiping.button.setIsChecked(limb.swiping);
         this.looking.button.setIsChecked(limb.looking);
         this.swinging.button.setIsChecked(limb.swinging);

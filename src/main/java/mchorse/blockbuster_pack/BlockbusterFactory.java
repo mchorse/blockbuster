@@ -7,6 +7,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.IMorphFactory;
@@ -130,7 +131,7 @@ public class BlockbusterFactory implements IMorphFactory
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
 
-                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                for (Map.Entry<String, ModelPose> entry : actor.model.poses.entrySet())
                 {
                     String pose = entry.getKey();
 
@@ -155,7 +156,7 @@ public class BlockbusterFactory implements IMorphFactory
                 actor.skin = new ResourceLocation("blockbuster.actors", path);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
 
-                for (Map.Entry<String, Model.Pose> entry : actor.model.poses.entrySet())
+                for (Map.Entry<String, ModelPose> entry : actor.model.poses.entrySet())
                 {
                     String pose = entry.getKey();
 

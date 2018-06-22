@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
@@ -138,7 +141,7 @@ public class ModelExporter
      */
     private void savePose(String poseName, Model data, Map<String, ModelRenderer> limbs)
     {
-        Model.Pose pose = new Model.Pose();
+        ModelPose pose = new ModelPose();
 
         /* Set size */
         float width = this.entity.width;
@@ -151,7 +154,7 @@ public class ModelExporter
         {
             String key = entry.getKey();
             ModelRenderer renderer = entry.getValue();
-            Model.Transform transform = new Model.Transform();
+            ModelTransform transform = new ModelTransform();
 
             float PI = (float) Math.PI;
 
@@ -243,7 +246,7 @@ public class ModelExporter
 
         for (ModelBox box : renderer.cubeList)
         {
-            Model.Limb limb = new Model.Limb();
+            ModelLimb limb = new ModelLimb();
             String boxName = box.boxName != null ? box.boxName : "";
             String name = boxName.isEmpty() ? "limb_" + this.limbId : boxName;
 
