@@ -4,14 +4,17 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import mchorse.blockbuster.api.Model.Limb;
+import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -27,96 +30,109 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Custom head layer
- *
- * This code is taken from
- * {@link net.minecraft.client.renderer.entity.layers.LayerCustomHead} in order
- * to make blocks rendering available for usage.
  */
 @SideOnly(Side.CLIENT)
 public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
 {
-    public ModelPlayer model;
+    public RenderCustomModel render;
 
-    public LayerCustomHead()
+    public LayerCustomHead(RenderCustomModel render)
     {
-        this.model = new ModelPlayer(0.0F, false);
+        this.render = render;
     }
 
     /**
      * Render the layer
      *
-     * This method is responsible for rendering either skull with player's name
-     * or an item (i.e. block or something) on custom model's head. Hardcoded
-     * to vanilla player model.
+     * This method is responsible for rendering either skull with 
+     * player's name or an item (i.e. block or something) on custom 
+     * model's head.
      */
     @Override
     public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        ItemStack itemstack = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+        ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+        ModelBase base = this.render.getMainModel();
 
-        if (itemstack != null && itemstack.getItem() != null)
+        if (base instanceof ModelCustom && stack != null && stack.getItem() != null)
         {
-            Item item = itemstack.getItem();
-            Minecraft minecraft = Minecraft.getMinecraft();
-            GlStateManager.pushMatrix();
+            ModelCustom model = (ModelCustom) base;
 
-            if (entity.isSneaking())
+            for (ModelCustomRenderer limb : model.limbs)
             {
-                GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            }
-
-            if (entity.isChild() && !(entity instanceof EntityVillager))
-            {
-                GlStateManager.translate(0.0F, 0.5F * scale, 0.0F);
-                GlStateManager.scale(0.7F, 0.7F, 0.7F);
-                GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
-            }
-
-            this.model.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
-            this.model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
-            this.model.bipedHead.postRender(0.0625F);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-            /* Player skull rendering */
-            if (item == Items.SKULL)
-            {
-                GlStateManager.scale(1.1875F, -1.1875F, -1.1875F);
-
-                GameProfile gameprofile = null;
-
-                if (itemstack.hasTagCompound())
+                if (!limb.limb.looking)
                 {
-                    NBTTagCompound nbttagcompound = itemstack.getTagCompound();
-
-                    if (nbttagcompound.hasKey("SkullOwner", 10))
-                    {
-                        gameprofile = NBTUtil.readGameProfileFromNBT(nbttagcompound.getCompoundTag("SkullOwner"));
-                    }
-                    else if (nbttagcompound.hasKey("SkullOwner", 8))
-                    {
-                        String s = nbttagcompound.getString("SkullOwner");
-
-                        if (!StringUtils.isNullOrEmpty(s))
-                        {
-                            gameprofile = TileEntitySkull.updateGameprofile(new GameProfile((UUID) null, s));
-                            nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
-                        }
-                    }
+                    continue;
                 }
 
-                TileEntitySkullRenderer.instance.renderSkull(-0.5F, 0.0F, -0.5F, EnumFacing.UP, 180.0F, itemstack.getMetadata(), gameprofile, -1, limbSwing);
+                GlStateManager.pushMatrix();
+
+                limb.postRender(scale);
+
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.renderItem(entity, stack, limb.limb, limbSwing);
+                GlStateManager.popMatrix();
             }
-            else if (!(item instanceof ItemArmor) || ((ItemArmor) item).getEquipmentSlot() != EntityEquipmentSlot.HEAD)
+        }
+    }
+
+    /**
+     * This code is taken from
+     * {@link net.minecraft.client.renderer.entity.layers.LayerCustomHead} 
+     * in order to make blocks rendering available for usage. 
+     */
+    protected void renderItem(EntityLivingBase entity, ItemStack stack, Limb limb, float limbSwing)
+    {
+        Item item = stack.getItem();
+        Minecraft mc = Minecraft.getMinecraft();
+
+        float w = limb.size[0] / 8F;
+        float h = limb.size[1] / 8F;
+        float d = limb.size[2] / 8F;
+
+        float offsetX = limb.anchor[0] * w / 2;
+        float offsetY = limb.anchor[1] * h / 2;
+        float offsetZ = limb.anchor[2] * d / 2;
+
+        /* Player skull rendering */
+        if (item == Items.SKULL)
+        {
+            /* Limb */
+            GlStateManager.translate(-w / 4 + offsetX, h / 2 - offsetY, d / 4 - offsetZ);
+            GlStateManager.scale(1.1875F * w, -1.1875F * h, -1.1875F * d);
+
+            GameProfile gameprofile = null;
+
+            if (stack.hasTagCompound())
             {
-                /* Custom block rendering */
-                GlStateManager.translate(0.0F, -0.25F, 0.0F);
-                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.scale(0.625F, -0.625F, -0.625F);
+                NBTTagCompound nbttagcompound = stack.getTagCompound();
 
-                minecraft.getItemRenderer().renderItem(entity, itemstack, ItemCameraTransforms.TransformType.HEAD);
+                if (nbttagcompound.hasKey("SkullOwner", 10))
+                {
+                    gameprofile = NBTUtil.readGameProfileFromNBT(nbttagcompound.getCompoundTag("SkullOwner"));
+                }
+                else if (nbttagcompound.hasKey("SkullOwner", 8))
+                {
+                    String s = nbttagcompound.getString("SkullOwner");
+
+                    if (!StringUtils.isNullOrEmpty(s))
+                    {
+                        gameprofile = TileEntitySkull.updateGameprofile(new GameProfile((UUID) null, s));
+                        nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
+                    }
+                }
             }
 
-            GlStateManager.popMatrix();
+            TileEntitySkullRenderer.instance.renderSkull(-0.5F, 0.0F, -0.5F, EnumFacing.UP, 180.0F, stack.getMetadata(), gameprofile, -1, limbSwing);
+        }
+        else if (!(item instanceof ItemArmor) || ((ItemArmor) item).getEquipmentSlot() != EntityEquipmentSlot.HEAD)
+        {
+            /* Custom block rendering */
+            GlStateManager.translate(-w / 4 + offsetX, h / 4 - offsetY, d / 4 - offsetZ);
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.scale(0.5625F * w, -0.5625F * h, -0.5625F * d);
+
+            mc.getItemRenderer().renderItem(entity, stack, ItemCameraTransforms.TransformType.HEAD);
         }
     }
 
