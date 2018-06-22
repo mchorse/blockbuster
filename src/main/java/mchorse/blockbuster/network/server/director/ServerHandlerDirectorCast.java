@@ -11,7 +11,7 @@ public class ServerHandlerDirectorCast extends ServerMessageHandler<PacketDirect
     @Override
     public void run(EntityPlayerMP player, PacketDirectorCast message)
     {
-        TileEntity tile = player.worldObj.getTileEntity(message.pos);
+        TileEntity tile = this.getTE(player, message.pos);
 
         if (tile instanceof TileEntityDirector)
         {

@@ -12,7 +12,7 @@ public class ServerHandlerRequestLength extends ServerMessageHandler<PacketReque
     @Override
     public void run(EntityPlayerMP player, PacketRequestLength message)
     {
-        TileEntity tile = player.worldObj.getTileEntity(message.pos);
+        TileEntity tile = this.getTE(player, message.pos);
 
         if (tile != null && tile instanceof TileEntityDirector)
         {

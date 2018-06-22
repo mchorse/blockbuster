@@ -12,7 +12,7 @@ public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirect
     @Override
     public void run(EntityPlayerMP player, PacketDirectorPlay message)
     {
-        TileEntity te = player.worldObj.getTileEntity(message.pos);
+        TileEntity te = this.getTE(player, message.pos);
 
         if (te instanceof TileEntityDirector)
         {

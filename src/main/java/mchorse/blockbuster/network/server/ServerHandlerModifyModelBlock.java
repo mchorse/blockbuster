@@ -14,7 +14,7 @@ public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketMo
     public void run(EntityPlayerMP player, PacketModifyModelBlock message)
     {
         BlockPos pos = message.pos;
-        TileEntity tile = player.worldObj.getTileEntity(pos);
+        TileEntity tile = this.getTE(player, pos);
 
         if (tile != null && tile instanceof TileEntityModel)
         {
