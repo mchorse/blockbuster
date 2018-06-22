@@ -98,11 +98,7 @@ public class GuiActor extends GuiScreen
         /* Rotate the actor */
         float yaw = (float) this.rotateX.getValue();
         float pitch = (float) this.rotateY.getValue();
-
-        if (yaw != this.actor.rotationYaw || pitch != this.actor.rotationPitch)
-        {
-            Dispatcher.sendToServer(new PacketActorRotate(this.actor.getEntityId(), yaw, pitch));
-        }
+        Dispatcher.sendToServer(new PacketActorRotate(this.actor.getEntityId(), yaw, pitch));
 
         Minecraft.getMinecraft().displayGuiScreen(null);
     }
