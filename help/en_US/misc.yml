@@ -1,7 +1,9 @@
 # Recording
 blockbuster:
     # Parsing
-    parsing.lacks_pose: Parsed model with name "%s" doesn't have "%s" pose!
+    parsing:
+        lacks_pose: Parsed model with name "%s" doesn't have "%s" pose!
+        lacks_limbs: Parsed model with name "%s" doesn't have any limbs!
     
     marker: "{6}{l}|{r} Record {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}difference is {7}%s{6}t{8}){r}."
     recording: Recording to {7}%s{r}

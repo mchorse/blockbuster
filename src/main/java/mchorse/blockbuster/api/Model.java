@@ -112,6 +112,11 @@ public class Model
             }
         }
 
+        if (data.limbs.isEmpty())
+        {
+            throw new Exception(I18n.format("blockbuster.parsing.lacks_limbs", data.name));
+        }
+
         data.fillInMissing();
 
         return data;
