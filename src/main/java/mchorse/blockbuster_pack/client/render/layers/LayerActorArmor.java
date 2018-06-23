@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.client.render.layers;
 
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
@@ -31,7 +32,8 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
     @Override
     protected void initArmor()
     {
-        this.modelArmor = new ModelBiped(0.5F);
+        this.modelArmor = new ModelBiped(1);
+        this.modelLeggings = new ModelBiped(0.5F);
     }
 
     @Override
@@ -62,47 +64,20 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
 
     private void renderArmorSlot(EntityLivingBase entity, ItemStack stack, ItemArmor item, ModelCustomRenderer limb, EntityEquipmentSlot slot, float scale)
     {
-        ModelBiped t = this.getModelFromSlot(slot);
-        t = this.getArmorModelHook(entity, stack, slot, t);
+        ModelBiped model = this.getModelFromSlot(slot);
+        model = this.getArmorModelHook(entity, stack, slot, model);
 
-        if (t == null)
+        if (model == null)
         {
             return;
         }
 
-        t.setModelAttributes(this.renderer.getMainModel());
-        this.setModelSlotVisible(t, slot);
+        model.setModelAttributes(this.renderer.getMainModel());
         this.renderer.bindTexture(this.getArmorResource(entity, stack, slot, null));
-
-        t.bipedBody.setRotationPoint(0, 0, 0);
-        t.bipedHead.setRotationPoint(0, 0, 0);
-        t.bipedHeadwear.setRotationPoint(0, 0, 0);
-        t.bipedLeftArm.setRotationPoint(-0.1F, 0, 0);
-        t.bipedRightArm.setRotationPoint(0.1F, 0, 0);
-        t.bipedLeftLeg.setRotationPoint(0, 0, 0);
-        t.bipedRightLeg.setRotationPoint(0, 0, 0);
-
-        t.setInvisible(false);
-
-        if (limb.limb.slot == ArmorSlot.HEAD) t.bipedHead.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.CHEST) t.bipedBody.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.LEFT_SHOULDER) t.bipedLeftArm.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.RIGHT_SHOULDER) t.bipedRightArm.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.LEFT_LEG) t.bipedLeftLeg.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.RIGHT_LEG) t.bipedRightLeg.showModel = true;
-        else if (limb.limb.slot == ArmorSlot.LEFT_FOOT)
-        {
-            t.bipedLeftLeg.showModel = true;
-            t.bipedLeftLeg.setRotationPoint(0, -6, 0);
-        }
-        else if (limb.limb.slot == ArmorSlot.RIGHT_FOOT)
-        {
-            t.bipedRightLeg.showModel = true;
-            t.bipedRightLeg.setRotationPoint(0, -6, 0);
-        }
 
         GlStateManager.pushMatrix();
         limb.postRender(scale);
+        this.setModelSlotVisible(model, limb.limb, limb.limb.slot);
 
         if (item.hasOverlay(stack))
         {
@@ -112,63 +87,114 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
             float f2 = (float) (i & 255) / 255.0F;
 
             GlStateManager.color(f, f1, f2, 1);
-            t.bipedHead.render(scale);
-            t.bipedBody.render(scale);
-            t.bipedRightArm.render(scale);
-            t.bipedLeftArm.render(scale);
-            t.bipedRightLeg.render(scale);
-            t.bipedLeftLeg.render(scale);
+            model.bipedHead.render(scale);
+            model.bipedBody.render(scale);
+            model.bipedRightArm.render(scale);
+            model.bipedLeftArm.render(scale);
+            model.bipedRightLeg.render(scale);
+            model.bipedLeftLeg.render(scale);
             this.renderer.bindTexture(this.getArmorResource(entity, stack, slot, "overlay"));
         }
 
         GlStateManager.color(1, 1, 1, 1);
-        t.bipedHead.render(scale);
-        t.bipedBody.render(scale);
-        t.bipedRightArm.render(scale);
-        t.bipedLeftArm.render(scale);
-        t.bipedRightLeg.render(scale);
-        t.bipedLeftLeg.render(scale);
+        model.bipedHead.render(scale);
+        model.bipedBody.render(scale);
+        model.bipedRightArm.render(scale);
+        model.bipedLeftArm.render(scale);
+        model.bipedRightLeg.render(scale);
+        model.bipedLeftLeg.render(scale);
 
         GlStateManager.popMatrix();
 
         if (stack.hasEffect())
         {
-            // renderEnchantedGlint(this.renderer, entityLivingBaseIn, t, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+            // renderEnchantedGlint(this.renderer, entity, model, 0, 0, 0, 0, 0, 0, scale);
+        }
+    }
+
+    protected void setModelSlotVisible(ModelBiped model, ModelLimb limb, ArmorSlot slot)
+    {
+        model.bipedBody.setRotationPoint(0, 0, 0);
+        model.bipedHead.setRotationPoint(0, 0, 0);
+        model.bipedHeadwear.setRotationPoint(0, 0, 0);
+        model.bipedLeftArm.setRotationPoint(-0.1F, 0, 0);
+        model.bipedRightArm.setRotationPoint(0.1F, 0, 0);
+        model.bipedLeftLeg.setRotationPoint(0, 0, 0);
+        model.bipedRightLeg.setRotationPoint(0, 0, 0);
+
+        model.setInvisible(false);
+
+        int w = limb.size[0];
+        int h = limb.size[1];
+        int d = limb.size[2];
+
+        float ax = limb.anchor[0];
+        float ay = limb.anchor[1];
+        float az = limb.anchor[2];
+
+        float ww = w / 8F;
+        float hh = h / 8F;
+        float dd = d / 8F;
+
+        float offsetX = limb.anchor[0] * ww / 2;
+        float offsetY = limb.anchor[1] * hh / 2;
+        float offsetZ = limb.anchor[2] * dd / 2;
+
+        GlStateManager.translate(-ww / 4 + offsetX, hh / 4 - offsetY, dd / 4 - offsetZ);
+
+        if (slot == ArmorSlot.HEAD)
+        {
+            GlStateManager.scale(w / 8F, h / 8F, d / 8F);
+            model.bipedHead.showModel = true;
+            model.bipedHead.setRotationPoint(0, 4, 0);
+        }
+        else if (slot == ArmorSlot.CHEST)
+        {
+            GlStateManager.scale(w / 8F, h / 12F, d / 4F);
+            model.bipedBody.showModel = true;
+            model.bipedBody.setRotationPoint(0, -6, 0);
+        }
+        else if (slot == ArmorSlot.LEFT_SHOULDER)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedLeftArm.showModel = true;
+            model.bipedLeftArm.setRotationPoint(-0.1F, -4, 0);
+        }
+        else if (slot == ArmorSlot.RIGHT_SHOULDER)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedRightArm.showModel = true;
+            model.bipedRightArm.setRotationPoint(0.1F, -4, 0);
+        }
+        else if (slot == ArmorSlot.LEFT_LEG)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedLeftLeg.showModel = true;
+            model.bipedLeftLeg.setRotationPoint(0, -6, 0);
+        }
+        else if (slot == ArmorSlot.RIGHT_LEG)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedRightLeg.showModel = true;
+            model.bipedRightLeg.setRotationPoint(0, -6, 0);
+        }
+        else if (slot == ArmorSlot.LEFT_FOOT)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedLeftLeg.showModel = true;
+            model.bipedLeftLeg.setRotationPoint(0, -6, 0);
+        }
+        else if (slot == ArmorSlot.RIGHT_FOOT)
+        {
+            GlStateManager.scale(w / 4F, h / 12F, d / 4F);
+            model.bipedRightLeg.showModel = true;
+            model.bipedRightLeg.setRotationPoint(0, -6, 0);
         }
     }
 
     @Override
-    @SuppressWarnings("incomplete-switch")
-    protected void setModelSlotVisible(ModelBiped model, EntityEquipmentSlot slotIn)
-    {
-        this.setModelVisible(model);
-
-        switch (slotIn)
-        {
-            case HEAD:
-                model.bipedHead.showModel = true;
-                model.bipedHeadwear.showModel = true;
-            break;
-            case CHEST:
-                model.bipedBody.showModel = true;
-                model.bipedRightArm.showModel = true;
-                model.bipedLeftArm.showModel = true;
-            break;
-            case LEGS:
-                model.bipedBody.showModel = true;
-                model.bipedRightLeg.showModel = true;
-                model.bipedLeftLeg.showModel = true;
-            break;
-            case FEET:
-                model.bipedRightLeg.showModel = true;
-                model.bipedLeftLeg.showModel = true;
-        }
-    }
-
-    protected void setModelVisible(ModelBiped model)
-    {
-        model.setInvisible(false);
-    }
+    protected void setModelSlotVisible(ModelBiped p_188359_1_, EntityEquipmentSlot slotIn)
+    {}
 
     @Override
     protected ModelBiped getArmorModelHook(net.minecraft.entity.EntityLivingBase entity, net.minecraft.item.ItemStack itemStack, EntityEquipmentSlot slot, ModelBiped model)
