@@ -1,9 +1,11 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Equip item action
@@ -66,6 +68,33 @@ public class EquipAction extends Action
         }
 
         return null;
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.armorSlot = buf.readByte();
+        this.armorId = buf.readShort();
+
+        if (this.armorId != -1)
+        {
+            this.itemData = ByteBufUtils.readTag(buf);
+        }
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+
+        buf.writeByte(this.armorSlot);
+        buf.writeShort(this.armorId);
+
+        if (this.armorId != -1)
+        {
+            ByteBufUtils.writeTag(buf, this.itemData);
+        }
     }
 
     @Override

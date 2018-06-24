@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -54,6 +55,20 @@ public class ItemUseAction extends Action
 
             item.getItem().onItemRightClick(item, actor.worldObj, player, this.hand);
         }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.hand = buf.readByte() == 0 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeByte((byte) (this.hand.equals(EnumHand.MAIN_HAND) ? 0 : 1));
     }
 
     @Override

@@ -1,8 +1,10 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Chat action
@@ -33,6 +35,20 @@ public class ChatAction extends Action
     public void apply(EntityLivingBase actor)
     {
         Utils.broadcastMessage(this.message.replace('[', '§'));
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.message = ByteBufUtils.readUTF8String(buf);
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        ByteBufUtils.writeUTF8String(buf, this.message);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -96,6 +97,32 @@ public class ItemUseBlockAction extends Action
         newZ += firstZ;
 
         this.pos = new BlockPos(newX, newY, newZ);
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.hand = buf.readByte() == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
+        this.facing = EnumFacing.values()[buf.readByte()];
+        this.hitX = buf.readFloat();
+        this.hitY = buf.readFloat();
+        this.hitZ = buf.readFloat();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeInt(this.pos.getX());
+        buf.writeInt(this.pos.getY());
+        buf.writeInt(this.pos.getZ());
+        buf.writeByte(this.hand == EnumHand.MAIN_HAND ? (byte) 0 : (byte) 1);
+        buf.writeByte((byte) this.facing.ordinal());
+        buf.writeFloat(this.hitX);
+        buf.writeFloat(this.hitY);
+        buf.writeFloat(this.hitZ);
     }
 
     @Override

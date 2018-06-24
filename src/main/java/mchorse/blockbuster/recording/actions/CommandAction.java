@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.CommandResultStats.Type;
 import net.minecraft.command.ICommandManager;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Command action
@@ -54,6 +56,20 @@ public class CommandAction extends Action
                 manager.executeCommand(new CommandSender(actor), this.command);
             }
         }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.command = ByteBufUtils.readUTF8String(buf);
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        ByteBufUtils.writeUTF8String(buf, this.command);
     }
 
     @Override
