@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
@@ -26,6 +27,7 @@ public class GuiDashboard extends GuiBase
     public GuiDirectorPanel directorPanel;
     public GuiModelPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
+    public GuiRecordingEditorPanel recordingEditorPanel;
     public GuiMainPanel mainPanel;
 
     private boolean mainMenu;
@@ -55,12 +57,6 @@ public class GuiDashboard extends GuiBase
 
         this.elements.add(this.panel);
         this.elements.add(this.sidebar);
-
-        if (mc.theWorld != null)
-        {
-            this.directorPanel.open();
-            this.modelPanel.open();
-        }
     }
 
     private void createWorldPanels(Minecraft mc)
@@ -69,6 +65,7 @@ public class GuiDashboard extends GuiBase
         {
             this.directorPanel = new GuiDirectorPanel(mc);
             this.modelPanel = new GuiModelPanel(mc);
+            this.recordingEditorPanel = new GuiRecordingEditorPanel(mc);
         }
     }
 
@@ -102,6 +99,13 @@ public class GuiDashboard extends GuiBase
     public GuiDashboard open()
     {
         Minecraft.getMinecraft().displayGuiScreen(this);
+
+        if (this.mc.theWorld != null)
+        {
+            this.directorPanel.open();
+            this.modelPanel.open();
+            this.recordingEditorPanel.open();
+        }
 
         return this;
     }

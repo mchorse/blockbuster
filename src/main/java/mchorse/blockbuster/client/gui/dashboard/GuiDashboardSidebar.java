@@ -37,7 +37,8 @@ public class GuiDashboardSidebar extends GuiElement
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        /* Despacito 13 confirmed */
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel));
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }
