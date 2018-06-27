@@ -10,11 +10,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
-public class GuiDashboardSidebar extends GuiElement
+/**
+ * Dashboard sidebar GUI
+ * 
+ * Des-pa-ci-to.
+ */
+public class GuiDespacito extends GuiElement
 {
     public GuiDashboard dashboard;
 
-    public GuiDashboardSidebar(Minecraft mc, GuiDashboard dashboard)
+    public GuiDespacito(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc);
 

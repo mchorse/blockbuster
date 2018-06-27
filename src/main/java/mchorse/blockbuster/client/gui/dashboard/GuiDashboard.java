@@ -26,7 +26,7 @@ public class GuiDashboard extends GuiBase
     public static final ResourceLocation ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
 
     public GuiDelegateElement panel;
-    public GuiDashboardSidebar sidebar;
+    public GuiDespacito sidebar;
 
     public GuiDirectorPanel directorPanel;
     public GuiModelBlockPanel modelPanel;
@@ -57,7 +57,7 @@ public class GuiDashboard extends GuiBase
         this.panel.resizer().w.set(1, Measure.RELATIVE, -32);
         this.panel.resizer().h.set(1, Measure.RELATIVE);
 
-        this.sidebar = new GuiDashboardSidebar(mc, this);
+        this.sidebar = new GuiDespacito(mc, this);
         this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area);
         this.sidebar.resizer.h.set(1, Measure.RELATIVE);
 
