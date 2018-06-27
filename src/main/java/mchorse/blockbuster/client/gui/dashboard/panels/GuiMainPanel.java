@@ -41,9 +41,9 @@ public class GuiMainPanel extends GuiDashboardPanel
         {}
     }
 
-    public GuiMainPanel(Minecraft mc)
+    public GuiMainPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         GuiElement element = GuiButtonElement.button(mc, "Wiki", (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
         Resizer resizer = new Resizer().set(10, 25, 80, 20).parent(this.area);

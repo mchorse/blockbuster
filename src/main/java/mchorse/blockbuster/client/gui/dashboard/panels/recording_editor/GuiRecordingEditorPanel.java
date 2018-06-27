@@ -1,40 +1,78 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiCommandActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
+import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.recording.PacketRequestActions;
+import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiRecordingEditorPanel extends GuiDashboardPanel
 {
+    /**
+     * A map of  
+     */
+    public static final Map<Class<? extends Action>, GuiActionPanel<? extends Action>> PANELS = new HashMap<Class<? extends Action>, GuiActionPanel<? extends Action>>();
+
     public GuiStringListElement records;
     public GuiRecordSelector selector;
+    public GuiDelegateElement editor;
 
     public Record record;
-    public String current = "";
 
-    public GuiRecordingEditorPanel(Minecraft mc)
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static GuiActionPanel getPanel(Action action)
     {
-        super(mc);
+        if (action == null)
+        {
+            return null;
+        }
+
+        GuiActionPanel panel = PANELS.get(action.getClass());
+
+        if (panel == null)
+        {
+            panel = PANELS.get(Action.class);
+        }
+
+        panel.fill(action);
+
+        return panel;
+    }
+
+    public GuiRecordingEditorPanel(Minecraft mc, GuiDashboard dashboard)
+    {
+        super(mc, dashboard);
 
         this.records = new GuiStringListElement(mc, (str) -> this.selectRecord(str));
-        this.records.resizer().parent(this.area).set(0, 0, 80, 0).h.set(1, Measure.RELATIVE);
+        this.records.resizer().parent(this.area).set(0, 0, 80, 0).h.set(1, Measure.RELATIVE, -100);
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
-        this.selector.resizer().parent(this.area).set(80, 0, 0, 120);
-        this.selector.resizer().y.set(1, Measure.RELATIVE, -120);
-        this.selector.resizer().w.set(1, Measure.RELATIVE, -80);
+        this.selector.resizer().parent(this.area).set(0, 0, 0, 100);
+        this.selector.resizer().y.set(1, Measure.RELATIVE, -100);
+        this.selector.resizer().w.set(1, Measure.RELATIVE);
         this.selector.setVisible(false);
 
-        this.children.add(this.records, this.selector);
+        this.editor = new GuiDelegateElement(mc, null);
+        this.editor.resizer().parent(this.area).set(80, 0, 0, 0);
+        this.editor.resizer().w.set(1, Measure.RELATIVE, -80);
+        this.editor.resizer().h.set(1, Measure.RELATIVE, -100);
+
+        this.children.add(this.records, this.selector, this.editor);
     }
 
     private void selectRecord(String str)
@@ -42,19 +80,17 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         Dispatcher.sendToServer(new PacketRequestActions(str));
     }
 
+    @SuppressWarnings("unchecked")
     private void selectAction(Action action)
     {
-        if (action == null)
+        if (this.editor.delegate != null)
         {
-            this.current = "";
-        }
-        else
-        {
-            NBTTagCompound tag = new NBTTagCompound();
+            Action old = ((GuiActionPanel<? extends Action>) this.editor.delegate).action;
 
-            action.toNBT(tag);
-            this.current = tag.toString();
+            Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
         }
+
+        this.editor.setDelegate(getPanel(action));
     }
 
     public void selectRecord(Record record)
@@ -71,13 +107,14 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
 
         this.records.clear();
         this.records.add(records);
-    }
 
-    @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
-    {
-        this.font.drawSplitString(this.current, this.area.getX(0.5F) - (this.area.w - 180) / 2, this.area.y + 20, (this.area.w - 180), 0xcccccc);
+        if (PANELS.isEmpty())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            GuiEmptyActionPanel empty = new GuiEmptyActionPanel(mc);
 
-        super.draw(mouseX, mouseY, partialTicks);
+            PANELS.put(Action.class, empty);
+            PANELS.put(CommandAction.class, new GuiCommandActionPanel(mc));
+        }
     }
 }

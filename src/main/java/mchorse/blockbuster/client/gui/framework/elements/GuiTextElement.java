@@ -16,7 +16,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     public GuiTextField field;
     public Consumer<String> callback;
 
-    public GuiTextElement(Minecraft mc, Consumer<String> callback, int maxLength)
+    public GuiTextElement(Minecraft mc, int maxLength, Consumer<String> callback)
     {
         this(mc, callback);
         this.field.setMaxStringLength(maxLength);

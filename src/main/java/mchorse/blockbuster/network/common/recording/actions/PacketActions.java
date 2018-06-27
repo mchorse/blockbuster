@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common.recording;
+package mchorse.blockbuster.network.common.recording.actions;
 
 import java.util.ArrayList;
 import java.util.List;

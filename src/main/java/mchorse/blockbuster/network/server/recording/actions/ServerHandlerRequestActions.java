@@ -1,9 +1,9 @@
-package mchorse.blockbuster.network.server.recording;
+package mchorse.blockbuster.network.server.recording.actions;
 
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.recording.PacketActions;
-import mchorse.blockbuster.network.common.recording.PacketRequestActions;
+import mchorse.blockbuster.network.common.recording.actions.PacketActions;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.server.ServerMessageHandler;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayerMP;

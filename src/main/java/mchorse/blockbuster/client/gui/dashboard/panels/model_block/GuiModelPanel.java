@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
@@ -89,9 +90,9 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         lastBlocks.add(pos);
     }
 
-    public GuiModelPanel(Minecraft mc)
+    public GuiModelPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         GuiElement element = null;

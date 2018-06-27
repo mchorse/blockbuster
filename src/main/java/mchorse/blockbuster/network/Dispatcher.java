@@ -8,7 +8,6 @@ import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.director.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
-import mchorse.blockbuster.network.client.recording.ClientHandlerActions;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
@@ -16,6 +15,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames
 import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
+import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
@@ -28,17 +28,18 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
-import mchorse.blockbuster.network.common.recording.PacketActions;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
-import mchorse.blockbuster.network.common.recording.PacketRequestActions;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
+import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.network.common.recording.actions.PacketActions;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
@@ -51,8 +52,9 @@ import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorGot
 import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorPlay;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
-import mchorse.blockbuster.network.server.recording.ServerHandlerRequestActions;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
+import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
+import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestActions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -124,24 +126,24 @@ public class Dispatcher
         register(PacketModifyModelBlock.class, ServerHandlerModifyModelBlock.class, Side.SERVER);
 
         /* Recording */
+        register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
         register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
 
-        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
-
+        register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
         register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
         register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);
-
-        register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
-        register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
-        register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
-        register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
 
         register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
         register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
 
-        register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
-        register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
+        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+        register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
+        register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
+        register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
+
+        register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
+        register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
+        register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

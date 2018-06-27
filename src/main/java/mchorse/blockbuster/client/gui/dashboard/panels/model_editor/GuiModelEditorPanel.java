@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -63,9 +63,9 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
 
-    public GuiModelEditorPanel(Minecraft mc)
+    public GuiModelEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         this.modelRenderer = new GuiModelRenderer(mc, this);
         this.modelRenderer.resizer().parent(this.area).w.set(1, Measure.RELATIVE);

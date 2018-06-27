@@ -93,9 +93,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         lastBlocks.add(pos);
     }
 
-    public GuiDirectorPanel(Minecraft mc)
+    public GuiDirectorPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         this.subChildren = new GuiElements();
         this.subChildren.setVisible(false);
@@ -112,8 +112,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.subChildren.add(this.mainView);
 
         /* Config options */
-        this.startCommand = new GuiTextElement(mc, (str) -> this.director.startCommand = str, 4000);
-        this.stopCommand = new GuiTextElement(mc, (str) -> this.director.stopCommand = str, 4000);
+        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.director.startCommand = str);
+        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.director.stopCommand = str);
         this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
         this.hide = GuiButtonElement.checkbox(mc, "Hide during playback", false, (b) -> this.director.hide = b.button.isChecked());
@@ -127,8 +127,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.configOptions.add(this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
         /* Replay options */
-        this.id = new GuiTextElement(mc, (str) -> this.replay.id = str, 80);
-        this.name = new GuiTextElement(mc, (str) -> this.replay.name = str, 80);
+        this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
+        this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.invincible = GuiButtonElement.checkbox(mc, "Invincible", false, (b) -> this.replay.invincible = b.button.isChecked());
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
@@ -183,7 +183,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         IMorphing morphing = this.mc.thePlayer == null ? null : Morphing.get(this.mc.thePlayer);
-        
+
         this.morphs = new GuiMorphsPopup(6, null, morphing);
         this.morphs.callback = (morph) -> this.setMorph(morph);
 

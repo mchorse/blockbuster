@@ -158,13 +158,13 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedLeftArm.showModel = true;
-            model.bipedLeftArm.setRotationPoint(-0.1F, -4, 0);
+            model.bipedLeftArm.setRotationPoint(-1, -4, 0);
         }
         else if (slot == ArmorSlot.RIGHT_SHOULDER)
         {
             GlStateManager.scale(w / 4F, h / 12F, d / 4F);
             model.bipedRightArm.showModel = true;
-            model.bipedRightArm.setRotationPoint(0.1F, -4, 0);
+            model.bipedRightArm.setRotationPoint(1, -4, 0);
         }
         else if (slot == ArmorSlot.LEFT_LEG)
         {

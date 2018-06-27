@@ -42,9 +42,9 @@ public class GuiDashboard extends GuiBase
     {
         Minecraft mc = Minecraft.getMinecraft();
 
+        this.modelEditorPanel = new GuiModelEditorPanel(mc, this);
+        this.mainPanel = new GuiMainPanel(mc, this);
         this.createWorldPanels(mc);
-        this.modelEditorPanel = new GuiModelEditorPanel(mc);
-        this.mainPanel = new GuiMainPanel(mc);
 
         this.panel = new GuiDelegateElement(mc, this.mainPanel);
         this.panel.resizer().set(32, 0, 1, 1).parent(this.area);
@@ -63,9 +63,9 @@ public class GuiDashboard extends GuiBase
     {
         if (mc != null && mc.theWorld != null && this.directorPanel == null)
         {
-            this.directorPanel = new GuiDirectorPanel(mc);
-            this.modelPanel = new GuiModelPanel(mc);
-            this.recordingEditorPanel = new GuiRecordingEditorPanel(mc);
+            this.directorPanel = new GuiDirectorPanel(mc, this);
+            this.modelPanel = new GuiModelPanel(mc, this);
+            this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
         }
     }
 
