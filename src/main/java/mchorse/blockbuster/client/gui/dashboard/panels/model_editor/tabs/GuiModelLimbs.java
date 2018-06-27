@@ -64,6 +64,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         super(mc, panel);
 
+        this.title = "Limbs";
+
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
         this.limbList.resizer().x.set(1, Measure.RELATIVE, -100);
@@ -111,7 +113,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.texture.resizer().relative(this.size.resizer()).set(0, 35, 120, 20);
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 35, 120, 20);
         this.origin.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
-        this.slot.resizer().relative(this.origin.resizer()).set(0, 25, 120, 20);
+        this.slot.resizer().relative(this.origin.resizer()).set(0, 22, 120, 20);
 
         this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot);
 

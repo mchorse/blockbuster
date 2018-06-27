@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
@@ -337,7 +338,17 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        super.keyTyped(typedChar, keyCode);
+        if (keyCode == 1)
+        {
+            if (this.search.isFocused())
+            {
+                this.search.setFocused(false);
+            }
+            else
+            {
+                this.hide(true);
+            }
+        }
 
         this.search.textboxKeyTyped(typedChar, keyCode);
 
@@ -403,6 +414,8 @@ public class GuiMorphsPopup extends GuiScreen
         {
             return;
         }
+
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
         this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);

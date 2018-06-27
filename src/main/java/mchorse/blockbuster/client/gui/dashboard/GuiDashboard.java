@@ -3,15 +3,19 @@ package mchorse.blockbuster.client.gui.dashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
+import mchorse.metamorph.capabilities.morphing.Morphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,16 +29,18 @@ public class GuiDashboard extends GuiBase
     public GuiDashboardSidebar sidebar;
 
     public GuiDirectorPanel directorPanel;
-    public GuiModelPanel modelPanel;
+    public GuiModelBlockPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
     public GuiRecordingEditorPanel recordingEditorPanel;
     public GuiMainPanel mainPanel;
+
+    public GuiMorphsPopup morphs;
 
     private boolean mainMenu;
 
     public static void reset()
     {
-        GuiModelPanel.lastBlocks.clear();
+        GuiModelBlockPanel.lastBlocks.clear();
         GuiDirectorPanel.lastBlocks.clear();
     }
 
@@ -64,7 +70,7 @@ public class GuiDashboard extends GuiBase
         if (mc != null && mc.theWorld != null && this.directorPanel == null)
         {
             this.directorPanel = new GuiDirectorPanel(mc, this);
-            this.modelPanel = new GuiModelPanel(mc, this);
+            this.modelPanel = new GuiModelBlockPanel(mc, this);
             this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
         }
     }
@@ -83,6 +89,7 @@ public class GuiDashboard extends GuiBase
         {
             this.directorPanel.close();
             this.modelPanel.close();
+            this.recordingEditorPanel.close();
         }
 
         this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
@@ -100,7 +107,17 @@ public class GuiDashboard extends GuiBase
     {
         Minecraft.getMinecraft().displayGuiScreen(this);
 
-        if (this.mc.theWorld != null)
+        return this.onOpen();
+    }
+
+    public GuiDashboard onOpen()
+    {
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        IMorphing morphing = player == null ? null : Morphing.get(player);
+
+        this.morphs = new GuiMorphsPopup(6, null, morphing);
+
+        if (Minecraft.getMinecraft().theWorld != null)
         {
             this.directorPanel.open();
             this.modelPanel.open();

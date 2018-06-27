@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -7,9 +8,12 @@ import java.util.Set;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiChatActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiCommandActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.common.ClientProxy;
@@ -17,16 +21,18 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.CommandAction;
+import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
 
-public class GuiRecordingEditorPanel extends GuiDashboardPanel
+public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLegacy
 {
     /**
-     * A map of  
+     * A map of action editing panels mapped to their classes  
      */
-    public static final Map<Class<? extends Action>, GuiActionPanel<? extends Action>> PANELS = new HashMap<Class<? extends Action>, GuiActionPanel<? extends Action>>();
+    public Map<Class<? extends Action>, GuiActionPanel<? extends Action>> panels = new HashMap<Class<? extends Action>, GuiActionPanel<? extends Action>>();
 
     public GuiStringListElement records;
     public GuiRecordSelector selector;
@@ -35,18 +41,18 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     public Record record;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static GuiActionPanel getPanel(Action action)
+    public GuiActionPanel getPanel(Action action)
     {
         if (action == null)
         {
             return null;
         }
 
-        GuiActionPanel panel = PANELS.get(action.getClass());
+        GuiActionPanel panel = this.panels.get(action.getClass());
 
         if (panel == null)
         {
-            panel = PANELS.get(Action.class);
+            panel = this.panels.get(Action.class);
         }
 
         panel.fill(action);
@@ -72,16 +78,36 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         this.editor.resizer().w.set(1, Measure.RELATIVE, -80);
         this.editor.resizer().h.set(1, Measure.RELATIVE, -100);
 
-        this.children.add(this.records, this.selector, this.editor);
+        this.children.add(this.records, this.editor, this.selector);
     }
 
-    private void selectRecord(String str)
+    @Override
+    public void open()
     {
-        Dispatcher.sendToServer(new PacketRequestActions(str));
+        Set<String> records = ClientProxy.manager.records.keySet();
+
+        this.records.clear();
+        this.records.add(records);
+
+        if (this.panels.isEmpty())
+        {
+            GuiEmptyActionPanel empty = new GuiEmptyActionPanel(this.mc);
+
+            this.panels.put(Action.class, empty);
+            this.panels.put(ChatAction.class, new GuiChatActionPanel(this.mc));
+            this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc, this.dashboard));
+            this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
+        }
+    }
+
+    @Override
+    public void close()
+    {
+        this.save();
     }
 
     @SuppressWarnings("unchecked")
-    private void selectAction(Action action)
+    private void save()
     {
         if (this.editor.delegate != null)
         {
@@ -89,7 +115,16 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
         }
+    }
 
+    private void selectRecord(String str)
+    {
+        Dispatcher.sendToServer(new PacketRequestActions(str));
+    }
+
+    private void selectAction(Action action)
+    {
+        this.save();
         this.editor.setDelegate(getPanel(action));
     }
 
@@ -101,20 +136,14 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void open()
+    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        Set<String> records = ClientProxy.manager.records.keySet();
+        return this.children.handleMouseInput(mouseX, mouseY);
+    }
 
-        this.records.clear();
-        this.records.add(records);
-
-        if (PANELS.isEmpty())
-        {
-            Minecraft mc = Minecraft.getMinecraft();
-            GuiEmptyActionPanel empty = new GuiEmptyActionPanel(mc);
-
-            PANELS.put(Action.class, empty);
-            PANELS.put(CommandAction.class, new GuiCommandActionPanel(mc));
-        }
+    @Override
+    public boolean handleKeyboardInput() throws IOException
+    {
+        return this.children.handleKeyboardInput();
     }
 }

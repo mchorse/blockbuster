@@ -10,7 +10,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -25,8 +24,6 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
-import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
@@ -70,7 +67,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> enabled;
     public GuiButtonElement<GuiCheckBox> fake;
 
-    public GuiMorphsPopup morphs;
     public GuiDirectorBlockList list;
 
     private Director director;
@@ -170,7 +166,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replays.add(element);
 
         /* Additional utility buttons */
-        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.hide(false));
+        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
         element.resizer().y.set(1, Measure.RELATIVE, -86);
 
@@ -181,11 +177,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         element.resizer().y.set(1, Measure.RELATIVE, -86);
 
         this.replayEditor.add(element);
-
-        IMorphing morphing = this.mc.thePlayer == null ? null : Morphing.get(this.mc.thePlayer);
-
-        this.morphs = new GuiMorphsPopup(6, null, morphing);
-        this.morphs.callback = (morph) -> this.setMorph(morph);
 
         /* Model blocks */
         this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (pos) -> this.pickDirector(pos)));
@@ -280,7 +271,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
 
-        this.morphs.setSelected(this.replay.morph);
+        this.dashboard.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
     }
 
@@ -373,9 +364,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        boolean result = !this.morphs.isHidden() && this.morphs.isInside(mouseX, mouseY);
+        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
 
-        this.morphs.handleMouseInput();
+        this.dashboard.morphs.handleMouseInput();
 
         return result;
     }
@@ -383,9 +374,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     @Override
     public boolean handleKeyboardInput() throws IOException
     {
-        this.morphs.handleKeyboardInput();
+        this.dashboard.morphs.handleKeyboardInput();
 
-        return !this.morphs.isHidden();
+        return !this.dashboard.morphs.isHidden();
     }
 
     @Override
@@ -393,8 +384,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         super.resize(width, height);
 
-        this.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.morphs.setWorldAndResolution(this.mc, width, height);
+        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
     }
 
     @Override
@@ -405,7 +396,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             if (this.replay != null)
             {
-                MorphCell cell = this.morphs.getSelected();
+                MorphCell cell = this.dashboard.morphs.getSelected();
                 AbstractMorph morph = this.replay.morph;
 
                 if (morph == null && cell != null)
@@ -455,6 +446,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.font.drawStringWithShadow(no, this.area.getX(0.5F) - w / 2, this.area.getY(0.5F) - 6, 0xffffff);
         }
 
-        this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
