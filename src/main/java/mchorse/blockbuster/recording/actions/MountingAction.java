@@ -18,7 +18,12 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class MountingAction extends Action
 {
-    public UUID target;
+    /**
+     * Default UUID 
+     */
+    public static final UUID DEFAULT = new UUID(0, 0);
+
+    public UUID target = DEFAULT;
     public boolean isMounting;
 
     public MountingAction()

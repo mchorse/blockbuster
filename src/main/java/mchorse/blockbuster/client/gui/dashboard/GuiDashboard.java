@@ -112,13 +112,12 @@ public class GuiDashboard extends GuiBase
 
     public GuiDashboard onOpen()
     {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        IMorphing morphing = player == null ? null : Morphing.get(player);
-
-        this.morphs = new GuiMorphsPopup(6, null, morphing);
-
         if (Minecraft.getMinecraft().theWorld != null)
         {
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            IMorphing morphing = player == null ? null : Morphing.get(player);
+
+            this.morphs = new GuiMorphsPopup(6, null, morphing);
             this.directorPanel.open();
             this.modelPanel.open();
             this.recordingEditorPanel.open();
