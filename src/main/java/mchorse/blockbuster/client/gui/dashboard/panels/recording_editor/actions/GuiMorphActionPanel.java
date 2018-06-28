@@ -23,6 +23,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
     {
         super(mc);
 
+        this.title = "Morph action";
         this.dashboard = dashboard;
         this.pick = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
         this.pick.resizer().parent(this.area).set(0, 0, 60, 20).x(0.5F, -30).y(1, -30);

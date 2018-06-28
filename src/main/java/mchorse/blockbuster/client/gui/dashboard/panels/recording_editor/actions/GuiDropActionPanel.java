@@ -17,6 +17,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     {
         super(mc);
 
+        this.title = "Drop item action";
         this.inventory = new GuiInventory(this, mc.thePlayer);
         this.slot = new GuiSlot(0);
     }
@@ -24,7 +25,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     @Override
     public void pickItem(GuiInventory inventory, ItemStack stack)
     {
-        this.action.itemData = stack.writeToNBT(new NBTTagCompound());
+        this.action.itemData = stack == null ? null : stack.writeToNBT(new NBTTagCompound());
         this.slot.stack = stack;
 
         inventory.visible = false;

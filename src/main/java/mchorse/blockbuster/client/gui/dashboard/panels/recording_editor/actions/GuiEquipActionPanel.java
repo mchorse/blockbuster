@@ -20,6 +20,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     {
         super(mc);
 
+        this.title = "Equip item action";
         this.inventory = new GuiInventory(this, mc.thePlayer);
         this.slot = new GuiSlot(0);
         this.armor = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.action.armorSlot = (byte) (b.button.getValue() - 1));

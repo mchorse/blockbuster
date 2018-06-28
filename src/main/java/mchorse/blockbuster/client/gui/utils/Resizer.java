@@ -77,7 +77,7 @@ public class Resizer
 
     public Resizer w(float value, int padding)
     {
-        this.h.set(value, Measure.RELATIVE, padding);
+        this.w.set(value, Measure.RELATIVE, padding);
 
         return this;
     }

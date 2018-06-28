@@ -14,6 +14,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEquipActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
@@ -29,6 +30,7 @@ import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
+import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
 
@@ -101,6 +103,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.panels.put(ChatAction.class, new GuiChatActionPanel(this.mc));
             this.panels.put(DropAction.class, new GuiDropActionPanel(this.mc));
             this.panels.put(EquipAction.class, new GuiEquipActionPanel(this.mc));
+            this.panels.put(ShootArrowAction.class, new GuiShootArrowActionPanel(this.mc));
             this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc, this.dashboard));
             this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
         }

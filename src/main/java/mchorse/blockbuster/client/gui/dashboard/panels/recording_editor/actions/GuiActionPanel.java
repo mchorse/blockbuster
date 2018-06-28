@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 public abstract class GuiActionPanel<T extends Action> extends GuiElement
 {
     public T action;
+    public String title = "";
 
     public GuiActionPanel(Minecraft mc)
     {
@@ -17,5 +18,16 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     public void fill(T action)
     {
         this.action = action;
+    }
+
+    @Override
+    public void draw(int mouseX, int mouseY, float partialTicks)
+    {
+        super.draw(mouseX, mouseY, partialTicks);
+
+        if (!this.title.isEmpty())
+        {
+            this.font.drawStringWithShadow(this.title, this.area.x + 6, this.area.y + 6, 0xffffff);
+        }
     }
 }

@@ -69,12 +69,15 @@ public class PlayerTracker
      */
     private boolean trackItemToSlot(ItemStack item, int slot)
     {
-        if (item != null && item != this.items[slot])
+        if (item != null)
         {
-            this.items[slot] = item;
-            this.recorder.actions.add(new EquipAction((byte) slot, item));
+            if (item != this.items[slot])
+            {
+                this.items[slot] = item;
+                this.recorder.actions.add(new EquipAction((byte) slot, item));
 
-            return true;
+                return true;
+            }
         }
         else if (this.items[slot] != null)
         {
