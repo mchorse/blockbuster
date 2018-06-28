@@ -10,7 +10,6 @@ import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.GuiBase;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import net.minecraft.client.Minecraft;
@@ -53,13 +52,10 @@ public class GuiDashboard extends GuiBase
         this.createWorldPanels(mc);
 
         this.panel = new GuiDelegateElement(mc, this.mainPanel);
-        this.panel.resizer().set(32, 0, 1, 1).parent(this.area);
-        this.panel.resizer().w.set(1, Measure.RELATIVE, -32);
-        this.panel.resizer().h.set(1, Measure.RELATIVE);
+        this.panel.resizer().set(32, 0, 1, 1).parent(this.area).w(1F, -32).h(1F, 0);
 
         this.sidebar = new GuiDespacito(mc, this);
-        this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area);
-        this.sidebar.resizer.h.set(1, Measure.RELATIVE);
+        this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area).h(1F, 0);
 
         this.elements.add(this.panel);
         this.elements.add(this.sidebar);

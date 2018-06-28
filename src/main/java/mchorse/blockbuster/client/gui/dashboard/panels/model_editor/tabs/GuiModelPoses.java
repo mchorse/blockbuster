@@ -37,8 +37,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.title = "Poses";
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
-        this.posesList.resizer().x.set(1, Measure.RELATIVE, -80);
+        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).x(1, -80);
         this.children.add(this.posesList);
 
         this.translate = new GuiThreeElement(mc, (values) ->
@@ -77,8 +76,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
         this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
 
-        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area);
-        this.addPose.resizer().x.set(1, Measure.RELATIVE, -38);
+        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -38);
         this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
         this.children.add(this.addPose, this.removePose);
 

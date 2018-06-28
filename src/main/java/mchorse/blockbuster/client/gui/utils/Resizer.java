@@ -40,6 +40,62 @@ public class Resizer
         return this.set(x, y, w, h);
     }
 
+    public Resizer x(int value)
+    {
+        this.x.set(value, Measure.PIXELS, 0);
+
+        return this;
+    }
+
+    public Resizer x(float value, int padding)
+    {
+        this.x.set(value, Measure.RELATIVE, padding);
+
+        return this;
+    }
+
+    public Resizer y(int value)
+    {
+        this.y.set(value, Measure.PIXELS, 0);
+
+        return this;
+    }
+
+    public Resizer y(float value, int padding)
+    {
+        this.y.set(value, Measure.RELATIVE, padding);
+
+        return this;
+    }
+
+    public Resizer w(int value)
+    {
+        this.w.set(value, Measure.PIXELS, 0);
+
+        return this;
+    }
+
+    public Resizer w(float value, int padding)
+    {
+        this.h.set(value, Measure.RELATIVE, padding);
+
+        return this;
+    }
+
+    public Resizer h(int value)
+    {
+        this.h.set(value, Measure.PIXELS, 0);
+
+        return this;
+    }
+
+    public Resizer h(float value, int padding)
+    {
+        this.h.set(value, Measure.RELATIVE, padding);
+
+        return this;
+    }
+
     public Resizer relative(Resizer relative)
     {
         this.relative = relative;

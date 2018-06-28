@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.recording.actions.CommandAction;
 import net.minecraft.client.Minecraft;
 
@@ -14,9 +13,7 @@ public class GuiCommandActionPanel extends GuiActionPanel<CommandAction>
         super(mc);
 
         this.command = new GuiTextElement(mc, 10000, (str) -> this.action.command = str);
-        this.command.resizer().parent(this.area).set(10, 0, 0, 20);
-        this.command.resizer().y.set(1, Measure.RELATIVE, -30);
-        this.command.resizer().w.set(1, Measure.RELATIVE, -20);
+        this.command.resizer().parent(this.area).set(10, 0, 0, 20).y(1, -30).w(1, -20);
 
         this.children.add(this.command);
     }

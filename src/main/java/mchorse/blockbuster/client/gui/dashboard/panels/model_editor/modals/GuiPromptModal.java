@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -26,9 +25,7 @@ public class GuiPromptModal extends GuiModal
         this.callback = callback;
 
         this.text = new GuiTextElement(mc, null);
-        this.text.resizer().parent(this.area).set(0, 0, 90, 20);
-        this.text.resizer().x.set(0.5F, Measure.RELATIVE, -45);
-        this.text.resizer().y.set(0.5F, Measure.RELATIVE, 10);
+        this.text.resizer().parent(this.area).set(0, 0, 90, 20).x(0.5F, -45).y(0.5F, 10);
         this.text.field.setFocused(true);
 
         this.confirm = GuiButtonElement.button(mc, "Ok", (b) -> this.send());

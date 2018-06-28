@@ -14,10 +14,11 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEquipActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
+import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
@@ -41,6 +42,9 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public GuiStringListElement records;
     public GuiRecordSelector selector;
     public GuiDelegateElement editor;
+
+    public GuiButtonElement<GuiTextureButton> add;
+    public GuiButtonElement<GuiTextureButton> remove;
 
     public Record record;
 
@@ -69,18 +73,14 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         super(mc, dashboard);
 
         this.records = new GuiStringListElement(mc, (str) -> this.selectRecord(str));
-        this.records.resizer().parent(this.area).set(0, 0, 80, 0).h.set(1, Measure.RELATIVE, -100);
+        this.records.resizer().parent(this.area).set(0, 0, 80, 0).h(1, -100);
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
-        this.selector.resizer().parent(this.area).set(0, 0, 0, 100);
-        this.selector.resizer().y.set(1, Measure.RELATIVE, -100);
-        this.selector.resizer().w.set(1, Measure.RELATIVE);
+        this.selector.resizer().parent(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
 
         this.editor = new GuiDelegateElement(mc, null);
-        this.editor.resizer().parent(this.area).set(80, 0, 0, 0);
-        this.editor.resizer().w.set(1, Measure.RELATIVE, -80);
-        this.editor.resizer().h.set(1, Measure.RELATIVE, -100);
+        this.editor.resizer().parent(this.area).set(80, 0, 0, 0).w(1, -80).h(1, -100);
 
         this.children.add(this.records, this.editor, this.selector);
     }

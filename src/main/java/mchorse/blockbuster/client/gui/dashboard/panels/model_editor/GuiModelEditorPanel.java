@@ -20,7 +20,6 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelU
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Area;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
@@ -68,8 +67,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.modelRenderer = new GuiModelRenderer(mc, this);
-        this.modelRenderer.resizer().parent(this.area).w.set(1, Measure.RELATIVE);
-        this.modelRenderer.resizer().h.set(1, Measure.RELATIVE);
+        this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
 
         this.models = new GuiModelModels(mc, this);
@@ -84,12 +82,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.limbs = new GuiModelLimbs(mc, this);
         this.limbs.setVisible(false);
-        this.limbs.resizer().set(0, 0, 240, 220).parent(this.area).x.set(1, Measure.RELATIVE, -260);
+        this.limbs.resizer().set(0, 0, 240, 220).parent(this.area).x(1, -260);
         this.children.add(this.limbs);
 
         this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
-        this.options.resizer().set(0, 0, 140, 225).parent(this.area).x.set(1, Measure.RELATIVE, -160);
+        this.options.resizer().set(0, 0, 140, 225).parent(this.area).x(1, -160);
         this.children.add(this.options);
 
         /* Top bar buttons */
@@ -100,8 +98,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.openModels.resizer().set(2, 2, 16, 16).parent(this.area);
         this.openPoses.resizer().set(0, 20, 16, 16).relative(this.openModels.resizer());
-        this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
-        this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -18);
+        this.openOptions.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -18);
+        this.openLimbs.resizer().set(0, 22, 16, 16).parent(this.area).x(1, -18);
 
         this.children.add(this.openModels, this.openPoses, this.openOptions, this.openLimbs);
 
@@ -112,11 +110,10 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.hitbox = GuiButtonElement.checkbox(mc, "Hitbox", this.modelRenderer.aabb, (b) -> this.modelRenderer.aabb = b.button.isChecked());
         this.looking = GuiButtonElement.checkbox(mc, "Looking", this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.button.isChecked());
 
-        this.swipe.resizer().set(0, 0, 16, 16).parent(this.area).x.set(0.5F, Measure.RELATIVE, -38);
-        this.swipe.resizer().y.set(1, Measure.RELATIVE, -18);
+        this.swipe.resizer().set(0, 0, 16, 16).parent(this.area).x(0.5F, -38).y(1, -18);
         this.running.resizer().set(20, 0, 16, 16).relative(this.swipe.resizer());
         this.items.resizer().set(20, 0, 16, 16).relative(this.running.resizer());
-        this.hitbox.resizer().set(6, 0, 40, 11).parent(this.area).y.set(1, Measure.RELATIVE, -16);
+        this.hitbox.resizer().set(6, 0, 40, 11).parent(this.area).y(1, -16);
         this.looking.resizer().set(50, 0, 40, 11).relative(this.hitbox.resizer());
 
         this.children.add(this.swipe, this.running, this.items, this.hitbox, this.looking);

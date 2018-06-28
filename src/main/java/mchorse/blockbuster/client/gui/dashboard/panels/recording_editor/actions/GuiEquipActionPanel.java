@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.widgets.GuiSlot;
@@ -31,8 +30,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
         this.armor.button.addLabel("Chest");
         this.armor.button.addLabel("Head");
         this.armor.button.addLabel("Off hand");
-        this.armor.resizer().set(0, 0, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
-        this.armor.resizer().y.set(0.5F, Measure.RELATIVE, -50);
+        this.armor.resizer().set(0, 0, 80, 20).parent(this.area).x(0.5F, -40).y(0.5F, -50);
 
         this.children.add(this.armor);
     }

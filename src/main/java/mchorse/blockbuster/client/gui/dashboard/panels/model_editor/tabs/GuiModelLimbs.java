@@ -67,8 +67,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.title = "Limbs";
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
-        this.limbList.resizer().x.set(1, Measure.RELATIVE, -100);
+        this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h(1, -20).x(1, -100);
         this.children.add(this.limbList);
 
         /* First category */
@@ -181,10 +180,10 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.second.setVisible(!this.first.isVisible());
         });
 
-        this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -38);
+        this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -38);
         this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
 
-        this.toggle.resizer().set(10, 0, 20, 20).parent(this.area).y.set(1, Measure.RELATIVE, -30);
+        this.toggle.resizer().set(10, 0, 20, 20).parent(this.area).y(1, -30);
         this.renameLimb.resizer().set(23, 0, 44, 20).relative(this.toggle.resizer());
         this.parentLimb.resizer().set(47, 0, 50, 20).relative(this.renameLimb.resizer());
 

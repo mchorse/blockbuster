@@ -16,7 +16,6 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.utils.Area;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.widgets.GuiSlot;
@@ -120,7 +119,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.subChildren.add(this.y = new GuiTrackpadElement(mc, "Y", (value) -> this.model.y = value));
         this.subChildren.add(this.z = new GuiTrackpadElement(mc, "Z", (value) -> this.model.z = value));
 
-        this.x.resizer().set(0, 20, 80, 20).parent(this.area).x.set(1, Measure.RELATIVE, -90);
+        this.x.resizer().set(0, 20, 80, 20).parent(this.area).x(1, -90);
         this.y.resizer().set(0, 25, 80, 20).relative(this.x.resizer);
         this.z.resizer().set(0, 25, 80, 20).relative(this.y.resizer);
 
@@ -138,7 +137,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.toggleOne()));
         this.subChildren.add(this.shadow = GuiButtonElement.checkbox(mc, "Shadow", false, (button) -> this.model.shadow = button.button.isChecked()));
 
-        element.resizer().set(0, 10, 70, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -35);
+        element.resizer().set(0, 10, 70, 20).parent(this.area).x(0.5F, -35);
         this.shadow.resizer().set(80, 4, 30, 11).relative(element.resizer);
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
 
@@ -151,11 +150,10 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
 
         /* Model blocks */
         this.children.add(this.list = new GuiModelBlockList(mc, "Model blocks", (tile) -> this.setModelBlock(tile)));
-        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.list.resizer().x.set(1, Measure.RELATIVE, -120);
+        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1F, 0).x(1F, -120);
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (b) -> this.list.toggleVisible()));
-        element.resizer().set(0, 2, 24, 24).parent(this.area).x.set(1, Measure.RELATIVE, -28);
+        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1F, -28);
 
         /* Inventory */
         this.inventory = new GuiInventory(this, player);
@@ -246,15 +244,13 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     {
         if (height >= 400)
         {
-            this.x.resizer().relative(this.rz.resizer).set(0, 0, 80, 20).x.set(0, Measure.PIXELS, 0);
-            this.x.resizer().y.set(45, Measure.PIXELS, 0);
-            this.yaw.resizer().y.set(0.5F, Measure.RELATIVE, -175);
+            this.x.resizer().relative(this.rz.resizer).set(0, 0, 80, 20).x(0).y(45);
+            this.yaw.resizer().y(0.5F, -175);
         }
         else
         {
-            this.x.resizer().parent(this.area).set(0, 20, 80, 20).x.set(1, Measure.RELATIVE, -90);
-            this.x.resizer().y.set(0.5F, Measure.RELATIVE, -80);
-            this.yaw.resizer().y.set(0.5F, Measure.RELATIVE, -80);
+            this.x.resizer().parent(this.area).set(0, 20, 80, 20).x(1, -90).y(0.5F, -80);
+            this.yaw.resizer().y(0.5F, -80);
         }
 
         super.resize(width, height);

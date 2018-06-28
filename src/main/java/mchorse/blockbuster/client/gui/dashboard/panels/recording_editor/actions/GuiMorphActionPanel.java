@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -26,9 +25,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
 
         this.dashboard = dashboard;
         this.pick = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
-        this.pick.resizer().parent(this.area).set(0, 0, 60, 20);
-        this.pick.resizer().x.set(0.5F, Measure.RELATIVE, -30);
-        this.pick.resizer().y.set(1, Measure.RELATIVE, -30);
+        this.pick.resizer().parent(this.area).set(0, 0, 60, 20).x(0.5F, -30).y(1, -30);
 
         this.children.add(this.pick);
     }

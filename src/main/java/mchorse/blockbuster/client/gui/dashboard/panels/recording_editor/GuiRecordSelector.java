@@ -13,6 +13,7 @@ import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.math.MathHelper;
 
 public class GuiRecordSelector extends GuiElement
 {
@@ -122,7 +123,12 @@ public class GuiRecordSelector extends GuiElement
         {
             int x = this.area.x - this.scroll.scroll + i * h;
 
-            Gui.drawRect(x, this.area.y, x + 1, this.area.getY(1), 0x88ffffff);
+            Gui.drawRect(x, this.area.y, x + 1, this.area.getY(1), 0x22ffffff);
+
+            if (i == this.tick)
+            {
+                Gui.drawRect(x, this.area.y, x + h + 1, this.area.getY(1), 0x440088ff);
+            }
 
             if (i % 5 == 0)
             {
@@ -139,7 +145,20 @@ public class GuiRecordSelector extends GuiElement
 
                     for (Action action : actions)
                     {
-                        this.font.drawStringWithShadow(String.valueOf(action.getType()), x + 4, this.area.y + 20 * j + 6, 0xffffff);
+                        int y = this.area.y + j * 20;
+
+                        if (i == this.tick && j == this.index)
+                        {
+                            Gui.drawRect(x, y, x + h + 1, y + 1, 0xffffffff);
+                            Gui.drawRect(x, y + 19, x + h + 1, y + 20, 0xffffffff);
+                            Gui.drawRect(x, y + 1, x + 1, y + 19, 0xffffffff);
+                            Gui.drawRect(x + h, y + 1, x + h + 1, y + 19, 0xffffffff);
+                        }
+
+                        int color = MathHelper.hsvToRGB((float) action.getType() / 20F * 6, 1F, 0.75F);
+
+                        Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
 
                         j++;
                     }

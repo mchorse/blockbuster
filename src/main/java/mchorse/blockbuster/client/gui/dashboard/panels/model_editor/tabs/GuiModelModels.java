@@ -39,8 +39,7 @@ public class GuiModelModels extends GuiModelEditorTab
         this.title = "Models";
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str));
-        this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
-        this.modelList.resizer().w.set(1, Measure.RELATIVE);
+        this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).w(1, 0);
         this.modelList.add(ModelCustom.MODELS.keySet());
         this.modelList.sort();
         this.children.add(this.modelList);
@@ -48,7 +47,7 @@ public class GuiModelModels extends GuiModelEditorTab
         this.save = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveModel());
         this.export = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) -> this.exportModel());
 
-        this.save.resizer().set(2, 2, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -38);
+        this.save.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -38);
         this.export.resizer().set(20, 0, 16, 16).relative(this.save.resizer());
         this.children.add(this.save, this.export);
 

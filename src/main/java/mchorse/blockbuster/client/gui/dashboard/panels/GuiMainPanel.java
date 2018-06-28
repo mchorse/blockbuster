@@ -6,7 +6,6 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -46,18 +45,14 @@ public class GuiMainPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         GuiElement element = GuiButtonElement.button(mc, "Wiki", (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
-        Resizer resizer = new Resizer().set(10, 25, 80, 20).parent(this.area);
-
-        resizer.x.set(1, Measure.RELATIVE, -90);
+        Resizer resizer = new Resizer().set(10, 25, 80, 20).parent(this.area).x(1, -90);
         this.children.add(element.setResizer(resizer));
 
         element = GuiButtonElement.button(mc, "Discord", (button) -> openWebLink("https://discord.gg/qfxrqUF"));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 80, 20).relative(resizer)));
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
-        resizer = new Resizer().set(0, 0, 16, 16).parent(this.area);
-        resizer.x.set(1, Measure.RELATIVE, -40);
-        resizer.y.set(1, Measure.RELATIVE, -20);
+        resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
         this.children.add(element.setResizer(resizer));
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 16, 0, 16, 16, (button) -> openWebLink("https://twitter.com/McHorsy"));
