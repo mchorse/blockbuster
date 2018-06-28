@@ -28,6 +28,7 @@ public class GuiRecordSelector extends GuiElement
     {
         super(mc);
 
+        this.createChildren();
         this.scroll = new ScrollArea(34);
         this.scroll.direction = ScrollDirection.HORIZONTAL;
         this.panel = panel;
@@ -146,6 +147,10 @@ public class GuiRecordSelector extends GuiElement
                     for (Action action : actions)
                     {
                         int y = this.area.y + j * 20;
+                        int color = MathHelper.hsvToRGB((float) action.getType() / 20F * 6, 1F, 0.75F);
+
+                        Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
 
                         if (i == this.tick && j == this.index)
                         {
@@ -154,11 +159,6 @@ public class GuiRecordSelector extends GuiElement
                             Gui.drawRect(x, y + 1, x + 1, y + 19, 0xffffffff);
                             Gui.drawRect(x + h, y + 1, x + h + 1, y + 19, 0xffffffff);
                         }
-
-                        int color = MathHelper.hsvToRGB((float) action.getType() / 20F * 6, 1F, 0.75F);
-
-                        Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
-                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
 
                         j++;
                     }

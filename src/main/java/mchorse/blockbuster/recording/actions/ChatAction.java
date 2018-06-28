@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class ChatAction extends Action
 {
-    public String message;
+    public String message = "";
 
     public ChatAction()
     {}

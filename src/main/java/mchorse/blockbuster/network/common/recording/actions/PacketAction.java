@@ -11,6 +11,7 @@ public class PacketAction implements IMessage
     public int tick = -1;
     public int index = -1;
     public Action action;
+    public boolean add;
 
     public PacketAction()
     {}
@@ -23,12 +24,19 @@ public class PacketAction implements IMessage
         this.action = action;
     }
 
+    public PacketAction(String filename, int tick, int index, Action action, boolean add)
+    {
+        this(filename, tick, index, action);
+        this.add = add;
+    }
+
     @Override
     public void fromBytes(ByteBuf buf)
     {
         this.filename = ByteBufUtils.readUTF8String(buf);
         this.tick = buf.readInt();
         this.index = buf.readInt();
+        this.add = buf.readBoolean();
 
         if (buf.readBoolean())
         {
@@ -48,6 +56,7 @@ public class PacketAction implements IMessage
         ByteBufUtils.writeUTF8String(buf, this.filename);
         buf.writeInt(this.tick);
         buf.writeInt(this.index);
+        buf.writeBoolean(this.add);
         buf.writeBoolean(this.action != null);
 
         if (this.action != null)

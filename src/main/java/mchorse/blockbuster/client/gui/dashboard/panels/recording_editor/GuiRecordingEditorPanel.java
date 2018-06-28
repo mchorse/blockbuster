@@ -17,6 +17,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -47,6 +48,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public GuiButtonElement<GuiTextureButton> add;
     public GuiButtonElement<GuiTextureButton> remove;
+
+    public GuiSearchListElement list;
 
     public Record record;
 
@@ -84,7 +87,63 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.editor = new GuiDelegateElement(mc, null);
         this.editor.resizer().parent(this.area).set(80, 0, 0, 0).w(1, -80).h(1, -100);
 
+        /* Add/remove */
+        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.setVisible(true));
+        this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction());
+
+        this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
+        this.list.elements.addAll(Action.TYPES.keySet());
+
+        this.add.resizer().set(0, 8, 16, 16).parent(this.selector.area).x(1F, -24);
+        this.remove.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
+        this.list.resizer().set(-90, 0, 80, 60).relative(this.add.resizer());
+
         this.children.add(this.records, this.editor, this.selector);
+        this.selector.children.add(this.add, this.remove, this.list);
+    }
+
+    private void createAction(String str)
+    {
+        Integer type = Action.TYPES.get(str);
+
+        if (type == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Action action = Action.fromType(type.byteValue());
+            int tick = this.selector.tick;
+            int index = this.selector.index;
+
+            this.record.addAction(tick, index, action);
+            this.list.setVisible(false);
+            this.selectAction(action);
+            this.selector.index = index == -1 ? 0 : index + 1;
+
+            Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeAction()
+    {
+        if (this.selector.tick == -1)
+        {
+            return;
+        }
+
+        int tick = this.selector.tick;
+        int index = this.selector.index;
+
+        this.record.removeAction(tick, index);
+        this.editor.setDelegate(null);
+        this.selector.index = -1;
+        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, null));
     }
 
     @Override
@@ -143,6 +202,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.setVisible(record != null);
         this.selector.update();
         this.editor.setDelegate(null);
+        this.list.filter("");
+        this.list.setVisible(false);
     }
 
     @Override

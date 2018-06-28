@@ -27,7 +27,7 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
 
         if (!this.title.isEmpty())
         {
-            this.font.drawStringWithShadow(this.title, this.area.x + 6, this.area.y + 6, 0xffffff);
+            this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
         }
     }
 }

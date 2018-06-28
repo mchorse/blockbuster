@@ -42,6 +42,11 @@ public class DropAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
+        if (this.itemData == null)
+        {
+            return;
+        }
+
         final float PI = 3.1415927F;
 
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();

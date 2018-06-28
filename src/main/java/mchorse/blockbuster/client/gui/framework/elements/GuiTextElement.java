@@ -33,6 +33,11 @@ public class GuiTextElement extends GuiElement implements GuiResponder
 
     public void setText(String text)
     {
+        if (text == null)
+        {
+            text = "";
+        }
+
         this.field.setText(text);
         this.field.setCursorPositionZero();
     }
