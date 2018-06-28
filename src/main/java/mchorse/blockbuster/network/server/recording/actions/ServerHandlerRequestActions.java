@@ -13,7 +13,14 @@ public class ServerHandlerRequestActions extends ServerMessageHandler<PacketRequ
     @Override
     public void run(EntityPlayerMP player, PacketRequestActions message)
     {
-        Record record = CommonProxy.manager.records.get(message.filename);
+        Record record = null;
+
+        try
+        {
+            record = CommonProxy.manager.getRecord(message.filename);
+        }
+        catch (Exception e)
+        {}
 
         if (record != null)
         {

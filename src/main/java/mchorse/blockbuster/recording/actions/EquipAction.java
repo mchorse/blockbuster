@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 public class EquipAction extends Action
 {
     public byte armorSlot;
-    public short armorId;
     public NBTTagCompound itemData;
 
     public EquipAction()
@@ -27,11 +26,10 @@ public class EquipAction extends Action
         this.itemData = new NBTTagCompound();
     }
 
-    public EquipAction(byte armorSlot, short armorId, ItemStack item)
+    public EquipAction(byte armorSlot, ItemStack item)
     {
         this();
         this.armorSlot = armorSlot;
-        this.armorId = armorId;
 
         if (item != null)
         {
@@ -50,7 +48,7 @@ public class EquipAction extends Action
     {
         EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);
 
-        if (this.armorId == -1)
+        if (this.itemData == null)
         {
             actor.setItemStackToSlot(slot, null);
         }
@@ -75,12 +73,7 @@ public class EquipAction extends Action
     {
         super.fromBuf(buf);
         this.armorSlot = buf.readByte();
-        this.armorId = buf.readShort();
-
-        if (this.armorId != -1)
-        {
-            this.itemData = ByteBufUtils.readTag(buf);
-        }
+        this.itemData = ByteBufUtils.readTag(buf);
     }
 
     @Override
@@ -89,21 +82,15 @@ public class EquipAction extends Action
         super.toBuf(buf);
 
         buf.writeByte(this.armorSlot);
-        buf.writeShort(this.armorId);
-
-        if (this.armorId != -1)
-        {
-            ByteBufUtils.writeTag(buf, this.itemData);
-        }
+        ByteBufUtils.writeTag(buf, this.itemData);
     }
 
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
         this.armorSlot = tag.getByte("Slot");
-        this.armorId = tag.getShort("Id");
 
-        if (this.armorId != -1)
+        if (tag.hasKey("Data"))
         {
             this.itemData = tag.getCompoundTag("Data");
         }
@@ -113,9 +100,8 @@ public class EquipAction extends Action
     public void toNBT(NBTTagCompound tag)
     {
         tag.setByte("Slot", this.armorSlot);
-        tag.setShort("Id", this.armorId);
 
-        if (this.armorId != -1)
+        if (this.itemData != null)
         {
             tag.setTag("Data", this.itemData);
         }

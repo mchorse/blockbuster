@@ -14,7 +14,14 @@ public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
     @Override
     public void run(EntityPlayerMP player, PacketAction message)
     {
-        Record record = CommonProxy.manager.records.get(message.filename);
+        Record record = null;
+
+        try
+        {
+            record = CommonProxy.manager.getRecord(message.filename);
+        }
+        catch (Exception e)
+        {}
 
         if (record == null)
         {
