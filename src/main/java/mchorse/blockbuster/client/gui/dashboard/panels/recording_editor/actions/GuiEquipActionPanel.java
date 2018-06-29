@@ -39,7 +39,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     @Override
     public void pickItem(GuiInventory inventory, ItemStack stack)
     {
-        this.action.itemData = stack.writeToNBT(new NBTTagCompound());
+        this.action.itemData = stack == null ? null : stack.writeToNBT(new NBTTagCompound());
         this.slot.stack = stack;
 
         inventory.visible = false;

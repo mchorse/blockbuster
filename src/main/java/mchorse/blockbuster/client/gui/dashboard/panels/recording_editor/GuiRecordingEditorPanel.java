@@ -114,10 +114,10 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
         this.list.elements.addAll(Action.TYPES.keySet());
 
-        this.add.resizer().set(0, 8, 16, 16).parent(this.selector.area).x(1F, -24);
+        this.add.resizer().set(0, 2, 16, 16).parent(this.selector.area).x(1F, -18);
         this.dupe.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
         this.remove.resizer().set(0, 20, 16, 16).relative(this.dupe.resizer());
-        this.list.resizer().set(-90, 0, 80, 60).relative(this.add.resizer());
+        this.list.resizer().set(0, 0, 80, 80).parent(this.selector.area).x(1, -100);
 
         this.children.add(this.records, this.editor, this.selector);
         this.selector.children.add(this.add, this.dupe, this.remove, this.list);

@@ -26,7 +26,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
         this.title = "Morph action";
         this.dashboard = dashboard;
         this.pick = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
-        this.pick.resizer().parent(this.area).set(0, 0, 60, 20).x(0.5F, -30).y(1, -30);
+        this.pick.resizer().parent(this.area).set(0, 5, 60, 20).x(0.5F, -30);
 
         this.children.add(this.pick);
     }
@@ -75,12 +75,12 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
         if (cell != null)
         {
             int x = this.area.getX(0.5F);
-            int y = this.area.getY(0.65F);
+            int y = this.area.getY(0.8F);
 
             GuiScreen screen = this.mc.currentScreen;
 
             GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-            cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
+            cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 3F, 1.0F);
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
 

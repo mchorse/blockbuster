@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.ScrollArea;
 import mchorse.blockbuster.client.gui.utils.ScrollArea.ScrollDirection;
@@ -42,6 +43,7 @@ public class GuiRecordSelector extends GuiElement
         super.resize(width, height);
 
         this.scroll.copy(this.area);
+        this.scroll.w -= 20;
     }
 
     public void update()
@@ -115,7 +117,7 @@ public class GuiRecordSelector extends GuiElement
 
         GuiScreen screen = this.mc.currentScreen;
 
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.scroll.x, this.scroll.y, this.scroll.getX(1), this.scroll.getY(1), 0x88000000);
         GuiUtils.scissor(this.area.x, this.area.y - 12, this.area.w, this.area.h + 12, screen.width, screen.height);
 
         int h = this.scroll.scrollItemSize;
@@ -123,18 +125,18 @@ public class GuiRecordSelector extends GuiElement
 
         for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
         {
-            int x = this.area.x - this.scroll.scroll + i * h;
+            int x = this.scroll.x - this.scroll.scroll + i * h;
 
-            Gui.drawRect(x, this.area.y, x + 1, this.area.getY(1), 0x22ffffff);
+            Gui.drawRect(x, this.scroll.y, x + 1, this.scroll.getY(1), 0x22ffffff);
 
             if (i == this.tick)
             {
-                Gui.drawRect(x, this.area.y, x + h + 1, this.area.getY(1), 0x440088ff);
+                Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.getY(1), 0x440088ff);
             }
 
             if (i % 5 == 0)
             {
-                this.font.drawStringWithShadow(String.valueOf(i), x, this.area.y - 12, 0xffffff);
+                this.font.drawStringWithShadow(String.valueOf(i), x, this.scroll.y - 12, 0xffffff);
             }
 
             if (i >= 0 && i < this.panel.record.actions.size())
@@ -147,7 +149,7 @@ public class GuiRecordSelector extends GuiElement
 
                     for (Action action : actions)
                     {
-                        int y = this.area.y + j * 20;
+                        int y = this.scroll.y + j * 20;
                         int color = MathHelper.hsvToRGB((float) action.getType() / 20F * 6, 1F, 0.75F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
@@ -169,8 +171,11 @@ public class GuiRecordSelector extends GuiElement
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        super.draw(mouseX, mouseY, partialTicks);
-
         this.scroll.drawScrollbar();
+        this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+        net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 32, 20, this.area.h, 32, 32, 0, 0);
+        mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);
+
+        super.draw(mouseX, mouseY, partialTicks);
     }
 }
