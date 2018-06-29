@@ -22,7 +22,7 @@ public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActio
 
         this.x.trackpad.integer = this.y.trackpad.integer = this.z.trackpad.integer = true;
 
-        this.x.resizer().set(10, 0, 80, 20).parent(this.area).y(1, -90);
+        this.x.resizer().set(10, 0, 80, 20).parent(this.area).y(1, -80);
         this.y.resizer().set(0, 25, 80, 20).relative(this.x.resizer());
         this.z.resizer().set(0, 25, 80, 20).relative(this.y.resizer());
 

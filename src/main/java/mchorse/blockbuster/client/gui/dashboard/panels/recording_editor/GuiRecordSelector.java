@@ -31,6 +31,7 @@ public class GuiRecordSelector extends GuiElement
         this.createChildren();
         this.scroll = new ScrollArea(34);
         this.scroll.direction = ScrollDirection.HORIZONTAL;
+        this.scroll.scrollSpeed = 34;
         this.panel = panel;
         this.callback = callback;
     }

@@ -16,8 +16,8 @@ import net.minecraft.util.math.Vec3d;
 
 public class ItemUseBlockAction extends ItemUseAction
 {
-    public BlockPos pos;
-    public EnumFacing facing;
+    public BlockPos pos = BlockPos.ORIGIN;
+    public EnumFacing facing = EnumFacing.UP;
     public float hitX;
     public float hitY;
     public float hitZ;

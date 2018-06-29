@@ -19,7 +19,7 @@ import net.minecraft.util.EnumHand;
  */
 public class ItemUseAction extends Action
 {
-    public EnumHand hand;
+    public EnumHand hand = EnumHand.MAIN_HAND;
 
     public ItemUseAction()
     {}

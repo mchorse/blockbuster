@@ -102,6 +102,24 @@ public class Record
     }
 
     /**
+     * Get an action by given tick and index 
+     */
+    public Action getAction(int tick, int index)
+    {
+        if (tick >= 0 && tick < this.actions.size())
+        {
+            List<Action> actions = this.actions.get(tick);
+
+            if (actions != null && index >= 0 && index < actions.size())
+            {
+                return actions.get(index);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Reset unloading timer
      */
     public void resetUnload()

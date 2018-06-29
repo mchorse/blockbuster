@@ -45,6 +45,7 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLegacy
 {
@@ -58,6 +59,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public GuiDelegateElement editor;
 
     public GuiButtonElement<GuiTextureButton> add;
+    public GuiButtonElement<GuiTextureButton> dupe;
     public GuiButtonElement<GuiTextureButton> remove;
 
     public GuiSearchListElement list;
@@ -96,21 +98,23 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.setVisible(false);
 
         this.editor = new GuiDelegateElement(mc, null);
-        this.editor.resizer().parent(this.area).set(80, 0, 0, 0).w(1, -80).h(1, -100);
+        this.editor.resizer().parent(this.area).set(80, 0, 0, 0).w(1, -80).h(1, -80);
 
         /* Add/remove */
         this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.setVisible(true));
+        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction());
         this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction());
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
         this.list.elements.addAll(Action.TYPES.keySet());
 
         this.add.resizer().set(0, 8, 16, 16).parent(this.selector.area).x(1F, -24);
-        this.remove.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
+        this.dupe.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
+        this.remove.resizer().set(0, 20, 16, 16).relative(this.dupe.resizer());
         this.list.resizer().set(-90, 0, 80, 60).relative(this.add.resizer());
 
         this.children.add(this.records, this.editor, this.selector);
-        this.selector.children.add(this.add, this.remove, this.list);
+        this.selector.children.add(this.add, this.dupe, this.remove, this.list);
     }
 
     private void createAction(String str)
@@ -131,7 +135,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.record.addAction(tick, index, action);
             this.list.setVisible(false);
             this.selectAction(action);
-            this.selector.index = index == -1 ? 0 : index + 1;
+            this.selector.index = index == -1 ? 0 : index;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
         }
@@ -139,6 +143,33 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         {
             e.printStackTrace();
         }
+    }
+
+    private void dupeAction()
+    {
+        int tick = this.selector.tick;
+        int index = this.selector.index;
+
+        Action action = this.record.getAction(tick, index);
+
+        if (action == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Action newAction = Action.fromType(action.getType());
+            NBTTagCompound tag = new NBTTagCompound();
+            action.toNBT(tag);
+            newAction.fromNBT(tag);
+            action = newAction;
+        }
+        catch (Exception e)
+        {}
+
+        this.record.addAction(tick, index, action);
+        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
     }
 
     private void removeAction()
@@ -178,7 +209,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.panels.put(InteractBlockAction.class, new GuiBlockActionPanel<InteractBlockAction>(this.mc));
             this.panels.put(BreakBlockAction.class, new GuiBreakBlockActionPanel(this.mc));
             this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc, this.dashboard));
-            this.panels.put(AttackAction.class, new GuiDamageActionPanel(this.mc, "Action action"));
+            this.panels.put(AttackAction.class, new GuiDamageActionPanel(this.mc, "Attack action"));
             this.panels.put(DamageAction.class, new GuiDamageActionPanel(this.mc, "Damage action"));
             this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
             this.panels.put(BreakBlockAnimation.class, new GuiBreakBlockAnimationPanel(this.mc));

@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 public class PlaceBlockAction extends InteractBlockAction
 {
     public byte metadata;
-    public String block;
+    public String block = "";
 
     public PlaceBlockAction()
     {}
@@ -43,13 +43,17 @@ public class PlaceBlockAction extends InteractBlockAction
     public void apply(EntityLivingBase actor)
     {
         Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
-        IBlockState state = block.getStateFromMeta(this.metadata);
-        actor.worldObj.setBlockState(this.pos, state);
 
-        World world = actor.worldObj;
+        if (block != null)
+        {
+            IBlockState state = block.getStateFromMeta(this.metadata);
+            actor.worldObj.setBlockState(this.pos, state);
 
-        SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, null);
-        world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            World world = actor.worldObj;
+
+            SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, null);
+            world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+        }
     }
 
     @Override
