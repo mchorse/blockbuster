@@ -25,7 +25,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class InteractBlockAction extends Action
 {
-    public BlockPos pos;
+    public BlockPos pos = BlockPos.ORIGIN;
 
     public InteractBlockAction()
     {}

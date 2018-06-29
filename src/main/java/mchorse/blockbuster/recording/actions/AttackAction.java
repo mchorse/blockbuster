@@ -5,6 +5,7 @@ import mchorse.blockbuster.utils.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 
 /**
@@ -12,10 +13,17 @@ import net.minecraft.util.DamageSource;
  *
  * This action is responsible for attacking an entity in in front of the actor.
  */
-public class AttackAction extends Action
+public class AttackAction extends DamageAction
 {
     public AttackAction()
-    {}
+    {
+        this.damage = 2F;
+    }
+
+    public AttackAction(float damage)
+    {
+        super(damage);
+    }
 
     @Override
     public byte getType()
@@ -43,7 +51,7 @@ public class AttackAction extends Action
 
         if (target != null)
         {
-            target.attackEntityFrom(DamageSource.causeMobDamage(actor), 2.0F);
+            target.attackEntityFrom(DamageSource.causeMobDamage(actor), this.damage);
 
             AbstractMorph morph = mchorse.metamorph.api.EntityUtils.getMorph(actor);
 
@@ -51,6 +59,15 @@ public class AttackAction extends Action
             {
                 morph.attack(target, actor);
             }
+        }
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound tag)
+    {
+        if (tag.hasKey("Damage"))
+        {
+            this.damage = tag.getFloat("Damage");
         }
     }
 }
