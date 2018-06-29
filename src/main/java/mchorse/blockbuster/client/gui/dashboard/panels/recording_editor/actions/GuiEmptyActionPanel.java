@@ -11,8 +11,18 @@ public class GuiEmptyActionPanel extends GuiActionPanel<Action>
     }
 
     @Override
+    public void fill(Action action)
+    {
+        super.fill(action);
+
+        this.title = action.getClass().getSimpleName();
+    }
+
+    @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
+        super.draw(mouseX, mouseY, partialTicks);
+
         this.drawCenteredString(this.font, "This action doesn't have any editable fields", this.area.getX(0.5F), this.area.getY(0.5F), 0xffffff);
     }
 }

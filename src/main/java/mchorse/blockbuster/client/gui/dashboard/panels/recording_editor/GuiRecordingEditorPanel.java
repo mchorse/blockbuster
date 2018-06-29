@@ -17,6 +17,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiDropActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEquipActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMountingActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
@@ -40,6 +42,8 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.ItemUseAction;
+import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
@@ -213,6 +217,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.panels.put(DamageAction.class, new GuiDamageActionPanel(this.mc, "Damage action"));
             this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
             this.panels.put(BreakBlockAnimation.class, new GuiBreakBlockAnimationPanel(this.mc));
+            this.panels.put(ItemUseAction.class, new GuiItemUseActionPanel<ItemUseAction>(this.mc));
+            this.panels.put(ItemUseBlockAction.class, new GuiItemUseBlockActionPanel(this.mc));
         }
     }
 
