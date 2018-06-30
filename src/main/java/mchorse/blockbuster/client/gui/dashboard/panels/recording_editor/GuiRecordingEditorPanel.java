@@ -149,7 +149,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.record.addAction(tick, index, action);
             this.list.setVisible(false);
             this.selectAction(action);
-            this.selector.index = index == -1 ? 0 : index;
+            this.selector.index = index == -1 ? this.record.actions.get(tick).size() - 1 : index;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
         }

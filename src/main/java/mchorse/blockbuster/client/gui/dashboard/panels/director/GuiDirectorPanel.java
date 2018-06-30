@@ -379,6 +379,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             this.dashboard.openPanel(this.dashboard.recordingEditorPanel);
             this.dashboard.recordingEditorPanel.selectRecord(this.replay.id);
+            this.dashboard.recordingEditorPanel.records.setVisible(false);
         }
     }
 
