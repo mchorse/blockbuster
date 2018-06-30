@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Limb.Holding;
+import mchorse.blockbuster.api.ModelLimb.Holding;
+import mchorse.blockbuster.api.ModelPose;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -39,7 +40,7 @@ public class ModelCustom extends ModelBiped
     /**
      * Current pose
      */
-    public Model.Pose pose;
+    public ModelPose pose;
 
     /**
      * Array of all limbs that has been parsed from JSON model
@@ -54,6 +55,7 @@ public class ModelCustom extends ModelBiped
 
     public ModelCustomRenderer[] left;
     public ModelCustomRenderer[] right;
+    public ModelCustomRenderer[] armor;
 
     /**
      * Initiate the model with the size of the texture

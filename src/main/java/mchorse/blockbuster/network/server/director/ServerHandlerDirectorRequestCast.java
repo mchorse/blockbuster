@@ -13,7 +13,7 @@ public class ServerHandlerDirectorRequestCast extends ServerMessageHandler<Packe
     @Override
     public void run(EntityPlayerMP player, PacketDirectorRequestCast message)
     {
-        TileEntityDirector tile = ((TileEntityDirector) player.world.getTileEntity(message.pos));
+        TileEntityDirector tile = ((TileEntityDirector) this.getTE(player, message.pos));
 
         tile.open(player, message.pos);
     }

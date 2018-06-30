@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Pose;
-import mchorse.blockbuster.api.Model.Transform;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
@@ -28,7 +28,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiThreeElement rotation;
     private GuiTwoElement hitbox;
 
-    private Transform transform;
+    private ModelTransform transform;
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -37,8 +37,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.title = "Poses";
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h.set(1, Measure.RELATIVE, -20);
-        this.posesList.resizer().x.set(1, Measure.RELATIVE, -80);
+        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).x(1, -80);
         this.children.add(this.posesList);
 
         this.translate = new GuiThreeElement(mc, (values) ->
@@ -77,8 +76,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
         this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
 
-        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area);
-        this.addPose.resizer().x.set(1, Measure.RELATIVE, -38);
+        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -38);
         this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
         this.children.add(this.addPose, this.removePose);
 
@@ -96,7 +94,7 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void addPose(String text)
     {
-        Pose pose = this.panel.pose.clone();
+        ModelPose pose = this.panel.pose.clone();
 
         this.panel.model.poses.put(text, pose);
         this.posesList.add(text);
@@ -153,7 +151,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.hitbox.setValues(this.panel.pose.size[0], this.panel.pose.size[1]);
     }
 
-    private void fillTransformData(Transform transform)
+    private void fillTransformData(ModelTransform transform)
     {
         this.translate.setValues(transform.translate[0], transform.translate[1], transform.translate[2]);
         this.scale.setValues(transform.scale[0], transform.scale[1], transform.scale[2]);

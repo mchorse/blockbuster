@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -13,11 +14,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-public class ItemUseBlockAction extends Action
+public class ItemUseBlockAction extends ItemUseAction
 {
-    public BlockPos pos;
-    public EnumHand hand;
-    public EnumFacing facing;
+    public BlockPos pos = BlockPos.ORIGIN;
+    public EnumFacing facing = EnumFacing.UP;
     public float hitX;
     public float hitY;
     public float hitZ;
@@ -27,8 +27,8 @@ public class ItemUseBlockAction extends Action
 
     public ItemUseBlockAction(BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+        super(hand);
         this.pos = pos;
-        this.hand = hand;
         this.facing = facing;
         this.hitX = hitX;
         this.hitY = hitY;
@@ -105,10 +105,37 @@ public class ItemUseBlockAction extends Action
     }
 
     @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+
+        this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.facing = EnumFacing.values()[buf.readByte()];
+        this.hitX = buf.readFloat();
+        this.hitY = buf.readFloat();
+        this.hitZ = buf.readFloat();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+
+        buf.writeInt(this.pos.getX());
+        buf.writeInt(this.pos.getY());
+        buf.writeInt(this.pos.getZ());
+        buf.writeByte((byte) this.facing.ordinal());
+        buf.writeFloat(this.hitX);
+        buf.writeFloat(this.hitY);
+        buf.writeFloat(this.hitZ);
+    }
+
+    @Override
     public void fromNBT(NBTTagCompound tag)
     {
+        super.fromNBT(tag);
+
         this.pos = new BlockPos(tag.getInteger("PosX"), tag.getInteger("PosY"), tag.getInteger("PosZ"));
-        this.hand = tag.getByte("Hand") == 1 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
         this.facing = EnumFacing.values()[tag.getByte("Facing")];
         this.hitX = tag.getFloat("HitX");
         this.hitY = tag.getFloat("HitY");
@@ -118,10 +145,11 @@ public class ItemUseBlockAction extends Action
     @Override
     public void toNBT(NBTTagCompound tag)
     {
+        super.toNBT(tag);
+
         tag.setInteger("PosX", this.pos.getX());
         tag.setInteger("PosY", this.pos.getY());
         tag.setInteger("PosZ", this.pos.getZ());
-        tag.setByte("Hand", this.hand == EnumHand.MAIN_HAND ? (byte) 0 : (byte) 1);
         tag.setByte("Facing", (byte) this.facing.ordinal());
         tag.setFloat("HitX", this.hitX);
         tag.setFloat("HitY", this.hitX);

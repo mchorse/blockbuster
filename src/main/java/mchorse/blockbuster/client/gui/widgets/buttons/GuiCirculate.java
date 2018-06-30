@@ -29,6 +29,11 @@ public class GuiCirculate extends GuiButton
         return this.value;
     }
 
+    public String getLabel()
+    {
+        return this.labels.get(this.value);
+    }
+
     public void setValue(int value)
     {
         this.value = value;
@@ -36,6 +41,11 @@ public class GuiCirculate extends GuiButton
         if (this.value > this.labels.size() - 1)
         {
             this.value = 0;
+        }
+
+        if (this.value < 0)
+        {
+            this.value = this.labels.size() - 1;
         }
 
         this.displayString = this.labels.get(this.value);

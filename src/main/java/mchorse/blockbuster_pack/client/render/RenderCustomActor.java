@@ -25,7 +25,7 @@ public class RenderCustomActor extends RenderCustomModel
 
         this.addLayer(new LayerElytra(this));
         this.addLayer(new LayerActorArmor(this));
-        this.addLayer(new LayerCustomHead());
+        this.addLayer(new LayerCustomHead(this));
     }
 
     /**

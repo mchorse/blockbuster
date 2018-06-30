@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -104,9 +105,19 @@ public abstract class Action
     public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {}
 
-    /* TODO: Action method which were responsible for writing and reading data
-     * from network were removed, but they will come back in 1.5 update.
+    /**
+     * Persist action from byte buffer. Used for sending the action 
+     * over the network.
      */
+    public void fromBuf(ByteBuf buf)
+    {}
+
+    /**
+     * Persist action to byte buffer. Used for sending the action over 
+     * the network.
+     */
+    public void toBuf(ByteBuf buf)
+    {}
 
     /**
      * Persist action from NBT tag. Used for loading from the disk.

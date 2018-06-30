@@ -16,7 +16,7 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     public GuiTextField field;
     public Consumer<String> callback;
 
-    public GuiTextElement(Minecraft mc, Consumer<String> callback, int maxLength)
+    public GuiTextElement(Minecraft mc, int maxLength, Consumer<String> callback)
     {
         this(mc, callback);
         this.field.setMaxStringLength(maxLength);
@@ -33,6 +33,11 @@ public class GuiTextElement extends GuiElement implements GuiResponder
 
     public void setText(String text)
     {
+        if (text == null)
+        {
+            text = "";
+        }
+
         this.field.setText(text);
         this.field.setCursorPositionZero();
     }

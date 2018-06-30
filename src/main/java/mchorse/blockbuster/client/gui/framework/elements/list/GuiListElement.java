@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiScreen;
 /**
  * Abstract GUI list element
  * 
- * This element allows managing scrolling lists much easier
+ * This element allows managing scrolling vertical lists much easier
  */
 public abstract class GuiListElement<T> extends GuiElement
 {

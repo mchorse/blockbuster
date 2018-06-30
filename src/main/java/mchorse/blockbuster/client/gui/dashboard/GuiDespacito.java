@@ -10,11 +10,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
-public class GuiDashboardSidebar extends GuiElement
+/**
+ * Dashboard sidebar GUI
+ * 
+ * Des-pa-ci-to.
+ */
+public class GuiDespacito extends GuiElement
 {
     public GuiDashboard dashboard;
 
-    public GuiDashboardSidebar(Minecraft mc, GuiDashboard dashboard)
+    public GuiDespacito(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc);
 
@@ -37,7 +42,8 @@ public class GuiDashboardSidebar extends GuiElement
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        /* Despacito 13 confirmed */
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel));
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }

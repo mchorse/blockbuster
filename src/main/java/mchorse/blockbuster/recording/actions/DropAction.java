@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import java.util.Random;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,6 +10,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Item drop action
@@ -40,6 +42,11 @@ public class DropAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
+        if (this.itemData == null)
+        {
+            return;
+        }
+
         final float PI = 3.1415927F;
 
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
@@ -65,6 +72,20 @@ public class DropAction extends Action
         item.motionZ += Math.sin(f1) * f;
 
         actor.world.spawnEntity(item);
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.itemData = ByteBufUtils.readTag(buf);
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        ByteBufUtils.writeTag(buf, this.itemData);
     }
 
     @Override

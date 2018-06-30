@@ -3,7 +3,7 @@ package mchorse.blockbuster_pack.morphs;
 import com.google.common.base.Objects;
 
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Pose;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -40,7 +40,7 @@ public class CustomMorph extends AbstractMorph
     /**
      * Current pose 
      */
-    protected Pose pose;
+    protected ModelPose pose;
 
     /**
      * Current custom pose
@@ -60,7 +60,7 @@ public class CustomMorph extends AbstractMorph
     /**
      * Custom pose 
      */
-    public Pose customPose = null;
+    public ModelPose customPose = null;
 
     private String key;
 
@@ -76,7 +76,7 @@ public class CustomMorph extends AbstractMorph
     /**
      * Get a pose for rendering
      */
-    public Pose getPose(EntityLivingBase target)
+    public ModelPose getPose(EntityLivingBase target)
     {
         if (this.customPose != null)
         {
@@ -333,7 +333,7 @@ public class CustomMorph extends AbstractMorph
 
         if (tag.hasKey("CustomPose", 10))
         {
-            this.customPose = new Model.Pose();
+            this.customPose = new ModelPose();
             this.customPose.fromNBT(tag.getCompoundTag("CustomPose"));
         }
     }

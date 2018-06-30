@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -30,15 +29,10 @@ public class GuiListModal extends GuiModal
         this.cancel = GuiButtonElement.button(mc, "Cancel", (b) -> this.parent.setDelegate(null));
         this.limbs = new GuiStringListElement(mc, null);
 
-        this.pick.resizer().set(0, 0, 50, 20).parent(this.area);
-        this.pick.resizer().x.set(0.5F, Measure.RELATIVE, -55);
-        this.pick.resizer().y.set(0.7F, Measure.RELATIVE, 10);
+        this.pick.resizer().set(0, 0, 50, 20).parent(this.area).x(0.5F, -55).y(0.7F, 10);
         this.cancel.resizer().set(60, 0, 50, 20).relative(this.pick.resizer());
 
-        this.limbs.resizer().set(0, 0, 100, 0).parent(this.area);
-        this.limbs.resizer().x.set(0.5F, Measure.RELATIVE, -50);
-        this.limbs.resizer().y.set(0.4F, Measure.RELATIVE);
-        this.limbs.resizer().h.set(0.3F, Measure.RELATIVE);
+        this.limbs.resizer().set(0, 0, 100, 0).parent(this.area).x(0.5F, -50).y(0.4F, 0).h(0.3F, 0);
         this.limbs.add("(none)");
         this.limbs.current = 0;
 

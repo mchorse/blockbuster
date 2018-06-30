@@ -5,7 +5,6 @@ import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -72,12 +71,10 @@ public class PlayerTracker
     {
         if (!item.isEmpty())
         {
-            int id = Item.getIdFromItem(item.getItem());
-
             if (item != this.items[slot])
             {
                 this.items[slot] = item;
-                this.recorder.actions.add(new EquipAction((byte) slot, (short) id, item));
+                this.recorder.actions.add(new EquipAction((byte) slot, item));
 
                 return true;
             }
@@ -85,7 +82,7 @@ public class PlayerTracker
         else if (this.items[slot] != null)
         {
             this.items[slot] = null;
-            this.recorder.actions.add(new EquipAction((byte) slot, (short) -1, null));
+            this.recorder.actions.add(new EquipAction((byte) slot, null));
 
             return true;
         }

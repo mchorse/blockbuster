@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -32,6 +33,20 @@ public class DamageAction extends Action
     public void apply(EntityLivingBase actor)
     {
         actor.attackEntityFrom(DamageSource.OUT_OF_WORLD, this.damage);
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.damage = buf.readFloat();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeFloat(this.damage);
     }
 
     @Override

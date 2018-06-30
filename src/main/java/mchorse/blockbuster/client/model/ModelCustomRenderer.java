@@ -2,7 +2,8 @@ package mchorse.blockbuster.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.model.ModelBase;
@@ -28,8 +29,8 @@ public class ModelCustomRenderer extends ModelRenderer
     private static float lastBrightnessX;
     private static float lastBrightnessY;
 
-    public Model.Limb limb;
-    public Model.Transform trasnform;
+    public ModelLimb limb;
+    public ModelTransform trasnform;
     public ModelCustomRenderer parent;
 
     public float scaleX = 1;
@@ -48,7 +49,7 @@ public class ModelCustomRenderer extends ModelRenderer
     /**
      * Initiate with limb and transform instances
      */
-    public ModelCustomRenderer(ModelBase model, Model.Limb limb, Model.Transform transform)
+    public ModelCustomRenderer(ModelBase model, ModelLimb limb, ModelTransform transform)
     {
         this(model, limb.texture[0], limb.texture[1]);
 
@@ -59,7 +60,7 @@ public class ModelCustomRenderer extends ModelRenderer
     /**
      * Apply transformations on this model renderer
      */
-    public void applyTransform(Model.Transform transform)
+    public void applyTransform(ModelTransform transform)
     {
         this.trasnform = transform;
 

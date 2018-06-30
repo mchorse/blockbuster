@@ -7,16 +7,15 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.utils.Area;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.widgets.GuiSlot;
@@ -25,8 +24,6 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
-import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
@@ -38,7 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
+public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
@@ -68,7 +65,6 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     private GuiModelBlockList list;
     private GuiElements subChildren;
 
-    private GuiMorphsPopup morphs;
     private GuiInventory inventory;
     private GuiSlot[] slots = new GuiSlot[6];
     private GuiSlot active;
@@ -89,15 +85,13 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         lastBlocks.add(pos);
     }
 
-    public GuiModelPanel(Minecraft mc)
+    public GuiModelBlockPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         EntityPlayer player = Minecraft.getMinecraft().player;
         GuiElement element = null;
-        IMorphing morphing = player == null ? null : Morphing.get(player);
 
-        this.morphs = new GuiMorphsPopup(6, null, morphing);
         this.subChildren = new GuiElements();
         this.subChildren.setVisible(false);
         this.children.add(this.subChildren);
@@ -125,7 +119,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.subChildren.add(this.y = new GuiTrackpadElement(mc, "Y", (value) -> this.model.y = value));
         this.subChildren.add(this.z = new GuiTrackpadElement(mc, "Z", (value) -> this.model.z = value));
 
-        this.x.resizer().set(0, 20, 80, 20).parent(this.area).x.set(1, Measure.RELATIVE, -90);
+        this.x.resizer().set(0, 20, 80, 20).parent(this.area).x(1, -90);
         this.y.resizer().set(0, 25, 80, 20).relative(this.x.resizer);
         this.z.resizer().set(0, 25, 80, 20).relative(this.y.resizer);
 
@@ -139,11 +133,11 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.sz.resizer().set(0, 25, 80, 20).relative(this.sy.resizer);
 
         /* Buttons */
-        this.subChildren.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.morphs.hide(false)));
+        this.subChildren.add(element = GuiButtonElement.button(mc, "Pick morph", (button) -> this.dashboard.morphs.hide(false)));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, "One", false, (button) -> this.toggleOne()));
         this.subChildren.add(this.shadow = GuiButtonElement.checkbox(mc, "Shadow", false, (button) -> this.model.shadow = button.button.isChecked()));
 
-        element.resizer().set(0, 10, 70, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -35);
+        element.resizer().set(0, 10, 70, 20).parent(this.area).x(0.5F, -35);
         this.shadow.resizer().set(80, 4, 30, 11).relative(element.resizer);
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
 
@@ -156,11 +150,10 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
         /* Model blocks */
         this.children.add(this.list = new GuiModelBlockList(mc, "Model blocks", (tile) -> this.setModelBlock(tile)));
-        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.list.resizer().x.set(1, Measure.RELATIVE, -120);
+        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1F, 0).x(1F, -120);
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (b) -> this.list.toggleVisible()));
-        element.resizer().set(0, 2, 24, 24).parent(this.area).x.set(1, Measure.RELATIVE, -28);
+        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1F, -28);
 
         /* Inventory */
         this.inventory = new GuiInventory(this, player);
@@ -200,7 +193,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         if (this.model != null)
         {
-            MorphCell morph = this.morphs.getSelected();
+            MorphCell morph = this.dashboard.morphs.getSelected();
 
             /* Update model's morph */
             PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), morph == null ? null : morph.current().morph);
@@ -216,7 +209,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         }
     }
 
-    public GuiModelPanel openModelBlock(TileEntityModel model)
+    public GuiModelBlockPanel openModelBlock(TileEntityModel model)
     {
         tryAddingBlock(model.getPos());
 
@@ -226,7 +219,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         return this.setModelBlock(model);
     }
 
-    public GuiModelPanel setModelBlock(TileEntityModel model)
+    public GuiModelBlockPanel setModelBlock(TileEntityModel model)
     {
         if (this.model == model)
         {
@@ -251,15 +244,13 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         if (height >= 400)
         {
-            this.x.resizer().relative(this.rz.resizer).set(0, 0, 80, 20).x.set(0, Measure.PIXELS, 0);
-            this.x.resizer().y.set(45, Measure.PIXELS, 0);
-            this.yaw.resizer().y.set(0.5F, Measure.RELATIVE, -175);
+            this.x.resizer().relative(this.rz.resizer).set(0, 0, 80, 20).x(0).y(45);
+            this.yaw.resizer().y(0.5F, -175);
         }
         else
         {
-            this.x.resizer().parent(this.area).set(0, 20, 80, 20).x.set(1, Measure.RELATIVE, -90);
-            this.x.resizer().y.set(0.5F, Measure.RELATIVE, -80);
-            this.yaw.resizer().y.set(0.5F, Measure.RELATIVE, -80);
+            this.x.resizer().parent(this.area).set(0, 20, 80, 20).x(1, -90).y(0.5F, -80);
+            this.yaw.resizer().y(0.5F, -80);
         }
 
         super.resize(width, height);
@@ -273,8 +264,8 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
         this.slots[5].update(this.area.getX(0.5F) + this.area.w / 8, this.area.getY(0.5F) - 55);
         this.inventory.update(this.area.getX(0.5F), this.area.getY(1) - 50);
 
-        this.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.morphs.setWorldAndResolution(this.mc, width, height);
+        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
 
         this.fillData();
     }
@@ -293,7 +284,7 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     {
         if (this.model != null)
         {
-            this.morphs.setSelected(this.model.morph);
+            this.dashboard.morphs.setSelected(this.model.morph);
 
             this.yaw.trackpad.setValue(this.model.rotateYawHead);
             this.pitch.trackpad.setValue(this.model.rotatePitch);
@@ -336,9 +327,9 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        boolean result = !this.morphs.isHidden() && this.morphs.isInside(mouseX, mouseY);
+        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
 
-        this.morphs.handleMouseInput();
+        this.dashboard.morphs.handleMouseInput();
 
         return result;
     }
@@ -366,30 +357,30 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
     @Override
     public boolean handleKeyboardInput() throws IOException
     {
-        this.morphs.handleKeyboardInput();
+        this.dashboard.morphs.handleKeyboardInput();
 
-        return !this.morphs.isHidden();
+        return !this.dashboard.morphs.isHidden();
     }
 
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        MorphCell cell = this.morphs.getSelected();
-
-        if (cell != null)
-        {
-            int x = this.area.getX(0.5F);
-            int y = this.area.getY(0.65F);
-
-            GuiScreen screen = this.mc.currentScreen;
-
-            GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-            cell.current().morph.renderOnScreen(this.mc.player, x, y, this.area.h / 4F, 1.0F);
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        }
-
         if (this.model != null)
         {
+            MorphCell cell = this.dashboard.morphs.getSelected();
+
+            if (cell != null)
+            {
+                int x = this.area.getX(0.5F);
+                int y = this.area.getY(0.65F);
+
+                GuiScreen screen = this.mc.currentScreen;
+
+                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+                cell.current().morph.renderOnScreen(this.mc.player, x, y, this.area.h / 4F, 1.0F);
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            }
+
             this.model.morph = cell == null ? null : cell.current().morph;
         }
 
@@ -421,6 +412,6 @@ public class GuiModelPanel extends GuiDashboardPanel implements IGuiLegacy, IInv
 
         super.draw(mouseX, mouseY, partialTicks);
 
-        this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.WorldEventListener;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +42,20 @@ public class BreakBlockAnimation extends InteractBlockAction
         {
             actor.world.sendBlockBreakProgress(actor.getEntityId(), this.pos, this.progress);
         }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.progress = buf.readInt();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeInt(this.progress);
     }
 
     @Override

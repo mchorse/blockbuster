@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.render;
 import java.util.Map;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.layer.LayerHeldItem;
@@ -109,7 +110,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
         ModelCustom model = null;
-        Model.Pose pose = null;
+        ModelPose pose = null;
 
         if (this.current != null)
         {

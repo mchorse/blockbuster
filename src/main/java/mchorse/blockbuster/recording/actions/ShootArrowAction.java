@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
@@ -47,6 +48,20 @@ public class ShootArrowAction extends Action
 
         arrow.shoot(actor, frame.pitch, frame.yaw, 0.0F, f * 3.0F, 1.0F);
         world.spawnEntity(arrow);
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.charge = buf.readByte();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeByte(this.charge);
     }
 
     @Override

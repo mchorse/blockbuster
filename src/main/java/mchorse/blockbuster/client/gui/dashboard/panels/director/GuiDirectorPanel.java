@@ -10,14 +10,12 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
@@ -25,8 +23,6 @@ import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
-import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
@@ -70,7 +66,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> enabled;
     public GuiButtonElement<GuiCheckBox> fake;
 
-    public GuiMorphsPopup morphs;
     public GuiDirectorBlockList list;
 
     private Director director;
@@ -93,9 +88,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         lastBlocks.add(pos);
     }
 
-    public GuiDirectorPanel(Minecraft mc)
+    public GuiDirectorPanel(Minecraft mc, GuiDashboard dashboard)
     {
-        super(mc);
+        super(mc, dashboard);
 
         this.subChildren = new GuiElements();
         this.subChildren.setVisible(false);
@@ -105,21 +100,20 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.configOptions = new GuiElements();
         this.mainView = new GuiDelegateElement(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
-        this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w.set(1, Measure.RELATIVE);
-        this.selector.resizer().y.set(1, Measure.RELATIVE, -60);
+        this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w(1, 0).y(1, -60);
 
         this.children.add(this.subChildren);
         this.subChildren.add(this.mainView);
 
         /* Config options */
-        this.startCommand = new GuiTextElement(mc, (str) -> this.director.startCommand = str, 4000);
-        this.stopCommand = new GuiTextElement(mc, (str) -> this.director.stopCommand = str, 4000);
+        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.director.startCommand = str);
+        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.director.stopCommand = str);
         this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
         this.hide = GuiButtonElement.checkbox(mc, "Hide during playback", false, (b) -> this.director.hide = b.button.isChecked());
 
-        this.startCommand.resizer().set(10, 50, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
-        this.stopCommand.resizer().set(10, 90, 0, 20).parent(this.area).w.set(1, Measure.RELATIVE, -20);
+        this.startCommand.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
+        this.stopCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
@@ -127,14 +121,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.configOptions.add(this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
         /* Replay options */
-        this.id = new GuiTextElement(mc, (str) -> this.replay.id = str, 80);
-        this.name = new GuiTextElement(mc, (str) -> this.replay.name = str, 80);
+        this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
+        this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.invincible = GuiButtonElement.checkbox(mc, "Invincible", false, (b) -> this.replay.invincible = b.button.isChecked());
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
         this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
 
-        this.id.resizer().set(10, 20, 120, 20).parent(this.area);
+        this.id.resizer().set(10, 30, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
         this.invincible.resizer().set(0, 30, 80, 11).relative(this.name.resizer());
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
@@ -149,51 +143,48 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
         });
-        element.resizer().set(0, 6, 16, 16).parent(this.area).x.set(1, Measure.RELATIVE, -48);
+        element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -48);
 
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
-        element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
-        element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
-        element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x.set(1, Measure.RELATIVE, -24);
+        element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
         /* Additional utility buttons */
-        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.morphs.hide(false));
-        element.resizer().set(10, 70, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
-        element.resizer().y.set(1, Measure.RELATIVE, -86);
+        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
+        element.resizer().set(10, 70, 80, 20).parent(this.area).x(0.5F, -40).y(1, -86);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
-        element.resizer().set(10, 0, 60, 20).parent(this.area);
-        element.resizer().y.set(1, Measure.RELATIVE, -86);
+        element.resizer().set(10, 30, 60, 20).parent(this.area).x(1, -70);
 
         this.replayEditor.add(element);
 
-        IMorphing morphing = this.mc.player == null ? null : Morphing.get(this.mc.player);
+        element = GuiButtonElement.button(mc, "Edit record", (b) -> this.openRecordEditor());
+        element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
 
-        this.morphs = new GuiMorphsPopup(6, null, morphing);
-        this.morphs.callback = (morph) -> this.setMorph(morph);
+        this.replayEditor.add(element);
 
         /* Model blocks */
         this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (pos) -> this.pickDirector(pos)));
-        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h.set(1, Measure.RELATIVE);
-        this.list.resizer().x.set(1, Measure.RELATIVE, -120);
+        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1, 0).x(1, -120);
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.toggleVisible()));
-        element.resizer().set(0, 2, 24, 24).parent(this.area).x.set(1, Measure.RELATIVE, -28);
+        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
     }
 
     private void pickDirector(BlockPos pos)
@@ -231,6 +222,18 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.fillData();
 
         return this;
+    }
+
+    @Override
+    public void appear()
+    {
+        this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
+    }
+
+    @Override
+    public void disappear()
+    {
+        this.dashboard.morphs.callback = null;
     }
 
     @Override
@@ -280,7 +283,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
 
-        this.morphs.setSelected(this.replay.morph);
+        this.dashboard.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
     }
 
@@ -370,12 +373,22 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         }
     }
 
+    private void openRecordEditor()
+    {
+        if (this.replay != null && !this.replay.id.isEmpty())
+        {
+            this.dashboard.openPanel(this.dashboard.recordingEditorPanel);
+            this.dashboard.recordingEditorPanel.selectRecord(this.replay.id);
+            this.dashboard.recordingEditorPanel.records.setVisible(false);
+        }
+    }
+
     @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        boolean result = !this.morphs.isHidden() && this.morphs.isInside(mouseX, mouseY);
+        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
 
-        this.morphs.handleMouseInput();
+        this.dashboard.morphs.handleMouseInput();
 
         return result;
     }
@@ -383,9 +396,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     @Override
     public boolean handleKeyboardInput() throws IOException
     {
-        this.morphs.handleKeyboardInput();
+        this.dashboard.morphs.handleKeyboardInput();
 
-        return !this.morphs.isHidden();
+        return !this.dashboard.morphs.isHidden();
     }
 
     @Override
@@ -393,8 +406,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         super.resize(width, height);
 
-        this.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.morphs.setWorldAndResolution(this.mc, width, height);
+        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
     }
 
     @Override
@@ -405,7 +418,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         {
             if (this.replay != null)
             {
-                MorphCell cell = this.morphs.getSelected();
+                MorphCell cell = this.dashboard.morphs.getSelected();
                 AbstractMorph morph = this.replay.morph;
 
                 if (morph == null && cell != null)
@@ -455,6 +468,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.font.drawStringWithShadow(no, this.area.getX(0.5F) - w / 2, this.area.getY(0.5F) - 6, 0xffffff);
         }
 
-        this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
