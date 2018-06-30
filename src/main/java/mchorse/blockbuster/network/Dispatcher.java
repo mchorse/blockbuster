@@ -15,6 +15,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerRequestedFrames
 import mchorse.blockbuster.network.client.recording.ClientHandlerSyncTick;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
+import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActionList;
 import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
@@ -38,7 +39,9 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
 import mchorse.blockbuster.network.common.recording.PacketUnloadRecordings;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.blockbuster.network.common.recording.actions.PacketActions;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
@@ -54,6 +57,7 @@ import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
+import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestActions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
@@ -143,7 +147,9 @@ public class Dispatcher
 
         register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
         register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
+        register(PacketRequestAction.class, ServerHandlerRequestAction.class, Side.SERVER);
         register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
+        register(PacketActionList.class, ClientHandlerActionList.class, Side.CLIENT);
 
         /* Director block management messages */
         register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);

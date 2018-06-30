@@ -6,13 +6,13 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 
 public class GuiSearchListElement extends GuiElement
 {
     public List<String> elements = new ArrayList<String>();
     public GuiTextElement search;
     public GuiStringListElement list;
+    public String label;
 
     public GuiSearchListElement(Minecraft mc, Consumer<String> callback)
     {
@@ -58,8 +58,13 @@ public class GuiSearchListElement extends GuiElement
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+        // Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
 
         super.draw(mouseX, mouseY, partialTicks);
+
+        if (!this.search.field.isFocused() && this.search.field.getText().isEmpty())
+        {
+            this.font.drawStringWithShadow(this.label, this.search.area.x + 6, this.search.area.y + 6, 0xcccccc);
+        }
     }
 }

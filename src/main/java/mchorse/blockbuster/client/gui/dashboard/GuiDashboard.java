@@ -129,8 +129,8 @@ public class GuiDashboard extends GuiBase
             ((GuiDashboardPanel) this.panel.delegate).disappear();
         }
 
-        element.appear();
         this.panel.setDelegate(element);
+        element.appear();
 
         return this;
     }

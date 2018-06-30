@@ -128,7 +128,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
         this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
 
-        this.id.resizer().set(10, 20, 120, 20).parent(this.area);
+        this.id.resizer().set(10, 30, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
         this.invincible.resizer().set(0, 30, 80, 11).relative(this.name.resizer());
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
@@ -170,7 +170,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
-        element.resizer().set(10, 0, 60, 20).parent(this.area).y(1, -86);
+        element.resizer().set(10, 30, 60, 20).parent(this.area).x(1, -70);
+
+        this.replayEditor.add(element);
+
+        element = GuiButtonElement.button(mc, "Edit record", (b) -> this.openRecordEditor());
+        element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
@@ -220,10 +225,21 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     }
 
     @Override
+    public void appear()
+    {
+        this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
+    }
+
+    @Override
+    public void disappear()
+    {
+        this.dashboard.morphs.callback = null;
+    }
+
+    @Override
     public void open()
     {
         this.updateList();
-        this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
     }
 
     @Override
@@ -354,6 +370,15 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         if (lastMessageIsntCommand || empty)
         {
             messages.add(command);
+        }
+    }
+
+    private void openRecordEditor()
+    {
+        if (this.replay != null && !this.replay.id.isEmpty())
+        {
+            this.dashboard.openPanel(this.dashboard.recordingEditorPanel);
+            this.dashboard.recordingEditorPanel.selectRecord(this.replay.id);
         }
     }
 

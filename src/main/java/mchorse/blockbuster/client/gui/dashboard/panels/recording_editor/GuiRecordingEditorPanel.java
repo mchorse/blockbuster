@@ -2,10 +2,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
@@ -25,13 +26,13 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
-import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
+import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
@@ -51,6 +52,8 @@ import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLegacy
@@ -60,13 +63,15 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
      */
     public Map<Class<? extends Action>, GuiActionPanel<? extends Action>> panels = new HashMap<Class<? extends Action>, GuiActionPanel<? extends Action>>();
 
-    public GuiStringListElement records;
+    public GuiRecordList records;
     public GuiRecordSelector selector;
     public GuiDelegateElement editor;
 
     public GuiButtonElement<GuiTextureButton> add;
     public GuiButtonElement<GuiTextureButton> dupe;
     public GuiButtonElement<GuiTextureButton> remove;
+
+    public GuiButtonElement<GuiTextureButton> open;
 
     public GuiSearchListElement list;
 
@@ -96,15 +101,15 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     {
         super(mc, dashboard);
 
-        this.records = new GuiStringListElement(mc, (str) -> this.selectRecord(str));
-        this.records.resizer().parent(this.area).set(0, 0, 80, 0).h(1, -100);
+        this.records = new GuiRecordList(mc, this);
+        this.records.resizer().set(0, 0, 120, 0).parent(this.area).x(1, -120).h(1, 0);
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
         this.selector.resizer().parent(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
 
         this.editor = new GuiDelegateElement(mc, null);
-        this.editor.resizer().parent(this.area).set(80, 0, 0, 0).w(1, -80).h(1, -80);
+        this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
         this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.setVisible(true));
@@ -119,7 +124,10 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.remove.resizer().set(0, 20, 16, 16).relative(this.dupe.resizer());
         this.list.resizer().set(0, 0, 80, 80).parent(this.selector.area).x(1, -100);
 
-        this.children.add(this.records, this.editor, this.selector);
+        GuiElement element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (b) -> this.records.toggleVisible());
+        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
+
+        this.children.add(this.editor, this.selector, this.records, element);
         this.selector.children.add(this.add, this.dupe, this.remove, this.list);
     }
 
@@ -197,10 +205,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     @Override
     public void open()
     {
-        Set<String> records = ClientProxy.manager.records.keySet();
-
         this.records.clear();
-        this.records.add(records);
+        Dispatcher.sendToServer(new PacketRequestActions());
 
         if (this.panels.isEmpty())
         {
@@ -242,12 +248,17 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         }
     }
 
-    private void selectRecord(String str)
+    public void addRecords(List<String> records)
     {
-        Dispatcher.sendToServer(new PacketRequestActions(str));
+        this.records.add(records);
     }
 
-    private void selectAction(Action action)
+    public void selectRecord(String str)
+    {
+        Dispatcher.sendToServer(new PacketRequestAction(str));
+    }
+
+    public void selectAction(Action action)
     {
         this.save();
         this.editor.setDelegate(getPanel(action));
@@ -264,14 +275,42 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     }
 
     @Override
+    public void resize(int width, int height)
+    {
+        super.resize(width, height);
+
+        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
+    }
+
+    @Override
     public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
     {
-        return this.children.handleMouseInput(mouseX, mouseY);
+        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
+
+        this.dashboard.morphs.handleMouseInput();
+
+        return result;
     }
 
     @Override
     public boolean handleKeyboardInput() throws IOException
     {
-        return this.children.handleKeyboardInput();
+        this.dashboard.morphs.handleKeyboardInput();
+
+        return !this.dashboard.morphs.isHidden();
+    }
+
+    @Override
+    public void draw(int mouseX, int mouseY, float partialTicks)
+    {
+        super.draw(mouseX, mouseY, partialTicks);
+
+        if (this.record == null)
+        {
+            this.drawCenteredString(this.font, "Select a player recording...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+        }
+
+        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

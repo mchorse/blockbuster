@@ -150,7 +150,7 @@ public class GuiRecordSelector extends GuiElement
                     for (Action action : actions)
                     {
                         int y = this.scroll.y + j * 20;
-                        int color = MathHelper.hsvToRGB((float) action.getType() / 20F * 6, 1F, 0.75F);
+                        int color = MathHelper.hsvToRGB((float) (action.getType() - 1) / 20F, 1F, 1F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
                         this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);

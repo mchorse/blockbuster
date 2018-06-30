@@ -1,12 +1,9 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -14,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements IGuiLegacy
+public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 {
     public GuiDashboard dashboard;
     public GuiButtonElement<GuiButton> pick;
@@ -41,33 +38,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-        super.resize(width, height);
-
-        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
-    }
-
-    @Override
-    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
-    {
-        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
-
-        this.dashboard.morphs.handleMouseInput();
-
-        return result;
-    }
-
-    @Override
-    public boolean handleKeyboardInput() throws IOException
-    {
-        this.dashboard.morphs.handleKeyboardInput();
-
-        return !this.dashboard.morphs.isHidden();
-    }
-
-    @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
         MorphCell cell = this.dashboard.morphs.getSelected();
@@ -87,7 +57,5 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction> implements 
         this.action.morph = cell == null ? null : cell.current().morph;
 
         super.draw(mouseX, mouseY, partialTicks);
-
-        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
