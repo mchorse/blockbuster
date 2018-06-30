@@ -27,7 +27,7 @@ public class GuiModelOptions extends GuiModelEditorTab
 
         this.title = "";
 
-        this.name = new GuiTextElement(mc, (str) -> this.panel.model.name = str, 120);
+        this.name = new GuiTextElement(mc, 120, (str) -> this.panel.model.name = str);
         this.texture = new GuiTwoElement(mc, (value) ->
         {
             this.panel.model.texture[0] = value[0].intValue();
@@ -42,7 +42,7 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.scale[2] = value[2];
         });
         this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.panel.model.scaleGui = value);
-        this.defaultTexture = new GuiTextElement(mc, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str), 1000);
+        this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str));
         this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) ->
         {
             this.panel.model.providesObj = b.button.isChecked();

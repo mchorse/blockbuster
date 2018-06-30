@@ -1,9 +1,11 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Equip item action
@@ -17,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 public class EquipAction extends Action
 {
     public byte armorSlot;
-    public short armorId;
     public NBTTagCompound itemData;
 
     public EquipAction()
@@ -25,11 +26,10 @@ public class EquipAction extends Action
         this.itemData = new NBTTagCompound();
     }
 
-    public EquipAction(byte armorSlot, short armorId, ItemStack item)
+    public EquipAction(byte armorSlot, ItemStack item)
     {
         this();
         this.armorSlot = armorSlot;
-        this.armorId = armorId;
 
         if (item != null)
         {
@@ -48,7 +48,7 @@ public class EquipAction extends Action
     {
         EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);
 
-        if (this.armorId == -1)
+        if (this.itemData == null)
         {
             actor.setItemStackToSlot(slot, ItemStack.EMPTY);
         }
@@ -69,12 +69,28 @@ public class EquipAction extends Action
     }
 
     @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.armorSlot = buf.readByte();
+        this.itemData = ByteBufUtils.readTag(buf);
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+
+        buf.writeByte(this.armorSlot);
+        ByteBufUtils.writeTag(buf, this.itemData);
+    }
+
+    @Override
     public void fromNBT(NBTTagCompound tag)
     {
         this.armorSlot = tag.getByte("Slot");
-        this.armorId = tag.getShort("Id");
 
-        if (this.armorId != -1)
+        if (tag.hasKey("Data"))
         {
             this.itemData = tag.getCompoundTag("Data");
         }
@@ -84,9 +100,8 @@ public class EquipAction extends Action
     public void toNBT(NBTTagCompound tag)
     {
         tag.setByte("Slot", this.armorSlot);
-        tag.setShort("Id", this.armorId);
 
-        if (this.armorId != -1)
+        if (this.itemData != null)
         {
             tag.setTag("Data", this.itemData);
         }

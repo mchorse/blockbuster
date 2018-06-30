@@ -2,7 +2,6 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -20,9 +19,7 @@ public class GuiMessageModal extends GuiModal
         this.label = label;
 
         this.button = GuiButtonElement.button(mc, "Ok", (b) -> parent.setDelegate(null));
-        this.button.resizer().parent(this.area).set(0, 0, 60, 20);
-        this.button.resizer().x.set(0.5F, Measure.RELATIVE, -30);
-        this.button.resizer().y.set(0.5F, Measure.RELATIVE, 10);
+        this.button.resizer().parent(this.area).set(0, 0, 60, 20).x(0.5F, -30).y(0.5F, 10);
 
         this.children.add(this.button);
     }

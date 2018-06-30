@@ -3,8 +3,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
-import mchorse.blockbuster.api.Model.Limb;
-import mchorse.blockbuster.api.Model.Pose;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRenderer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -305,7 +305,7 @@ public class GuiModelRenderer extends GuiElement
     /**
      * Render limb highlight and the anchor and origin point of the limb 
      */
-    public void renderLimbHighlight(Limb limb)
+    public void renderLimbHighlight(ModelLimb limb)
     {
         float f = 1F / 16F;
         float w = limb.size[0] * f;
@@ -426,7 +426,7 @@ public class GuiModelRenderer extends GuiElement
      */
     private void renderAABB()
     {
-        Pose current = this.panel.pose;
+        ModelPose current = this.panel.pose;
 
         float minX = -current.size[0] / 2.0F;
         float maxX = current.size[0] / 2.0F;

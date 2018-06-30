@@ -10,17 +10,17 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.Model.Limb;
-import mchorse.blockbuster.api.Model.Limb.Holding;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
+import mchorse.blockbuster.api.ModelLimb.Holding;
 
 /**
  * Model limb adapter
  */
-public class ModelLimbAdapter implements JsonSerializer<Model.Limb>, JsonDeserializer<Model.Limb>
+public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserializer<ModelLimb>
 {
     @Override
-    public JsonElement serialize(Limb src, Type typeOfSrc, JsonSerializationContext context)
+    public JsonElement serialize(ModelLimb src, Type typeOfSrc, JsonSerializationContext context)
     {
         JsonElement serial = ModelAdapter.plainGSON.toJsonTree(src, typeOfSrc);
         JsonObject map = serial.getAsJsonObject();
@@ -34,6 +34,11 @@ public class ModelLimbAdapter implements JsonSerializer<Model.Limb>, JsonDeseria
         if (src.holding != Holding.NONE)
         {
             map.addProperty("holding", src.holding == Holding.RIGHT ? "right" : "left");
+        }
+
+        if (src.slot != null)
+        {
+            map.addProperty("slot", src.slot.name);
         }
 
         if (!src.parent.isEmpty())
@@ -71,12 +76,11 @@ public class ModelLimbAdapter implements JsonSerializer<Model.Limb>, JsonDeseria
     }
 
     @Override
-    public Limb deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+    public ModelLimb deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
     {
-        Limb limb = ModelAdapter.plainGSON.fromJson(json, Limb.class);
+        ModelLimb limb = ModelAdapter.plainGSON.fromJson(json, ModelLimb.class);
         JsonObject object = json.getAsJsonObject();
 
-        /* Only due to holding */
         if (object.has("holding"))
         {
             String holding = object.get("holding").getAsString();
@@ -94,6 +98,20 @@ public class ModelLimbAdapter implements JsonSerializer<Model.Limb>, JsonDeseria
         if (limb.holding == null)
         {
             limb.holding = Holding.NONE;
+        }
+
+        if (object.has("slot"))
+        {
+            try
+            {
+                limb.slot = ArmorSlot.fromName(object.get("slot").getAsString());
+            }
+            catch (Exception e)
+            {}
+        }
+        else
+        {
+            limb.slot = ArmorSlot.NONE;
         }
 
         return limb;

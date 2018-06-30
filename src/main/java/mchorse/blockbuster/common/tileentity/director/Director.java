@@ -209,7 +209,6 @@ public class Director
                     RecordPlayer actor = entry.getValue();
                     boolean notAttached = true;
 
-                    // TODO: come back later
                     actor.stopPlaying();
                     actor.startPlaying(replay.id, 0, !this.loops);
                 }

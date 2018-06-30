@@ -1,14 +1,18 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
 
 public class GuiDashboardPanel extends GuiElement
 {
-    public GuiDashboardPanel(Minecraft mc)
+    protected GuiDashboard dashboard;
+
+    public GuiDashboardPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc);
         this.createChildren();
+        this.dashboard = dashboard;
     }
 
     public boolean needsBackground()

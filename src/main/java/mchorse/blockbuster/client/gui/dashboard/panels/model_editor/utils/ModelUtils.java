@@ -6,7 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
 import mchorse.blockbuster.api.json.ModelPoseAdapter;
@@ -30,8 +32,8 @@ public class ModelUtils
         GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
 
         builder.registerTypeAdapter(Model.class, new ModelAdapter());
-        builder.registerTypeAdapter(Model.Limb.class, new ModelLimbAdapter());
-        builder.registerTypeAdapter(Model.Pose.class, new ModelPoseAdapter());
+        builder.registerTypeAdapter(ModelLimb.class, new ModelLimbAdapter());
+        builder.registerTypeAdapter(ModelPose.class, new ModelPoseAdapter());
 
         Gson gson = builder.create();
         StringWriter writer = new StringWriter();

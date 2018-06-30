@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import java.util.UUID;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
@@ -17,7 +18,12 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class MountingAction extends Action
 {
-    public UUID target;
+    /**
+     * Default UUID 
+     */
+    public static final UUID DEFAULT = new UUID(0, 0);
+
+    public UUID target = DEFAULT;
     public boolean isMounting;
 
     public MountingAction()
@@ -71,6 +77,23 @@ public class MountingAction extends Action
         {
             actor.dismountRidingEntity();
         }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.target = new UUID(buf.readLong(), buf.readLong());
+        this.isMounting = buf.readBoolean();
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeLong(this.target.getMostSignificantBits());
+        buf.writeLong(this.target.getLeastSignificantBits());
+        buf.writeBoolean(this.isMounting);
     }
 
     @Override

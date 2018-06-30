@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Guess what this action does
@@ -18,7 +20,7 @@ import net.minecraft.world.World;
 public class PlaceBlockAction extends InteractBlockAction
 {
     public byte metadata;
-    public String block;
+    public String block = "";
 
     public PlaceBlockAction()
     {}
@@ -41,13 +43,33 @@ public class PlaceBlockAction extends InteractBlockAction
     public void apply(EntityLivingBase actor)
     {
         Block block = Block.REGISTRY.getObject(new ResourceLocation(this.block));
-        IBlockState state = block.getStateFromMeta(this.metadata);
-        actor.world.setBlockState(this.pos, state);
 
-        World world = actor.world;
+        if (block != null)
+        {
+            IBlockState state = block.getStateFromMeta(this.metadata);
+            actor.world.setBlockState(this.pos, state);
 
-        SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, null);
-        world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            World world = actor.world;
+
+            SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, null);
+            world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+        }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.metadata = buf.readByte();
+        this.block = ByteBufUtils.readUTF8String(buf);
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        buf.writeByte(this.metadata);
+        ByteBufUtils.writeUTF8String(buf, this.block);
     }
 
     @Override

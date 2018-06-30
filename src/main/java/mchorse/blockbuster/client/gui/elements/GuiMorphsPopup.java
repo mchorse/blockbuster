@@ -6,9 +6,10 @@ import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.api.Model.Pose;
-import mchorse.blockbuster.api.Model.Transform;
+import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
@@ -63,8 +64,8 @@ public class GuiMorphsPopup extends GuiScreen
 
     private GuiStringListElement list;
 
-    private Pose pose;
-    private Transform trans;
+    private ModelPose pose;
+    private ModelTransform trans;
 
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
@@ -144,7 +145,7 @@ public class GuiMorphsPopup extends GuiScreen
         }
     }
 
-    public void setTransform(Transform trans)
+    public void setTransform(ModelTransform trans)
     {
         this.trans = trans;
 
@@ -217,7 +218,7 @@ public class GuiMorphsPopup extends GuiScreen
                     this.pose = morph.customPose;
                 }
 
-                Map.Entry<String, Transform> entry = this.pose.limbs.entrySet().iterator().next();
+                Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
 
                 this.setTransform(entry.getValue());
 
@@ -337,7 +338,17 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        super.keyTyped(typedChar, keyCode);
+        if (keyCode == 1)
+        {
+            if (this.search.isFocused())
+            {
+                this.search.setFocused(false);
+            }
+            else
+            {
+                this.hide(true);
+            }
+        }
 
         this.search.textboxKeyTyped(typedChar, keyCode);
 
@@ -403,6 +414,8 @@ public class GuiMorphsPopup extends GuiScreen
         {
             return;
         }
+
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
         this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);

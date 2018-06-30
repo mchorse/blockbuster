@@ -4,7 +4,8 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
@@ -28,24 +29,17 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelOBJRenderer extends ModelCustomRenderer
 {
-    public static final VertexFormat POSITION_COLOR_NORMAL = new VertexFormat();
-
     /**
      * Mesh containing the data about the model
      */
     public OBJParser.MeshObject mesh;
 
+    /**
+     * Display lists 
+     */
     public OBJDisplayList[] displayLists;
 
-    static
-    {
-        POSITION_COLOR_NORMAL.addElement(DefaultVertexFormats.POSITION_3F);
-        POSITION_COLOR_NORMAL.addElement(DefaultVertexFormats.COLOR_4UB);
-        POSITION_COLOR_NORMAL.addElement(DefaultVertexFormats.NORMAL_3B);
-        POSITION_COLOR_NORMAL.addElement(DefaultVertexFormats.PADDING_1B);
-    }
-
-    public ModelOBJRenderer(ModelBase model, Model.Limb limb, Model.Transform transform, OBJParser.MeshObject mesh)
+    public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, OBJParser.MeshObject mesh)
     {
         super(model, limb, transform);
 
@@ -79,7 +73,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 int id = GLAllocation.generateDisplayLists(1);
                 boolean hasColor = material != null && !mesh.material.useTexture;
 
-                VertexFormat format = hasColor ? POSITION_COLOR_NORMAL : DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL;
+                VertexFormat format = hasColor ? DefaultVertexFormats.POSITION_NORMAL : DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL;
 
                 GlStateManager.glNewList(id, 4864);
                 renderer.begin(GL11.GL_TRIANGLES, format);
@@ -99,7 +93,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                     if (hasColor)
                     {
-                        renderer.pos(x, y, z).color(material.r, material.g, material.b, 1).normal(nx, ny, nz).endVertex();
+                        renderer.pos(x, y, z).normal(nx, ny, nz).endVertex();
                     }
                     else
                     {
@@ -182,7 +176,12 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             if (hasColor)
             {
+                float r = this.limb.color[0] * list.material.r;
+                float g = this.limb.color[1] * list.material.g;
+                float b = this.limb.color[2] * list.material.b;
+
                 GlStateManager.disableTexture2D();
+                GlStateManager.color(r, g, b, limb.opacity);
             }
 
             if (hasTexture && list.material.texture != null)
@@ -199,9 +198,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
                 }
                 catch (Exception e)
-                {
-                    System.out.println(RenderCustomModel.lastTexture);
-                }
+                {}
             }
 
             if (hasColor)

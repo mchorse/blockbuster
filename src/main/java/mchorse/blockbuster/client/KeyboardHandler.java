@@ -62,7 +62,7 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            this.mc.displayGuiScreen(ClientProxy.getDashboard(false));
+            ClientProxy.getDashboard(false).open();
         }
 
         if (this.cameraMarker.isPressed())

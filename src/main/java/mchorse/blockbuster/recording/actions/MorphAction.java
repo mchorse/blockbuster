@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.EntityUtils;
@@ -8,6 +9,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Morph action
@@ -55,6 +57,23 @@ public class MorphAction extends Action
             act.morph = morph;
             act.notifyPlayers();
         }
+    }
+
+    @Override
+    public void fromBuf(ByteBuf buf)
+    {
+        super.fromBuf(buf);
+        this.morph = MorphUtils.morphFromNBT(ByteBufUtils.readTag(buf));
+    }
+
+    @Override
+    public void toBuf(ByteBuf buf)
+    {
+        super.toBuf(buf);
+        NBTTagCompound tag = new NBTTagCompound();
+
+        MorphUtils.morphToNBT(tag, this.morph);
+        ByteBufUtils.writeTag(buf, tag);
     }
 
     @Override

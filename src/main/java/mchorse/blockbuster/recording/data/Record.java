@@ -103,6 +103,24 @@ public class Record
     }
 
     /**
+     * Get an action by given tick and index 
+     */
+    public Action getAction(int tick, int index)
+    {
+        if (tick >= 0 && tick < this.actions.size())
+        {
+            List<Action> actions = this.actions.get(tick);
+
+            if (actions != null && index >= 0 && index < actions.size())
+            {
+                return actions.get(index);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Reset unloading timer
      */
     public void resetUnload()
@@ -262,7 +280,14 @@ public class Record
 
         if (actions != null)
         {
-            actions.add(index, action);
+            if (index == -1)
+            {
+                actions.add(action);
+            }
+            else
+            {
+                actions.add(index, action);
+            }
         }
         else
         {
@@ -270,6 +295,31 @@ public class Record
             actions.add(action);
 
             this.actions.set(tick, actions);
+        }
+    }
+
+    /**
+     * Remove an action at given tick and index 
+     */
+    public void removeAction(int tick, int index)
+    {
+        if (index == -1)
+        {
+            this.actions.set(tick, null);
+        }
+        else
+        {
+            List<Action> actions = this.actions.get(tick);
+
+            if (index >= 0 && index < actions.size())
+            {
+                actions.remove(index);
+
+                if (actions.isEmpty())
+                {
+                    this.actions.set(tick, null);
+                }
+            }
         }
     }
 
