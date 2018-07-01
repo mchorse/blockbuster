@@ -5,6 +5,7 @@ blockbuster.success:
         
         was_registered: "{f}This actor was successfully attached to director block!"
         attached_device: "{f}This registering device was successfully attached to director block!"
+        attached_button: "{f}This playback button was successfully attached to director block!"
     
     model:
         export:
