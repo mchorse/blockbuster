@@ -69,7 +69,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        this.modelRenderer = new GuiModelRenderer(mc, this);
+        this.modelRenderer = new GuiModelRenderer(mc);
         this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
 
@@ -195,10 +195,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         ModelPose oldPose = this.renderModel.pose;
 
         this.renderModel = this.buildModel();
+        this.modelRenderer.model = this.renderModel;
 
         if (this.model != null)
         {
             this.renderModel.pose = oldPose;
+            this.modelRenderer.pose = oldPose;
         }
     }
 
@@ -262,6 +264,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             }
         }
 
+        this.modelRenderer.model = this.renderModel;
+        this.modelRenderer.texture = this.renderTexture;
+        this.modelRenderer.limb = this.limb;
+        this.modelRenderer.pose = this.pose;
+
         if (this.renderTexture == null)
         {
             this.renderTexture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
@@ -283,6 +290,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (limb != null)
         {
             this.limb = limb;
+            this.modelRenderer.limb = limb;
+
             this.limbs.setCurrent(str);
             this.poses.setLimb(str);
         }
@@ -295,6 +304,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (pose != null)
         {
             this.pose = pose;
+            this.modelRenderer.pose = pose;
+
             this.renderModel.pose = pose;
             this.poses.setLimb(this.limb.name);
         }

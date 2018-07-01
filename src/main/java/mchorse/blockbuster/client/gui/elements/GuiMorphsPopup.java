@@ -6,10 +6,11 @@ import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
@@ -17,6 +18,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -27,7 +29,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 /**
@@ -63,6 +64,7 @@ public class GuiMorphsPopup extends GuiScreen
     private GuiTrackpadElement rz;
 
     private GuiStringListElement list;
+    private GuiModelRenderer modelRenderer;
 
     private ModelPose pose;
     private ModelTransform trans;
@@ -72,6 +74,10 @@ public class GuiMorphsPopup extends GuiScreen
         this.morphs = new GuiCreativeMorphs(perRow, selected, morphing);
         this.morphs.setHidden(true);
         this.morphs.shiftX = 8;
+
+        this.modelRenderer = new GuiModelRenderer(Minecraft.getMinecraft());
+        this.modelRenderer.looking = false;
+        this.elements.add(this.modelRenderer);
 
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -109,11 +115,19 @@ public class GuiMorphsPopup extends GuiScreen
         element.resizer().y.set(1, Measure.RELATIVE, -30);
         this.elements.add(element);
 
-        element = this.list = new GuiStringListElement(mc, (str) -> this.setTransform(this.pose.limbs.get(str)));
+        element = this.list = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         element.resizer().parent(this.area).set(5, 30, 80, 90).h.set(1, Measure.RELATIVE, -40);
         this.elements.add(element);
 
         this.elements.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz);
+    }
+
+    private void setLimb(String str)
+    {
+        ModelLimb limb = ((CustomMorph) this.lastMorph).model.limbs.get(str);
+
+        this.modelRenderer.limb = limb;
+        this.setTransform(this.pose.limbs.get(str));
     }
 
     public MorphCell getSelected()
@@ -221,6 +235,11 @@ public class GuiMorphsPopup extends GuiScreen
                 Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
 
                 this.setTransform(entry.getValue());
+
+                this.modelRenderer.model = ModelCustom.MODELS.get(morph.getKey());
+                this.modelRenderer.texture = morph.skin == null ? morph.model.defaultTexture : morph.skin;
+                this.modelRenderer.pose = this.pose;
+                this.modelRenderer.limb = morph.model.limbs.get(entry.getKey());
 
                 this.list.clear();
                 this.list.add(this.pose.limbs.keySet());
@@ -415,24 +434,15 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
-        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);
 
-        this.search.drawTextBox();
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0, 120);
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
-        GlStateManager.popMatrix();
 
         MorphCell cell = this.morphs.getSelected();
 
         if (this.elements.isVisible())
         {
             this.elements.draw(mouseX, mouseY, partialTicks);
-            this.lastMorph.renderOnScreen(this.mc.thePlayer, this.area.getX(0.33F), this.area.getY(0.8F), this.area.h / 3, 1);
         }
         else if (cell != null)
         {
@@ -445,6 +455,9 @@ public class GuiMorphsPopup extends GuiScreen
             this.drawCenteredString(fontRendererObj, cell.current().name, center, y, 0xffffff);
             this.drawCenteredString(fontRendererObj, cell.current().morph.name, center, y + 14, 0x888888);
         }
+
+        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);
+        this.search.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
