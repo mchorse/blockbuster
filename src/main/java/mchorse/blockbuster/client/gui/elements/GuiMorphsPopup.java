@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
@@ -43,6 +44,7 @@ public class GuiMorphsPopup extends GuiScreen
     public GuiButton close;
     public GuiButton poses;
     public Consumer<AbstractMorph> callback;
+    public Consumer<Boolean> callbackOpen;
     private GuiCreativeMorphs morphs;
     private AbstractMorph lastMorph;
 
@@ -68,6 +70,8 @@ public class GuiMorphsPopup extends GuiScreen
 
     private ModelPose pose;
     private ModelTransform trans;
+
+    public boolean transparent;
 
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
@@ -184,6 +188,11 @@ public class GuiMorphsPopup extends GuiScreen
         this.hidden = hide;
         this.morphs.setHidden(hide);
         this.elements.setVisible(false);
+
+        if (this.callbackOpen != null)
+        {
+            this.callbackOpen.accept(hide);
+        }
     }
 
     public boolean isHidden()
@@ -236,6 +245,7 @@ public class GuiMorphsPopup extends GuiScreen
 
                 this.setTransform(entry.getValue());
 
+                this.modelRenderer.setVisible(!this.transparent);
                 this.modelRenderer.model = ModelCustom.MODELS.get(morph.getKey());
                 this.modelRenderer.texture = morph.skin == null ? morph.model.defaultTexture : morph.skin;
                 this.modelRenderer.pose = this.pose;
@@ -434,7 +444,12 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+
+        if (this.transparent && !this.elements.isVisible() || !this.transparent)
+        {
+            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
+        }
 
         this.morphs.drawScreen(mouseX, mouseY, partialTicks);
 

@@ -183,6 +183,20 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     }
 
     @Override
+    public void appear()
+    {
+        this.dashboard.morphs.transparent = true;
+        this.dashboard.morphs.callbackOpen = (open) -> this.subChildren.setVisible(open);
+    }
+
+    @Override
+    public void disappear()
+    {
+        this.dashboard.morphs.transparent = false;
+        this.dashboard.morphs.callbackOpen = null;
+    }
+
+    @Override
     public void open()
     {
         this.updateList();
@@ -365,7 +379,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model != null)
+        if (this.model != null && this.dashboard.morphs.isHidden())
         {
             MorphCell cell = this.dashboard.morphs.getSelected();
 
@@ -405,7 +419,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
 
             this.inventory.draw(mouseX, mouseY, partialTicks);
         }
-        else
+        else if (this.model == null)
         {
             this.drawCenteredString(this.font, "Select a model block...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
