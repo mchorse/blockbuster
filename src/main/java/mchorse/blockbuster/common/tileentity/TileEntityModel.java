@@ -204,21 +204,21 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
-        if (compound.hasKey("Shadow") || !this.shadow) compound.setBoolean("Shadow", this.shadow);
-        if (compound.hasKey("Yaw") || this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
-        if (compound.hasKey("Pitch") || this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
-        if (compound.hasKey("Body") || this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
-        if (compound.hasKey("ShiftX") || this.x != 0) compound.setFloat("ShiftX", this.x);
-        if (compound.hasKey("ShiftY") || this.y != 0) compound.setFloat("ShiftY", this.y);
-        if (compound.hasKey("ShiftZ") || this.z != 0) compound.setFloat("ShiftZ", this.z);
-        if (compound.hasKey("RotateX") || this.rx != 0) compound.setFloat("RotateX", this.rx);
-        if (compound.hasKey("RotateY") || this.ry != 0) compound.setFloat("RotateY", this.ry);
-        if (compound.hasKey("RotateZ") || this.rz != 0) compound.setFloat("RotateZ", this.rz);
-        if (compound.hasKey("Scale") || this.one == true) compound.setBoolean("Scale", this.one);
+        if (!this.shadow) compound.setBoolean("Shadow", this.shadow);
+        if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
+        if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
+        if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
+        if (this.x != 0) compound.setFloat("ShiftX", this.x);
+        if (this.y != 0) compound.setFloat("ShiftY", this.y);
+        if (this.z != 0) compound.setFloat("ShiftZ", this.z);
+        if (this.rx != 0) compound.setFloat("RotateX", this.rx);
+        if (this.ry != 0) compound.setFloat("RotateY", this.ry);
+        if (this.rz != 0) compound.setFloat("RotateZ", this.rz);
+        if (this.one == true) compound.setBoolean("Scale", this.one);
 
-        if (compound.hasKey("ScaleX") || this.sx != 1) compound.setFloat("ScaleX", this.sx);
-        if (compound.hasKey("ScaleY") || this.sy != 1) compound.setFloat("ScaleY", this.sy);
-        if (compound.hasKey("ScaleZ") || this.sz != 1) compound.setFloat("ScaleZ", this.sz);
+        if (this.sx != 1) compound.setFloat("ScaleX", this.sx);
+        if (this.sy != 1) compound.setFloat("ScaleY", this.sy);
+        if (this.sz != 1) compound.setFloat("ScaleZ", this.sz);
 
         NBTTagList list = new NBTTagList();
 
