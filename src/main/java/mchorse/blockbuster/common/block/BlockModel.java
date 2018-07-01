@@ -75,7 +75,7 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
     {
-        this.lastYaw = placer.rotationYaw;
+        this.lastYaw = MathHelper.wrapDegrees(180 - placer.rotationYaw);
 
         return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack);
     }
@@ -97,7 +97,11 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta)
     {
-        return new TileEntityModel(MathHelper.wrapDegrees(180 - this.lastYaw));
+        TileEntity entity = new TileEntityModel(this.lastYaw);
+
+        this.lastYaw = 0;
+
+        return entity;
     }
 
     /* Setting up visual properties and collision box */
