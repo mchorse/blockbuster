@@ -1,11 +1,13 @@
 package mchorse.blockbuster.api;
 
-import java.io.File;
+import java.util.Map;
 
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser.MeshObject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,15 +30,9 @@ public class ModelClientHandler extends ModelHandler
         ModelEntry entry = this.pack.models.get(name);
         Model mod = cell.model;
 
-        File objModel = null;
-        File mtlFile = null;
+        OBJParser parser = entry == null ? null : entry.createOBJParser(name, mod);
+        Map<String, MeshObject> meshes = parser == null ? null : parser.compile();
         boolean fallback = true;
-
-        if (entry != null)
-        {
-            objModel = entry.objModel;
-            mtlFile = entry.mtlFile;
-        }
 
         if (!mod.model.isEmpty())
         {
@@ -48,7 +44,7 @@ public class ModelClientHandler extends ModelHandler
                 ModelExtrudedLayer.clearByModel(ModelCustom.MODELS.get(name));
 
                 /* Parse custom custom model with a custom class */
-                ModelParser.parse(name, mod, clazz, objModel, mtlFile);
+                ModelParser.parse(name, mod, clazz, meshes);
 
                 fallback = false;
             }
@@ -60,7 +56,7 @@ public class ModelClientHandler extends ModelHandler
 
         if (fallback)
         {
-            ModelParser.parse(name, mod, objModel, mtlFile);
+            ModelParser.parse(name, mod, meshes);
         }
     }
 
