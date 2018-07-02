@@ -303,7 +303,7 @@ public class OBJParser
      * 
      * It holds faces for every object found in OBJ file
      */
-    protected static class OBJDataMesh
+    public static class OBJDataMesh
     {
         public String name;
         public List<OBJDataGroup> groups = new ArrayList<OBJDataGroup>();

@@ -7,51 +7,27 @@
     "poses": {
         "standing": {
             "size": [ 0.6, 0.8, 0.6 ],
-            "limbs": {
-                "body": {
-                    "translate": [ 0, 0, 0 ]
-                }
-            }
+            "limbs": {}
         },
         "riding": {
             "size": [ 0.6, 0.8, 0.6 ],
-            "limbs": {
-                "body": {
-                    "translate": [ 0, 0, 0 ]
-                }
-            }
+            "limbs": {}
         },
         "sneaking": {
             "size": [ 0.6, 0.8, 0.6 ],
-            "limbs": {
-                "body": {
-                    "translate": [ 0, 0, 0 ]
-                }
-            }
+            "limbs": {}
         },
         "sleeping": {
             "size": [ 0.6, 0.8, 0.6 ],
-            "limbs": {
-                "body": {
-                    "translate": [ 0, 0, 0 ]
-                }
-            }
+            "limbs": {}
         },
         "flying": {
             "size": [ 0.6, 0.8, 0.6 ],
-            "limbs": {
-                "body": {
-                    "translate": [ 0, 0, 0 ]
-                }
-            }
+            "limbs": {}
         }
     },
     "limbs": {
-        "body": {
-            "size": [ 8, 8, 8 ],
-            "texture": [ 0, 0 ],
-            "anchor": [ 0.5, 1, 0.5 ]
-        }
+        "body": {}
     },
     "texture": [ 64, 64 ]
 }

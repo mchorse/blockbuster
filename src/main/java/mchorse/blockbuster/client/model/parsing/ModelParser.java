@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.model.parsing;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,34 +32,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelParser
 {
     public String key;
-    public File objModel;
-    public File mtlFile;
+    public Map<String, OBJParser.MeshObject> meshes;
 
     /**
      * Parse with default class 
      */
     public static void parse(String key, Model data)
     {
-        parse(key, data, ModelCustom.class, null, null);
+        parse(key, data, ModelCustom.class, null);
     }
 
     /**
      * Parse with default class 
      */
-    public static void parse(String key, Model data, File objModel, File mtlFile)
+    public static void parse(String key, Model data, Map<String, OBJParser.MeshObject> meshes)
     {
-        parse(key, data, ModelCustom.class, objModel, mtlFile);
+        parse(key, data, ModelCustom.class, meshes);
     }
 
     /**
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
      */
-    public static void parse(String key, Model data, Class<? extends ModelCustom> clazz, File objModel, File mtlFile)
+    public static void parse(String key, Model data, Class<? extends ModelCustom> clazz, Map<String, OBJParser.MeshObject> meshes)
     {
         try
         {
-            ModelCustom model = new ModelParser(key, objModel, mtlFile).parseModel(data, clazz);
+            ModelCustom model = new ModelParser(key, meshes).parseModel(data, clazz);
             ModelCustom.MODELS.put(key, model);
         }
         catch (Exception e)
@@ -70,11 +68,15 @@ public class ModelParser
         }
     }
 
-    public ModelParser(String key, File objModel, File mtlFile)
+    public ModelParser(String key, Map<String, OBJParser.MeshObject> meshes)
     {
+        if (meshes == null)
+        {
+            meshes = new HashMap<String, OBJParser.MeshObject>();
+        }
+
         this.key = key;
-        this.objModel = objModel;
-        this.mtlFile = mtlFile;
+        this.meshes = meshes;
     }
 
     /**
@@ -110,33 +112,13 @@ public class ModelParser
 
         ModelPose standing = data.poses.get("standing");
 
-        /* OBJ model support */
-        Map<String, OBJParser.MeshObject> meshes = new HashMap<String, OBJParser.MeshObject>();
-
-        if (this.objModel != null && this.objModel.isFile() && data.providesObj)
-        {
-            try
-            {
-                OBJParser parser = new OBJParser(this.objModel, data.providesMtl ? this.mtlFile : null);
-
-                parser.read();
-                meshes = parser.compile();
-                parser.setupTextures(this.key, objModel.getParentFile());
-            }
-            catch (Exception e)
-            {
-                System.out.println("An error occured OBJ model loading!");
-                e.printStackTrace();
-            }
-        }
-
         /* First, iterate to create every limb */
         for (Map.Entry<String, ModelLimb> entry : data.limbs.entrySet())
         {
             ModelLimb limb = entry.getValue();
             ModelTransform transform = standing.limbs.get(entry.getKey());
 
-            ModelCustomRenderer renderer = this.createRenderer(model, meshes, data, limb, transform);
+            ModelCustomRenderer renderer = this.createRenderer(model, data, limb, transform);
 
             if (limb.holding == Holding.LEFT) left.add(renderer);
             if (limb.holding == Holding.RIGHT) right.add(renderer);
@@ -190,7 +172,7 @@ public class ModelParser
     /**
      * Create limb renderer for the model
      */
-    protected ModelCustomRenderer createRenderer(ModelBase model, Map<String, OBJParser.MeshObject> meshes, Model data, ModelLimb limb, ModelTransform transform)
+    protected ModelCustomRenderer createRenderer(ModelBase model, Model data, ModelLimb limb, ModelTransform transform)
     {
         ModelCustomRenderer renderer;
 
@@ -202,9 +184,9 @@ public class ModelParser
         float ay = limb.anchor[1];
         float az = limb.anchor[2];
 
-        if (!meshes.isEmpty() && meshes.containsKey(limb.name))
+        if (this.meshes.containsKey(limb.name))
         {
-            renderer = new ModelOBJRenderer(model, limb, transform, meshes.get(limb.name));
+            renderer = new ModelOBJRenderer(model, limb, transform, this.meshes.get(limb.name));
         }
         else
         {

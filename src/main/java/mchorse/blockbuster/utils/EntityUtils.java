@@ -14,9 +14,12 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -26,6 +29,15 @@ import net.minecraft.world.World;
  */
 public class EntityUtils
 {
+    /**
+     * Send status message. It's like chat, but it will be displayed 
+     * over the hotbar and won't clutter the chat 
+     */
+    public static void sendStatusMessage(EntityPlayerMP player, ITextComponent message)
+    {
+        player.connection.sendPacket(new SPacketChat(message, (byte) 2));
+    }
+
     /**
      * Get string pose key for entity state.
      */

@@ -24,12 +24,11 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 public class GuiModelRenderer extends GuiElement
 {
-    public GuiModelEditorPanel panel;
-
     public DummyEntity dummy;
     private IBlockState block = Blocks.GRASS.getDefaultState();
 
@@ -54,11 +53,15 @@ public class GuiModelRenderer extends GuiElement
     public boolean aabb;
     public boolean looking = true;
 
-    public GuiModelRenderer(Minecraft mc, GuiModelEditorPanel panel)
+    public ResourceLocation texture;
+    public ModelCustom model;
+    public ModelPose pose;
+    public ModelLimb limb;
+
+    public GuiModelRenderer(Minecraft mc)
     {
         super(mc);
 
-        this.panel = panel;
         this.dummy = new DummyEntity(null);
     }
 
@@ -166,7 +169,7 @@ public class GuiModelRenderer extends GuiElement
      */
     private void drawModel(int yaw, int pitch, float partialTicks)
     {
-        ModelCustom model = this.panel.renderModel;
+        ModelCustom model = this.model;
 
         /* Changing projection mode to perspective. In order for this to 
          * work, depth buffer must also be cleared. Thanks to Gegy for 
@@ -227,7 +230,7 @@ public class GuiModelRenderer extends GuiElement
             headYaw = headPitch = 0;
         }
 
-        model.pose = this.panel.pose;
+        model.pose = this.pose;
         model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * partialTicks) / 6.0F, 0.0F, 1.0F);
         model.setLivingAnimations(this.dummy, headYaw, headPitch, partialTicks);
         model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
@@ -240,32 +243,34 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
-        if (this.panel.renderTexture != null)
+        if (this.texture != null)
         {
-            RenderCustomModel.lastTexture = this.panel.renderTexture;
-            this.mc.renderEngine.bindTexture(this.panel.renderTexture);
+            RenderCustomModel.bindLastTexture(this.texture);
         }
 
         model.render(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
 
         if (this.items)
         {
-            ItemRenderer.renderItems(this.dummy, this.panel.renderModel, limbSwing, this.swingAmount, partialTicks, this.timer, yaw, pitch, factor);
+            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partialTicks, this.timer, yaw, pitch, factor);
         }
 
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
 
-        for (ModelCustomRenderer limb : model.limbs)
+        if (this.limb != null)
         {
-            if (limb.limb.name.equals(this.panel.limb.name))
+            for (ModelCustomRenderer limb : model.limbs)
             {
-                limb.postRender(1F / 16F);
+                if (limb.limb.name.equals(this.limb.name))
+                {
+                    limb.postRender(1F / 16F);
+                }
             }
-        }
 
-        this.renderLimbHighlight(this.panel.limb);
+            this.renderLimbHighlight(this.limb);
+        }
 
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
@@ -426,7 +431,7 @@ public class GuiModelRenderer extends GuiElement
      */
     private void renderAABB()
     {
-        ModelPose current = this.panel.pose;
+        ModelPose current = this.pose;
 
         float minX = -current.size[0] / 2.0F;
         float maxX = current.size[0] / 2.0F;
