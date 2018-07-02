@@ -183,6 +183,20 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     }
 
     @Override
+    public void appear()
+    {
+        this.dashboard.morphs.transparent = true;
+        this.dashboard.morphs.callbackOpen = (open) -> this.subChildren.setVisible(open);
+    }
+
+    @Override
+    public void disappear()
+    {
+        this.dashboard.morphs.transparent = false;
+        this.dashboard.morphs.callbackOpen = null;
+    }
+
+    @Override
     public void open()
     {
         this.updateList();
@@ -369,16 +383,19 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         {
             MorphCell cell = this.dashboard.morphs.getSelected();
 
-            if (cell != null)
+            if (this.dashboard.morphs.isHidden())
             {
-                int x = this.area.getX(0.5F);
-                int y = this.area.getY(0.65F);
+                if (cell != null)
+                {
+                    int x = this.area.getX(0.5F);
+                    int y = this.area.getY(0.65F);
 
-                GuiScreen screen = this.mc.currentScreen;
+                    GuiScreen screen = this.mc.currentScreen;
 
-                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-                cell.current().morph.renderOnScreen(this.mc.player, x, y, this.area.h / 4F, 1.0F);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                    GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+                    cell.current().morph.renderOnScreen(this.mc.player, x, y, this.area.h / 4F, 1.0F);
+                    GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                }
             }
 
             this.model.morph = cell == null ? null : cell.current().morph;
@@ -405,7 +422,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
 
             this.inventory.draw(mouseX, mouseY, partialTicks);
         }
-        else
+        else if (this.model == null)
         {
             this.drawCenteredString(this.font, "Select a model block...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }

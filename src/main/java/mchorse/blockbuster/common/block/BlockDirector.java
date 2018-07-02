@@ -8,7 +8,7 @@ import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,12 +19,14 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -163,7 +165,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
         if (item.getItem() instanceof ItemRegister && !world.isRemote)
         {
             ((ItemRegister) item.getItem()).registerStack(item, pos);
-            L10n.success(player, "director.attached_device");
+            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.success.director.attached_device"));
 
             return true;
         }
@@ -182,6 +184,11 @@ public class BlockDirector extends Block implements ITileEntityProvider
         }
 
         ItemPlayback.saveBlockPos("Dir", item, pos);
+
+        if (!world.isRemote)
+        {
+            EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.success.director.attached_button"));
+        }
 
         if (CameraHandler.isApertureLoaded())
         {

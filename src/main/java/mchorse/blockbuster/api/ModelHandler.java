@@ -9,6 +9,8 @@ import java.util.Set;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser.OBJDataMesh;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -61,19 +63,7 @@ public class ModelHandler
             {
                 if (entry.customModel == null)
                 {
-                    /* Generate custom model for an OBJ model */
-                    InputStream modelStream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/obj.json");
-                    Model data = Model.parse(modelStream);
-
-                    data.name = model;
-
-                    if (entry.mtlFile == null)
-                    {
-                        data.providesMtl = false;
-                    }
-
-                    this.addModel(model, new ModelCell(data, timestamp));
-                    modelStream.close();
+                    this.addModel(model, new ModelCell(this.generateObjModel(model, entry), timestamp));
                 }
                 else
                 {
@@ -123,6 +113,43 @@ public class ModelHandler
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Generate custom model based on given OBJ
+     */
+    private Model generateObjModel(String model, ModelEntry entry) throws Exception
+    {
+        /* Generate custom model for an OBJ model */
+        InputStream modelStream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/obj.json");
+        Model data = Model.parse(modelStream);
+
+        data.name = model;
+
+        if (entry.mtlFile == null)
+        {
+            data.providesMtl = false;
+        }
+
+        modelStream.close();
+
+        /* Generate limbs */
+        OBJParser parser = entry.createOBJParser(model, data);
+
+        if (parser != null)
+        {
+            for (OBJDataMesh mesh : parser.objects)
+            {
+                ModelLimb limb = new ModelLimb();
+
+                limb.name = mesh.name;
+                data.limbs.put(mesh.name, limb);
+            }
+        }
+
+        data.fillInMissing();
+
+        return data;
     }
 
     /**

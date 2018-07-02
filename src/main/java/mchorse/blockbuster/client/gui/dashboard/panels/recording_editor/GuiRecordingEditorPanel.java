@@ -118,6 +118,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
         this.list.elements.addAll(Action.TYPES.keySet());
+        this.list.background = true;
 
         this.add.resizer().set(0, 2, 16, 16).parent(this.selector.area).x(1F, -18);
         this.dupe.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
@@ -150,6 +151,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.list.setVisible(false);
             this.selectAction(action);
             this.selector.index = index == -1 ? this.record.actions.get(tick).size() - 1 : index;
+            this.selector.recalculateVertical();
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
         }
@@ -183,6 +185,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         {}
 
         this.record.addAction(tick, index, action);
+        this.selector.recalculateVertical();
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
     }
 
@@ -197,8 +200,19 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         int index = this.selector.index;
 
         this.record.removeAction(tick, index);
-        this.editor.setDelegate(null);
-        this.selector.index = -1;
+
+        if (this.selector.index == 0)
+        {
+            this.selector.index = -1;
+            this.editor.setDelegate(null);
+        }
+        else
+        {
+            this.selector.index--;
+            this.editor.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
+        }
+
+        this.selector.recalculateVertical();
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, null));
     }
 
@@ -272,6 +286,19 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.editor.setDelegate(null);
         this.list.filter("");
         this.list.setVisible(false);
+    }
+
+    public void moveTo(int tick)
+    {
+        Action action = this.record.getAction(this.selector.tick, this.selector.index);
+
+        this.removeAction();
+        this.record.addAction(tick, action);
+        this.selector.recalculateVertical();
+        this.selector.tick = tick;
+        this.selector.index = this.record.actions.get(tick).size() - 1;
+        this.editor.setDelegate(getPanel(action));
+        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
     }
 
     @Override

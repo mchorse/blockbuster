@@ -31,7 +31,7 @@ public class ModelLimb
 
     /* Game play */
     public Holding holding = Holding.NONE;
-    public ArmorSlot slot = null;
+    public ArmorSlot slot = ArmorSlot.NONE;
     public boolean swiping;
     public boolean looking;
     public boolean swinging;

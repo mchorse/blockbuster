@@ -20,10 +20,20 @@ public class GuiRecordSelector extends GuiElement
 {
     public GuiRecordingEditorPanel panel;
     public ScrollArea scroll;
+    public ScrollArea vertical;
     public Consumer<Action> callback;
 
     public int tick = -1;
     public int index = -1;
+
+    public boolean lastDragging = false;
+    public int lastX;
+    public int lastY;
+    public int lastH;
+    public int lastV;
+
+    public boolean dragging;
+    public boolean moving;
 
     public GuiRecordSelector(Minecraft mc, GuiRecordingEditorPanel panel, Consumer<Action> callback)
     {
@@ -33,6 +43,7 @@ public class GuiRecordSelector extends GuiElement
         this.scroll = new ScrollArea(34);
         this.scroll.direction = ScrollDirection.HORIZONTAL;
         this.scroll.scrollSpeed = 34;
+        this.vertical = new ScrollArea(20);
         this.panel = panel;
         this.callback = callback;
     }
@@ -44,6 +55,9 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.copy(this.area);
         this.scroll.w -= 20;
+
+        this.vertical.copy(this.area);
+        this.vertical.w = 4;
     }
 
     public void update()
@@ -53,13 +67,48 @@ public class GuiRecordSelector extends GuiElement
             this.tick = this.index = -1;
             this.scroll.setSize(this.panel.record.actions.size());
             this.scroll.clamp();
+
+            this.recalculateVertical();
         }
+    }
+
+    public void recalculateVertical()
+    {
+        int max = 0;
+
+        if (this.panel.record != null)
+        {
+            for (List<Action> actions : this.panel.record.actions)
+            {
+                if (actions != null && actions.size() > max)
+                {
+                    max = actions.size();
+                }
+            }
+
+            max += 1;
+        }
+
+        this.vertical.setSize(max);
+        this.vertical.clamp();
     }
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        if (super.mouseClicked(mouseX, mouseY, mouseButton) || this.scroll.mouseClicked(mouseX, mouseY))
+        this.lastX = mouseX;
+        this.lastY = mouseY;
+
+        if (mouseButton == 2 && this.area.isInside(mouseX, mouseY))
+        {
+            this.lastDragging = true;
+            this.lastH = this.scroll.scroll;
+            this.lastV = this.vertical.scroll;
+
+            return true;
+        }
+
+        if (super.mouseClicked(mouseX, mouseY, mouseButton) || this.scroll.mouseClicked(mouseX, mouseY) || this.vertical.mouseClicked(mouseX, mouseY))
         {
             return true;
         }
@@ -67,7 +116,7 @@ public class GuiRecordSelector extends GuiElement
         if (this.scroll.isInside(mouseX, mouseY))
         {
             int index = this.scroll.getIndex(mouseX, mouseY);
-            int sub = (mouseY - this.area.y) / 20;
+            int sub = this.vertical.getIndex(mouseX, mouseY);
 
             if (index >= 0 && index < this.panel.record.actions.size())
             {
@@ -81,6 +130,14 @@ public class GuiRecordSelector extends GuiElement
 
                 this.tick = index;
                 this.index = within ? sub : -1;
+
+                if (this.index != -1)
+                {
+                    System.out.println("TF! " + mouseX + " " + mouseY);
+
+                    this.dragging = true;
+                    this.moving = false;
+                }
             }
             else
             {
@@ -102,7 +159,16 @@ public class GuiRecordSelector extends GuiElement
     {
         super.mouseReleased(mouseX, mouseY, state);
 
+        if (this.moving)
+        {
+            this.panel.moveTo(this.scroll.getIndex(mouseX, mouseY));
+        }
+
+        this.lastDragging = false;
+        this.dragging = false;
+        this.moving = false;
         this.scroll.mouseReleased(mouseX, mouseY);
+        this.vertical.mouseReleased(mouseX, mouseY);
     }
 
     @Override
@@ -113,12 +179,28 @@ public class GuiRecordSelector extends GuiElement
             return;
         }
 
+        if (this.lastDragging)
+        {
+            this.scroll.scroll = this.lastH + (this.lastX - mouseX);
+            this.scroll.clamp();
+            this.vertical.scroll = this.lastV + (this.lastY - mouseY);
+            this.vertical.clamp();
+        }
+
+        if (this.dragging && !this.moving && (Math.abs(mouseX - this.lastX) > 2 || Math.abs(mouseY - this.lastY) > 2))
+        {
+            System.out.println("TF? " + mouseX + " " + mouseY);
+
+            this.moving = true;
+        }
+
         this.scroll.drag(mouseX, mouseY);
+        this.vertical.drag(mouseX, mouseY);
 
         GuiScreen screen = this.mc.currentScreen;
 
         Gui.drawRect(this.scroll.x, this.scroll.y, this.scroll.getX(1), this.scroll.getY(1), 0x88000000);
-        GuiUtils.scissor(this.area.x, this.area.y - 12, this.area.w, this.area.h + 12, screen.width, screen.height);
+        GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
 
         int h = this.scroll.scrollItemSize;
         int index = this.scroll.scroll / h;
@@ -134,11 +216,6 @@ public class GuiRecordSelector extends GuiElement
                 Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.getY(1), 0x440088ff);
             }
 
-            if (i % 5 == 0)
-            {
-                this.font.drawStringWithShadow(String.valueOf(i), x, this.scroll.y - 12, 0xffffff);
-            }
-
             if (i >= 0 && i < this.panel.record.actions.size())
             {
                 List<Action> actions = this.panel.record.actions.get(i);
@@ -149,7 +226,7 @@ public class GuiRecordSelector extends GuiElement
 
                     for (Action action : actions)
                     {
-                        int y = this.scroll.y + j * 20;
+                        int y = this.scroll.y + j * 20 - this.vertical.scroll;
                         int color = MathHelper.hsvToRGB((float) (action.getType() - 1) / 20F, 1F, 1F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
@@ -171,7 +248,30 @@ public class GuiRecordSelector extends GuiElement
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
+        if (this.moving)
+        {
+            int x = mouseX - h / 2;
+            int y = mouseY;
+
+            Action action = this.panel.record.getAction(this.tick, this.index);
+            int color = MathHelper.hsvToRGB((float) (action.getType() - 1) / 20F, 1F, 1F);
+
+            Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+            this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
+        }
+
+        for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
+        {
+            int x = this.scroll.x - this.scroll.scroll + i * h;
+
+            if (i % 5 == 0)
+            {
+                this.font.drawStringWithShadow(String.valueOf(i), x, this.scroll.y - 12, 0xffffff);
+            }
+        }
+
         this.scroll.drawScrollbar();
+        this.vertical.drawScrollbar();
         this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 32, 20, this.area.h, 32, 32, 0, 0);
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);

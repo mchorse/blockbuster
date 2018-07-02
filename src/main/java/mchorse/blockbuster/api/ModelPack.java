@@ -10,6 +10,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
+
 /**
  * Model pack class
  *
@@ -211,6 +213,28 @@ public class ModelPack
             long c = this.mtlFile == null ? 0 : this.mtlFile.lastModified();
 
             return Math.max(Math.max(a, b), c);
+        }
+
+        public OBJParser createOBJParser(String key, Model model)
+        {
+            if (!model.providesObj)
+            {
+                return null;
+            }
+
+            OBJParser parser = new OBJParser(this.objModel, model.providesMtl ? this.mtlFile : null);
+
+            try
+            {
+                parser.read();
+                parser.setupTextures(key, this.objModel.getParentFile());
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return parser;
         }
     }
 }

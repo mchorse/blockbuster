@@ -23,6 +23,7 @@ import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
+import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.common.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -59,6 +60,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public ModelPose pose;
     public ModelLimb limb;
 
+    public ModelParser modelParser;
+    public OBJParser objParser;
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
 
@@ -66,7 +69,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        this.modelRenderer = new GuiModelRenderer(mc, this);
+        this.modelRenderer = new GuiModelRenderer(mc);
         this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
 
@@ -171,8 +174,6 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (!exists && this.model.defaultTexture == null)
             {
-                /* TODO: warn? */
-
                 return false;
             }
         }
@@ -194,10 +195,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         ModelPose oldPose = this.renderModel.pose;
 
         this.renderModel = this.buildModel();
+        this.modelRenderer.model = this.renderModel;
 
         if (this.model != null)
         {
             this.renderModel.pose = oldPose;
+            this.modelRenderer.pose = oldPose;
         }
     }
 
@@ -210,17 +213,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         try
         {
-            File objModel = null;
-            File mtlFile = null;
-            ModelEntry entry = ClientProxy.actorPack.pack.models.get(this.modelName);
-
-            if (entry != null)
-            {
-                objModel = entry.objModel;
-                mtlFile = this.model.providesMtl ? entry.mtlFile : null;
-            }
-
-            return new ModelParser(this.modelName, objModel, mtlFile).parseModel(this.model, ModelCustom.class);
+            return this.modelParser.parseModel(this.model, ModelCustom.class);
         }
         catch (Exception e)
         {
@@ -244,6 +237,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         this.modelName = name;
         this.model = model.clone();
+
+        ModelEntry entry = ClientProxy.actorPack.pack.models.get(this.modelName);
+        this.objParser = entry == null ? null : entry.createOBJParser(this.modelName, this.model);
+        this.modelParser = new ModelParser(this.modelName, this.objParser == null ? null : objParser.compile());
+
         this.renderModel = this.buildModel();
         this.renderModel.pose = this.model.getPose("standing");
         this.pose = this.renderModel.pose;
@@ -266,6 +264,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             }
         }
 
+        this.modelRenderer.model = this.renderModel;
+        this.modelRenderer.texture = this.renderTexture;
+        this.modelRenderer.limb = this.limb;
+        this.modelRenderer.pose = this.pose;
+
         if (this.renderTexture == null)
         {
             this.renderTexture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
@@ -287,6 +290,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (limb != null)
         {
             this.limb = limb;
+            this.modelRenderer.limb = limb;
+
             this.limbs.setCurrent(str);
             this.poses.setLimb(str);
         }
@@ -299,6 +304,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (pose != null)
         {
             this.pose = pose;
+            this.modelRenderer.pose = pose;
+
             this.renderModel.pose = pose;
             this.poses.setLimb(this.limb.name);
         }
