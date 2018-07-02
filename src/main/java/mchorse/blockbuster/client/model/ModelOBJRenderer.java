@@ -87,6 +87,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                 buffer.flip();
 
+                /* For some reason, if there is no glTexParameter calls
+                 * the texture becomes pure white */
                 GlStateManager.bindTexture(texture);
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);

@@ -150,6 +150,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.list.setVisible(false);
             this.selectAction(action);
             this.selector.index = index == -1 ? this.record.actions.get(tick).size() - 1 : index;
+            this.selector.recalculateVertical();
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
         }
@@ -183,6 +184,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         {}
 
         this.record.addAction(tick, index, action);
+        this.selector.recalculateVertical();
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
     }
 
@@ -197,8 +199,18 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         int index = this.selector.index;
 
         this.record.removeAction(tick, index);
-        this.editor.setDelegate(null);
-        this.selector.index = -1;
+
+        if (this.selector.index == 0)
+        {
+            this.selector.index = -1;
+        }
+        else
+        {
+            this.selector.index--;
+            this.selectAction(this.record.getAction(this.selector.tick, this.selector.index));
+        }
+
+        this.selector.recalculateVertical();
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, null));
     }
 

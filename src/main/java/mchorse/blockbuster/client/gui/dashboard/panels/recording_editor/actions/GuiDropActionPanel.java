@@ -36,7 +36,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     {
         super.fill(action);
 
-        this.slot.stack = ItemStack.loadItemStackFromNBT(action.itemData);
+        this.slot.stack = action.itemData == null ? null : ItemStack.loadItemStackFromNBT(action.itemData);
     }
 
     @Override

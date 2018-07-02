@@ -50,7 +50,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     {
         super.fill(action);
 
-        this.slot.stack = ItemStack.loadItemStackFromNBT(action.itemData);
+        this.slot.stack = action.itemData == null ? null : ItemStack.loadItemStackFromNBT(action.itemData);
         this.armor.button.setValue(action.armorSlot + 1);
     }
 
