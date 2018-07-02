@@ -379,20 +379,23 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model != null && this.dashboard.morphs.isHidden())
+        if (this.model != null)
         {
             MorphCell cell = this.dashboard.morphs.getSelected();
 
-            if (cell != null)
+            if (this.dashboard.morphs.isHidden())
             {
-                int x = this.area.getX(0.5F);
-                int y = this.area.getY(0.65F);
+                if (cell != null)
+                {
+                    int x = this.area.getX(0.5F);
+                    int y = this.area.getY(0.65F);
 
-                GuiScreen screen = this.mc.currentScreen;
+                    GuiScreen screen = this.mc.currentScreen;
 
-                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-                cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                    GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+                    cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
+                    GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                }
             }
 
             this.model.morph = cell == null ? null : cell.current().morph;

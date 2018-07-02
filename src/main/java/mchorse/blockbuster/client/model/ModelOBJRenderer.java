@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.model;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
@@ -21,7 +22,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -60,6 +60,42 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             this.displayLists = new OBJDisplayList[this.mesh.meshes.size()];
             int index = 0;
+            int texture = 0;
+            int count = 0;
+
+            /* Generate a texture based on solid colored materials */
+            for (Mesh mesh : this.mesh.meshes)
+            {
+                count += mesh.material != null && !mesh.material.useTexture ? 1 : 0;
+            }
+
+            if (count > 0)
+            {
+                ByteBuffer buffer = GLAllocation.createDirectByteBuffer(count * 4);
+                texture = GL11.glGenTextures();
+
+                for (Mesh mesh : this.mesh.meshes)
+                {
+                    if (mesh.material != null && !mesh.material.useTexture)
+                    {
+                        buffer.put((byte) (mesh.material.r * 255));
+                        buffer.put((byte) (mesh.material.g * 255));
+                        buffer.put((byte) (mesh.material.b * 255));
+                        buffer.put((byte) 255);
+                    }
+                }
+
+                buffer.flip();
+
+                GlStateManager.bindTexture(texture);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+
+                GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, count, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+            }
+
+            /* Generate display lists */
+            int j = 0;
 
             for (Mesh mesh : this.mesh.meshes)
             {
@@ -73,10 +109,9 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 int id = GLAllocation.generateDisplayLists(1);
                 boolean hasColor = material != null && !mesh.material.useTexture;
 
-                VertexFormat format = hasColor ? DefaultVertexFormats.POSITION_NORMAL : DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL;
-
                 GlStateManager.glNewList(id, 4864);
-                renderer.begin(GL11.GL_TRIANGLES, format);
+                renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
+                float texF = (j + 0.5F) / (float) count;
 
                 for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
                 {
@@ -93,7 +128,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                     if (hasColor)
                     {
-                        renderer.pos(x, y, z).normal(nx, ny, nz).endVertex();
+                        renderer.pos(x, y, z).tex(texF, 0.5F).normal(nx, ny, nz).endVertex();
                     }
                     else
                     {
@@ -104,7 +139,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 Tessellator.getInstance().draw();
                 GlStateManager.glEndList();
 
-                this.displayLists[index++] = new OBJDisplayList(id, mesh.material);
+                this.displayLists[index++] = new OBJDisplayList(id, texture, mesh.material);
+                j += hasColor ? 1 : 0;
             }
 
             /* I hope this will get garbage collected xD */
@@ -176,12 +212,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             if (hasColor)
             {
-                float r = this.limb.color[0] * list.material.r;
-                float g = this.limb.color[1] * list.material.g;
-                float b = this.limb.color[2] * list.material.b;
-
-                GlStateManager.disableTexture2D();
-                GlStateManager.color(r, g, b, limb.opacity);
+                GlStateManager.bindTexture(list.texId);
             }
 
             if (hasTexture && list.material.texture != null)
@@ -191,21 +222,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             GL11.glCallList(list.id);
 
-            if (hasTexture && RenderCustomModel.lastTexture != null)
-            {
-                try
-                {
-                    Minecraft.getMinecraft().renderEngine.bindTexture(RenderCustomModel.lastTexture);
-                }
-                catch (Exception e)
-                {}
-            }
-
-            if (hasColor)
-            {
-                GlStateManager.enableTexture2D();
-            }
-
+            RenderCustomModel.bindLastTexture();
             GlStateManager.disableBlend();
         }
     }
@@ -213,11 +230,13 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     public static class OBJDisplayList
     {
         public int id;
+        public int texId;
         public OBJMaterial material;
 
-        public OBJDisplayList(int id, OBJMaterial material)
+        public OBJDisplayList(int id, int texId, OBJMaterial material)
         {
             this.id = id;
+            this.texId = texId;
             this.material = material;
         }
     }
