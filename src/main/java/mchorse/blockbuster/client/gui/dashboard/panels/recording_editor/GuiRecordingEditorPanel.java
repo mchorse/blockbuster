@@ -203,11 +203,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         if (this.selector.index == 0)
         {
             this.selector.index = -1;
+            this.editor.setDelegate(null);
         }
         else
         {
             this.selector.index--;
-            this.selectAction(this.record.getAction(this.selector.tick, this.selector.index));
+            this.editor.setDelegate(this.getPanel(this.record.getAction(this.selector.tick, this.selector.index)));
         }
 
         this.selector.recalculateVertical();
@@ -284,6 +285,19 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.editor.setDelegate(null);
         this.list.filter("");
         this.list.setVisible(false);
+    }
+
+    public void moveTo(int tick)
+    {
+        Action action = this.record.getAction(this.selector.tick, this.selector.index);
+
+        this.removeAction();
+        this.record.addAction(tick, action);
+        this.selector.recalculateVertical();
+        this.selector.tick = tick;
+        this.selector.index = this.record.actions.get(tick).size() - 1;
+        this.editor.setDelegate(getPanel(action));
+        Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, -1, action, true));
     }
 
     @Override

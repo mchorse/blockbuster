@@ -91,13 +91,13 @@ public class ScrollArea extends Area
      */
     public int getIndex(int x, int y)
     {
-        if (!this.isInside(x, y))
+        int axis = this.direction.getScroll(this, x, y);
+        int index = axis / this.scrollItemSize;
+
+        if (axis < 0 || axis > this.scrollSize)
         {
             return -1;
         }
-
-        int axis = this.direction.getScroll(this, x, y);
-        int index = axis / this.scrollItemSize;
 
         return index > this.scrollSize / this.scrollItemSize ? -1 : index;
     }

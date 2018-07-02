@@ -52,6 +52,11 @@ public class DropAction extends Action
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
         ItemStack items = ItemStack.loadItemStackFromNBT(this.itemData);
 
+        if (items == null)
+        {
+            return;
+        }
+
         EntityItem item = new EntityItem(actor.worldObj, actor.posX, actor.posY - 0.3D + actor.getEyeHeight(), actor.posZ, items);
         Random rand = new Random();
 
