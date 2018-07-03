@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.metamorph.client.gui.GuiCreativeMenu;
 import mchorse.metamorph.client.gui.GuiSurvivalMenu;
@@ -86,6 +87,11 @@ public class MainMenuHandler
         boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
         boolean isBlockbuster = gui instanceof GuiDashboard || gui instanceof GuiActor;
         boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiDashboard;
+
+        if (gui instanceof GuiMainMenu)
+        {
+            ModelExtrudedLayer.clear();
+        }
 
         if (isMetamorph || isBlockbuster || exitME)
         {
