@@ -27,6 +27,14 @@ public class WorldEventListener implements IWorldEventListener
 {
     public World world;
 
+    public static void setBlockState(World world, BlockPos pos, IBlockState newState, int flags)
+    {
+        if (Blockbuster.proxy.config.damage_control)
+        {
+            ActionHandler.lastTE = world.getTileEntity(pos);
+        }
+    }
+
     public WorldEventListener(World world)
     {
         this.world = world;

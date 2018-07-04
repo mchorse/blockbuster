@@ -35,7 +35,7 @@ minecraft
     runDir = "run"
     mappings = snapshot
     
-    clientJvmArgs = ["-Xmx1G"]
+    clientJvmArgs = ["-Xmx1G", "-Dfml.coreMods.load=" + coremodPath]
     serverJvmArgs = ["-Xmx1G"]
     
     replace "@VERSION@", project.version
@@ -45,6 +45,12 @@ dependencies
 {
 	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
+}
+
+jar {
+   manifest {
+       attributes 'FMLCorePlugin': coremodPath, 'FMLCorePluginContainsFMLMod': 'true'
+   }
 }
 
 eclipse
