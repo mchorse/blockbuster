@@ -22,6 +22,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.common.ClientProxy;
@@ -213,6 +214,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         try
         {
+            ModelExtrudedLayer.clearByModel(this.renderModel);
+
             return this.modelParser.parseModel(this.model, ModelCustom.class);
         }
         catch (Exception e)
