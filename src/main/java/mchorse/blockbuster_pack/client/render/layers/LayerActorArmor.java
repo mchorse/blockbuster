@@ -79,6 +79,8 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
         limb.postRender(scale);
         this.setModelSlotVisible(model, limb.limb, limb.limb.slot);
 
+        GlStateManager.enableRescaleNormal();
+
         if (item.hasOverlay(stack))
         {
             int i = item.getColor(stack);
@@ -105,6 +107,7 @@ public class LayerActorArmor extends LayerArmorBase<ModelBiped>
         model.bipedLeftLeg.render(scale);
 
         GlStateManager.popMatrix();
+        GlStateManager.disableRescaleNormal();
 
         if (stack.hasEffect())
         {

@@ -246,11 +246,6 @@ public class ClientProxy extends CommonProxy
         Minecraft mc = Minecraft.getMinecraft();
         boolean greenScreen = Blockbuster.proxy.config.green_screen_sky;
 
-        if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
-        {
-            RenderingHandler.models.clear();
-        }
-
         /* Toggle green screen */
         if (greenScreen && !(mc.renderGlobal instanceof RenderCustomGlobal))
         {
