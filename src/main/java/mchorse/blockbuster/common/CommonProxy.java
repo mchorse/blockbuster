@@ -79,6 +79,8 @@ public class CommonProxy
      */
     public BlockbusterFactory factory;
 
+    public static File configFile;
+
     /**
      * Registers network messages (and their handlers), items, blocks, director
      * block tile entities and actor entity.
@@ -91,6 +93,7 @@ public class CommonProxy
         /* Configuration */
         File config = new File(event.getModConfigurationDirectory(), "blockbuster/config.cfg");
 
+        configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
         this.forge = new Configuration(config);
         this.config = new BlockbusterConfig(this.forge);
 
@@ -167,7 +170,11 @@ public class CommonProxy
      */
     public ModelPack getPack()
     {
-        return new ModelPack();
+        ModelPack pack = new ModelPack();
+
+        pack.addFolder(configFile.getAbsolutePath() + "/models");
+
+        return pack;
     }
 
     /**

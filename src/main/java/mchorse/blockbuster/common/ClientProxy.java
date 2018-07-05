@@ -67,7 +67,6 @@ public class ClientProxy extends CommonProxy
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
 
-    public static File config;
     public static RenderGlobal original;
 
     /**
@@ -90,10 +89,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preLoad(FMLPreInitializationEvent event)
     {
-        String path = event.getSuggestedConfigurationFile().getAbsolutePath();
-        path = path.substring(0, path.length() - 4);
-
-        config = new File(path);
         super.preLoad(event);
 
         /* Items */
@@ -112,7 +107,7 @@ public class ClientProxy extends CommonProxy
         /* Tile entity */
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, modelRenderer = new TileEntityModelRenderer());
 
-        this.injectResourcePack(path);
+        this.injectResourcePack(CommonProxy.configFile.getAbsolutePath());
     }
 
     /**
@@ -196,19 +191,6 @@ public class ClientProxy extends CommonProxy
         super.loadModels(pack, force);
 
         this.factory.registerClient(null);
-    }
-
-    /**
-     * Get server pack. This method adds another directory where to look up
-     * the models. This method only invoked for intergraded server.
-     */
-    @Override
-    public ModelPack getPack()
-    {
-        ModelPack pack = super.getPack();
-        pack.addFolder(config.getAbsolutePath() + "/models");
-
-        return pack;
     }
 
     protected void registerItemModel(Block block, String path)

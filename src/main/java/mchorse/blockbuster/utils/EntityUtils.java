@@ -127,8 +127,6 @@ public class EntityUtils
     /**
      * Get the entity at which given player is looking at.
      * Taken from EntityRenderer class.
-     *
-     * That's a big method... Why Minecraft has lots of these big methods?
      */
     public static Entity getTargetEntity(Entity input, double maxReach)
     {
