@@ -10,6 +10,7 @@ import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.common.block.BlockDirector;
+import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
@@ -107,6 +108,7 @@ public class CommonProxy
         /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
         this.registerBlock(Blockbuster.modelBlock = new BlockModel());
+        this.registerBlock(Blockbuster.greenBlock = new BlockGreen());
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);

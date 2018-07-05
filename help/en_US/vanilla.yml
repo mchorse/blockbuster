@@ -10,13 +10,16 @@ blockbuster:
         register: Ties actors to director block
         director_block: Manages actors and replays
         model_block: Allows to place morphs as static models
+        green_block: Can be used as green screen
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 
 # Block name
-tile.blockbuster.director.name: Director block
-tile.blockbuster.model.name: Model block
+tile.blockbuster:
+    director.name: Director block
+    model.name: Model block
+    green.name: Green block
 
 # Item names
 item:
