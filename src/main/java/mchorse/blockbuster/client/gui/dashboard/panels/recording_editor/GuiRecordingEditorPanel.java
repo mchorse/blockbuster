@@ -307,7 +307,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         super.resize(width, height);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
     }
 
     @Override

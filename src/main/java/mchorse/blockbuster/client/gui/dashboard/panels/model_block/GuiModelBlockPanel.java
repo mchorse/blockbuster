@@ -185,15 +185,19 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     @Override
     public void appear()
     {
-        this.dashboard.morphs.transparent = true;
-        this.dashboard.morphs.callbackOpen = (open) -> this.subChildren.setVisible(open);
+        this.dashboard.morphs.callback = (morph) ->
+        {
+            if (this.model != null)
+            {
+                this.model.morph = morph;
+            }
+        };
     }
 
     @Override
     public void disappear()
     {
-        this.dashboard.morphs.transparent = false;
-        this.dashboard.morphs.callbackOpen = null;
+        this.dashboard.morphs.callback = null;
     }
 
     @Override
@@ -207,10 +211,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     {
         if (this.model != null)
         {
-            MorphCell morph = this.dashboard.morphs.getSelected();
-
             /* Update model's morph */
-            PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), morph == null ? null : morph.current().morph);
+            PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), this.model.morph);
 
             packet.setBody(this.yaw.trackpad.value, this.pitch.trackpad.value, this.body.trackpad.value);
             packet.setPos(this.x.trackpad.value, this.y.trackpad.value, this.z.trackpad.value);
@@ -279,8 +281,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.inventory.update(this.area.getX(0.5F), this.area.getY(1) - 50);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.dashboard.morphs.setWorldAndResolution(this.mc, width, height);
-
         this.fillData();
     }
 
@@ -379,26 +379,21 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     @Override
     public void draw(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model != null)
+        if (this.model != null && this.dashboard.morphs.isHidden())
         {
             MorphCell cell = this.dashboard.morphs.getSelected();
 
-            if (this.dashboard.morphs.isHidden())
+            if (cell != null)
             {
-                if (cell != null)
-                {
-                    int x = this.area.getX(0.5F);
-                    int y = this.area.getY(0.65F);
+                int x = this.area.getX(0.5F);
+                int y = this.area.getY(0.65F);
 
-                    GuiScreen screen = this.mc.currentScreen;
+                GuiScreen screen = this.mc.currentScreen;
 
-                    GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-                    cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
-                    GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                }
+                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+                cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 4F, 1.0F);
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
             }
-
-            this.model.morph = cell == null ? null : cell.current().morph;
         }
 
         if (this.subChildren.isVisible())

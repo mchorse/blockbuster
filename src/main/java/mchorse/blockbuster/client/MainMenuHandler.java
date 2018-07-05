@@ -91,6 +91,7 @@ public class MainMenuHandler
         if (gui instanceof GuiMainMenu)
         {
             ModelExtrudedLayer.clear();
+            ClientProxy.getDashboard(true).clear();
         }
 
         if (isMetamorph || isBlockbuster || exitME)
