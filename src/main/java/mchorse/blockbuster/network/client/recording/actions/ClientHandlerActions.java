@@ -7,10 +7,13 @@ import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerActions extends ClientMessageHandler<PacketActions>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketActions message)
     {
         Record record = new Record(message.filename);
