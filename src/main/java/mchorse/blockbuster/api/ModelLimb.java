@@ -90,7 +90,7 @@ public class ModelLimb
      */
     public static enum ArmorSlot
     {
-        NONE(null, "none"), HEAD(EntityEquipmentSlot.HEAD, "head"), CHEST(EntityEquipmentSlot.CHEST, "chest"), LEFT_SHOULDER(EntityEquipmentSlot.CHEST, "left_shoulder"), RIGHT_SHOULDER(EntityEquipmentSlot.CHEST, "right_shoulder"), LEFT_LEG(EntityEquipmentSlot.LEGS, "left_leg"), RIGHT_LEG(EntityEquipmentSlot.LEGS, "right_leg"), LEFT_FOOT(EntityEquipmentSlot.FEET, "left_foot"), RIGHT_FOOT(EntityEquipmentSlot.FEET, "right_foot");
+        NONE(null, "none"), HEAD(EntityEquipmentSlot.HEAD, "head"), CHEST(EntityEquipmentSlot.CHEST, "chest"), LEFT_SHOULDER(EntityEquipmentSlot.CHEST, "left_shoulder"), RIGHT_SHOULDER(EntityEquipmentSlot.CHEST, "right_shoulder"), LEGGINGS(EntityEquipmentSlot.LEGS, "leggings"), LEFT_LEG(EntityEquipmentSlot.LEGS, "left_leg"), RIGHT_LEG(EntityEquipmentSlot.LEGS, "right_leg"), LEFT_FOOT(EntityEquipmentSlot.FEET, "left_foot"), RIGHT_FOOT(EntityEquipmentSlot.FEET, "right_foot");
 
         public final EntityEquipmentSlot slot;
         public final String name;

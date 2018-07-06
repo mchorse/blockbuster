@@ -176,9 +176,6 @@ public class ModelHandler
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
     {
         this.models.clear();
-
-        // TODO: remake
-        // ModelExtrudedLayer.clear();
     }
 
     /**

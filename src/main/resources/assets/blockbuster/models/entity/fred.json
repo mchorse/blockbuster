@@ -251,13 +251,15 @@
         "body": {
             "size": [ 8, 12, 4 ],
             "texture": [ 16, 16 ],
-            "anchor": [ 0.5, 0, 0.5 ]
+            "anchor": [ 0.5, 0, 0.5 ],
+            "slot": "leggings"
         },
         "head": {
             "size": [ 8, 8, 8 ],
             "texture": [ 0, 0 ],
             "anchor": [ 0.5, 1, 0.5 ],
-            "looking": true
+            "looking": true,
+            "slot": "head"
         },
         "outer": {
             "parent": "head",
@@ -272,7 +274,8 @@
             "holding": "left",
             "swinging": true,
             "idle": true,
-            "invert": true
+            "invert": true,
+            "slot": "left_shoulder"
         },
         "right_arm": {
             "size": [ 4, 12, 4 ],
@@ -281,20 +284,23 @@
             "holding": "right",
             "swiping": true,
             "swinging": true,
-            "idle": true
+            "idle": true,
+            "slot": "right_shoulder"
         },
         "left_leg": {
             "size": [ 4, 12, 4 ],
             "texture": [ 16, 48 ],
             "anchor": [ 0.5, 0, 0.5 ],
-            "swinging": true
+            "swinging": true,
+            "slot": "left_leg"
         },
         "right_leg": {
             "size": [ 4, 12, 4 ],
             "texture": [ 0, 16 ],
             "anchor": [ 0.5, 0, 0.5 ],
             "swinging": true,
-            "invert": true
+            "invert": true,
+            "slot": "right_leg"
         },
         "right_armwear": {
             "parent": "right_arm",
@@ -312,19 +318,22 @@
             "parent": "right_leg",
             "size": [ 4, 12, 4 ],
             "texture": [ 0, 32 ],
-            "anchor": [ 0.5, 0.5, 0.5 ]
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "slot": "right_foot"
         },
         "left_legwear": {
             "parent": "left_leg",
             "size": [ 4, 12, 4 ],
             "texture": [ 0, 48 ],
-            "anchor": [ 0.5, 0.5, 0.5 ]
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "slot": "left_foot"
         },
         "bodywear": {
             "parent": "body",
             "size": [ 8, 12, 4 ],
             "texture": [ 16, 32 ],
-            "anchor": [ 0.5, 0.5, 0.5 ]
+            "anchor": [ 0.5, 0.5, 0.5 ],
+            "slot": "chest"
         }
     },
     "texture": [ 64, 64 ]

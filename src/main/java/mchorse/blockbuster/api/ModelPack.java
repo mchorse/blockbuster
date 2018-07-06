@@ -55,7 +55,10 @@ public class ModelPack
 
         folder.mkdirs();
 
-        if (folder.isDirectory()) this.folders.add(folder);
+        if (folder.isDirectory())
+        {
+            this.folders.add(folder);
+        }
     }
 
     /**

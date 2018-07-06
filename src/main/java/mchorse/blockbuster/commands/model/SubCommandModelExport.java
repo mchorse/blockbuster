@@ -9,7 +9,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.client.Minecraft;
@@ -96,14 +96,14 @@ public class SubCommandModelExport extends CommandBase
         ModelExporter exporter = new ModelExporter((EntityLivingBase) entity, (RenderLivingBase) render);
 
         String output = exporter.exportJSON(type);
-        File exportFolder = new File(ClientProxy.config.getAbsolutePath() + "/export");
+        File exportFolder = new File(CommonProxy.configFile.getAbsolutePath() + "/export");
 
         exportFolder.mkdirs();
 
         /* Save exported model */
         try
         {
-            File destination = new File(ClientProxy.config.getAbsolutePath() + "/export/" + type.replaceAll("[^\\w\\d_-]", "_") + ".json");
+            File destination = new File(CommonProxy.configFile.getAbsolutePath() + "/export/" + type.replaceAll("[^\\w\\d_-]", "_") + ".json");
             PrintWriter writer = new PrintWriter(destination);
 
             writer.print(output);

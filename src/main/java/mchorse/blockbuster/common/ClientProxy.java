@@ -67,7 +67,6 @@ public class ClientProxy extends CommonProxy
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
 
-    public static File config;
     public static RenderGlobal original;
 
     /**
@@ -75,7 +74,7 @@ public class ClientProxy extends CommonProxy
      */
     public static GuiDashboard getDashboard(boolean mainMenu)
     {
-        if (dashboard != null || dashboard == null)
+        if (dashboard == null)
         {
             dashboard = new GuiDashboard();
         }
@@ -90,10 +89,6 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preLoad(FMLPreInitializationEvent event)
     {
-        String path = event.getSuggestedConfigurationFile().getAbsolutePath();
-        path = path.substring(0, path.length() - 4);
-
-        config = new File(path);
         super.preLoad(event);
 
         /* Items */
@@ -104,6 +99,7 @@ public class ClientProxy extends CommonProxy
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
         this.registerItemModel(Blockbuster.modelBlock, Blockbuster.path("model"));
+        this.registerItemModel(Blockbuster.greenBlock, Blockbuster.path("green"));
 
         /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
@@ -111,7 +107,7 @@ public class ClientProxy extends CommonProxy
         /* Tile entity */
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, modelRenderer = new TileEntityModelRenderer());
 
-        this.injectResourcePack(path);
+        this.injectResourcePack(CommonProxy.configFile.getAbsolutePath());
     }
 
     /**
@@ -197,19 +193,6 @@ public class ClientProxy extends CommonProxy
         this.factory.registerClient(null);
     }
 
-    /**
-     * Get server pack. This method adds another directory where to look up
-     * the models. This method only invoked for intergraded server.
-     */
-    @Override
-    public ModelPack getPack()
-    {
-        ModelPack pack = super.getPack();
-        pack.addFolder(config.getAbsolutePath() + "/models");
-
-        return pack;
-    }
-
     protected void registerItemModel(Block block, String path)
     {
         this.registerItemModel(Item.getItemFromBlock(block), path);
@@ -245,11 +228,6 @@ public class ClientProxy extends CommonProxy
 
         Minecraft mc = Minecraft.getMinecraft();
         boolean greenScreen = Blockbuster.proxy.config.green_screen_sky;
-
-        if (Blockbuster.proxy.config.model_block_disable_culling_workaround)
-        {
-            RenderingHandler.models.clear();
-        }
 
         /* Toggle green screen */
         if (greenScreen && !(mc.renderGlobal instanceof RenderCustomGlobal))

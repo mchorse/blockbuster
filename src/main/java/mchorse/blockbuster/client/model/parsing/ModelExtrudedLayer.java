@@ -79,8 +79,8 @@ public class ModelExtrudedLayer
 
             GL11.glCallList(id);
 
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            GlStateManager.enableTexture2D();
+            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            // GlStateManager.enableTexture2D();
         }
 
         /* Clean up cache */
@@ -350,55 +350,59 @@ public class ModelExtrudedLayer
                     offX /= tw;
                     offY /= th;
 
+                    float aX = -renderer.limb.anchor[0] * w + w;
+                    float aY = -renderer.limb.anchor[1] * h + h;
+                    float aZ = -renderer.limb.anchor[2] * d + d;
+
                     /* Top & Bottom */
                     if (!chunk.hasBlock(x, y + 1, z))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offY).normal(0, -1, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(0, -1, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(0, -1, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(0, -1, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(0, -1, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, -1, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, -1, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, -1, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(x, y - 1, z))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offY).normal(0, 1, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(0, 1, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(0, 1, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(0, 1, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ) * f).tex(offX, offY).normal(0, 1, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, 1, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, 1, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, 1, 0).endVertex();
                     }
 
                     /* Front & back */
                     if (!chunk.hasBlock(x, y, z + 1))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(0, 0, -1).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, 0, -1).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, 0, -1).endVertex();
                     }
 
                     if (!chunk.hasBlock(x, y, z - 1))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(0, 0, 1).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offMY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(0, 0, 1).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offMY).normal(0, 0, 1).endVertex();
                     }
 
                     /* Left & Right */
                     if (!chunk.hasBlock(x + 1, y, z))
                     {
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F + 1) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX + 1) * f, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(x - 1, y, z))
                     {
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F + 1) * f, -(z - d / 2F + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - w / 2F) * f, -(y - h / 2F) * f, -(z - d / 2F) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
                     }
                 }
             }
@@ -455,6 +459,11 @@ public class ModelExtrudedLayer
             }
 
             Map<ResourceLocation, Integer> map = layers.remove(renderer);
+
+            if (map == null)
+            {
+                continue;
+            }
 
             for (Integer i : map.values())
             {

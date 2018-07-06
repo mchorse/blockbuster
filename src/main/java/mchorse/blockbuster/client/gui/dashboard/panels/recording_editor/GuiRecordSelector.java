@@ -133,8 +133,6 @@ public class GuiRecordSelector extends GuiElement
 
                 if (this.index != -1)
                 {
-                    System.out.println("TF! " + mouseX + " " + mouseY);
-
                     this.dragging = true;
                     this.moving = false;
                 }
@@ -189,8 +187,6 @@ public class GuiRecordSelector extends GuiElement
 
         if (this.dragging && !this.moving && (Math.abs(mouseX - this.lastX) > 2 || Math.abs(mouseY - this.lastY) > 2))
         {
-            System.out.println("TF? " + mouseX + " " + mouseY);
-
             this.moving = true;
         }
 

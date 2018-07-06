@@ -315,6 +315,34 @@ public class OBJParser
         public OBJMaterial material;
     }
 
+    public static class MeshObject
+    {
+        public List<Mesh> meshes = new ArrayList<Mesh>();
+    }
+
+    /**
+     * Holds the mesh data 
+     */
+    public static class Mesh
+    {
+        public float[] posData;
+        public float[] texData;
+        public float[] normData;
+        public OBJMaterial material;
+
+        public Mesh(int faces)
+        {
+            this(new float[faces * 9], new float[faces * 6], new float[faces * 9]);
+        }
+
+        public Mesh(float[] posData, float[] texData, float[] normData)
+        {
+            this.posData = posData;
+            this.texData = texData;
+            this.normData = normData;
+        }
+    }
+
     /**
      * Substitute class for a 2d vector which comes with joml library 
      */
@@ -344,34 +372,6 @@ public class OBJParser
             this.x = x;
             this.y = y;
             this.z = z;
-        }
-    }
-
-    public static class MeshObject
-    {
-        public List<Mesh> meshes = new ArrayList<Mesh>();
-    }
-
-    /**
-     * Holds the mesh data 
-     */
-    public static class Mesh
-    {
-        public float[] posData;
-        public float[] texData;
-        public float[] normData;
-        public OBJMaterial material;
-
-        public Mesh(int faces)
-        {
-            this(new float[faces * 9], new float[faces * 6], new float[faces * 9]);
-        }
-
-        public Mesh(float[] posData, float[] texData, float[] normData)
-        {
-            this.posData = posData;
-            this.texData = texData;
-            this.normData = normData;
         }
     }
 }

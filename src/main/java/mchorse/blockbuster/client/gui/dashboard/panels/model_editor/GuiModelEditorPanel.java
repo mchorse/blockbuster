@@ -22,9 +22,11 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.common.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -146,7 +148,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             return false;
         }
 
-        File folder = new File(ClientProxy.config, "models/" + name);
+        File folder = new File(CommonProxy.configFile, "models/" + name);
         File file = new File(folder, "model.json");
         String output = ModelUtils.toJson(this.model);
 
@@ -213,6 +215,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         try
         {
+            ModelExtrudedLayer.clearByModel(this.renderModel);
+
             return this.modelParser.parseModel(this.model, ModelCustom.class);
         }
         catch (Exception e)

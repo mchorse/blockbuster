@@ -151,13 +151,15 @@
         "body": {
             "size": [ 8, 12, 4 ],
             "texture": [ 16, 16 ],
-            "anchor": [ 0.5, 0, 0.5 ]
+            "anchor": [ 0.5, 0, 0.5 ],
+            "slot": "chest"
         },
         "head": {
             "size": [ 8, 8, 8 ],
             "texture": [ 0, 0 ],
             "anchor": [ 0.5, 1, 0.5 ],
-            "looking": true
+            "looking": true,
+            "slot": "head"
         },
         "outer": {
             "parent": "head",
@@ -172,7 +174,8 @@
             "mirror": true,
             "holding": "left",
             "swinging": true,
-            "idle": true
+            "idle": true,
+            "slot": "left_shoulder"
         },
         "right_arm": {
             "size": [ 4, 12, 4 ],
@@ -181,7 +184,8 @@
             "holding": "right",
             "swiping": true,
             "swinging": true,
-            "idle": true
+            "idle": true,
+            "slot": "right_shoulder"
         },
         "left_leg": {
             "size": [ 4, 12, 4 ],
@@ -189,14 +193,16 @@
             "anchor": [ 0.5, 0, 0.5 ],
             "mirror": true,
             "swinging": true,
-            "invert": true
+            "invert": true,
+            "slot": "left_leg"
         },
         "right_leg": {
             "size": [ 4, 12, 4 ],
             "texture": [ 0, 16 ],
             "anchor": [ 0.5, 0, 0.5 ],
             "swinging": true,
-            "invert": true
+            "invert": true,
+            "slot": "right_leg"
         }
     },
     "texture": [ 64, 32 ]
