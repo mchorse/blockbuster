@@ -10,6 +10,7 @@ import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
 import mchorse.blockbuster.common.block.BlockDirector;
+import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
@@ -80,6 +81,8 @@ public class CommonProxy
      */
     public BlockbusterFactory factory;
 
+    public static File configFile;
+
     /**
      * Registers network messages (and their handlers), items, blocks, director
      * block tile entities and actor entity.
@@ -92,6 +95,7 @@ public class CommonProxy
         /* Configuration */
         File config = new File(event.getModConfigurationDirectory(), "blockbuster/config.cfg");
 
+        configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
         this.forge = new Configuration(config);
         this.config = new BlockbusterConfig(this.forge);
 
@@ -109,12 +113,16 @@ public class CommonProxy
         /* Blocks */
         Block director = new BlockDirector();
         Block model = new BlockModel();
+        Block green = new BlockGreen();
 
         ForgeRegistries.BLOCKS.register(Blockbuster.directorBlock = director);
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
 
         ForgeRegistries.BLOCKS.register(Blockbuster.modelBlock = model);
         ForgeRegistries.ITEMS.register(Blockbuster.modelBlockItem = new ItemBlock(model).setRegistryName(model.getRegistryName()));
+
+        ForgeRegistries.BLOCKS.register(Blockbuster.greenBlock = green);
+        ForgeRegistries.ITEMS.register(new ItemBlock(green).setRegistryName(green.getRegistryName()));
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
@@ -173,7 +181,11 @@ public class CommonProxy
      */
     public ModelPack getPack()
     {
-        return new ModelPack();
+        ModelPack pack = new ModelPack();
+
+        pack.addFolder(configFile.getAbsolutePath() + "/models");
+
+        return pack;
     }
 
     /**

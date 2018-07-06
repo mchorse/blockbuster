@@ -135,8 +135,14 @@ public class Utils
     {
         List<String> list = new ArrayList<String>();
         File replays = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
+        File[] files = replays.listFiles();
 
-        for (File file : replays.listFiles())
+        if (files == null)
+        {
+            return list;
+        }
+
+        for (File file : files)
         {
             String name = file.getName();
 

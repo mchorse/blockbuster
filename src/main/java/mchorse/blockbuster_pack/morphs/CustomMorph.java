@@ -80,7 +80,10 @@ public class CustomMorph extends AbstractMorph
     {
         if (this.customPose != null)
         {
-            return this.customPose;
+            if (this.currentPoseOnSneak && target.isSneaking() || !this.currentPoseOnSneak)
+            {
+                return this.customPose;
+            }
         }
 
         String poseName = EntityUtils.getPose(target, this.currentPose, this.currentPoseOnSneak);

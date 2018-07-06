@@ -1,13 +1,9 @@
 package mchorse.blockbuster.client.render.tileentity;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.RenderingHandler;
-import mchorse.blockbuster.client.RenderingHandler.TEModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -98,28 +94,12 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
+            // System.out.println("Test!");
+
             if (te.shadow)
             {
                 this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);
                 this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
-            }
-
-            if (!Blockbuster.proxy.config.model_block_disable_culling_workaround && alpha != 0)
-            {
-                /* Stupid TEs getting culled when the chunk is getting 
-                 * culled, so there is a workaround for that */
-                TEModel model = RenderingHandler.models.get(te.getPos());
-
-                if (model == null)
-                {
-                    RenderingHandler.models.put(te.getPos(), new TEModel(te, OpenGlHelper.lastBrightnessX, OpenGlHelper.lastBrightnessY));
-                }
-                else
-                {
-                    model.render = false;
-                    model.lastX = OpenGlHelper.lastBrightnessX;
-                    model.lastY = OpenGlHelper.lastBrightnessY;
-                }
             }
         }
 
@@ -135,6 +115,12 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
         }
+    }
+
+    @Override
+    public boolean isGlobalRenderer(TileEntityModel te)
+    {
+        return true;
     }
 
     /**

@@ -184,7 +184,7 @@ public class ModelParser
         float ay = limb.anchor[1];
         float az = limb.anchor[2];
 
-        if (this.meshes.containsKey(limb.name))
+        if (this.meshes.containsKey(limb.name) && data.providesObj)
         {
             renderer = new ModelOBJRenderer(model, limb, transform, this.meshes.get(limb.name));
         }

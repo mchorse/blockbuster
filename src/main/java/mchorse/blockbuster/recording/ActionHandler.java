@@ -149,11 +149,6 @@ public class ActionHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (Blockbuster.proxy.config.damage_control)
-        {
-            lastTE = player.world.getTileEntity(event.getPos());
-        }
-
         if (!player.world.isRemote && events != null && player.isCreative())
         {
             events.add(new BreakBlockAction(event.getPos(), false));
