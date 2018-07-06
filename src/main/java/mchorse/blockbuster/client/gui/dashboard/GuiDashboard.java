@@ -53,6 +53,7 @@ public class GuiDashboard extends GuiBase
     {
         Minecraft mc = Minecraft.getMinecraft();
 
+        this.mc = mc;
         this.modelEditorPanel = new GuiModelEditorPanel(mc, this);
         this.mainPanel = new GuiMainPanel(mc, this);
 
@@ -68,7 +69,7 @@ public class GuiDashboard extends GuiBase
 
     public GuiDashboard setMainMenu(boolean main)
     {
-        this.createWorldPanels(mc);
+        this.createWorldPanels(this.mc);
         this.onOpen();
         this.mainMenu = main;
 

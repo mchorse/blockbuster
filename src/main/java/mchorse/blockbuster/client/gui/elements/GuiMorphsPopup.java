@@ -25,12 +25,15 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
+import mchorse.metamorph.network.Dispatcher;
+import mchorse.metamorph.network.common.PacketAcquireMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 /**
  * Creative morphs GUI picker
@@ -66,6 +69,7 @@ public class GuiMorphsPopup extends GuiScreen
 
     private GuiStringListElement list;
     private GuiModelRenderer modelRenderer;
+    private GuiButtonElement<GuiCheckBox> applyOnSneak;
 
     private ModelPose pose;
     private ModelTransform trans;
@@ -119,6 +123,20 @@ public class GuiMorphsPopup extends GuiScreen
         element = this.list = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         element.resizer().parent(this.area).set(5, 30, 80, 90).h.set(1, Measure.RELATIVE, -40);
         this.elements.add(element);
+
+        element = GuiButtonElement.button(mc, "Acquire morph", (b) -> Dispatcher.sendToServer(new PacketAcquireMorph(this.lastMorph)));
+        element.resizer().parent(this.area).set(5, 4, 80, 20);
+        this.elements.add(element);
+
+        this.applyOnSneak = GuiButtonElement.checkbox(mc, "Apply on sneak", false, (b) ->
+        {
+            if (this.lastMorph instanceof CustomMorph)
+            {
+                ((CustomMorph) this.lastMorph).currentPoseOnSneak = b.button.isChecked();
+            }
+        });
+        this.applyOnSneak.resizer().relative(element.resizer()).set(85, 4, 90, 11);
+        this.elements.add(this.applyOnSneak);
 
         this.elements.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz);
     }
@@ -241,6 +259,7 @@ public class GuiMorphsPopup extends GuiScreen
                 this.modelRenderer.texture = morph.skin == null ? morph.model.defaultTexture : morph.skin;
                 this.modelRenderer.pose = this.pose;
                 this.modelRenderer.limb = morph.model.limbs.get(entry.getKey());
+                this.applyOnSneak.button.setIsChecked(morph.currentPoseOnSneak);
 
                 this.list.clear();
                 this.list.add(this.pose.limbs.keySet());
