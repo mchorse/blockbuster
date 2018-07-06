@@ -10,6 +10,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockGreen extends Block
 {
@@ -24,12 +26,14 @@ public class BlockGreen extends Block
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced)
     {
         tooltip.add(I18n.format("blockbuster.info.green_block"));
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public float getAmbientOcclusionLightValue(IBlockState state)
     {
         return 1;
