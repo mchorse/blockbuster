@@ -30,7 +30,7 @@ public class CommandOnHead extends CommandBase
 
         if (stack != null)
         {
-            player.setItemStackToSlot(EntityEquipmentSlot.HEAD, stack);
+            player.setItemStackToSlot(EntityEquipmentSlot.HEAD, stack.copy());
         }
     }
 }
