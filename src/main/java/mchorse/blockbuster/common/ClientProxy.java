@@ -18,7 +18,6 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderCustomGlobal;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
-import mchorse.blockbuster.commands.CommandLoadChunks;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -170,7 +169,6 @@ public class ClientProxy extends CommonProxy
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
-        ClientCommandHandler.instance.registerCommand(new CommandLoadChunks());
 
         /* Metamorph morph builder panel */
         GuiMorphBuilder.BUILDERS.put("blockbuster", new GuiCustomModelMorphBuilder());
