@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThr
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -20,7 +21,7 @@ public class GuiModelPoses extends GuiModelEditorTab
 {
     private GuiButtonElement<GuiTextureButton> addPose;
     private GuiButtonElement<GuiTextureButton> removePose;
-    private GuiDelegateElement modal;
+    private GuiDelegateElement<IGuiElement> modal;
 
     private GuiStringListElement posesList;
     private GuiThreeElement translate;
@@ -80,7 +81,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
         this.children.add(this.addPose, this.removePose);
 
-        this.modal = new GuiDelegateElement(mc, null);
+        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
         this.children.add(this.modal);
     }

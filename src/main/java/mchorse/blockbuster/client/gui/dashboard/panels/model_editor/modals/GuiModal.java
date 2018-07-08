@@ -2,14 +2,15 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 public abstract class GuiModal extends GuiElement
 {
-    public GuiDelegateElement parent;
+    public GuiDelegateElement<IGuiElement> parent;
 
-    public GuiModal(Minecraft mc, GuiDelegateElement parent)
+    public GuiModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent)
     {
         super(mc);
 

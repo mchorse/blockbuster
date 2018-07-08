@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -11,7 +12,7 @@ public class GuiMessageModal extends GuiModal
 
     private GuiButtonElement<GuiButton> button;
 
-    public GuiMessageModal(Minecraft mc, GuiDelegateElement parent, String label)
+    public GuiMessageModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent, String label)
     {
         super(mc, parent);
 

@@ -65,7 +65,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public GuiRecordList records;
     public GuiRecordSelector selector;
-    public GuiDelegateElement editor;
+    public GuiDelegateElement<GuiActionPanel<? extends Action>> editor;
 
     public GuiButtonElement<GuiTextureButton> add;
     public GuiButtonElement<GuiTextureButton> dupe;
@@ -78,7 +78,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public Record record;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public GuiActionPanel getPanel(Action action)
+    public GuiActionPanel<? extends Action> getPanel(Action action)
     {
         if (action == null)
         {
@@ -108,7 +108,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.resizer().parent(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
 
-        this.editor = new GuiDelegateElement(mc, null);
+        this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
         this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
@@ -252,12 +252,11 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.save();
     }
 
-    @SuppressWarnings("unchecked")
     private void save()
     {
         if (this.editor.delegate != null)
         {
-            Action old = ((GuiActionPanel<? extends Action>) this.editor.delegate).action;
+            Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
         }

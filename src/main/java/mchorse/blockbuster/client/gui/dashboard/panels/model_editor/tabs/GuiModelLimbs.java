@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
@@ -29,7 +30,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiButtonElement<GuiTextureButton> removeLimb;
     private GuiButtonElement<GuiButton> renameLimb;
     private GuiButtonElement<GuiButton> parentLimb;
-    private GuiDelegateElement modal;
+    private GuiDelegateElement<IGuiElement> modal;
 
     private GuiStringListElement limbList;
 
@@ -189,7 +190,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.children.add(this.addLimb, this.removeLimb, this.renameLimb, this.parentLimb, this.toggle);
 
-        this.modal = new GuiDelegateElement(mc, null);
+        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
         this.children.add(this.modal);
     }

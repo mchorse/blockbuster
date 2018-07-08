@@ -16,6 +16,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -46,7 +47,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
     private GuiElements subChildren;
-    private GuiDelegateElement mainView;
+    private GuiDelegateElement<IGuiElement> mainView;
     private GuiElements replays;
     private GuiElements replayEditor;
     private GuiElements configOptions;
@@ -100,7 +101,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor = new GuiElements();
         this.replayEditor.setVisible(false);
         this.configOptions = new GuiElements();
-        this.mainView = new GuiDelegateElement(mc, this.replays);
+        this.mainView = new GuiDelegateElement<IGuiElement>(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w(1, 0).y(1, -60);
 

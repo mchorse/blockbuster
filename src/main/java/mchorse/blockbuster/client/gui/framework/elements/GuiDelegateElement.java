@@ -11,17 +11,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Delegated {@link IGuiElement}
  */
 @SideOnly(Side.CLIENT)
-public class GuiDelegateElement extends GuiElement implements IGuiLegacy
+public class GuiDelegateElement<T extends IGuiElement> extends GuiElement implements IGuiLegacy
 {
-    public IGuiElement delegate;
+    public T delegate;
 
-    public GuiDelegateElement(Minecraft mc, IGuiElement element)
+    public GuiDelegateElement(Minecraft mc, T element)
     {
         super(mc);
         this.delegate = element;
     }
 
-    public void setDelegate(IGuiElement element)
+    public void setDelegate(T element)
     {
         GuiScreen screen = this.mc.currentScreen;
 

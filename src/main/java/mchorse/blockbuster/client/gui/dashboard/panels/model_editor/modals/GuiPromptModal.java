@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -17,7 +18,7 @@ public class GuiPromptModal extends GuiModal
     public GuiButtonElement<GuiButton> confirm;
     public GuiButtonElement<GuiButton> cancel;
 
-    public GuiPromptModal(Minecraft mc, GuiDelegateElement parent, String label, Consumer<String> callback)
+    public GuiPromptModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent, String label, Consumer<String> callback)
     {
         super(mc, parent);
 

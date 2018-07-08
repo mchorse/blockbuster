@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMe
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -30,7 +31,7 @@ public class GuiModelModels extends GuiModelEditorTab
     private GuiStringListElement modelList;
     private GuiButtonElement<GuiTextureButton> save;
     private GuiButtonElement<GuiTextureButton> export;
-    private GuiDelegateElement modal;
+    private GuiDelegateElement<IGuiElement> modal;
 
     public GuiModelModels(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -51,7 +52,7 @@ public class GuiModelModels extends GuiModelEditorTab
         this.export.resizer().set(20, 0, 16, 16).relative(this.save.resizer());
         this.children.add(this.save, this.export);
 
-        this.modal = new GuiDelegateElement(mc, null);
+        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
         this.children.add(this.modal);
     }
