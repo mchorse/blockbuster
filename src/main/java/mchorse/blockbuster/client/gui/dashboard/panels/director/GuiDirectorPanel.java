@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -65,6 +66,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> invisible;
     public GuiButtonElement<GuiCheckBox> enabled;
     public GuiButtonElement<GuiCheckBox> fake;
+    public GuiTrackpadElement health;
 
     public GuiDirectorBlockList list;
 
@@ -127,6 +129,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
         this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
+        this.health = new GuiTrackpadElement(mc, "Health", (value) -> this.replay.health = value);
+        this.health.trackpad.min = 0;
 
         this.id.resizer().set(10, 30, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
@@ -134,8 +138,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
         this.enabled.resizer().set(0, 16, 80, 11).relative(this.invisible.resizer());
         this.fake.resizer().set(0, 16, 80, 11).relative(this.enabled.resizer());
+        this.health.resizer().set(0, 30, 80, 20).parent(this.area).x(1, -90);
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake);
+        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.health);
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
@@ -170,12 +175,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
-        element.resizer().set(10, 30, 60, 20).parent(this.area).x(1, -70);
+        element.resizer().set(10, 55, 60, 20).parent(this.area).x(1, -70);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Edit record", (b) -> this.openRecordEditor());
-        element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
+        element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
@@ -282,6 +287,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible.button.setIsChecked(this.replay.invisible);
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
+        this.health.setValue(this.replay.health);
 
         this.dashboard.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
@@ -407,6 +413,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         super.resize(width, height);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.initGui();
     }
 
     @Override

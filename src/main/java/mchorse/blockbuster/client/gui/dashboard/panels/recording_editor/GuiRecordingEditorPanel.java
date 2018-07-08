@@ -112,11 +112,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
-        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.setVisible(true));
+        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.toggleVisible());
         this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction());
         this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction());
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
+        this.list.label = "Search...";
         this.list.elements.addAll(Action.TYPES.keySet());
         this.list.background = true;
 
@@ -307,6 +308,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         super.resize(width, height);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.initGui();
     }
 
     @Override

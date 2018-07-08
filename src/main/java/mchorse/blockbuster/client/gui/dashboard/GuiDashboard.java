@@ -188,7 +188,7 @@ public class GuiDashboard extends GuiBase
 
         if (this.mc.theWorld != null)
         {
-            this.morphs.setWorldAndResolution(this.mc, width, height);
+            this.morphs.setWorldAndResolution(mc, width, height);
         }
     }
 
