@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 
-@Name("CoreMod")
+@Name("BlockbusterCore")
 @MCVersion("1.10.2")
 @SortingIndex(1)
 public class BBCoreMod implements IFMLLoadingPlugin
