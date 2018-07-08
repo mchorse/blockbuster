@@ -99,13 +99,27 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
         try
         {
             NBTTagCompound tag = new NBTTagCompound();
+            String texture = this.texture.getText();
+            String model = this.model.getText();
 
-            tag.setString("Name", "blockbuster." + this.model.getText());
+            tag.setString("Name", "blockbuster." + model);
             tag.setBoolean("Sneak", this.poseOnSneak.isChecked());
 
-            if (!this.texture.getText().isEmpty())
+            if (!texture.isEmpty())
             {
-                tag.setString("Skin", this.texture.getText());
+                if (!texture.contains(":"))
+                {
+                    if (texture.contains("/"))
+                    {
+                        texture = "blockbuster.actors:" + texture;
+                    }
+                    else
+                    {
+                        texture = "blockbuster.actors:" + model + "/" + texture;
+                    }
+                }
+
+                tag.setString("Skin", texture);
             }
 
             if (this.poses.selected >= 0 && this.poses.selected < this.poses.values.size())
