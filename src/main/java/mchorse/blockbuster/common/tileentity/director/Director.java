@@ -181,7 +181,7 @@ public class Director
 
         for (RecordPlayer record : this.actors.values())
         {
-            if (record.isFinished())
+            if (record.isFinished() || record.actor.isDead)
             {
                 count++;
             }
