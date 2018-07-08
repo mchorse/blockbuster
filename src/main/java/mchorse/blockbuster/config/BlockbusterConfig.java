@@ -168,14 +168,14 @@ public class BlockbusterConfig
 
         /* Actor */
         this.actor_fall_damage = this.getBoolean("actor_fall_damage", actor, true, "Do actors receive fall damage?");
-        this.actor_tracking_range = this.getInt("actor_tracking_range", actor, 96, 64, 1024, "How far actors are tracked? Requires restart of the game.");
-        this.actor_rendering_range = this.getInt("actor_rendering_range", actor, 64, 64, 1024, "How far actors are seen?");
+        this.actor_tracking_range = this.getInt("actor_tracking_range", actor, 256, 64, 1024, "How far actors are tracked? Requires restart of the game.");
+        this.actor_rendering_range = this.getInt("actor_rendering_range", actor, 256, 64, 1024, "How far actors are seen?");
         this.actor_always_render_names = this.getBoolean("actor_always_render_names", actor, false, "Enable unconditional actor nametag rendering");
         this.actor_swish_swipe = this.getBoolean("actor_swish_swipe", actor, false, "Do actors emit swish sound when swiping?");
 
         /* Damage control */
-        this.damage_control = this.getBoolean("damage_control", damage, false, "Whether damage control is enabled");
-        this.damage_control_distance = this.getInt("damage_control_distance", damage, 32, 1, 1024, "Radius of effect for damage control");
+        this.damage_control = this.getBoolean("damage_control", damage, true, "Whether damage control is enabled");
+        this.damage_control_distance = this.getInt("damage_control_distance", damage, 64, 1, 1024, "Radius of effect for damage control");
 
         Blockbuster.proxy.onConfigChange(this.config);
 
