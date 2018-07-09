@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.recording.actions.ChatAction;
 import net.minecraft.client.Minecraft;
@@ -28,8 +29,8 @@ public class GuiChatActionPanel extends GuiActionPanel<ChatAction>
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

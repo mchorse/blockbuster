@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -58,14 +59,14 @@ public class GuiSearchListElement extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         if (this.background)
         {
             Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
         }
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (!this.search.field.isFocused() && this.search.field.getText().isEmpty())
         {

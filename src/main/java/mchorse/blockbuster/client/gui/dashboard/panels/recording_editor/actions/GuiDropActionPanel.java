@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory;
 import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
 import mchorse.blockbuster.client.gui.widgets.GuiSlot;
@@ -67,9 +68,9 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         this.slot.draw(mouseX, mouseY, partialTicks);
         this.inventory.draw(mouseX, mouseY, partialTicks);

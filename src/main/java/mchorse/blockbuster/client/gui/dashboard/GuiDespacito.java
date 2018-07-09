@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
@@ -26,30 +28,30 @@ public class GuiDespacito extends GuiElement
         this.createChildren();
         this.dashboard = dashboard;
 
-        GuiElement element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel));
+        GuiButtonElement<GuiSidebarButton> element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel)).tooltip("Dashboard", TooltipDirection.RIGHT);
         Resizer resizer = new Resizer().set(4, 4, 24, 24).parent(this.area);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel));
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel)).tooltip("Director block", TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel));
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel)).tooltip("Model block", TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelEditorPanel));
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelEditorPanel)).tooltip("Model editor", TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
         /* Despacito 13 confirmed */
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel));
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel)).tooltip("Player recording editor", TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         int h = this.area.h;
         int x = this.area.x + this.area.w;
@@ -60,6 +62,6 @@ public class GuiDespacito extends GuiElement
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);
         Gui.drawRect(x - 1, this.area.y, x, this.area.getY(1), 0x22000000);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

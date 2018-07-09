@@ -7,6 +7,7 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRenderer;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
@@ -131,9 +132,9 @@ public class GuiModelRenderer extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
         this.update();
 
         this.drawModel(mouseX, mouseY, partialTicks);

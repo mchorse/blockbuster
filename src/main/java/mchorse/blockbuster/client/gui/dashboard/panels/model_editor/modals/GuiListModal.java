@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
@@ -79,9 +80,9 @@ public class GuiListModal extends GuiModal
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         this.font.drawSplitString(this.label, this.area.getX(0.15F), this.area.getY(0.1F), (int) (this.area.w * 0.7), 0xffffff);
     }

@@ -17,6 +17,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiMode
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Area;
@@ -96,10 +98,10 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.options);
 
         /* Top bar buttons */
-        this.openModels = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.models, this.poses));
-        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.models));
-        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs));
-        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options));
+        this.openModels = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.models, this.poses)).tooltip("Models", TooltipDirection.RIGHT);
+        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.models)).tooltip("Poses", TooltipDirection.RIGHT);
+        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs)).tooltip("Model options", TooltipDirection.LEFT);
+        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options)).tooltip("Limbs", TooltipDirection.LEFT);
 
         this.openModels.resizer().set(2, 2, 16, 16).parent(this.area);
         this.openPoses.resizer().set(0, 20, 16, 16).relative(this.openModels.resizer());
@@ -109,9 +111,9 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.openModels, this.openPoses, this.openOptions, this.openLimbs);
 
         /* Buttons */
-        this.swipe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe());
-        this.running = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging);
-        this.items = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems());
+        this.swipe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe()).tooltip("Swipe", TooltipDirection.TOP);
+        this.running = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging).tooltip("Toggle swing", TooltipDirection.TOP);
+        this.items = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems()).tooltip("Toggle items", TooltipDirection.TOP);
         this.hitbox = GuiButtonElement.checkbox(mc, "Hitbox", this.modelRenderer.aabb, (b) -> this.modelRenderer.aabb = b.button.isChecked());
         this.looking = GuiButtonElement.checkbox(mc, "Looking", this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.button.isChecked());
 
@@ -316,7 +318,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.enableAlpha();
         this.drawGradientRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x00000000, 0x88000000);
@@ -326,7 +328,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (this.poses.isVisible()) this.drawIconBackground(this.openPoses.area);
         if (this.models.isVisible()) this.drawIconBackground(this.openModels.area);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 
     private void drawIconBackground(Area area)

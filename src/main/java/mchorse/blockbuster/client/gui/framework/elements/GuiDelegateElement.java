@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.io.IOException;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
@@ -128,11 +129,11 @@ public class GuiDelegateElement<T extends IGuiElement> extends GuiElement implem
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         if (this.delegate != null)
         {
-            this.delegate.draw(mouseX, mouseY, partialTicks);
+            this.delegate.draw(tooltip, mouseX, mouseY, partialTicks);
         }
     }
 }

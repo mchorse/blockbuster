@@ -10,6 +10,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -148,23 +150,23 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
-        });
+        }).tooltip("Director block options", TooltipDirection.LEFT);
         element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -48);
 
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip("Add", TooltipDirection.LEFT);
         element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip("Duplicate", TooltipDirection.LEFT);
         element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip("Remove", TooltipDirection.LEFT);
         element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
@@ -418,7 +420,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
@@ -465,7 +467,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.font.drawStringWithShadow("On stop command", this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
         }
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (this.director == null)
         {
