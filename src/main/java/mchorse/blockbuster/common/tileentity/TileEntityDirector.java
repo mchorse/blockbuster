@@ -17,7 +17,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntityFlowerPot;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,7 +30,7 @@ import net.minecraft.world.World;
  * it's the best way to implement activation of the redstone (See update method
  * for more information).
  */
-public class TileEntityDirector extends TileEntity implements ITickable
+public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
 {
     /**
      * Director instance which is responsible for managing and storing 
@@ -87,6 +88,12 @@ public class TileEntityDirector extends TileEntity implements ITickable
     }
 
     /* Read/write this TE to disk */
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        return new SPacketUpdateTileEntity(this.pos, 5, this.getUpdateTag());
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound)

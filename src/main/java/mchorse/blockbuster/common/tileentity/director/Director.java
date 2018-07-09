@@ -54,6 +54,11 @@ public class Director
     public List<Replay> replays = new ArrayList<Replay>();
 
     /**
+     * Display title, used for client organization purposes
+     */
+    public String title = "";
+
+    /**
      * Command which should be executed when director block starts 
      * playing 
      */
@@ -581,6 +586,7 @@ public class Director
         this.loops = director.loops;
         this.disableStates = director.disableStates;
         this.hide = director.hide;
+        this.title = director.title;
         this.startCommand = director.startCommand;
         this.stopCommand = director.stopCommand;
     }
@@ -604,6 +610,7 @@ public class Director
         this.loops = compound.getBoolean("Loops");
         this.disableStates = compound.getBoolean("DisableState");
         this.hide = compound.getBoolean("Hide");
+        this.title = compound.getString("Title");
         this.startCommand = compound.getString("StartCommand");
         this.stopCommand = compound.getString("StopCommand");
     }
@@ -624,6 +631,7 @@ public class Director
         compound.setBoolean("Loops", this.loops);
         compound.setBoolean("DisableState", this.disableStates);
         compound.setBoolean("Hide", this.hide);
+        compound.setString("Title", this.title);
         compound.setString("StartCommand", this.startCommand);
         compound.setString("StopCommand", this.stopCommand);
     }
@@ -645,6 +653,7 @@ public class Director
         this.loops = buffer.readBoolean();
         this.disableStates = buffer.readBoolean();
         this.hide = buffer.readBoolean();
+        this.title = ByteBufUtils.readUTF8String(buffer);
         this.startCommand = ByteBufUtils.readUTF8String(buffer);
         this.stopCommand = ByteBufUtils.readUTF8String(buffer);
     }
@@ -661,6 +670,7 @@ public class Director
         buffer.writeBoolean(this.loops);
         buffer.writeBoolean(this.disableStates);
         buffer.writeBoolean(this.hide);
+        ByteBufUtils.writeUTF8String(buffer, this.title);
         ByteBufUtils.writeUTF8String(buffer, this.startCommand);
         ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
     }
