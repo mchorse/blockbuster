@@ -399,10 +399,10 @@ public class ModelExtrudedLayer
 
                     if (!chunk.hasBlock(x - 1, y, z))
                     {
-                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(1, 0, 0).endVertex();
+                        buffer.pos((x - aX) * f, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(1, 0, 0).endVertex();
                     }
                 }
             }
