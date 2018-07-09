@@ -16,6 +16,7 @@ import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListEleme
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
@@ -90,7 +91,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         String key = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
 
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new pose:", (text) -> this.addPose(text)).setValue(key));
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type in a name for a new pose:", (text) -> this.addPose(text)).setValue(key));
     }
 
     private void addPose(String text)
@@ -160,6 +161,21 @@ public class GuiModelPoses extends GuiModelEditorTab
     }
 
     @Override
+    public void resize(int width, int height)
+    {
+        if (this.resizer().h.unit == Measure.RELATIVE)
+        {
+            this.posesList.resizer().x(0).y(150).w(1, 0).h(1, -150);
+        }
+        else
+        {
+            this.posesList.resizer().y(20).h(1, -20).w(80).x(1, -80);
+        }
+
+        super.resize(width, height);
+    }
+
+    @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         return super.mouseClicked(mouseX, mouseY, mouseButton) || this.area.isInside(mouseX, mouseY);
@@ -169,6 +185,14 @@ public class GuiModelPoses extends GuiModelEditorTab
     protected void drawLabels()
     {
         super.drawLabels();
+
+        if (this.resizer().h.unit == Measure.RELATIVE)
+        {
+            int x = this.posesList.area.x;
+            int y = this.posesList.area.y;
+
+            Gui.drawRect(x, y, x + this.posesList.area.w, y + this.posesList.area.h, 0x88000000);
+        }
 
         this.font.drawStringWithShadow("Hitbox", this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
     }

@@ -270,7 +270,7 @@ public class GuiRecordSelector extends GuiElement
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
         this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
-        net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 32, 20, this.area.h, 32, 32, 0, 0);
+        net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 64, 20, this.area.h, 32, 32, 0, 0);
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

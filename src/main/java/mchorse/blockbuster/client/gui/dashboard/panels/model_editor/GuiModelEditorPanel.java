@@ -69,6 +69,19 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
 
+    public static <T> String getKey(T value, Map<String, T> map)
+    {
+        for (Map.Entry<String, T> entry : map.entrySet())
+        {
+            if (Objects.equals(value, entry.getValue()))
+            {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
+
     public GuiModelEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
@@ -318,6 +331,23 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     }
 
     @Override
+    public void resize(int width, int height)
+    {
+        if (height > 280)
+        {
+            this.poses.resizer().w(130).h(1, -20);
+            this.limbs.resizer().x(1, -160).w(140).h(1, -20);
+        }
+        else
+        {
+            this.poses.resizer().w(210).h(150);
+            this.limbs.resizer().x(1, -260).w(240).h(220);
+        }
+
+        super.resize(width, height);
+    }
+
+    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.enableAlpha();
@@ -334,18 +364,5 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private void drawIconBackground(Area area)
     {
         Gui.drawRect(area.x - 2, area.y - 2, area.x + 18, area.y + 18, 0x88000000);
-    }
-
-    public static <T> String getKey(T value, Map<String, T> map)
-    {
-        for (Map.Entry<String, T> entry : map.entrySet())
-        {
-            if (Objects.equals(value, entry.getValue()))
-            {
-                return entry.getKey();
-            }
-        }
-
-        return null;
     }
 }

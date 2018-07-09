@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMe
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
@@ -21,6 +22,7 @@ import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -103,6 +105,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.rebuildModel();
         });
         this.slot = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.slot = ArmorSlot.values()[b.button.getValue()]);
+        this.slot.tooltip("Armor slot", TooltipDirection.LEFT);
 
         for (ArmorSlot slot : ArmorSlot.values())
         {
@@ -137,7 +140,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.shading = GuiButtonElement.checkbox(mc, "Shading", false, (b) -> this.panel.limb.shading = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
-        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]);
+        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]).tooltip("Held items", TooltipDirection.LEFT);
         this.holding.button.addLabel("None");
         this.holding.button.addLabel("Right");
         this.holding.button.addLabel("Left");
@@ -179,7 +182,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         {
             this.first.setVisible(!this.first.isVisible());
             this.second.setVisible(!this.first.isVisible());
-        });
+        }).tooltip("Next page", TooltipDirection.LEFT);
 
         this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -38);
         this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
@@ -296,9 +299,34 @@ public class GuiModelLimbs extends GuiModelEditorTab
     }
 
     @Override
+    public void resize(int width, int height)
+    {
+        if (this.resizer().h.unit == Measure.RELATIVE)
+        {
+            this.limbList.resizer().x(0).y(220).w(1, 0).h(1, -220);
+            this.toggle.resizer().y(190);
+        }
+        else
+        {
+            this.limbList.resizer().x(1, -100).y(20).w(100).h(1, -20);
+            this.toggle.resizer().y(1, -30);
+        }
+
+        super.resize(width, height);
+    }
+
+    @Override
     protected void drawLabels()
     {
         super.drawLabels();
+
+        if (this.resizer().h.unit == Measure.RELATIVE)
+        {
+            int x = this.limbList.area.x;
+            int y = this.limbList.area.y;
+
+            Gui.drawRect(x, y, x + this.limbList.area.w, y + this.limbList.area.h, 0x88000000);
+        }
 
         if (this.first.isVisible())
         {
