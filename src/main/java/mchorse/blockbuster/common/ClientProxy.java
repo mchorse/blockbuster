@@ -29,11 +29,14 @@ import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -98,8 +101,22 @@ public class ClientProxy extends CommonProxy
 
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
-        this.registerItemModel(Blockbuster.modelBlock, Blockbuster.path(Blockbuster.proxy.config.model_block_disable_item_rendering ? "model_static" : "model"));
         this.registerItemModel(Blockbuster.greenBlock, Blockbuster.path("green"));
+
+        final ModelResourceLocation modelStatic = new ModelResourceLocation(Blockbuster.path("model_static"), "inventory");
+        final ModelResourceLocation model = new ModelResourceLocation(Blockbuster.path("model"), "inventory");
+
+        Item item = Item.getItemFromBlock(Blockbuster.modelBlock);
+        ModelBakery.registerItemVariants(item, model, modelStatic);
+
+        ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
+        {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack)
+            {
+                return ClientProxy.this.config.model_block_disable_item_rendering ? modelStatic : model;
+            }
+        });
 
         Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
 
