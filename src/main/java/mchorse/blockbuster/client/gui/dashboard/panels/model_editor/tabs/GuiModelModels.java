@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMe
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
@@ -30,10 +31,10 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class GuiModelModels extends GuiModelEditorTab
 {
-    private GuiStringListElement modelList;
+    public GuiStringListElement modelList;
     private GuiButtonElement<GuiTextureButton> save;
     private GuiButtonElement<GuiTextureButton> export;
-    private GuiDelegateElement modal;
+    private GuiDelegateElement<IGuiElement> modal;
 
     public GuiModelModels(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -43,8 +44,6 @@ public class GuiModelModels extends GuiModelEditorTab
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str));
         this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).w(1, 0);
-        this.modelList.add(ModelCustom.MODELS.keySet());
-        this.modelList.sort();
         this.children.add(this.modelList);
 
         this.save = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveModel());
@@ -54,9 +53,16 @@ public class GuiModelModels extends GuiModelEditorTab
         this.export.resizer().set(20, 0, 16, 16).relative(this.save.resizer());
         this.children.add(this.save, this.export);
 
-        this.modal = new GuiDelegateElement(mc, null);
+        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
         this.children.add(this.modal);
+    }
+
+    public void updateModelList()
+    {
+        this.modelList.clear();
+        this.modelList.add(ModelCustom.MODELS.keySet());
+        this.modelList.sort();
     }
 
     private void saveModel()
@@ -66,7 +72,15 @@ public class GuiModelModels extends GuiModelEditorTab
 
     private void saveModel(String name)
     {
-        this.panel.saveModel(name);
+        boolean exists = ModelCustom.MODELS.containsKey(this.panel.modelName);
+        boolean save = this.panel.saveModel(name);
+
+        if (!exists && save)
+        {
+            this.modelList.add(name);
+            this.modelList.sort();
+            this.modelList.setCurrent(name);
+        }
     }
 
     private void exportModel()

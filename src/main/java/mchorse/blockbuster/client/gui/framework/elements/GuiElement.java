@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.framework.elements;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.utils.Area;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import net.minecraft.client.Minecraft;
@@ -173,11 +174,11 @@ public class GuiElement extends Gui implements IGuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         if (this.children != null)
         {
-            this.children.draw(mouseX, mouseY, partialTicks);
+            this.children.draw(tooltip, mouseX, mouseY, partialTicks);
         }
     }
 }

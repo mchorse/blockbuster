@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiBase extends GuiScreen
 {
     public GuiElements elements = new GuiElements();
+    public GuiTooltip tooltip = new GuiTooltip();
     public Area area = new Area();
 
     @Override
@@ -107,6 +108,8 @@ public class GuiBase extends GuiScreen
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.elements.draw(mouseX, mouseY, partialTicks);
+        this.tooltip.set(null, null);
+        this.elements.draw(this.tooltip, mouseX, mouseY, partialTicks);
+        this.tooltip.draw(this.fontRenderer, this.width, this.height);
     }
 }

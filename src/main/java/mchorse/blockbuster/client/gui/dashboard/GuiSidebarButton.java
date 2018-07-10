@@ -23,14 +23,23 @@ public class GuiSidebarButton extends GuiButton
     {
         if (this.visible)
         {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(this.x + this.width / 2, this.y + this.height / 2, 0);
+
+            if (mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height)
+            {
+                GlStateManager.scale(1.5, 1.5, 1.5);
+            }
+
             GlStateManager.enableDepth();
             RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
-            GuiInventory.drawItemStack(this.stack, this.x + this.width / 2 - 8, this.y + this.height / 2 - 8, null);
+            GuiInventory.drawItemStack(this.stack, -8, -8, null);
 
-            GlStateManager.disableDepth();
             RenderHelper.disableStandardItemLighting();
+            GlStateManager.disableDepth();
+            GlStateManager.popMatrix();
         }
     }
 }

@@ -18,6 +18,7 @@ public class GuiModelOptions extends GuiModelEditorTab
     private GuiThreeElement scale;
     private GuiTrackpadElement scaleGui;
     private GuiTextElement defaultTexture;
+    private GuiTextElement skins;
     private GuiButtonElement<GuiCheckBox> providesObj;
     private GuiButtonElement<GuiCheckBox> providesMtl;
 
@@ -43,6 +44,7 @@ public class GuiModelOptions extends GuiModelEditorTab
         });
         this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.panel.model.scaleGui = value);
         this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str));
+        this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);
         this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) ->
         {
             this.panel.model.providesObj = b.button.isChecked();
@@ -61,10 +63,11 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.scale.resizer().set(0, 40, w, 20).relative(this.texture.resizer());
         this.scaleGui.resizer().set(0, 25, w, 20).relative(this.scale.resizer());
         this.defaultTexture.resizer().set(0, 40, w, 20).relative(this.scaleGui.resizer());
-        this.providesObj.resizer().set(0, 25, w, 11).relative(this.defaultTexture.resizer());
+        this.skins.resizer().set(0, 40, w, 20).relative(this.defaultTexture.resizer());
+        this.providesObj.resizer().set(0, 25, w, 11).relative(this.skins.resizer());
         this.providesMtl.resizer().set(0, 16, w, 11).relative(this.providesObj.resizer());
 
-        this.children.add(this.name, this.texture, this.scale, this.scaleGui, this.defaultTexture, this.providesObj, this.providesMtl);
+        this.children.add(this.name, this.texture, this.scale, this.scaleGui, this.defaultTexture, this.skins, this.providesObj, this.providesMtl);
     }
 
     @Override
@@ -80,6 +83,7 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.scale.setValues(model.scale[0], model.scale[1], model.scale[2]);
         this.scaleGui.trackpad.setValue(model.scaleGui);
         this.defaultTexture.setText(model.defaultTexture == null ? "" : model.defaultTexture.toString());
+        this.skins.setText(model.skins);
         this.providesObj.button.setIsChecked(model.providesObj);
         this.providesMtl.button.setIsChecked(model.providesMtl);
     }
@@ -91,5 +95,6 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.font.drawStringWithShadow("Texture size", this.texture.area.x, this.texture.area.y - 12, 0xeeeeee);
         this.font.drawStringWithShadow("Global scale", this.scale.area.x, this.scale.area.y - 12, 0xeeeeee);
         this.font.drawStringWithShadow("Default texture", this.defaultTexture.area.x, this.defaultTexture.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow("Skins folder", this.skins.area.x, this.skins.area.y - 12, 0xeeeeee);
     }
 }

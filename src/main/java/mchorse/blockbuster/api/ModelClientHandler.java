@@ -23,7 +23,7 @@ public class ModelClientHandler extends ModelHandler
 {
     @Override
     @SuppressWarnings("unchecked")
-    protected void addModel(String name, ModelCell cell)
+    public void addModel(String name, ModelCell cell)
     {
         super.addModel(name, cell);
 
@@ -61,7 +61,7 @@ public class ModelClientHandler extends ModelHandler
     }
 
     @Override
-    protected void removeModel(String key)
+    public void removeModel(String key)
     {
         super.removeModel(key);
 

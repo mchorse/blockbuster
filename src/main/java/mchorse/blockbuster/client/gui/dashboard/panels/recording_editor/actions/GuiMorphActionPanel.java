@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
@@ -38,7 +39,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         MorphCell cell = this.dashboard.morphs.getSelected();
 
@@ -56,6 +57,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 
         this.action.morph = cell == null ? null : cell.current().morph;
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

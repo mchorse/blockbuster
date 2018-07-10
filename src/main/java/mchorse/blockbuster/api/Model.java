@@ -76,6 +76,11 @@ public class Model
      */
     public boolean providesMtl = false;
 
+    /**
+     * Skins folder 
+     */
+    public String skins = "";
+
     public Map<String, ModelLimb> limbs = new HashMap<String, ModelLimb>();
     public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
 
@@ -271,6 +276,7 @@ public class Model
         b.defaultTexture = this.defaultTexture == null ? null : new ResourceLocation(this.defaultTexture.toString());
         b.providesObj = this.providesObj;
         b.providesMtl = this.providesMtl;
+        b.skins = this.skins;
 
         for (Map.Entry<String, ModelLimb> entry : this.limbs.entrySet())
         {
@@ -283,6 +289,28 @@ public class Model
         }
 
         return b;
+    }
+
+    /**
+     * Copy model from model
+     */
+    public void copy(Model from)
+    {
+        this.texture = from.texture;
+        this.scale = from.scale;
+        this.scaleGui = from.scaleGui;
+
+        this.name = from.name;
+        this.scheme = from.scheme;
+        this.model = from.model;
+
+        this.defaultTexture = from.defaultTexture;
+        this.providesObj = from.providesObj;
+        this.providesMtl = from.providesMtl;
+        this.skins = from.skins;
+
+        this.poses = from.poses;
+        this.limbs = from.limbs;
     }
 
     @Override

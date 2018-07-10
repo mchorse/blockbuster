@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad;
 import mchorse.blockbuster.client.gui.widgets.GuiTrackpad.ITrackpadListener;
 import net.minecraft.client.Minecraft;
@@ -75,7 +76,7 @@ public class GuiTrackpadElement extends GuiElement implements ITrackpadListener
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.trackpad.draw(mouseX, mouseY, partialTicks);
     }

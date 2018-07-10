@@ -11,9 +11,9 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Model block list 
  */
-public class GuiDirectorBlockList extends GuiBlockList<BlockPos>
+public class GuiDirectorBlockList extends GuiBlockList<TileEntityDirector>
 {
-    public GuiDirectorBlockList(Minecraft mc, String title, Consumer<BlockPos> callback)
+    public GuiDirectorBlockList(Minecraft mc, String title, Consumer<TileEntityDirector> callback)
     {
         super(mc, title, callback);
     }
@@ -25,7 +25,7 @@ public class GuiDirectorBlockList extends GuiBlockList<BlockPos>
 
         if (tile instanceof TileEntityDirector)
         {
-            this.list.add(pos);
+            this.list.add((TileEntityDirector) tile);
 
             this.scroll.setSize(this.list.size());
             this.scroll.clamp();
@@ -37,10 +37,15 @@ public class GuiDirectorBlockList extends GuiBlockList<BlockPos>
     }
 
     @Override
-    public void drawElement(BlockPos item, int i, int x, int y, boolean hovered)
+    public void drawElement(TileEntityDirector item, int i, int x, int y, boolean hovered)
     {
-        BlockPos pos = item;
-        String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
+        BlockPos pos = item.getPos();
+        String label = item.director.title;
+
+        if (label.isEmpty())
+        {
+            label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
+        }
 
         this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
     }

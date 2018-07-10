@@ -1,12 +1,14 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.io.FileUtils;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.api.ModelPose;
@@ -17,6 +19,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiMode
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Area;
@@ -67,6 +71,19 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
 
+    public static <T> String getKey(T value, Map<String, T> map)
+    {
+        for (Map.Entry<String, T> entry : map.entrySet())
+        {
+            if (Objects.equals(value, entry.getValue()))
+            {
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
+
     public GuiModelEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
@@ -92,14 +109,14 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
-        this.options.resizer().set(0, 0, 140, 225).parent(this.area).x(1, -160);
+        this.options.resizer().set(0, 0, 140, 225 + 42).parent(this.area).x(1, -160);
         this.children.add(this.options);
 
         /* Top bar buttons */
-        this.openModels = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.models, this.poses));
-        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.models));
-        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs));
-        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options));
+        this.openModels = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 32, 96, 48, (b) -> this.toggle(this.models, this.poses)).tooltip("Models", TooltipDirection.RIGHT);
+        this.openPoses = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.toggle(this.poses, this.models)).tooltip("Poses", TooltipDirection.RIGHT);
+        this.openOptions = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) -> this.toggle(this.options, this.limbs)).tooltip("Model options", TooltipDirection.LEFT);
+        this.openLimbs = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 128, 0, 128, 16, (b) -> this.toggle(this.limbs, this.options)).tooltip("Limbs", TooltipDirection.LEFT);
 
         this.openModels.resizer().set(2, 2, 16, 16).parent(this.area);
         this.openPoses.resizer().set(0, 20, 16, 16).relative(this.openModels.resizer());
@@ -109,9 +126,9 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.openModels, this.openPoses, this.openOptions, this.openLimbs);
 
         /* Buttons */
-        this.swipe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe());
-        this.running = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging);
-        this.items = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems());
+        this.swipe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe()).tooltip("Swipe", TooltipDirection.TOP);
+        this.running = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging).tooltip("Toggle swing", TooltipDirection.TOP);
+        this.items = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems()).tooltip("Toggle items", TooltipDirection.TOP);
         this.hitbox = GuiButtonElement.checkbox(mc, "Hitbox", this.modelRenderer.aabb, (b) -> this.modelRenderer.aabb = b.button.isChecked());
         this.looking = GuiButtonElement.checkbox(mc, "Looking", this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.button.isChecked());
 
@@ -124,6 +141,18 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.swipe, this.running, this.items, this.hitbox, this.looking);
 
         this.setModel("steve");
+    }
+
+    @Override
+    public void open()
+    {
+        this.models.updateModelList();
+        this.models.modelList.setCurrent(this.modelName);
+
+        if (this.models.modelList.current == -1)
+        {
+            this.setModel("steve");
+        }
     }
 
     private void toggle(GuiElement main, GuiElement secondary)
@@ -152,32 +181,44 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         File file = new File(folder, "model.json");
         String output = ModelUtils.toJson(this.model);
 
-        boolean exists = folder.exists();
-
         folder.mkdirs();
 
         try
         {
-            PrintWriter writer = new PrintWriter(file);
+            FileUtils.write(file, output);
 
-            writer.print(output);
-            writer.close();
-
-            String key = name;
-            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(key);
+            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(name);
+            ModelEntry entry = Blockbuster.proxy.models.pack.models.get(this.modelName);
 
             if (model != null)
             {
-                ModelUtils.copy(this.model.clone(), model.model);
+                model.model.copy(this.model.clone());
             }
 
-            ModelCustom.MODELS.put(key, this.buildModel());
-            this.modelName = name;
-
-            if (!exists && this.model.defaultTexture == null)
+            /* Copy OBJ files */
+            if (entry != null)
             {
-                return false;
+                try
+                {
+                    if (entry.objModel != null) FileUtils.copyFile(entry.objModel, new File(folder, "model.obj"));
+                    if (entry.mtlFile != null) FileUtils.copyFile(entry.mtlFile, new File(folder, "model.mtl"));
+
+                    File skins = new File(entry.customModel.getParentFile(), "skins");
+
+                    if (skins.exists())
+                    {
+                        FileUtils.copyDirectory(skins, new File(folder, "skins"));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
+
+            Blockbuster.proxy.models.pack.reload();
+            Blockbuster.proxy.models.addModel(name, new ModelCell(this.model.clone(), file.lastModified()));
+            this.modelName = name;
         }
         catch (Exception e)
         {
@@ -316,7 +357,24 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void resize(int width, int height)
+    {
+        if (height > 280)
+        {
+            this.poses.resizer().w(130).h(1, -20);
+            this.limbs.resizer().x(1, -160).w(140).h(1, -20);
+        }
+        else
+        {
+            this.poses.resizer().w(210).h(150);
+            this.limbs.resizer().x(1, -260).w(240).h(220);
+        }
+
+        super.resize(width, height);
+    }
+
+    @Override
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.enableAlpha();
         this.drawGradientRect(this.area.x, this.area.getY(1) - 20, this.area.getX(1), this.area.getY(1), 0x00000000, 0x88000000);
@@ -326,24 +384,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         if (this.poses.isVisible()) this.drawIconBackground(this.openPoses.area);
         if (this.models.isVisible()) this.drawIconBackground(this.openModels.area);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 
     private void drawIconBackground(Area area)
     {
         Gui.drawRect(area.x - 2, area.y - 2, area.x + 18, area.y + 18, 0x88000000);
-    }
-
-    public static <T> String getKey(T value, Map<String, T> map)
-    {
-        for (Map.Entry<String, T> entry : map.entrySet())
-        {
-            if (Objects.equals(value, entry.getValue()))
-            {
-                return entry.getKey();
-            }
-        }
-
-        return null;
     }
 }

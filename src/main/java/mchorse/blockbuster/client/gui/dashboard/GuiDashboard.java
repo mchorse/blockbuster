@@ -30,7 +30,7 @@ public class GuiDashboard extends GuiBase
      */
     public static final ResourceLocation ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
 
-    public GuiDelegateElement panel;
+    public GuiDelegateElement<GuiDashboardPanel> panel;
     public GuiDespacito sidebar;
 
     public GuiDirectorPanel directorPanel;
@@ -57,7 +57,7 @@ public class GuiDashboard extends GuiBase
         this.modelEditorPanel = new GuiModelEditorPanel(mc, this);
         this.mainPanel = new GuiMainPanel(mc, this);
 
-        this.panel = new GuiDelegateElement(mc, this.mainPanel);
+        this.panel = new GuiDelegateElement<GuiDashboardPanel>(mc, this.mainPanel);
         this.panel.resizer().set(32, 0, 1, 1).parent(this.area).w(1F, -32).h(1F, 0);
 
         this.sidebar = new GuiDespacito(mc, this);
@@ -99,8 +99,10 @@ public class GuiDashboard extends GuiBase
 
         if (this.panel.delegate != null)
         {
-            ((GuiDashboardPanel) this.panel.delegate).appear();
+            this.panel.delegate.appear();
         }
+
+        this.modelEditorPanel.open();
 
         if (mc.world != null)
         {
@@ -125,7 +127,7 @@ public class GuiDashboard extends GuiBase
 
         if (this.panel.delegate != null)
         {
-            ((GuiDashboardPanel) this.panel.delegate).disappear();
+            this.panel.delegate.disappear();
         }
 
         this.panel.setDelegate(element);
@@ -157,7 +159,7 @@ public class GuiDashboard extends GuiBase
     @Override
     protected void closeScreen()
     {
-        ((GuiDashboardPanel) this.panel.delegate).disappear();
+        this.panel.delegate.disappear();
 
         if (!this.mainMenu)
         {
@@ -188,14 +190,14 @@ public class GuiDashboard extends GuiBase
 
         if (this.mc.world != null)
         {
-            this.morphs.setWorldAndResolution(this.mc, width, height);
+            this.morphs.setWorldAndResolution(mc, width, height);
         }
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.panel.delegate != null && ((GuiDashboardPanel) this.panel.delegate).needsBackground())
+        if (this.panel.delegate != null && this.panel.delegate.needsBackground())
         {
             this.drawDefaultBackground();
         }

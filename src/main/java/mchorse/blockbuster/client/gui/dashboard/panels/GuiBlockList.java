@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -39,7 +40,7 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 64, this.area.w, this.area.h, 32, 32, 0, 0);
@@ -47,6 +48,6 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 30, 0x44000000);
         this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 11, 0xcccccc);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

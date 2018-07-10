@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;
@@ -112,10 +113,10 @@ public class GuiTextElement extends GuiElement implements GuiResponder
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.field.drawTextBox();
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

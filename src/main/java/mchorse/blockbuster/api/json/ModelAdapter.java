@@ -16,8 +16,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -112,6 +112,11 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         if (src.providesMtl)
         {
             map.addProperty("providesMtl", src.providesMtl);
+        }
+
+        if (src.skins.isEmpty())
+        {
+            map.addProperty("skins", src.skins);
         }
 
         map.add("limbs", context.serialize(src.limbs));
