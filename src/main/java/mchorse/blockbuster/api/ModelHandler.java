@@ -155,7 +155,7 @@ public class ModelHandler
     /**
      * Add model to the model handler 
      */
-    protected void addModel(String name, ModelCell cell)
+    public void addModel(String name, ModelCell cell)
     {
         this.models.put(name, cell);
     }
@@ -163,7 +163,7 @@ public class ModelHandler
     /**
      * Remove model from model handler 
      */
-    protected void removeModel(String key)
+    public void removeModel(String key)
     {
         this.models.remove(key);
         System.out.println("Removing '" + key + "' custom model!");

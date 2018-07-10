@@ -28,7 +28,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class GuiModelModels extends GuiModelEditorTab
 {
-    private GuiStringListElement modelList;
+    public GuiStringListElement modelList;
     private GuiButtonElement<GuiTextureButton> save;
     private GuiButtonElement<GuiTextureButton> export;
     private GuiDelegateElement<IGuiElement> modal;
@@ -41,8 +41,6 @@ public class GuiModelModels extends GuiModelEditorTab
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str));
         this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).w(1, 0);
-        this.modelList.add(ModelCustom.MODELS.keySet());
-        this.modelList.sort();
         this.children.add(this.modelList);
 
         this.save = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveModel());
@@ -57,6 +55,13 @@ public class GuiModelModels extends GuiModelEditorTab
         this.children.add(this.modal);
     }
 
+    public void updateModelList()
+    {
+        this.modelList.clear();
+        this.modelList.add(ModelCustom.MODELS.keySet());
+        this.modelList.sort();
+    }
+
     private void saveModel()
     {
         this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter name for the model:", (name) -> this.saveModel(name)).setValue(this.panel.modelName));
@@ -64,7 +69,15 @@ public class GuiModelModels extends GuiModelEditorTab
 
     private void saveModel(String name)
     {
-        this.panel.saveModel(name);
+        boolean exists = ModelCustom.MODELS.containsKey(this.panel.modelName);
+        boolean save = this.panel.saveModel(name);
+
+        if (!exists && save)
+        {
+            this.modelList.add(name);
+            this.modelList.sort();
+            this.modelList.setCurrent(name);
+        }
     }
 
     private void exportModel()

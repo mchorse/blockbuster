@@ -102,6 +102,8 @@ public class GuiDashboard extends GuiBase
             this.panel.delegate.appear();
         }
 
+        this.modelEditorPanel.open();
+
         if (mc.theWorld != null)
         {
             EntityPlayer player = mc.thePlayer;

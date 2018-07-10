@@ -1,12 +1,14 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.io.FileUtils;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.api.ModelPose;
@@ -141,6 +143,18 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.setModel("steve");
     }
 
+    @Override
+    public void open()
+    {
+        this.models.updateModelList();
+        this.models.modelList.setCurrent(this.modelName);
+
+        if (this.models.modelList.current == -1)
+        {
+            this.setModel("steve");
+        }
+    }
+
     private void toggle(GuiElement main, GuiElement secondary)
     {
         main.toggleVisible();
@@ -167,32 +181,44 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         File file = new File(folder, "model.json");
         String output = ModelUtils.toJson(this.model);
 
-        boolean exists = folder.exists();
-
         folder.mkdirs();
 
         try
         {
-            PrintWriter writer = new PrintWriter(file);
+            FileUtils.write(file, output);
 
-            writer.print(output);
-            writer.close();
-
-            String key = name;
-            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(key);
+            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(name);
+            ModelEntry entry = Blockbuster.proxy.models.pack.models.get(this.modelName);
 
             if (model != null)
             {
                 ModelUtils.copy(this.model.clone(), model.model);
             }
 
-            ModelCustom.MODELS.put(key, this.buildModel());
-            this.modelName = name;
-
-            if (!exists && this.model.defaultTexture == null)
+            /* Copy OBJ files */
+            if (entry != null)
             {
-                return false;
+                try
+                {
+                    if (entry.objModel != null) FileUtils.copyFile(entry.objModel, new File(folder, "model.obj"));
+                    if (entry.mtlFile != null) FileUtils.copyFile(entry.mtlFile, new File(folder, "model.mtl"));
+
+                    File skins = new File(entry.customModel.getParentFile(), "skins");
+
+                    if (skins.exists())
+                    {
+                        FileUtils.copyDirectory(skins, new File(folder, "skins"));
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
+
+            Blockbuster.proxy.models.pack.reload();
+            Blockbuster.proxy.models.addModel(name, new ModelCell(this.model.clone(), file.lastModified()));
+            this.modelName = name;
         }
         catch (Exception e)
         {
