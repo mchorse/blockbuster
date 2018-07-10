@@ -114,7 +114,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
             map.addProperty("providesMtl", src.providesMtl);
         }
 
-        if (src.skins.isEmpty())
+        if (!src.skins.isEmpty())
         {
             map.addProperty("skins", src.skins);
         }
