@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 import java.net.URI;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
@@ -61,11 +62,11 @@ public class GuiMainPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.font.drawStringWithShadow("Resources", this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
         this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

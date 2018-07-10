@@ -1,15 +1,17 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 public abstract class GuiModal extends GuiElement
 {
-    public GuiDelegateElement parent;
+    public GuiDelegateElement<IGuiElement> parent;
 
-    public GuiModal(Minecraft mc, GuiDelegateElement parent)
+    public GuiModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent)
     {
         super(mc);
 
@@ -24,10 +26,10 @@ public abstract class GuiModal extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

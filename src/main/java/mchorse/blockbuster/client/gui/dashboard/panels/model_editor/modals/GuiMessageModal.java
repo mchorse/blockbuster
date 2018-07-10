@@ -1,7 +1,9 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -11,7 +13,7 @@ public class GuiMessageModal extends GuiModal
 
     private GuiButtonElement<GuiButton> button;
 
-    public GuiMessageModal(Minecraft mc, GuiDelegateElement parent, String label)
+    public GuiMessageModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent, String label)
     {
         super(mc, parent);
 
@@ -25,9 +27,9 @@ public class GuiMessageModal extends GuiModal
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         this.font.drawSplitString(this.label, this.area.getX(0.2F), this.area.getY(0.25F), (int) (this.area.w * 0.6), 0xffffff);
     }

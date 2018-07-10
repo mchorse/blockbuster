@@ -147,6 +147,8 @@ public class CommonProxy
      */
     public void load(FMLInitializationEvent event)
     {
+        this.config.reload();
+
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());

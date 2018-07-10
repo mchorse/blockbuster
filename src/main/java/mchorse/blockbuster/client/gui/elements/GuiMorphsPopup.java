@@ -467,7 +467,7 @@ public class GuiMorphsPopup extends GuiScreen
 
         if (this.elements.isVisible())
         {
-            this.elements.draw(mouseX, mouseY, partialTicks);
+            this.elements.draw(null, mouseX, mouseY, partialTicks);
         }
         else if (cell != null)
         {

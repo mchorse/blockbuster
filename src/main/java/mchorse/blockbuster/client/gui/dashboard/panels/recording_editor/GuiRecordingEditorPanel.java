@@ -24,6 +24,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMountingActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiPlaceBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiShootArrowActionPanel;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
@@ -65,7 +67,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public GuiRecordList records;
     public GuiRecordSelector selector;
-    public GuiDelegateElement editor;
+    public GuiDelegateElement<GuiActionPanel<? extends Action>> editor;
 
     public GuiButtonElement<GuiTextureButton> add;
     public GuiButtonElement<GuiTextureButton> dupe;
@@ -78,7 +80,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public Record record;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public GuiActionPanel getPanel(Action action)
+    public GuiActionPanel<? extends Action> getPanel(Action action)
     {
         if (action == null)
         {
@@ -108,15 +110,16 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.resizer().parent(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
 
-        this.editor = new GuiDelegateElement(mc, null);
+        this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
         this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
-        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.setVisible(true));
-        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction());
-        this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction());
+        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.toggleVisible()).tooltip("Add", TooltipDirection.LEFT);
+        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction()).tooltip("Duplicate", TooltipDirection.LEFT);
+        this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction()).tooltip("Remove", TooltipDirection.LEFT);
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
+        this.list.label = "Search...";
         this.list.elements.addAll(Action.TYPES.keySet());
         this.list.background = true;
 
@@ -251,12 +254,11 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.save();
     }
 
-    @SuppressWarnings("unchecked")
     private void save()
     {
         if (this.editor.delegate != null)
         {
-            Action old = ((GuiActionPanel<? extends Action>) this.editor.delegate).action;
+            Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));
         }
@@ -307,6 +309,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         super.resize(width, height);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.initGui();
     }
 
     @Override
@@ -328,9 +331,9 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (this.record == null)
         {

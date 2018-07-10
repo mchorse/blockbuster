@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+
 /**
  * GUI elements collection
  * 
@@ -177,13 +179,13 @@ public class GuiElements implements IGuiElement, IGuiLegacy
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         for (IGuiElement element : this.elements)
         {
             if (element.isVisible())
             {
-                element.draw(mouseX, mouseY, partialTicks);
+                element.draw(tooltip, mouseX, mouseY, partialTicks);
             }
         }
     }

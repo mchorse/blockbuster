@@ -3,8 +3,10 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import java.util.Collection;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -18,7 +20,7 @@ public class GuiListModal extends GuiModal
     private GuiButtonElement<GuiButton> cancel;
     private GuiStringListElement limbs;
 
-    public GuiListModal(Minecraft mc, GuiDelegateElement parent, String label, Consumer<String> callback)
+    public GuiListModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent, String label, Consumer<String> callback)
     {
         super(mc, parent);
 
@@ -78,9 +80,9 @@ public class GuiListModal extends GuiModal
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         this.font.drawSplitString(this.label, this.area.getX(0.15F), this.area.getY(0.1F), (int) (this.area.w * 0.7), 0xffffff);
     }

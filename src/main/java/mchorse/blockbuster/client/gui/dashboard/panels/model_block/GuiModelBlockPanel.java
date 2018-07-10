@@ -10,6 +10,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
@@ -377,7 +378,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         if (this.model != null && this.dashboard.morphs.isHidden())
         {
@@ -422,7 +423,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             this.drawCenteredString(this.font, "Select a model block...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }

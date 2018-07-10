@@ -2,6 +2,9 @@ package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.Tooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -12,6 +15,7 @@ public class GuiButtonElement<T extends GuiButton> extends GuiElement
 {
     public T button;
     public Consumer<GuiButtonElement<T>> callback;
+    public Tooltip tooltip;
 
     public static GuiButtonElement<GuiCheckBox> checkbox(Minecraft mc, String label, boolean value, Consumer<GuiButtonElement<GuiCheckBox>> callback)
     {
@@ -33,6 +37,13 @@ public class GuiButtonElement<T extends GuiButton> extends GuiElement
         super(mc);
         this.button = button;
         this.callback = callback;
+    }
+
+    public GuiButtonElement<T> tooltip(String label, TooltipDirection direction)
+    {
+        this.tooltip = new Tooltip(label, direction);
+
+        return this;
     }
 
     @Override
@@ -85,8 +96,13 @@ public class GuiButtonElement<T extends GuiButton> extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
+        if (this.area.isInside(mouseX, mouseY) && this.enabled && this.tooltip != null)
+        {
+            tooltip.set(this, this.tooltip);
+        }
+
         this.button.drawButton(this.mc, mouseX, mouseY);
     }
 }

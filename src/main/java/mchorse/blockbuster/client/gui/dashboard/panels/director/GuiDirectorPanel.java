@@ -10,11 +10,15 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElements;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -45,13 +49,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
     private GuiElements subChildren;
-    private GuiDelegateElement mainView;
+    private GuiDelegateElement<IGuiElement> mainView;
     private GuiElements replays;
     private GuiElements replayEditor;
     private GuiElements configOptions;
     private GuiReplaySelector selector;
 
     /* Config fields */
+    public GuiTextElement title;
     public GuiTextElement startCommand;
     public GuiTextElement stopCommand;
     public GuiButtonElement<GuiCheckBox> loops;
@@ -65,6 +70,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> invisible;
     public GuiButtonElement<GuiCheckBox> enabled;
     public GuiButtonElement<GuiCheckBox> fake;
+    public GuiTrackpadElement health;
 
     public GuiDirectorBlockList list;
 
@@ -98,7 +104,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor = new GuiElements();
         this.replayEditor.setVisible(false);
         this.configOptions = new GuiElements();
-        this.mainView = new GuiDelegateElement(mc, this.replays);
+        this.mainView = new GuiDelegateElement<IGuiElement>(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w(1, 0).y(1, -60);
 
@@ -106,19 +112,21 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.subChildren.add(this.mainView);
 
         /* Config options */
+        this.title = new GuiTextElement(mc, 80, (str) -> this.director.title = str);
         this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.director.startCommand = str);
         this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.director.stopCommand = str);
         this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
         this.hide = GuiButtonElement.checkbox(mc, "Hide during playback", false, (b) -> this.director.hide = b.button.isChecked());
 
-        this.startCommand.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
-        this.stopCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
+        this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
+        this.startCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
+        this.stopCommand.resizer().set(10, 130, 0, 20).parent(this.area).w(1, -20);
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
 
-        this.configOptions.add(this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
+        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
@@ -127,6 +135,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
         this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
+        this.health = new GuiTrackpadElement(mc, "Health", (value) -> this.replay.health = value);
+        this.health.trackpad.min = 0;
 
         this.id.resizer().set(10, 30, 120, 20).parent(this.area);
         this.name.resizer().set(0, 40, 120, 20).relative(this.id.resizer());
@@ -134,31 +144,32 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
         this.enabled.resizer().set(0, 16, 80, 11).relative(this.invisible.resizer());
         this.fake.resizer().set(0, 16, 80, 11).relative(this.enabled.resizer());
+        this.health.resizer().set(0, 30, 80, 20).parent(this.area).x(1, -90);
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake);
+        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.health);
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
-        });
+        }).tooltip("Director block options", TooltipDirection.LEFT);
         element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -48);
 
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip("Add", TooltipDirection.LEFT);
         element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip("Duplicate", TooltipDirection.LEFT);
         element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay());
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip("Remove", TooltipDirection.LEFT);
         element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
@@ -170,17 +181,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
-        element.resizer().set(10, 30, 60, 20).parent(this.area).x(1, -70);
+        element.resizer().set(10, 55, 60, 20).parent(this.area).x(1, -70);
 
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, "Edit record", (b) -> this.openRecordEditor());
-        element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
+        element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
         /* Model blocks */
-        this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (pos) -> this.pickDirector(pos)));
+        this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (director) -> this.pickDirector(director.getPos())));
         this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1, 0).x(1, -120);
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.toggleVisible()));
@@ -262,6 +273,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
     private void fillData()
     {
+        this.title.setText(this.director.title);
         this.startCommand.setText(this.director.startCommand);
         this.stopCommand.setText(this.director.stopCommand);
         this.loops.button.setIsChecked(this.director.loops);
@@ -282,6 +294,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.invisible.button.setIsChecked(this.replay.invisible);
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
+        this.health.setValue(this.replay.health);
 
         this.dashboard.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
@@ -407,10 +420,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         super.resize(width, height);
 
         this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
+        this.dashboard.morphs.initGui();
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
@@ -455,9 +469,10 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
             this.font.drawStringWithShadow("On start command", this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
             this.font.drawStringWithShadow("On stop command", this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow("Display title", this.title.area.x, this.title.area.y - 12, 0xcccccc);
         }
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (this.director == null)
         {

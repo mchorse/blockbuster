@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.framework.elements;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,5 +50,5 @@ public interface IGuiElement
     /**
      * Draw its components on the screen
      */
-    public void draw(int mouseX, int mouseY, float partialTicks);
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks);
 }

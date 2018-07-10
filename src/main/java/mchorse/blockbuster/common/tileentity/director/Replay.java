@@ -32,7 +32,7 @@ public class Replay
     public boolean invisible = false;
     public boolean enabled = true;
     public boolean fake = false;
-    public int health = 20;
+    public float health = 20F;
 
     public Replay()
     {}
@@ -96,6 +96,7 @@ public class Replay
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("Enabled", this.enabled);
         tag.setBoolean("Fake", this.fake);
+        if (this.health != 20) tag.setFloat("Health", this.health);
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -114,6 +115,7 @@ public class Replay
         }
 
         this.fake = tag.getBoolean("Fake");
+        if (tag.hasKey("Health")) this.health = tag.getFloat("Health");
     }
 
     /* to / from ByteBuf */
@@ -136,6 +138,7 @@ public class Replay
         buf.writeBoolean(this.invisible);
         buf.writeBoolean(this.enabled);
         buf.writeBoolean(this.fake);
+        buf.writeFloat(this.health);
     }
 
     public void fromBuf(ByteBuf buf)
@@ -152,6 +155,7 @@ public class Replay
         this.invisible = buf.readBoolean();
         this.enabled = buf.readBoolean();
         this.fake = buf.readBoolean();
+        this.health = buf.readFloat();
     }
 
     @Override

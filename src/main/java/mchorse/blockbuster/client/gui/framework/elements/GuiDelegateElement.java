@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.framework.elements;
 
 import java.io.IOException;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,17 +12,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Delegated {@link IGuiElement}
  */
 @SideOnly(Side.CLIENT)
-public class GuiDelegateElement extends GuiElement implements IGuiLegacy
+public class GuiDelegateElement<T extends IGuiElement> extends GuiElement implements IGuiLegacy
 {
-    public IGuiElement delegate;
+    public T delegate;
 
-    public GuiDelegateElement(Minecraft mc, IGuiElement element)
+    public GuiDelegateElement(Minecraft mc, T element)
     {
         super(mc);
         this.delegate = element;
     }
 
-    public void setDelegate(IGuiElement element)
+    public void setDelegate(T element)
     {
         GuiScreen screen = this.mc.currentScreen;
 
@@ -128,11 +129,11 @@ public class GuiDelegateElement extends GuiElement implements IGuiLegacy
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         if (this.delegate != null)
         {
-            this.delegate.draw(mouseX, mouseY, partialTicks);
+            this.delegate.draw(tooltip, mouseX, mouseY, partialTicks);
         }
     }
 }

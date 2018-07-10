@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.ScrollArea;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
@@ -153,7 +154,7 @@ public abstract class GuiListElement<T> extends GuiElement
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.scroll.drag(mouseX, mouseY);
 
@@ -190,7 +191,7 @@ public abstract class GuiListElement<T> extends GuiElement
 
         this.scroll.drawScrollbar();
 
-        super.draw(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 
     /**

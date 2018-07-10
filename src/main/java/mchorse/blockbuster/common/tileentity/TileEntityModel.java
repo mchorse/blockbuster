@@ -195,12 +195,6 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
     }
 
     @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return this.writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
