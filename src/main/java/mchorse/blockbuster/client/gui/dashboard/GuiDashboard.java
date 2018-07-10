@@ -166,6 +166,7 @@ public class GuiDashboard extends GuiBase
             this.directorPanel.close();
             this.modelPanel.close();
             this.recordingEditorPanel.close();
+            this.mainPanel.close();
         }
 
         this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);

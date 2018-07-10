@@ -132,6 +132,7 @@ public class BlockbusterConfig
     public BlockbusterConfig(Configuration config)
     {
         this.config = config;
+        this.reload();
     }
 
     /**
