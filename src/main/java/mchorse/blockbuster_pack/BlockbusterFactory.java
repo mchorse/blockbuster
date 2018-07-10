@@ -1,6 +1,8 @@
 package mchorse.blockbuster_pack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
@@ -148,12 +150,23 @@ public class BlockbusterFactory implements IMorphFactory
             }
 
             /* Morphs with skins */
-            for (String skin : this.models.pack.getSkins(key))
+            List<String> skins = new ArrayList<String>();
+
+            for (String str : this.models.pack.getSkins(original.model.skins))
+            {
+                skins.add(original.model.skins + "/" + str);
+            }
+
+            for (String str : this.models.pack.getSkins(key))
+            {
+                skins.add(key + "/" + str);
+            }
+
+            for (String skin : skins)
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
-                String path = actor.name.substring(actor.name.indexOf(".") + 1) + "/" + skin;
 
-                actor.skin = new ResourceLocation("blockbuster.actors", path);
+                actor.skin = new ResourceLocation("blockbuster.actors", skin);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
 
                 for (Map.Entry<String, ModelPose> entry : actor.model.poses.entrySet())

@@ -109,7 +109,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.options = new GuiModelOptions(mc, this);
         this.options.setVisible(false);
-        this.options.resizer().set(0, 0, 140, 225).parent(this.area).x(1, -160);
+        this.options.resizer().set(0, 0, 140, 225 + 42).parent(this.area).x(1, -160);
         this.children.add(this.options);
 
         /* Top bar buttons */
@@ -192,7 +192,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (model != null)
             {
-                ModelUtils.copy(this.model.clone(), model.model);
+                model.model.copy(this.model.clone());
             }
 
             /* Copy OBJ files */
