@@ -115,9 +115,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.title = new GuiTextElement(mc, 80, (str) -> this.director.title = str);
         this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.director.startCommand = str);
         this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.director.stopCommand = str);
-        this.loops = GuiButtonElement.checkbox(mc, "Loops", false, (b) -> this.director.loops = b.button.isChecked());
-        this.disableStates = GuiButtonElement.checkbox(mc, "Disable states", false, (b) -> this.director.disableStates = b.button.isChecked());
-        this.hide = GuiButtonElement.checkbox(mc, "Hide during playback", false, (b) -> this.director.hide = b.button.isChecked());
+        this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.director.loops = b.button.isChecked());
+        this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.director.disableStates = b.button.isChecked());
+        this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.director.hide = b.button.isChecked());
 
         this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
         this.startCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
@@ -131,11 +131,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
-        this.invincible = GuiButtonElement.checkbox(mc, "Invincible", false, (b) -> this.replay.invincible = b.button.isChecked());
-        this.invisible = GuiButtonElement.checkbox(mc, "Invisible", false, (b) -> this.replay.invisible = b.button.isChecked());
-        this.enabled = GuiButtonElement.checkbox(mc, "Enabled", false, (b) -> this.replay.enabled = b.button.isChecked());
-        this.fake = GuiButtonElement.checkbox(mc, "Fake player", false, (b) -> this.replay.fake = b.button.isChecked());
-        this.health = new GuiTrackpadElement(mc, "Health", (value) -> this.replay.health = value);
+        this.invincible = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.button.isChecked());
+        this.invisible = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.button.isChecked());
+        this.enabled = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.button.isChecked());
+        this.fake = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.fake_player"), false, (b) -> this.replay.fake = b.button.isChecked());
+        this.health = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.director.health"), (value) -> this.replay.health = value);
         this.health.trackpad.min = 0;
 
         this.id.resizer().set(10, 30, 120, 20).parent(this.area);
@@ -153,45 +153,45 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
-        }).tooltip("Director block options", TooltipDirection.LEFT);
+        }).tooltip(I18n.format("blockbuster.gui.director.config"), TooltipDirection.LEFT);
         element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -48);
 
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip("Add", TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip(I18n.format("blockbuster.gui.add"), TooltipDirection.LEFT);
         element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip("Duplicate", TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
         element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip("Remove", TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
         element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
         /* Additional utility buttons */
-        element = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.hide(false));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x(0.5F, -40).y(1, -86);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, "Record", (b) -> this.sendRecordMessage());
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
         element.resizer().set(10, 55, 60, 20).parent(this.area).x(1, -70);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, "Edit record", (b) -> this.openRecordEditor());
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
         /* Model blocks */
-        this.children.add(this.list = new GuiDirectorBlockList(mc, "Director blocks", (director) -> this.pickDirector(director.getPos())));
+        this.children.add(this.list = new GuiDirectorBlockList(mc, I18n.format("blockbuster.gui.director.title"), (director) -> this.pickDirector(director.getPos())));
         this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1, 0).x(1, -120);
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.toggleVisible()));
@@ -456,8 +456,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
             if (this.replayEditor.isVisible())
             {
-                this.font.drawStringWithShadow("Recording ID", this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
-                this.font.drawStringWithShadow("Name tag", this.name.area.x, this.name.area.y - 12, 0xcccccc);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.name"), this.name.area.x, this.name.area.y - 12, 0xcccccc);
             }
         }
         else
@@ -465,21 +465,20 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 24, 0x88000000);
             this.drawGradientRect(this.area.x, this.area.y + 24, this.area.getX(1), this.area.y + 32, 0x88000000, 0x00000000);
 
-            this.font.drawStringWithShadow("Director block configuration", this.area.x + 10, this.area.y + 10, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
-            this.font.drawStringWithShadow("On start command", this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
-            this.font.drawStringWithShadow("On stop command", this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
-            this.font.drawStringWithShadow("Display title", this.title.area.x, this.title.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.start_command"), this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.stop_command"), this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (this.director == null)
         {
-            String no = "Select a director block...";
-            int w = this.font.getStringWidth(no);
+            String no = I18n.format("blockbuster.gui.director.not_selected");
 
-            this.font.drawStringWithShadow(no, this.area.getX(0.5F) - w / 2, this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, no, this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
         this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);

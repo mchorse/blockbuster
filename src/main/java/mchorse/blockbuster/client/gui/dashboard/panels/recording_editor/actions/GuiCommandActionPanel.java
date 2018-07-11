@@ -13,7 +13,6 @@ public class GuiCommandActionPanel extends GuiActionPanel<CommandAction>
     {
         super(mc);
 
-        this.title = "Commnad action";
         this.command = new GuiTextElement(mc, 10000, (str) -> this.action.command = str);
         this.command.resizer().parent(this.area).set(10, 0, 0, 20).y(1, -30).w(1, -20);
 

@@ -17,6 +17,7 @@ import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
@@ -36,7 +37,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         super(mc, panel);
 
-        this.title = "Poses";
+        this.title = I18n.format("blockbuster.gui.me.poses.title");
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
         this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).x(1, -80);
@@ -91,7 +92,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         String key = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
 
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type in a name for a new pose:", (text) -> this.addPose(text)).setValue(key));
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.new_pose"), (text) -> this.addPose(text)).setValue(key));
     }
 
     private void addPose(String text)
@@ -109,7 +110,7 @@ public class GuiModelPoses extends GuiModelEditorTab
 
         if (Model.REQUIRED_POSES.contains(pose))
         {
-            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You cannot remove one of the standard poses..."));
+            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.poses.standard")));
         }
         else
         {
@@ -194,6 +195,6 @@ public class GuiModelPoses extends GuiModelEditorTab
             Gui.drawRect(x, y, x + this.posesList.area.w, y + this.posesList.area.h, 0x88000000);
         }
 
-        this.font.drawStringWithShadow("Hitbox", this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.poses.hitbox"), this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
     }
 }

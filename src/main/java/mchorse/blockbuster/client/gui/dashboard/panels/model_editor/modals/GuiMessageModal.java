@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 public class GuiMessageModal extends GuiModal
 {
@@ -20,7 +21,7 @@ public class GuiMessageModal extends GuiModal
         this.parent = parent;
         this.label = label;
 
-        this.button = GuiButtonElement.button(mc, "Ok", (b) -> parent.setDelegate(null));
+        this.button = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.ok"), (b) -> parent.setDelegate(null));
         this.button.resizer().parent(this.area).set(0, 0, 60, 20).x(0.5F, -30).y(0.5F, 10);
 
         this.children.add(this.button);

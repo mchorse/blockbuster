@@ -24,6 +24,7 @@ import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelLimbs extends GuiModelEditorTab
@@ -67,7 +68,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         super(mc, panel);
 
-        this.title = "Limbs";
+        this.title = I18n.format("blockbuster.gui.me.limbs.title");
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h(1, -20).x(1, -100);
@@ -105,11 +106,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.rebuildModel();
         });
         this.slot = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.slot = ArmorSlot.values()[b.button.getValue()]);
-        this.slot.tooltip("Armor slot", TooltipDirection.LEFT);
+        this.slot.tooltip(I18n.format("blockbuster.gui.me.limbs.slot"), TooltipDirection.LEFT);
 
         for (ArmorSlot slot : ArmorSlot.values())
         {
-            this.slot.button.addLabel(slot.name);
+            this.slot.button.addLabel(I18n.format("blockbuster.gui.me.limbs.slots." + slot.name));
         }
 
         this.size.resizer().parent(this.area).set(10, 40, 120, 20);
@@ -129,27 +130,27 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.color[2] = values[2];
         });
         this.color.setLimit(0, 1);
-        this.opacity = new GuiTrackpadElement(mc, "Opacity", (value) -> this.panel.limb.opacity = value);
+        this.opacity = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.limbs.opacity"), (value) -> this.panel.limb.opacity = value);
         this.opacity.setLimit(0, 1);
-        this.mirror = GuiButtonElement.checkbox(mc, "Mirror", false, (b) ->
+        this.mirror = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.mirror"), false, (b) ->
         {
             this.panel.limb.mirror = b.button.isChecked();
             this.panel.rebuildModel();
         });
-        this.lighting = GuiButtonElement.checkbox(mc, "Lighting", false, (b) -> this.panel.limb.lighting = b.button.isChecked());
-        this.shading = GuiButtonElement.checkbox(mc, "Shading", false, (b) -> this.panel.limb.shading = b.button.isChecked());
+        this.lighting = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.panel.limb.lighting = b.button.isChecked());
+        this.shading = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.shading"), false, (b) -> this.panel.limb.shading = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
-        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]).tooltip("Held items", TooltipDirection.LEFT);
-        this.holding.button.addLabel("None");
-        this.holding.button.addLabel("Right");
-        this.holding.button.addLabel("Left");
+        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]).tooltip(I18n.format("blockbuster.gui.me.limbs.hold"), TooltipDirection.LEFT);
+        this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.none"));
+        this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.right"));
+        this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.left"));
 
-        this.swiping = GuiButtonElement.checkbox(mc, "Swiping", false, (b) -> this.panel.limb.swiping = b.button.isChecked());
-        this.looking = GuiButtonElement.checkbox(mc, "Looking", false, (b) -> this.panel.limb.looking = b.button.isChecked());
-        this.swinging = GuiButtonElement.checkbox(mc, "Swinging", false, (b) -> this.panel.limb.swinging = b.button.isChecked());
-        this.idle = GuiButtonElement.checkbox(mc, "Idle", false, (b) -> this.panel.limb.idle = b.button.isChecked());
-        this.invert = GuiButtonElement.checkbox(mc, "Invert", false, (b) -> this.panel.limb.invert = b.button.isChecked());
+        this.swiping = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.swiping"), false, (b) -> this.panel.limb.swiping = b.button.isChecked());
+        this.looking = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.looking"), false, (b) -> this.panel.limb.looking = b.button.isChecked());
+        this.swinging = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.swinging"), false, (b) -> this.panel.limb.swinging = b.button.isChecked());
+        this.idle = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.idle"), false, (b) -> this.panel.limb.idle = b.button.isChecked());
+        this.invert = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.invert"), false, (b) -> this.panel.limb.invert = b.button.isChecked());
 
         this.color.resizer().parent(this.area).set(10, 40, 120, 20);
         this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
@@ -175,14 +176,14 @@ public class GuiModelLimbs extends GuiModelEditorTab
         /* Buttons */
         this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
         this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
-        this.renameLimb = GuiButtonElement.button(mc, "Rename", (b) -> this.renameLimb());
-        this.parentLimb = GuiButtonElement.button(mc, "Parent", (b) -> this.parentLimb());
+        this.renameLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
+        this.parentLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
 
         this.toggle = GuiButtonElement.button(mc, "<", (b) ->
         {
             this.first.setVisible(!this.first.isVisible());
             this.second.setVisible(!this.first.isVisible());
-        }).tooltip("Next page", TooltipDirection.LEFT);
+        }).tooltip(I18n.format("blockbuster.gui.me.limbs.page"), TooltipDirection.LEFT);
 
         this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -38);
         this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
@@ -200,7 +201,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void addLimb()
     {
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Type a new name for a new limb:", (text) -> this.addLimb(text)).setValue(this.panel.limb.name));
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.limbs.new_limb"), (text) -> this.addLimb(text)).setValue(this.panel.limb.name));
     }
 
     private void addLimb(String text)
@@ -218,7 +219,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         if (size == this.panel.model.getLimbCount(this.panel.limb))
         {
-            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, "You can't remove last limb..."));
+            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.limbs.last_limb")));
         }
         else
         {
@@ -234,7 +235,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void renameLimb()
     {
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Rename current limb to a new name:", (text) -> this.renameLimb(text)).setValue(this.panel.limb.name));
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.limbs.rename_limb"), (text) -> this.renameLimb(text)).setValue(this.panel.limb.name));
     }
 
     private void renameLimb(String text)
@@ -248,7 +249,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void parentLimb()
     {
-        this.modal.setDelegate(new GuiListModal(mc, this.modal, "Choose the parent limb for currently selected limb...", (text) -> this.parentLimb(text)).addValues(this.panel.model.limbs.keySet()).setValue(this.panel.limb.parent));
+        this.modal.setDelegate(new GuiListModal(mc, this.modal, I18n.format("blockbuster.gui.me.limbs.parent_limb"), (text) -> this.parentLimb(text)).addValues(this.panel.model.limbs.keySet()).setValue(this.panel.limb.parent));
     }
 
     private void parentLimb(String text)
@@ -330,14 +331,14 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         if (this.first.isVisible())
         {
-            this.font.drawStringWithShadow("Limb size", this.size.area.x, this.size.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("Texture offset", this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("Anchor point", this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow("OBJ origin", this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size"), this.size.area.x, this.size.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.texture"), this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.anchor"), this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.origin"), this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
         }
         else if (this.second.isVisible())
         {
-            this.font.drawStringWithShadow("Color", this.color.area.x, this.color.area.y - 10, 0xeeeeee);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.color"), this.color.area.x, this.color.area.y - 10, 0xeeeeee);
         }
     }
 }
