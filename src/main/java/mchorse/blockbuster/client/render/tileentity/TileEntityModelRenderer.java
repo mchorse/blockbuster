@@ -137,6 +137,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
         public void setShadowSize(float size)
         {
             this.shadowSize = size;
+            this.shadowOpaque = 0.8F;
         }
     }
 }
