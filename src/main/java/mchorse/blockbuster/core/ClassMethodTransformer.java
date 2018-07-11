@@ -31,12 +31,7 @@ public abstract class ClassMethodTransformer extends ClassTransformer
 
     protected String checkName(MethodNode method)
     {
-        if (BBCoreClassTransformer.obfuscated)
-        {
-            return method.name.equals(this.notch) && method.desc.equals(this.notchSign) ? this.notch : null;
-        }
-
-        return method.name.equals(this.mcp) && method.desc.equals(this.mcpSign) ? this.mcp : null;
+        return this.checkName(method, this.notch, this.notchSign, this.mcp, this.mcpSign);
     }
 
     public abstract void processMethod(String name, MethodNode method);

@@ -2,11 +2,16 @@ package mchorse.blockbuster.client;
 
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,6 +27,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;
+
+    /**
+     * Render green sky, this is getting invoked from the ASM patched 
+     * code in {@link RenderGlobal}
+     */
+    public static void renderGreenSky()
+    {
+        GlStateManager.clearColor(0, 1, 0, 1);
+        GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glDisable(GL11.GL_FOG);
+    }
+
+    /**
+     * Check whether it's time to render green sky, this is getting 
+     * invoked from ASM patched code in {@link RenderGlobal}  
+     */
+    public static boolean isGreenSky()
+    {
+        return Blockbuster.proxy.config.green_screen_sky;
+    }
 
     public RenderingHandler(GuiRecordingOverlay overlay)
     {

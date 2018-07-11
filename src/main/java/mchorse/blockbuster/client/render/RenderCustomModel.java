@@ -126,6 +126,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
                 pose = model.model.getPose("standing");
             }
 
+            model.materials = this.current.materials;
             model.pose = pose;
             this.mainModel = model;
         }

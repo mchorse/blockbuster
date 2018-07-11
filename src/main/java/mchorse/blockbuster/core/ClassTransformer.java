@@ -3,6 +3,7 @@ package mchorse.blockbuster.core;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 public abstract class ClassTransformer
 {
@@ -20,6 +21,16 @@ public abstract class ClassTransformer
         classNode.accept(writer);
 
         return writer.toByteArray();
+    }
+
+    protected String checkName(MethodNode method, String notch, String notchSign, String mcp, String mcpSign)
+    {
+        if (BBCoreClassTransformer.obfuscated)
+        {
+            return method.name.equals(notch) && method.desc.equals(notchSign) ? notch : null;
+        }
+
+        return method.name.equals(mcp) && method.desc.equals(mcpSign) ? mcp : null;
     }
 
     public abstract void process(String name, ClassNode node);

@@ -16,7 +16,6 @@ import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
-import mchorse.blockbuster.client.render.RenderCustomGlobal;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -28,7 +27,6 @@ import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourcePack;
@@ -65,8 +63,6 @@ public class ClientProxy extends CommonProxy
     public static RenderCustomActor actorRenderer;
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
-
-    public static RenderGlobal original;
 
     /**
      * Create dashboard GUI dynamically 
@@ -222,34 +218,6 @@ public class ClientProxy extends CommonProxy
         if (Blockbuster.proxy.config == null)
         {
             return;
-        }
-
-        Minecraft mc = Minecraft.getMinecraft();
-        boolean greenScreen = Blockbuster.proxy.config.green_screen_sky;
-
-        /* Toggle green screen */
-        if (greenScreen && !(mc.renderGlobal instanceof RenderCustomGlobal))
-        {
-            if (original == null)
-            {
-                original = mc.renderGlobal;
-            }
-
-            mc.renderGlobal = new RenderCustomGlobal(mc);
-
-            if (mc.world != null)
-            {
-                mc.renderGlobal.setWorldAndLoadRenderers(mc.world);
-            }
-        }
-        else if (!greenScreen && original != null && mc.renderGlobal != original)
-        {
-            mc.renderGlobal = original;
-
-            if (mc.world != null)
-            {
-                mc.renderGlobal.setWorldAndLoadRenderers(mc.world);
-            }
         }
     }
 
