@@ -58,6 +58,11 @@ public class ModelExtended extends ModelCustom implements IModelCustom
         for (ModelCustomRenderer wheel : this.wheels)
         {
             wheel.rotateAngleX += limbSwing;
+
+            if (wheel.limb.name.contains("frontal"))
+            {
+                wheel.rotateAngleY = netHeadYaw / 180 * (float) Math.PI;
+            }
         }
 
         for (ModelCustomRenderer wing : this.wings)

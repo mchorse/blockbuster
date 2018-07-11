@@ -54,6 +54,7 @@ import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -114,12 +115,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
-        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.toggleVisible()).tooltip("Add", TooltipDirection.LEFT);
-        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction()).tooltip("Duplicate", TooltipDirection.LEFT);
-        this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction()).tooltip("Remove", TooltipDirection.LEFT);
+        this.add = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.list.toggleVisible()).tooltip(I18n.format("blockbuster.gui.add"), TooltipDirection.LEFT);
+        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
+        this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
-        this.list.label = "Search...";
+        this.list.label = I18n.format("blockbuster.gui.search") + "...";
         this.list.elements.addAll(Action.TYPES.keySet());
         this.list.background = true;
 
@@ -239,8 +240,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.panels.put(InteractBlockAction.class, new GuiBlockActionPanel<InteractBlockAction>(this.mc));
             this.panels.put(BreakBlockAction.class, new GuiBreakBlockActionPanel(this.mc));
             this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc, this.dashboard));
-            this.panels.put(AttackAction.class, new GuiDamageActionPanel(this.mc, "Attack action"));
-            this.panels.put(DamageAction.class, new GuiDamageActionPanel(this.mc, "Damage action"));
+            this.panels.put(AttackAction.class, new GuiDamageActionPanel(this.mc));
+            this.panels.put(DamageAction.class, new GuiDamageActionPanel(this.mc));
             this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
             this.panels.put(BreakBlockAnimation.class, new GuiBreakBlockAnimationPanel(this.mc));
             this.panels.put(ItemUseAction.class, new GuiItemUseActionPanel<ItemUseAction>(this.mc));
@@ -292,6 +293,11 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public void moveTo(int tick)
     {
+        if (tick < 0 || tick >= this.record.actions.size())
+        {
+            return;
+        }
+
         Action action = this.record.getAction(this.selector.tick, this.selector.index);
 
         this.removeAction();
@@ -337,7 +343,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
         if (this.record == null)
         {
-            this.drawCenteredString(this.font, "Select a player recording...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.not_selected"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
         this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);

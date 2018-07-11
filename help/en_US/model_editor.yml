@@ -1,49 +1,86 @@
 blockbuster.gui.me:
-    save_modal: "In order to save, you should specify a name of your model."
-    new_modal: "Choose a model which you want to edit or use as a template."
-    add_limb_modal: "Choose a name for your new limb."
-    model_props_modal: "This model provides a way to edit model's general properties."
-    limb_name_modal: "Type in a new name for currently editing limb."
-    limb_parent_modal: "Choose a limb you want to be parent of currently selected limb"
-    pose_title_modal: "{l}Poses"
+    pick: Pick
+    none: "(none)"
     
-    warning_skins: It appears that you're adding a new model. You need to add at least one skin for that "%s" model, in order for it to appear in creative morph menu. \n\nSee "config/models/%s/skins" folder.
+    hitbox: Hitbox
+    looking: Looking
     
-    model_editor: "Model Editor"
-    limbs: "Limbs"
+    limbs:
+        title: Limbs
+        
+        size: Limb size
+        texture: Texture offset
+        anchor: Anchor point
+        origin: OBJ origin
+        slot: Armor slot
+        
+        color: Color
+        opacity: Opacity
+        mirror: Mirror
+        lighting: Lighting
+        shading: Shading
+        hold: Held items
+        none: None
+        right: Right
+        left: Left
+        
+        swiping: Swiping
+        looking: Looking
+        swinging: Swinging
+        idle: Idle
+        invert: Invert
+        
+        rename: Rename
+        parent: Parent
+        page: Switch page
+        
+        new_limb: Type in a name for a new limb...
+        last_limb: You can't remove the last limb...
+        rename_limb: "Rename current limb by typing in a new name:"
+        parent_limb: "Choose the parent limb for currently selected limb..."
+        
+        slots:
+            none: None
+            head: Helmet
+            chest: Chestplate
+            left_shoulder: Left shoulder
+            right_shoulder: Right shoulder
+            leggings: Body legs
+            left_leg: Left leg
+            right_leg: Right leg
+            left_foot: Left shoe
+            right_foot: Right shoe
     
-    name: "Change name"
-    parent: "Change parent"
-    mirror: "Mirror"
-    looking: "Looking"
-    idle: "Idle"
-    swinging: "Swinging"
-    swiping: "Swiping"
-    invert: "Invert"
-    lighting: "Lighted"
-    shading: "Shaded"
-    is3d: "3D"
+    models:
+        title: Models
+        save: Save model
+        export: Create model from mob
+        name: "Enter name for the model:"
+        pick: "Pick mob you want to export limbs from:"
+        error: "Whoops, couldn't create a model, because an error happened: %s"
     
-    no_hands: "No hands"
-    left_hand: "Left"
-    right_hand: "Right"
+    options:
+        name: Display name
+        texture: Texture size
+        scale: Global scale
+        scale_gui: GUI scale
+        default: Default texture
+        skins: Skins folder
+        provides_obj: Provides OBJ
+        provides_mtl: Provides MTL
     
-    no_limbs: "No limb selected..."
-    visual: "Visual"
-    gameplay: "Gameplay"
-    pose: "Pose"
+    poses:
+        title: Poses
+        new_pose: "Type in a name for a new pose:"
+        standard: "You cannot remove one of the standard poses..."
+        hitbox: Hitbox
     
-    pose_name: "New pose's name..."
-    search: "Search..."
-    search_texture: "Search texture..."
-    
-    none: "None"
-    
-    model:
-        name: "Name"
-        scale: "Scale"
-        scale_gui: "GUI scale"
-        texture_size: "Texture size"
-        texture: "Default texture"
-        provides_obj: "Provides OBJ model"
-        provides_mtl: "Provides MTL file"
+    tooltips:
+        models: Models
+        poses: Poses
+        options: Model options
+        limbs: Limbs
+        
+        swipe: Swipe
+        swing: Toggle swing
+        items: Toggle items

@@ -16,6 +16,7 @@ public class ServerHandlerDirectorCast extends ServerMessageHandler<PacketDirect
         if (tile instanceof TileEntityDirector)
         {
             ((TileEntityDirector) tile).director.copy(message.director);
+            tile.markDirty();
         }
     }
 }

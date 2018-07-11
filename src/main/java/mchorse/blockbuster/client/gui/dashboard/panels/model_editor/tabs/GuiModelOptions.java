@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -42,15 +43,15 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.scale[1] = value[1];
             this.panel.model.scale[2] = value[2];
         });
-        this.scaleGui = new GuiTrackpadElement(mc, "GUI scale", (value) -> this.panel.model.scaleGui = value);
+        this.scaleGui = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale_gui"), (value) -> this.panel.model.scaleGui = value);
         this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str));
         this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);
-        this.providesObj = GuiButtonElement.checkbox(mc, "Provides OBJ", false, (b) ->
+        this.providesObj = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.options.provides_obj"), false, (b) ->
         {
             this.panel.model.providesObj = b.button.isChecked();
             this.panel.rebuildModel();
         });
-        this.providesMtl = GuiButtonElement.checkbox(mc, "Provides MTL", false, (b) ->
+        this.providesMtl = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.options.provides_mtl"), false, (b) ->
         {
             this.panel.model.providesMtl = b.button.isChecked();
             this.panel.rebuildModel();
@@ -91,10 +92,10 @@ public class GuiModelOptions extends GuiModelEditorTab
     @Override
     protected void drawLabels()
     {
-        this.font.drawStringWithShadow("Display name", this.name.area.x, this.name.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Texture size", this.texture.area.x, this.texture.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Global scale", this.scale.area.x, this.scale.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Default texture", this.defaultTexture.area.x, this.defaultTexture.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow("Skins folder", this.skins.area.x, this.skins.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.name"), this.name.area.x, this.name.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.texture"), this.texture.area.x, this.texture.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.scale"), this.scale.area.x, this.scale.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.default"), this.defaultTexture.area.x, this.defaultTexture.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.skins"), this.skins.area.x, this.skins.area.y - 12, 0xeeeeee);
     }
 }

@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 
 public class GuiRecordList extends GuiElement
 {
@@ -22,7 +23,7 @@ public class GuiRecordList extends GuiElement
         this.panel = panel;
         this.records = new GuiSearchListElement(mc, (str) -> this.panel.selectRecord(str));
         this.records.resizer().parent(this.area).set(10, 35, 0, 0).h(1, -35).w(1, -20);
-        this.records.label = "Search...";
+        this.records.label = I18n.format("blockbuster.gui.search") + "...";
 
         this.createChildren().children.add(this.records);
     }
@@ -50,7 +51,7 @@ public class GuiRecordList extends GuiElement
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 64, this.area.w, this.area.h, 32, 32, 0, 0);
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 30, 0x44000000);
 
-        this.font.drawStringWithShadow("Recordings", this.area.x + 10, this.area.y + 11, 0xcccccc);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.record_editor.title"), this.area.x + 10, this.area.y + 11, 0xcccccc);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
