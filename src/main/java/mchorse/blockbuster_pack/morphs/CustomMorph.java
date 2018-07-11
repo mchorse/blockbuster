@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.common.base.Objects;
 
 import mchorse.blockbuster.api.Model;
@@ -61,6 +64,14 @@ public class CustomMorph extends AbstractMorph
      */
     public ModelPose customPose = null;
 
+    /**
+     * Map of textures designated to specific OBJ materials 
+     */
+    public Map<String, ResourceLocation> materials = new HashMap<String, ResourceLocation>();
+
+    /**
+     * Cached key value 
+     */
     private String key;
 
     /**
@@ -123,6 +134,7 @@ public class CustomMorph extends AbstractMorph
 
             if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
+                model.materials = this.materials;
                 model.pose = this.getPose(player);
                 model.swingProgress = 0;
 
@@ -318,6 +330,18 @@ public class CustomMorph extends AbstractMorph
         {
             tag.setTag("CustomPose", this.customPose.toNBT(new NBTTagCompound()));
         }
+
+        if (!this.materials.isEmpty())
+        {
+            NBTTagCompound materials = new NBTTagCompound();
+
+            for (Map.Entry<String, ResourceLocation> entry : this.materials.entrySet())
+            {
+                materials.setString(entry.getKey(), entry.getValue().toString());
+            }
+
+            tag.setTag("Materials", materials);
+        }
     }
 
     @Override
@@ -337,6 +361,18 @@ public class CustomMorph extends AbstractMorph
         {
             this.customPose = new ModelPose();
             this.customPose.fromNBT(tag.getCompoundTag("CustomPose"));
+        }
+
+        if (tag.hasKey("Materials", 10))
+        {
+            NBTTagCompound materials = tag.getCompoundTag("Materials");
+
+            this.materials.clear();
+
+            for (String key : materials.getKeySet())
+            {
+                this.materials.put(key, new ResourceLocation(materials.getString(key)));
+            }
         }
     }
 }

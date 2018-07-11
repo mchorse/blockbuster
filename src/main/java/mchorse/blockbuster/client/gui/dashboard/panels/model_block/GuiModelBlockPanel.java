@@ -301,6 +301,13 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         {
             this.dashboard.morphs.setSelected(this.model.morph);
 
+            MorphCell cell = this.dashboard.morphs.getSelected();
+
+            if (cell != null)
+            {
+                this.model.morph = cell.current().morph;
+            }
+
             this.yaw.trackpad.setValue(this.model.rotateYawHead);
             this.pitch.trackpad.setValue(this.model.rotatePitch);
             this.body.trackpad.setValue(this.model.rotateBody);
