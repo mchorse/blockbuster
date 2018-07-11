@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,6 +57,8 @@ public class ModelCustom extends ModelBiped
     public ModelCustomRenderer[] left;
     public ModelCustomRenderer[] right;
     public ModelCustomRenderer[] armor;
+
+    public Map<String, ResourceLocation> materials;
 
     /**
      * Initiate the model with the size of the texture
@@ -146,6 +149,11 @@ public class ModelCustom extends ModelBiped
         {
             boolean mirror = limb.limb.mirror;
             boolean invert = limb.limb.invert;
+
+            if (limb instanceof ModelOBJRenderer)
+            {
+                ((ModelOBJRenderer) limb).materials = this.materials;
+            }
 
             float factor = mirror ^ invert ? -1 : 1;
             float PI = (float) Math.PI;

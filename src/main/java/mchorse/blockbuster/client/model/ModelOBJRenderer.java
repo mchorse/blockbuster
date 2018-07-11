@@ -39,6 +39,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
      */
     public OBJDisplayList[] displayLists;
 
+    /**
+     * Custom materials texture 
+     */
+    public Map<String, ResourceLocation> materials;
+
     public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, OBJParser.MeshObject mesh)
     {
         super(model, limb, transform);
@@ -219,7 +224,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             if (hasTexture && list.material.texture != null)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(list.material.texture);
+                ResourceLocation texture = list.material.texture;
+
+                if (this.materials != null && this.materials.containsKey(list.material.name))
+                {
+                    texture = this.materials.get(list.material.name);
+                }
+
+                Minecraft.getMinecraft().renderEngine.bindTexture(texture);
             }
 
             GL11.glCallList(list.id);
