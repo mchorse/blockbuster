@@ -292,6 +292,11 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public void moveTo(int tick)
     {
+        if (tick < 0 || tick >= this.record.actions.size())
+        {
+            return;
+        }
+
         Action action = this.record.getAction(this.selector.tick, this.selector.index);
 
         this.removeAction();
