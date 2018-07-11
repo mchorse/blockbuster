@@ -11,6 +11,7 @@ import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 {
@@ -21,9 +22,8 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     {
         super(mc);
 
-        this.title = "Morph action";
         this.dashboard = dashboard;
-        this.pick = GuiButtonElement.button(mc, "Pick morph", (b) -> this.dashboard.morphs.hide(false));
+        this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.hide(false));
         this.pick.resizer().parent(this.area).set(0, 5, 60, 20).x(0.5F, -30);
 
         this.children.add(this.pick);

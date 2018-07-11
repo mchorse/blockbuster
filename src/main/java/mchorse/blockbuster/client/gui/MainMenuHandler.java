@@ -1,8 +1,7 @@
-package mchorse.blockbuster.client;
+package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;

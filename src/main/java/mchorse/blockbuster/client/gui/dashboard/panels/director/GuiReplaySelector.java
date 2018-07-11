@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 
 /**
  * This GUI is responsible for drawing replays available in the 
@@ -162,7 +163,7 @@ public class GuiReplaySelector extends GuiElement
         }
         else
         {
-            this.drawCenteredString(this.font, "Create a replay...", this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.director.no_replays"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
         this.scroll.drawScrollbar();

@@ -87,34 +87,34 @@ public class GuiMorphsPopup extends GuiScreen
         Minecraft mc = Minecraft.getMinecraft();
 
         this.elements.setVisible(false);
-        this.tx = new GuiTrackpadElement(mc, "X", (value) -> this.trans.translate[0] = value);
-        this.ty = new GuiTrackpadElement(mc, "Y", (value) -> this.trans.translate[1] = value);
-        this.tz = new GuiTrackpadElement(mc, "Z", (value) -> this.trans.translate[2] = value);
+        this.tx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.translate[0] = value);
+        this.ty = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.translate[1] = value);
+        this.tz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.translate[2] = value);
 
         this.tx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -65);
         this.tx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
         this.ty.resizer().set(0, 25, 60, 20).relative(this.tx.resizer());
         this.tz.resizer().set(0, 25, 60, 20).relative(this.ty.resizer());
 
-        this.sx = new GuiTrackpadElement(mc, "X", (value) -> this.trans.scale[0] = value);
-        this.sy = new GuiTrackpadElement(mc, "Y", (value) -> this.trans.scale[1] = value);
-        this.sz = new GuiTrackpadElement(mc, "Z", (value) -> this.trans.scale[2] = value);
+        this.sx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.scale[0] = value);
+        this.sy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.scale[1] = value);
+        this.sz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.scale[2] = value);
 
         this.sx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -130);
         this.sx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
         this.sy.resizer().set(0, 25, 60, 20).relative(this.sx.resizer());
         this.sz.resizer().set(0, 25, 60, 20).relative(this.sy.resizer());
 
-        this.rx = new GuiTrackpadElement(mc, "X", (value) -> this.trans.rotate[0] = value);
-        this.ry = new GuiTrackpadElement(mc, "Y", (value) -> this.trans.rotate[1] = value);
-        this.rz = new GuiTrackpadElement(mc, "Z", (value) -> this.trans.rotate[2] = value);
+        this.rx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.rotate[0] = value);
+        this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.rotate[1] = value);
+        this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.rotate[2] = value);
 
         this.rx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -130 - 65);
         this.rx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
         this.ry.resizer().set(0, 25, 60, 20).relative(this.rx.resizer());
         this.rz.resizer().set(0, 25, 60, 20).relative(this.ry.resizer());
 
-        GuiElement element = GuiButtonElement.button(mc, "Reset pose", (b) -> this.reset());
+        GuiElement element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) -> this.reset());
 
         element.resizer().set(0, 50, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
         element.resizer().y.set(1, Measure.RELATIVE, -30);
@@ -124,11 +124,11 @@ public class GuiMorphsPopup extends GuiScreen
         element.resizer().parent(this.area).set(5, 30, 80, 90).h.set(1, Measure.RELATIVE, -40);
         this.elements.add(element);
 
-        element = GuiButtonElement.button(mc, "Acquire morph", (b) -> Dispatcher.sendToServer(new PacketAcquireMorph(this.lastMorph)));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.acquire"), (b) -> Dispatcher.sendToServer(new PacketAcquireMorph(this.lastMorph)));
         element.resizer().parent(this.area).set(5, 4, 80, 20);
         this.elements.add(element);
 
-        this.applyOnSneak = GuiButtonElement.checkbox(mc, "Apply on sneak", false, (b) ->
+        this.applyOnSneak = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.morphs.sneak"), false, (b) ->
         {
             if (this.lastMorph instanceof CustomMorph)
             {
@@ -434,7 +434,7 @@ public class GuiMorphsPopup extends GuiScreen
     {
         this.search = new GuiTextField(0, this.fontRendererObj, this.area.x + 61 - 3, this.area.y + 4, this.area.w - 87 - 65, 18);
         this.close = new GuiButton(1, this.area.x + this.area.w - 23, this.area.y + 3, 20, 20, "X");
-        this.poses = new GuiButton(2, this.area.x + this.area.w - 23 - 65, this.area.y + 3, 60, 20, "Pose");
+        this.poses = new GuiButton(2, this.area.x + this.area.w - 23 - 65, this.area.y + 3, 60, 20, I18n.format("blockbuster.gui.morphs.pose"));
         this.poses.enabled = this.lastMorph instanceof CustomMorph;
 
         this.buttonList.add(this.close);

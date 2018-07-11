@@ -18,7 +18,6 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     {
         super(mc);
 
-        this.title = "Drop item action";
         this.inventory = new GuiInventory(this, mc.thePlayer);
         this.slot = new GuiSlot(0);
     }

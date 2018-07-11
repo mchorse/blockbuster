@@ -89,8 +89,6 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             te.morph.render(entity, 0, 0, 0, 0, partialTicks);
             GlStateManager.popMatrix();
 
-            // System.out.println("Test!");
-
             if (te.shadow)
             {
                 this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);

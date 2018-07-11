@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 public class GuiListModal extends GuiModal
 {
@@ -27,15 +28,15 @@ public class GuiListModal extends GuiModal
         this.callback = callback;
         this.label = label;
 
-        this.pick = GuiButtonElement.button(mc, "Pick", (b) -> this.send());
-        this.cancel = GuiButtonElement.button(mc, "Cancel", (b) -> this.parent.setDelegate(null));
+        this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.pick"), (b) -> this.send());
+        this.cancel = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.cancel"), (b) -> this.parent.setDelegate(null));
         this.limbs = new GuiStringListElement(mc, null);
 
         this.pick.resizer().set(0, 0, 50, 20).parent(this.area).x(0.5F, -55).y(0.7F, 10);
         this.cancel.resizer().set(60, 0, 50, 20).relative(this.pick.resizer());
 
         this.limbs.resizer().set(0, 0, 100, 0).parent(this.area).x(0.5F, -50).y(0.4F, 0).h(0.3F, 0);
-        this.limbs.add("(none)");
+        this.limbs.add(I18n.format("blockbuster.gui.me.none"));
         this.limbs.current = 0;
 
         this.children.add(this.pick, this.cancel, this.limbs);

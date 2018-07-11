@@ -54,11 +54,11 @@ public class GuiMainPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        GuiElement element = GuiButtonElement.button(mc, "Wiki", (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
+        GuiElement element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
         Resizer resizer = new Resizer().set(10, 25, 80, 20).parent(this.area).x(1, -90);
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.button(mc, "Discord", (button) -> openWebLink("https://discord.gg/qfxrqUF"));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink("https://discord.gg/qfxrqUF"));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 80, 20).relative(resizer)));
 
         element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
@@ -125,8 +125,8 @@ public class GuiMainPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawStringWithShadow("Resources", this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
-        this.font.drawStringWithShadow("Options", this.area.x + 10, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.options"), this.area.x + 10, this.area.y + 10, 0xffffff);
         this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

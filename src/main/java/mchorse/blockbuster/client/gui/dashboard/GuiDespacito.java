@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.Resizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -28,24 +29,24 @@ public class GuiDespacito extends GuiElement
         this.createChildren();
         this.dashboard = dashboard;
 
-        GuiButtonElement<GuiSidebarButton> element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel)).tooltip("Dashboard", TooltipDirection.RIGHT);
+        GuiButtonElement<GuiSidebarButton> element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.main"), TooltipDirection.RIGHT);
         Resizer resizer = new Resizer().set(4, 4, 24, 24).parent(this.area);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel)).tooltip("Director block", TooltipDirection.RIGHT);
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.director"), TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel)).tooltip("Model block", TooltipDirection.RIGHT);
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.model"), TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelEditorPanel)).tooltip("Model editor", TooltipDirection.RIGHT);
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelEditorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.model_editor"), TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
 
         /* Despacito 13 confirmed */
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel)).tooltip("Player recording editor", TooltipDirection.RIGHT);
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.player_recording"), TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }

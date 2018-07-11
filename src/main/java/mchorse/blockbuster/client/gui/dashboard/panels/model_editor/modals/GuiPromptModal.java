@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 public class GuiPromptModal extends GuiModal
 {
@@ -30,10 +31,10 @@ public class GuiPromptModal extends GuiModal
         this.text.resizer().parent(this.area).set(0, 0, 90, 20).x(0.5F, -45).y(0.5F, 10);
         this.text.field.setFocused(true);
 
-        this.confirm = GuiButtonElement.button(mc, "Ok", (b) -> this.send());
+        this.confirm = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.ok"), (b) -> this.send());
         this.confirm.resizer().set(60, 25, 30, 20).relative(this.text.resizer());
 
-        this.cancel = GuiButtonElement.button(mc, "Cancel", (b) -> this.parent.setDelegate(null));
+        this.cancel = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.cancel"), (b) -> this.parent.setDelegate(null));
         this.cancel.resizer().set(0, 25, 55, 20).relative(this.text.resizer());
 
         this.children.add(this.text, this.confirm, this.cancel);

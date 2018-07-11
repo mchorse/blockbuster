@@ -11,6 +11,7 @@ blockbuster:
     "no": "No"
     eggs:
         yike: "{l}Alright{r}, {o}alright{r}, that was {7}McHorse{r}'s joke! Switching back to {6}YikeFilms{r}."
+    morph_error: No model found
 
 # Metamorph category
 morph.category.blockbuster: Blockbuster models

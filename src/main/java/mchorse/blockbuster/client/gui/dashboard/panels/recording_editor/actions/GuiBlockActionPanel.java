@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 
 public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActionPanel<T>
@@ -15,10 +16,9 @@ public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActio
     {
         super(mc);
 
-        this.title = "Interact block action";
-        this.x = new GuiTrackpadElement(mc, "X", (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
-        this.y = new GuiTrackpadElement(mc, "Y", (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), v.intValue(), this.action.pos.getZ()));
-        this.z = new GuiTrackpadElement(mc, "Z", (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), this.action.pos.getY(), v.intValue()));
+        this.x = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
+        this.y = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), v.intValue(), this.action.pos.getZ()));
+        this.z = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), this.action.pos.getY(), v.intValue()));
 
         this.x.trackpad.integer = this.y.trackpad.integer = this.z.trackpad.integer = true;
 

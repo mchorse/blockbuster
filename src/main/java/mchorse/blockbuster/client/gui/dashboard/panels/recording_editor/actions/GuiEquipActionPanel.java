@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.widgets.GuiSlot;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -21,17 +22,16 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     {
         super(mc);
 
-        this.title = "Equip item action";
         this.inventory = new GuiInventory(this, mc.thePlayer);
         this.slot = new GuiSlot(0);
         this.armor = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.action.armorSlot = (byte) (b.button.getValue() - 1));
-        this.armor.button.addLabel("None");
-        this.armor.button.addLabel("Main hand");
-        this.armor.button.addLabel("Feet");
-        this.armor.button.addLabel("Leggings");
-        this.armor.button.addLabel("Chest");
-        this.armor.button.addLabel("Head");
-        this.armor.button.addLabel("Off hand");
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.none"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.feet"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.leggings"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.chest"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.head"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
         this.armor.resizer().set(0, 0, 80, 20).parent(this.area).x(0.5F, -40).y(0.5F, -50);
 
         this.children.add(this.armor);
