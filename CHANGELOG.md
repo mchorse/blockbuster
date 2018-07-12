@@ -2,6 +2,88 @@
 
 Blockbuster's change log.
 
+## Version 1.5 (GUIs and custom models)
+
+Blockbuster `1.5` is a massive update which improves almost every aspect of the mod. Main features of `1.5` are: improved support for OBJ, revamped GUIs, improved damage control and green screen features.
+
+**Compatible** with Metamorph `1.1.6` and Aperture `1.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+#### General
+
+* Added green block which helps setting up a green screen
+* Added green sky option which allows making the sky fully green (works nicely with green screen block)
+* Added custom morph preservation, if the model wasn't found, it will still create a morph but without a model
+* Fixed another dedicated server crashes (reported by AzureZhen)
+* Fixed dedicated server not persisting morph information (due not loaded custom morphs)
+* Removed support for playing back and registering actors spawned from a spawn egg (obsolete feature)
+
+#### GUIs (user interfaces)
+
+* Added player recording editor GUI which allows editing player recording's actions
+* Added pose editor to morph picker
+* Reworked most of GUIs into a dashboard panel based GUIs
+* Reworked model block GUI
+* Reworked director block GUI
+* Reworked model editor GUI
+    * Added a button which allows creating a model from a mob
+
+#### Director block
+
+* Added better duplication mechanic (suggested by Olrik&Flynn)
+* Added director block configuration options: start and stop commands, looping, disabling redstone state change, hiding block on playback and display name
+* Added new replay properties: starting health, enabled playback and use a fake player instead of an actor.
+
+#### Custom models
+
+* Added back custom model code back from Metamorph to Blockbuster
+* Added support for quad faces in OBJ code
+* Added support for C4D exported OBJ files (suggested by Andruxioid)
+* Added support for OBJ material files (must be manually enabled with `providesMtl` model property)
+    * Added support for non-standard `map_Kd_linear` instruction which indicates that this texture should be linearly interpolated
+    * Added mipmap support for material textures
+    * Added special NBT tag which allows specifying custom texture for given material
+* Added `shading` limb property which allow to disable default MC shading
+* Added `lighting` limb property which allow to disable lightmap shading (glow in the dark)
+* Added `slot` limb property which allows to assign an armor slot to be coated by the armor model
+* Added `is3D` limb property which allows to make the limb look extruded as seen in MPM/CNPCs mods (suggested by snifferish)
+* Added `scaleGui` model property which allows to set scale of the model within GUI
+* Added `skins` model property which allows the model to specify an additional model from which it can reference its skins, along its own skins (suggested by Andruxioid)
+* Added a feature to blacklist a model by simply adding `__` to model's folder name
+* Improved auto-load OBJ feature which allows generating limbs out of objects found within OBJ file
+* Optimized model reloading code which reloads models only if model files has changed
+
+#### Commands 
+
+* Added `/on_head` command which allows placing currently held item in the head slot
+* Added several `/record` sub-commands for more extensive player recording editing:
+    * `/record origin` – allows to change the initial position and rotation around that point based on player's position or given coordinates (thanks to Olrik&Flynn)
+    * `/record dupe` – allows to duplicate a player recording (thanks to Agirres)
+    * `/record prolong` – allows to add delays before and after the actual playback of the player recording content starts
+    * `/record tp` – allows to tp to given player recording at given tick (thanks to Olrik&Flynn)
+    * `/record clean` – allows to clean/set frame property within given range (thanks to Olrik&Flynn)
+* Added `[path]` argument to `/model clear` command which allows to clear out only skins for specific model
+* Added `[force]` argument to `/model reload` command which allows to force reload models, and also `/model reload` now reloads models on the client too
+* Fixed and slightly improved `/model export` command
+
+#### Damage control
+
+* Restore tile entities which were removed during damage control session
+* Remove entities which were created during damage control session
+
+#### Model block
+
+* Added a feature to render model blocks in inventory/as held items (1.12.2 feature only)
+* Added global rendering of model blocks
+* Added rotation order, uniform slider scale, optional entity-like shadow (suggested by _TroloTroll_) and item stacks configuration to model block
+* Fixed model block connecting to nearby fences (reported by _TroloTroll_)
+* Removed destruction particles
+
+#### Recording
+
+* Fixed item use actions not taking in account of actor's held items
+* Fixed items disappear from actor's hand when executing some item action
+* Switched from item ID to `ItemStack` equality for item tracking
+
 ## Version 1.4.10 (model block)
 
 This patch adds two nice features and also cleans up the code base a little bit (for next updates, basically, it's only the beginning).
@@ -378,7 +460,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-    * Idle fixture – static camera shot 
+  	* Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -389,10 +471,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-    * Removing last fixture
-    * Adding idle, look or follow fixture to current camera profile
-    * Toggle camera profile rendering
-    * Start or stop camera profile
+	* Removing last fixture
+	* Adding idle, look or follow fixture to current camera profile
+	* Toggle camera profile rendering
+	* Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command
