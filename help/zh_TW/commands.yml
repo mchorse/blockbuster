@@ -6,7 +6,7 @@ blockbuster:
             |
                 {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
                 
-                {r}開始，停止，或調整導演方塊的播放的位置在{7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (妳可以使用F3確定妳的當前位置)。 同時{7}spawn{r}命令會在{7}[tick]{r}tick後生成一個閑置演員 ({7}[tick]{r} 參數只會在本次命令有效)。
+                {r}開始，停止，或調整導演方塊的播放的位置在{7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (你可以使用F3確定你的當前位置)。 同時{7}spawn{r}命令會在{7}[tick]{r}tick後生成一個閑置演員 ({7}[tick]{r} 參數只會在本次命令有效)。
 
         # Record's commands
         record:
@@ -18,11 +18,23 @@ blockbuster:
                     
                     {r}添加一個動作，玩家通過{7}<filename>{r} 在 {7}<tick>{r}時間，和{7}<action_type>{r}的類別，加上在{7}[data_tag]{r}附加的的數據，導入錄制。
             
+            clean:
+                |
+                    {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
+                    
+                    {r}這個命令會清除來自 {7}<filename>{r} 玩家錄制中給予的 {7}<property>{r}，從 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定義在 {7}[value]{r} 參數（接受絕對值），{7}[from]{r} tick 或者第壹幀。
+            
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}這個命令會將 {7}<filename>{r} 玩家錄制拷貝壹份到名為 {7}<new_filename>{r} 的新玩家錄制。
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
                     
-                    {r}輸出數據在 {7}<tick>{r} 找到的動作在玩家錄制文件 {7}<filename>{r}。
+                    {r}輸出數據在 {7}<tick>{r} 找到的動作在玩家錄制檔案 {7}<filename>{r}。
             
             info:
                 |
@@ -34,43 +46,61 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
-                    {r}移除 {7}<tick>{r} 時的所有動作，在玩家錄制文件 {7}<filename>{r}。如果妳指定 {7}[index]{r}，此命令只會移除在 {7}[index]{r} {7}<tick>{r}時的一個動作。
+                    {r}移除 {7}<tick>{r} 時的所有動作，在玩家錄制檔案 {7}<filename>{r}。如果你指定 {7}[index]{r}，此命令只會移除在 {7}[index]{r} {7}<tick>{r}時的一個動作。
             
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
                     
-                    {r}搜索動作，自願限制在 {7}[limit]{r}，給予的 {7}<action_type>{r} ，輸出tick時間，自願輸出數據標簽，在文件名 {7}<filename>{r} 裏所找到的。
+                    {r}搜索動作，自願限制在 {7}[limit]{r}，給予的 {7}<action_type>{r} ，輸出tick時間，自願輸出數據標簽，在檔案名 {7}<filename>{r} 裏所找到的。
+                    
+            origin:
+                |
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
+                    
+                    {r}這個命令會根據 {7}[x] [y] [z]{r}（如果三個都指定了）來改變玩家錄制的源（第壹幀）或者玩家現在的位置。你也許可能會用絕對值來圍繞 Y 軸旋轉玩家錄制。
+                    
+            prolong:
+                |
+                    {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
+                    
+                    {r}這個命令可以調整名為 {7}<filename>{r} 的玩家錄制的前後延遲。
+                                
+            tp:
+                |
+                    {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
+                    
+                    {r}這個命令會傳送玩家到名為 {7}<filename>{r} 玩家錄制中的第壹幀（或者指定的 {7}[tick]{r} 幀，如果有的話）
 
         # Model's commands
         model:
-            help: "{r}{o}模型命令{r}。 本命令讓妳管理自定義模型。"
+            help: "{r}{o}模型命令{r}。 本命令讓你管理自定義模型。"
             
             export:
                 |
                     {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
                     
-                    {r}導出從 {7}<entity_name>{r} 為JSON的生物渲染器，能夠在演員上使用。模型將會導出在Blockbuster的config文件夾的exports文件夾。
+                    {r}導出從 {7}<entity_name>{r} 為JSON的生物渲染器，能夠在演員上使用。模型將會導出在Blockbuster的config檔案夾的exports檔案夾。
                     
-                    {r}{l}註意{r}: 這些自動生成的模型不完美，妳需要在McME進一步編輯獲得最佳效果。
-            
-            request: 
-                |
-                    {l}{6}/{r}model {8}request{r}
-                    
-                    {r}從伺服器上請求模型 (包括局域網遊戲主機上的)。
+                    {r}{l}註意{r}: 這些自動生成的模型不完美，你需要在McME進一步編輯獲得最佳效果。
             
             clear:
                 |
-                    {l}{6}/{r}model {8}clear{r}
+                    {l}{6}/{r}model {8}clear{r} {7}[path]{r}
                     
-                    {r}清除來自皮膚材質的緩存。
+                    {r}清除來自 Blockbuster 已載入的皮膚材質。如果 {7}[path]{r} 指定了，這個命令只會清理來自 {7}[path]{r} 的材質。
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r} {7}[force]{r}
+                    
+                    {r}強制客戶端和伺服器重載模型（伺服器端只用於 OP 用戶），自定義使用 {7}[force]{r} 參數，如果是 {7}true{r} 的話就也會重新載入壹遍沒有改變時間戳的檔案。
                     
             replace_texture:
                 |
                     {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
                     
-                    {r}以資源位置 {7}[replace]{r} 替換 {7}<target>{r} 材質。如果 {7}[replace]{r} 參數未指定，那麽 {7}<target>{r} 的原始材質會被恢復上去。
+                    {r}使用來自 {7}[replace]{r} 路徑位置的材質來替換來自 {7}<target>{r} 路徑位置的材質。 如果 {7}[replace]{r} 沒有指定，那麽目標 {7}<target>{r} 將會恢復原來的材質。
 
         # Action's commands
         action:
@@ -85,17 +115,17 @@ blockbuster:
                 |
                     {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
                     
-                    {r}播放文件名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}(模型) and {7}[skin]{r} and {7}[invincibility]{r}(是否隱身) 選項 ({7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 可用)。
+                    {r}播放檔案名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}(模型) and {7}[skin]{r} and {7}[invincibility]{r}(是否隱身) 選項 ({7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 可用)。
             record: 
                 |
                     {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
                     
-                    {r}從當前玩家錄制動作到 {7}<filename>{r}。妳也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 來指定妳想錄制到哪個導演方塊。提供導演方塊的坐標可以幫助同步演員。 
+                    {r}從當前玩家錄制動作到 {7}<filename>{r}。你也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 來指定你想錄制到哪個導演方塊。提供導演方塊的坐標可以幫助同步演員。 
             request: 
                 |
                     {l}{6}/{r}action {8}request{r} {7}<filename>{r}
                     
-                    {r}請求要從伺服器加載到本地客戶端，命名為 {7}<filename>{r} 的動作。
+                    {r}請求要從伺服器載入到本地客戶端，命名為 {7}<filename>{r} 的動作。
             stop: 
                 |
                     {l}{6}/{r}action {8}stop{r}

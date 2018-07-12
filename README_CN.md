@@ -1,6 +1,6 @@
 ![Blockbuster](http://i.imgur.com/nqDKg1R.png)
 
-[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum 帖子](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) - [中文百科](https://github.com/ycwei982/blockbuster/wiki) - [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap)
+[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum 帖子](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) – [中文百科](https://github.com/ycwei982/blockbuster/wiki) - [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap)
 
 Blockbuster 是一个可以让你在 Minecraft 单人模式使用 NPC 演员和摄像机来制作短片的 mod。本 mod 适用于 Forge 版本的 Minecraft 1.10.2，1.11.2 和 1.12.2。不适用于网易我的世界中国版。
 
@@ -32,7 +32,7 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片：
 
 1.4 版本的特性。这个播放列表教你如何使用。每次更新我都会发布一个更新日志视频讲解新版特性。
 
-<a href="https://youtu.be/R-g6fIUBtR4?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/R-g6fIUBtR4/0.jpg"></a>
+<a href="https://youtu.be/r3BpwMBDxwk?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/r3BpwMBDxwk/0.jpg"></a> 
 
 还有个视频教你如何使用 Blockbuster mod 创作一个简单的短片。这个视频展示了导演方块的基础，如何链接演员到导演方块，以及设定摄像机：
 
@@ -61,7 +61,7 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片：
 
 ## Bug 反馈
 
-当你发现了一个Bug，或者mod导致游戏崩溃，我希望你可以报告bug或崩溃在[issue tracker](https://github.com/mchorse/blockbuster/issues/), 或私信在 [Twitter](https://twitter.com/McHorsy)。也请麻烦在[pastebin](http://pastebin.com)贴一份日志文件，并描述下发生的事情，及重现bug或崩溃的方法。谢谢！
+当你发现了一个Bug，或者mod导致游戏崩溃，我希望你可以报告bug或崩溃在 [issue tracker](https://github.com/mchorse/blockbuster/issues/)，或私信在 [Twitter](https://twitter.com/McHorsy)。也请麻烦在 [pastebin](http://pastebin.com) 贴一份日志文件，并描述下发生的事情，及重现bug或崩溃的方法。谢谢！
 
 如果你没有英文交流能力，你也可以选择在[中国用户QQ群(328380393)](https://jq.qq.com/?_wv=1027&k=584nNVF)反馈你的 Bug 或崩溃，Mod 的翻译者将会协助你。
 
@@ -71,7 +71,7 @@ Blockbuster mod 的代码是MIT许可证, 查看 [LICENSE.md](./LICENSE.md) 了�
 
 ## 开发者请看
 
-语言文件是由 YML（在`help\`文件夹）编译成 INI 格式的。
+语言文件是由 YML（在 `help\` 文件夹）编译成 INI 格式的。
 
 如果你想翻译本 Mod，你得先修改合适的 YML 文件。然后使用 `./gradlew buildLangFiles` 命令来将 YML 转换成 INI 的 `.lang` 文件，到 `src/main/resources/assets/blockbuster/lang` 文件夹。
 

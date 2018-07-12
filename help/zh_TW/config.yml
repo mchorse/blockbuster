@@ -3,10 +3,16 @@ blockbuster.config:
     general:
         title: 通用
 
-        clean_model_downloads: 清除模型的下載內容
         disable_teleport_playback_button: 關閉播放後瞬移功能
         extra_wubs: 附加的雜物
         auto_refresh_models: 刷新模型和皮膚
+        debug_playback_ticks: Debug ticks
+        green_screen_sky: 綠色的天空
+        
+    model_block:
+        title: 模型方塊
+        
+        model_block_disable_culling_workaround: 禁用剔除變通方式
 
     recording:
         title: 錄制
