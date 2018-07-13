@@ -4,9 +4,9 @@ blockbuster:
         # General commands (no SubCommandBase commands)
         director: 
             |
-                {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
+                {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
                 
-                {r}开始，停止，或调整导演方块的播放的位置在{7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (你可以使用F3确定你的当前位置)。 同时{7}spawn{r}命令会在{7}[tick]{r}tick后生成一个闲置演员 ({7}[tick]{r} 参数只会在本次命令有效)。
+                {r}开始，停止，或调整导演方块的播放的位置在{7}<x>{r}, {7}<y>{r}，和 {7}<z>{r}（你可以使用F3确定你的当前位置）。 同时也有 {7}loop{r} 和 {7}disable_state{r} 可以让你使用 {7}[flag]{r} 参数（{7}true{r} 或 {7}false{r}）更改循环和是否发出红石信号的功能。
 
         # Record's commands
         record:
@@ -18,59 +18,89 @@ blockbuster:
                     
                     {r}添加一个动作，玩家通过{7}<filename>{r} 在 {7}<tick>{r}时间，和{7}<action_type>{r}的类别，加上在{7}[data_tag]{r}附加的的数据，导入录制。
             
+            clean:
+                |
+                    {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
+                    
+                    {r}这个命令会清除来自 {7}<filename>{r} 玩家录制中给予的 {7}<property>{r}，从 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定义在 {7}[value]{r} 参数（接受绝对值），{7}[from]{r} tick 或者第一帧。
+            
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}这个命令会将 {7}<filename>{r} 玩家录制复制一份到名为 {7}<new_filename>{r} 的新玩家录制。
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
                     
-                    {r}输出数据在 {7}<tick>{r} 找到的动作在玩家录制文件 {7}<filename>{r}。
+                    {r}输出在玩家录制文件 {7}<filename>{r} 中在 {7}<tick>{r} 找到的动作数据。
             
             info:
                 |
                     {l}{6}/{r}record {8}info{r} {7}<filename>{r}
                     
-                    {r}以 {7}<filename>{r} 输出玩家录制的数据，例如已保存的录制版本，录制时长...
+                    {r}以 {7}<filename>{r} 输出玩家录制的数据，例如已保存的录制版本，录制时长…
             
             remove:
                 |
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
-                    {r}移除 {7}<tick>{r} 时的所有动作，在玩家录制文件 {7}<filename>{r}。如果你指定 {7}[index]{r}，此命令只会移除在 {7}[index]{r} {7}<tick>{r}时的一个动作。
+                    {r}在玩家录制文件 {7}<filename>{r} 中移除 {7}<tick>{r} 时的所有动作。如果你指定 {7}[index]{r}，此命令只会移除在 {7}[index]{r} {7}<tick>{r} 时的一个动作。
             
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
                     
-                    {r}搜索动作，自愿限制在 {7}[limit]{r}，给予的 {7}<action_type>{r} ，输出tick时间，自愿输出数据标签，在文件名 {7}<filename>{r} 里所找到的。
+                    {r}搜索在文件名 {7}<filename>{r} 里所找到的动作，可选限制在 {7}[limit]{r}，给予的 {7}<action_type>{r}，输出 tick 时间，可选输出哪些数据标签。
+                    
+            origin:
+                |
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
+                    
+                    {r}这个命令会根据 {7}[x] [y] [z]{r}（如果三个都指定了）来改变玩家录制的源（第一帧）或者玩家现在的位置。你也许可能会用绝对值来围绕 Y 轴旋转玩家录制。
+                    
+            prolong:
+                |
+                    {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
+                    
+                    {r}这个命令可以调整名为 {7}<filename>{r} 的玩家录制的前后延迟。
+                                
+            tp:
+                |
+                    {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
+                    
+                    {r}这个命令会传送玩家到名为 {7}<filename>{r} 玩家录制中的第一帧（或者指定的 {7}[tick]{r} 帧，如果有的话）
 
         # Model's commands
         model:
-            help: "{r}{o}模型命令{r}。 本命令让你管理自定义模型。"
+            help: "{r}{o}模型命令{r}。本命令让你管理自定义模型。"
             
             export:
                 |
                     {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
                     
-                    {r}导出从 {7}<entity_name>{r} 为JSON的生物渲染器，能够在演员上使用。模型将会导出在Blockbuster的config文件夹的exports文件夹。
+                    {r}导出从 {7}<entity_name>{r} 为 JSON 的生物渲染器，能够在演员上使用。模型将会导出在 Blockbuster 的 config 文件夹的 exports 文件夹。你可以自愿地提供 {7}[entity_tag]{r} 来从实体中生成含有自定义数据的模型。
                     
-                    {r}{l}注意{r}: 这些自动生成的模型不完美，你需要在McME进一步编辑获得最佳效果。
-            
-            request: 
-                |
-                    {l}{6}/{r}model {8}request{r}
+                    {r}{l}注意{r}: 这些自动生成的模型不完美，你需要在 McME 进一步编辑获得最佳效果。
                     
-                    {r}从服务器上请求模型 (包括局域网游戏主机上的)。
-            
             clear:
                 |
-                    {l}{6}/{r}model {8}clear{r}
+                    {l}{6}/{r}model {8}clear{r} {7}[path]{r}
                     
-                    {r}清除来自皮肤材质的缓存。
+                    {r}清除来自 Blockbuster 已加载的皮肤材质。如果 {7}[path]{r} 指定了，这个命令只会清理来自 {7}[path]{r} 的材质。
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r} {7}[force]{r}
+                    
+                    {r}强制客户端和服务器重载模型（服务器端只用于 OP 用户），自定义使用 {7}[force]{r} 参数，如果是 {7}true{r} 的话就也会重新加载一遍没有改变时间戳的文件。
                     
             replace_texture:
                 |
                     {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
                     
-                    {r}以资源位置 {7}[replace]{r} 替换 {7}<target>{r} 材质。如果 {7}[replace]{r} 参数未指定，那么 {7}<target>{r} 的原始材质会被恢复上去。
+                    {r}使用来自 {7}[replace]{r} 路径位置的材质来替换来自 {7}<target>{r} 路径位置的材质。 如果 {7}[replace]{r} 没有指定，那么目标 {7}<target>{r} 将会恢复原来的材质。
 
         # Action's commands
         action:
