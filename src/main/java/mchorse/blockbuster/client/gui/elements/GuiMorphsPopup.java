@@ -156,21 +156,8 @@ public class GuiMorphsPopup extends GuiScreen
 
     public void setSelected(AbstractMorph morph)
     {
-        /* TODO: make creative morph menu add the morph if it doesn't
-         * exists */
         this.morphs.setSelected(morph);
         this.lastMorph = morph;
-
-        /* Saving the custom pose */
-        if (morph instanceof CustomMorph)
-        {
-            MorphCell cell = this.getSelected();
-
-            if (cell != null && cell.current().morph instanceof CustomMorph)
-            {
-                ((CustomMorph) cell.current().morph).customPose = ((CustomMorph) morph).customPose;
-            }
-        }
 
         if (this.poses != null)
         {
