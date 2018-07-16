@@ -13,7 +13,7 @@ blockbuster.gui:
     record: 錄制
     pick: 選擇生物
     duplicate: 拷貝
-    search: 搜索:
+    search: 搜索
     cancel: 取消
     break: 破壞
     select: 選擇
