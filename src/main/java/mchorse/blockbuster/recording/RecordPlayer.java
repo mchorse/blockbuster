@@ -216,9 +216,7 @@ public class RecordPlayer
         }
         else if (this.actor instanceof EntityPlayer)
         {
-            this.actor.worldObj.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
-
-            if (this.actor instanceof EntityPlayer && this.record.playerData != null)
+            if (this.record.playerData != null)
             {
                 this.actor.readEntityFromNBT(this.record.playerData);
 
@@ -227,6 +225,8 @@ public class RecordPlayer
                     MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
                 }
             }
+
+            this.actor.worldObj.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
         }
 
         this.record.applyFrame(tick, actor, true);
