@@ -1,44 +1,86 @@
 blockbuster.gui.me:
-    save_modal: "如要保存，妳應該為模型指定名稱。"
-    new_modal: "選擇一個妳想用來作為模版來編輯或使用的模型。"
-    add_limb_modal: "為妳的新肢體取個名字。"
-    model_props_modal: "這個模型提供一種方式來編輯模型的全局選項。"
-    limb_name_modal: "給目前編輯中的肢體取個名字。"
-    limb_parent_modal: "選擇一個妳想讓它成為妳選擇的肢體的父肢體。"
-    pose_title_modal: "{l}姿勢"
-
-    warning_skins: 看起來妳在編輯一個新的模型。妳至少要為這個 "%s" 模型指定一個皮膚。為了讓皮膚顯示到菜單，\n\n請前往 "config/models/%s/skins" 文件夾。
-
-    model_editor: "模型編輯器"
-    limbs: "肢體"
-
-    name: "更改名字"
-    parent: "更改父級"
-    mirror: "鏡像"
-    looking: "查看"
-    idle: "靜止狀態"
-    swinging: "晃悠狀態"
-    swiping: "打擊狀態"
-    invert: "反轉"
-
-    no_hands: "無頭"
-    left_hand: "左"
-    right_hand: "右"
-
-    no_limbs: "沒有肢體被選中..."
-    visual: "視覺"
-    gameplay: "遊玩"
-    pose: "姿勢"
-
-    pose_name: "新姿勢的名字..."
-    search: "搜索..."
-    search_texture: "搜索材質..."
-
-    none: "無"
-
-    model:
-        name: "名字"
-        scale: "伸縮"
-        texture_size: "材質大小"
-        texture: "默認材質"
-        provides_obj: "提供OBJ模型"
+    pick: 選擇
+    none: "（無）"
+    
+    hitbox: 碰撞箱
+    looking: 盯著看
+    
+    limbs:
+        title: 肢體
+        
+        size: 肢體尺寸
+        texture: 材質偏移
+        anchor: 錨點
+        origin: OBJ 源
+        slot: 盔甲槽
+        
+        color: 顏色
+        opacity: 不透明度
+        mirror: 鏡像
+        lighting: 光
+        shading: 陰影
+        hold: 拿著物品
+        none: 無
+        right: 右
+        left: 左
+        
+        swiping: 揮手
+        looking: 看著
+        swinging: 跑動
+        idle: 靜止
+        invert: 反轉
+        
+        rename: 重命名
+        parent: 父級
+        page: 換頁
+        
+        new_limb: 為新肢體輸入壹個名字…
+        last_limb: 你不能移除最後壹個肢體…
+        rename_limb: "重命名當前肢體："
+        parent_limb: "為現在選中的肢體選擇壹個父級肢體…"
+        
+        slots:
+            none: 無
+            head: 頭盔
+            chest: 胸甲
+            left_shoulder: 左肩
+            right_shoulder: 右肩
+            leggings: 護腿
+            left_leg: 左腿
+            right_leg: 右腿
+            left_foot: 左鞋
+            right_foot: 右鞋
+    
+    models:
+        title: 模型
+        save: 保存模型
+        export: 從生物中新建模型
+        name: "為模型輸入名字："
+        pick: "選擇壹個你想從中導出肢體的生物："
+        error: "糟糕，由於壹個錯誤，導致無法新建模型：%s"
+    
+    options:
+        name: 顯示名字
+        texture: 材質尺寸
+        scale: 全局縮放
+        scale_gui: GUI 縮放
+        default: 默認材質
+        skins: 皮膚檔案夾
+        provides_obj: 提供 OBJ
+        provides_mtl: 提供 MTL
+    
+    poses:
+        title: 姿勢
+        new_pose: "為新的姿勢輸入名字："
+        standard: "你無法移除默認姿勢…"
+        hitbox: 碰撞箱
+    
+    tooltips:
+        models: 模型
+        poses: 姿勢
+        options: 模型選項
+        limbs: 肢體
+        
+        swipe: 揮動
+        swing: 切換跑動
+        items: 切換物品

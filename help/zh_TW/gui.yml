@@ -10,30 +10,68 @@ blockbuster.gui:
     add: 添加
     edit: 編輯
     remove: 移除
-    detach: 脫離
     record: 錄制
-    pick: 選擇生物…
+    pick: 選擇生物
     duplicate: 拷貝
-    search: "搜索:"
+    search: 搜索:
     cancel: 取消
     break: 破壞
     select: 選擇
     ok: 好
+    
+    # Morphs popup strings
+    morphs:
+        acquire: "獲得偽裝"
+        pose: 姿勢
+        sneak: 在潛行時應用
+        reset: 重設姿勢
 
     confirm:
         title: 確認破壞導演方塊
-        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊總共含 {7}%s{f} 個回放。妳真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
+        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊總共含 {7}%s{f} 個回放。你真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
 
+    dashboard: 
+        main: 儀表盤
+        director: 導演方塊
+        model: 模型方塊
+        model_editor: 模型編輯器
+        player_recording: 玩家錄制編輯器
+    
+    # Main page of dashboard
+    main:
+        resources: 資源
+        wiki: 百科
+        discord: Discord
+        
+        options: 選項
+        
     # Director block GUI strings
     director:
         title: 導演方塊
-        add: 添加一個回放...
-        no_cast: 沒有回放！
-        reset_replays: 妳確定要把{l}這個{r}導演方塊裏的{o}所有{r}回放{o}移除{r}嗎？
+        config: 導演方塊選項
+        not_selected: 選擇壹個導演方塊…
+        no_replays: 創建壹個回放…
+    
+        display_title: 顯示標題
+        start_command: 開始時執行命令
+        stop_command: 停止時執行命令
+        loops: 循環
+        disable_states: 停用狀態
+        hide: 在回放時隱藏
+        
+        id: 錄制 ID
+        name: 名稱標簽
+        invincible: 無敵
+        invisible: 隱身
+        enabled: 啟用
+        fake_player: 假玩家
+        health: 健康值
+        edit_record: 編輯錄制
 
     # Actor configuration GUI strings
     actor:
         title: 演員設定
+        
         default: 默認
         name: 名稱
         filename: 錄制ID
@@ -45,21 +83,111 @@ blockbuster.gui:
 
     # Model block GUI strings
     model_block:
-        title: 模型方塊設定
+        title: 模型方塊
+        not_selected: 選擇壹個模型方塊…
+        
         x: X
         "y": "Y"
         z: Z
+        yaw: 偏航
+        pitch: 俯仰
         body: 身體偏航
+        one: 整體
+        one_tooltip: 整體縮放
+        shadow: 陰影
+        
         entity: 實體
         translate: 翻譯
-        rotate: 傾斜
+        rotate: 翻滾
         scale: 縮放
-
+        
+    # Player recording editor GUI strings
+    record_editor:
+        title: 錄制
+        not_selected: 選擇壹個玩家錄制…
+        action: 動作
+        
+        drop: 扔下方塊
+        damage: 傷害
+        progress: 進度
+        mounting: 乘坐
+        meta: 元值
+        arrow_charge: 拉弓力度
+        no_fields: 這個動作沒有可用的編輯欄…
+        
+        actions:
+            chat: 
+                title: 聊天
+                desc: 本動作發送壹條消息
+            swipe: 
+                title: 揮手
+                desc: 本動作讓演員揮動主要手臂
+            drop:
+                title: 丟東西
+                desc: 丟下壹個物品（就像按了 Q）
+            equip:
+                title: 穿戴物品
+                desc: 任何壹只手拿著東西或者穿戴了盔甲
+                
+                none: 無
+                main_hand: 主要手
+                feet: 腳
+                legs: 腿
+                chest: 胸
+                head: 頭
+                off_hand: 次要手
+            shoot_arrow:
+                title: 射箭
+                desc: 以給定的力量射出壹根普通箭
+            place_block:
+                title: 放置方塊
+                desc: 在給定的位置上放壹個指定的方塊
+            mounting:
+                title: 乘坐
+                desc: 乘坐或不乘坐前面的實體
+            interact_block:
+                title: 方塊互動
+                desc: 讓演員與壹個方塊互動
+            break_block:
+                title: 破壞方塊
+                desc: 在給定的位置上破壞方塊
+            morph:
+                title: 偽裝
+                desc: 將演員偽裝成給定的偽裝
+            attack:
+                title: 攻擊
+                desc: 對演員前方的生物造成傷害（如果你要對玩家使用，確保遊戲設定中，不是和平難度）
+            damage:
+                title: 傷害
+                desc: 對演員實體造成傷害
+            morph_action:
+                title: 偽裝動作
+                desc: 使用偽裝的動作，如果演員已在偽裝中
+            command:
+                title: 命令
+                desc: 使用演員執行壹條命令
+            break_animation:
+                title: 破壞方塊動畫
+                desc: 在給定的方塊位置上進行裂痕動畫
+            use_item:
+                title: 使用物品
+                desc: 使用正拿在手上的物品
+            use_item_block:
+                title: 在方塊上使用物品
+                desc: 在演員正對著的方塊使用手上拿著的物品
+                
+                down: 下
+                up: 上
+                north: 北
+                south: 南
+                west: 西
+                east: 東
+    
     # Playback GUI
     playback:
         title: 播放設定
         camera_mode: 攝像機模式
-        profile: 檔案文件名稱
+        profile: 檔案檔案名稱
 
         nothing: 什麽都不做
         play: 僅播放

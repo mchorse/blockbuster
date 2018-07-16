@@ -6,6 +6,9 @@ blockbuster.info:
         already_registered: "{f}这个演员已经链接到了这个导演方块上了！"
         looped: "{f}给予的导演方块现在已开启重复播放！"
         unlooped: "{f}给予的导演方块现在已关闭重复播放！"
+        
+        enabled_state: "{f}给定的导演方块现在改变了状态！"
+        disabled_state: "{f}给定的导演方块现在没有改变状态！"
 
     # General command infos
     commands:
@@ -14,23 +17,23 @@ blockbuster.info:
         replace_texture: "{f}材质 %s{f} 已被材质 %s{f} 替换。"
         restore_texture: "{f}材质 %s{f} 已经还原为初始状态。"
 
-    models.loaded: "{f}已从服务器收到%s{f}个自定义模型和%s{f}个皮肤。"
+    models.loaded: "{f}已从服务器收到 %s{f} 个自定义模型和 %s{f} 个皮肤。"
 
     record:
-        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引号 %s{f} 并带有数据： %s"
+        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引号 %s{f} 并带有数据：%s"
 
         info:
             |
-                {f}关于 %s{f} 的信息:
+                {f}关于 %s{f} 的信息：
 
-                {7}*{f} 录制版本: %s
-                {7}*{f} 录制的时长（ticks单位）: %s
-                {7}*{f} 延时帧: %s
-                {7}*{f} 卸载前的tick时长: %s
+                {7}*{f} 录制版本：%s
+                {7}*{f} 录制的时长（ticks 单位）：%s
+                {7}*{f} 延时帧：%s
+                {7}*{f} 卸载前的 tick 时长：%s
 
-        search_type: "{f}以类型 %s{f} 搜索动作:"
-        search_action: "{f}在%s{f} tick找到动作， 在索引号 %s{f}."
-        search_action_data: "{f}在%s{f} tick找到动作， 在索引号 %s{f} 并带有数据: %s"
+        search_type: "{f}以类型 %s{f} 搜索动作："
+        search_action: "{f}在%s{f} tick 找到动作，在索引号 %s{f}。"
+        search_action_data: "{f}在%s{f} tick 找到动作，在索引号 %s{f} 并带有数据：%s"
 
     # Recording strings
     recording:

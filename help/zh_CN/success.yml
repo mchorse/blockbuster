@@ -5,9 +5,15 @@ blockbuster.success:
         
         was_registered: "{f}这个演员已经链接到了导演方块！"
         attached_device: "{f}这个激活设备已经链接到了导演方块！"
+        attached_button: "{f}这个播放按钮已经链接到了导演方块！"
     
     model:
         export:
             saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
         
         reload: "{f}服务器已经重载了模型！"
+        
+    record:
+        changed_origin: "{f}玩家录制的来源已经成功从 %s{f} 从 (%s{f}, %s{f}, %s{f}) 更换到 (%s{f}, %s{f}, %s{f})！"
+        duped: "{f}玩家录制 %s{f} 已成功复制到 %s{f}!"
+        clean: "{f}玩家录制 %s{f} 的属性 %s{f} 已经成功从 %s{f} 到 %s{f} 清除！"
