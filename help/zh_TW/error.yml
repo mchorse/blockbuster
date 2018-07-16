@@ -10,11 +10,11 @@ blockbuster.error:
     
     # General command errors
     commands:
-        load_chunks: 無法加載渲染範圍裏所有已創建的區塊！詳情錯誤記錄在日誌裏。
+        load_chunks: 無法載入渲染範圍裏所有已創建的區塊！詳情錯誤記錄在日誌裏。
         
         restore_texture: "{f}材質 %s{f} 無法被恢復，因為它沒有被這個命令改變過。"
-        replace_texture: "{f}材質 %s{f} 和 %s{f} 沒有被加載！"
-        replace_texture_one: "{f}材質 %s{f} 沒有被加載！"
+        replace_texture: "{f}材質 %s{f} 和 %s{f} 沒有被載入！"
+        replace_texture_one: "{f}材質 %s{f} 沒有被載入！"
         
     
     # Director block error strings
@@ -22,7 +22,7 @@ blockbuster.error:
         playing: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊正在播放！"
         stopped: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊已停止播放！"
         
-        missing: "{f}鏈接到這個設備的導演方塊 (%s{f}, %s{f}, %s{f}), 已被破壞或移動。妳需要把本設備鏈接到另外一個導演方塊！"
+        missing: "{f}在 (%s{f}, %s{f}, %s{f}) 沒有導演方塊！"
         no_director: "{f}(%s{f}, %s{f}, %s{f})的導演方塊不存在。"
         empty_filename: "{f}導演方塊有一個空白的{7}錄制ID{f}。 請填充空白的{7}錄制ID{f}."
     
@@ -32,23 +32,25 @@ blockbuster.error:
             error_save: "{f}無法保存導出的模型！"
             wrong_type: "{f}無法以形式 %s{f} 導出模型（因為它沒有渲染器，或者不是活的實體渲染器）。"
         
-        reload: 妳需要成為 OP 用戶才能重載模型！
+        reload: 你需要成為 OP 用戶才能重載模型！
     
     # Record command errors
     record:
-        no_action: "{f}文件名為 %s{f} 的玩家錄制內容在 %s{f} tick沒有動作！"
-        not_exist: "{f}文件名為 %s{f} 的玩家錄制內容不存在！"
-        tick_out_range: "{f}在 tick %s{f} 的內容不存在！範圍應在{7}0{r} 和 %s{r}之間。"
-        index_out_range: "{f}Index %s{f} 超出範圍！範圍應在{7}0{r} 和 %s{r}之間。"
-        already_empty: "{f}在索引號 %s{r}，玩家錄制文件 %s{r} 裏沒有動作！"
+        no_action: "{f}檔案名為 %s{f} 的玩家錄制內容在 %s{f} tick沒有動作！"
+        not_exist: "{f}檔案名為 %s{f} 的玩家錄制內容不存在！"
+        tick_out_range: "{f}在 tick %s{f} 的內容不存在！範圍應在 {7}0{r} 和 %s{r} 之間。"
+        index_out_range: "{f}Index %s{f} 超出範圍！範圍應在 {7}0{r} 和 %s{r} 之間。"
+        already_empty: "{f}在索引號 %s{r}，玩家錄制檔案 %s{r} 裏沒有動作！"
         wrong_action: "{f}動作類別 %s{f} 不存在！"
-        add: "{f}動作類別 %s{f} 由於以下錯誤而無法添加： %s"
-    
+        add: "{f}動作類別 %s{f} 由於以下錯誤而無法添加：%s"
+        already_exists: "{f}名為 %s{f} 的玩家錄製已經存在了！"
+        couldnt_save: "{f}不能以 %s{f} 檔案名保存玩家錄製！"
+        wrong_clean_property: "{f}給予"
     # Recording errors
     recording:
-        read: "{f}命名為 %s{f} 的錄制文件不適合播放 ({7}老版本{f}, {7}已損壞{f}, 或不是{7}錄制文件{f})。"
+        read: "{f}命名為 %s{f} 的錄制檔案不適合播放 ({7}老版本{f}, {7}已損壞{f}, 或不是{7}錄制檔案{f})。"
         logout: "{f}已停止錄制 %s{f}, 因為玩家登出了！"
-        not_found: "{f}無法找到 %s{f} 錄制文件！"
+        not_found: "{f}無法找到 %s{f} 錄制檔案！"
         fill_filename: "{f}請填充{7}錄制ID{f}框！"
         empty_filename: "{f}無法錄制玩家錄像與一個空白的{7}錄制ID{f}."
         empty_record: "{f}無法回放錄像 %s{f}, 因為是空的！"

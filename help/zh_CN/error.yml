@@ -22,7 +22,7 @@ blockbuster.error:
         playing: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块正在播放！"
         stopped: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块已停止播放！"
         
-        missing: "{f}链接到这个设备的导演方块 (%s{f}, %s{f}, %s{f}), 已被破坏或移动。你需要把本设备链接到另外一个导演方块！"
+        missing: "{f}在 (%s{f}, %s{f}, %s{f}) 不存在导演方块！"
         no_director: "{f}(%s{f}, %s{f}, %s{f})的导演方块不存在。"
         empty_filename: "{f}导演方块有一个空白的{7}录制ID{f}。 请填充空白的{7}录制ID{f}."
     
@@ -38,11 +38,14 @@ blockbuster.error:
     record:
         no_action: "{f}文件名为 %s{f} 的玩家录制内容在 %s{f} tick没有动作！"
         not_exist: "{f}文件名为 %s{f} 的玩家录制内容不存在！"
-        tick_out_range: "{f}在 tick %s{f} 的内容不存在！范围应在{7}0{r} 和 %s{r}之间。"
-        index_out_range: "{f}Index %s{f} 超出范围！范围应在{7}0{r} 和 %s{r}之间。"
+        tick_out_range: "{f}在 tick %s{f} 的内容不存在！范围应在 {7}0{r} 和 %s{r} 之间。"
+        index_out_range: "{f}Index %s{f} 超出范围！范围应在 {7}0{r} 和 %s{r} 之间。"
         already_empty: "{f}在索引号 %s{r}，玩家录制文件 %s{r} 里没有动作！"
         wrong_action: "{f}动作类别 %s{f} 不存在！"
-        add: "{f}动作类别 %s{f} 由于以下错误而无法添加： %s"
+        add: "{f}动作类别 %s{f} 由于以下错误而无法添加：%s"
+        already_exists: "{f}名为 %s{f} 的玩家录制已经存在了！"
+        couldnt_save: "{f}无法以 %s{f} 文件名保存玩家录制！"
+        wrong_clean_property: "{f}给予"
     
     # Recording errors
     recording:

@@ -3,10 +3,16 @@ blockbuster.config:
     general:
         title: 通用
 
-        clean_model_downloads: 清除模型的下载内容
         disable_teleport_playback_button: 关闭播放后瞬移功能
         extra_wubs: 附加的杂物
         auto_refresh_models: 刷新模型和皮肤
+        debug_playback_ticks: Debug ticks
+        green_screen_sky: 绿色的天空
+        
+    model_block:
+        title: 模型方块
+        
+        model_block_disable_culling_workaround: 禁用剔除变通方法
 
     recording:
         title: 录制
@@ -15,7 +21,7 @@ blockbuster.config:
         recording_delay: 录制跳过帧
         record_unload_time: 自动卸载录制的时间
         record_unload: 自动卸载录制的
-        record_sync_rate: 录制tick的同步率
+        record_sync_rate: 录制 tick 的同步率
         record_attack_on_swipe: 挥动手攻击
         record_commands: 录制命令
 

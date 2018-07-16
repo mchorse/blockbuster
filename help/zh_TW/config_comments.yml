@@ -1,10 +1,14 @@
 blockbuster.config.comments:
     general:
-        clean_model_downloads: 退出伺服器後，刪除下載的所有模型？
-        disable_teleport_playback_button: 當妳使用播放按鈕的時候，瞬移功能是否開啟？
+        disable_teleport_playback_button: 當你潛行使用播放按鈕的時候，传送功能是否開啟？
         extra_wubs: 這個選項可能沒有作用，或者有點用？
-        auto_refresh_models: 當進入Metamorph或Blockbuster的GUI時，自動刷新模型和皮膚？
-        debug_playback_ticks: 當導演方塊錄制時，將tick時間寫入日誌文件
+        auto_refresh_models: 當進入 Metamorph 或 Blockbuster 的 GUI 時，自動刷新模型和皮膚？
+        debug_playback_ticks: 當導演方塊錄制時，將 tick 時間寫入日誌檔案
+        green_screen_sky: 將天空完全變綠，用來鍵控摳像
+
+    model_block:
+        model_block_disable_culling_workaround: 是否禁用剔除變通方式
+
 
     recording:
         recording_countdown: 錄制倒計時（秒）

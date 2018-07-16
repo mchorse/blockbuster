@@ -4,5 +4,6 @@ key:
         # Categories
         category: Blockbuster
 
+        dashboard: 儀錶盤
         model_editor: 模型編輯器
-        marker: 創建tick時間標記
+        marker: tick 時間標記

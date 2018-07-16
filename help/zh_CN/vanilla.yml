@@ -10,13 +10,16 @@ blockbuster:
         register: 关联演员到导演方块
         director_block: 管理回放和演员的方块
         model_block: 以静态方式放置伪装实体
+        green_block: 可以用作绿幕
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 
 # Block name
-tile.blockbuster.director.name: 导演方块
-tile.blockbuster.model.name: 模型方块
+tile.blockbuster:
+        director.name: 导演方块
+        model.name: 模型方块
+        green.name: 绿幕方块
 
 # Item names
 item:
