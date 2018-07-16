@@ -1,6 +1,5 @@
 package mchorse.blockbuster.recording;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,6 +76,11 @@ public class MPMHelper
      */
     public static void setMPMData(EntityPlayer entity, NBTTagCompound tag)
     {
+        if (set == null)
+        {
+            init();
+        }
+
         if (set != null)
         {
             try
