@@ -186,7 +186,7 @@ public class Director
 
         for (RecordPlayer record : this.actors.values())
         {
-            if (record.isFinished() || record.actor.isDead)
+            if ((record.isFinished() && record.playing) || record.actor.isDead)
             {
                 count++;
             }
@@ -339,8 +339,7 @@ public class Director
             }
 
             actor.playing = false;
-            actor.actor.noClip = true;
-            actor.startPlaying(replay.id, notAttached);
+            actor.startPlaying(replay.id, tick, notAttached);
             actor.pause();
 
             for (int i = 0; i <= tick; i++)
