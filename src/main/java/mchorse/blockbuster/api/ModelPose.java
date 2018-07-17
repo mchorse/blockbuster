@@ -21,6 +21,19 @@ public class ModelPose
     public float[] size = new float[] {1, 1, 1};
     public Map<String, ModelTransform> limbs = new HashMap<String, ModelTransform>();
 
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof ModelPose)
+        {
+            ModelPose pose = (ModelPose) obj;
+
+            return ModelTransform.equalFloatArray(this.size, pose.size) && this.limbs.equals(pose.limbs);
+        }
+
+        return super.equals(obj);
+    }
+
     /**
      * Clone a model pose
      */

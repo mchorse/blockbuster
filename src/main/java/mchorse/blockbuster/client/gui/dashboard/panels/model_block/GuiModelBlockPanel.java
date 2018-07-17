@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
@@ -27,10 +25,8 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
-import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -395,13 +391,14 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             if (cell != null)
             {
                 int x = this.area.getX(0.5F);
-                int y = this.area.getY(0.65F);
+                int y = this.area.getY(1) - 10;
 
-                GuiScreen screen = this.mc.currentScreen;
+                int w = Math.max(this.font.getStringWidth(cell.current().name), this.font.getStringWidth(cell.current().morph.name));
 
-                GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-                cell.current().morph.renderOnScreen(this.mc.player, x, y, this.area.h / 4F, 1.0F);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, 0x88000000);
+
+                this.drawCenteredString(this.font, cell.current().name, x, y - this.font.FONT_HEIGHT * 2, 0xffffff);
+                this.drawCenteredString(this.font, cell.current().morph.name, x, y - this.font.FONT_HEIGHT, 0xcccccc);
             }
         }
 
