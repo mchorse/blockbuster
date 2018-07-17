@@ -269,6 +269,17 @@ public class CustomMorph extends AbstractMorph
 
             result = result && Objects.equal(this.currentPose, morph.currentPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
+            result = result && this.materials.equals(morph.materials);
+
+            if (this.customPose != null && morph.customPose != null)
+            {
+                result = result && this.customPose.equals(morph.customPose);
+            }
+            /* If one of them isn't a null, then clearly different */
+            else if (this.customPose != morph.customPose)
+            {
+                result = false;
+            }
 
             if (this.skin == null && morph.skin == null)
             {
@@ -301,6 +312,12 @@ public class CustomMorph extends AbstractMorph
         if (this.customPose != null)
         {
             morph.customPose = this.customPose.clone();
+        }
+
+        if (this.materials.isEmpty())
+        {
+            morph.materials.clear();
+            morph.materials.putAll(this.materials);
         }
 
         morph.settings = settings;
