@@ -38,7 +38,16 @@ public class ClientHandlerPlayback extends ClientMessageHandler<PacketPlayback>
         if (message.state)
         {
             Record record = ClientProxy.manager.records.get(message.filename);
-            EntityUtils.setRecordPlayer(actor, new RecordPlayer(record, Mode.FRAMES, actor));
+            RecordPlayer recordPlayer = EntityUtils.getRecordPlayer(actor);
+
+            if (recordPlayer == null)
+            {
+                EntityUtils.setRecordPlayer(actor, new RecordPlayer(record, Mode.FRAMES, actor));
+            }
+            else
+            {
+                recordPlayer.record = record;
+            }
 
             if (record == null)
             {

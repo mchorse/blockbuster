@@ -338,11 +338,10 @@ public class Director
                 CommonProxy.manager.addDamageControl(this, actor.actor);
             }
 
-            actor.startPlaying(replay.id, notAttached);
-
             actor.playing = false;
-            actor.record.applyFrame(tick, actor.actor, true);
             actor.actor.noClip = true;
+            actor.startPlaying(replay.id, notAttached);
+            actor.pause();
 
             for (int i = 0; i <= tick; i++)
             {
