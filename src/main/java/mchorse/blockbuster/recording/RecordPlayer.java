@@ -210,6 +210,9 @@ public class RecordPlayer
         this.tick = tick;
         this.kill = kill;
 
+        this.record.applyFrame(tick, this.actor, true);
+        EntityUtils.setRecordPlayer(this.actor, this);
+
         if (this.actor instanceof EntityActor)
         {
             this.actor.world.spawnEntity(this.actor);
@@ -229,10 +232,7 @@ public class RecordPlayer
             this.actor.world.getMinecraftServer().getPlayerList().playerLoggedIn((EntityPlayerMP) this.actor);
         }
 
-        this.record.applyFrame(tick, actor, true);
-
-        EntityUtils.setRecordPlayer(actor, this);
-        Dispatcher.sendToTracked(actor, new PacketPlayback(actor.getEntityId(), true, filename));
+        Dispatcher.sendToTracked(this.actor, new PacketPlayback(this.actor.getEntityId(), true, filename));
     }
 
     /**

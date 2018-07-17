@@ -97,13 +97,6 @@ public class GuiDashboard extends GuiBase
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (this.panel.delegate != null)
-        {
-            this.panel.delegate.appear();
-        }
-
-        this.modelEditorPanel.open();
-
         if (mc.world != null)
         {
             EntityPlayer player = mc.player;
@@ -113,6 +106,13 @@ public class GuiDashboard extends GuiBase
             this.directorPanel.open();
             this.modelPanel.open();
             this.recordingEditorPanel.open();
+        }
+
+        this.modelEditorPanel.open();
+
+        if (this.panel.delegate != null)
+        {
+            this.panel.delegate.appear();
         }
 
         return this;
