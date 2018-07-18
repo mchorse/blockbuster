@@ -18,11 +18,13 @@ import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.JsonToNBT;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
     private GuiButtonElement<GuiTextureButton> addPose;
     private GuiButtonElement<GuiTextureButton> removePose;
+    private GuiButtonElement<GuiTextureButton> importPose;
     private GuiDelegateElement<IGuiElement> modal;
 
     private GuiStringListElement posesList;
@@ -32,6 +34,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiTwoElement hitbox;
 
     private ModelTransform transform;
+    private String pose;
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -78,10 +81,12 @@ public class GuiModelPoses extends GuiModelEditorTab
         /* Buttons */
         this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
         this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
+        this.importPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.importPose());
 
-        this.addPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -38);
+        this.importPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -58);
+        this.addPose.resizer().set(20, 0, 16, 16).relative(this.importPose.resizer());
         this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
-        this.children.add(this.addPose, this.removePose);
+        this.children.add(this.importPose, this.addPose, this.removePose);
 
         this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
@@ -90,48 +95,70 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void addPose()
     {
-        String key = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
-
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.new_pose"), (text) -> this.addPose(text)).setValue(key));
+        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.new_pose"), (text) -> this.addPose(text)).setValue(pose));
     }
 
     private void addPose(String text)
     {
-        ModelPose pose = this.panel.pose.clone();
+        if (!this.panel.model.poses.containsKey(text))
+        {
+            ModelPose pose = this.panel.pose.clone();
 
-        this.panel.model.poses.put(text, pose);
-        this.posesList.add(text);
-        this.posesList.setCurrent(text);
+            this.panel.model.poses.put(text, pose);
+            this.posesList.add(text);
+            this.setCurrent(text);
+            this.panel.setPose(text);
+        }
     }
 
     private void removePose()
     {
-        String pose = GuiModelEditorPanel.getKey(this.panel.pose, this.panel.model.poses);
-
-        if (Model.REQUIRED_POSES.contains(pose))
+        if (Model.REQUIRED_POSES.contains(this.pose))
         {
             this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.poses.standard")));
         }
         else
         {
-            this.panel.model.poses.remove(pose);
+            this.panel.model.poses.remove(this.pose);
 
             String newPose = this.panel.model.poses.keySet().iterator().next();
 
+            this.posesList.remove(this.pose);
             this.setPose(newPose);
-            this.posesList.remove(pose);
             this.posesList.setCurrent(newPose);
         }
     }
 
+    private void importPose()
+    {
+        GuiPromptModal modal = new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.import_pose"), (text) -> this.importPose(text));
+
+        modal.text.field.setMaxStringLength(10000);
+        this.modal.setDelegate(modal);
+    }
+
+    private void importPose(String nbt)
+    {
+        try
+        {
+            this.panel.pose.fromNBT(JsonToNBT.getTagFromJson(nbt));
+            this.panel.model.fillInMissing();
+            this.setLimb(this.panel.limb.name);
+        }
+        catch (Exception e)
+        {}
+    }
+
     public void setPose(String str)
     {
+        this.pose = str;
         this.panel.setPose(str);
         this.fillPoseData();
     }
 
     public void setCurrent(String pose)
     {
+        this.pose = pose;
         this.posesList.setCurrent(pose);
         this.fillPoseData();
     }

@@ -11,6 +11,7 @@ import mchorse.metamorph.client.gui.utils.GuiDropDownField.IDropDownListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -18,6 +19,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
 {
     public GuiTextField model;
     public GuiTextField texture;
+    public GuiTextField customPose;
     public GuiDropDownField poses;
     public GuiCheckBox poseOnSneak;
 
@@ -31,6 +33,8 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
         this.texture.setMaxStringLength(500);
         this.poses = new GuiDropDownField(this.font, this);
         this.poseOnSneak = new GuiCheckBox(0, 0, 0, I18n.format("blockbuster.gui.builder.pose_sneak"), false);
+        this.customPose = new GuiTextField(0, font, 0, 0, 0, 0);
+        this.customPose.setMaxStringLength(10000);
     }
 
     @Override
@@ -45,6 +49,15 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
             this.texture.setText(actor.skin != null ? actor.skin.toString() : "");
             this.texture.setCursorPositionZero();
             this.poseOnSneak.setIsChecked(actor.currentPoseOnSneak);
+
+            if (actor.customPose != null)
+            {
+                NBTTagCompound tag = new NBTTagCompound();
+
+                actor.customPose.toNBT(tag);
+                this.customPose.setText(tag.toString());
+                this.customPose.setCursorPositionZero();
+            }
 
             for (String pose : actor.model.poses.keySet())
             {
@@ -71,12 +84,15 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
     {
         super.update(x, y, w, h);
 
-        this.model.x = this.texture.x = x + 61;
+        this.model.x = this.texture.x = this.customPose.x = x + 61;
+        this.model.width = this.texture.width = this.customPose.width = w - 62;
+        this.model.height = this.texture.height = this.customPose.height = 18;
+
         this.model.y = y + 31;
         this.texture.y = y + 1 + 61;
-
-        this.model.width = this.texture.width = w - 62;
-        this.model.height = this.texture.height = 18;
+        this.customPose.y = y + 120 + 26;
+        this.customPose.x += 10;
+        this.customPose.width -= 10;
 
         this.poses.x = x + 60;
         this.poses.y = y + 90;
@@ -101,6 +117,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
             NBTTagCompound tag = new NBTTagCompound();
             String texture = this.texture.getText();
             String model = this.model.getText();
+            String customPose = this.customPose.getText();
 
             tag.setString("Name", "blockbuster." + model);
             tag.setBoolean("Sneak", this.poseOnSneak.isChecked());
@@ -120,6 +137,16 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
                 }
 
                 tag.setString("Skin", texture);
+            }
+
+            if (!customPose.isEmpty())
+            {
+                try
+                {
+                    tag.setTag("CustomPose", JsonToNBT.getTagFromJson(customPose));
+                }
+                catch (Exception e)
+                {}
             }
 
             if (this.poses.selected >= 0 && this.poses.selected < this.poses.values.size())
@@ -142,6 +169,7 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
 
         this.model.mouseClicked(mouseX, mouseY, mouseButton);
         this.texture.mouseClicked(mouseX, mouseY, mouseButton);
+        this.customPose.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (this.poseOnSneak.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY))
         {
@@ -160,8 +188,9 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
     {
         this.model.textboxKeyTyped(typedChar, keyCode);
         this.texture.textboxKeyTyped(typedChar, keyCode);
+        this.customPose.textboxKeyTyped(typedChar, keyCode);
 
-        if (this.model.isFocused() || this.texture.isFocused())
+        if (this.model.isFocused() || this.texture.isFocused() || this.customPose.isFocused())
         {
             this.updateMorph();
             this.updatePoses();
@@ -201,11 +230,13 @@ public class GuiCustomModelMorphBuilder extends GuiAbstractMorphBuilder implemen
         this.model.drawTextBox();
         this.texture.drawTextBox();
         this.poseOnSneak.drawButton(mc, mouseX, mouseY, partialTicks);
+        this.customPose.drawTextBox();
 
         this.poses.draw(mouseX, mouseY, mc.currentScreen.width, mc.currentScreen.height, partialTicks);
 
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.model"), this.x, this.y + 37, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.skin"), this.x, this.y + 67, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.x, this.y + 97, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.custom_pose"), this.x, this.y + 152, 0xffffff);
     }
 }
