@@ -266,7 +266,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         if (this.director != null && this.pos != null)
         {
             Dispatcher.sendToServer(new PacketDirectorCast(this.pos, this.director));
-            TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
+            TileEntity te = this.mc.world.getTileEntity(this.pos);
 
             if (te instanceof TileEntityDirector)
             {
