@@ -72,6 +72,7 @@ blockbuster.gui.me:
     poses:
         title: Poses
         new_pose: "Type in a name for a new pose:"
+        import_pose: "Type here NBT data of a pose to import it into current pose:"
         standard: "You cannot remove one of the standard poses..."
         hitbox: Hitbox
     

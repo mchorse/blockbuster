@@ -198,6 +198,7 @@ blockbuster.gui:
         model: Model
         skin: Skin
         pose: Pose
+        custom_pose: Custom pose
     
     aperture:
         config:
