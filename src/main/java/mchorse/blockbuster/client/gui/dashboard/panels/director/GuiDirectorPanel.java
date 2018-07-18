@@ -20,6 +20,7 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
@@ -35,6 +36,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -239,6 +241,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public void appear()
     {
         this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
+
+        if (this.director != null)
+        {
+            this.setDirector(this.director, this.pos);
+        }
     }
 
     @Override
@@ -259,6 +266,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         if (this.director != null && this.pos != null)
         {
             Dispatcher.sendToServer(new PacketDirectorCast(this.pos, this.director));
+            TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
+
+            if (te instanceof TileEntityDirector)
+            {
+                ((TileEntityDirector) te).director.copy(this.director);
+            }
         }
     }
 

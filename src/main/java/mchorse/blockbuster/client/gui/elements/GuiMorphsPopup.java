@@ -424,6 +424,7 @@ public class GuiMorphsPopup extends GuiScreen
         this.poses = new GuiButton(2, this.area.x + this.area.w - 23 - 65, this.area.y + 3, 60, 20, I18n.format("blockbuster.gui.morphs.pose"));
         this.poses.enabled = this.lastMorph instanceof CustomMorph;
 
+        this.buttonList.clear();
         this.buttonList.add(this.close);
         this.buttonList.add(this.poses);
 
