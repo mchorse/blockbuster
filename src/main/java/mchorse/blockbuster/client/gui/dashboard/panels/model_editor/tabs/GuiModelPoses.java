@@ -102,6 +102,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.panel.model.poses.put(text, pose);
         this.posesList.add(text);
         this.posesList.setCurrent(text);
+        this.panel.setPose(text);
     }
 
     private void removePose()

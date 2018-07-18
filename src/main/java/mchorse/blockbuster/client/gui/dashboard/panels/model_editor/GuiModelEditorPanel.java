@@ -205,10 +205,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
                     if (entry.mtlFile != null) FileUtils.copyFile(entry.mtlFile, new File(folder, "model.mtl"));
 
                     File skins = new File(entry.customModel.getParentFile(), "skins");
+                    File dest = new File(folder, "skins");
 
-                    if (skins.exists())
+                    if (skins.exists() && !skins.equals(dest))
                     {
-                        FileUtils.copyDirectory(skins, new File(folder, "skins"));
+                        FileUtils.copyDirectory(skins, dest);
                     }
                 }
                 catch (Exception e)

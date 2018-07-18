@@ -250,6 +250,7 @@ public class GuiMorphsPopup extends GuiScreen
 
                 this.list.clear();
                 this.list.add(this.pose.limbs.keySet());
+                this.list.sort();
                 this.list.setCurrent(entry.getKey());
             }
         }
