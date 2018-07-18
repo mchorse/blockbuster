@@ -1,0 +1,30 @@
+blockbuster.config.comments:
+    general:
+        disable_teleport_playback_button: Выключена ли возможность телепорта к блоку режиссёра кода вы крадётесь и испольуете кнопку воспроизведения?
+        extra_wubs: А эта штука вообще ничего не делает. А может быть... Тыц?
+        auto_refresh_models: Обновить модели и скины при входе в меню Блокбастера и Метаморфа?
+        debug_playback_ticks: Записывать тики в логи пока блок режиссёра делает запись
+        green_screen_sky: Делает небо полностью зеленым для хрома кеинга
+
+    model_block:
+        model_block_disable_culling_workaround: Должны ли быть выключены обходные методы отображения блоков-моделей
+
+    recording:
+        recording_countdown: Отсчет до записи (в секундах)
+        recording_delay: Задержка кадров в записи
+        record_unload_time: Сколько времени занимает выгрузка записи (в тиках)
+        record_unload: Включить автоматическую выгрузку записей?
+        record_sync_rate: Насколько часто запись синхронизируется с сервером?
+        record_attack_on_swipe: Записывается ли атака вместе с действием взмаха?
+        record_commands: Записываются ли команды?
+
+    actor:
+        actor_fall_damage: Получают ли актеры урон от падения?
+        actor_tracking_range: Насколько далеко отслеживаются актеры? Необходим перезапуск игры.
+        actor_rendering_range: Насколько далеко видны актеры?
+        actor_always_render_names: Включить отображение имен актеров
+        actor_swish_swipe: Издают ли актеры вжух когда появляются?
+
+    damage_control:
+        damage_control: Включен ли контроль урона
+        damage_control_distance: Радиус эффекта контроля урона

@@ -1,0 +1,32 @@
+# Item tooltips
+blockbuster:
+    info:
+        playback_button: Включает блок режиссёра
+        playback_director: Прикреплено к ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_profile: Воспроизводит профиль "{f}{o}%s{r}{7}"
+        playback_play: Воспроизводит камеру
+
+        actor_config: Использовать на актёре
+        register: Соединяет актёров и блоки режиссёра
+        director_block: Управляет актерами и записями
+        model_block: Позволяет использовать морфы как статичные модели
+        green_block: Можно использовать как зелёный экран
+
+# Creative tabs
+itemGroup.blockbuster: Блокбастер
+
+# Block name
+tile.blockbuster:
+    director.name: Блок режиссёра
+    model.name: Блок-модель
+    green.name: Зелёный блок
+
+# Item names
+item:
+    blockbuster:
+        playback.name: Кнопка воспроизведения
+        register.name: Регистрирующее устройство
+        actor_config.name: Устройство конфигурации актёра
+
+# Entity names
+entity.blockbuster.Actor.name: Актёр

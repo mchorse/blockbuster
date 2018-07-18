@@ -1,0 +1,209 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: Готово
+    next: Следующий
+    previous: Предыдущий
+    restore: Сбросить по умолчанию
+    reset: Сбросить
+    add: Добавить
+    edit: Редактировать
+    remove: Убрать
+    record: Записать
+    pick: Выбрать морф
+    duplicate: Дублировать
+    search: Исказть
+    cancel: Отменить
+    break: Сломать
+    select: Выбрать
+    ok: Oк
+    
+    # Morphs popup strings
+    morphs:
+        acquire: "Превратиться"
+        pose: Создать позу
+        sneak: Применить на красться
+        reset: Сбросить позу
+    
+    confirm:
+        title: Подтвердить Уничтожение Блока Режиссёра
+        description: Блок режиссёра в ({7}%s{f}, {7}%s{f}, {7}%s{f}) содержит {7}%s{f} записей. Вы уверены, что хотите уничтожить этот блок? Записи в нём будут {c}удалены{r} {l}навсегда{r}.
+    
+    dashboard: 
+        main: Панель управления
+        director: Блок режиссёра
+        model: Блок-модель
+        model_editor: Редактор моделей
+        player_recording: Редактор записей игрока
+    
+    # Main page of dashboard
+    main:
+        resources: Ресурсы
+        wiki: Вики
+        discord: Дискорд
+        
+        options: Настройки
+    
+    # Director block GUI strings
+    director:
+        title: Блоки режиссёра
+        config: Настройка блока режиссёра
+        not_selected: Выбрать блок режиссёра...
+        no_replays: Создать запись...
+    
+        display_title: Имя
+        start_command: Команда на старте
+        stop_command: Команда в конце
+        loops: Закольцевать
+        disable_states: Отключить статистику
+        hide: Спрятать во время воспроизведения
+        
+        id: ID Записи
+        name: Имя
+        invincible: Неуязвимый
+        invisible: Невидимый
+        enabled: Включено
+        fake_player: Поддельный игрок
+        health: Здоровье
+        edit_record: Редактировать запись
+    
+    # Actor configuration GUI strings
+    actor:
+        title: Конфигурация актёра
+        
+        default: По умолчанию
+        name: Имя
+        filename: ID Записи
+        invincible: Может быть убит?
+        invisible: Виден?
+        attached: Прикреплен к актёру
+        yaw: Рыскание
+        pitch: Тангаж
+    
+    # Model block GUI strings
+    model_block:
+        title: Блоки-модели
+        not_selected: Выбрать блок-модель...
+        
+        x: X
+        "y": "Y"
+        z: Z
+        yaw: Рыскание
+        pitch: Тангаж
+        body: Рыскание тела
+        one: Один
+        one_tooltip: Один слайдер масштаба
+        shadow: Тень
+        
+        entity: Существо
+        translate: Переместить
+        rotate: Вращать
+        scale: Масштабировать
+    
+    # Player recording editor GUI strings
+    record_editor:
+        title: Записи
+        not_selected: Выберите запись игрока...
+        action: Действие
+        
+        drop: Выбросить блок
+        damage: Урон
+        progress: Прогресс
+        mounting: Верхом
+        meta: Метаданные
+        arrow_charge: Выпустить стрелу
+        no_fields: У этого действия отсутствуют редактируемые поля...
+        
+        actions:
+            chat: 
+                title: Чат
+                desc: Это действие выводит в чат сообщение
+            swipe: 
+                title: Взмахнуть
+                desc: Это действие заставит актера выполнить анимацию взмаха
+            drop:
+                title: Выбросить предмет
+                desc: Выбрасывает предмет (как при нажатии на клавишу Q)
+            equip:
+                title: Экипировать предмет
+                desc: Экипирует предмет в одну из рук или слот брони
+                
+                none: Отсутствует
+                main_hand: Главная рука
+                feet: Стопы
+                legs: Поножи
+                chest: Нагрудник
+                head: Голова
+                off_hand: Левая рука
+            shoot_arrow:
+                title: Выпустить стрелу
+                desc: Выпускает стрелу с заданной силой
+            place_block:
+                title: Поставить блок
+                desc: Ставит выбранный блок на заданную позицию
+            mounting:
+                title: Верхом
+                desc: Садит или снимает актёра с существа напротив
+            interact_block:
+                title: Взаимодействовать с блоком
+                desc: Заставляет актера взаимодейстовавать с блоком
+            break_block:
+                title: Сломать блок
+                desc: Ломает блок в выбранной позиции
+            morph:
+                title: Морф
+                desc: Превращает актёра в выбранный морф
+            attack:
+                title: Атаковать
+                desc: Наносит урон сущности перед актёром (не ставьте мирной сложности, если хотите использовать с игроками) 
+            damage:
+                title: Урон
+                desc: Наносит актёру урон
+            morph_action:
+                title: Действие морфа
+                desc: Использует действие морфа (запуск фаербола и т.д.), если актёр имеет соответствующий морф
+            command:
+                title: Команда
+                desc: Выполняет команду посредством актёра 
+            break_animation:
+                title: Анимация разрушения блока
+                desc: Выполняет анимацию разрушения блока (трещины) на выбранном блоке в заданной позиции
+            use_item:
+                title: Использовать предмет
+                desc: Использует текущий предмет в руке
+            use_item_block:
+                title: Использовать предмет на блоке
+                desc: Использует текущий выбранный предмет в заданной руке на блоке, сторону которого видит игрок
+                
+                down: Низ
+                up: Верх
+                north: Север
+                south: Юг
+                west: Запад
+                east: Восток
+    
+    # Playback GUI
+    playback:
+        title: Конфигурация воспроизведения
+        camera_mode: Режим камеры
+        profile: Имя профиля
+
+        nothing: Ничего не делать
+        play: Только воспроизвести
+        load_profile: Загрузить и воспроизвести
+    
+    builder:
+        pose_sneak: Поза применится, когда вы будете красться
+        model: Модель
+        skin: Скин
+        pose: Поза
+        custom_pose: Пользовательская поза
+    
+    aperture:
+        config:
+            title: Режиссёр
+            
+            reload: Перезагрузить актеров
+            actions: Предпросмотр действий
+            reload_scene: Перезагрузить сцену
