@@ -72,6 +72,7 @@ blockbuster.gui.me:
     poses:
         title: 姿勢
         new_pose: "為新的姿勢輸入名字："
+        import_pose: "在這鍵入一個姿勢的 NBT 數據來導入它到現在的姿勢："
         standard: "你無法移除默認姿勢…"
         hitbox: 碰撞箱
     
