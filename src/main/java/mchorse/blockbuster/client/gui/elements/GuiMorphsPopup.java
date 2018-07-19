@@ -219,7 +219,7 @@ public class GuiMorphsPopup extends GuiScreen
         {
             this.hide(true);
         }
-        else if (button.id == 2)
+        else if (button.id == 2 && this.lastMorph instanceof CustomMorph)
         {
             this.morphs.setHidden(!this.morphs.getHidden());
             this.elements.setVisible(this.morphs.getHidden());
