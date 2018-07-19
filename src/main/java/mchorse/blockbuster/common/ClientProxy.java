@@ -32,6 +32,9 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -185,6 +188,16 @@ public class ClientProxy extends CommonProxy
         {
             CameraHandler.register();
         }
+
+        /* Attach resource listener so it would null the dashboard */
+        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(new IResourceManagerReloadListener()
+        {
+            @Override
+            public void onResourceManagerReload(IResourceManager resourceManager)
+            {
+                dashboard = null;
+            }
+        });
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());

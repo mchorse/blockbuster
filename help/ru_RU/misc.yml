@@ -1,0 +1,19 @@
+# Recording
+blockbuster:
+    # Parsing
+    parsing:
+        lacks_pose: У обработанной модели "%s" отсутствует поза "%s"!
+        lacks_limbs: У обработанной модели "%s" отсутсвуют конечности!
+    
+    marker: "{6}{l}|{r} Записать {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}с разницей в {7}%s{6}t{8}){r}."
+    recording: Записать в {7}%s{r}
+    "yes": "Да"
+    "no": "Нет"
+    eggs:
+        yike: "{l}Ладно{r}, {o}ладно{r}, это была шутка от {7}McHorse{r}'а! Логинюсь обратно в {6}YikeFilms{r}."
+    morph_error: Модели отсутсвуют
+
+# Metamorph category
+morph.category.blockbuster: Модели блокбастера
+metamorph.builder.blockbuster: Конструктор пользовательских моделей
+# This is Russian BB's localization, made by Andruxioid, Cyka Blyat!

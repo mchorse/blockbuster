@@ -8,7 +8,7 @@
         "url": "https://minecraft.curseforge.com/projects/blockbuster",
         "updateJSON": "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json",
         "authorList": ["mchorse"],
-        "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345, The Minebox, Andruxioid, AzureZhen for feature suggesting and testing! Also TheImaginationCrafter for suggesting OBJ feature, and also all members of McHorse's Pub Discord server! Also big thanks to ycwei982 for testing, adding few features and localization!",
+        "credits": "Minecraft Forge, Minecraft Forge forum, Ernio, NlL5, EchebKeso and his Mocap mod, Badr, Tom Soel, Vasily12345, The Minebox, AzureZhen for feature suggesting and testing! Also TheImaginationCrafter for suggesting OBJ feature, and also all members of McHorse's Pub Discord server! Also big thanks to ycwei982 for testing, adding few features and localization, and Andruxioid for testing and localization!",
         "requiredMods": ["metamorph"],
         "dependencies": ["metamorph"]
     }
