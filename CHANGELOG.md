@@ -13,9 +13,12 @@ Blockbuster `1.5` is a massive update which improves almost every aspect of the 
 * Added green block which helps setting up a green screen
 * Added green sky option which allows making the sky fully green (works nicely with green screen block)
 * Added custom morph preservation, if the model wasn't found, it will still create a morph but without a model
+* Added Russian localization (thanks to Andruxioid)
 * Fixed another dedicated server crashes (reported by AzureZhen)
 * Fixed dedicated server not persisting morph information (due not loaded custom morphs)
 * Removed support for playing back and registering actors spawned from a spawn egg (obsolete feature)
+* Removed Globgabgalab
+* Updated Chinese localization (thanks to ycwei982)
 
 #### GUIs (user interfaces)
 
@@ -49,7 +52,9 @@ Blockbuster `1.5` is a massive update which improves almost every aspect of the 
 * Added `scaleGui` model property which allows to set scale of the model within GUI
 * Added `skins` model property which allows the model to specify an additional model from which it can reference its skins, along its own skins (suggested by Andruxioid)
 * Added a feature to blacklist a model by simply adding `__` to model's folder name
+* Added more poses to default models
 * Improved auto-load OBJ feature which allows generating limbs out of objects found within OBJ file
+* Improved default models `steve`, `alex` and `fred` by adding an anchor limb which allows posing much easier
 * Optimized model reloading code which reloads models only if model files has changed
 
 #### Commands 
@@ -460,7 +465,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-  	* Idle fixture – static camera shot 
+    * Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -471,10 +476,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-	* Removing last fixture
-	* Adding idle, look or follow fixture to current camera profile
-	* Toggle camera profile rendering
-	* Start or stop camera profile
+    * Removing last fixture
+    * Adding idle, look or follow fixture to current camera profile
+    * Toggle camera profile rendering
+    * Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command
