@@ -1,0 +1,9 @@
+# Keys localization
+key:
+    blockbuster:
+        # Categories
+        category: Блокбастер
+        
+        dashboard: Панель управления
+        model_editor: Редактор Моделей
+        marker: Маркер тиков

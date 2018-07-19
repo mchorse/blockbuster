@@ -1,0 +1,41 @@
+# Config strings
+blockbuster.config:
+    general:
+        title: Общие
+        
+        disable_teleport_playback_button: Отключить телепорт к блоку режиссёра кнопкой воспроизведения
+        extra_wubs: Экстра тыцы
+        auto_refresh_models: Автоматическое обновление скинов и моделей
+        debug_playback_ticks: Тики отладки
+        green_screen_sky: Зелёное небо
+    
+    model_block:
+        title: Блоки-модели
+        
+        model_block_disable_culling_workaround: Выключить методы обхода
+    
+    recording:
+        title: Записи
+
+        recording_countdown: Отсчет до начала записи
+        recording_delay: Пропуск кадров записей
+        record_unload_time: Автоматическое время выгрузки записей
+        record_unload: Автоматическая выгрузка записей
+        record_sync_rate: Показатель синхронизации тиков
+        record_attack_on_swipe: Атака взмахом
+        record_commands: Запись команд
+    
+    actor:
+        title: Актёры
+        
+        actor_fall_damage: Урон от падения для актёров
+        actor_tracking_range: Диапазон отслеживания актёров
+        actor_rendering_range: Диапазон отображения актеров
+        actor_always_render_names: Всегда отображать имена актеров
+        actor_swish_swipe: Вжух взмаха
+
+    damage_control:
+        title: Контроль урона
+        
+        damage_control: Контроль урона
+        damage_control_distance: Дистанция контроля урона
