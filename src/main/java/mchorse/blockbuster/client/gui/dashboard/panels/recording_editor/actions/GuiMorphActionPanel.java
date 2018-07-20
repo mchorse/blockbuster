@@ -39,6 +39,15 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     }
 
     @Override
+    public void appear()
+    {
+        if (this.action != null)
+        {
+            this.fill(action);
+        }
+    }
+
+    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         MorphCell cell = this.dashboard.morphs.getSelected();
