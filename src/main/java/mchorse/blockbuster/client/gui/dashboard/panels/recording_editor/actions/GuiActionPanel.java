@@ -35,6 +35,9 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
         }
     }
 
+    public void appear()
+    {}
+
     public void setKey(String key)
     {
         this.title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
