@@ -250,6 +250,15 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     }
 
     @Override
+    public void appear()
+    {
+        if (this.editor.delegate != null)
+        {
+            this.editor.delegate.appear();
+        }
+    }
+
+    @Override
     public void close()
     {
         this.save();

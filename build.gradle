@@ -56,14 +56,24 @@ eclipse
         file
         {
             whenMerged
-            {
+            { classpath -> 
                 def ver = project.minecraft.version
+                /* Fucking gradle 2.14 doesn't have fileReference() method,
+                 * screw you piece of shit */
+                def getMeReference = { File file ->
+                	return [
+                		getFile: { return file },
+                		getPath: { return file.getAbsolutePath() },
+                		getJarURL: { return file.getAbsolutePath() },
+                		isRelativeToPathVariable: { return false }
+                	] as org.gradle.plugins.ide.eclipse.model.FileReference
+                }
                 
                 def lib = entries.find { it.path.contains "metamorph-${metamorph}" }
-                lib.sourcePath = fileReference(file("run/libs/metamorph-${metamorph}-${ver}-sources.jar"))
+                lib.sourcePath = getMeReference(file("run/libs/metamorph-${metamorph}-${ver}-sources.jar"))
                 
                 lib = entries.find { it.path.contains "aperture-${aperture}" } 
-                lib.sourcePath = fileReference(file("run/libs/aperture-${aperture}-${ver}-sources.jar"))
+                lib.sourcePath = getMeReference(file("run/libs/aperture-${aperture}-${ver}-sources.jar"))
             }
         }
     }
