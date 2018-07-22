@@ -2,7 +2,7 @@ blockbuster.gui.me:
     pick: Выбрать
     none: "(отсутствует)"
     
-    hitbox: Каркас
+    hitbox: Хитбокс
     looking: Смотрит
     
     limbs:
@@ -16,7 +16,7 @@ blockbuster.gui.me:
         
         color: Цвет
         opacity: Прозрачность
-        mirror: Отразить
+        mirror: Отражен
         lighting: Светится
         shading: Затенён
         hold: Предмет в руке
@@ -82,5 +82,5 @@ blockbuster.gui.me:
         options: Настройки моделей
         limbs: Конечности
         swipe: Взмах
-        swing: Включить качку
+        swing: Включить бег
         items: Включить вещи
