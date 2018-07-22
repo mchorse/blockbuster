@@ -92,8 +92,8 @@ blockbuster.gui:
         yaw: Рыскание
         pitch: Тангаж
         body: Рыскание тела
-        one: Один
-        one_tooltip: Один слайдер масштаба
+        one: Единый
+        one_tooltip: Единый слайдер масштаба
         shadow: Тень
         
         entity: Существо
