@@ -11,6 +11,11 @@ Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projec
 
 Recording and playback is based on, and rewritten from scratch, Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
+## FAQ
+
+**Q: Model block is invisible when I hold it in the hand. How to fix it? (1.12.2)**  
+A: Looks like you're using Optifine D1 or below. Update Optifine to D2 or higher.
+
 ## Features
 
 Blockbuster mod provides you with lots of features to make cool machinimas/roleplay series:
