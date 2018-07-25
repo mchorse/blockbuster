@@ -3,79 +3,79 @@
 [Страница на Planet Minecraft](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Тред на Minecraft Forum](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [Страница на CurseForge](https://minecraft.curseforge.com/projects/blockbuster) – [Исходный код](https://github.com/mchorse/blockbuster) – [Ссылка на Ad.fly для поддержки](http://adf.ly/15268913/blockbuster-curseforge) – [Вики](https://github.com/mchorse/blockbuster/wiki)  
 [EchebKeso](https://twitter.com/EchebKeso) – [Mocap мод](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Исходный код MoCap'a](https://github.com/EchebKeso/Mocap)
 
-Blockbuster is a Minecraft mod which lets you create Minecraft machinimas/roleplays series in singleplayer using NPC body actors. Besides providing basic recording and playback, it also features a lot of miscellaneous features which can help you add some originality to your video, extending your possibilities beyond plain body acting (see **Features** section). 
+Блокбастер это мод для Minecraft, который позволяет вам записывать Minecraft машинимы/сериалы в одиночной игре, используя дублёров-NPC в одиночной игре. Кроме возможности записи и воспроизведения, также существует ряд других полезных функций, которые могут помочь вам в создании вашего видео, увеличивая границы ваших возможностей (смотреть раздел **Возможности** section). 
 
-This mod works with Forge for Minecraft 1.10.2, 1.11.2 and 1.12.2 (requires Forge **14.23.4.2638** or higher).
+Этот мод работает на Forge для Minecraft версии 1.10.2, 1.11.2 and 1.12.2 (необходим Forge **14.23.4.2638** или выше).
 
-Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Every new change log will specify the version of Metamorph supported. Blockbuster also provides **optional** integration for [Aperture](https://minecraft.curseforge.com/projects/aperture) mod.
+Блокбастер работает на основе [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Каждый новый журнал изменений будет уточнать поддерживаемую версию Метаморфа. Также, Блокбастер поддерживает мод [Aperture](https://minecraft.curseforge.com/projects/aperture).
 
-Recording and playback is based on, and rewritten from scratch, Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
+Запись и воспроизведение написаны с нуля на основе Mocap за авторством [EchebKeso](https://twitter.com/EchebKeso).
 
-## Features
+## Возможности
 
-Blockbuster mod provides you with lots of features to make cool machinimas/roleplay series:
+Блокбастер предоставляет ряд возможностей для производства крутых машиним/сериалов:
 
-* **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) for more information about limitations.
-* **Director blocks** – one actor is good, a crowd of them is even better. Blockbuster mod provides you with a mechanism called *director block* which manages playback of registered actors. It allows you to record actors. It also has outlets for redstone contraptions, making it easy attaching some custom commands or redstone logic on start or the end of the scene playback.
-* **Model block** – besides actors, Blockbuster also adds a *model block*, allowing you placing down custom models or mobs as static props, which allows creating magnificient and immersive scenes. Besides placing them down, you can also hold those models or mobs in your hand (this feature available only in 1.12.2 build of the mod).
-* **[Aperture](https://minecraft.curseforge.com/projects/aperture) support** – camera is how you present your machinima. Blockbuster mod has built-in Aperture integration. When Aperture is loaded, Blockbuster mod provides you with some features such as: ability to attach camera profiles to playback button, and previewing director block playback while editing cameras in the camera editor.
-* **Custom models** – recording only player-like entities limits the originality of your machinimas. Blockbuster mod let's you create custom models using in-game model editor. Unleash your creativity with custom models!
-* **OBJ models** – beside custom models which can be created with in-game custom model editor, Blockbuster also supports OBJ models on top of custom JSON models!
-* **Mobs support** – thanks to [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s public API, Blockbuster is capable of using any morphs which Metamorph provides to be used by Blockbuster actors.
-* **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
-* **Green screen features** – Blockbuster adds glowing green blocks without any shading and an option to turn the sky fully green which makes it easier creating green screens for post processing of your machinimas. 
+* **Актёры и записи игрока** – самая важная возможность, ибо без неё у вас бы не было возможности создавать машинимы. С Блокбастером вы можете записать себя, делающего разные штуки, а потом воспроизвести это с помощью актёра. *У кода записи есть ограничения, касающиеся того, какие именно действия он может записывать*. Смотрите [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) для более детальной ифнормации об ограничениях.
+* **Блок режиссёра** – один актёр это хорошо, а несколько - ещё лучше. У Блокбастера есть механика под названием *блок режиссёра*, которая позволяет управлять записями зарегистрированных актёров. Позволяет вам записывать актёров. Также может излучать редстоуновский сигнал, делая проще добавление пользовательских команд или редстоуновских механизмов в начало или конец сцены воспроизведения.
+* **Блок-модель** – кроме актёров, Блокбастер добавляет также и *блок-модель*, который позволяет вам ставить пользовательские модели как статичный реквизит, что даёт вам возможность создавать невероятные и впечатляющие сцены. Кроме возможности их поставить, вы можете также держать этих мобов или модели в руках (эта опция доступна только на версии 1.12.2).
+* **Поддержка [Aperture](https://minecraft.curseforge.com/projects/aperture)** – теперь камера это то, с помощью чего вы представляете свою машиниму. У Блокбастера есть встроенная интеграция с Aperture. Когда Aperture установлен, Блокбастер позволяет вам: способность прикреплять профили камер к кнопкам воспроизведения и делать предпросмотр воспроизведения из блока режиссёра во время настройки самой камеры.
+* **Пользовательские модели** – запись только существ, подобных игроку, очень сильно ограничивает ваши машинимы. Блокбастер позволяет вам создавать пользовательские модели, используя встроенный редактор моделей. Высвободите всю свою креативность вместе с пользовательскими моделями!
+* **OBJ модели** – кроме пользовательских моделей, которые могут быть созданы во встроенном редакторе моделей, Блокбастер также поддерживает OBJ модели вместе с пользовательскими моделями JSON!
+* **Поддержка мобов** – благодаря возможностям [Metamorph](https://minecraft.curseforge.com/projects/metamorph), Блокбастер способен использовать любые морфы, которые может предоставить Metamorph для использования в качестве актёров.
+* **Совместимость с [Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder)** – благодаря камерам и записям игрока, основывающихся на кадрах, вы можете конверитровать ваши внутриигровые машинимы в видео нажатием одной кнопки.
+* **Возможность использования зелёного экрана** – Блокбастер добавляет светящийся зелёный блок без какого-либо затенения и опцию включения полностью зелёного неба для облегчения процесса пост-обработки ваших машиним. 
 
-## Install
+## Установка
 
-Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available minecraft version. Also install following mods: [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
+Установите [Minecraft Forge](http://files.minecraftforge.net/), загрузите новейшую стабильною версию для вашего Minecraft. Также установите этот мод: [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Переместите их в папку `mods` и запустите игру.
 
-After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong. 
+После этого, Блокбастер установится и появится в меню модов в Minecraft. Если Блокбастер не появился в меню модов, значит что-то пошло не так. 
 
-## Videos
+## Видео
 
-### Tutorial videos
+### Обучающие видео
 
-Feature videos for 1.4. This playlist shows how to use the mod features. Almost every update comes with a change log video which show out new features.
+Существуют обучающие видео для версии 1.4. Этот плейлист показывает как использовать возможности мода. Практически каждое обновление сопровождается видео-журналом изменений, который демонстрирует новые функции.
 
 <a href="https://youtu.be/r3BpwMBDxwk?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/r3BpwMBDxwk/0.jpg"></a> 
 
-There's also a video that shows how to create a simple machinima using Blockbuster mod. This video shows basics of director block, how to attach actors to director block, and how to setup cameras:
+Также есть видео, показывающие как делать простенькие машинимы, используя Блокбастер. Эти видео показывают основы управления блока режиссёра, как прикреплять актёров к блоку режиссёра и как настраивать камеры:
 
 <a href="https://youtu.be/cVTIzKzWtqg?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/cVTIzKzWtqg/0.jpg"></a> 
 
-### Machinima Examples
+### Примеры Машиним
 
-This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Earlier of those videos are my lab experiments.
+Это плейлист видео и машиним которые я сделал для теста возможностей Блокбастера, да и просто так. Раньше эти видео были моими экспериментами.
 
 <a href="https://youtu.be/3uMywkj1_Gs?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/3uMywkj1_Gs/0.jpg"></a> 
 
-## For mod reviewers and reposters
+## Для обзорщиков и репостеров
 
-When reposting my mod on your own website or reviewing it, please consider following (if you want to support me and my mod):
+Когда вы репостите этот мод к себе на сайт или обозреваете его, то пожалуйста, (если вы хотите поддержать меня и мой мод) прочтите следующее:
 
-* Don't distort the mod name. It's the *Blockbuster* mod.
-* Make sure that information and description of my mod is legit. Misleading information, like Minecraft version support or non-existent features, is your responsibility.
-* By uploading a custom build of this mod, the build becomes your responsibility.
-* Provide the source link, please. [CurseForge](https://minecraft.curseforge.com/projects/blockbuster) page is preferable.
-* Provide a link to my [YouTube channel](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w), please. This will be really appreciated! 
-* You can use Blockbuster [banner](http://i.imgur.com/nqDKg1R.png) or [cover](http://i.imgur.com/XgU8Tvx.png) for your repost page. Don't apply the watermark, though, that's just rude.
+* Не искажайте название мода. Это *Блокбастер* *(Blockbuster)*.
+* Удостоверьтесь, что корректно составили информацию и описание этого мода. Если вы укажете дизориентирующую информацию, по типу остутствия сведений про поддерживаемые версии Minecraft или информацию про несуществиющие возможности, то ответственность за неё будет лежать только на вас.
+* Загрузив модифицированную версию этого мода, вся ответвественность за неё остаётся на вас.
+* Пожалуйста, указывайте ссылку на [CurseForge](https://minecraft.curseforge.com/projects/blockbuster).
+* Пожалуйста, указывайте ссылку на мой [YouTube канал](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w). Это действительно очень ценно для меня! 
+* Вы можете использовать [баннер](http://i.imgur.com/nqDKg1R.png) или [обложку](http://i.imgur.com/XgU8Tvx.png) Блокбастера для репоста на свой сайт. Только не накладывайте водяных знаков, это очень некруто.
 
-If you're interested in this project, you might as well follow me on any of social media accounts listed below:
+Если вы заинтересованы в этом проекте, то вы также можете подписаться или следить за мной на следующих ресурсах:
 
-[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse)  
+[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w) [![Дискорд](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Твиттер](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse)  
 
-## Bug reports
+## Отчёты об ошибках
 
-If you found a bug, or this mod crashed your game. I'll appreciate if you could report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/blockbuster/issues/), on PM or on [Twitter](https://twitter.com/McHorsy). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks! 
+Если вы нашли баг, или этот мод крашнул вашу игру, то я буду очень признателен, если вы пришлёте отчёт или крашлог ко мне либо на [трекер ошибок](https://github.com/mchorse/blockbuster/issues/), либо отправите мне личное сообщение в [Твиттере](https://twitter.com/McHorsy). Пожалуйста, удостоверьтесь, что прикрепили ссылку на крашлог в [pastebin](http://pastebin.com) с описанием бага или краша и способом его повторить. Спасибо! 
 
-## License
+## Лицензия
 
-Blockbuster mod's code is licensed under MIT license. See [LICENSE.md](./LICENSE.md) file for more information about the license.
+Код Блокбастера находится под лицензией MIT. Смотрите файлы [LICENSE.md](./LICENSE.md) для более детальной информации о лицензии.
 
-## For Devs
+## Для разрабов
 
-Language files are compiled from YML (which are located in `help/` folder) to INI format. 
+Языковые файлы используют формат YML (находятся в папке `help/`) и могут быть изменены в формат INI.
 
-If you're going to work with localization strings, modify the appropriate YML file, first. Then use the `./gradlew buildLangFiles` command to convert YML to INI format `.lang` files directly to `src/main/resources/assets/blockbuster/lang` folder. Don't forget to refresh your IDE after building the langauge files.
+Если вы собираетесь работать с локализацией, сперва модифицируйте YML файлы. Затем, используйте команду `./gradlew buildLangFiles` чтобы конверитровать файлы из YML в INI формат `.lang` файлов, и поместите их в папку `src/main/resources/assets/blockbuster/lang`. Не забудьте перезагрузить ваш IDE после генерации языковых файлов.
 
-Also, you need [Aperture](https://github.com/mchorse/aperture)'s and [Metamorph](https://github.com/mchorse/blockbuster)'s dev builds. Build them and then grab `-sources.jar` and `-dev.jar` to `run/libs/` folder, and refresh the IDE.
+Также вам будут нужны версии для разработчиков [Aperture](https://github.com/mchorse/aperture) и [Metamorph](https://github.com/mchorse/blockbuster). Сгенерируйте их, а затем переместите`-sources.jar` и `-dev.jar` в папку `run/libs/`, и перезагрузите ваш IDE.
