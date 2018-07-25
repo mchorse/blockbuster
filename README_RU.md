@@ -3,11 +3,11 @@
 [Страница на Planet Minecraft](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Тред на Minecraft Forum](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [Страница на CurseForge](https://minecraft.curseforge.com/projects/blockbuster) – [Исходный код](https://github.com/mchorse/blockbuster) – [Ссылка на Ad.fly для поддержки](http://adf.ly/15268913/blockbuster-curseforge) – [Вики](https://github.com/mchorse/blockbuster/wiki)  
 [EchebKeso](https://twitter.com/EchebKeso) – [Mocap мод](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Исходный код MoCap'a](https://github.com/EchebKeso/Mocap)
 
-Блокбастер это мод для Minecraft, который позволяет вам записывать Minecraft машинимы/сериалы в одиночной игре, используя дублёров-NPC в одиночной игре. Кроме возможности записи и воспроизведения, также существует ряд других полезных функций, которые могут помочь вам в создании вашего видео, увеличивая границы ваших возможностей (смотреть раздел **Возможности** section). 
+Блокбастер это мод для Minecraft, который позволяет вам записывать Minecraft машинимы/сериалы в одиночной игре, используя NPC-дублёров. Кроме возможности записи и воспроизведения, также существует ряд других полезных функций, которые могут помочь вам в создании вашего видео, увеличивая границы ваших возможностей (смотреть раздел **Возможности**). 
 
 Этот мод работает на Forge для Minecraft версии 1.10.2, 1.11.2 and 1.12.2 (необходим Forge **14.23.4.2638** или выше).
 
-Блокбастер работает на основе [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Каждый новый журнал изменений будет уточнать поддерживаемую версию Метаморфа. Также, Блокбастер поддерживает мод [Aperture](https://minecraft.curseforge.com/projects/aperture).
+Блокбастер работает на основе [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Каждый новый журнал изменений будет уточнять поддерживаемую версию Метаморфа. Также, Блокбастер поддерживает мод [Aperture](https://minecraft.curseforge.com/projects/aperture).
 
 Запись и воспроизведение написаны с нуля на основе Mocap за авторством [EchebKeso](https://twitter.com/EchebKeso).
 
@@ -58,7 +58,7 @@
 * Загрузив модифицированную версию этого мода, вся ответвественность за неё остаётся на вас.
 * Пожалуйста, указывайте ссылку на [CurseForge](https://minecraft.curseforge.com/projects/blockbuster).
 * Пожалуйста, указывайте ссылку на мой [YouTube канал](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w). Это действительно очень ценно для меня! 
-* Вы можете использовать [баннер](http://i.imgur.com/nqDKg1R.png) или [обложку](http://i.imgur.com/XgU8Tvx.png) Блокбастера для репоста на свой сайт. Только не накладывайте водяных знаков, это очень некруто.
+* Вы можете использовать [баннер](http://i.imgur.com/nqDKg1R.png) или [обложку](http://i.imgur.com/XgU8Tvx.png) Блокбастера для репоста на свой сайт. Только не накладывайте водяных знаков, это очень грубо.
 
 Если вы заинтересованы в этом проекте, то вы также можете подписаться или следить за мной на следующих ресурсах:
 
