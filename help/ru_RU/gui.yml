@@ -13,7 +13,7 @@ blockbuster.gui:
     record: Записать
     pick: Выбрать морф
     duplicate: Дублировать
-    search: Исказть
+    search: Искать
     cancel: Отменить
     break: Сломать
     select: Выбрать
