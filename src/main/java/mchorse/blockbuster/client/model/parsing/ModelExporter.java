@@ -8,12 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.PositionTextureVertex;
@@ -76,7 +77,21 @@ public class ModelExporter
 
         /* Save sneaking pose */
         this.setSneaking(this.entity);
-        this.render.doRender(this.entity, 0, -420, 0, 0, 0);
+
+        if (this.render.getMainModel() instanceof ModelBiped)
+        {
+            ModelBiped biped = ((ModelBiped) this.render.getMainModel());
+            boolean old = biped.isSneak;
+
+            biped.isSneak = true;
+            this.render.doRender(this.entity, 0, -420, 0, 0, 0);
+            biped.isSneak = old;
+        }
+        else
+        {
+            this.render.doRender(this.entity, 0, -420, 0, 0, 0);
+        }
+
         this.savePose("sneaking", data, limbs);
 
         this.setDefaultTexture(data);
@@ -174,7 +189,9 @@ public class ModelExporter
             }
             else
             {
+                x *= -1;
                 y *= -1;
+                z *= -1;
             }
 
             transform.rotate = new float[] {rx, ry, rz};
