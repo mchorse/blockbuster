@@ -39,7 +39,7 @@ public class ModelCustomRenderer extends ModelRenderer
 
     /* Compied code from the ModelRenderer */
     protected boolean compiled;
-    protected int displayList;
+    protected int displayList = -1;
 
     public ModelCustomRenderer(ModelBase model, int texOffX, int texOffY)
     {
@@ -354,6 +354,17 @@ public class ModelCustomRenderer extends ModelRenderer
         else
         {
             GL11.glCallList(this.displayList);
+        }
+    }
+
+    /**
+     * DELET DIS 
+     */
+    public void delete()
+    {
+        if (this.displayList != -1)
+        {
+            GL11.glDeleteLists(this.displayList, 1);
         }
     }
 }

@@ -166,7 +166,6 @@ public class ModelHandler
     public void removeModel(String key)
     {
         this.models.remove(key);
-        System.out.println("Removing '" + key + "' custom model!");
     }
 
     /**
