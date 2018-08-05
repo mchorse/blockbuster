@@ -276,4 +276,15 @@ public class ModelCustom extends ModelBiped
 
         return null;
     }
+
+    /**
+     * Clean up resources used by this model 
+     */
+    public void delete()
+    {
+        for (ModelCustomRenderer renderer : this.limbs)
+        {
+            renderer.delete();
+        }
+    }
 }
