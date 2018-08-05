@@ -55,6 +55,12 @@ public class GuiPlayback extends GuiScreen
         Dispatcher.sendToServer(new PacketRequestProfiles());
     }
 
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
     /* Input */
 
     @Override

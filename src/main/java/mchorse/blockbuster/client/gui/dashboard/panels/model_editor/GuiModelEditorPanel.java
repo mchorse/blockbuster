@@ -31,6 +31,7 @@ import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -239,6 +240,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         ModelPose oldPose = this.renderModel.pose;
 
+        this.renderModel.delete();
         this.renderModel = this.buildModel();
         this.modelRenderer.model = this.renderModel;
 
@@ -307,7 +309,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (skins != null && !skins.isEmpty())
             {
-                this.renderTexture = new ResourceLocation("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
+                this.renderTexture = new TextureLocation("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
             }
         }
 

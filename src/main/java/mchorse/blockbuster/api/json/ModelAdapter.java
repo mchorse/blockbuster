@@ -18,6 +18,7 @@ import com.google.gson.JsonSerializer;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -51,7 +52,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         {
             String type = object.get("default").getAsString();
 
-            model.defaultTexture = new ResourceLocation(type);
+            model.defaultTexture = new TextureLocation(type);
         }
 
         return model;

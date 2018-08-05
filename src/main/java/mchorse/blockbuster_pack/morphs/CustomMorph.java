@@ -390,7 +390,7 @@ public class CustomMorph extends AbstractMorph
 
             for (String key : materials.getKeySet())
             {
-                this.materials.put(key, new ResourceLocation(materials.getString(key)));
+                this.materials.put(key, new TextureLocation(materials.getString(key)));
             }
         }
     }

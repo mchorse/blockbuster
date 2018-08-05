@@ -28,7 +28,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.none"));
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.feet"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.leggings"));
+        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.legs"));
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.chest"));
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.head"));
         this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
