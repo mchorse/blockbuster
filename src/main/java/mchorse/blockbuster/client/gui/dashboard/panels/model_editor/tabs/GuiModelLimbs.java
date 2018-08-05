@@ -141,7 +141,12 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.shading = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.shading"), false, (b) -> this.panel.limb.shading = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
-        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.holding = Holding.values()[b.button.getValue()]).tooltip(I18n.format("blockbuster.gui.me.limbs.hold"), TooltipDirection.LEFT);
+        this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) ->
+        {
+            this.panel.limb.holding = Holding.values()[b.button.getValue()];
+            this.panel.rebuildModel();
+        });
+        this.holding.tooltip(I18n.format("blockbuster.gui.me.limbs.hold"), TooltipDirection.LEFT);
         this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.none"));
         this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.right"));
         this.holding.button.addLabel(I18n.format("blockbuster.gui.me.limbs.left"));
