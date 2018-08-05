@@ -20,13 +20,13 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -104,7 +104,7 @@ public class CameraHandler
             }
             else if (tag.hasKey("CameraProfile"))
             {
-                CameraAPI.playCameraProfile((EntityPlayerMP) player, new ResourceLocation(tag.getString("CameraProfile")));
+                CameraAPI.playCameraProfile((EntityPlayerMP) player, new TextureLocation(tag.getString("CameraProfile")));
             }
         }
     }

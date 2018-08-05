@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.commands.SubCommandBase;
-import net.minecraft.util.ResourceLocation;
+import mchorse.blockbuster.utils.TextureLocation;
 
 /**
  * OBJ and MTL parser and loader
@@ -77,7 +77,7 @@ public class OBJParser
         {
             if (material.useTexture)
             {
-                material.texture = new ResourceLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
+                material.texture = new TextureLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
 
                 /* Create folder for every material */
                 new File(folder, "skins/" + material.name + "/").mkdirs();

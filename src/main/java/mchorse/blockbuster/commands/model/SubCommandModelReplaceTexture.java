@@ -5,6 +5,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -72,7 +73,7 @@ public class SubCommandModelReplaceTexture extends McCommandBase
             /* Replace */
             else
             {
-                ResourceLocation replace = new ResourceLocation(args[1]);
+                ResourceLocation replace = new TextureLocation(args[1]);
 
                 boolean hasTarget = map.containsKey(target);
                 boolean hasReplace = map.containsKey(replace);

@@ -42,7 +42,7 @@ public class BlockbusterTab extends CreativeTabs
         super.displayAllRelevantItems(items);
 
         ItemStack stack = new ItemStack(Items.SPAWN_EGG);
-        ItemMonsterPlacer.applyEntityIdToItemStack(stack, new ResourceLocation("blockbuster", "Actor"));
+        ItemMonsterPlacer.applyEntityIdToItemStack(stack, new ResourceLocation("blockbuster", "actor"));
 
         items.add(stack);
     }

@@ -7,9 +7,9 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwo
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiModelOptions extends GuiModelEditorTab
@@ -44,7 +44,7 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.scale[2] = value[2];
         });
         this.scaleGui = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale_gui"), (value) -> this.panel.model.scaleGui = value);
-        this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new ResourceLocation(str));
+        this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : new TextureLocation(str));
         this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);
         this.providesObj = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.options.provides_obj"), false, (b) ->
         {

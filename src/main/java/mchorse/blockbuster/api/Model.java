@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -273,7 +274,7 @@ public class Model
         b.scheme = this.scheme;
         b.model = this.model;
 
-        b.defaultTexture = this.defaultTexture == null ? null : new ResourceLocation(this.defaultTexture.toString());
+        b.defaultTexture = this.defaultTexture == null ? null : new TextureLocation(this.defaultTexture.toString());
         b.providesObj = this.providesObj;
         b.providesMtl = this.providesMtl;
         b.skins = this.skins;
