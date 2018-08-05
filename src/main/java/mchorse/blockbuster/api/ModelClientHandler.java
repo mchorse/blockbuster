@@ -65,6 +65,9 @@ public class ModelClientHandler extends ModelHandler
     {
         super.removeModel(key);
 
-        ModelExtrudedLayer.clearByModel(ModelCustom.MODELS.remove(key));
+        ModelCustom model = ModelCustom.MODELS.remove(key);
+
+        model.delete();
+        ModelExtrudedLayer.clearByModel(model);
     }
 }

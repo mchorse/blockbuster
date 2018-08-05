@@ -239,6 +239,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         ModelPose oldPose = this.renderModel.pose;
 
+        this.renderModel.delete();
         this.renderModel = this.buildModel();
         this.modelRenderer.model = this.renderModel;
 

@@ -44,6 +44,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
      */
     public Map<String, ResourceLocation> materials;
 
+    /**
+     * Solid colored texture ID 
+     */
+    protected int solidColorTex = -1;
+
     public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, OBJParser.MeshObject mesh)
     {
         super(model, limb, transform);
@@ -153,6 +158,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             /* I hope this will get garbage collected xD */
             this.compiled = true;
             this.mesh = null;
+            this.solidColorTex = texture;
         }
         else
         {
@@ -238,6 +244,25 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             RenderCustomModel.bindLastTexture();
             GlStateManager.disableBlend();
+        }
+    }
+
+    @Override
+    public void delete()
+    {
+        super.delete();
+
+        for (OBJDisplayList list : this.displayLists)
+        {
+            if (list.id != -1)
+            {
+                GL11.glDeleteLists(list.id, 1);
+            }
+        }
+
+        if (this.solidColorTex != -1)
+        {
+            GL11.glDeleteTextures(this.solidColorTex);
         }
     }
 
