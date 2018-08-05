@@ -33,6 +33,12 @@ public class GuiConfirm extends GuiScreen
     }
 
     @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
+    @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
         if (button.id == 1)
