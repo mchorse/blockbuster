@@ -164,7 +164,15 @@ public class ModelCustom extends ModelBiped
             if (limb.limb.looking)
             {
                 limb.rotateAngleX += headPitch * 0.017453292F;
-                limb.rotateAngleY += netHeadYaw * 0.017453292F;
+
+                if (invert)
+                {
+                    limb.rotateAngleZ += netHeadYaw * 0.017453292F;
+                }
+                else
+                {
+                    limb.rotateAngleY += netHeadYaw * 0.017453292F;
+                }
             }
 
             if (limb.limb.swinging)
