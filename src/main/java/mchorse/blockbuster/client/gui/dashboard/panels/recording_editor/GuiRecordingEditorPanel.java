@@ -266,7 +266,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     private void save()
     {
-        if (this.editor.delegate != null)
+        if (this.editor.delegate != null && this.record != null)
         {
             Action old = this.editor.delegate.action;
 
@@ -281,6 +281,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     public void selectRecord(String str)
     {
+        this.save();
         Dispatcher.sendToServer(new PacketRequestAction(str));
     }
 
