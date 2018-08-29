@@ -38,7 +38,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
     private TileEntityModel model;
-    private TileEntityModel temp = new TileEntityModel();
 
     private GuiTrackpadElement yaw;
     private GuiTrackpadElement pitch;
@@ -252,9 +251,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             this.close();
         }
 
-        this.subChildren.setVisible(true);
+        this.subChildren.setVisible(model != null);
         this.model = model;
-        this.temp.copyData(model);
         this.fillData();
 
         return this;

@@ -162,12 +162,18 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     }
 
     /**
-     * Yes, this boy can be steered!
+     * No, this boy can't be steered!
      */
     @Override
     public boolean canBeSteered()
     {
-        return true;
+        return false;
+    }
+
+    @Override
+    public boolean canPassengerSteer()
+    {
+        return false;
     }
 
     /**

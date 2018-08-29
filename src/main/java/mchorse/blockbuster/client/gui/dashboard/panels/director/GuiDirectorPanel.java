@@ -226,6 +226,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         if (director == null)
         {
+            this.setReplay(null);
+
             return this;
         }
 
