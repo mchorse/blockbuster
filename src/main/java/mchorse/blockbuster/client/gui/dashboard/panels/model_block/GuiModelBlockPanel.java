@@ -224,6 +224,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             packet.setScale(this.one.button.isChecked(), this.sx.trackpad.value, this.sy.trackpad.value, this.sz.trackpad.value);
             packet.setOrder(RotationOrder.values()[this.order.button.getValue()]);
             packet.setSlots(this.model.slots);
+            packet.shadow = this.model.shadow;
 
             Dispatcher.sendToServer(packet);
         }
