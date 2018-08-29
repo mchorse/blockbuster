@@ -219,8 +219,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         this.director = director;
         this.pos = pos;
-        this.selector.setDirector(director);
+
+        this.updateList();
         this.subChildren.setVisible(director != null);
+        this.replayEditor.setVisible(director != null);
+
+        if (director == null)
+        {
+            return this;
+        }
+
+        this.selector.setDirector(director);
 
         if (!this.director.replays.isEmpty())
         {
@@ -231,7 +240,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.setReplay(null);
         }
 
-        this.updateList();
         this.fillData();
 
         return this;
@@ -258,6 +266,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public void open()
     {
         this.updateList();
+
+        /* Resetting the current director block, if it was removed from the 
+         * world */
+        if (this.pos != null && this.mc.theWorld.getTileEntity(this.pos) == null)
+        {
+            this.setDirector(null, null);
+        }
     }
 
     @Override
