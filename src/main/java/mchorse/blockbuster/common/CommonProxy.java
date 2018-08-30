@@ -113,6 +113,8 @@ public class CommonProxy
         this.registerBlock(Blockbuster.modelBlock = new BlockModel());
         this.registerBlock(Blockbuster.greenBlock = new BlockGreen());
 
+        Blockbuster.modelBlockItem = Item.getItemFromBlock(Blockbuster.modelBlock);
+
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
 

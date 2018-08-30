@@ -6,12 +6,16 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,6 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;
+
+    private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
 
     /**
      * Render green sky, this is getting invoked from the ASM patched 
@@ -48,9 +54,39 @@ public class RenderingHandler
         return Blockbuster.proxy.config.green_screen_sky;
     }
 
+    /**
+     * Renders item stack in {@link TileEntityItemStackRenderer}. This is 
+     * called by ASM patched code.   
+     */
+    public static boolean renderItemStack(ItemStack stack)
+    {
+        if (stack.getItem() == Blockbuster.modelBlockItem)
+        {
+            model.renderByItem(stack, Minecraft.getMinecraft().getRenderPartialTicks());
+
+            return true;
+        }
+
+        return false;
+    }
+
     public RenderingHandler(GuiRecordingOverlay overlay)
     {
         this.overlay = overlay;
+    }
+
+    /**
+     * Fixes lightmap for TEISR
+     */
+    @SubscribeEvent
+    public void onHUDRender(RenderGameOverlayEvent.Pre event)
+    {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+        {
+            Minecraft.getMinecraft().entityRenderer.enableLightmap();
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+            Minecraft.getMinecraft().entityRenderer.disableLightmap();
+        }
     }
 
     /**

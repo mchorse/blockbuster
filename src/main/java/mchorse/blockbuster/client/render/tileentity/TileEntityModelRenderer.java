@@ -43,6 +43,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 te.createEntity();
             }
 
+            if (te.entity == null)
+            {
+                return;
+            }
+
             EntityLivingBase entity = te.entity;
 
             /* Apply entity rotations */

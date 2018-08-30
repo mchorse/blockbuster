@@ -8,6 +8,8 @@ import java.util.Map;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
@@ -549,6 +551,15 @@ public class ActionHandler
             if (record.isFinished() && server)
             {
                 record.stopPlaying();
+            }
+        }
+
+        /* Update TEs in the model's TEISR */
+        if (player.worldObj.isRemote)
+        {
+            for (TEModel model : TileEntityModelItemStackRenderer.models.values())
+            {
+                model.model.update();
             }
         }
     }

@@ -74,6 +74,7 @@ public class Blockbuster
     public static Item playbackItem;
     public static Item registerItem;
     public static Item actorConfigItem;
+    public static Item modelBlockItem;
 
     /* Blocks */
     public static Block directorBlock;
