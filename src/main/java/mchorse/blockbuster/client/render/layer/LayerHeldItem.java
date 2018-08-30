@@ -43,7 +43,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
         ItemStack itemstack1 = entity.getHeldItemMainhand();
         ItemStack itemstack = entity.getHeldItemOffhand();
 
-        if (itemstack != null || itemstack1 != null)
+        if (!itemstack.isEmpty() || !itemstack1.isEmpty())
         {
             HeldModel model = new HeldModel(((ModelCustom) this.livingEntityRenderer.getMainModel()));
 
@@ -68,7 +68,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
      */
     private void renderHeldItem(EntityLivingBase entity, ItemStack item, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
-        if (item != null)
+        if (!item.isEmpty())
         {
             HeldModel model = this.models.pop();
 
