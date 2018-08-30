@@ -2,6 +2,28 @@
 
 Blockbuster's change log.
 
+## Version 1.5.1
+
+This patch update fixes minor bugs introduced in `1.5`, as well as fixing some of the older bugs. Also, this patch contains a little surprise for `1.10.2` and `1.11.2`, allowing them enjoy `1.12.2` exclusive item model feature introduced in `1.5`.
+
+**Compatible** with Metamorph `1.1.6` and Aperture `1.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added item model rendering from `1.12.2` to `1.11.2` and `1.10.2` builds
+* Added a procedure to clean up GL resources after models are getting removed
+* Fixed NPE in `ClientHandlerActorPause` (reported by KazerLight)
+* Fixed `ResourceLocation` to `TextureLocation` in 1.11.2+ branches (reported by AzureZhen)
+* Fixed issues with mixed MTL and cubic limbs
+* Fixed last edited action not saved when switching between files
+* Fixed `blockbuster.gui.record_editor.actions.equip.leggings`
+* Fixed issue with riding an actor
+* Fixed shadow configuration option doesn't get saved
+* Fixed add limb with same name bug (reported by \_TroloTroll\_)
+* Made pose editor clone a morph into selected morph slot (instead of modifying current)
+* Made `invert` property use Z axis instead of Y for yaw when `looking` is enabled
+* Made playback button and confirm break director block GUIs not pause the game
+* Made `null` director block and model block if they aren't accessible in the world
+* Made the model rebuild on `holding` button click
+
 ## Version 1.5 (GUIs and custom models)
 
 Blockbuster `1.5` is a massive update which improves almost every aspect of the mod. Main features of `1.5` are: improved support for OBJ, revamped GUIs, improved damage control and green screen features.
@@ -467,7 +489,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-    * Idle fixture – static camera shot 
+  	* Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -478,10 +500,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-    * Removing last fixture
-    * Adding idle, look or follow fixture to current camera profile
-    * Toggle camera profile rendering
-    * Start or stop camera profile
+	* Removing last fixture
+	* Adding idle, look or follow fixture to current camera profile
+	* Toggle camera profile rendering
+	* Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command
