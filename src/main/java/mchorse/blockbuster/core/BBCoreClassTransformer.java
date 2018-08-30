@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
+import mchorse.blockbuster.core.transformers.TileEntityItemStackRendererTransformer;
 import mchorse.blockbuster.core.transformers.WorldTransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -20,6 +21,7 @@ public class BBCoreClassTransformer implements IClassTransformer
 
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
+    private TileEntityItemStackRendererTransformer isr = new TileEntityItemStackRendererTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -35,6 +37,12 @@ public class BBCoreClassTransformer implements IClassTransformer
             System.out.println("BBCoreMod: Transforming RenderGlobal class (" + name + ")");
 
             return this.render.transform(name, basicClass);
+        }
+        else if (this.checkName(name, "bnx", "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer"))
+        {
+            System.out.println("BBCoreMod: Transforming TEISR class (" + name + ")");
+
+            return this.isr.transform(name, basicClass);
         }
 
         return basicClass;

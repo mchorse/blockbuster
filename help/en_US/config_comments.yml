@@ -8,6 +8,7 @@ blockbuster.config.comments:
 
     model_block:
         model_block_disable_culling_workaround: Whether model block culling workaround should be disabled
+        model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
 
     recording:
         recording_countdown: Recording countdown (in seconds)

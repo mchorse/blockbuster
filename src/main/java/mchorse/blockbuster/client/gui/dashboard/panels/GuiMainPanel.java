@@ -73,6 +73,7 @@ public class GuiMainPanel extends GuiDashboardPanel
         this.options.add(new GuiConfigOption("record_commands", "recording"));
         this.options.add(new GuiConfigOption("actor_always_render_names", "actor"));
         this.options.add(new GuiConfigOption("damage_control", "damage_control"));
+        this.options.add(new GuiConfigOption("model_block_disable_item_rendering", "model_block"));
 
         GuiButtonElement<GuiCheckBox> previous = null;
 

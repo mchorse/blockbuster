@@ -46,6 +46,11 @@ public class BlockbusterConfig
 
     /* Model block */
 
+    /**
+     * Whether model block item rendering should be disabled 
+     */
+    public boolean model_block_disable_item_rendering;
+
     /* Recording */
 
     /**
@@ -156,6 +161,7 @@ public class BlockbusterConfig
         this.green_screen_sky = this.getBoolean("green_screen_sky", general, false, "Makes the sky fully green for chroma keying purposes");
 
         /* Model block */
+        this.model_block_disable_item_rendering = this.getBoolean("model_block_disable_item_rendering", model, false, "Whether model block item rendering should be disabled");
 
         /* Recording */
         this.recording_countdown = this.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown (in seconds)");

@@ -226,7 +226,7 @@ public class GuiMorphsPopup extends GuiScreen
 
             if (this.elements.isVisible())
             {
-                CustomMorph morph = (CustomMorph) this.lastMorph;
+                CustomMorph morph = (CustomMorph) this.lastMorph.clone(true);
 
                 if (morph.customPose == null)
                 {
@@ -252,6 +252,13 @@ public class GuiMorphsPopup extends GuiScreen
                 this.list.add(this.pose.limbs.keySet());
                 this.list.sort();
                 this.list.setCurrent(entry.getKey());
+
+                this.setSelected(morph);
+
+                if (this.callback != null)
+                {
+                    this.callback.accept(morph);
+                }
             }
         }
     }
