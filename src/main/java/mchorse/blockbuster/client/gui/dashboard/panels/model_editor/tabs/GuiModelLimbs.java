@@ -211,11 +211,14 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void addLimb(String text)
     {
-        this.panel.model.addLimb(text);
-        this.panel.setLimb(text);
-        this.limbList.add(text);
-        this.limbList.setCurrent(text);
-        this.panel.rebuildModel();
+        if (!this.panel.model.limbs.containsKey(text))
+        {
+            this.panel.model.addLimb(text);
+            this.panel.setLimb(text);
+            this.limbList.add(text);
+            this.limbList.setCurrent(text);
+            this.panel.rebuildModel();
+        }
     }
 
     private void removeLimb()

@@ -124,6 +124,8 @@ public class CommonProxy
         ForgeRegistries.BLOCKS.register(Blockbuster.greenBlock = green);
         ForgeRegistries.ITEMS.register(new ItemBlock(green).setRegistryName(green.getRegistryName()));
 
+        Blockbuster.modelBlockItem = Item.getItemFromBlock(Blockbuster.modelBlock);
+
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
 

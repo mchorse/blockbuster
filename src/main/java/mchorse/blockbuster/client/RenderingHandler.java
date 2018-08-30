@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderingHandler
 {
     private GuiRecordingOverlay overlay;
+
+    private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
 
     /**
      * Render green sky, this is getting invoked from the ASM patched 

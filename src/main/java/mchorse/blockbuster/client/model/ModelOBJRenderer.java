@@ -245,6 +245,8 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             RenderCustomModel.bindLastTexture();
             GlStateManager.disableBlend();
         }
+
+        RenderCustomModel.bindLastTexture();
     }
 
     @Override

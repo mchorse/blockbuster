@@ -38,7 +38,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
     private TileEntityModel model;
-    private TileEntityModel temp = new TileEntityModel();
 
     private GuiTrackpadElement yaw;
     private GuiTrackpadElement pitch;
@@ -202,6 +201,12 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     public void open()
     {
         this.updateList();
+
+        /* Resetting the current model block, if it was removed from the world */
+        if (this.model != null && this.mc.world.getTileEntity(this.model.getPos()) == null)
+        {
+            this.setModelBlock(null);
+        }
     }
 
     @Override
@@ -218,6 +223,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             packet.setScale(this.one.button.isChecked(), this.sx.trackpad.value, this.sy.trackpad.value, this.sz.trackpad.value);
             packet.setOrder(RotationOrder.values()[this.order.button.getValue()]);
             packet.setSlots(this.model.slots);
+            packet.shadow = this.model.shadow;
 
             Dispatcher.sendToServer(packet);
         }
@@ -245,9 +251,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
             this.close();
         }
 
-        this.subChildren.setVisible(true);
+        this.subChildren.setVisible(model != null);
         this.model = model;
-        this.temp.copyData(model);
         this.fillData();
 
         return this;

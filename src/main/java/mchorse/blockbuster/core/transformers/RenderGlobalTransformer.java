@@ -1,7 +1,6 @@
 package mchorse.blockbuster.core.transformers;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
@@ -70,22 +69,5 @@ public class RenderGlobalTransformer extends ClassTransformer
 
             System.out.println("BBCoreMod: successfully patched renderClouds!");
         }
-    }
-
-    private LabelNode getFirstLabel(MethodNode method)
-    {
-        AbstractInsnNode node = method.instructions.getFirst();
-
-        while (node != null)
-        {
-            if (node instanceof LabelNode)
-            {
-                return (LabelNode) node;
-            }
-
-            node = node.getNext();
-        }
-
-        return null;
     }
 }
