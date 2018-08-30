@@ -268,25 +268,6 @@ public class ModelOBJRenderer extends ModelCustomRenderer
         }
     }
 
-    @Override
-    public void delete()
-    {
-        super.delete();
-
-        for (OBJDisplayList list : this.displayLists)
-        {
-            if (list.id != -1)
-            {
-                GL11.glDeleteLists(list.id, 1);
-            }
-        }
-
-        if (this.solidColorTex != -1)
-        {
-            GL11.glDeleteTextures(this.solidColorTex);
-        }
-    }
-
     public static class OBJDisplayList
     {
         public int id;

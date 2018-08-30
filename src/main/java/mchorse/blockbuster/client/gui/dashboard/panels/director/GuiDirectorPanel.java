@@ -271,7 +271,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         /* Resetting the current director block, if it was removed from the 
          * world */
-        if (this.pos != null && this.mc.theWorld.getTileEntity(this.pos) == null)
+        if (this.pos != null && this.mc.world.getTileEntity(this.pos) == null)
         {
             this.setDirector(null, null);
         }

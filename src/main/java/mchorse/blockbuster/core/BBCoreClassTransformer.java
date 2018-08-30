@@ -38,7 +38,7 @@ public class BBCoreClassTransformer implements IClassTransformer
 
             return this.render.transform(name, basicClass);
         }
-        else if (this.checkName(name, "bnx", "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer"))
+        else if (this.checkName(name, "bqc", "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer"))
         {
             System.out.println("BBCoreMod: Transforming TEISR class (" + name + ")");
 

@@ -555,7 +555,7 @@ public class ActionHandler
         }
 
         /* Update TEs in the model's TEISR */
-        if (player.worldObj.isRemote)
+        if (player.world.isRemote)
         {
             for (TEModel model : TileEntityModelItemStackRenderer.models.values())
             {

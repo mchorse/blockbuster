@@ -19,7 +19,7 @@ public class TileEntityItemStackRendererTransformer extends ClassMethodTransform
         this.mcp = "renderByItem";
         this.mcpSign = "(Lnet/minecraft/item/ItemStack;)V";
         this.notch = "a";
-        this.notchSign = "(Ladz;)V";
+        this.notchSign = "(Lafj;)V";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class TileEntityItemStackRendererTransformer extends ClassMethodTransform
         if (label != null)
         {
             InsnList list = new InsnList();
-            String desc = BBCoreClassTransformer.obfuscated ? "(Ladz;)V" : "(Lnet/minecraft/item/ItemStack;)Z";
+            String desc = BBCoreClassTransformer.obfuscated ? "(Lafj;)V" : "(Lnet/minecraft/item/ItemStack;)Z";
 
             list.add(new VarInsnNode(Opcodes.ALOAD, 1));
             list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderItemStack", desc, false));

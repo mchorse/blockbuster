@@ -203,7 +203,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.updateList();
 
         /* Resetting the current model block, if it was removed from the world */
-        if (this.model != null && this.mc.theWorld.getTileEntity(this.model.getPos()) == null)
+        if (this.model != null && this.mc.world.getTileEntity(this.model.getPos()) == null)
         {
             this.setModelBlock(null);
         }
