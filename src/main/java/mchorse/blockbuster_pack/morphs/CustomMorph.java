@@ -71,6 +71,11 @@ public class CustomMorph extends AbstractMorph
     public Map<String, ResourceLocation> materials = new HashMap<String, ResourceLocation>();
 
     /**
+     * This flag allows to fail {@link #equals(Object)} equality test 
+     */
+    public boolean notComparible;
+
+    /**
      * Cached key value 
      */
     private String key;
@@ -266,6 +271,11 @@ public class CustomMorph extends AbstractMorph
         if (object instanceof CustomMorph)
         {
             CustomMorph morph = (CustomMorph) object;
+
+            if (morph.notComparible || this.notComparible)
+            {
+                return false;
+            }
 
             result = result && Objects.equal(this.currentPose, morph.currentPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
