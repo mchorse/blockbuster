@@ -140,7 +140,14 @@ public class Record
             return;
         }
 
-        this.frames.get(tick).apply(actor, force);
+        Frame frame = this.frames.get(tick);
+
+        frame.apply(actor, force);
+
+        if (actor.world.isRemote)
+        {
+            /* actor.posY = frame.y; */
+        }
 
         if (tick != 0)
         {
@@ -150,6 +157,14 @@ public class Record
              * faster than RecordRecorder can record both onGround and
              * fallDistance being correct for player, so we just hack */
             actor.fallDistance = prev.fallDistance;
+
+            /* TODO: do something about it, it literally fixes the issue with 
+             * floating actors, but at the cost of making the movement very 
+             * sharp instead of smooth */
+            if (actor.world.isRemote)
+            {
+                /* actor.lastTickPosY = actor.prevPosY = prev.y; */
+            }
         }
     }
 
