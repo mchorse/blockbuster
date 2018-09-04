@@ -227,7 +227,21 @@ public class GuiMorphsPopup extends GuiScreen
             if (this.elements.isVisible())
             {
                 CustomMorph morph = (CustomMorph) this.lastMorph.clone(true);
+                morph.notComparible = true;
 
+                /* Tricking Metamorph to explicitly copy the morph to the 
+                 * Selected slot */
+                this.setSelected(morph);
+                morph = (CustomMorph) this.getSelected().current().morph;
+                morph.notComparible = false;
+                this.lastMorph = morph;
+
+                if (this.callback != null)
+                {
+                    this.callback.accept(morph);
+                }
+
+                /* Setting up the GUI properties */
                 if (morph.customPose == null)
                 {
                     this.pose = morph.getPose(this.mc.player).clone();
@@ -252,13 +266,6 @@ public class GuiMorphsPopup extends GuiScreen
                 this.list.add(this.pose.limbs.keySet());
                 this.list.sort();
                 this.list.setCurrent(entry.getKey());
-
-                this.setSelected(morph);
-
-                if (this.callback != null)
-                {
-                    this.callback.accept(morph);
-                }
             }
         }
     }
@@ -290,16 +297,19 @@ public class GuiMorphsPopup extends GuiScreen
         this.morphs.handleMouseInput();
         super.handleMouseInput();
 
-        cell = this.morphs.getSelected();
-        AbstractMorph morph = cell == null ? null : cell.current().morph;
-
-        if (this.lastMorph != morph)
+        if (!this.elements.isVisible())
         {
-            this.poses.enabled = morph instanceof CustomMorph;
+            cell = this.morphs.getSelected();
+            AbstractMorph morph = cell == null ? null : cell.current().morph;
 
-            if (this.callback != null)
+            if (this.lastMorph != morph)
             {
-                this.callback.accept(morph);
+                this.poses.enabled = morph instanceof CustomMorph;
+
+                if (this.callback != null)
+                {
+                    this.callback.accept(morph);
+                }
             }
         }
 
