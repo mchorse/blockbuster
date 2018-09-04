@@ -144,7 +144,7 @@ public class Record
 
         frame.apply(actor, force);
 
-        if (actor.worldObj.isRemote)
+        if (actor.world.isRemote)
         {
             /* actor.posY = frame.y; */
         }
@@ -161,7 +161,7 @@ public class Record
             /* TODO: do something about it, it literally fixes the issue with 
              * floating actors, but at the cost of making the movement very 
              * sharp instead of smooth */
-            if (actor.worldObj.isRemote)
+            if (actor.world.isRemote)
             {
                 /* actor.lastTickPosY = actor.prevPosY = prev.y; */
             }
