@@ -24,12 +24,6 @@ public class DamageAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.DAMAGE;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         actor.attackEntityFrom(DamageSource.outOfWorld, this.damage);

@@ -36,12 +36,6 @@ public class InteractBlockAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.INTERACT_BLOCK;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         IBlockState state = actor.worldObj.getBlockState(this.pos);

@@ -36,12 +36,6 @@ public class MountingAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.MOUNTING;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         Entity mount = EntityUtils.entityByUUID(actor.worldObj, this.target);

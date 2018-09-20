@@ -37,12 +37,6 @@ public class CommandAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.COMMAND;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         if (!this.command.isEmpty())

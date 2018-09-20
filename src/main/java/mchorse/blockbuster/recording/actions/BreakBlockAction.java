@@ -24,12 +24,6 @@ public class BreakBlockAction extends InteractBlockAction
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.BREAK_BLOCK;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         actor.worldObj.destroyBlock(this.pos, this.drop);

@@ -26,12 +26,6 @@ public class BreakBlockAnimation extends InteractBlockAction
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.BREAK_ANIMATION;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         if (this.progress >= 10)

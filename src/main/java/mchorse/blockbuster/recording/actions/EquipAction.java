@@ -38,12 +38,6 @@ public class EquipAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.EQUIP;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);

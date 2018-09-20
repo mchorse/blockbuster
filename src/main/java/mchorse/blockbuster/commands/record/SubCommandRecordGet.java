@@ -1,9 +1,9 @@
 package mchorse.blockbuster.commands.record;
 
 import java.util.List;
-import java.util.Map;
 
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -62,29 +62,10 @@ public class SubCommandRecordGet extends SubCommandRecordBase
         {
             Action action = actions.get(i);
             NBTTagCompound tag = new NBTTagCompound();
-            String type = byteToType(action.getType());
+            String type = ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass());
             action.toNBT(tag);
 
             L10n.info(sender, "record.action", tick, type, i, tag.toString());
         }
-    }
-
-    /**
-     * Get string name based on byte value
-     */
-    public static String byteToType(byte actionType)
-    {
-        String type = "none";
-
-        for (Map.Entry<String, Integer> entry : Action.TYPES.entrySet())
-        {
-            if (entry.getValue().byteValue() == actionType)
-            {
-                type = entry.getKey();
-                break;
-            }
-        }
-
-        return type;
     }
 }

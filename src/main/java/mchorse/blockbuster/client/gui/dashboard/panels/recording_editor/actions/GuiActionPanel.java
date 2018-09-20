@@ -1,9 +1,10 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import java.util.Map;
+import java.util.Map.Entry;
 
 import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -24,9 +25,9 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     {
         this.action = action;
 
-        for (Map.Entry<String, Integer> entry : Action.TYPES.entrySet())
+        for (Entry<String, Class<? extends Action>> entry : ActionRegistry.NAME_TO_CLASS.entrySet())
         {
-            if (entry.getValue() == action.getType())
+            if (entry.getValue() == action.getClass())
             {
                 this.setKey(entry.getKey());
 

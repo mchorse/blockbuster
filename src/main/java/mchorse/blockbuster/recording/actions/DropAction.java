@@ -34,12 +34,6 @@ public class DropAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.DROP;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         if (this.itemData == null)

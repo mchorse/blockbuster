@@ -3,6 +3,7 @@ package mchorse.blockbuster.commands.record;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.metamorph.commands.CommandMorph;
@@ -51,14 +52,14 @@ public class SubCommandRecordAdd extends SubCommandRecordBase
             throw new CommandException("record.tick_out_range", tick, record.actions.size() - 1);
         }
 
-        if (!Action.TYPES.containsKey(args[2]))
+        if (!ActionRegistry.NAME_TO_CLASS.containsKey(args[2]))
         {
             throw new CommandException("record.wrong_action", args[2]);
         }
 
         try
         {
-            Action action = Action.fromType(Action.TYPES.get(args[2]).byteValue());
+            Action action = ActionRegistry.fromName(args[2]);
 
             if (args.length > 3)
             {
@@ -82,7 +83,7 @@ public class SubCommandRecordAdd extends SubCommandRecordBase
     {
         if (args.length == 3)
         {
-            return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
+            return getListOfStringsMatchingLastWord(args, ActionRegistry.NAME_TO_ID.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

@@ -3,6 +3,7 @@ package mchorse.blockbuster.commands.record;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -36,13 +37,13 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (!Action.TYPES.containsKey(args[1]))
+        if (!ActionRegistry.NAME_TO_CLASS.containsKey(args[1]))
         {
             throw new CommandException("record.wrong_action", args[1]);
         }
 
         String filename = args[0];
-        byte type = Action.TYPES.get(args[1]).byteValue();
+        byte type = ActionRegistry.NAME_TO_ID.get(args[1]).byteValue();
         Record record = CommandRecord.getRecord(filename);
 
         int i = 0;
@@ -83,7 +84,7 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
             {
                 j++;
 
-                if (action.getType() != type)
+                if (ActionRegistry.getType(action) != type)
                 {
                     continue;
                 }
@@ -111,7 +112,7 @@ public class SubCommandRecordSearch extends SubCommandRecordBase
     {
         if (args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, Action.TYPES.keySet());
+            return getListOfStringsMatchingLastWord(args, ActionRegistry.NAME_TO_CLASS.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

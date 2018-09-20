@@ -9,6 +9,7 @@ import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import net.minecraft.entity.Entity;
@@ -371,7 +372,7 @@ public class Record
                         NBTTagCompound tag = new NBTTagCompound();
 
                         action.toNBT(tag);
-                        tag.setByte("Type", action.getType());
+                        tag.setByte("Type", ActionRegistry.CLASS_TO_ID.get(action.getClass()));
                         newActions.add(this.actionFromNBT(tag));
                     }
                     catch (Exception e)
@@ -438,7 +439,7 @@ public class Record
                     NBTTagCompound actionTag = new NBTTagCompound();
 
                     action.toNBT(actionTag);
-                    actionTag.setByte("Type", action.getType());
+                    actionTag.setByte("Type", ActionRegistry.CLASS_TO_ID.get(action.getClass()));
                     actionsTag.appendTag(actionTag);
                 }
 
@@ -525,7 +526,7 @@ public class Record
         byte type = tag.getByte("Type");
         Action action = null;
 
-        action = Action.fromType(type);
+        action = ActionRegistry.fromType(type);
         action.fromNBT(tag);
 
         return action;

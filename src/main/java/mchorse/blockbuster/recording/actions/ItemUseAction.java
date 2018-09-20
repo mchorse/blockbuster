@@ -30,12 +30,6 @@ public class ItemUseAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.USE_ITEM;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         ItemStack item = actor.getHeldItem(this.hand);
