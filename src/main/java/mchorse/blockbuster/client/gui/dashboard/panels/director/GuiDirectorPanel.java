@@ -26,6 +26,7 @@ import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
+import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
@@ -189,6 +190,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
+
+        this.replayEditor.add(element);
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData()).tooltip(I18n.format("blockbuster.gui.director.update_data_tooltip"), TooltipDirection.LEFT);
+        element.resizer().set(10, 105, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
@@ -424,6 +430,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.dashboard.recordingEditorPanel.selectRecord(this.replay.id);
             this.dashboard.recordingEditorPanel.records.setVisible(false);
         }
+    }
+
+    private void updatePlayerData()
+    {
+        Dispatcher.sendToServer(new PacketUpdatePlayerData(this.replay.id));
     }
 
     @Override

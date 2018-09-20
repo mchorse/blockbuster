@@ -67,6 +67,8 @@ blockbuster.gui:
         fake_player: Fake player
         health: Health
         edit_record: Edit record
+        update_data: Update data
+        update_data_tooltip: Updates player data in record file
     
     # Actor configuration GUI strings
     actor:

@@ -45,7 +45,7 @@ blockbuster.error:
         add: "{f}Action of type %s{f} couldn't be added due to error: %s"
         already_exists: "{f}Player recording by filename %s{f} already exists!"
         couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
-        wrong_clean_property: "{f}Given"
+        wrong_clean_property: "{f}Given wrong clean property %s{f}!"
     
     # Recording errors
     recording:
