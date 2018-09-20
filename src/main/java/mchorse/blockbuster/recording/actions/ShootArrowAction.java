@@ -27,12 +27,6 @@ public class ShootArrowAction extends Action
         this.charge = charge;
     }
 
-    @Override
-    public byte getType()
-    {
-        return Action.SHOOT_ARROW;
-    }
-
     /**
      * Some code in this method is borrowed from ItemBow, I guess, I don't
      * remember

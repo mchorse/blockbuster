@@ -32,12 +32,6 @@ public class PlaceBlockAction extends InteractBlockAction
         this.block = block;
     }
 
-    @Override
-    public byte getType()
-    {
-        return Action.PLACE_BLOCK;
-    }
-
     @SuppressWarnings("deprecation")
     @Override
     public void apply(EntityLivingBase actor)

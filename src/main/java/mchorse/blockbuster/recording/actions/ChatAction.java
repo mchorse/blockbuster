@@ -26,12 +26,6 @@ public class ChatAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.CHAT;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         Utils.broadcastMessage(this.message.replace('[', '§'));

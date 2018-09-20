@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.common.recording.actions;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -40,13 +41,7 @@ public class PacketAction implements IMessage
 
         if (buf.readBoolean())
         {
-            try
-            {
-                this.action = Action.fromType(buf.readByte());
-                this.action.fromBuf(buf);
-            }
-            catch (Exception e)
-            {}
+            this.action = ActionRegistry.fromByteBuf(buf);
         }
     }
 
@@ -61,8 +56,7 @@ public class PacketAction implements IMessage
 
         if (this.action != null)
         {
-            buf.writeByte(this.action.getType());
-            this.action.toBuf(buf);
+            ActionRegistry.toByteBuf(this.action, buf);
         }
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -39,16 +40,11 @@ public class PacketActions implements IMessage
 
                 for (int j = 0; j < count; j++)
                 {
-                    try
-                    {
-                        Action action = Action.fromType(buf.readByte());
+                    Action action = ActionRegistry.fromByteBuf(buf);
 
-                        action.fromBuf(buf);
-                        actions.add(action);
-                    }
-                    catch (Exception e)
+                    if (action != null)
                     {
-                        e.printStackTrace();
+                        actions.add(action);
                     }
                 }
 
@@ -79,8 +75,7 @@ public class PacketActions implements IMessage
             {
                 for (Action action : list)
                 {
-                    buf.writeByte(action.getType());
-                    action.toBuf(buf);
+                    ActionRegistry.toByteBuf(action, buf);
                 }
             }
         }
