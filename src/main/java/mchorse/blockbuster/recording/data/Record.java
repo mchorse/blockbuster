@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -372,8 +373,11 @@ public class Record
                         NBTTagCompound tag = new NBTTagCompound();
 
                         action.toNBT(tag);
-                        tag.setByte("Type", ActionRegistry.CLASS_TO_ID.get(action.getClass()));
-                        newActions.add(this.actionFromNBT(tag));
+
+                        Action newAction = ActionRegistry.fromType(ActionRegistry.getType(action));
+
+                        newAction.fromNBT(tag);
+                        newActions.add(newAction);
                     }
                     catch (Exception e)
                     {
@@ -405,6 +409,7 @@ public class Record
         compound.setByte("Delay", (byte) this.delay);
         compound.setInteger("PreDelay", this.preDelay);
         compound.setInteger("PostDelay", this.postDelay);
+        compound.setTag("Actions", this.createActionMap());
 
         if (this.playerData != null)
         {
@@ -455,6 +460,22 @@ public class Record
     }
 
     /**
+     * Creates an action map between action name and an action type byte values
+     * for compatibility
+     */
+    private NBTTagCompound createActionMap()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        for (Map.Entry<String, Byte> entry : ActionRegistry.NAME_TO_ID.entrySet())
+        {
+            tag.setString(entry.getValue().toString(), entry.getKey());
+        }
+
+        return tag;
+    }
+
+    /**
      * Read a recording from given file.
      *
      * This method basically checks if the given file has appropriate short
@@ -463,11 +484,17 @@ public class Record
     public void load(File file) throws IOException
     {
         NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
+        NBTTagCompound map = null;
 
         this.version = compound.getShort("Version");
         this.delay = compound.getByte("Delay");
         this.preDelay = compound.getInteger("PreDelay");
         this.postDelay = compound.getInteger("PostDelay");
+
+        if (compound.hasKey("Actions", 10))
+        {
+            map = compound.getCompoundTag("Actions");
+        }
 
         if (compound.hasKey("PlayerData", 10))
         {
@@ -492,7 +519,12 @@ public class Record
 
                     if (actionTag instanceof NBTTagCompound)
                     {
-                        actions.add(this.actionFromNBT((NBTTagCompound) actionTag));
+                        Action action = this.actionFromNBT((NBTTagCompound) actionTag, map);
+
+                        if (action != null)
+                        {
+                            actions.add(action);
+                        }
                     }
                     else if (actionTag instanceof NBTTagList)
                     {
@@ -500,7 +532,12 @@ public class Record
 
                         for (int ii = 0, cc = list.tagCount(); ii < cc; ii++)
                         {
-                            actions.add(this.actionFromNBT(list.getCompoundTagAt(ii)));
+                            Action action = this.actionFromNBT(list.getCompoundTagAt(ii), map);
+
+                            if (action != null)
+                            {
+                                actions.add(action);
+                            }
                         }
                     }
 
@@ -521,13 +558,29 @@ public class Record
         }
     }
 
-    private Action actionFromNBT(NBTTagCompound tag) throws Exception
+    private Action actionFromNBT(NBTTagCompound tag, NBTTagCompound map) throws Exception
     {
         byte type = tag.getByte("Type");
         Action action = null;
 
-        action = ActionRegistry.fromType(type);
-        action.fromNBT(tag);
+        if (map == null)
+        {
+            action = ActionRegistry.fromType(type);
+        }
+        else
+        {
+            String name = map.getString(String.valueOf(type));
+
+            if (ActionRegistry.NAME_TO_CLASS.containsKey(name))
+            {
+                action = ActionRegistry.fromName(name);
+            }
+        }
+
+        if (action != null)
+        {
+            action.fromNBT(tag);
+        }
 
         return action;
     }
