@@ -115,7 +115,7 @@ public class GuiRecordSelector extends GuiElement
             return true;
         }
 
-        if (this.scroll.isInside(mouseX, mouseY))
+        if (this.scroll.isInside(mouseX, mouseY) && !this.moving)
         {
             int index = this.scroll.getIndex(mouseX, mouseY);
             int sub = this.vertical.getIndex(mouseX, mouseY);
