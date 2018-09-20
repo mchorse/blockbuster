@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.utils.ScrollArea;
 import mchorse.blockbuster.client.gui.utils.ScrollArea.ScrollDirection;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.metamorph.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
@@ -114,7 +115,7 @@ public class GuiRecordSelector extends GuiElement
             return true;
         }
 
-        if (this.scroll.isInside(mouseX, mouseY))
+        if (this.scroll.isInside(mouseX, mouseY) && !this.moving)
         {
             int index = this.scroll.getIndex(mouseX, mouseY);
             int sub = this.vertical.getIndex(mouseX, mouseY);
@@ -224,7 +225,7 @@ public class GuiRecordSelector extends GuiElement
                     for (Action action : actions)
                     {
                         int y = this.scroll.y + j * 20 - this.vertical.scroll;
-                        int color = MathHelper.hsvToRGB((float) (action.getType() - 1) / 20F, 1F, 1F);
+                        int color = MathHelper.hsvToRGB((float) (ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
                         this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
@@ -251,7 +252,7 @@ public class GuiRecordSelector extends GuiElement
             int y = mouseY;
 
             Action action = this.panel.record.getAction(this.tick, this.index);
-            int color = MathHelper.hsvToRGB((float) (action.getType() - 1) / 20F, 1F, 1F);
+            int color = MathHelper.hsvToRGB((float) (ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
             Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
             this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);

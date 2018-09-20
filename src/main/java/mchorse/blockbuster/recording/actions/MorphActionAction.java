@@ -16,12 +16,6 @@ public class MorphActionAction extends Action
     {}
 
     @Override
-    public byte getType()
-    {
-        return MORPH_ACTION;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         AbstractMorph morph = mchorse.metamorph.api.EntityUtils.getMorph(actor);

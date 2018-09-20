@@ -17,12 +17,6 @@ public class SwipeAction extends Action
     {}
 
     @Override
-    public byte getType()
-    {
-        return Action.SWIPE;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         actor.swingArm(EnumHand.MAIN_HAND);

@@ -26,12 +26,6 @@ public class AttackAction extends DamageAction
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.ATTACK;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();

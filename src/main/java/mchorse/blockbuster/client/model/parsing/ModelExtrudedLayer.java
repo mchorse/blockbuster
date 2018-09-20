@@ -125,7 +125,11 @@ public class ModelExtrudedLayer
             Chunk chunk = new Chunk(limb.size[0], limb.size[1], limb.size[2]);
 
             fillChunk(chunk, image.image, renderer);
-            id = generateDisplayList(chunk, renderer);
+
+            if (chunk.stats > 0)
+            {
+                id = generateDisplayList(chunk, renderer);
+            }
         }
         catch (Exception e)
         {
@@ -503,6 +507,8 @@ public class ModelExtrudedLayer
         public final int h;
         public final int d;
 
+        public int stats;
+
         /**
          * Initialize empty chunk data 
          */
@@ -525,7 +531,14 @@ public class ModelExtrudedLayer
                 return;
             }
 
+            byte old = this.data[x + y * this.w + z * this.w * this.h];
+
             this.data[x + y * this.w + z * this.w * this.h] = block;
+
+            if (block != old)
+            {
+                this.stats += (block == 0) ? -1 : 1;
+            }
         }
 
         /**

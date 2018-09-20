@@ -31,12 +31,6 @@ public class MorphAction extends Action
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.MORPH;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         AbstractMorph morph = EntityUtils.getMorph(actor);

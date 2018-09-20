@@ -36,12 +36,6 @@ public class ItemUseBlockAction extends ItemUseAction
     }
 
     @Override
-    public byte getType()
-    {
-        return Action.USE_ITEM_BLOCK;
-    }
-
-    @Override
     public void apply(EntityLivingBase actor)
     {
         ItemStack item = actor.getHeldItem(this.hand);

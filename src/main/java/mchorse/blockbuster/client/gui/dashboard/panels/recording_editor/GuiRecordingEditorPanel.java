@@ -32,10 +32,12 @@ import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.blockbuster.events.ActionPanelRegisterEvent;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
+import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
@@ -58,6 +60,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 
 public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLegacy
 {
@@ -121,7 +124,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
         this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
         this.list.label = I18n.format("blockbuster.gui.search") + "...";
-        this.list.elements.addAll(Action.TYPES.keySet());
+        this.list.elements.addAll(ActionRegistry.NAME_TO_CLASS.keySet());
         this.list.background = true;
 
         this.add.resizer().set(0, 2, 16, 16).parent(this.selector.area).x(1F, -18);
@@ -138,16 +141,14 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     private void createAction(String str)
     {
-        Integer type = Action.TYPES.get(str);
-
-        if (type == null)
+        if (ActionRegistry.NAME_TO_CLASS.containsKey(str))
         {
             return;
         }
 
         try
         {
-            Action action = Action.fromType(type.byteValue());
+            Action action = ActionRegistry.fromName(str);
             int tick = this.selector.tick;
             int index = this.selector.index;
 
@@ -179,7 +180,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
         try
         {
-            Action newAction = Action.fromType(action.getType());
+            Action newAction = ActionRegistry.fromType(ActionRegistry.getType(action));
             NBTTagCompound tag = new NBTTagCompound();
             action.toNBT(tag);
             newAction.fromNBT(tag);
@@ -246,6 +247,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             this.panels.put(BreakBlockAnimation.class, new GuiBreakBlockAnimationPanel(this.mc));
             this.panels.put(ItemUseAction.class, new GuiItemUseActionPanel<ItemUseAction>(this.mc));
             this.panels.put(ItemUseBlockAction.class, new GuiItemUseBlockActionPanel(this.mc));
+
+            MinecraftForge.EVENT_BUS.post(new ActionPanelRegisterEvent(this));
         }
     }
 
