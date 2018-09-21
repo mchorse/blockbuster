@@ -141,7 +141,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
     private void createAction(String str)
     {
-        if (ActionRegistry.NAME_TO_CLASS.containsKey(str))
+        if (!ActionRegistry.NAME_TO_CLASS.containsKey(str))
         {
             return;
         }
