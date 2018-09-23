@@ -14,6 +14,7 @@ import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
+import mchorse.blockbuster.common.item.ItemBlockGreen;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -194,7 +195,7 @@ public class CommonProxy
      */
     protected void registerBlock(Block block)
     {
-        ItemBlock item = new ItemBlock(block);
+        ItemBlock item = block instanceof BlockGreen ? new ItemBlockGreen(block, true) : new ItemBlock(block);
 
         GameRegistry.register(block);
         GameRegistry.register(item.setRegistryName(block.getRegistryName()));
