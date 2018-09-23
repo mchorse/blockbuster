@@ -69,6 +69,7 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
                 GlStateManager.pushMatrix();
 
                 limb.postRender(scale);
+                base.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
 
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 this.renderItem(entity, stack, limb.limb, limbSwing);
