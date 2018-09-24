@@ -1,7 +1,7 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "blockbuster:blocks/green"
+    	"all": "blockbuster:blocks/green"
     },
     "elements": [
         {

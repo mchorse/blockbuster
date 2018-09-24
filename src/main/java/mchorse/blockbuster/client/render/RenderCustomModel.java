@@ -63,7 +63,12 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         if (this.mainModel != null && ((ModelCustom) this.mainModel).model.providesMtl)
         {
-            return true;
+            ResourceLocation texture = this.getEntityTexture(entity);
+
+            if (texture == null)
+            {
+                return true;
+            }
         }
 
         return super.bindEntityTexture(entity);

@@ -1,5 +1,39 @@
 {
+    "forge_marker": 1,
     "variants": {
-        "normal": { "model": "blockbuster:green" }
+        "color": {
+            "green": {
+                "textures": {"all": "blockbuster:blocks/green"},
+                "model": "blockbuster:green"
+            },
+            "blue": { 
+                "textures": {"all": "blockbuster:blocks/blue"}, 
+                "model": "blockbuster:green" 
+            },
+            "red": {
+                "textures": {"all": "blockbuster:blocks/red"}, 
+                "model": "blockbuster:green" 
+            },
+            "yellow": { 
+                "textures": {"all": "blockbuster:blocks/yellow"}, 
+                "model": "blockbuster:green" 
+            },
+            "cyan": { 
+                "textures": {"all": "blockbuster:blocks/cyan"}, 
+                "model": "blockbuster:green" 
+            },
+            "purple": { 
+                "textures": {"all": "blockbuster:blocks/purple"}, 
+                "model": "blockbuster:green" 
+            },
+            "white": { 
+                "textures": {"all": "blockbuster:blocks/white"}, 
+                "model": "blockbuster:green" 
+            },
+            "black": { 
+                "textures": {"all": "blockbuster:blocks/black"}, 
+                "model": "blockbuster:green"
+            }
+        }
     }
 }
