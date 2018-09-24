@@ -10,7 +10,7 @@ blockbuster:
         register: Ties actors to director block
         director_block: Manages actors and replays
         model_block: Allows to place morphs as static models
-        green_block: %s chroma block. Can be used for chroma keying.
+        green_block: "%s chroma block. Can be used for chroma keying."
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
