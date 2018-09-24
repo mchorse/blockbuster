@@ -242,11 +242,13 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
             GL11.glCallList(list.id);
 
-            RenderCustomModel.bindLastTexture();
+            if (hasColor || (hasTexture && list.material.texture != null))
+            {
+                RenderCustomModel.bindLastTexture();
+            }
+
             GlStateManager.disableBlend();
         }
-
-        RenderCustomModel.bindLastTexture();
     }
 
     @Override

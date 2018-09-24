@@ -4,6 +4,7 @@ import mchorse.blockbuster.commands.model.SubCommandModelClear;
 import mchorse.blockbuster.commands.model.SubCommandModelExport;
 import mchorse.blockbuster.commands.model.SubCommandModelReload;
 import mchorse.blockbuster.commands.model.SubCommandModelReplaceTexture;
+import mchorse.blockbuster.commands.model.SubCommandModelTexture;
 
 /**
  * Command /model
@@ -19,10 +20,11 @@ public class CommandModel extends SubCommandBase
      */
     public CommandModel()
     {
-        this.add(new SubCommandModelExport());
         this.add(new SubCommandModelClear());
-        this.add(new SubCommandModelReplaceTexture());
+        this.add(new SubCommandModelExport());
         this.add(new SubCommandModelReload());
+        this.add(new SubCommandModelReplaceTexture());
+        this.add(new SubCommandModelTexture());
     }
 
     @Override

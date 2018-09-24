@@ -19,6 +19,7 @@ import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandModel;
+import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.FrameHandler;
@@ -29,6 +30,7 @@ import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -100,7 +102,6 @@ public class ClientProxy extends CommonProxy
 
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
-        this.registerItemModel(Blockbuster.greenBlock, Blockbuster.path("green"));
 
         final ModelResourceLocation modelStatic = new ModelResourceLocation(Blockbuster.path("model_static"), "inventory");
         final ModelResourceLocation model = new ModelResourceLocation(Blockbuster.path("model"), "inventory");
@@ -204,6 +205,14 @@ public class ClientProxy extends CommonProxy
 
         /* Metamorph morph builder panel */
         GuiMorphBuilder.BUILDERS.put("blockbuster", new GuiCustomModelMorphBuilder());
+
+        Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
+        ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
+
+        for (ChromaColor color : ChromaColor.values())
+        {
+            mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
+        }
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -66,14 +65,7 @@ public abstract class SubCommandBase extends CommandBase
     @Override
     public String getUsage(ICommandSender sender)
     {
-        String message = I18n.format(this.getHelp()) + "\n\n";
-
-        for (CommandBase command : this.subcommands.values())
-        {
-            message += I18n.format(command.getUsage(sender)).split("\n")[0] + "\n";
-        }
-
-        return message.trim();
+        return this.getHelp();
     }
 
     /**

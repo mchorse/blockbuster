@@ -1,4 +1,11 @@
 blockbuster.success:
+    commands:
+        mipmaped_texture: "{f}Texture %s{f} was successfully mipmapped!"
+        demipmaped_texture: "{f}Texture's mipmap %s{f} was deleted!"
+        
+        texture_filter_linear: "{f}Texture's filter was changed to linear!"
+        texture_filter_nearest: "{f}Texture's filter was changed to nearest neighbor!"
+
     director:
         play: "{f}Director block at (%s{f}, %s{f}, %s{f}) has started playing!"
         stop: "{f}Director block at (%s{f}, %s{f}, %s{f}) has stopped!"
