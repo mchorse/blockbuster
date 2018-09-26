@@ -23,6 +23,10 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
     }
 
     @Override
+    public void sort()
+    {}
+
+    @Override
     public boolean addBlock(BlockPos pos)
     {
         TileEntity tile = this.mc.theWorld.getTileEntity(pos);

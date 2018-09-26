@@ -19,6 +19,10 @@ public class GuiDirectorBlockList extends GuiBlockList<TileEntityDirector>
     }
 
     @Override
+    public void sort()
+    {}
+
+    @Override
     public boolean addBlock(BlockPos pos)
     {
         TileEntity tile = this.mc.theWorld.getTileEntity(pos);

@@ -1,34 +1,37 @@
-package mchorse.blockbuster.client.gui.framework.elements;
+package mchorse.blockbuster.client.gui.framework.elements.list;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
-public class GuiSearchListElement extends GuiElement
+public abstract class GuiSearchListElement<T> extends GuiElement
 {
-    public List<String> elements = new ArrayList<String>();
+    public List<T> elements = new ArrayList<T>();
     public GuiTextElement search;
-    public GuiStringListElement list;
+    public GuiListElement<T> list;
     public String label;
     public boolean background;
 
-    public GuiSearchListElement(Minecraft mc, Consumer<String> callback)
+    public GuiSearchListElement(Minecraft mc, Consumer<T> callback)
     {
         super(mc);
 
         this.search = new GuiTextElement(mc, 100, (str) -> this.filter(str, false));
         this.search.resizer().parent(this.area).set(0, 0, 0, 20).w(1, 0);
 
-        this.list = new GuiStringListElement(mc, callback);
+        this.list = this.createList(mc, callback);
         this.list.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
 
         this.createChildren().children.add(this.search, this.list);
     }
+
+    protected abstract GuiListElement<T> createList(Minecraft mc, Consumer<T> callback);
 
     public void filter(String str, boolean fill)
     {
@@ -42,9 +45,9 @@ public class GuiSearchListElement extends GuiElement
         }
         else
         {
-            for (String element : this.elements)
+            for (T element : this.elements)
             {
-                if (element.startsWith(str))
+                if (element.toString().toLowerCase().startsWith(str.toLowerCase()))
                 {
                     this.list.add(element);
                 }
