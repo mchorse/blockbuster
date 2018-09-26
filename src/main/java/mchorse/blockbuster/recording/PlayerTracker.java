@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -22,6 +23,14 @@ public class PlayerTracker
 
     /* Items to track */
     private ItemStack[] items = new ItemStack[6];
+
+    /**
+     * Track player swing progress, apparently, during player sleep, 
+     * {@link EntityLivingBase#isSwingInProgress} is true, however, its value 
+     * doesn't change over time. So gotta track that so it wouldn't look like 
+     * Steve is beating his meat.
+     */
+    private float lastSwing;
 
     public PlayerTracker(RecordRecorder recorder)
     {
@@ -95,7 +104,7 @@ public class PlayerTracker
      */
     private void trackSwing(EntityPlayer player)
     {
-        if (player.isSwingInProgress && player.swingProgress == 0)
+        if (player.isSwingInProgress && player.swingProgress == 0 && player.swingProgress != this.lastSwing)
         {
             this.recorder.actions.add(new SwipeAction());
 
@@ -104,5 +113,7 @@ public class PlayerTracker
                 this.recorder.actions.add(new AttackAction());
             }
         }
+
+        this.lastSwing = player.swingProgress;
     }
 }
