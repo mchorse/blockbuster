@@ -300,7 +300,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.setVisible(record != null);
         this.selector.update();
         this.editor.setDelegate(null);
-        this.list.filter("");
         this.list.setVisible(false);
     }
 

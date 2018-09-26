@@ -31,7 +31,7 @@ public class GuiRecordList extends GuiElement
     public void clear()
     {
         this.records.elements.clear();
-        this.records.filter("");
+        this.records.filter("", true);
     }
 
     public void add(List<String> records)
@@ -41,7 +41,7 @@ public class GuiRecordList extends GuiElement
             this.records.elements.add(record);
         }
 
-        this.records.filter("");
+        this.records.filter("", true);
     }
 
     @Override

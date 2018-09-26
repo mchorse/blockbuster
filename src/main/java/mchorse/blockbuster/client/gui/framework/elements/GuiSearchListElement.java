@@ -21,7 +21,7 @@ public class GuiSearchListElement extends GuiElement
     {
         super(mc);
 
-        this.search = new GuiTextElement(mc, 100, (str) -> this.filter(str));
+        this.search = new GuiTextElement(mc, 100, (str) -> this.filter(str, false));
         this.search.resizer().parent(this.area).set(0, 0, 0, 20).w(1, 0);
 
         this.list = new GuiStringListElement(mc, callback);
@@ -30,8 +30,10 @@ public class GuiSearchListElement extends GuiElement
         this.createChildren().children.add(this.search, this.list);
     }
 
-    public void filter(String str)
+    public void filter(String str, boolean fill)
     {
+        if (fill) this.search.setText(str);
+
         this.list.clear();
 
         if (str == null || str.isEmpty())
