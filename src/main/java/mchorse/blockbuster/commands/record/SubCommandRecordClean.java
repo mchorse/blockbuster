@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class SubCommandRecordClean extends SubCommandRecordBase
 {
-    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch", "fallDistance", "sprinting", "sneaking");
+    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch", "fall_distance", "sprinting", "sneaking", "active_hands");
 
     @Override
     public int getRequiredArgs()
@@ -113,7 +113,7 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         {
             return (float) frame.pitch;
         }
-        else if (property.equals("fallDistance"))
+        else if (property.equals("fall_distance"))
         {
             return frame.fallDistance;
         }
@@ -124,6 +124,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("sneaking"))
         {
             return frame.isSneaking ? 1 : 0;
+        }
+        else if (property.equals("active_hands"))
+        {
+            return frame.activeHands;
         }
 
         return 0;
@@ -155,7 +159,7 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         {
             frame.pitch = value;
         }
-        else if (property.equals("fallDistance"))
+        else if (property.equals("fall_distance"))
         {
             frame.fallDistance = value;
         }
@@ -166,6 +170,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("sneaking"))
         {
             frame.isSneaking = value == 1;
+        }
+        else if (property.equals("active_hands"))
+        {
+            frame.activeHands = (int) value;
         }
     }
 
