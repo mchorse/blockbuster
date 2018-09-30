@@ -5,7 +5,7 @@ import java.util.List;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
+import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringSearchListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -13,15 +13,14 @@ import net.minecraft.client.resources.I18n;
 public class GuiRecordList extends GuiElement
 {
     public GuiRecordingEditorPanel panel;
-
-    public GuiSearchListElement records;
+    public GuiStringSearchListElement records;
 
     public GuiRecordList(Minecraft mc, GuiRecordingEditorPanel panel)
     {
         super(mc);
 
         this.panel = panel;
-        this.records = new GuiSearchListElement(mc, (str) -> this.panel.selectRecord(str));
+        this.records = new GuiStringSearchListElement(mc, (str) -> this.panel.selectRecord(str));
         this.records.resizer().parent(this.area).set(10, 35, 0, 0).h(1, -35).w(1, -20);
         this.records.label = I18n.format("blockbuster.gui.search") + "...";
 
@@ -31,7 +30,7 @@ public class GuiRecordList extends GuiElement
     public void clear()
     {
         this.records.elements.clear();
-        this.records.filter("");
+        this.records.filter("", true);
     }
 
     public void add(List<String> records)
@@ -41,7 +40,7 @@ public class GuiRecordList extends GuiElement
             this.records.elements.add(record);
         }
 
-        this.records.filter("");
+        this.records.filter("", true);
     }
 
     @Override

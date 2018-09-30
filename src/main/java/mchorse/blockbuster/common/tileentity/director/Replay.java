@@ -177,14 +177,17 @@ public class Replay
 
         replay.id = this.id;
         replay.name = this.name;
-        replay.invincible = this.invincible;
-
-        replay.invisible = this.invisible;
 
         if (this.morph != null)
         {
             replay.morph = this.morph.clone(isRemote);
         }
+
+        replay.invincible = this.invincible;
+        replay.invisible = this.invisible;
+        replay.enabled = this.enabled;
+        replay.fake = this.fake;
+        replay.health = this.health;
 
         return replay;
     }
