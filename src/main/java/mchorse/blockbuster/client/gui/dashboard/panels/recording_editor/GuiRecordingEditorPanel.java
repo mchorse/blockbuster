@@ -8,6 +8,7 @@ import java.util.Map;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiActionSearchListElement.ActionType;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockActionPanel;
@@ -29,7 +30,6 @@ import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiSearchListElement;
 import mchorse.blockbuster.client.gui.framework.elements.IGuiLegacy;
 import mchorse.blockbuster.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.blockbuster.events.ActionPanelRegisterEvent;
@@ -78,8 +78,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public GuiButtonElement<GuiTextureButton> remove;
 
     public GuiButtonElement<GuiTextureButton> open;
-
-    public GuiSearchListElement list;
+    public GuiActionSearchListElement list;
 
     public Record record;
 
@@ -122,10 +121,18 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.dupe = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeAction()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
         this.remove = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeAction()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
 
-        this.list = new GuiSearchListElement(mc, (str) -> this.createAction(str));
+        this.list = new GuiActionSearchListElement(mc, (str) -> this.createAction(str.value));
         this.list.label = I18n.format("blockbuster.gui.search") + "...";
-        this.list.elements.addAll(ActionRegistry.NAME_TO_CLASS.keySet());
         this.list.background = true;
+
+        for (String key : ActionRegistry.NAME_TO_CLASS.keySet())
+        {
+            String title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
+
+            this.list.elements.add(new ActionType(title, key));
+        }
+
+        this.list.filter("", false);
 
         this.add.resizer().set(0, 2, 16, 16).parent(this.selector.area).x(1F, -18);
         this.dupe.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
@@ -300,7 +307,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.selector.setVisible(record != null);
         this.selector.update();
         this.editor.setDelegate(null);
-        this.list.filter("");
         this.list.setVisible(false);
     }
 

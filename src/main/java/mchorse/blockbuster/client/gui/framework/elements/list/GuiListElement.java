@@ -97,6 +97,8 @@ public abstract class GuiListElement<T> extends GuiElement
         this.list.remove(element);
     }
 
+    public abstract void sort();
+
     public void update()
     {
         this.scroll.setSize(this.list.size());
