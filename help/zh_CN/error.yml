@@ -45,7 +45,7 @@ blockbuster.error:
         add: "{f}动作类别 %s{f} 由于以下错误而无法添加：%s"
         already_exists: "{f}名为 %s{f} 的玩家录制已经存在了！"
         couldnt_save: "{f}无法以 %s{f} 文件名保存玩家录制！"
-        wrong_clean_property: "{f}给予"
+        wrong_clean_property: "{f}给予了错误的干净的属性 %s{f}！"
     
     # Recording errors
     recording:

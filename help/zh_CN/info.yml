@@ -16,6 +16,8 @@ blockbuster.info:
 
         replace_texture: "{f}材质 %s{f} 已被材质 %s{f} 替换。"
         restore_texture: "{f}材质 %s{f} 已经还原为初始状态。"
+        
+        not_loaded: "{f}材质 %s{f} 没有加载。"
 
     models.loaded: "{f}已从服务器收到 %s{f} 个自定义模型和 %s{f} 个皮肤。"
 
