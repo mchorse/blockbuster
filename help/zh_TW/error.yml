@@ -45,7 +45,7 @@ blockbuster.error:
         add: "{f}動作類別 %s{f} 由於以下錯誤而無法添加：%s"
         already_exists: "{f}名為 %s{f} 的玩家錄製已經存在了！"
         couldnt_save: "{f}不能以 %s{f} 檔案名保存玩家錄製！"
-        wrong_clean_property: "{f}給予"
+        wrong_clean_property: "{f}給予了錯誤的乾淨的屬性 %s{f}！"
     # Recording errors
     recording:
         read: "{f}命名為 %s{f} 的錄制檔案不適合播放 ({7}老版本{f}, {7}已損壞{f}, 或不是{7}錄制檔案{f})。"
