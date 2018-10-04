@@ -32,10 +32,10 @@ item:
 entity.blockbuster.Actor.name: 演员
 
 blockbuster.chroma_blocks:
-    0: 綠
-    1: 藍
-    2: 紅
-    3: 黃
+    0: 绿
+    1: 蓝
+    2: 红
+    3: 黄
     4: 青
     5: 紫
     6: 白
