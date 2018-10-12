@@ -31,6 +31,8 @@ blockbuster.error:
         export:
             error_save: "{f}Can't save exported model!"
             wrong_type: "{f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer)."
+            no_model: "{f}Can't export model %s{f} into OBJ, because it wasn't found!"
+            obj: "{f}Couldn't export model %s{f}!"
         
         reload: You supposed to be an OP user in order to reload models!
     

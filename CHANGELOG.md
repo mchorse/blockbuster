@@ -2,6 +2,27 @@
 
 Blockbuster's change log.
 
+## Version 1.5.2
+
+This patch update adds more colored blocks for chroma keying and fixes lots of things (including pose editor that I broke in `1.5.1`).
+
+* Added more colored blocks for green screen block
+* Added button in director block GUI to update player data (used by fake players option)
+* Added display titles instead of action IDs in player recording editor GUI
+* Added `active_hands`, `fall_distance`, `sprinting` and `sneaking` properties to `/record clean`
+* Added `/model texture <location> [linear] [mipmap]` command
+* Fixed pose editor which was broken in `1.5.1` (whoops, my bad)
+* Fixed some cascading transformation issues custom head blocks, held items and model blocks rendering
+* Fixed issue with no-material OBJ part not having selected texture of the model
+* Fixed crash related to clicking on an empty cell when dragging an action (reported by Chunk7)
+* Fixed some syncing issues when duplicating a replay in director block GUI (enabled, fake player and health fields)
+* Fixed constant swiping in bed as fake players
+* Fixed resetting of action list in player recording editor
+* Fixed crash with my commands having client side code, `I18n` specifically (reported by LatvianModder)
+* Optimized 3D layers to avoid creating empty display lists when there are no cells 
+* Renamed **Green block** to **Chroma block**
+* Rewritten action system to use a registry
+
 ## Version 1.5.1
 
 This patch update fixes minor bugs introduced in `1.5`, as well as fixing some of the older bugs. Also, this patch contains a little surprise for `1.10.2` and `1.11.2`, allowing them enjoy `1.12.2` exclusive item model feature introduced in `1.5`.
