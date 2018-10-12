@@ -67,6 +67,9 @@ blockbuster.gui:
         fake_player: 假玩家
         health: 健康值
         edit_record: 編輯錄制
+        update_data: 更新數據
+        updata_data_tooltip: 更新在錄製檔案中的玩家數據
+
 
     # Actor configuration GUI strings
     actor:

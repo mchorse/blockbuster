@@ -9,6 +9,8 @@ blockbuster.info:
         
         enabled_state: "{f}給定的導演方塊現在改變了狀態！"
         disabled_state: "{f}給定的導演方塊現在沒有改變狀態！"
+        
+        not_loaded: "{f}材質 %s{f} 沒有加載。"
 
     # General command infos
     commands:

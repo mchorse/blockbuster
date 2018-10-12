@@ -9,6 +9,11 @@ import com.google.common.base.MoreObjects;
  */
 public class ModelTransform
 {
+    /**
+     * Default model transform. Please don't modify its values. 
+     */
+    public static final ModelTransform DEFAULT = new ModelTransform();
+
     public float[] translate = new float[] {0, 0, 0};
     public float[] scale = new float[] {1, 1, 1};
     public float[] rotate = new float[] {0, 0, 0};
@@ -47,6 +52,7 @@ public class ModelTransform
     /**
      * Clone a model transform
      */
+    @Override
     public ModelTransform clone()
     {
         ModelTransform b = new ModelTransform();

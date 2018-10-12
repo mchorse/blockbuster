@@ -17,6 +17,7 @@ blockbuster.success:
     model:
         export:
             saved: "{f}Entity model %s{f} was saved to %s{f}."
+            obj: "{f}Successfully exported model %s{f} to OBJ!"
         
         reload: "{f}Server has reloaded the models!"
         

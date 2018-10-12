@@ -84,6 +84,12 @@ blockbuster:
                     
                     {r}{l}Attention{r}: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
             
+            export_obj:
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}Converts Blockbuster JSON model named {7}<model_name>{r} to OBJ (along side with default texture, if present, and MTL file). Exported OBJ model can be found in Blockbuster's config {l}export{r} folder. 
+
             clear:
                 |
                     {l}{6}/{r}model {8}clear{r} {7}[path]{r}
