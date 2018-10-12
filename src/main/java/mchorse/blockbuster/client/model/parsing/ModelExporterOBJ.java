@@ -26,6 +26,8 @@ import net.minecraft.util.math.Vec3d;
  * 
  * <i>slaps roof of ModelExporterOBJ</i> this bad boy can convert so much 
  * OBJ models from Blockbuster JSON models. 
+ * 
+ * TODO: Connected quads
  */
 public class ModelExporterOBJ
 {
@@ -126,7 +128,7 @@ public class ModelExporterOBJ
             int h = limb.size[1];
             int d = limb.size[2];
 
-            float ox = limb.anchor[0];
+            float ox = 1 - limb.anchor[0];
             float oy = limb.anchor[1];
             float oz = limb.anchor[2];
 
