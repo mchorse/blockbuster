@@ -28,13 +28,13 @@ import net.minecraft.util.math.BlockPos;
 public class SubCommandModelExportObj extends CommandBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "export_obj";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.export_obj";
     }
@@ -44,7 +44,7 @@ public class SubCommandModelExportObj extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         }
 
         String modelName = args[0];
@@ -100,13 +100,13 @@ public class SubCommandModelExportObj extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if (args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, ModelCustom.MODELS.keySet());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }
