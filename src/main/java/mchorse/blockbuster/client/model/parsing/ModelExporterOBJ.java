@@ -219,7 +219,7 @@ public class ModelExporterOBJ
                 Vec3d v1 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[0].vector3D);
                 Vec3d v2 = quad.vertexPositions[1].vector3D.subtractReverse(quad.vertexPositions[2].vector3D);
                 Vec3d v3 = v2.crossProduct(v1).normalize();
-                Vector3f normal = new Vector3f((float) v3.xCoord, (float) v3.yCoord, (float) v3.zCoord);
+                Vector3f normal = new Vector3f((float) v3.x, (float) v3.y, (float) v3.z);
                 String face = "f ";
 
                 rot.transform(normal);
@@ -231,7 +231,7 @@ public class ModelExporterOBJ
                 for (int i = quad.nVertices - 1; i >= 0; i--)
                 {
                     PositionTextureVertex vx = quad.vertexPositions[i];
-                    Vector4f vec = new Vector4f((float) vx.vector3D.xCoord, (float) vx.vector3D.yCoord, (float) vx.vector3D.zCoord, 1);
+                    Vector4f vec = new Vector4f((float) vx.vector3D.x, (float) vx.vector3D.y, (float) vx.vector3D.z, 1);
 
                     mat.transform(vec);
                     vertices += String.format("v %.4f %.4f %.4f\n", vec.x, vec.y, vec.z);
