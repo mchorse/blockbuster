@@ -40,6 +40,7 @@ minecraft
 
 dependencies 
 {
+	compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
 	compile files("run/libs/aperture-${aperture}-${project.minecraft.version}-dev.jar")
 }
@@ -75,6 +76,9 @@ eclipse
                 
                 lib = entries.find { it.path.contains "aperture-${aperture}" } 
                 lib.sourcePath = getMeReference(file("run/libs/aperture-${aperture}-${ver}-sources.jar"))
+                
+                lib = entries.find { it.path.contains "mclib-${mclib}" } 
+                lib.sourcePath = getMeReference(file("run/libs/mclib-${mclib}-${ver}-sources.jar"))
             }
         }
     }

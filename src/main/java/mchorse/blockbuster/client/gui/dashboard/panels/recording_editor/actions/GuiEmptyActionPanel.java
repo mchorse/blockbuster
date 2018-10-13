@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 

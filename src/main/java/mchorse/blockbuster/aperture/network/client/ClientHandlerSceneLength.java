@@ -3,7 +3,7 @@ package mchorse.blockbuster.aperture.network.client;
 import mchorse.aperture.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
-import mchorse.blockbuster.network.client.ClientMessageHandler;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -2,8 +2,8 @@ package mchorse.blockbuster.network.server.recording.actions;
 
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
-import mchorse.blockbuster.network.server.ServerMessageHandler;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerAction extends ServerMessageHandler<PacketAction>

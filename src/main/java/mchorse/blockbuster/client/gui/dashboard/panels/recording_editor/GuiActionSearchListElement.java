@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiActionSearchListElement.ActionType;
-import mchorse.blockbuster.client.gui.framework.elements.list.GuiListElement;
-import mchorse.blockbuster.client.gui.framework.elements.list.GuiSearchListElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiSearchListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 

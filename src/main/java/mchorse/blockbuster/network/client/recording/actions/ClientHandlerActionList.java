@@ -1,8 +1,8 @@
 package mchorse.blockbuster.network.client.recording.actions;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;

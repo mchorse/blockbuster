@@ -6,13 +6,13 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
-import mchorse.blockbuster.client.gui.utils.ScrollArea;
-import mchorse.blockbuster.client.gui.utils.ScrollArea.ScrollDirection;
 import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
-import mchorse.metamorph.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.utils.ScrollArea;
+import mchorse.mclib.client.gui.utils.ScrollArea.ScrollDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -225,7 +225,7 @@ public class GuiRecordSelector extends GuiElement
                     for (Action action : actions)
                     {
                         int y = this.scroll.y + j * 20 - this.vertical.scroll;
-                        int color = MathHelper.hsvToRGB((float) (ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
+                        int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
                         this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
@@ -252,7 +252,7 @@ public class GuiRecordSelector extends GuiElement
             int y = mouseY;
 
             Action action = this.panel.record.getAction(this.tick, this.index);
-            int color = MathHelper.hsvToRGB((float) (ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
+            int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
             Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
             this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
@@ -272,7 +272,7 @@ public class GuiRecordSelector extends GuiElement
         this.vertical.drawScrollbar();
         this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 64, 20, this.area.h, 32, 32, 0, 0);
-        mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);
+        GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

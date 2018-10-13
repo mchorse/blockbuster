@@ -1,9 +1,9 @@
 package mchorse.blockbuster.network.client.recording;
 
 import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -3,6 +3,7 @@ package mchorse.blockbuster.network.server;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +21,7 @@ public class ServerHandlerModifyModelBlock extends ServerMessageHandler<PacketMo
         {
             ((TileEntityModel) tile).copyData(message);
 
-            Dispatcher.get().sendToAllAround(message, new TargetPoint(player.dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
+            Dispatcher.DISPATCHER.get().sendToAllAround(message, new TargetPoint(player.dimension, pos.getX(), pos.getY(), pos.getZ(), 64));
         }
     }
 }

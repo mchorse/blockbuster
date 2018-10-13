@@ -1,8 +1,8 @@
 package mchorse.blockbuster.network.client.director;
 
 import mchorse.blockbuster.client.gui.GuiConfirm;
-import mchorse.blockbuster.network.client.ClientMessageHandler;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;

@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
 import mchorse.blockbuster.recording.actions.MountingAction;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiCheckBox;

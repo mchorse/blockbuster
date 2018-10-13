@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
-import mchorse.blockbuster.client.gui.widgets.GuiInventory;
+import mchorse.mclib.client.gui.widgets.GuiInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
