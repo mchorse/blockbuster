@@ -5,10 +5,10 @@ import java.io.IOException;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
-import mchorse.blockbuster.network.server.ServerMessageHandler;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerFramesChunk extends ServerMessageHandler<PacketFramesChunk>

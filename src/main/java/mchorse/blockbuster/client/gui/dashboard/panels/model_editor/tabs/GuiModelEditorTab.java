@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 

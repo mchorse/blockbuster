@@ -1,12 +1,12 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.widgets.GuiInventory;
-import mchorse.blockbuster.client.gui.widgets.GuiInventory.IInventoryPicker;
-import mchorse.blockbuster.client.gui.widgets.GuiSlot;
-import mchorse.blockbuster.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.blockbuster.recording.actions.EquipAction;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.widgets.GuiInventory;
+import mchorse.mclib.client.gui.widgets.GuiInventory.IInventoryPicker;
+import mchorse.mclib.client.gui.widgets.GuiSlot;
+import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;

@@ -84,12 +84,12 @@ public class CameraHandler
     public static void registerMessages()
     {
         /* Camera management */
-        Dispatcher.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
-        Dispatcher.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
-        Dispatcher.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
+        Dispatcher.DISPATCHER.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
 
-        Dispatcher.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
-        Dispatcher.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
+        Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
     @Method(modid = "aperture")

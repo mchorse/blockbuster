@@ -2,10 +2,10 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 
 import java.util.Map.Entry;
 
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
 import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 

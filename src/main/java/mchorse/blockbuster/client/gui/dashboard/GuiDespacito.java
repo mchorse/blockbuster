@@ -1,11 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.GuiTooltip.TooltipDirection;
-import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
-import mchorse.blockbuster.client.gui.utils.Resizer;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.utils.Resizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;

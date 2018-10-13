@@ -3,11 +3,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiButtonElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.framework.elements.IGuiElement;
-import mchorse.blockbuster.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;

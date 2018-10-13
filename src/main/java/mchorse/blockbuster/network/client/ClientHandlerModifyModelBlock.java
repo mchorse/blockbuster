@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.client;
 
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;

@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
 
 public class GuiDashboardPanel extends GuiElement

@@ -7,9 +7,9 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlock
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
-import mchorse.blockbuster.client.gui.framework.GuiBase;
-import mchorse.blockbuster.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.blockbuster.client.gui.utils.Resizer;
+import mchorse.mclib.client.gui.framework.GuiBase;
+import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.mclib.client.gui.utils.Resizer;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import net.minecraft.client.Minecraft;

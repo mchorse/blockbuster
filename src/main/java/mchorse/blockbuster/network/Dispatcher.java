@@ -61,43 +61,83 @@ import mchorse.blockbuster.network.server.recording.ServerHandlerUpdatePlayerDat
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestActions;
+import mchorse.mclib.network.AbstractDispatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-/**
- * Network dispatcher
- *
- * @author Ernio (Ernest Sadowski)
- */
 public class Dispatcher
 {
-    private static final SimpleNetworkWrapper DISPATCHER = NetworkRegistry.INSTANCE.newSimpleChannel(Blockbuster.MODID);
-    private static byte PACKET_ID;
-
-    public static SimpleNetworkWrapper get()
+    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Blockbuster.MODID)
     {
-        return DISPATCHER;
-    }
+        @Override
+        public void register()
+        {
+            /* Update actor properties */
+            register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
+            register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
+            register(PacketActorPause.class, ClientHandlerActorPause.class, Side.CLIENT);
+            register(PacketActorRotate.class, ServerHandlerActorRotate.class, Side.SERVER);
+
+            /* Update model block properties */
+            register(PacketModifyModelBlock.class, ClientHandlerModifyModelBlock.class, Side.CLIENT);
+            register(PacketModifyModelBlock.class, ServerHandlerModifyModelBlock.class, Side.SERVER);
+
+            /* Recording */
+            register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
+            register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
+
+            register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
+            register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
+            register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);
+
+            register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
+            register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
+
+            register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
+            register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
+            register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
+            register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
+
+            register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
+            register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
+            register(PacketRequestAction.class, ServerHandlerRequestAction.class, Side.SERVER);
+            register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
+            register(PacketActionList.class, ClientHandlerActionList.class, Side.CLIENT);
+
+            /* Director block management messages */
+            register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
+            register(PacketDirectorCast.class, ServerHandlerDirectorCast.class, Side.SERVER);
+            register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
+
+            register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
+            register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
+            register(PacketUpdatePlayerData.class, ServerHandlerUpdatePlayerData.class, Side.SERVER);
+
+            /* Director block syncing */
+            register(PacketDirectorGoto.class, ServerHandlerDirectorGoto.class, Side.SERVER);
+            register(PacketDirectorPlay.class, ServerHandlerDirectorPlay.class, Side.SERVER);
+
+            /* Multiplayer */
+            register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
+
+            /* Miscellaneous */
+            register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+
+            if (CameraHandler.isApertureLoaded())
+            {
+                CameraHandler.registerMessages();
+            }
+        }
+    };
 
     /**
      * Send message to players who are tracking given entity
      */
     public static void sendToTracked(Entity entity, IMessage message)
     {
-        EntityTracker tracker = ((WorldServer) entity.worldObj).getEntityTracker();
-
-        for (EntityPlayer player : tracker.getTrackingPlayers(entity))
-        {
-            DISPATCHER.sendTo(message, (EntityPlayerMP) player);
-        }
+        DISPATCHER.sendToTracked(entity, message);
     }
 
     /**
@@ -121,68 +161,6 @@ public class Dispatcher
      */
     public static void register()
     {
-        /* Update actor properties */
-        register(PacketModifyActor.class, ClientHandlerModifyActor.class, Side.CLIENT);
-        register(PacketModifyActor.class, ServerHandlerModifyActor.class, Side.SERVER);
-        register(PacketActorPause.class, ClientHandlerActorPause.class, Side.CLIENT);
-        register(PacketActorRotate.class, ServerHandlerActorRotate.class, Side.SERVER);
-
-        /* Update model block properties */
-        register(PacketModifyModelBlock.class, ClientHandlerModifyModelBlock.class, Side.CLIENT);
-        register(PacketModifyModelBlock.class, ServerHandlerModifyModelBlock.class, Side.SERVER);
-
-        /* Recording */
-        register(PacketCaption.class, ClientHandlerCaption.class, Side.CLIENT);
-        register(PacketPlayerRecording.class, ClientHandlerPlayerRecording.class, Side.CLIENT);
-
-        register(PacketSyncTick.class, ClientHandlerSyncTick.class, Side.CLIENT);
-        register(PacketPlayback.class, ClientHandlerPlayback.class, Side.CLIENT);
-        register(PacketPlayback.class, ServerHandlerPlayback.class, Side.SERVER);
-
-        register(PacketUnloadFrames.class, ClientHandlerUnloadFrames.class, Side.CLIENT);
-        register(PacketUnloadRecordings.class, ClientHandlerUnloadRecordings.class, Side.CLIENT);
-
-        register(PacketFramesLoad.class, ClientHandlerFrames.class, Side.CLIENT);
-        register(PacketFramesChunk.class, ServerHandlerFramesChunk.class, Side.SERVER);
-        register(PacketRequestedFrames.class, ClientHandlerRequestedFrames.class, Side.CLIENT);
-        register(PacketRequestFrames.class, ServerHandlerRequestFrames.class, Side.SERVER);
-
-        register(PacketAction.class, ServerHandlerAction.class, Side.SERVER);
-        register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
-        register(PacketRequestAction.class, ServerHandlerRequestAction.class, Side.SERVER);
-        register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
-        register(PacketActionList.class, ClientHandlerActionList.class, Side.CLIENT);
-
-        /* Director block management messages */
-        register(PacketDirectorCast.class, ClientHandlerDirectorCast.class, Side.CLIENT);
-        register(PacketDirectorCast.class, ServerHandlerDirectorCast.class, Side.SERVER);
-        register(PacketDirectorRequestCast.class, ServerHandlerDirectorRequestCast.class, Side.SERVER);
-
-        register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
-        register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);
-        register(PacketUpdatePlayerData.class, ServerHandlerUpdatePlayerData.class, Side.SERVER);
-
-        /* Director block syncing */
-        register(PacketDirectorGoto.class, ServerHandlerDirectorGoto.class, Side.SERVER);
-        register(PacketDirectorPlay.class, ServerHandlerDirectorPlay.class, Side.SERVER);
-
-        /* Multiplayer */
-        register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
-
-        /* Miscellaneous */
-        register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
-
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.registerMessages();
-        }
-    }
-
-    /**
-     * Register given message with given message handler on a given side
-     */
-    public static <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
-    {
-        DISPATCHER.registerMessage(handler, message, PACKET_ID++, side);
+        DISPATCHER.register();
     }
 }
