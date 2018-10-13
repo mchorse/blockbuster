@@ -4,7 +4,7 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.server.ServerMessageHandler;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerRequestProfiles extends ServerMessageHandler<PacketRequestProfiles>

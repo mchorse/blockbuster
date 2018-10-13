@@ -2,8 +2,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 
 public class GuiThreeElement extends GuiTwoElement
@@ -28,6 +28,7 @@ public class GuiThreeElement extends GuiTwoElement
         this.b.resizer().x.set(0.333F, Measure.RELATIVE, 0);
     }
 
+    @Override
     public void setLimit(int min, int max)
     {
         super.setLimit(min, max);

@@ -2,9 +2,9 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.framework.elements.GuiElement;
-import mchorse.blockbuster.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.blockbuster.client.gui.utils.Resizer.Measure;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import net.minecraft.client.Minecraft;
 
 public class GuiTwoElement extends GuiElement

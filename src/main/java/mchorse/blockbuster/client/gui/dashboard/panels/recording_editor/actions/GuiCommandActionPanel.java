@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import mchorse.blockbuster.client.gui.framework.GuiTooltip;
-import mchorse.blockbuster.client.gui.framework.elements.GuiTextElement;
 import mchorse.blockbuster.recording.actions.CommandAction;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import net.minecraft.client.Minecraft;
 
 public class GuiCommandActionPanel extends GuiActionPanel<CommandAction>

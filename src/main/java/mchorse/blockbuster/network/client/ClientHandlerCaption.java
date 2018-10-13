@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.client;
 
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.server;
 
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketActorRotate;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerActorRotate extends ServerMessageHandler<PacketActorRotate>

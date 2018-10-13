@@ -3,6 +3,7 @@ package mchorse.blockbuster.network.server;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.PacketReloadModels;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class ServerHandlerReloadModels extends ServerMessageHandler<PacketReloadModels>
