@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.metamorph.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
