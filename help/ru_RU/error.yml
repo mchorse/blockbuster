@@ -45,7 +45,7 @@ blockbuster.error:
         add: "{f}Действие типа %s{f} не может быть добавлено из-за ошибки: %s"
         already_exists: "{f}Запись игрока с именем %s{f} уже существует!"
         couldnt_save: "{f}Невозможно сохранить запись игрока с именем %s{f}!"
-        wrong_clean_property: "{f}Дано"
+        wrong_clean_property: "{f}дано неправильное свойство очистки %s{f}!"
     
     # Recording errors
     recording:
