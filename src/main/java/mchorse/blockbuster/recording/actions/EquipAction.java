@@ -42,6 +42,11 @@ public class EquipAction extends Action
     {
         EntityEquipmentSlot slot = this.getSlotByIndex(this.armorSlot);
 
+        if (slot == null)
+        {
+            return;
+        }
+
         if (this.itemData == null)
         {
             actor.setItemStackToSlot(slot, null);
