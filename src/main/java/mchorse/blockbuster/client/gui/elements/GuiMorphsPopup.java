@@ -1,39 +1,23 @@
 package mchorse.blockbuster.client.gui.elements;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Consumer;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.api.ModelLimb;
-import mchorse.blockbuster.api.ModelPose;
-import mchorse.blockbuster.api.ModelTransform;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
-import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster_pack.morphs.CustomMorph;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.utils.Area;
-import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
-import mchorse.metamorph.network.Dispatcher;
-import mchorse.metamorph.network.common.PacketAcquireMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 /**
  * Creative morphs GUI picker
@@ -46,107 +30,28 @@ public class GuiMorphsPopup extends GuiScreen
     public GuiTextField search;
     public GuiButton close;
     public GuiButton poses;
-    public Consumer<AbstractMorph> callback;
     private GuiCreativeMorphs morphs;
-    private AbstractMorph lastMorph;
+    public Consumer<AbstractMorph> callback;
 
     /* Poser */
     private Area area = new Area();
     private boolean hidden = true;
-
-    private GuiElements elements = new GuiElements();
-    private GuiTrackpadElement tx;
-    private GuiTrackpadElement ty;
-    private GuiTrackpadElement tz;
-
-    private GuiTrackpadElement sx;
-    private GuiTrackpadElement sy;
-    private GuiTrackpadElement sz;
-
-    private GuiTrackpadElement rx;
-    private GuiTrackpadElement ry;
-    private GuiTrackpadElement rz;
-
-    private GuiStringListElement list;
-    private GuiModelRenderer modelRenderer;
-    private GuiButtonElement<GuiCheckBox> applyOnSneak;
-
-    private ModelPose pose;
-    private ModelTransform trans;
+    private GuiTooltip tooltip = new GuiTooltip();
 
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
-        this.morphs = new GuiCreativeMorphs(perRow, selected, morphing);
-        this.morphs.setHidden(true);
+        this.morphs = new GuiCreativeMorphs(Minecraft.getMinecraft(), perRow, selected, morphing);
+        this.morphs.setVisible(false);
         this.morphs.shiftX = 8;
-
-        this.modelRenderer = new GuiModelRenderer(Minecraft.getMinecraft());
-        this.modelRenderer.looking = false;
-        this.elements.add(this.modelRenderer);
-
-        Minecraft mc = Minecraft.getMinecraft();
-
-        this.elements.setVisible(false);
-        this.tx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.translate[0] = value);
-        this.ty = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.translate[1] = value);
-        this.tz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.translate[2] = value);
-
-        this.tx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -65);
-        this.tx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
-        this.ty.resizer().set(0, 25, 60, 20).relative(this.tx.resizer());
-        this.tz.resizer().set(0, 25, 60, 20).relative(this.ty.resizer());
-
-        this.sx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.scale[0] = value);
-        this.sy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.scale[1] = value);
-        this.sz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.scale[2] = value);
-
-        this.sx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -130);
-        this.sx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
-        this.sy.resizer().set(0, 25, 60, 20).relative(this.sx.resizer());
-        this.sz.resizer().set(0, 25, 60, 20).relative(this.sy.resizer());
-
-        this.rx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.rotate[0] = value);
-        this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.rotate[1] = value);
-        this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.rotate[2] = value);
-
-        this.rx.resizer().set(0, 40, 60, 20).parent(this.area).x.set(1, Measure.RELATIVE, -130 - 65);
-        this.rx.resizer().y.set(0.5F, Measure.RELATIVE, -40);
-        this.ry.resizer().set(0, 25, 60, 20).relative(this.rx.resizer());
-        this.rz.resizer().set(0, 25, 60, 20).relative(this.ry.resizer());
-
-        GuiElement element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) -> this.reset());
-
-        element.resizer().set(0, 50, 80, 20).parent(this.area).x.set(0.5F, Measure.RELATIVE, -40);
-        element.resizer().y.set(1, Measure.RELATIVE, -30);
-        this.elements.add(element);
-
-        element = this.list = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        element.resizer().parent(this.area).set(5, 30, 80, 90).h.set(1, Measure.RELATIVE, -40);
-        this.elements.add(element);
-
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.acquire"), (b) -> Dispatcher.sendToServer(new PacketAcquireMorph(this.lastMorph)));
-        element.resizer().parent(this.area).set(5, 4, 80, 20);
-        this.elements.add(element);
-
-        this.applyOnSneak = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.morphs.sneak"), false, (b) ->
-        {
-            if (this.lastMorph instanceof CustomMorph)
-            {
-                ((CustomMorph) this.lastMorph).currentPoseOnSneak = b.button.isChecked();
-            }
-        });
-        this.applyOnSneak.resizer().relative(element.resizer()).set(85, 4, 90, 11);
-        this.elements.add(this.applyOnSneak);
-
-        this.elements.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz);
+        this.morphs.callback = (morph) -> this.selectMorph(morph);
     }
 
-    private void setLimb(String str)
+    private void selectMorph(AbstractMorph morph)
     {
-        ModelLimb limb = ((CustomMorph) this.lastMorph).model.limbs.get(str);
-
-        this.modelRenderer.limb = limb;
-        this.setTransform(this.pose.limbs.get(str));
+        if (this.callback != null)
+        {
+            this.callback.accept(morph);
+        }
     }
 
     public MorphCell getSelected()
@@ -157,39 +62,18 @@ public class GuiMorphsPopup extends GuiScreen
     public void setSelected(AbstractMorph morph)
     {
         this.morphs.setSelected(morph);
-        this.lastMorph = morph;
 
-        if (this.poses != null)
-        {
-            this.poses.enabled = this.lastMorph instanceof CustomMorph;
-        }
-    }
+        /* The unknown morph that can't be found in the morph picker 
+         * will get cloned, so we have to retrieve it */
+        MorphCell cell = this.getSelected();
 
-    public void setTransform(ModelTransform trans)
-    {
-        this.trans = trans;
-
-        if (trans != null)
-        {
-            this.tx.trackpad.setValue(trans.translate[0]);
-            this.ty.trackpad.setValue(trans.translate[1]);
-            this.tz.trackpad.setValue(trans.translate[2]);
-
-            this.sx.trackpad.setValue(trans.scale[0]);
-            this.sy.trackpad.setValue(trans.scale[1]);
-            this.sz.trackpad.setValue(trans.scale[2]);
-
-            this.rx.trackpad.setValue(trans.rotate[0]);
-            this.ry.trackpad.setValue(trans.rotate[1]);
-            this.rz.trackpad.setValue(trans.rotate[2]);
-        }
+        this.selectMorph(cell == null ? null : cell.current().morph);
     }
 
     public void hide(boolean hide)
     {
         this.hidden = hide;
-        this.morphs.setHidden(hide);
-        this.elements.setVisible(false);
+        this.morphs.setVisible(!hide);
     }
 
     public boolean isHidden()
@@ -201,7 +85,7 @@ public class GuiMorphsPopup extends GuiScreen
     {
         this.area.set(x, y, w, h);
 
-        this.morphs.updateRect(x, y + 25, w, h - 25);
+        this.morphs.area.set(x, y + 25, w, h - 25);
         this.morphs.setPerRow((int) Math.ceil(w / 54.0F));
     }
 
@@ -219,99 +103,16 @@ public class GuiMorphsPopup extends GuiScreen
         {
             this.hide(true);
         }
-        else if (button.id == 2 && this.lastMorph instanceof CustomMorph)
+        else if (button.id == 2)
         {
-            this.morphs.setHidden(!this.morphs.getHidden());
-            this.elements.setVisible(this.morphs.getHidden());
-
-            if (this.elements.isVisible())
-            {
-                CustomMorph morph = (CustomMorph) this.lastMorph.clone(true);
-                morph.notComparible = true;
-
-                /* Tricking Metamorph to explicitly copy the morph to the 
-                 * Selected slot */
-                this.setSelected(morph);
-                morph = (CustomMorph) this.getSelected().current().morph;
-                morph.notComparible = false;
-                this.lastMorph = morph;
-
-                if (this.callback != null)
-                {
-                    this.callback.accept(morph);
-                }
-
-                /* Setting up the GUI properties */
-                if (morph.customPose == null)
-                {
-                    this.pose = morph.getPose(this.mc.thePlayer).clone();
-                    morph.customPose = this.pose;
-                }
-                else
-                {
-                    this.pose = morph.customPose;
-                }
-
-                Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
-
-                this.setTransform(entry.getValue());
-
-                this.modelRenderer.model = ModelCustom.MODELS.get(morph.getKey());
-                this.modelRenderer.texture = morph.skin == null ? morph.model.defaultTexture : morph.skin;
-                this.modelRenderer.pose = this.pose;
-                this.modelRenderer.limb = morph.model.limbs.get(entry.getKey());
-                this.applyOnSneak.button.setIsChecked(morph.currentPoseOnSneak);
-
-                this.list.clear();
-                this.list.add(this.pose.limbs.keySet());
-                this.list.sort();
-                this.list.setCurrent(entry.getKey());
-            }
+            this.morphs.toggleEditMode();
         }
-    }
-
-    private void reset()
-    {
-        this.morphs.setHidden(!this.morphs.getHidden());
-        this.elements.setVisible(this.morphs.getHidden());
-
-        CustomMorph morph = (CustomMorph) this.lastMorph;
-
-        morph.customPose = null;
-        this.setTransform(null);
-    }
-
-    @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
-    {
-        super.setWorldAndResolution(mc, width, height);
-        this.morphs.setWorldAndResolution(mc, width, height);
     }
 
     @Override
     public void handleMouseInput() throws IOException
     {
-        MorphCell cell = this.morphs.getSelected();
-        this.lastMorph = cell == null ? null : cell.current().morph;
-
-        this.morphs.handleMouseInput();
         super.handleMouseInput();
-
-        if (!this.elements.isVisible())
-        {
-            cell = this.morphs.getSelected();
-            AbstractMorph morph = cell == null ? null : cell.current().morph;
-
-            if (this.lastMorph != morph)
-            {
-                this.poses.enabled = morph instanceof CustomMorph;
-
-                if (this.callback != null)
-                {
-                    this.callback.accept(morph);
-                }
-            }
-        }
 
         /* Firing a mouse scroll event */
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
@@ -323,9 +124,9 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        if (this.elements.isEnabled())
+        if (this.morphs.isEnabled())
         {
-            this.elements.mouseScrolled(x, y, scroll);
+            this.morphs.mouseScrolled(x, y, scroll);
         }
     }
 
@@ -343,19 +144,17 @@ public class GuiMorphsPopup extends GuiScreen
 
         if (!this.isInside(mouseX, mouseY))
         {
-            this.morphs.setHidden(true);
+            this.morphs.setVisible(false);
         }
 
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (this.elements.isEnabled())
+        if (this.morphs.isEnabled())
         {
-            this.elements.mouseClicked(mouseX, mouseY, mouseButton);
+            this.morphs.mouseClicked(mouseX, mouseY, mouseButton);
         }
-        else
-        {
-            this.search.mouseClicked(mouseX, mouseY, mouseButton);
-        }
+
+        this.search.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -366,9 +165,9 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        if (this.elements.isEnabled())
+        if (this.morphs.isEnabled())
         {
-            this.elements.mouseReleased(mouseX, mouseY, state);
+            this.morphs.mouseReleased(mouseX, mouseY, state);
         }
     }
 
@@ -396,36 +195,14 @@ public class GuiMorphsPopup extends GuiScreen
             }
         }
 
-        if (this.elements.isEnabled())
+        if (this.search.isFocused())
         {
-            this.elements.keyTyped(typedChar, keyCode);
+            this.search.textboxKeyTyped(typedChar, keyCode);
+            this.morphs.setFilter(this.search.getText());
         }
-        else if (!this.morphs.getHidden())
+        else if (this.morphs.isEnabled())
         {
-            if (this.search.isFocused())
-            {
-                this.search.textboxKeyTyped(typedChar, keyCode);
-                this.morphs.setFilter(this.search.getText());
-            }
-            else
-            {
-                if (keyCode == Keyboard.KEY_DOWN)
-                {
-                    this.morphs.scrollBy(30);
-                }
-                else if (keyCode == Keyboard.KEY_UP)
-                {
-                    this.morphs.scrollBy(-30);
-                }
-                else if (keyCode == Keyboard.KEY_LEFT)
-                {
-                    this.morphs.scrollTo(0);
-                }
-                else if (keyCode == Keyboard.KEY_RIGHT)
-                {
-                    this.morphs.scrollTo(this.morphs.getHeight());
-                }
-            }
+            this.morphs.keyTyped(typedChar, keyCode);
         }
     }
 
@@ -440,13 +217,12 @@ public class GuiMorphsPopup extends GuiScreen
         this.search = new GuiTextField(0, this.fontRendererObj, this.area.x + 61 - 3, this.area.y + 4, this.area.w - 87 - 65, 18);
         this.close = new GuiButton(1, this.area.x + this.area.w - 23, this.area.y + 3, 20, 20, "X");
         this.poses = new GuiButton(2, this.area.x + this.area.w - 23 - 65, this.area.y + 3, 60, 20, I18n.format("blockbuster.gui.morphs.pose"));
-        this.poses.enabled = this.lastMorph instanceof CustomMorph;
 
         this.buttonList.clear();
         this.buttonList.add(this.close);
         this.buttonList.add(this.poses);
 
-        this.elements.resize(this.width, this.height);
+        this.morphs.resize(this.width, this.height);
     }
 
     /* Rendering */
@@ -467,15 +243,12 @@ public class GuiMorphsPopup extends GuiScreen
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
 
-        this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        this.tooltip.set(null, null);
+        this.morphs.draw(this.tooltip, mouseX, mouseY, partialTicks);
 
         MorphCell cell = this.morphs.getSelected();
 
-        if (this.elements.isVisible())
-        {
-            this.elements.draw(null, mouseX, mouseY, partialTicks);
-        }
-        else if (cell != null)
+        if (cell != null && !this.morphs.isEditMode())
         {
             int width = Math.max(this.fontRendererObj.getStringWidth(cell.current().name), this.fontRendererObj.getStringWidth(cell.current().morph.name)) + 6;
             int center = this.area.getX(0.5F);
@@ -487,11 +260,8 @@ public class GuiMorphsPopup extends GuiScreen
             this.drawCenteredString(fontRendererObj, cell.current().morph.name, center, y + 14, 0x888888);
         }
 
-        if (!this.elements.isVisible())
-        {
-            this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);
-            this.search.drawTextBox();
-        }
+        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);
+        this.search.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
