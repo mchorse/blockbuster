@@ -70,8 +70,12 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     @SideOnly(Side.CLIENT)
     public void registerClient(MorphManager manager)
+    {}
+
+    @Override
+    public void registerMorphEditors(List<GuiAbstractMorph> editors)
     {
-        GuiAbstractMorph.EDITORS.add(new GuiCustomMorph(Minecraft.getMinecraft()));
+        editors.add(new GuiCustomMorph(Minecraft.getMinecraft()));
     }
 
     @SideOnly(Side.CLIENT)
