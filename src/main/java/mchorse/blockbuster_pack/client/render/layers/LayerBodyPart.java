@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.client.render.layers;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
@@ -35,7 +36,16 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
             return;
         }
 
-        renderBodyParts(morph, (ModelCustom) this.renderer.getMainModel(), partialTicks, scale);
+        ModelCustom model = (ModelCustom) this.renderer.getMainModel();
+        float swingProgress = model.swingProgress;
+        ModelPose pose = model.pose;
+
+        renderBodyParts(morph, model, partialTicks, scale);
+
+        /* Restore back properties */
+        model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
+        model.swingProgress = swingProgress;
+        model.pose = pose;
     }
 
     public static void renderBodyParts(CustomMorph morph, ModelCustom model, float partialTicks, float scale)
