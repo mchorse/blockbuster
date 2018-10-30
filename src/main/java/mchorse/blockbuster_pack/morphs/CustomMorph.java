@@ -1,6 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Objects;
@@ -10,6 +12,8 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster_pack.client.render.part.IBodyPart;
+import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -22,6 +26,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -74,6 +79,18 @@ public class CustomMorph extends AbstractMorph
      * This flag allows to fail {@link #equals(Object)} equality test 
      */
     public boolean notComparible;
+
+    /**
+     * NBT information about body part system (the actual rendering and 
+     * updating is done on client side) 
+     */
+    public NBTTagList bodyParts = new NBTTagList();
+
+    /**
+     * List of body parts (on client side only)
+     */
+    @SideOnly(Side.CLIENT)
+    public List<BodyPart> parts;
 
     /**
      * Cached key value 
@@ -140,6 +157,8 @@ public class CustomMorph extends AbstractMorph
 
             if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
+                this.initBodyParts();
+
                 model.materials = this.materials;
                 model.pose = this.getPose(player);
                 model.swingProgress = 0;
@@ -199,6 +218,8 @@ public class CustomMorph extends AbstractMorph
     {
         if (this.model != null)
         {
+            this.initBodyParts();
+
             RenderCustomModel render = (RenderCustomModel) this.renderer;
 
             render.current = this;
@@ -210,7 +231,44 @@ public class CustomMorph extends AbstractMorph
             FontRenderer font = mc.fontRendererObj;
             RenderManager manager = mc.getRenderManager();
 
-            EntityRenderer.drawNameplate(font, this.name.replace("blockbuster.", ""), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+            EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initBodyParts()
+    {
+        if (this.parts == null)
+        {
+            this.parts = new ArrayList<BodyPart>();
+
+            for (int i = 0; i < this.bodyParts.tagCount(); i++)
+            {
+                BodyPart part = new BodyPart();
+
+                part.fromNBT(this.bodyParts.getCompoundTagAt(i));
+                part.init();
+                this.parts.add(part);
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateBodyParts()
+    {
+        if (this.parts == null)
+        {
+            return;
+        }
+
+        this.bodyParts = new NBTTagList();
+
+        for (BodyPart part : this.parts)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            part.toNBT(tag);
+            this.bodyParts.appendTag(tag);
         }
     }
 
@@ -226,7 +284,29 @@ public class CustomMorph extends AbstractMorph
             this.updateSize(target, cap);
         }
 
+        if (target.worldObj.isRemote)
+        {
+            this.updateBodyLimbs();
+        }
+
         super.update(target, cap);
+    }
+
+    /**
+     * Update body limbs 
+     */
+    @SideOnly(Side.CLIENT)
+    private void updateBodyLimbs()
+    {
+        if (this.parts == null)
+        {
+            return;
+        }
+
+        for (BodyPart part : this.parts)
+        {
+            part.update();
+        }
     }
 
     /**
@@ -336,6 +416,7 @@ public class CustomMorph extends AbstractMorph
         if (isRemote)
         {
             morph.renderer = this.renderer;
+            morph.bodyParts = this.bodyParts.copy();
         }
 
         return morph;
@@ -370,6 +451,11 @@ public class CustomMorph extends AbstractMorph
 
             tag.setTag("Materials", materials);
         }
+
+        if (!this.bodyParts.hasNoTags())
+        {
+            tag.setTag("BodyParts", this.bodyParts);
+        }
     }
 
     @Override
@@ -401,6 +487,50 @@ public class CustomMorph extends AbstractMorph
             {
                 this.materials.put(key, new ResourceLocation(materials.getString(key)));
             }
+        }
+
+        this.bodyParts = tag.getTagList("BodyParts", 10);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static class BodyPart implements IBodyPart
+    {
+        public String limb = "";
+        public MorphBodyPart part;
+
+        @Override
+        public void init()
+        {
+            if (this.part != null) this.part.init();
+        }
+
+        @Override
+        public void render(float partialTicks)
+        {
+            if (this.part != null) this.part.render(partialTicks);
+        }
+
+        @Override
+        public void update()
+        {
+            if (this.part != null) this.part.update();
+        }
+
+        @Override
+        public void toNBT(NBTTagCompound tag)
+        {
+            tag.setString("Limb", this.limb);
+
+            if (this.part != null) this.part.toNBT(tag);
+        }
+
+        @Override
+        public void fromNBT(NBTTagCompound tag)
+        {
+            this.limb = tag.getString("Limb");
+            this.part = new MorphBodyPart();
+
+            this.part.fromNBT(tag);
         }
     }
 }

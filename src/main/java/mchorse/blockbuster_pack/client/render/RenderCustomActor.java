@@ -2,7 +2,9 @@ package mchorse.blockbuster_pack.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.client.render.layer.LayerHeldItem;
 import mchorse.blockbuster_pack.client.render.layers.LayerActorArmor;
+import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.client.render.layers.LayerCustomHead;
 import mchorse.blockbuster_pack.client.render.layers.LayerElytra;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -24,8 +26,10 @@ public class RenderCustomActor extends RenderCustomModel
         super(renderManagerIn, modelBaseIn, shadowSizeIn);
 
         this.addLayer(new LayerElytra(this));
+        this.addLayer(new LayerBodyPart(this));
         this.addLayer(new LayerActorArmor(this));
         this.addLayer(new LayerCustomHead(this));
+        this.addLayer(new LayerHeldItem(this));
     }
 
     /**

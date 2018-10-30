@@ -258,13 +258,14 @@ public class GuiModelRenderer extends GuiElement
             RenderCustomModel.bindLastTexture(this.texture);
         }
 
-        this.renderModel(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
+        this.renderModel(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, partialTicks, factor);
 
         if (this.items)
         {
             ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partialTicks, this.timer, yaw, pitch, factor);
         }
 
+        GlStateManager.disableCull();
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
@@ -297,6 +298,7 @@ public class GuiModelRenderer extends GuiElement
 
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableAlpha();
+        GlStateManager.enableCull();
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
@@ -317,7 +319,7 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.matrixMode(5888);
     }
 
-    protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float factor)
+    protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
     {
         this.model.render(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
     }

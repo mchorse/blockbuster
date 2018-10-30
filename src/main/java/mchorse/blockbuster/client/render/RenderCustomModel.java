@@ -6,7 +6,6 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
-import mchorse.blockbuster.client.render.layer.LayerHeldItem;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -45,8 +44,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     public RenderCustomModel(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
     {
         super(renderManagerIn, null, shadowSizeIn);
-
-        this.addLayer(new LayerHeldItem(this));
     }
 
     /**

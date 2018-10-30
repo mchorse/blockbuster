@@ -7,6 +7,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -16,8 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
 
 /**
  * Creative morphs GUI picker
@@ -27,20 +26,16 @@ import net.minecraft.client.resources.I18n;
 public class GuiMorphsPopup extends GuiScreen
 {
     /* GUI fields */
-    public GuiTextField search;
-    public GuiButton close;
-    public GuiButton poses;
     private GuiCreativeMorphs morphs;
     public Consumer<AbstractMorph> callback;
 
     /* Poser */
     private Area area = new Area();
-    private boolean hidden = true;
     private GuiTooltip tooltip = new GuiTooltip();
 
     public GuiMorphsPopup(int perRow, AbstractMorph selected, IMorphing morphing)
     {
-        this.morphs = new GuiCreativeMorphs(Minecraft.getMinecraft(), perRow, selected, morphing);
+        this.morphs = new GuiCreativeMorphsMenu(Minecraft.getMinecraft(), perRow, selected, morphing);
         this.morphs.setVisible(false);
         this.morphs.shiftX = 8;
         this.morphs.callback = (morph) -> this.selectMorph(morph);
@@ -72,21 +67,20 @@ public class GuiMorphsPopup extends GuiScreen
 
     public void hide(boolean hide)
     {
-        this.hidden = hide;
         this.morphs.setVisible(!hide);
     }
 
     public boolean isHidden()
     {
-        return this.hidden;
+        return !this.morphs.isVisible();
     }
 
     public void updateRect(int x, int y, int w, int h)
     {
         this.area.set(x, y, w, h);
 
-        this.morphs.area.set(x, y + 25, w, h - 25);
-        this.morphs.setPerRow((int) Math.ceil(w / 54.0F));
+        this.morphs.area.set(x, y, w, h);
+        this.morphs.setPerRow((int) Math.ceil(w / 50.0F));
     }
 
     public boolean isInside(int x, int y)
@@ -153,8 +147,6 @@ public class GuiMorphsPopup extends GuiScreen
         {
             this.morphs.mouseClicked(mouseX, mouseY, mouseButton);
         }
-
-        this.search.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -185,9 +177,9 @@ public class GuiMorphsPopup extends GuiScreen
 
         if (keyCode == 1)
         {
-            if (this.search.isFocused())
+            if (this.morphs.search.field.isFocused())
             {
-                this.search.setFocused(false);
+                this.morphs.search.field.setFocused(false);
             }
             else
             {
@@ -195,12 +187,7 @@ public class GuiMorphsPopup extends GuiScreen
             }
         }
 
-        if (this.search.isFocused())
-        {
-            this.search.textboxKeyTyped(typedChar, keyCode);
-            this.morphs.setFilter(this.search.getText());
-        }
-        else if (this.morphs.isEnabled())
+        if (this.morphs.isEnabled())
         {
             this.morphs.keyTyped(typedChar, keyCode);
         }
@@ -214,14 +201,6 @@ public class GuiMorphsPopup extends GuiScreen
     @Override
     public void initGui()
     {
-        this.search = new GuiTextField(0, this.fontRendererObj, this.area.x + 61 - 3, this.area.y + 4, this.area.w - 87 - 65, 18);
-        this.close = new GuiButton(1, this.area.x + this.area.w - 23, this.area.y + 3, 20, 20, "X");
-        this.poses = new GuiButton(2, this.area.x + this.area.w - 23 - 65, this.area.y + 3, 60, 20, I18n.format("blockbuster.gui.morphs.pose"));
-
-        this.buttonList.clear();
-        this.buttonList.add(this.close);
-        this.buttonList.add(this.poses);
-
         this.morphs.resize(this.width, this.height);
     }
 
@@ -240,9 +219,6 @@ public class GuiMorphsPopup extends GuiScreen
             return;
         }
 
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xcc000000);
-
         this.tooltip.set(null, null);
         this.morphs.draw(this.tooltip, mouseX, mouseY, partialTicks);
 
@@ -252,17 +228,50 @@ public class GuiMorphsPopup extends GuiScreen
         {
             int width = Math.max(this.fontRendererObj.getStringWidth(cell.current().name), this.fontRendererObj.getStringWidth(cell.current().morph.name)) + 6;
             int center = this.area.getX(0.5F);
-            int y = this.area.y + 34;
+            int y = this.area.y + 40;
 
-            Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0xcc000000);
+            Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0x88000000);
 
             this.drawCenteredString(fontRendererObj, cell.current().name, center, y, 0xffffff);
             this.drawCenteredString(fontRendererObj, cell.current().morph.name, center, y + 14, 0x888888);
         }
 
-        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.search"), this.area.x + 9, this.area.y + 9, 0xffffffff);
-        this.search.drawTextBox();
-
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    /**
+     * Creative morph menu, but with a close button 
+     */
+    public static class GuiCreativeMorphsMenu extends GuiCreativeMorphs
+    {
+        private GuiButtonElement<GuiButton> close;
+
+        public GuiCreativeMorphsMenu(Minecraft mc, int perRow, AbstractMorph selected, IMorphing morphing)
+        {
+            super(mc, perRow, selected, morphing);
+
+            this.close = GuiButtonElement.button(mc, "X", (b) -> this.setVisible(false));
+            this.close.resizer().parent(this.area).set(10, 10, 20, 20);
+            this.children.add(this.close);
+
+            this.search.resizer().set(35, 10, 0, 20).w(1, -130);
+        }
+
+        @Override
+        public void toggleEditMode()
+        {
+            super.toggleEditMode();
+
+            this.close.setVisible(this.editor.delegate == null);
+        }
+
+        @Override
+        public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+        {
+            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xaa000000);
+
+            super.draw(tooltip, mouseX, mouseY, partialTicks);
+        }
     }
 }
