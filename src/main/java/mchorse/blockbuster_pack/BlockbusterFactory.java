@@ -6,17 +6,18 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
-import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
+import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -68,6 +69,16 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     @SideOnly(Side.CLIENT)
     public void registerClient(MorphManager manager)
+    {}
+
+    @Override
+    public void registerMorphEditors(List<GuiAbstractMorph> editors)
+    {
+        editors.add(new GuiCustomMorph(Minecraft.getMinecraft()));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateRenderers()
     {
         for (CustomMorph morph : this.morphs.values())
         {
@@ -131,21 +142,6 @@ public class BlockbusterFactory implements IMorphFactory
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
                 morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
-
-                for (Map.Entry<String, ModelPose> entry : actor.model.poses.entrySet())
-                {
-                    String pose = entry.getKey();
-
-                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
-                    {
-                        continue;
-                    }
-
-                    CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
-
-                    poseActor.currentPose = pose;
-                    morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", "pose " + pose, poseActor);
-                }
             }
 
             /* Morphs with skins */
@@ -167,21 +163,6 @@ public class BlockbusterFactory implements IMorphFactory
 
                 actor.skin = new TextureLocation("blockbuster.actors", skin);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
-
-                for (Map.Entry<String, ModelPose> entry : actor.model.poses.entrySet())
-                {
-                    String pose = entry.getKey();
-
-                    if (Model.REQUIRED_POSES.contains(pose) || pose.equals("riding"))
-                    {
-                        continue;
-                    }
-
-                    CustomMorph poseActor = (CustomMorph) actor.clone(world.isRemote);
-
-                    poseActor.currentPose = pose;
-                    morphs.addMorphVariant(actor.name + "." + pose, "blockbuster", skin, poseActor);
-                }
             }
         }
     }

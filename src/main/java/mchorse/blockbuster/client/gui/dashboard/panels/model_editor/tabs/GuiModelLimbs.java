@@ -262,8 +262,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void parentLimb(String text)
     {
-        this.panel.limb.parent = text;
-        this.panel.rebuildModel();
+        if (!this.panel.limb.name.equals(text))
+        {
+            this.panel.limb.parent = text;
+            this.panel.rebuildModel();
+        }
     }
 
     private void setLimb(String str)

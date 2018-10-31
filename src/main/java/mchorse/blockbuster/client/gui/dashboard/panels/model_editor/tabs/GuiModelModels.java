@@ -35,7 +35,7 @@ public class GuiModelModels extends GuiModelEditorTab
 {
     public GuiStringListElement modelList;
     private GuiButtonElement<GuiTextureButton> save;
-    private GuiButtonElement<GuiTextureButton> export;
+    public GuiButtonElement<GuiTextureButton> export;
     private GuiDelegateElement<IGuiElement> modal;
 
     public GuiModelModels(Minecraft mc, GuiModelEditorPanel panel)
@@ -51,8 +51,8 @@ public class GuiModelModels extends GuiModelEditorTab
         this.save = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveModel()).tooltip(I18n.format("blockbuster.gui.me.models.save"), TooltipDirection.BOTTOM);
         this.export = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) -> this.exportModel()).tooltip(I18n.format("blockbuster.gui.me.models.export"), TooltipDirection.BOTTOM);
 
-        this.save.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -38);
-        this.export.resizer().set(20, 0, 16, 16).relative(this.save.resizer());
+        this.save.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -18);
+        this.export.resizer().set(-20, 0, 16, 16).relative(this.save.resizer());
         this.children.add(this.save, this.export);
 
         this.modal = new GuiDelegateElement<IGuiElement>(mc, null);

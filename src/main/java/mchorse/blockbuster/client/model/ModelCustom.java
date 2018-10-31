@@ -6,6 +6,7 @@ import java.util.Map;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -221,7 +222,7 @@ public class ModelCustom extends ModelBiped
                 limb.rotateAngleZ += MathHelper.sin(this.swingProgress * PI) * -0.4F * factor;
             }
 
-            if (limb.limb.holding != Holding.NONE && limb.limb.parent.isEmpty())
+            if (limb.limb.holding != Holding.NONE)
             {
                 boolean right = limb.limb.holding == Holding.RIGHT;
                 ModelBiped.ArmPose pose = right ? this.rightArmPose : this.leftArmPose;
@@ -265,7 +266,9 @@ public class ModelCustom extends ModelBiped
      */
     public void applyLimbPose(ModelCustomRenderer limb)
     {
-        limb.applyTransform(this.pose.limbs.get(limb.limb.name));
+        ModelTransform trans = this.pose.limbs.get(limb.limb.name);
+
+        limb.applyTransform(trans == null ? ModelTransform.DEFAULT : trans);
     }
 
     /**

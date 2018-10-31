@@ -12,7 +12,6 @@ blockbuster.config:
     model_block:
         title: Model block
         
-        model_block_disable_culling_workaround: Disable culling workaround
         model_block_disable_item_rendering: Disable item rendering
     
     recording:
@@ -25,6 +24,7 @@ blockbuster.config:
         record_sync_rate: Record tick synchronization rate
         record_attack_on_swipe: Attack on swipe
         record_commands: Record commands
+        record_chat_prefix: Chat action prefix
     
     actor:
         title: Actor

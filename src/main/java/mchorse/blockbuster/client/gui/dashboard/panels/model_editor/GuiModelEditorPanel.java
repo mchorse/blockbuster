@@ -150,6 +150,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         this.models.updateModelList();
         this.models.modelList.setCurrent(this.modelName);
+        this.models.export.setVisible(Minecraft.getMinecraft().world != null);
 
         if (this.models.modelList.current == -1)
         {

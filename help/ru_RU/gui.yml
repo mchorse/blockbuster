@@ -67,6 +67,8 @@ blockbuster.gui:
         fake_player: Поддельный игрок
         health: Здоровье
         edit_record: Редактировать запись
+        update_data: Обновить данные
+        update_data_tooltip: Обновляет данные игрока в файле записи
     
     # Actor configuration GUI strings
     actor:
