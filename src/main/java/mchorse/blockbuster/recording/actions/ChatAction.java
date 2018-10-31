@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.recording.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +29,15 @@ public class ChatAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
-        Utils.broadcastMessage(this.message.replace('[', '§'));
+        String message = this.message.replace('[', '§');
+        String prefix = Blockbuster.proxy.config.record_chat_prefix;
+
+        if (!prefix.isEmpty())
+        {
+            message = prefix.replace("%NAME%", actor.getName()) + message;
+        }
+
+        Utils.broadcastMessage(message);
     }
 
     @Override
