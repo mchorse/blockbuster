@@ -66,6 +66,15 @@ public class GuiModelRenderer extends GuiElement
         this.dummy = new DummyEntity(null);
     }
 
+    public void reset()
+    {
+        this.yaw = 0;
+        this.pitch = 0;
+        this.x = 0;
+        this.y = 0;
+        this.scale = 0;
+    }
+
     public void swipe()
     {
         this.swipe = 6;
@@ -249,13 +258,14 @@ public class GuiModelRenderer extends GuiElement
             RenderCustomModel.bindLastTexture(this.texture);
         }
 
-        model.render(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, factor);
+        this.renderModel(this.dummy, headYaw, headPitch, this.timer, yaw, pitch, partialTicks, factor);
 
         if (this.items)
         {
             ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partialTicks, this.timer, yaw, pitch, factor);
         }
 
+        GlStateManager.disableCull();
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
@@ -288,6 +298,7 @@ public class GuiModelRenderer extends GuiElement
 
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableAlpha();
+        GlStateManager.enableCull();
         GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
@@ -306,6 +317,11 @@ public class GuiModelRenderer extends GuiElement
         GlStateManager.loadIdentity();
         GlStateManager.ortho(0.0D, screen.width, screen.height, 0.0D, 1000.0D, 3000000.0D);
         GlStateManager.matrixMode(5888);
+    }
+
+    protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
+    {
+        this.model.render(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
     }
 
     /**

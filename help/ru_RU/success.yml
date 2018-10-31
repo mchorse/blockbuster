@@ -1,4 +1,11 @@
 blockbuster.success:
+    commands:
+        mipmaped_texture: "{f}Для текстуры %s{f} был успешно создана MIP карта!"
+        demipmaped_texture: "{f}MIP карта текстуры %s{f} была удалена!"
+        
+        texture_filter_linear: "{f}Фильтрация текстуры была сменена на линейную!"
+        texture_filter_nearest: "{f}Фильтрация текстуры была сменена на ближайший!"
+    
     director:
         play: "{f}Блок режиссёра в точке (%s{f}, %s{f}, %s{f}) начал воспроизведение!"
         stop: "{f}Блок режиссёра в точке (%s{f}, %s{f}, %s{f}) остановился!"

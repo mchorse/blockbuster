@@ -7,6 +7,7 @@ import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandRecordSound;
+import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -138,6 +139,7 @@ public class Blockbuster
         event.registerServerCommand(new CommandDirector());
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandRecordSound());
+        event.registerServerCommand(new CommandSpectate());
         event.registerServerCommand(new CommandOnHead());
     }
 

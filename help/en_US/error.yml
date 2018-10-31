@@ -16,6 +16,8 @@ blockbuster.error:
         replace_texture: "{f}Texture %s{f} and %s{f} aren't loaded!"
         replace_texture_one: "{f}Texture %s{f} isn't loaded!"
         
+        no_player: "{f}Player %s{f} couldn't be found!"
+        no_entity: "{f}Given entity with target selector %s{f}, couldn't be found!"
     
     # Director block error strings
     director:

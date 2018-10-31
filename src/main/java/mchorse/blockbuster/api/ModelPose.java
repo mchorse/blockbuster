@@ -37,6 +37,7 @@ public class ModelPose
     /**
      * Clone a model pose
      */
+    @Override
     public ModelPose clone()
     {
         ModelPose b = new ModelPose();
@@ -59,7 +60,7 @@ public class ModelPose
 
             if (list.tagCount() >= 3)
             {
-                this.readFloatList(list, this.size);
+                readFloatList(list, this.size);
             }
         }
 
@@ -74,9 +75,9 @@ public class ModelPose
                 NBTTagCompound pose = poses.getCompoundTag(key);
                 ModelTransform trans = new ModelTransform();
 
-                this.readFloatList(pose.getTagList("P", 5), trans.translate);
-                this.readFloatList(pose.getTagList("S", 5), trans.scale);
-                this.readFloatList(pose.getTagList("R", 5), trans.rotate);
+                readFloatList(pose.getTagList("P", 5), trans.translate);
+                readFloatList(pose.getTagList("S", 5), trans.scale);
+                readFloatList(pose.getTagList("R", 5), trans.rotate);
 
                 this.limbs.put(key, trans);
             }
@@ -87,7 +88,7 @@ public class ModelPose
     {
         NBTTagCompound poses = new NBTTagCompound();
 
-        tag.setTag("Size", this.writeFloatList(new NBTTagList(), this.size));
+        tag.setTag("Size", writeFloatList(new NBTTagList(), this.size));
         tag.setTag("Poses", poses);
 
         for (Map.Entry<String, ModelTransform> entry : this.limbs.entrySet())
@@ -95,9 +96,9 @@ public class ModelPose
             NBTTagCompound pose = new NBTTagCompound();
             ModelTransform trans = entry.getValue();
 
-            pose.setTag("P", this.writeFloatList(new NBTTagList(), trans.translate));
-            pose.setTag("S", this.writeFloatList(new NBTTagList(), trans.scale));
-            pose.setTag("R", this.writeFloatList(new NBTTagList(), trans.rotate));
+            pose.setTag("P", writeFloatList(new NBTTagList(), trans.translate));
+            pose.setTag("S", writeFloatList(new NBTTagList(), trans.scale));
+            pose.setTag("R", writeFloatList(new NBTTagList(), trans.rotate));
 
             poses.setTag(entry.getKey(), pose);
         }
@@ -105,7 +106,7 @@ public class ModelPose
         return tag;
     }
 
-    public void readFloatList(NBTTagList list, float[] array)
+    public static void readFloatList(NBTTagList list, float[] array)
     {
         int count = Math.min(array.length, list.tagCount());
 
@@ -115,7 +116,7 @@ public class ModelPose
         }
     }
 
-    public NBTTagList writeFloatList(NBTTagList list, float[] array)
+    public static NBTTagList writeFloatList(NBTTagList list, float[] array)
     {
         for (int i = 0; i < array.length; i++)
         {

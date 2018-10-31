@@ -7,7 +7,6 @@ blockbuster.config.comments:
         green_screen_sky: Makes the sky fully green for chroma keying purposes
 
     model_block:
-        model_block_disable_culling_workaround: Whether model block culling workaround should be disabled
         model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
 
     recording:
@@ -18,6 +17,7 @@ blockbuster.config.comments:
         record_sync_rate: How often a recording is going to synchronize with the server?
         record_attack_on_swipe: Does attack action get recorded with swipe action?
         record_commands: Does command action get recorded during recording?
+        record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)
 
     actor:
         actor_fall_damage: Do actors receive fall damage?

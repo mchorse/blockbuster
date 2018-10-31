@@ -24,9 +24,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
-import mchorse.blockbuster_pack.client.gui.GuiCustomModelMorphBuilder;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
-import mchorse.metamorph.client.gui.builder.GuiMorphBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -203,9 +201,6 @@ public class ClientProxy extends CommonProxy
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
 
-        /* Metamorph morph builder panel */
-        GuiMorphBuilder.BUILDERS.put("blockbuster", new GuiCustomModelMorphBuilder());
-
         Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
         ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 
@@ -229,7 +224,7 @@ public class ClientProxy extends CommonProxy
     {
         super.loadModels(pack, force);
 
-        this.factory.registerClient(null);
+        this.factory.updateRenderers();
     }
 
     protected void registerItemModel(Block block, String path)

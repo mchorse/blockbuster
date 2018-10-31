@@ -1,6 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Objects;
@@ -11,18 +13,25 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.utils.TextureLocation;
-import mchorse.mclib.client.gui.utils.GuiUtils;
+import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
+import mchorse.blockbuster_pack.client.render.part.IBodyPart;
+import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -75,6 +84,16 @@ public class CustomMorph extends AbstractMorph
      * This flag allows to fail {@link #equals(Object)} equality test 
      */
     public boolean notComparible;
+
+    /**
+     * List of body parts (on client side only)
+     */
+    public List<BodyPart> parts = new ArrayList<BodyPart>();
+
+    /**
+     * Whether body parts were initiated 
+     */
+    public boolean initiated;
 
     /**
      * Cached key value 
@@ -141,6 +160,8 @@ public class CustomMorph extends AbstractMorph
 
             if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
+                this.initBodyParts();
+
                 model.materials = this.materials;
                 model.pose = this.getPose(player);
                 model.swingProgress = 0;
@@ -148,7 +169,7 @@ public class CustomMorph extends AbstractMorph
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
                 RenderCustomModel.bindLastTexture(texture);
 
-                GuiUtils.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
+                this.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
             }
         }
         else
@@ -160,6 +181,60 @@ public class CustomMorph extends AbstractMorph
             font.drawStringWithShadow(error, x - font.getStringWidth(error) / 2, y - (int) (font.FONT_HEIGHT * 2.5), 0xff2222);
             font.drawStringWithShadow(this.name, x - width / 2, y - font.FONT_HEIGHT, 0xffffff);
         }
+    }
+
+    /**
+     * Draw a {@link ModelBase} without using the {@link RenderManager} (which 
+     * adds a lot of useless transformations and stuff to the screen rendering).
+     */
+    @SideOnly(Side.CLIENT)
+    private void drawModel(ModelCustom model, EntityPlayer player, int x, int y, float scale, float alpha)
+    {
+        float factor = 0.0625F;
+
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 50.0F);
+        GlStateManager.scale((-scale), scale, scale);
+        GlStateManager.rotate(45.0F, -1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(45.0F, 0.0F, -1.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+
+        RenderHelper.enableStandardItemLighting();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.disableCull();
+
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+        GlStateManager.translate(0.0F, -1.501F, 0.0F);
+
+        GlStateManager.enableAlpha();
+
+        model.setLivingAnimations(player, 0, 0, 0);
+        model.setRotationAngles(0, 0, player.ticksExisted, 0, 0, factor, player);
+
+        GlStateManager.enableDepth();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+
+        model.render(player, 0, 0, 0, 0, 0, factor);
+        LayerBodyPart.renderBodyParts(this, model, 0F, factor);
+
+        GlStateManager.disableDepth();
+
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableAlpha();
+        GlStateManager.popMatrix();
+
+        GlStateManager.popMatrix();
+
+        RenderHelper.disableStandardItemLighting();
+
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     @Override
@@ -200,6 +275,8 @@ public class CustomMorph extends AbstractMorph
     {
         if (this.model != null)
         {
+            this.initBodyParts();
+
             RenderCustomModel render = (RenderCustomModel) this.renderer;
 
             render.current = this;
@@ -211,7 +288,21 @@ public class CustomMorph extends AbstractMorph
             FontRenderer font = mc.fontRenderer;
             RenderManager manager = mc.getRenderManager();
 
-            EntityRenderer.drawNameplate(font, this.name.replace("blockbuster.", ""), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+            EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initBodyParts()
+    {
+        if (!this.initiated)
+        {
+            for (BodyPart part : this.parts)
+            {
+                part.init();
+            }
+
+            this.initiated = true;
         }
     }
 
@@ -227,7 +318,29 @@ public class CustomMorph extends AbstractMorph
             this.updateSize(target, cap);
         }
 
+        if (target.world.isRemote)
+        {
+            this.updateBodyLimbs();
+        }
+
         super.update(target, cap);
+    }
+
+    /**
+     * Update body limbs 
+     */
+    @SideOnly(Side.CLIENT)
+    private void updateBodyLimbs()
+    {
+        if (this.parts == null)
+        {
+            return;
+        }
+
+        for (BodyPart part : this.parts)
+        {
+            part.update();
+        }
     }
 
     /**
@@ -281,6 +394,7 @@ public class CustomMorph extends AbstractMorph
             result = result && Objects.equal(this.currentPose, morph.currentPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
             result = result && this.materials.equals(morph.materials);
+            result = result && this.parts.equals(morph.parts);
 
             if (this.customPose != null && morph.customPose != null)
             {
@@ -310,6 +424,15 @@ public class CustomMorph extends AbstractMorph
     }
 
     @Override
+    public void reset()
+    {
+        super.reset();
+
+        this.key = null;
+        this.initiated = false;
+    }
+
+    @Override
     public AbstractMorph clone(boolean isRemote)
     {
         CustomMorph morph = new CustomMorph();
@@ -331,8 +454,9 @@ public class CustomMorph extends AbstractMorph
             morph.materials.putAll(this.materials);
         }
 
-        morph.settings = settings;
+        morph.settings = this.settings;
         morph.model = this.model;
+        morph.parts.addAll(this.parts);
 
         if (isRemote)
         {
@@ -371,6 +495,25 @@ public class CustomMorph extends AbstractMorph
 
             tag.setTag("Materials", materials);
         }
+
+        if (!this.parts.isEmpty())
+        {
+            NBTTagList bodyParts = new NBTTagList();
+
+            for (BodyPart part : this.parts)
+            {
+                NBTTagCompound bodyPart = new NBTTagCompound();
+
+                part.toNBT(bodyPart);
+
+                if (!bodyPart.hasNoTags())
+                {
+                    bodyParts.appendTag(bodyPart);
+                }
+            }
+
+            tag.setTag("BodyParts", bodyParts);
+        }
     }
 
     @Override
@@ -402,6 +545,83 @@ public class CustomMorph extends AbstractMorph
             {
                 this.materials.put(key, new TextureLocation(materials.getString(key)));
             }
+        }
+
+        if (tag.hasKey("BodyParts", 9))
+        {
+            NBTTagList bodyParts = tag.getTagList("BodyParts", 10);
+
+            for (int i = 0, c = bodyParts.tagCount(); i < c; i++)
+            {
+                NBTTagCompound bodyPart = bodyParts.getCompoundTagAt(i);
+                BodyPart part = new BodyPart();
+
+                part.fromNBT(bodyPart);
+                this.parts.add(part);
+            }
+        }
+    }
+
+    public static class BodyPart implements IBodyPart
+    {
+        public String limb = "";
+        public MorphBodyPart part;
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void init()
+        {
+            if (this.part != null) this.part.init();
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void render(float partialTicks)
+        {
+            if (this.part != null) this.part.render(partialTicks);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void update()
+        {
+            if (this.part != null) this.part.update();
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            boolean result = super.equals(obj);
+
+            if (obj instanceof BodyPart)
+            {
+                BodyPart part = (BodyPart) obj;
+
+                result = result && Objects.equal(this.limb, part.limb);
+                result = result && Objects.equal(this.part, part.part);
+            }
+
+            return result;
+        }
+
+        @Override
+        public void toNBT(NBTTagCompound tag)
+        {
+            if (this.part == null)
+            {
+                return;
+            }
+
+            tag.setString("Limb", this.limb);
+            this.part.toNBT(tag);
+        }
+
+        @Override
+        public void fromNBT(NBTTagCompound tag)
+        {
+            this.limb = tag.getString("Limb");
+            this.part = new MorphBodyPart();
+            this.part.fromNBT(tag);
         }
     }
 }

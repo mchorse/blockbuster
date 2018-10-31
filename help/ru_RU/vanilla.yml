@@ -10,7 +10,7 @@ blockbuster:
         register: Соединяет актёров и блоки режиссёра
         director_block: Управляет актерами и записями
         model_block: Позволяет использовать морфы как статичные модели
-        green_block: Можно использовать как зелёный экран
+        green_block: "%s хромаблок. Может быть использован для хромакеинга."
 
 # Creative tabs
 itemGroup.blockbuster: Блокбастер
@@ -19,7 +19,7 @@ itemGroup.blockbuster: Блокбастер
 tile.blockbuster:
     director.name: Блок режиссёра
     model.name: Блок-модель
-    green.name: Зелёный блок
+    green.name: Хромаблок
 
 # Item names
 item:
@@ -30,3 +30,13 @@ item:
 
 # Entity names
 entity.blockbuster.Actor.name: Актёр
+
+blockbuster.chroma_blocks:
+    0: Зелёный
+    1: Синий
+    2: Красный
+    3: Жёлтый
+    4: Бирюзовый
+    5: Фиолетовый
+    6: Белый
+    7: Черный
