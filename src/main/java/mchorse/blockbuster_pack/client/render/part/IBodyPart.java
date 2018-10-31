@@ -7,13 +7,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Interface for body-part system part
  */
-@SideOnly(Side.CLIENT)
 public interface IBodyPart
 {
+    @SideOnly(Side.CLIENT)
     public void init();
 
+    @SideOnly(Side.CLIENT)
     public void render(float partialTicks);
 
+    @SideOnly(Side.CLIENT)
     public void update();
 
     public void toNBT(NBTTagCompound tag);

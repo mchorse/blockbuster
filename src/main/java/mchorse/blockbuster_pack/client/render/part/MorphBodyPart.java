@@ -21,9 +21,11 @@ public class MorphBodyPart implements IBodyPart
     public float[] scale = new float[] {1, 1, 1};
     public float[] rotate = new float[3];
 
+    @SideOnly(Side.CLIENT)
     private EntityLivingBase entity;
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void init()
     {
         this.entity = new EntityActor(Minecraft.getMinecraft().theWorld);
@@ -32,6 +34,7 @@ public class MorphBodyPart implements IBodyPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void render(float partialTicks)
     {
         if (this.morph == null || this.entity == null)
@@ -53,6 +56,7 @@ public class MorphBodyPart implements IBodyPart
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void update()
     {
         if (this.entity != null)
@@ -69,7 +73,10 @@ public class MorphBodyPart implements IBodyPart
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
-        this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
+        if (tag.hasKey("Morph", 10))
+        {
+            this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
+        }
 
         ModelPose.readFloatList(tag.getTagList("T", 5), this.translate);
         ModelPose.readFloatList(tag.getTagList("S", 5), this.scale);
@@ -85,10 +92,10 @@ public class MorphBodyPart implements IBodyPart
 
             this.morph.toNBT(morph);
             tag.setTag("Morph", morph);
-        }
 
-        tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
-        tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
-        tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+            tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
+            tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
+            tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+        }
     }
 }
