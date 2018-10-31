@@ -137,3 +137,10 @@ blockbuster:
                     {l}{6}/{r}action {8}stop{r}
                     
                     {r}Stops the recording of action. If the player didn't record anything, nothing will happen.
+        
+        on_head.help: "{r}{o}On head command{r}. This command allows putting currently held item in the main slot directly in the head slot, without any hassle of coming up with NBT data tag."
+        spectate.help: 
+            |
+                {r}{o}Spectate command{r}. This command allows making given player to spectate given entity.
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}
