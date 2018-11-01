@@ -48,7 +48,11 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morph = morph;
+            if (act.morph == null || (act.morph != null && !act.morph.canMerge(morph)))
+            {
+                act.morph = morph;
+            }
+
             act.notifyPlayers();
         }
     }
