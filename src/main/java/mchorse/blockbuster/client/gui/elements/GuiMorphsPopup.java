@@ -222,20 +222,6 @@ public class GuiMorphsPopup extends GuiScreen
         this.tooltip.set(null, null);
         this.morphs.draw(this.tooltip, mouseX, mouseY, partialTicks);
 
-        MorphCell cell = this.morphs.getSelected();
-
-        if (cell != null && !this.morphs.isEditMode())
-        {
-            int width = Math.max(this.fontRendererObj.getStringWidth(cell.current().name), this.fontRendererObj.getStringWidth(cell.current().morph.name)) + 6;
-            int center = this.area.getX(0.5F);
-            int y = this.area.y + 40;
-
-            Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0x88000000);
-
-            this.drawCenteredString(fontRendererObj, cell.current().name, center, y, 0xffffff);
-            this.drawCenteredString(fontRendererObj, cell.current().morph.name, center, y + 14, 0x888888);
-        }
-
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -270,6 +256,20 @@ public class GuiMorphsPopup extends GuiScreen
         {
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0xaa000000);
+
+            MorphCell cell = this.getSelected();
+
+            if (cell != null && !this.isEditMode())
+            {
+                int width = Math.max(this.font.getStringWidth(cell.current().name), this.font.getStringWidth(cell.current().morph.name)) + 6;
+                int center = this.area.getX(0.5F);
+                int y = this.area.y + 40;
+
+                Gui.drawRect(center - width / 2, y - 4, center + width / 2, y + 24, 0x88000000);
+
+                this.drawCenteredString(this.font, cell.current().name, center, y, 0xffffff);
+                this.drawCenteredString(this.font, cell.current().morph.name, center, y + 14, 0x888888);
+            }
 
             super.draw(tooltip, mouseX, mouseY, partialTicks);
         }

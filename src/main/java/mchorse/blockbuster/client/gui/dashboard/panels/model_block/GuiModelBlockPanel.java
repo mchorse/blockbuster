@@ -186,7 +186,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         {
             if (this.model != null)
             {
-                this.model.morph = morph;
+                this.model.morph = morph.clone(true);
             }
         };
     }

@@ -70,6 +70,24 @@ public class MorphBodyPart implements IBodyPart
         }
     }
 
+    public MorphBodyPart clone(boolean isRemote)
+    {
+        MorphBodyPart part = new MorphBodyPart();
+
+        part.morph = this.morph.clone(isRemote);
+        part.translate[0] = this.translate[0];
+        part.translate[1] = this.translate[1];
+        part.translate[2] = this.translate[2];
+        part.scale[0] = this.scale[0];
+        part.scale[1] = this.scale[1];
+        part.scale[2] = this.scale[2];
+        part.rotate[0] = this.rotate[0];
+        part.rotate[1] = this.rotate[1];
+        part.rotate[2] = this.rotate[2];
+
+        return part;
+    }
+
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
