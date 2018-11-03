@@ -236,7 +236,14 @@ public class GuiMorphsPopup extends GuiScreen
         {
             super(mc, perRow, selected, morphing);
 
-            this.close = GuiButtonElement.button(mc, "X", (b) -> this.setVisible(false));
+            this.close = GuiButtonElement.button(mc, "X", (b) ->
+            {
+                if (this.isEditMode())
+                {
+                    this.setMorph(this.getSelected().current().morph);
+                }
+                this.setVisible(false);
+            });
             this.close.resizer().parent(this.area).set(10, 10, 20, 20);
             this.children.add(this.close);
 
