@@ -64,16 +64,21 @@ public class ImageMorph extends AbstractMorph
             return;
         }
 
+        RenderHelper.disableStandardItemLighting();
+
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
         GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(180.0F - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
 
-        RenderHelper.disableStandardItemLighting();
         this.renderPicture(this.scale, true);
-        RenderHelper.enableStandardItemLighting();
 
         GL11.glPopMatrix();
+
+        GlStateManager.enableLighting();
+        GlStateManager.enableLight(0);
+        GlStateManager.enableLight(1);
+        GlStateManager.enableColorMaterial();
     }
 
     private void renderPicture(float scale, boolean flipX)
@@ -119,7 +124,6 @@ public class ImageMorph extends AbstractMorph
         y1 *= scale;
         y2 *= scale;
 
-        GlStateManager.enableRescaleNormal();
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
@@ -131,17 +135,16 @@ public class ImageMorph extends AbstractMorph
 
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
-        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
+        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
         GlStateManager.enableCull();
-        GlStateManager.disableRescaleNormal();
     }
 
     @Override
