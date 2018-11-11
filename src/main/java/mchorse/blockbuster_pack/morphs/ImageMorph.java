@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -199,6 +200,6 @@ public class ImageMorph extends AbstractMorph
         super.fromNBT(tag);
 
         if (tag.hasKey("Scale")) this.scale = tag.getFloat("Scale");
-        if (tag.hasKey("Texture", 8)) this.texture = new ResourceLocation(tag.getString("Texture"));
+        if (tag.hasKey("Texture", 8)) this.texture = new TextureLocation(tag.getString("Texture"));
     }
 }

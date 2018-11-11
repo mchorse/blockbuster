@@ -151,7 +151,7 @@ public class OBJParser
             {
                 String texture = String.join(" ", SubCommandBase.dropFirstArgument(tokens));
 
-                material.texture = new ResourceLocation(texture);
+                material.texture = new TextureLocation(texture);
             }
         }
     }

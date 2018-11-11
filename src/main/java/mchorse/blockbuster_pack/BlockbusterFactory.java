@@ -181,7 +181,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             ImageMorph image = new ImageMorph();
 
-            image.texture = new ResourceLocation("blockbuster.actors", "image/" + texture);
+            image.texture = new TextureLocation("blockbuster.actors", "image/" + texture);
             morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
     }
