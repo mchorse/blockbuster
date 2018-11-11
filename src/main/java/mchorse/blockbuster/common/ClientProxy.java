@@ -36,6 +36,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -149,13 +150,18 @@ public class ClientProxy extends CommonProxy
             actorPack.pack.addFolder(path + "/models");
             actorPack.pack.reload();
 
+            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+
+            if (manager instanceof SimpleReloadableResourceManager)
+            {
+                ((SimpleReloadableResourceManager) manager).reloadResourcePack(actorPack);
+            }
+
             /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();
             new File(path + "/models/alex/skins").mkdirs();
             new File(path + "/models/fred/skins").mkdirs();
-
-            /* sigh */
-            Minecraft.getMinecraft().refreshResources();
+            new File(path + "/models/image/skins").mkdirs();
         }
         catch (Exception e)
         {
