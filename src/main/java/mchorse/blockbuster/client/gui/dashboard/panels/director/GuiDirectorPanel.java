@@ -373,7 +373,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         if (this.replay != null)
         {
-            this.replay.morph = morph.clone(true);
+            this.replay.morph = morph == null ? null : morph.clone(true);
         }
     }
 

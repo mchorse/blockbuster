@@ -242,8 +242,10 @@ public class GuiMorphsPopup extends GuiScreen
                 {
                     this.setMorph(this.getSelected().current().morph);
                 }
+
                 this.setVisible(false);
             });
+
             this.close.resizer().parent(this.area).set(10, 10, 20, 20);
             this.children.add(this.close);
 

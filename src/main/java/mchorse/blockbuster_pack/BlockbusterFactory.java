@@ -11,6 +11,7 @@ import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
@@ -108,6 +109,16 @@ public class BlockbusterFactory implements IMorphFactory
     {
         String name = tag.getString("Name");
         name = name.substring(name.indexOf(".") + 1);
+
+        if (name.equals("image"))
+        {
+            ImageMorph image = new ImageMorph();
+
+            image.fromNBT(tag);
+
+            return image;
+        }
+
         CustomMorph morph = this.morphs.get(name);
 
         if (morph != null)
@@ -165,6 +176,14 @@ public class BlockbusterFactory implements IMorphFactory
                 actor.skin = new ResourceLocation("blockbuster.actors", skin);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
             }
+        }
+
+        for (String texture : this.models.pack.getSkins("image"))
+        {
+            ImageMorph image = new ImageMorph();
+
+            image.texture = new ResourceLocation("blockbuster.actors", "image/" + texture);
+            morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
     }
 
