@@ -75,7 +75,7 @@ public class OBJParser
         /* Create a texture location for materials */
         for (OBJMaterial material : this.materials.values())
         {
-            if (material.useTexture)
+            if (material.useTexture && material.texture == null)
             {
                 material.texture = new TextureLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
 
@@ -146,6 +146,12 @@ public class OBJParser
             else if (first.equals("map_Kd_linear"))
             {
                 material.linear = true;
+            }
+            else if (first.equals("map_Kd_path"))
+            {
+                String texture = String.join(" ", SubCommandBase.dropFirstArgument(tokens));
+
+                material.texture = new ResourceLocation(texture);
             }
         }
     }

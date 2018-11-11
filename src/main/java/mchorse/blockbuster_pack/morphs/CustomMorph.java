@@ -456,7 +456,11 @@ public class CustomMorph extends AbstractMorph
 
         morph.settings = this.settings;
         morph.model = this.model;
-        morph.parts.addAll(this.parts);
+
+        for (BodyPart part : this.parts)
+        {
+            morph.parts.add(part.clone(isRemote));
+        }
 
         if (isRemote)
         {
@@ -602,6 +606,16 @@ public class CustomMorph extends AbstractMorph
             }
 
             return result;
+        }
+
+        public BodyPart clone(boolean isRemote)
+        {
+            BodyPart part = new BodyPart();
+
+            part.limb = this.limb;
+            part.part = this.part.clone(isRemote);
+
+            return part;
         }
 
         @Override
