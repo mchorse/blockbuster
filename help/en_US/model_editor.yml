@@ -29,6 +29,8 @@ blockbuster.gui.me:
         swinging: Swinging
         idle: Idle
         invert: Invert
+        wheel: Wheel
+        wing: Wing
         
         rename: Rename
         parent: Parent

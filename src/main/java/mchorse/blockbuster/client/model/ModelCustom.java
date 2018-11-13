@@ -162,7 +162,7 @@ public class ModelCustom extends ModelBiped
             /* Reseting the angles */
             this.applyLimbPose(limb);
 
-            if (limb.limb.looking)
+            if (limb.limb.looking && !limb.limb.wheel)
             {
                 limb.rotateAngleX += headPitch * 0.017453292F;
 
@@ -257,6 +257,21 @@ public class ModelCustom extends ModelBiped
                     limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
                     limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
                 }
+            }
+
+            if (limb.limb.wheel)
+            {
+                limb.rotateAngleX += limbSwing;
+
+                if (limb.limb.looking)
+                {
+                    limb.rotateAngleY = netHeadYaw / 180 * (float) Math.PI;
+                }
+            }
+
+            if (limb.limb.wing)
+            {
+                limb.rotateAngleY = MathHelper.cos(ageInTicks * 1.3F) * (float) Math.PI * 0.25F * (0.5F + limbSwingAmount) * (limb.limb.invert || limb.limb.mirror ? -1 : 1);
             }
         }
     }

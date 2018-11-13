@@ -63,6 +63,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiButtonElement<GuiCheckBox> swinging;
     private GuiButtonElement<GuiCheckBox> idle;
     private GuiButtonElement<GuiCheckBox> invert;
+    private GuiButtonElement<GuiCheckBox> wheel;
+    private GuiButtonElement<GuiCheckBox> wing;
 
     public GuiModelLimbs(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -156,6 +158,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.swinging = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.swinging"), false, (b) -> this.panel.limb.swinging = b.button.isChecked());
         this.idle = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.idle"), false, (b) -> this.panel.limb.idle = b.button.isChecked());
         this.invert = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.invert"), false, (b) -> this.panel.limb.invert = b.button.isChecked());
+        this.wheel = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.wheel"), false, (b) -> this.panel.limb.wheel = b.button.isChecked());
+        this.wing = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.wing"), false, (b) -> this.panel.limb.wing = b.button.isChecked());
 
         this.color.resizer().parent(this.area).set(10, 40, 120, 20);
         this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
@@ -173,8 +177,10 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.idle.resizer().relative(this.looking.resizer()).set(60, 0, 60, 11);
         this.swinging.resizer().relative(this.looking.resizer()).set(0, 16, 60, 11);
         this.invert.resizer().relative(this.swinging.resizer()).set(60, 0, 60, 11);
+        this.wheel.resizer().relative(this.swinging.resizer()).set(0, 16, 60, 11);
+        this.wing.resizer().relative(this.wheel.resizer()).set(60, 0, 60, 11);
 
-        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert);
+        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert, this.wheel, this.wing);
         this.second.setVisible(false);
         this.children.add(this.first, this.second);
 
@@ -315,8 +321,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         if (this.resizer().h.unit == Measure.RELATIVE)
         {
-            this.limbList.resizer().x(0).y(220).w(1, 0).h(1, -220);
-            this.toggle.resizer().y(190);
+            this.limbList.resizer().x(0).y(240).w(1, 0).h(1, -240);
+            this.toggle.resizer().y(210);
         }
         else
         {

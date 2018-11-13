@@ -37,6 +37,8 @@ public class ModelLimb
     public boolean swinging;
     public boolean idle;
     public boolean invert;
+    public boolean wheel;
+    public boolean wing;
 
     /* OBJ */
     public float[] origin = new float[] {0F, 0F, 0F};
@@ -44,6 +46,7 @@ public class ModelLimb
     /**
      * Clone a model limb
      */
+    @Override
     public ModelLimb clone()
     {
         ModelLimb b = new ModelLimb();
@@ -68,6 +71,8 @@ public class ModelLimb
         b.swinging = this.swinging;
         b.idle = this.idle;
         b.invert = this.invert;
+        b.wheel = this.wheel;
+        b.wing = this.wing;
 
         b.origin = new float[] {this.origin[0], this.origin[1], this.origin[2]};
 
