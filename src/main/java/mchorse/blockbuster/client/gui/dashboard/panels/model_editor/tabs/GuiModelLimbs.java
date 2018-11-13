@@ -30,6 +30,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiModelLimbs extends GuiModelEditorTab
 {
     private GuiButtonElement<GuiTextureButton> addLimb;
+    private GuiButtonElement<GuiTextureButton> dupeLimb;
     private GuiButtonElement<GuiTextureButton> removeLimb;
     private GuiButtonElement<GuiButton> renameLimb;
     private GuiButtonElement<GuiButton> parentLimb;
@@ -186,6 +187,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         /* Buttons */
         this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
+        this.dupeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeLimb());
         this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
         this.renameLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
         this.parentLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
@@ -196,14 +198,15 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.second.setVisible(!this.first.isVisible());
         }).tooltip(I18n.format("blockbuster.gui.me.limbs.page"), TooltipDirection.LEFT);
 
-        this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -38);
-        this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
+        this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -58);
+        this.dupeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
+        this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.dupeLimb.resizer());
 
         this.toggle.resizer().set(10, 0, 20, 20).parent(this.area).y(1, -30);
         this.renameLimb.resizer().set(23, 0, 44, 20).relative(this.toggle.resizer());
         this.parentLimb.resizer().set(47, 0, 50, 20).relative(this.renameLimb.resizer());
 
-        this.children.add(this.addLimb, this.removeLimb, this.renameLimb, this.parentLimb, this.toggle);
+        this.children.add(this.addLimb, this.dupeLimb, this.removeLimb, this.renameLimb, this.parentLimb, this.toggle);
 
         this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
@@ -225,6 +228,23 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.limbList.setCurrent(text);
             this.panel.rebuildModel();
         }
+    }
+
+    private void dupeLimb()
+    {
+        ModelLimb limb = this.panel.limb.clone();
+
+        /* It must be unique name */
+        while (this.panel.model.limbs.containsKey(limb.name))
+        {
+            limb.name += "_copy";
+        }
+
+        this.panel.model.addLimb(limb);
+        this.panel.setLimb(limb.name);
+        this.limbList.add(limb.name);
+        this.limbList.setCurrent(limb.name);
+        this.panel.rebuildModel();
     }
 
     private void removeLimb()

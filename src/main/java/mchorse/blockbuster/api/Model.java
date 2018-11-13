@@ -132,11 +132,20 @@ public class Model
         ModelLimb limb = new ModelLimb();
 
         limb.name = name;
-        this.limbs.put(name, limb);
+
+        return this.addLimb(limb);
+    }
+
+    /**
+     * Add a limb into a model
+     */
+    public ModelLimb addLimb(ModelLimb limb)
+    {
+        this.limbs.put(limb.name, limb);
 
         for (ModelPose pose : this.poses.values())
         {
-            pose.limbs.put(name, new ModelTransform());
+            pose.limbs.put(limb.name, new ModelTransform());
         }
 
         return limb;
@@ -261,6 +270,7 @@ public class Model
     /**
      * Clone a model
      */
+    @Override
     public Model clone()
     {
         Model b = new Model();
