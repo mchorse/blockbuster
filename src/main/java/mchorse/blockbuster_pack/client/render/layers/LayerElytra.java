@@ -66,10 +66,6 @@ public class LayerElytra implements LayerRenderer<EntityLivingBase>
                 int h = limb.size[1];
                 int d = limb.size[2];
 
-                float ax = limb.anchor[0];
-                float ay = limb.anchor[1];
-                float az = limb.anchor[2];
-
                 float ww = w / 8F;
                 float hh = h / 8F;
                 float dd = d / 8F;

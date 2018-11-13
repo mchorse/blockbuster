@@ -75,7 +75,7 @@ public class ClientProxy extends CommonProxy
      */
     public static GuiDashboard getDashboard(boolean mainMenu)
     {
-        if (dashboard == null)
+        if (dashboard != null)
         {
             dashboard = new GuiDashboard();
         }

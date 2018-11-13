@@ -69,6 +69,9 @@ blockbuster.gui:
         edit_record: Edit record
         update_data: Update data
         update_data_tooltip: Updates player data in record file
+        rename_prefix: Rename prefix
+        rename_prefix_tooltip: Renames replay recording ID with a new prefix  
+        rename_prefix_popup: "Enter a new prefix:"
     
     # Actor configuration GUI strings
     actor:
