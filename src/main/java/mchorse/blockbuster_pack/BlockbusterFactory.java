@@ -143,7 +143,7 @@ public class BlockbusterFactory implements IMorphFactory
             String key = morph.getKey();
             CustomMorph original = morph.getValue();
 
-            if (key.equals("yike"))
+            if (key.equals("yike") || original.model == null)
             {
                 continue;
             }

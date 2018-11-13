@@ -36,7 +36,7 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
             map.addProperty("holding", src.holding == Holding.RIGHT ? "right" : "left");
         }
 
-        if (src.slot != null)
+        if (src.slot != null && src.slot != ArmorSlot.NONE)
         {
             map.addProperty("slot", src.slot.name);
         }
