@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -11,7 +12,6 @@ import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiImageMorph extends GuiAbstractMorph
@@ -30,7 +30,7 @@ public class GuiImageMorph extends GuiAbstractMorph
 
         this.texture = new GuiTextElement(mc, 400, (str) ->
         {
-            this.getMorph().texture = new ResourceLocation(str);
+            this.getMorph().texture = new TextureLocation(str);
         });
 
         this.scale = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.scale"), (value) ->

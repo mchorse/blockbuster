@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.client.gui;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -18,7 +19,6 @@ import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,7 +54,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         /* General options */
         this.skin = new GuiTextElement(mc, 400, (str) ->
         {
-            this.getMorph().skin = new ResourceLocation(str);
+            this.getMorph().skin = new TextureLocation(str);
             this.updateModelRenderer();
         });
 
