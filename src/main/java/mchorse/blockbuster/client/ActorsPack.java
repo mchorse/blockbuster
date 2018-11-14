@@ -3,6 +3,7 @@ package mchorse.blockbuster.client;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 
 import mchorse.blockbuster.api.ModelPack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -46,7 +48,14 @@ public class ActorsPack implements IResourcePack
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException
     {
+        String domain = location.getResourceDomain();
         String path = location.getResourcePath();
+
+        if ((domain.equals("http") || domain.equals("https")) && path.startsWith("//") && !path.endsWith(".mcmeta"))
+        {
+            return this.hanldeURLSkins(location);
+        }
+
         String[] splits = path.split("/");
 
         if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
@@ -79,7 +88,18 @@ public class ActorsPack implements IResourcePack
             return new FileInputStream(fileFile);
         }
 
-        return null;
+        throw new FileNotFoundException(location.toString());
+    }
+
+    /**
+     * Handle URL skins 
+     */
+    private InputStream hanldeURLSkins(ResourceLocation location)
+    {
+        Minecraft.getMinecraft().addScheduledTask(new URLDownload(location));
+
+        /*  */
+        return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/entity/black.png");
     }
 
     /**
@@ -89,7 +109,17 @@ public class ActorsPack implements IResourcePack
     @Override
     public boolean resourceExists(ResourceLocation location)
     {
+        /* Handle skin URLs */
+        String domain = location.getResourceDomain();
         String path = location.getResourcePath();
+
+        /* Only actual HTTP URL can go here, also ignore mcmeta data */
+        if ((domain.equals("http") || domain.equals("https")) && path.startsWith("//") && !path.endsWith(".mcmeta"))
+        {
+            return true;
+        }
+
+        /* Handle models path */
         String[] splits = path.split("/");
 
         if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
@@ -117,15 +147,13 @@ public class ActorsPack implements IResourcePack
     /**
      * Get resource domains
      *
-     * Seems like this method is used only once resource packs are getting
-     * reloaded. So no need for a public static field. That's also very strange
-     * that return time is a set, instead of a simple string. Several domains
-     * for one pack, but why?
+     * Having multiple domains seems like a nice idea for aliases. 
+     * I'm totally using it for URL skins and "blockbuster.actors" alias.
      */
     @Override
     public Set<String> getResourceDomains()
     {
-        return ImmutableSet.<String>of("blockbuster.actors", "b.a");
+        return ImmutableSet.<String>of("blockbuster.actors", "b.a", "http", "https");
     }
 
     @Override

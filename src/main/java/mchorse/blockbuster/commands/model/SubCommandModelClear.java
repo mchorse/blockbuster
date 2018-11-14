@@ -54,8 +54,11 @@ public class SubCommandModelClear extends CommandBase
             {
                 Map.Entry<ResourceLocation, ITextureObject> entry = it.next();
                 ResourceLocation key = entry.getKey();
+                String domain = key.getResourceDomain();
 
-                if (key.getResourceDomain().equals("blockbuster.actors") && key.getResourcePath().startsWith(prefix))
+                boolean bbDomain = domain.equals("blockbuster.actors") || domain.equals("b.a") || domain.equals("http") || domain.equals("https");
+
+                if (bbDomain && key.getResourcePath().startsWith(prefix))
                 {
                     TextureUtil.deleteTexture(entry.getValue().getGlTextureId());
 
