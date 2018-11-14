@@ -125,7 +125,7 @@ public class ActorsPack implements IResourcePack
     @Override
     public Set<String> getResourceDomains()
     {
-        return ImmutableSet.<String>of("blockbuster.actors");
+        return ImmutableSet.<String>of("blockbuster.actors", "b.a");
     }
 
     @Override

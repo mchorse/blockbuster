@@ -96,6 +96,12 @@ blockbuster:
                     
                     {r}Clears the texture cache from loaded Blockbuster's skin textures. If {7}[path]{r} specified, the command will only clear the textures which begins with {7}[path]{r}.
             
+            convert:
+                |
+                    {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
+                    
+                    {r}Converts a skin {7}<skin>{r} (name filename without extension in {7}<steve|fred>{r} model) 64x64 ({7}fred{r}) to 64x32 or 64x32 ({7}steve{r}) to 64x64 skin.
+            
             reload:
                 |
                     {l}{6}/{r}model {8}reload{r} {7}[force]{r}

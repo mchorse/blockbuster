@@ -5,6 +5,8 @@ blockbuster.success:
         
         texture_filter_linear: "{f}Texture's filter was changed to linear!"
         texture_filter_nearest: "{f}Texture's filter was changed to nearest neighbor!"
+        
+        convert_skin: "{f}Successfully converted %s{r}/%s{r} skin!"
 
     director:
         play: "{f}Director block at (%s{f}, %s{f}, %s{f}) has started playing!"
