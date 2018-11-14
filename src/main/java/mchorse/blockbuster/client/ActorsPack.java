@@ -96,7 +96,10 @@ public class ActorsPack implements IResourcePack
      */
     private InputStream hanldeURLSkins(ResourceLocation location)
     {
-        Minecraft.getMinecraft().addScheduledTask(new URLDownload(location));
+        Minecraft.getMinecraft().addScheduledTask(() ->
+        {
+            new Thread(new URLDownloadThread(location)).start();
+        });
 
         /*  */
         return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/entity/black.png");

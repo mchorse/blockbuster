@@ -16,6 +16,12 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * URL download thread
+ * 
+ * This bad boy downloads a picture from internet and puts it into the 
+ * texture manager's.
+ */
 public class URLDownloadThread implements Runnable
 {
     private ResourceLocation url;
@@ -42,7 +48,6 @@ public class URLDownloadThread implements Runnable
                 Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
 
                 map.put(this.url, texture);
-
             });
         }
         catch (IOException e)
