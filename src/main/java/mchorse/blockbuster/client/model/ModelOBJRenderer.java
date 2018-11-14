@@ -123,7 +123,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
 
                 GlStateManager.glNewList(id, 4864);
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
-                float texF = (j + 0.5F) / (float) count;
+                float texF = (j + 0.5F) / count;
 
                 for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
                 {
@@ -220,9 +220,6 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             boolean hasColor = list.material != null && !list.material.useTexture;
             boolean hasTexture = list.material != null && list.material.useTexture;
 
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-
             if (hasColor)
             {
                 GlStateManager.bindTexture(list.texId);
@@ -246,8 +243,6 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             {
                 RenderCustomModel.bindLastTexture();
             }
-
-            GlStateManager.disableBlend();
         }
     }
 

@@ -31,6 +31,7 @@ public class MorphBodyPart implements IBodyPart
         this.entity = new EntityActor(Minecraft.getMinecraft().world);
         this.entity.rotationYaw = this.entity.prevRotationYaw;
         this.entity.rotationYawHead = this.entity.prevRotationYawHead;
+        this.entity.onGround = true;
     }
 
     @Override

@@ -29,6 +29,8 @@ blockbuster.gui.me:
         swinging: Swinging
         idle: Idle
         invert: Invert
+        wheel: Wheel
+        wing: Wing
         
         rename: Rename
         parent: Parent
@@ -73,6 +75,9 @@ blockbuster.gui.me:
         title: Poses
         new_pose: "Type in a name for a new pose:"
         import_pose: "Type here NBT data of a pose to import it into current pose:"
+        import_pose_tooltip: "Import pose properties with NBT tag"
+        copy_pose: "Select the pose from which you want to copy properties for current limb."
+        copy_pose_tooltip: "Copy pose properties from another pose"
         standard: "You cannot remove one of the standard poses..."
         hitbox: Hitbox
     

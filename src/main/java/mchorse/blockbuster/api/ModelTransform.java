@@ -36,6 +36,16 @@ public class ModelTransform
         return true;
     }
 
+    public void copy(ModelTransform transform)
+    {
+        for (int i = 0; i < 3; i++)
+            this.translate[i] = transform.translate[i];
+        for (int i = 0; i < 3; i++)
+            this.scale[i] = transform.scale[i];
+        for (int i = 0; i < 3; i++)
+            this.rotate[i] = transform.rotate[i];
+    }
+
     @Override
     public boolean equals(Object obj)
     {

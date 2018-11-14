@@ -36,7 +36,7 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
             map.addProperty("holding", src.holding == Holding.RIGHT ? "right" : "left");
         }
 
-        if (src.slot != null)
+        if (src.slot != null && src.slot != ArmorSlot.NONE)
         {
             map.addProperty("slot", src.slot.name);
         }
@@ -66,6 +66,8 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         this.addBoolean(map, "swinging", src.swinging, false);
         this.addBoolean(map, "swiping", src.swiping, false);
         this.addBoolean(map, "invert", src.invert, false);
+        this.addBoolean(map, "wheel", src.wheel, false);
+        this.addBoolean(map, "wing", src.wing, false);
 
         if (!ModelPoseAdapter.isDefault(src.origin, 0F))
         {

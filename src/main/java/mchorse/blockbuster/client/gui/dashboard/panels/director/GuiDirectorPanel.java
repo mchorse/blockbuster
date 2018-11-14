@@ -10,6 +10,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -75,6 +76,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public GuiButtonElement<GuiCheckBox> fake;
     public GuiTrackpadElement health;
 
+    public GuiDelegateElement<IGuiElement> popup;
     public GuiDirectorBlockList list;
 
     private Director director;
@@ -101,6 +103,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     {
         super(mc, dashboard);
 
+        this.popup = new GuiDelegateElement<IGuiElement>(mc, null);
         this.subChildren = new GuiElements();
         this.subChildren.setVisible(false);
         this.replays = new GuiElements();
@@ -197,6 +200,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         element.resizer().set(10, 105, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix()).tooltip(I18n.format("blockbuster.gui.director.rename_prefix_tooltip"), TooltipDirection.LEFT);
+        element.resizer().set(10, 130, 80, 20).parent(this.area).x(1, -90);
+
+        this.replayEditor.add(element);
+
+        this.popup.resizer().parent(element.area).set(-130, -130, 120, 150);
+        this.replayEditor.add(this.popup);
 
         /* Model blocks */
         this.children.add(this.list = new GuiDirectorBlockList(mc, I18n.format("blockbuster.gui.director.title"), (director) -> this.pickDirector(director.getPos())));
@@ -435,6 +446,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     private void updatePlayerData()
     {
         Dispatcher.sendToServer(new PacketUpdatePlayerData(this.replay.id));
+    }
+
+    private void renamePrefix()
+    {
+        this.popup.setDelegate(new GuiPromptModal(this.mc, this.popup, I18n.format("blockbuster.gui.director.rename_prefix_popup"), (str) -> this.renamePrefix(str)));
+    }
+
+    private void renamePrefix(String newPrefix)
+    {
+        this.director.renamePrefix(newPrefix);
+        this.fillReplayData();
     }
 
     @Override

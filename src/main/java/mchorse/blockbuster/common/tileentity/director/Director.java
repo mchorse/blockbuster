@@ -44,9 +44,14 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 public class Director
 {
     /**
-     * Pattern for finding numbered
+     * Pattern for finding numbered suffix
      */
     public static final Pattern NUMBERED_SUFFIX = Pattern.compile("_(\\d+)$");
+
+    /**
+     * Pattern for finding prefix
+     */
+    public static final Pattern PREFIX = Pattern.compile("^([\\d\\w\\.]+)_");
 
     /**
      * List of replays
@@ -536,6 +541,23 @@ public class Director
 
         replay.id = prefix + "_" + (max + 1);
         this.replays.add(replay);
+    }
+
+    public void renamePrefix(String newPrefix)
+    {
+        Pattern pattern = Pattern.compile("^([^_]+)_");
+
+        for (Replay replay : this.replays)
+        {
+            Matcher matcher = pattern.matcher(replay.id);
+
+            if (matcher.find())
+            {
+                String suffix = replay.id.substring(matcher.end());
+
+                replay.id = newPrefix + "_" + suffix;
+            }
+        }
     }
 
     /**

@@ -18,6 +18,10 @@ blockbuster.error:
         
         no_player: "{f}Player %s{f} couldn't be found!"
         no_entity: "{f}Given entity with target selector %s{f}, couldn't be found!"
+        
+        convert_model: "{f}Given wrong model %s{f}! It must be either {7}steve{f} or {7}fred{f}."
+        convert_skin: "{f}An exception occurred during convert procedure of %s{f}/%s{f} skin: %s{f}"
+        convert_skin_size: "{f}The skin's size is %s{f}x%s{f}, while must be power of two with 1:1 or 2:1 aspect ratio!"
     
     # Director block error strings
     director:
