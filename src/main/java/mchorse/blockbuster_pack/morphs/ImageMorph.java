@@ -34,6 +34,11 @@ public class ImageMorph extends AbstractMorph
      */
     public float scale = 1;
 
+    /**
+     * Whether image morph gets shaded 
+     */
+    public boolean shaded;
+
     public ImageMorph()
     {
         this.name = "blockbuster.image";
@@ -65,7 +70,10 @@ public class ImageMorph extends AbstractMorph
             return;
         }
 
-        RenderHelper.disableStandardItemLighting();
+        if (!this.shaded)
+        {
+            RenderHelper.disableStandardItemLighting();
+        }
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
@@ -76,10 +84,13 @@ public class ImageMorph extends AbstractMorph
 
         GL11.glPopMatrix();
 
-        GlStateManager.enableLighting();
-        GlStateManager.enableLight(0);
-        GlStateManager.enableLight(1);
-        GlStateManager.enableColorMaterial();
+        if (!this.shaded)
+        {
+            GlStateManager.enableLighting();
+            GlStateManager.enableLight(0);
+            GlStateManager.enableLight(1);
+            GlStateManager.enableColorMaterial();
+        }
     }
 
     private void renderPicture(float scale, boolean flipX)
@@ -157,6 +168,7 @@ public class ImageMorph extends AbstractMorph
         morph.settings = this.settings;
         morph.texture = this.texture;
         morph.scale = this.scale;
+        morph.shaded = this.shaded;
 
         return morph;
     }
@@ -196,6 +208,7 @@ public class ImageMorph extends AbstractMorph
 
         if (this.scale != 1) tag.setFloat("Scale", this.scale);
         if (this.texture != null) tag.setString("Texture", this.texture.toString());
+        if (this.shaded != false) tag.setBoolean("Shaded", this.shaded);
     }
 
     @Override
@@ -205,5 +218,6 @@ public class ImageMorph extends AbstractMorph
 
         if (tag.hasKey("Scale")) this.scale = tag.getFloat("Scale");
         if (tag.hasKey("Texture", 8)) this.texture = new TextureLocation(tag.getString("Texture"));
+        if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
     }
 }

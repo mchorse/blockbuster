@@ -186,7 +186,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         {
             if (this.model != null)
             {
-                this.model.morph = morph == null ? null : morph.clone(true);
+                this.model.morph = morph;
             }
         };
     }
@@ -215,6 +215,11 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         if (this.model != null)
         {
             /* Update model's morph */
+            if (this.model.morph != null)
+            {
+                this.model.morph = this.model.morph.clone(true);
+            }
+
             PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), this.model.morph);
 
             packet.setBody(this.yaw.trackpad.value, this.pitch.trackpad.value, this.body.trackpad.value);

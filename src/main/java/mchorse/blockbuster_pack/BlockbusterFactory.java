@@ -11,6 +11,7 @@ import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
+import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.metamorph.api.IMorphFactory;
@@ -75,7 +76,10 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public void registerMorphEditors(List<GuiAbstractMorph> editors)
     {
-        editors.add(new GuiCustomMorph(Minecraft.getMinecraft()));
+        Minecraft mc = Minecraft.getMinecraft();
+
+        editors.add(new GuiCustomMorph(mc));
+        editors.add(new GuiImageMorph(mc));
     }
 
     @SideOnly(Side.CLIENT)
@@ -142,7 +146,7 @@ public class BlockbusterFactory implements IMorphFactory
             String key = morph.getKey();
             CustomMorph original = morph.getValue();
 
-            if (key.equals("yike"))
+            if (key.equals("yike") || original.model == null)
             {
                 continue;
             }

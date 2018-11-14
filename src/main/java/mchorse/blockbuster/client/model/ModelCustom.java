@@ -9,6 +9,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
@@ -74,10 +75,15 @@ public class ModelCustom extends ModelBiped
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
         for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
         }
+
+        GlStateManager.disableBlend();
     }
 
     /**
@@ -162,7 +168,7 @@ public class ModelCustom extends ModelBiped
             /* Reseting the angles */
             this.applyLimbPose(limb);
 
-            if (limb.limb.looking)
+            if (limb.limb.looking && !limb.limb.wheel)
             {
                 limb.rotateAngleX += headPitch * 0.017453292F;
 
@@ -257,6 +263,21 @@ public class ModelCustom extends ModelBiped
                     limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
                     limb.rotateAngleX = -((float) Math.PI / 2F) + rotateAngleX;
                 }
+            }
+
+            if (limb.limb.wheel)
+            {
+                limb.rotateAngleX += limbSwing;
+
+                if (limb.limb.looking)
+                {
+                    limb.rotateAngleY = netHeadYaw / 180 * (float) Math.PI;
+                }
+            }
+
+            if (limb.limb.wing)
+            {
+                limb.rotateAngleY = MathHelper.cos(ageInTicks * 1.3F) * (float) Math.PI * 0.25F * (0.5F + limbSwingAmount) * (limb.limb.invert || limb.limb.mirror ? -1 : 1);
             }
         }
     }
