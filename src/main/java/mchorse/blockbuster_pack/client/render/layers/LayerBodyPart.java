@@ -40,7 +40,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
         float swingProgress = model.swingProgress;
         ModelPose pose = model.pose;
 
-        renderBodyParts(morph, model, partialTicks, scale);
+        renderBodyParts(entitylivingbaseIn, morph, model, partialTicks, scale);
 
         /* Restore back properties */
         model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
@@ -48,7 +48,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
         model.pose = pose;
     }
 
-    public static void renderBodyParts(CustomMorph morph, ModelCustom model, float partialTicks, float scale)
+    public static void renderBodyParts(EntityLivingBase target, CustomMorph morph, ModelCustom model, float partialTicks, float scale)
     {
         for (BodyPart part : morph.parts)
         {
@@ -58,7 +58,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
                 {
                     GL11.glPushMatrix();
                     limb.postRender(scale);
-                    part.render(partialTicks);
+                    part.render(target, partialTicks);
                     GL11.glPopMatrix();
 
                     break;

@@ -218,7 +218,7 @@ public class CustomMorph extends AbstractMorph
         GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
 
         model.render(player, 0, 0, 0, 0, 0, factor);
-        LayerBodyPart.renderBodyParts(this, model, 0F, factor);
+        LayerBodyPart.renderBodyParts(player, this, model, 0F, factor);
 
         GlStateManager.disableDepth();
 
@@ -319,7 +319,7 @@ public class CustomMorph extends AbstractMorph
 
         if (target.worldObj.isRemote)
         {
-            this.updateBodyLimbs();
+            this.updateBodyLimbs(target);
         }
 
         super.update(target, cap);
@@ -329,7 +329,7 @@ public class CustomMorph extends AbstractMorph
      * Update body limbs 
      */
     @SideOnly(Side.CLIENT)
-    private void updateBodyLimbs()
+    private void updateBodyLimbs(EntityLivingBase target)
     {
         if (this.parts == null)
         {
@@ -338,7 +338,7 @@ public class CustomMorph extends AbstractMorph
 
         for (BodyPart part : this.parts)
         {
-            part.update();
+            part.update(target);
         }
     }
 
@@ -579,16 +579,16 @@ public class CustomMorph extends AbstractMorph
 
         @Override
         @SideOnly(Side.CLIENT)
-        public void render(float partialTicks)
+        public void render(EntityLivingBase entity, float partialTicks)
         {
-            if (this.part != null) this.part.render(partialTicks);
+            if (this.part != null) this.part.render(entity, partialTicks);
         }
 
         @Override
         @SideOnly(Side.CLIENT)
-        public void update()
+        public void update(EntityLivingBase entity)
         {
-            if (this.part != null) this.part.update();
+            if (this.part != null) this.part.update(entity);
         }
 
         @Override

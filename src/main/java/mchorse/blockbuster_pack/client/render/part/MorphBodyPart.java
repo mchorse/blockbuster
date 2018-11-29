@@ -20,6 +20,7 @@ public class MorphBodyPart implements IBodyPart
     public float[] translate = new float[3];
     public float[] scale = new float[] {1, 1, 1};
     public float[] rotate = new float[3];
+    public boolean useTarget = false;
 
     @SideOnly(Side.CLIENT)
     private EntityLivingBase entity;
@@ -36,9 +37,11 @@ public class MorphBodyPart implements IBodyPart
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void render(float partialTicks)
+    public void render(EntityLivingBase entity, float partialTicks)
     {
-        if (this.morph == null || this.entity == null)
+        entity = this.useTarget ? entity : this.entity;
+
+        if (this.morph == null || entity == null)
         {
             return;
         }
@@ -52,21 +55,41 @@ public class MorphBodyPart implements IBodyPart
 
         GL11.glScalef(this.scale[0], this.scale[1], this.scale[2]);
 
-        this.morph.render(this.entity, 0, 0, 0, 0, partialTicks);
+        float rotationYaw = entity.renderYawOffset;
+        float prevRotationYaw = entity.prevRenderYawOffset;
+        float rotationYawHead = entity.rotationYawHead;
+        float prevRotationYawHead = entity.prevRotationYawHead;
+
+        entity.rotationYawHead = entity.rotationYawHead - entity.renderYawOffset;
+        entity.prevRotationYawHead = entity.prevRotationYawHead - entity.prevRenderYawOffset;
+        entity.renderYawOffset = entity.prevRenderYawOffset = 0;
+
+        this.morph.render(entity, 0, 0, 0, 0, partialTicks);
+
+        entity.renderYawOffset = rotationYaw;
+        entity.prevRenderYawOffset = prevRotationYaw;
+        entity.rotationYawHead = rotationYawHead;
+        entity.prevRotationYawHead = prevRotationYawHead;
+
         GL11.glPopMatrix();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void update()
+    public void update(EntityLivingBase entity)
     {
-        if (this.entity != null)
+        entity = this.useTarget ? entity : this.entity;
+
+        if (entity != null)
         {
-            this.entity.ticksExisted++;
+            if (!this.useTarget)
+            {
+                this.entity.ticksExisted++;
+            }
 
             if (this.morph != null)
             {
-                this.morph.update(this.entity, null);
+                this.morph.update(entity, null);
             }
         }
     }
@@ -85,6 +108,7 @@ public class MorphBodyPart implements IBodyPart
         part.rotate[0] = this.rotate[0];
         part.rotate[1] = this.rotate[1];
         part.rotate[2] = this.rotate[2];
+        part.useTarget = this.useTarget;
 
         return part;
     }
@@ -100,6 +124,11 @@ public class MorphBodyPart implements IBodyPart
         ModelPose.readFloatList(tag.getTagList("T", 5), this.translate);
         ModelPose.readFloatList(tag.getTagList("S", 5), this.scale);
         ModelPose.readFloatList(tag.getTagList("R", 5), this.rotate);
+
+        if (tag.hasKey("Target"))
+        {
+            this.useTarget = tag.getBoolean("Target");
+        }
     }
 
     @Override
@@ -115,6 +144,7 @@ public class MorphBodyPart implements IBodyPart
             tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
             tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
             tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+            if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         }
     }
 }

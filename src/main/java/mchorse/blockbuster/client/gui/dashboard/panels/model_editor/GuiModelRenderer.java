@@ -63,7 +63,7 @@ public class GuiModelRenderer extends GuiElement
     {
         super(mc);
 
-        this.dummy = new DummyEntity(null);
+        this.dummy = new DummyEntity(mc.theWorld);
     }
 
     public void reset()

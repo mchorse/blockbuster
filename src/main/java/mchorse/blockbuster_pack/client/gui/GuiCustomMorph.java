@@ -239,7 +239,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         {
             super.renderModel(dummy, headYaw, headPitch, timer, yaw, pitch, partialTicks, factor);
 
-            LayerBodyPart.renderBodyParts(this.morph, this.model, partialTicks, factor);
+            LayerBodyPart.renderBodyParts(dummy, this.morph, this.model, partialTicks, factor);
         }
 
         @Override
