@@ -2,14 +2,15 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
+import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.utils.Resizer.Measure;
@@ -38,7 +39,8 @@ public class GuiCustomMorph extends GuiAbstractMorph
     public GuiButtonElement<GuiButton> toggleBodyPart;
 
     /* General options */
-    public GuiTextElement skin;
+    public GuiTexturePicker textures;
+    public GuiButtonElement<GuiButton> skin;
     public GuiStringListElement poses;
     public GuiButtonElement<GuiCheckBox> poseOnSneak;
 
@@ -52,10 +54,15 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.modelRenderer.looking = false;
 
         /* General options */
-        this.skin = new GuiTextElement(mc, 400, (str) ->
+        this.textures = new GuiTexturePicker(mc, (rl) ->
         {
-            this.getMorph().skin = new ResourceLocation(str);
+            this.getMorph().skin = rl;
             this.updateModelRenderer();
+        });
+
+        this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick_skin"), (b) ->
+        {
+            this.textures.setVisible(true);
         });
 
         this.poseOnSneak = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.pose_sneak"), false, (b) ->
@@ -70,9 +77,9 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.updateModelRenderer();
         });
 
-        this.skin.resizer().parent(this.area).set(0, 50, 115, 20).x(1, -125);
+        this.skin.resizer().parent(this.area).set(0, 35, 115, 20).x(1, -125);
         this.poseOnSneak.resizer().parent(this.area).set(10, 0, 150, 11).y(1, -21);
-        this.poses.resizer().parent(this.area).set(0, 100, 90, 0).x(1, -100).h(1, -110);
+        this.poses.resizer().parent(this.area).set(0, 80, 90, 0).x(1, -100).h(1, -90);
 
         this.general.add(this.skin, this.poses, this.poseOnSneak);
 
@@ -85,8 +92,10 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.togglePose.resizer().relative(this.toggleNbt.resizer()).set(-75, 0, 70, 20);
         this.toggleBodyPart.resizer().parent(this.area).set(70, 10, 70, 20);
 
+        this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+
         this.children.elements.add(0, this.modelRenderer);
-        this.children.add(this.toggleNbt, this.togglePose, this.toggleBodyPart, this.view);
+        this.children.add(this.toggleNbt, this.togglePose, this.toggleBodyPart, this.view, this.textures);
 
         this.data.setVisible(false);
 
@@ -156,8 +165,18 @@ public class GuiCustomMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         CustomMorph custom = (CustomMorph) morph;
+        String key = custom.getKey();
 
-        this.skin.setText(custom.skin == null ? "" : custom.skin.toString());
+        this.textures.picker.clear();
+
+        for (String skin : ClientProxy.actorPack.pack.getSkins(key))
+        {
+            this.textures.picker.add(new ResourceLocation("b.a:" + key + "/" + skin));
+        }
+
+        this.textures.picker.sort();
+        this.textures.set(custom.skin);
+        this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
 
         this.updateModelRenderer();
@@ -213,13 +232,12 @@ public class GuiCustomMorph extends GuiAbstractMorph
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-
         if (this.view.delegate == this.general)
         {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.skin"), this.skin.area.x, this.skin.area.y - 12, 0xffffff);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.poses.area.x, this.poses.area.y - 12, 0xffffff);
         }
+
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 
     /**

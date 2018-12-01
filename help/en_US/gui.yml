@@ -12,6 +12,8 @@ blockbuster.gui:
     remove: Remove
     record: Record
     pick: Pick morph
+    pick_skin: Pick skin
+    picked: Pick
     duplicate: Duplicate
     search: Search
     cancel: Cancel
