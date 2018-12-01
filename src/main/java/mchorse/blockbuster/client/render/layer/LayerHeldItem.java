@@ -48,6 +48,8 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
             this.renderHeldItem(entity, itemstack1, model, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
             this.renderHeldItem(entity, itemstack, model, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
+
+            model.model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         }
     }
 
