@@ -231,6 +231,7 @@ public class ModelPack
             {
                 parser.read();
                 parser.setupTextures(key, this.objModel.getParentFile());
+                model.materials.putAll(parser.materials);
             }
             catch (Exception e)
             {

@@ -6,11 +6,13 @@ import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
@@ -54,18 +56,18 @@ public class GuiPoseEditor extends GuiElement
         this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.rotate[1] = value);
         this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.rotate[2] = value);
 
-        this.tx.resizer().set(0, 35, 60, 20).parent(this.area).x(1, -70);
+        this.tx.resizer().set(0, 35, 60, 20).parent(this.area).x(0.5F, -95).y(1, -105);
         this.ty.resizer().set(0, 25, 60, 20).relative(this.tx.resizer());
         this.tz.resizer().set(0, 25, 60, 20).relative(this.ty.resizer());
-        this.sx.resizer().set(0, 35, 60, 20).parent(this.area).x(1, -135);
+        this.sx.resizer().set(65, 0, 60, 20).relative(this.tx.resizer());
         this.sy.resizer().set(0, 25, 60, 20).relative(this.sx.resizer());
         this.sz.resizer().set(0, 25, 60, 20).relative(this.sy.resizer());
-        this.rx.resizer().set(0, 35, 60, 20).parent(this.area).x(1, -135 - 65);
+        this.rx.resizer().set(65, 0, 60, 20).relative(this.sx.resizer());
         this.ry.resizer().set(0, 25, 60, 20).relative(this.rx.resizer());
         this.rz.resizer().set(0, 25, 60, 20).relative(this.ry.resizer());
 
         this.limbs = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbs.resizer().parent(this.area).set(10, 40, 80, 90).h(1, -50);
+        this.limbs.resizer().parent(this.area).set(10, 50, 105, 90).h(1, -85);
 
         this.resetPose = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
         {
@@ -74,7 +76,7 @@ public class GuiPoseEditor extends GuiElement
             this.parent.updateModelRenderer();
         });
 
-        this.resetPose.resizer().relative(this.parent.togglePose.resizer()).set(-75, 0, 70, 20);
+        this.resetPose.resizer().parent(this.area).set(10, 10, 105, 20);
 
         this.children.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.limbs, this.resetPose);
     }
@@ -133,5 +135,18 @@ public class GuiPoseEditor extends GuiElement
             this.ry.trackpad.setValue(trans.rotate[1]);
             this.rz.trackpad.setValue(trans.rotate[2]);
         }
+    }
+
+    @Override
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    {
+        Gui.drawRect(this.limbs.area.x, this.limbs.area.y, this.limbs.area.getX(1), this.limbs.area.getY(1), 0x88000000);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.limbs"), this.limbs.area.x, this.limbs.area.y - 12, 0xffffff);
+
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.translate"), this.tx.area.x, this.tx.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x, this.sx.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x, this.rx.area.y - 12, 0xffffff);
+
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

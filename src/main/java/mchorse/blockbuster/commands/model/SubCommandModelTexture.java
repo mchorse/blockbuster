@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -51,7 +52,7 @@ public class SubCommandModelTexture extends CommandBase
             throw new WrongUsageException(this.getUsage(sender));
         }
 
-        ResourceLocation texture = new ResourceLocation(args[0]);
+        ResourceLocation texture = new TextureLocation(args[0]);
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
         Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
         ITextureObject tex = map.get(texture);

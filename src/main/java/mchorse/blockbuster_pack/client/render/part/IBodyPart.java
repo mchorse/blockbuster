@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.client.render.part;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,10 +14,10 @@ public interface IBodyPart
     public void init();
 
     @SideOnly(Side.CLIENT)
-    public void render(float partialTicks);
+    public void render(EntityLivingBase entity, float partialTicks);
 
     @SideOnly(Side.CLIENT)
-    public void update();
+    public void update(EntityLivingBase entity);
 
     public void toNBT(NBTTagCompound tag);
 

@@ -26,6 +26,7 @@ import mchorse.blockbuster.network.common.PacketReloadModels;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
@@ -51,6 +52,7 @@ import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorCast;
+import mchorse.blockbuster.network.server.director.ServerHandlerDirectorPlayback;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorRequestCast;
 import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorGoto;
 import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorPlay;
@@ -118,6 +120,7 @@ public class Dispatcher
             /* Director block syncing */
             register(PacketDirectorGoto.class, ServerHandlerDirectorGoto.class, Side.SERVER);
             register(PacketDirectorPlay.class, ServerHandlerDirectorPlay.class, Side.SERVER);
+            register(PacketDirectorPlayback.class, ServerHandlerDirectorPlayback.class, Side.SERVER);
 
             /* Multiplayer */
             register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
