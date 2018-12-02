@@ -156,7 +156,7 @@ public class ItemPlayback extends Item
 
             TileEntity te = worldIn.getTileEntity(pos);
 
-            if (te == null || !(te instanceof TileEntityDirector))
+            if (te == null || !(te instanceof TileEntityDirector) && player instanceof EntityPlayerMP)
             {
                 EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ()));
 

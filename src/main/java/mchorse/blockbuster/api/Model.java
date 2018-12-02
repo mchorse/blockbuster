@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
+import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -84,6 +85,7 @@ public class Model
 
     public Map<String, ModelLimb> limbs = new HashMap<String, ModelLimb>();
     public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
+    public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 
     /**
      * Parse model from input stream

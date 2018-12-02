@@ -54,7 +54,7 @@ public class SubCommandModelReplaceTexture extends McCommandBase
 
         if (map != null)
         {
-            ResourceLocation target = new ResourceLocation(args[0]);
+            ResourceLocation target = new TextureLocation(args[0]);
 
             /* Restore original */
             if (args.length < 2)

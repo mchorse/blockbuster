@@ -217,6 +217,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
     }
 
+    public BlockPos getPos()
+    {
+        return this.pos;
+    }
+
     private void pickDirector(BlockPos pos)
     {
         this.close();

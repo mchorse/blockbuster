@@ -11,6 +11,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.command.CommandBase;
@@ -65,7 +66,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             throw new CommandException("blockbuster.error.commands.convert_model", model);
         }
 
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", model + "/" + skin);
+        ResourceLocation location = new TextureLocation("blockbuster.actors", model + "/" + skin);
 
         try
         {
