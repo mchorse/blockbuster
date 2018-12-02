@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
@@ -54,6 +56,7 @@ public class GuiModelRenderer extends GuiElement
     public boolean aabb;
     public boolean looking = true;
 
+    public Map<String, ResourceLocation> materials;
     public ResourceLocation texture;
     public ModelCustom model;
     public ModelPose pose;
@@ -240,6 +243,7 @@ public class GuiModelRenderer extends GuiElement
             headYaw = headPitch = 0;
         }
 
+        model.materials = this.materials;
         model.pose = this.pose;
         model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * partialTicks) / 6.0F, 0.0F, 1.0F);
         model.setLivingAnimations(this.dummy, headYaw, headPitch, partialTicks);

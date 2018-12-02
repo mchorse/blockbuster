@@ -12,7 +12,6 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTexturePicker extends GuiElement
@@ -26,7 +25,7 @@ public class GuiTexturePicker extends GuiElement
     {
         super(mc);
 
-        this.text = new GuiTextElement(mc, (str) ->
+        this.text = new GuiTextElement(mc, 1000, (str) ->
         {
             ResourceLocation rl = str.isEmpty() ? null : new ResourceLocation(str);
 
@@ -38,7 +37,7 @@ public class GuiTexturePicker extends GuiElement
             this.picker.setCurrent(rl);
         });
 
-        this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.picked"), (b) ->
+        this.pick = GuiButtonElement.button(mc, "X", (b) ->
         {
             this.setVisible(false);
         });
@@ -53,17 +52,26 @@ public class GuiTexturePicker extends GuiElement
         });
 
         this.createChildren();
-        this.text.resizer().set(5, 5, 0, 20).parent(this.area).w(1, -75);
-        this.pick.resizer().set(0, 5, 60, 20).parent(this.area).x(1, -65);
+        this.text.resizer().set(5, 5, 0, 20).parent(this.area).w(1, -35);
+        this.pick.resizer().set(0, 5, 20, 20).parent(this.area).x(1, -25);
         this.picker.resizer().set(5, 30, 0, 0).parent(this.area).w(1, -10).h(1, -35);
 
         this.children.add(this.text, this.pick, this.picker);
         this.callback = callback;
     }
 
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        /* Necessary measure to avoid triggering buttons when you press 
+         * on a text field, for example */
+        return super.mouseClicked(mouseX, mouseY, mouseButton) || (this.isVisible() && this.area.isInside(mouseX, mouseY));
+    }
+
     public void set(ResourceLocation skin)
     {
         this.text.field.setText(skin == null ? "" : skin.toString());
+        this.text.field.setCursorPositionZero();
         this.picker.setCurrent(skin);
     }
 
@@ -71,6 +79,11 @@ public class GuiTexturePicker extends GuiElement
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+
+        if (this.picker.getList().isEmpty())
+        {
+            this.drawCenteredString(this.font, "No data available...", this.area.getX(0.5F), this.area.getY(0.5F), 0xffffff);
+        }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

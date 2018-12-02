@@ -447,7 +447,7 @@ public class CustomMorph extends AbstractMorph
             morph.customPose = this.customPose.clone();
         }
 
-        if (this.materials.isEmpty())
+        if (!this.materials.isEmpty())
         {
             morph.materials.clear();
             morph.materials.putAll(this.materials);

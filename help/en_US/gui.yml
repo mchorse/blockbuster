@@ -201,7 +201,7 @@ blockbuster.gui:
         load_profile: Load and play
     
     builder:
-        pose_sneak: Pose will apply when sneaking
+        pose_sneak: Sneaking pose
         model: Model
         skin: Skin
         pose: Pose
