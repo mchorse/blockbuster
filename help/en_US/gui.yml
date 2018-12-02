@@ -12,14 +12,13 @@ blockbuster.gui:
     remove: Remove
     record: Record
     pick: Pick morph
-    pick_skin: Pick skin
-    picked: Pick
     duplicate: Duplicate
     search: Search
     cancel: Cancel
     break: Break
     select: Select
     ok: Ok
+    no_data: No data available...
     
     # Morphs popup strings
     morphs:
@@ -201,11 +200,21 @@ blockbuster.gui:
         load_profile: Load and play
     
     builder:
+        pose_editor: Pose editor
+        body_part: Body part
+        materials: Materials
+        nbt: NBT
+        
+        pick_skin: Pick skin
         pose_sneak: Sneaking pose
-        model: Model
-        skin: Skin
         pose: Pose
-        custom_pose: Custom pose
+        
+        obj_materials: OBJ materials
+        pick_texture: Pick texture
+        
+        limbs: Limbs
+        body_parts: Body parts
+        use_target: Use target
     
     aperture:
         config:

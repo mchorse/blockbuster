@@ -141,11 +141,11 @@ public class GuiPoseEditor extends GuiElement
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.limbs.area.x, this.limbs.area.y, this.limbs.area.getX(1), this.limbs.area.getY(1), 0x88000000);
-        this.font.drawStringWithShadow("Limbs", this.limbs.area.x, this.limbs.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.limbs"), this.limbs.area.x, this.limbs.area.y - 12, 0xffffff);
 
-        this.font.drawStringWithShadow("Translate", this.tx.area.x, this.tx.area.y - 12, 0xffffff);
-        this.font.drawStringWithShadow("Scale", this.sx.area.x, this.sx.area.y - 12, 0xffffff);
-        this.font.drawStringWithShadow("Rotate", this.rx.area.x, this.rx.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.translate"), this.tx.area.x, this.tx.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x, this.sx.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x, this.rx.area.y - 12, 0xffffff);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

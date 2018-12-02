@@ -87,7 +87,7 @@ public class GuiBodyPartEditor extends GuiElement
 
         this.bodyParts = new GuiBodyPartListElement(mc, (part) -> this.setPart(part));
 
-        this.pickMorph = GuiButtonElement.button(mc, "Pick morph", (b) ->
+        this.pickMorph = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
         {
             if (this.morphPicker == null)
             {
@@ -108,7 +108,7 @@ public class GuiBodyPartEditor extends GuiElement
             this.morphPicker.setVisible(true);
         });
 
-        this.addPart = GuiButtonElement.button(mc, "Add", (b) ->
+        this.addPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.add"), (b) ->
         {
             BodyPart part = new BodyPart();
             String limb = this.limbs.getCurrent();
@@ -128,7 +128,7 @@ public class GuiBodyPartEditor extends GuiElement
             this.setPart(part);
         });
 
-        this.removePart = GuiButtonElement.button(mc, "Remove", (b) ->
+        this.removePart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.remove"), (b) ->
         {
             if (this.part == null)
             {
@@ -155,7 +155,7 @@ public class GuiBodyPartEditor extends GuiElement
             }
         });
 
-        this.useTarget = GuiButtonElement.checkbox(mc, "Use target", false, (b) ->
+        this.useTarget = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.use_target"), false, (b) ->
         {
             if (this.part != null) this.part.part.useTarget = b.button.isChecked();
         });
@@ -240,16 +240,16 @@ public class GuiBodyPartEditor extends GuiElement
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.bodyParts.area.x, this.bodyParts.area.y, this.bodyParts.area.getX(1), this.bodyParts.area.getY(1), 0x88000000);
-        this.font.drawStringWithShadow("Body parts", this.bodyParts.area.x, this.bodyParts.area.y - 12, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.body_parts"), this.bodyParts.area.x, this.bodyParts.area.y - 12, 0xffffff);
 
         if (this.editor.isVisible())
         {
             Gui.drawRect(this.limbs.area.x, this.limbs.area.y, this.limbs.area.getX(1), this.limbs.area.getY(1), 0x88000000);
-            this.font.drawStringWithShadow("Limbs", this.limbs.area.x, this.limbs.area.y - 12, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.limbs"), this.limbs.area.x, this.limbs.area.y - 12, 0xffffff);
 
-            this.font.drawStringWithShadow("Translate", this.tx.area.x, this.tx.area.y - 12, 0xffffff);
-            this.font.drawStringWithShadow("Scale", this.sx.area.x, this.sx.area.y - 12, 0xffffff);
-            this.font.drawStringWithShadow("Rotate", this.rx.area.x, this.rx.area.y - 12, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.translate"), this.tx.area.x, this.tx.area.y - 12, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x, this.sx.area.y - 12, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x, this.rx.area.y - 12, 0xffffff);
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

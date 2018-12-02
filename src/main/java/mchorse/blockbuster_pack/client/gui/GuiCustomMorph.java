@@ -4,6 +4,7 @@ import java.io.File;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
+import mchorse.blockbuster.client.gui.elements.GuiDrawable;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.common.ClientProxy;
@@ -70,7 +71,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.updateModelRenderer();
         });
 
-        this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick_skin"), (b) ->
+        this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
         {
             this.textures.setVisible(true);
         });
@@ -96,7 +97,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         /* Materials view */
         this.materialList = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str));
-        this.pickMaterialTexture = GuiButtonElement.button(mc, "Pick texture", (b) -> this.materialPicker.setVisible(true));
+        this.pickMaterialTexture = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) -> this.materialPicker.setVisible(true));
         this.materialPicker = new GuiTexturePicker(mc, (rl) -> this.setCurrentMaterialRL(rl));
 
         this.materialList.resizer().parent(this.area).set(10, 50, 105, 0).h(1, -85);
@@ -106,17 +107,33 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.materials.add(this.materialList, this.pickMaterialTexture, this.materialPicker);
 
         /* Switches */
-        this.toggleNbt = GuiButtonElement.button(mc, "NBT", (b) -> this.toggleNbt());
-        this.togglePose = GuiButtonElement.button(mc, "Pose editor", (b) -> this.togglePose());
-        this.toggleBodyPart = GuiButtonElement.button(mc, "Body part", (b) -> this.toggleBodyPart());
-        this.toggleMaterials = GuiButtonElement.button(mc, "Materials", (b) -> this.toggleMaterials());
+        this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
+        this.togglePose = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pose_editor"), (b) -> this.togglePose());
+        this.toggleBodyPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.body_part"), (b) -> this.toggleBodyPart());
+        this.toggleMaterials = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.materials"), (b) -> this.toggleMaterials());
 
         this.toggleNbt.resizer().parent(this.area).set(0, 10, 40, 20).x(1, -50).y(1, -25);
         this.togglePose.resizer().relative(this.toggleNbt.resizer()).set(-75, 0, 70, 20);
         this.toggleBodyPart.resizer().relative(this.togglePose.resizer()).set(-75, 0, 70, 20);
         this.toggleMaterials.resizer().relative(this.toggleBodyPart.resizer()).set(-65, 0, 60, 20);
-        this.finish.resizer().parent(this.area).set(10, 0, 55, 20).y(1, -25);
+        this.finish.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -25);
 
+        /* Draw overlay stuff */
+        this.children.elements.add(0, new GuiDrawable((n) ->
+        {
+            this.drawGradientRect(0, this.area.getY(1) - 30, this.area.w, this.area.getY(1), 0x00000000, 0x88000000);
+
+            if (this.view.delegate == this.general)
+            {
+                Gui.drawRect(this.poses.area.x, this.poses.area.y, this.poses.area.getX(1), this.poses.area.getY(1), 0x88000000);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.poses.area.x, this.poses.area.y - 12, 0xffffff);
+            }
+            else if (this.view.delegate == this.materials)
+            {
+                Gui.drawRect(this.materialList.area.x, this.materialList.area.y, this.materialList.area.getX(1), this.materialList.area.getY(1), 0x88000000);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.obj_materials"), this.materialList.area.x, this.materialList.area.y - 12, 0xffffff);
+            }
+        }));
         this.children.elements.add(0, this.modelRenderer);
         this.children.add(this.toggleNbt, this.togglePose, this.toggleBodyPart, this.toggleMaterials, this.view);
 
@@ -334,25 +351,6 @@ public class GuiCustomMorph extends GuiAbstractMorph
     @Override
     protected void drawMorph(int mouseX, int mouseY, float partialTicks)
     {}
-
-    @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-    {
-        this.drawGradientRect(0, this.area.getY(1) - 30, this.area.w, this.area.getY(1), 0x00000000, 0x88000000);
-
-        if (this.view.delegate == this.general)
-        {
-            Gui.drawRect(this.poses.area.x, this.poses.area.y, this.poses.area.getX(1), this.poses.area.getY(1), 0x88000000);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.poses.area.x, this.poses.area.y - 12, 0xffffff);
-        }
-        else if (this.view.delegate == this.materials)
-        {
-            Gui.drawRect(this.materialList.area.x, this.materialList.area.y, this.materialList.area.getX(1), this.materialList.area.getY(1), 0x88000000);
-            this.font.drawStringWithShadow("OBJ materials", this.materialList.area.x, this.materialList.area.y - 12, 0xffffff);
-        }
-
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-    }
 
     /**
      * Model renderer, but it also renders body parts 

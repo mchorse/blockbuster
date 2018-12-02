@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTexturePicker extends GuiElement
@@ -82,7 +83,7 @@ public class GuiTexturePicker extends GuiElement
 
         if (this.picker.getList().isEmpty())
         {
-            this.drawCenteredString(this.font, "No data available...", this.area.getX(0.5F), this.area.getY(0.5F), 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.no_data"), this.area.getX(0.5F), this.area.getY(0.5F), 0xffffff);
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

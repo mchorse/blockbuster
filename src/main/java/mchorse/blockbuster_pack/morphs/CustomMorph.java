@@ -479,8 +479,8 @@ public class CustomMorph extends AbstractMorph
             tag.setString("Skin", this.skin.toString());
         }
 
-        tag.setString("Pose", this.currentPose);
-        tag.setBoolean("Sneak", this.currentPoseOnSneak);
+        if (!this.currentPose.isEmpty()) tag.setString("Pose", this.currentPose);
+        if (this.currentPoseOnSneak) tag.setBoolean("Sneak", this.currentPoseOnSneak);
 
         if (this.customPose != null)
         {
@@ -625,7 +625,7 @@ public class CustomMorph extends AbstractMorph
                 return;
             }
 
-            tag.setString("Limb", this.limb);
+            if (!this.limb.isEmpty()) tag.setString("Limb", this.limb);
             this.part.toNBT(tag);
         }
 
