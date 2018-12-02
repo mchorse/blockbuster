@@ -6,7 +6,10 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
+import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -24,6 +27,7 @@ public class KeyboardHandler
     private KeyBinding dashboard;
     private KeyBinding modelEditor;
     private KeyBinding cameraMarker;
+    private KeyBinding plauseDirector;
 
     /**
      * Create and register key bindings for mod
@@ -37,10 +41,12 @@ public class KeyboardHandler
         this.dashboard = new KeyBinding("key.blockbuster.dashboard", Keyboard.KEY_0, category);
         this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, category);
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, category);
+        this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_NONE, category);
 
         ClientRegistry.registerKeyBinding(this.dashboard);
         ClientRegistry.registerKeyBinding(this.cameraMarker);
         ClientRegistry.registerKeyBinding(this.modelEditor);
+        ClientRegistry.registerKeyBinding(this.plauseDirector);
     }
 
     @SubscribeEvent
@@ -72,6 +78,21 @@ public class KeyboardHandler
             GuiDashboard dashboard = ClientProxy.getDashboard(false);
 
             dashboard.open().openPanel(dashboard.modelEditorPanel);
+        }
+
+        if (this.plauseDirector.isPressed())
+        {
+            GuiDashboard dash = ClientProxy.dashboard;
+
+            if (dash != null && dash.directorPanel != null)
+            {
+                BlockPos director = dash.directorPanel.getPos();
+
+                if (director != null)
+                {
+                    Dispatcher.sendToServer(new PacketDirectorPlayback(director));
+                }
+            }
         }
     }
 }
