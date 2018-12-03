@@ -18,6 +18,7 @@ blockbuster.gui:
     break: 破坏
     select: 选择
     ok: 好
+    no_data: 没有数据可用……
 
     # Morphs popup strings
     morphs:
@@ -69,6 +70,9 @@ blockbuster.gui:
         edit_record: 编辑录制
         update_data: 更新数据
         updata_data_tooltip: 更新在录制文件中的玩家数据
+        rename_prefix: 重命名前缀
+        rename_prefix_tooltip: 使用新前缀来重命名回放的录制 ID
+        rename_prefix_popup: "输入一个新的前缀："
 
     # Actor configuration GUI strings
     actor:
@@ -196,11 +200,21 @@ blockbuster.gui:
         load_profile: 读取并播放
         
     builder:
-        pose_sneak: 在潜行时姿势将会应用
-        model: 模型
-        skin: 皮肤
+        pose_editor: 姿势编辑器
+        body_part: 身体部分
+        materials: 材料
+        nbt: NBT
+        
+        pick_skin: 选择皮肤
+        pose_sneak: 潜行的姿势
         pose: 姿势
-        custom_pose: 自定义姿势
+        
+        obj_materials: OBJ 材料
+        pick_texture: 选择材质
+        
+        limbs: 肢体
+        body_parts: 身体部分
+        use_target: 使用目标
 
     aperture:
         config:

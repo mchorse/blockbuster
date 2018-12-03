@@ -6,7 +6,7 @@ blockbuster:
             |
                 {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
                 
-                {r}开始，停止，或调整导演方块的播放的位置在{7}<x>{r}, {7}<y>{r}，和 {7}<z>{r}（你可以使用F3确定你的当前位置）。 同时也有 {7}loop{r} 和 {7}disable_state{r} 可以让你使用 {7}[flag]{r} 参数（{7}true{r} 或 {7}false{r}）更改循环和是否发出红石信号的功能。
+                {r}开始，停止，或调整导演方块的播放的位置在 {7}<x>{r}，{7}<y>{r}，和 {7}<z>{r}（你可以使用F3确定你的当前位置）。 同时也有 {7}loop{r} 和 {7}disable_state{r} 可以让你使用 {7}[flag]{r} 参数（{7}true{r} 或 {7}false{r}）更改循环和是否发出红石信号的功能。
 
         # Record's commands
         record:
@@ -80,15 +80,27 @@ blockbuster:
                 |
                     {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
                     
-                    {r}导出从 {7}<entity_name>{r} 为 JSON 的生物渲染器，能够在演员上使用。模型将会导出在 Blockbuster 的 config 文件夹的 exports 文件夹。你可以自愿地提供 {7}[entity_tag]{r} 来从实体中生成含有自定义数据的模型。
+                    {r}导出从 {7}<entity_name>{r} 为 JSON 的生物渲染器，能够在演员上使用。模型将会导出在 Blockbuster 的 config 文件夹的 export 文件夹。你可以自愿地提供 {7}[entity_tag]{r} 来从实体中生成含有自定义数据的模型。
                     
                     {r}{l}注意{r}: 这些自动生成的模型不完美，你需要在 McME 进一步编辑获得最佳效果。
+
+            export_obj:
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}转换名为 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默认材质，如果存在的话也包括 MTL 文件）。导出的 OBJ 模型在 Blockbuster 的配置文件夹中的 {l}export{r} 文件夹。
                     
             clear:
                 |
                     {l}{6}/{r}model {8}clear{r} {7}[path]{r}
                     
                     {r}清除来自 Blockbuster 已加载的皮肤材质。如果 {7}[path]{r} 指定了，这个命令只会清理来自 {7}[path]{r} 的材质。
+
+            convert:
+                |
+                    {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
+                    
+                    {r}转换一个名为 {7}<skin>{r} 的皮肤（文件名不包括文件的扩展名 {7}<steve|fred>{r} 模型）64x64（{7}fred{r}）到 64x32 或者 64x32（{7}steve{r}）到 64x64 的皮肤。
             
             reload:
                 |
@@ -131,3 +143,10 @@ blockbuster:
                     {l}{6}/{r}action {8}stop{r}
                     
                     {r}停止录制动作。如果玩家没有录制任何东西，什么都不会发生。
+        
+        on_head.help: "{r}{o}在头上的命令{r}。这个命令可以将主要用手拿着的东西直接放入头上的佩戴槽，无需受任何 NBT 标签的困扰。"
+        spectate.help: 
+            |
+                {r}{o}观察者命令{r}。这个命令可以让给定的玩家观察给定的实体。
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}

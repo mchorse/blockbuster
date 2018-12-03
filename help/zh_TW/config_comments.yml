@@ -7,9 +7,8 @@ blockbuster.config.comments:
         green_screen_sky: 將天空完全變綠，用來鍵控摳像
 
     model_block:
-        model_block_disable_culling_workaround: 是否禁用剔除變通方式
-
-
+        model_block_disable_item_rendering: 是否要關閉模型方塊的物品渲染（有人想要關掉嗎？）
+        
     recording:
         recording_countdown: 錄制倒計時（秒）
         recording_delay: 錄制的幀延遲
@@ -17,7 +16,8 @@ blockbuster.config.comments:
         record_unload: 開啟自動解除安裝錄制？
         record_sync_rate: 與伺服器同步一個回放的頻率是？
         record_attack_on_swipe: 是否錄制揮手時，生物受到的傷害？
-        record_commands: 是否錄制玩家輸入的命令？
+        record_commands: 是否錄制玩家鍵入的命令？
+        record_chat_prefix: 將會在確切要執行的命令之前預先用的前置代號（%NAME% 通配符可用于指向演員的名稱）
 
     actor:
         actor_fall_damage: 演員是否會掉落傷害？
