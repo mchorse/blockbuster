@@ -16,6 +16,12 @@ blockbuster.error:
         replace_texture: "{f}材质 %s{f} 和 %s{f} 没有被加载！"
         replace_texture_one: "{f}材质 %s{f} 没有被加载！"
         
+        no_player: "{f}无法找到玩家 %s{f}！"
+        no_entity: "{f}无法找到使用目标选择器给定的实体 %s{f}！"
+        
+        convert_model: "{f}给定了错误的模型 %s{f}！它必须要是 {7}steve{f} 或者 {7}fred{f}。"
+        convert_skin: "{f}在转换 %s{f}/%s{f} 皮肤过程中，出现了一个错误：%s{f}"
+        convert_skin_size: "{f}皮肤的大小是 %s{f}x%s{f}，然而皮肤是必须要以 1:1 或 2:1 为比例的！"
     
     # Director block error strings
     director:
@@ -31,6 +37,8 @@ blockbuster.error:
         export:
             error_save: "{f}无法保存导出的模型！"
             wrong_type: "{f}无法以形式 %s{f} 导出模型（因为它没有渲染器，或者不是活的实体渲染器）。"
+            no_model: "{f}无法将模型 %s{f} 导出为 OBJ，因为无法找到这个模型！"
+            obj: "{f}无法导出模型 %s{f}！"
         
         reload: 你需要成为 OP 用户才能重载模型！
     

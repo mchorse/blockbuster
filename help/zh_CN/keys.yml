@@ -7,3 +7,4 @@ key:
         dashboard: 仪表盘
         model_editor: 模型编辑器
         marker: tick 时间标记
+        plause_director: 播放/暂停控制器

@@ -6,7 +6,7 @@ blockbuster:
             |
                 {l}{6}/{r}director {8}<play|toggle|stop|spawn>{r} {7}<x> <y> <z> [tick]{r}
                 
-                {r}開始，停止，或調整導演方塊的播放的位置在{7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (你可以使用F3確定你的當前位置)。 同時{7}spawn{r}命令會在{7}[tick]{r}tick後生成一個閑置演員 ({7}[tick]{r} 參數只會在本次命令有效)。
+                {r}開始，停止，或調整導演方塊的播放的位置在{7}<x>{r}，{7}<y>{r}，和 {7}<z>{r}（你可以使用F3確定你的當前位置）。 同時 {7}spawn{r} 命令會在 {7}[tick]{r} tick 後生成一個閑置演員（{7}[tick]{r} 參數只會在本次命令有效）。
 
         # Record's commands
         record:
@@ -16,7 +16,7 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
                     
-                    {r}添加一個動作，玩家通過{7}<filename>{r} 在 {7}<tick>{r}時間，和{7}<action_type>{r}的類別，加上在{7}[data_tag]{r}附加的的數據，導入錄制。
+                    {r}添加一個動作，玩家通過 {7}<filename>{r} 在 {7}<tick>{r} 時間，和 {7}<action_type>{r} 的類別，加上在 {7}[data_tag]{r} 附加的的數據，導入錄制。
             
             clean:
                 |
@@ -80,10 +80,16 @@ blockbuster:
                 |
                     {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
                     
-                    {r}導出從 {7}<entity_name>{r} 為JSON的生物渲染器，能夠在演員上使用。模型將會導出在Blockbuster的config檔案夾的exports檔案夾。
+                    {r}導出從 {7}<entity_name>{r} 為 JSON 的生物渲染器，能夠在演員上使用。模型將會導出在 Blockbuster 的 config 檔案夾的 export 檔案夾。
                     
-                    {r}{l}註意{r}: 這些自動生成的模型不完美，你需要在McME進一步編輯獲得最佳效果。
+                    {r}{l}註意{r}：這些自動生成的模型不完美，你需要在 McME 進一步編輯獲得最佳效果。
             
+            export_obj:
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}轉換名為 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默認材質，如果存在的話也包括 MTL 檔案）。導出的 OBJ 模型在 Blockbuster 的 config 檔案夾中的 {l}export{r} 檔案夾。
+
             clear:
                 |
                     {l}{6}/{r}model {8}clear{r} {7}[path]{r}
@@ -110,17 +116,17 @@ blockbuster:
                 |
                     {l}{6}/{r}action {8}clear{r}
                     
-                    {r}移除客戶端上所有的錄制內容。 (用來強制解除安裝客戶端上的回放)。
+                    {r}移除客戶端上所有的錄制內容。（用來強制解除安裝客戶端上的回放）。
             play: 
                 |
                     {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
                     
-                    {r}播放檔案名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}(模型) and {7}[skin]{r} and {7}[invincibility]{r}(是否隱身) 選項 ({7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 可用)。
+                    {r}播放檔案名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}（模型）和 {7}[skin]{r} 和 {7}[invincibility]{r}（是否隱身）選項（{7}1{r}，{7}0{r}，{7}true{r} 或 {7}false{r} 可用）。
             record: 
                 |
                     {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
                     
-                    {r}從當前玩家錄制動作到 {7}<filename>{r}。你也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 來指定你想錄制到哪個導演方塊。提供導演方塊的坐標可以幫助同步演員。 
+                    {r}從當前玩家錄制動作到 {7}<filename>{r}。你也可以使用 {7}[x]{f}，{7}[y]{f} 和 {7}[z]{f} 來指定你想錄制到哪個導演方塊。提供導演方塊的坐標可以幫助同步演員。 
             request: 
                 |
                     {l}{6}/{r}action {8}request{r} {7}<filename>{r}
@@ -131,3 +137,10 @@ blockbuster:
                     {l}{6}/{r}action {8}stop{r}
                     
                     {r}停止錄制動作。如果玩家沒有錄制任何東西，什麽都不會發生。
+                    
+        on_head.help: "{r}{o}在頭上的命令{r}。這個命令可以將主要用手拿著的東西直接放入頭上的佩戴槽，無需受任何 NBT 標籤的困擾。"
+        spectate.help:
+            |
+                {r}{o}觀察者命令{r}。這個命令可以讓給定的玩家觀察給定的實體。
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}
