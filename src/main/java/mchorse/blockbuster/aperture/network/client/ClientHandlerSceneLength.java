@@ -1,6 +1,7 @@
 package mchorse.blockbuster.aperture.network.client;
 
 import mchorse.aperture.ClientProxy;
+import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.mclib.network.ClientMessageHandler;
@@ -14,8 +15,10 @@ public class ClientHandlerSceneLength extends ClientMessageHandler<PacketSceneLe
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketSceneLength message)
     {
-        ClientProxy.cameraEditor.maxScrub = message.length;
-        ClientProxy.cameraEditor.scrub.value = CameraHandler.tick;
-        ClientProxy.cameraEditor.updateValues();
+        GuiCameraEditor editor = ClientProxy.getCameraEditor();
+
+        editor.maxScrub = message.length;
+        editor.scrub.value = CameraHandler.tick;
+        editor.updateValues();
     }
 }

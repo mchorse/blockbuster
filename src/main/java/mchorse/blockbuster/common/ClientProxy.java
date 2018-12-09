@@ -46,7 +46,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -202,15 +201,6 @@ public class ClientProxy extends CommonProxy
         for (ChromaColor color : ChromaColor.values())
         {
             mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
-        }
-    }
-
-    @Override
-    public void postLoad(FMLPostInitializationEvent event)
-    {
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.postRegister();
         }
     }
 
