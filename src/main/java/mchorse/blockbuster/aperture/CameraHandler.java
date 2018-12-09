@@ -3,8 +3,7 @@ package mchorse.blockbuster.aperture;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.client.gui.GuiCameraEditor;
-import mchorse.aperture.events.CameraEditorPlaybackStateEvent;
-import mchorse.aperture.events.CameraEditorScrubbedEvent;
+import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
@@ -75,12 +74,6 @@ public class CameraHandler
     }
 
     @Method(modid = "aperture")
-    public static void postRegister()
-    {
-        ClientProxy.cameraEditor.config.options.add(new GuiDirectorConfigOptions(ClientProxy.cameraEditor));
-    }
-
-    @Method(modid = "aperture")
     public static void registerMessages()
     {
         /* Camera management */
@@ -113,7 +106,7 @@ public class CameraHandler
 
     @Method(modid = "aperture")
     @SubscribeEvent
-    public void onCameraScrub(CameraEditorScrubbedEvent event)
+    public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
         BlockPos pos = getDirectorPos();
 
@@ -125,7 +118,7 @@ public class CameraHandler
 
     @Method(modid = "aperture")
     @SubscribeEvent
-    public void onCameraPlause(CameraEditorPlaybackStateEvent event)
+    public void onCameraPlause(CameraEditorEvent.Playback event)
     {
         BlockPos pos = getDirectorPos();
 
@@ -133,6 +126,13 @@ public class CameraHandler
         {
             Dispatcher.sendToServer(new PacketDirectorPlay(pos, event.play ? PacketDirectorPlay.PLAY : PacketDirectorPlay.PAUSE, event.position));
         }
+    }
+
+    @Method(modid = "aperture")
+    @SubscribeEvent
+    public void onCameraOptions(CameraEditorEvent.Options event)
+    {
+        event.options.add(new GuiDirectorConfigOptions(Minecraft.getMinecraft(), event.editor));
     }
 
     /**
@@ -175,9 +175,9 @@ public class CameraHandler
 
             if (pos != null)
             {
-                int tick = ClientProxy.cameraEditor.scrub.value;
+                int tick = ClientProxy.getCameraEditor().scrub.value;
 
-                if (current != ClientProxy.cameraEditor && toOpen instanceof GuiCameraEditor)
+                if (current instanceof GuiCameraEditor && toOpen instanceof GuiCameraEditor)
                 {
                     /* Camera editor opens */
                     CameraHandler.tick = tick;
