@@ -18,6 +18,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiLegacy;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.GuiInventory;
@@ -60,7 +61,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     private GuiButtonElement<GuiCheckBox> shadow;
 
     private GuiModelBlockList list;
-    private GuiElements subChildren;
+    private GuiElements<IGuiElement> subChildren;
 
     private GuiInventory inventory;
     private GuiSlot[] slots = new GuiSlot[6];
@@ -89,7 +90,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         GuiElement element = null;
 
-        this.subChildren = new GuiElements();
+        this.subChildren = new GuiElements<>();
         this.subChildren.setVisible(false);
         this.children.add(this.subChildren);
 

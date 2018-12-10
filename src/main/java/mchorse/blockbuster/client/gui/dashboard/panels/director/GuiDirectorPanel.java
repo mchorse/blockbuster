@@ -10,7 +10,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -29,6 +28,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiLegacy;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
@@ -52,11 +52,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
-    private GuiElements subChildren;
+    private GuiElements<IGuiElement> subChildren;
     private GuiDelegateElement<IGuiElement> mainView;
-    private GuiElements replays;
-    private GuiElements replayEditor;
-    private GuiElements configOptions;
+    private GuiElements<IGuiElement> replays;
+    private GuiElements<IGuiElement> replayEditor;
+    private GuiElements<IGuiElement> configOptions;
     private GuiReplaySelector selector;
 
     /* Config fields */
@@ -104,12 +104,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         super(mc, dashboard);
 
         this.popup = new GuiDelegateElement<IGuiElement>(mc, null);
-        this.subChildren = new GuiElements();
+        this.subChildren = new GuiElements<>();
         this.subChildren.setVisible(false);
-        this.replays = new GuiElements();
-        this.replayEditor = new GuiElements();
+        this.replays = new GuiElements<>();
+        this.replayEditor = new GuiElements<>();
         this.replayEditor.setVisible(false);
-        this.configOptions = new GuiElements();
+        this.configOptions = new GuiElements<>();
         this.mainView = new GuiDelegateElement<IGuiElement>(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w(1, 0).y(1, -60);
@@ -206,7 +206,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.replayEditor.add(element);
 
-        this.popup.resizer().parent(element.area).set(-130, -130, 120, 150);
+        this.popup.resizer().parent(element.area).set(-125, -100, 120, 120);
         this.replayEditor.add(this.popup);
 
         /* Model blocks */
