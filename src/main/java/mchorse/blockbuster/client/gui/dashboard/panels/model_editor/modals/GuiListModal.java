@@ -3,11 +3,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -23,19 +23,18 @@ public class GuiListModal extends GuiModal
 
     public GuiListModal(Minecraft mc, GuiDelegateElement<IGuiElement> parent, String label, Consumer<String> callback)
     {
-        super(mc, parent);
+        super(mc, parent, label);
 
         this.callback = callback;
-        this.label = label;
 
         this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.pick"), (b) -> this.send());
         this.cancel = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.cancel"), (b) -> this.parent.setDelegate(null));
         this.limbs = new GuiStringListElement(mc, null);
 
-        this.pick.resizer().set(0, 0, 50, 20).parent(this.area).x(0.5F, -55).y(0.7F, 10);
-        this.cancel.resizer().set(60, 0, 50, 20).relative(this.pick.resizer());
+        this.pick.resizer().parent(this.area).set(10, 0, 0, 20).y(1, -30).w(0.5F, -15);
+        this.cancel.resizer().parent(this.area).set(10, 0, 0, 20).y(1, -30).x(0.5F, 5).w(0.5F, -15);
 
-        this.limbs.resizer().set(0, 0, 100, 0).parent(this.area).x(0.5F, -50).y(0.4F, 0).h(0.3F, 0);
+        this.limbs.resizer().set(10, 0, 0, 0).parent(this.area).y(0.4F, 0).w(1, -20).h(0.6F, -35);
         this.limbs.add(I18n.format("blockbuster.gui.me.none"));
         this.limbs.current = 0;
 
@@ -78,13 +77,5 @@ public class GuiListModal extends GuiModal
         {
             this.callback.accept(this.limbs.current == 0 ? "" : parent);
         }
-    }
-
-    @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-    {
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-
-        this.font.drawSplitString(this.label, this.area.getX(0.15F), this.area.getY(0.1F), (int) (this.area.w * 0.7), 0xffffff);
     }
 }

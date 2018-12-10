@@ -14,12 +14,21 @@ import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.client.gui.elements.GuiDrawable;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElements;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -135,6 +144,51 @@ public class CameraHandler
         event.options.add(new GuiDirectorConfigOptions(Minecraft.getMinecraft(), event.editor));
     }
 
+    @Method(modid = "aperture")
+    @SubscribeEvent
+    public void onCameraEditorInit(CameraEditorEvent.Init event)
+    {
+        GuiCameraEditor editor = event.editor;
+        GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+        GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
+
+        GuiElements<IGuiElement> elements = new GuiElements<>();
+        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) ->
+        {
+            elements.setVisible(!elements.isVisible());
+
+            boolean show = elements.isVisible();
+
+            editor.panel.resizer().h(1, show ? -150 : -70);
+            editor.scrub.resizer().y(1, show ? -100 : -20);
+            b.resizer().y(1, show ? -98 : -18);
+
+            editor.panel.resize(editor.width, editor.height);
+            editor.scrub.resize(editor.width, editor.height);
+            b.resize(editor.width, editor.height);
+
+            b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
+        });
+
+        GuiDrawable drawable = new GuiDrawable((v) ->
+        {
+            if (elements.isVisible() && record.editor.delegate != null)
+            {
+                Area area = record.editor.delegate.area;
+
+                Gui.drawRect(area.x, area.y, area.getX(1), area.getY(1), 0x66000000);
+            }
+        });
+
+        elements.setVisible(false);
+        elements.add(drawable, record.selector, record.editor);
+
+        toggle.resizer().parent(editor.area).set(0, 0, 16, 16).x(1, -28).y(1, -18);
+
+        editor.scrub.resizer().w(1, -40);
+        editor.elements.add(toggle, elements);
+    }
+
     /**
      * Get director block position from player's playback button
      */
@@ -172,12 +226,13 @@ public class CameraHandler
             GuiScreen current = Minecraft.getMinecraft().currentScreen;
             GuiScreen toOpen = event.getGui();
             BlockPos pos = getDirectorPos();
+            boolean toOpenCamera = toOpen instanceof GuiCameraEditor;
 
             if (pos != null)
             {
                 int tick = ClientProxy.getCameraEditor().scrub.value;
 
-                if (current instanceof GuiCameraEditor && toOpen instanceof GuiCameraEditor)
+                if (!(current instanceof GuiCameraEditor) && toOpenCamera)
                 {
                     /* Camera editor opens */
                     CameraHandler.tick = tick;
@@ -189,6 +244,22 @@ public class CameraHandler
 
                     Dispatcher.sendToServer(new PacketRequestLength(pos));
                 }
+            }
+
+            if (toOpen instanceof GuiCameraEditor)
+            {
+                GuiCameraEditor editor = ClientProxy.getCameraEditor();
+                GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+
+                dashboard.recordingEditorPanel.selector.resizer().parent(editor.area);
+                dashboard.recordingEditorPanel.editor.resizer().parent(editor.area);
+            }
+
+            if (current instanceof GuiCameraEditor && !toOpenCamera)
+            {
+                GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+
+                dashboard.recordingEditorPanel.save();
             }
         }
     }

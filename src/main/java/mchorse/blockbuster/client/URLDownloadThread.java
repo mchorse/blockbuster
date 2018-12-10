@@ -25,6 +25,9 @@ import net.minecraft.util.ResourceLocation;
  */
 public class URLDownloadThread implements Runnable
 {
+    /**
+     * Look, MA! I'm Google Chrome on OS X!!! xD 
+     */
     public static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
 
     private ResourceLocation url;

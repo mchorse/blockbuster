@@ -234,6 +234,9 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.records.clear();
         Dispatcher.sendToServer(new PacketRequestActions());
 
+        this.selector.resizer().parent(this.area);
+        this.editor.resizer().parent(this.area);
+
         if (this.panels.isEmpty())
         {
             GuiEmptyActionPanel empty = new GuiEmptyActionPanel(this.mc);
@@ -274,7 +277,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.save();
     }
 
-    private void save()
+    public void save()
     {
         if (this.editor.delegate != null && this.record != null)
         {
