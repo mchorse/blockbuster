@@ -26,6 +26,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -42,6 +43,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Camera handler
@@ -66,6 +68,12 @@ public class CameraHandler
      * Whether actions should played back also
      */
     public static boolean actions = true;
+
+    /**
+     * Camera editor integrations
+     */
+    @SideOnly(Side.CLIENT)
+    public static GuiElements<IGuiElement> cameraEditorElements;
 
     /**
      * Check whether Aperture is loaded
@@ -113,6 +121,7 @@ public class CameraHandler
 
     /* Event listeners */
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = "aperture")
     @SubscribeEvent
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
@@ -123,8 +132,19 @@ public class CameraHandler
         {
             Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
         }
+
+        GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.dashboard;
+
+        if (dashboard != null && dashboard.recordingEditorPanel.selector.isVisible())
+        {
+            ScrollArea scroll = dashboard.recordingEditorPanel.selector.scroll;
+
+            scroll.scroll = scroll.scrollItemSize * event.position;
+            scroll.clamp();
+        }
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = "aperture")
     @SubscribeEvent
     public void onCameraPlause(CameraEditorEvent.Playback event)
@@ -137,6 +157,7 @@ public class CameraHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = "aperture")
     @SubscribeEvent
     public void onCameraOptions(CameraEditorEvent.Options event)
@@ -144,6 +165,7 @@ public class CameraHandler
         event.options.add(new GuiDirectorConfigOptions(Minecraft.getMinecraft(), event.editor));
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = "aperture")
     @SubscribeEvent
     public void onCameraEditorInit(CameraEditorEvent.Init event)
@@ -155,6 +177,11 @@ public class CameraHandler
         GuiElements<IGuiElement> elements = new GuiElements<>();
         GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) ->
         {
+            if (!record.selector.isVisible())
+            {
+                return;
+            }
+
             elements.setVisible(!elements.isVisible());
 
             boolean show = elements.isVisible();
@@ -166,6 +193,7 @@ public class CameraHandler
             editor.panel.resize(editor.width, editor.height);
             editor.scrub.resize(editor.width, editor.height);
             b.resize(editor.width, editor.height);
+            record.open.resize(editor.width, editor.height);
 
             b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
         });
@@ -180,13 +208,21 @@ public class CameraHandler
             }
         });
 
+        if (cameraEditorElements == null)
+        {
+            cameraEditorElements = new GuiElements<IGuiElement>();
+            editor.elements.add(cameraEditorElements);
+        }
+
         elements.setVisible(false);
         elements.add(drawable, record.selector, record.editor);
 
         toggle.resizer().parent(editor.area).set(0, 0, 16, 16).x(1, -28).y(1, -18);
 
-        editor.scrub.resizer().w(1, -40);
-        editor.elements.add(toggle, elements);
+        editor.scrub.resizer().x(30).w(1, -60);
+
+        cameraEditorElements.elements.clear();
+        cameraEditorElements.add(toggle, record.open, elements, record.records, dashboard.morphDelegate);
     }
 
     /**
@@ -214,6 +250,7 @@ public class CameraHandler
      */
     public static class CameraGUIHandler
     {
+        @SideOnly(Side.CLIENT)
         @Method(modid = "aperture")
         @SubscribeEvent
         public void onGuiOpen(GuiOpenEvent event)
@@ -251,8 +288,12 @@ public class CameraHandler
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
 
+                dashboard.openPanel(dashboard.recordingEditorPanel);
                 dashboard.recordingEditorPanel.selector.resizer().parent(editor.area);
                 dashboard.recordingEditorPanel.editor.resizer().parent(editor.area);
+                dashboard.recordingEditorPanel.records.resizer().parent(editor.area);
+                dashboard.recordingEditorPanel.open.resizer().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(-18).y(2);
+                dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
             }
 
             if (current instanceof GuiCameraEditor && !toOpenCamera)

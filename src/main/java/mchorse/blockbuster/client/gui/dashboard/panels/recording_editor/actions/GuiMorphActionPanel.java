@@ -7,7 +7,7 @@ import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.utils.GuiUtils;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,10 +23,16 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super(mc);
 
         this.dashboard = dashboard;
-        this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.hide(false));
+        this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.setVisible(true));
         this.pick.resizer().parent(this.area).set(0, 5, 60, 20).x(0.5F, -30);
 
         this.children.add(this.pick);
+    }
+
+    @Override
+    public void setMorph(AbstractMorph morph)
+    {
+        this.action.morph = morph;
     }
 
     @Override
@@ -35,7 +41,6 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super.fill(action);
 
         this.dashboard.morphs.setSelected(action.morph);
-        this.dashboard.morphs.hide(true);
     }
 
     @Override
@@ -50,9 +55,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        MorphCell cell = this.dashboard.morphs.getSelected();
-
-        if (cell != null)
+        if (this.action.morph != null)
         {
             int x = this.area.getX(0.5F);
             int y = this.area.getY(0.8F);
@@ -60,11 +63,9 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             GuiScreen screen = this.mc.currentScreen;
 
             GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
-            cell.current().morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 3F, 1.0F);
+            this.action.morph.renderOnScreen(this.mc.thePlayer, x, y, this.area.h / 3F, 1.0F);
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
-
-        this.action.morph = cell == null ? null : cell.current().morph;
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

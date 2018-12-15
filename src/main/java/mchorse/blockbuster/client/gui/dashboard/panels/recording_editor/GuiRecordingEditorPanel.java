@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +51,6 @@ import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiLegacy;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -62,7 +59,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 
-public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLegacy
+public class GuiRecordingEditorPanel extends GuiDashboardPanel
 {
     /**
      * A map of action editing panels mapped to their classes  
@@ -77,7 +74,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     public GuiButtonElement<GuiTextureButton> dupe;
     public GuiButtonElement<GuiTextureButton> remove;
 
-    public GuiButtonElement<GuiTextureButton> open;
+    public GuiButtonElement<GuiSidebarButton> open;
     public GuiActionSearchListElement list;
 
     public Record record;
@@ -97,6 +94,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
             panel = this.panels.get(Action.class);
         }
 
+        this.dashboard.morphs.setVisible(false);
         panel.fill(action);
 
         return panel;
@@ -139,11 +137,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
         this.remove.resizer().set(0, 20, 16, 16).relative(this.dupe.resizer());
         this.list.resizer().set(0, 0, 80, 80).parent(this.selector.area).x(1, -100);
 
-        GuiElement element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (b) -> this.records.toggleVisible());
-        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
+        this.open = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (b) -> this.records.toggleVisible());
+        this.open.resizer().parent(this.area).set(0, 2, 24, 24).x(1, -28);
 
-        this.children.add(this.editor, this.selector, this.records, element);
+        this.children.add(this.editor, this.selector, this.records, this.open);
         this.selector.children.add(this.add, this.dupe, this.remove, this.list);
+        this.children.add(this.dashboard.morphDelegate);
     }
 
     private void createAction(String str)
@@ -236,6 +235,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
 
         this.selector.resizer().parent(this.area);
         this.editor.resizer().parent(this.area);
+        this.records.resizer().parent(this.area);
+        this.open.resizer().parent(this.area).set(0, 2, 24, 24).x(1, -28).y(2);
 
         if (this.panels.isEmpty())
         {
@@ -265,6 +266,15 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     @Override
     public void appear()
     {
+        this.dashboard.morphs.callback = (morph) ->
+        {
+            if (this.editor.delegate != null)
+            {
+                this.editor.delegate.setMorph(morph == null ? null : morph.clone(true));
+            }
+        };
+        this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
+
         if (this.editor.delegate != null)
         {
             this.editor.delegate.appear();
@@ -332,42 +342,13 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel implements IGuiLe
     }
 
     @Override
-    public void resize(int width, int height)
-    {
-        super.resize(width, height);
-
-        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.dashboard.morphs.initGui();
-    }
-
-    @Override
-    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
-    {
-        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
-
-        this.dashboard.morphs.handleMouseInput();
-
-        return result;
-    }
-
-    @Override
-    public boolean handleKeyboardInput() throws IOException
-    {
-        this.dashboard.morphs.handleKeyboardInput();
-
-        return !this.dashboard.morphs.isHidden();
-    }
-
-    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-
         if (this.record == null)
         {
             this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.not_selected"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
-        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

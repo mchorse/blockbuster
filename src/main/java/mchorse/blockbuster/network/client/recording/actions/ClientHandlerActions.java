@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.recording.actions;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.recording.actions.PacketActions;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.network.ClientMessageHandler;
@@ -24,9 +24,9 @@ public class ClientHandlerActions extends ClientMessageHandler<PacketActions>
 
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-            if (screen instanceof GuiDashboard)
+            if (ClientProxy.dashboard != null)
             {
-                ((GuiDashboard) screen).recordingEditorPanel.selectRecord(record);
+                ClientProxy.dashboard.recordingEditorPanel.selectRecord(record);
             }
         }
     }
