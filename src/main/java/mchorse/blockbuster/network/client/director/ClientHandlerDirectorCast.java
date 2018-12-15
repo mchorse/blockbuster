@@ -38,11 +38,13 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
 
             if (opened)
             {
-                dashboard.openPanel(dashboard.directorPanel.openDirector(message.director, message.pos));
+                dashboard.openPanel(dashboard.directorPanel);
+                dashboard.directorPanel.openDirector(message.director, message.pos);
             }
             else
             {
-                dashboard.openPanel(dashboard.directorPanel.setDirector(message.director, message.pos));
+                dashboard.openPanel(dashboard.directorPanel);
+                dashboard.directorPanel.setDirector(message.director, message.pos);
             }
         }
     }

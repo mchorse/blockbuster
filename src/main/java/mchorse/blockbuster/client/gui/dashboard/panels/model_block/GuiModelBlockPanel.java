@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiLegacy;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.GuiInventory;
 import mchorse.mclib.client.gui.widgets.GuiInventory.IInventoryPicker;
@@ -33,7 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy, IInventoryPicker
+public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryPicker
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
@@ -60,7 +59,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     private GuiButtonElement<GuiCheckBox> shadow;
 
     private GuiModelBlockList list;
-    private GuiElements subChildren;
+    private GuiElements<IGuiElement> subChildren;
 
     private GuiInventory inventory;
     private GuiSlot[] slots = new GuiSlot[6];
@@ -89,7 +88,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         EntityPlayer player = Minecraft.getMinecraft().player;
         GuiElement element = null;
 
-        this.subChildren = new GuiElements();
+        this.subChildren = new GuiElements<>();
         this.subChildren.setVisible(false);
         this.children.add(this.subChildren);
 
@@ -130,7 +129,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.sz.resizer().set(0, 25, 80, 20).relative(this.sy.resizer);
 
         /* Buttons */
-        this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (button) -> this.dashboard.morphs.hide(false)));
+        this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (button) -> this.dashboard.morphs.setVisible(true)));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()).tooltip(I18n.format("blockbuster.gui.model_block.one_tooltip"), TooltipDirection.LEFT));
         this.subChildren.add(this.shadow = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.button.isChecked()));
 
@@ -159,6 +158,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         {
             this.slots[i] = new GuiSlot(i);
         }
+
+        this.children.add(this.dashboard.morphDelegate);
     }
 
     @Override
@@ -189,12 +190,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
                 this.model.morph = morph;
             }
         };
-    }
-
-    @Override
-    public void disappear()
-    {
-        this.dashboard.morphs.callback = null;
+        this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
     }
 
     @Override
@@ -287,9 +283,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         this.slots[4].update(this.area.getX(0.5F) + this.area.w / 8, this.area.getY(0.5F) - 25);
         this.slots[5].update(this.area.getX(0.5F) + this.area.w / 8, this.area.getY(0.5F) - 55);
         this.inventory.update(this.area.getX(0.5F), this.area.getY(1) - 50);
-
-        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.fillData();
     }
 
     private void updateList()
@@ -354,16 +347,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     }
 
     @Override
-    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
-    {
-        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
-
-        this.dashboard.morphs.handleMouseInput();
-
-        return result;
-    }
-
-    @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
         super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -384,17 +367,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
     }
 
     @Override
-    public boolean handleKeyboardInput() throws IOException
-    {
-        this.dashboard.morphs.handleKeyboardInput();
-
-        return !this.dashboard.morphs.isHidden();
-    }
-
-    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        if (this.model != null && this.dashboard.morphs.isHidden())
+        if (this.model != null && !this.dashboard.morphs.isVisible())
         {
             MorphCell cell = this.dashboard.morphs.getSelected();
 
@@ -439,7 +414,5 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IGuiLegacy,
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
-
-        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

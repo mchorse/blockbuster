@@ -7,8 +7,6 @@ import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiMessageModal;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
@@ -18,6 +16,8 @@ import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
@@ -38,8 +38,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private GuiStringListElement limbList;
 
-    private GuiElements first;
-    private GuiElements second;
+    private GuiElements<IGuiElement> first;
+    private GuiElements<IGuiElement> second;
 
     private GuiButtonElement<GuiButton> toggle;
 
@@ -78,7 +78,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.children.add(this.limbList);
 
         /* First category */
-        this.first = new GuiElements();
+        this.first = new GuiElements<>();
         this.size = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.size[0] = values[0].intValue();
@@ -125,7 +125,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot);
 
         /* Second category */
-        this.second = new GuiElements();
+        this.second = new GuiElements<>();
         this.color = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.color[0] = values[0];

@@ -1,11 +1,9 @@
 package mchorse.blockbuster.network.client.recording.actions;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.mclib.network.ClientMessageHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,11 +13,9 @@ public class ClientHandlerActionList extends ClientMessageHandler<PacketActionLi
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketActionList message)
     {
-        GuiScreen current = Minecraft.getMinecraft().currentScreen;
-
-        if (current instanceof GuiDashboard)
+        if (ClientProxy.dashboard != null)
         {
-            ((GuiDashboard) current).recordingEditorPanel.addRecords(message.records);
+            ClientProxy.dashboard.recordingEditorPanel.addRecords(message.records);
         }
     }
 }

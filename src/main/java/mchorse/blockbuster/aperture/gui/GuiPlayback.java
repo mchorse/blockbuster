@@ -148,7 +148,6 @@ public class GuiPlayback extends GuiScreen
     public void initGui()
     {
         int x = this.width / 2 - 75;
-        int y = 45;
         int w = 150;
 
         this.cameraMode = new GuiCirculate(1, x, this.height - 55, w, 20);

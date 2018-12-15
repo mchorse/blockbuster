@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiPromptModal;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.Director;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -28,7 +26,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiLegacy;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
@@ -48,15 +46,15 @@ import net.minecraft.util.text.event.ClickEvent.Action;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
+public class GuiDirectorPanel extends GuiDashboardPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
-    private GuiElements subChildren;
+    private GuiElements<IGuiElement> subChildren;
     private GuiDelegateElement<IGuiElement> mainView;
-    private GuiElements replays;
-    private GuiElements replayEditor;
-    private GuiElements configOptions;
+    private GuiElements<IGuiElement> replays;
+    private GuiElements<IGuiElement> replayEditor;
+    private GuiElements<IGuiElement> configOptions;
     private GuiReplaySelector selector;
 
     /* Config fields */
@@ -104,12 +102,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         super(mc, dashboard);
 
         this.popup = new GuiDelegateElement<IGuiElement>(mc, null);
-        this.subChildren = new GuiElements();
+        this.subChildren = new GuiElements<>();
         this.subChildren.setVisible(false);
-        this.replays = new GuiElements();
-        this.replayEditor = new GuiElements();
+        this.replays = new GuiElements<>();
+        this.replayEditor = new GuiElements<>();
         this.replayEditor.setVisible(false);
-        this.configOptions = new GuiElements();
+        this.configOptions = new GuiElements<>();
         this.mainView = new GuiDelegateElement<IGuiElement>(mc, this.replays);
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.resizer().set(0, 0, 0, 60).parent(this.area).w(1, 0).y(1, -60);
@@ -181,7 +179,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
         this.replays.add(element);
 
         /* Additional utility buttons */
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.hide(false));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.setVisible(true));
         element.resizer().set(10, 70, 80, 20).parent(this.area).x(0.5F, -40).y(1, -86);
 
         this.replayEditor.add(element);
@@ -206,7 +204,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.replayEditor.add(element);
 
-        this.popup.resizer().parent(element.area).set(-130, -130, 120, 150);
+        this.popup.resizer().parent(element.area).set(-125, -100, 120, 120);
         this.replayEditor.add(this.popup);
 
         /* Model blocks */
@@ -215,6 +213,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
 
         this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.toggleVisible()));
         element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
+
+        this.children.add(this.dashboard.morphDelegate);
     }
 
     public BlockPos getPos()
@@ -273,17 +273,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     public void appear()
     {
         this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
+        this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
 
         if (this.director != null)
         {
             this.setDirector(this.director, this.pos);
         }
-    }
-
-    @Override
-    public void disappear()
-    {
-        this.dashboard.morphs.callback = null;
     }
 
     @Override
@@ -465,33 +460,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
     }
 
     @Override
-    public boolean handleMouseInput(int mouseX, int mouseY) throws IOException
-    {
-        boolean result = !this.dashboard.morphs.isHidden() && this.dashboard.morphs.isInside(mouseX, mouseY);
-
-        this.dashboard.morphs.handleMouseInput();
-
-        return result;
-    }
-
-    @Override
-    public boolean handleKeyboardInput() throws IOException
-    {
-        this.dashboard.morphs.handleKeyboardInput();
-
-        return !this.dashboard.morphs.isHidden();
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        super.resize(width, height);
-
-        this.dashboard.morphs.updateRect(this.area.x, this.area.y, this.area.w, this.area.h);
-        this.dashboard.morphs.initGui();
-    }
-
-    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         /* Draw additional stuff */
@@ -540,8 +508,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);
         }
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-
         if (this.director == null)
         {
             String no = I18n.format("blockbuster.gui.director.not_selected");
@@ -549,6 +515,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel implements IGuiLegacy
             this.drawCenteredString(this.font, no, this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
         }
 
-        this.dashboard.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

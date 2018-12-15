@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import mchorse.aperture.client.gui.GuiCameraEditor;
+import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
@@ -48,7 +50,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -200,7 +201,16 @@ public class ClientProxy extends CommonProxy
             @Override
             public void onResourceManagerReload(IResourceManager resourceManager)
             {
+                boolean wasntNull = dashboard != null;
                 dashboard = null;
+
+                if (wasntNull)
+                {
+                    GuiCameraEditor editor = mchorse.aperture.ClientProxy.getCameraEditor();
+                    CameraEditorEvent.Init event = new CameraEditorEvent.Init(editor);
+
+                    mchorse.aperture.ClientProxy.EVENT_BUS.post(event);
+                }
             }
         });
 
@@ -213,15 +223,6 @@ public class ClientProxy extends CommonProxy
         for (ChromaColor color : ChromaColor.values())
         {
             mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
-        }
-    }
-
-    @Override
-    public void postLoad(FMLPostInitializationEvent event)
-    {
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.postRegister();
         }
     }
 
