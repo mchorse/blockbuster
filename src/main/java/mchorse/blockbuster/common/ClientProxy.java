@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import mchorse.aperture.client.gui.GuiCameraEditor;
+import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
@@ -188,7 +190,16 @@ public class ClientProxy extends CommonProxy
             @Override
             public void onResourceManagerReload(IResourceManager resourceManager)
             {
+                boolean wasntNull = dashboard != null;
                 dashboard = null;
+
+                if (wasntNull)
+                {
+                    GuiCameraEditor editor = mchorse.aperture.ClientProxy.getCameraEditor();
+                    CameraEditorEvent.Init event = new CameraEditorEvent.Init(editor);
+
+                    mchorse.aperture.ClientProxy.EVENT_BUS.post(event);
+                }
             }
         });
 
