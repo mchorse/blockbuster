@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser.MeshObject;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -65,9 +66,22 @@ public class ModelClientHandler extends ModelHandler
     {
         super.removeModel(key);
 
-        ModelCustom model = ModelCustom.MODELS.remove(key);
+        Minecraft.getMinecraft().addScheduledTask(() ->
+        {
+            /* If this gets run on the integrated server on the server 
+             * side, then it kicks the player due to state exception
+             * because OpenGL operations must be done on the client 
+             * thread...
+             * 
+             * Hopefully scheduling it fix this issue 
+             */
+            ModelCustom model = ModelCustom.MODELS.remove(key);
 
-        model.delete();
-        ModelExtrudedLayer.clearByModel(model);
+            if (model != null)
+            {
+                model.delete();
+                ModelExtrudedLayer.clearByModel(model);
+            }
+        });
     }
 }
