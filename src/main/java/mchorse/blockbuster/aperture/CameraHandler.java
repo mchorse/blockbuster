@@ -16,7 +16,6 @@ import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
-import mchorse.blockbuster.client.gui.elements.GuiDrawable;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
@@ -26,6 +25,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
@@ -292,7 +292,7 @@ public class CameraHandler
                 dashboard.recordingEditorPanel.selector.resizer().parent(editor.area);
                 dashboard.recordingEditorPanel.editor.resizer().parent(editor.area);
                 dashboard.recordingEditorPanel.records.resizer().parent(editor.area);
-                dashboard.recordingEditorPanel.open.resizer().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(-18).y(2);
+                dashboard.recordingEditorPanel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
                 dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
             }
 

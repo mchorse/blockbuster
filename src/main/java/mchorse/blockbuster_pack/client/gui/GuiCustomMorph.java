@@ -4,7 +4,6 @@ import java.io.File;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
-import mchorse.blockbuster.client.gui.elements.GuiDrawable;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.common.ClientProxy;
@@ -16,6 +15,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
@@ -31,8 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiCustomMorph extends GuiAbstractMorph
 {
-    public GuiElements general = new GuiElements();
-    public GuiElements materials = new GuiElements();
+    public GuiElements<IGuiElement> general = new GuiElements<IGuiElement>();
+    public GuiElements<IGuiElement> materials = new GuiElements<IGuiElement>();
     public GuiPoseEditor poseEditor;
     public GuiBodyPartEditor bodyPart;
 
