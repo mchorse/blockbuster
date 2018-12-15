@@ -2,48 +2,77 @@ package mchorse.blockbuster.aperture.gui;
 
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.client.gui.GuiCameraEditor;
-import mchorse.aperture.client.gui.config.AbstractGuiConfigOptions;
+import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
+public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 {
     private String title = I18n.format("blockbuster.gui.aperture.config.title");
 
-    public GuiCheckBox actions;
-    public GuiCheckBox reload;
-    public GuiButton reloadScene;
+    public GuiButtonElement<GuiCheckBox> actions;
+    public GuiButtonElement<GuiCheckBox> reload;
+    public GuiButtonElement<GuiButton> reloadScene;
 
     public int max;
     public int x;
     public int y;
 
-    public GuiDirectorConfigOptions(GuiCameraEditor editor)
+    public GuiDirectorConfigOptions(Minecraft mc, GuiCameraEditor editor)
     {
-        super(editor);
+        super(mc, editor);
 
-        this.reload = new GuiCheckBox(-1, 0, 0, I18n.format("blockbuster.gui.aperture.config.reload"), CameraHandler.actions);
-        this.reload.packedFGColour = 0xffffff;
-
-        this.actions = new GuiCheckBox(-2, 0, 0, I18n.format("blockbuster.gui.aperture.config.actions"), CameraHandler.reload);
-        this.actions.packedFGColour = 0xffffff;
-
-        this.reloadScene = new GuiButton(-3, 0, 0, 100, 20, I18n.format("blockbuster.gui.aperture.config.reload_scene"));
-
-        this.buttons.add(this.reload);
-        this.buttons.add(this.actions);
-        this.buttons.add(this.reloadScene);
-
-        for (GuiButton button : this.buttons.buttons)
+        this.reload = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.aperture.config.reload"), CameraHandler.reload, (b) ->
         {
-            this.max = Math.max(this.max, button.width);
+            CameraHandler.reload = b.button.isChecked();
+        });
+
+        this.actions = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.aperture.config.actions"), CameraHandler.actions, (b) ->
+        {
+            CameraHandler.actions = b.button.isChecked();
+        });
+
+        this.reloadScene = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.aperture.config.reload_scene"), (b) ->
+        {
+            BlockPos pos = CameraHandler.getDirectorPos();
+
+            Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.RESTART, ClientProxy.getCameraEditor().scrub.value));
+        });
+
+        this.reloadScene.button.width = 100;
+        this.children.add(this.reload, this.actions, this.reloadScene);
+
+        int i = 0;
+
+        for (IGuiElement element : this.children.elements)
+        {
+            if (element instanceof GuiButtonElement)
+            {
+                GuiButtonElement button = (GuiButtonElement) element;
+
+                button.resizer().parent(this.area).set(4, 4 + i * 18 + 20, button.button.width, button.button.height);
+                this.max = Math.max(this.max, button.button.width);
+
+                i++;
+            }
         }
+    }
+
+    @Override
+    public void update()
+    {
+        this.reload.button.setIsChecked(CameraHandler.reload);
+        this.actions.button.setIsChecked(CameraHandler.actions);
     }
 
     @Override
@@ -55,27 +84,7 @@ public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
     @Override
     public int getHeight()
     {
-        return this.buttons.buttons.size() * 20 + 16;
-    }
-
-    @Override
-    public void update(int x, int y)
-    {
-        int i = 0;
-
-        for (GuiButton button : this.buttons.buttons)
-        {
-            button.xPosition = x + 4;
-            button.yPosition = y + 4 + i * 20 + 16;
-
-            i++;
-        }
-
-        this.x = x;
-        this.y = y;
-
-        this.reload.setIsChecked(CameraHandler.reload);
-        this.actions.setIsChecked(CameraHandler.actions);
+        return this.children.elements.size() * 18 + 30;
     }
 
     @Override
@@ -85,32 +94,11 @@ public class GuiDirectorConfigOptions extends AbstractGuiConfigOptions
     }
 
     @Override
-    public void actionButtonPerformed(GuiButton button)
+    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        /* Options */
-        int id = button.id;
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
+        this.font.drawString(this.title, this.area.x + 6, this.area.y + 7, 0xffffff, true);
 
-        if (id == -1)
-        {
-            CameraHandler.reload = this.reload.isChecked();
-        }
-        else if (id == -2)
-        {
-            CameraHandler.actions = this.actions.isChecked();
-        }
-        else if (id == -3)
-        {
-            BlockPos pos = CameraHandler.getDirectorPos();
-
-            Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.RESTART, ClientProxy.cameraEditor.scrub.value));
-        }
-    }
-
-    @Override
-    public void draw(int mouseX, int mouseY, float partialTicks)
-    {
-        super.draw(mouseX, mouseY, partialTicks);
-
-        Minecraft.getMinecraft().fontRendererObj.drawString(this.title, this.x + 4, this.y + 4, 0xffffff, true);
+        super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

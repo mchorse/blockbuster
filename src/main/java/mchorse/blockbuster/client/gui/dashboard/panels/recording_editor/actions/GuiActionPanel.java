@@ -6,6 +6,7 @@ import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -39,6 +40,9 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     public void appear()
     {}
 
+    public void setMorph(AbstractMorph morph)
+    {}
+
     public void setKey(String key)
     {
         this.title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
@@ -46,8 +50,22 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     }
 
     @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        return super.mouseClicked(mouseX, mouseY, mouseButton) || this.area.isInside(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
+    {
+        return super.mouseScrolled(mouseX, mouseY, scroll) || this.area.isInside(mouseX, mouseY);
+    }
+
+    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
+        tooltip.set(null, null);
+
         super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         if (!this.title.isEmpty())

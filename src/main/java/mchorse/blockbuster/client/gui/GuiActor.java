@@ -2,12 +2,17 @@ package mchorse.blockbuster.client.gui;
 
 import java.io.IOException;
 
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
+import org.lwjgl.input.Mouse;
+
+import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketModifyActor;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.utils.Area;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
@@ -42,7 +47,8 @@ public class GuiActor extends GuiScreen
     private GuiCheckBox invisible;
     private GuiSlider rotateX;
     private GuiSlider rotateY;
-    private GuiMorphsPopup morphs;
+    private GuiCreativeMorphsMenu morphs;
+    private GuiTooltip tooltip = new GuiTooltip();
 
     /**
      * Constructor for director block and skin manager item
@@ -51,8 +57,12 @@ public class GuiActor extends GuiScreen
     {
         ClientProxy.actorPack.pack.reload();
 
+        Minecraft mc = Minecraft.getMinecraft();
+        IMorphing cap = Morphing.get(mc.player);
+
         this.actor = actor;
-        this.morphs = new GuiMorphsPopup(6, actor.getMorph(), Morphing.get(Minecraft.getMinecraft().player));
+        this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, cap);
+        this.morphs.setVisible(false);
     }
 
     @Override
@@ -72,7 +82,7 @@ public class GuiActor extends GuiScreen
         }
         else if (button.id == 1)
         {
-            this.morphs.hide(false);
+            this.morphs.setVisible(true);
         }
     }
 
@@ -103,40 +113,70 @@ public class GuiActor extends GuiScreen
         Minecraft.getMinecraft().displayGuiScreen(null);
     }
 
-    /* Setting up child GUI screens */
+    /* Handling input */
 
     @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        super.setWorldAndResolution(mc, width, height);
-        this.morphs.setWorldAndResolution(mc, width, height);
+        super.keyTyped(typedChar, keyCode);
+
+        if (this.morphs.isEnabled())
+        {
+            this.morphs.keyTyped(typedChar, keyCode);
+        }
     }
 
     @Override
     public void handleMouseInput() throws IOException
     {
-        this.morphs.handleMouseInput();
+        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
         super.handleMouseInput();
-    }
 
-    @Override
-    public void handleKeyboardInput() throws IOException
-    {
-        this.morphs.handleKeyboardInput();
-        super.handleKeyboardInput();
-    }
+        int scroll = -Mouse.getEventDWheel();
 
-    /* Handling input */
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-        if (this.morphs.isInside(mouseX, mouseY))
+        if (scroll == 0)
         {
             return;
         }
 
+        if (this.morphs.isEnabled())
+        {
+            this.morphs.mouseScrolled(x, y, scroll);
+        }
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    {
+        if (this.morphs.area.isInside(mouseX, mouseY))
+        {
+            if (this.morphs.isEnabled())
+            {
+                this.morphs.mouseClicked(mouseX, mouseY, mouseButton);
+            }
+
+            return;
+        }
+
         super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        if (this.morphs.area.isInside(mouseX, mouseY))
+        {
+            if (this.morphs.isEnabled())
+            {
+                this.morphs.mouseReleased(mouseX, mouseY, state);
+            }
+
+            return;
+        }
+
+        super.mouseReleased(mouseX, mouseY, state);
     }
 
     /* Initiating GUI and drawing */
@@ -173,7 +213,11 @@ public class GuiActor extends GuiScreen
         this.buttonList.add(this.rotateX);
         this.buttonList.add(this.rotateY);
 
-        this.morphs.updateRect(120, 30, this.width - 120, this.height - 30);
+        Area area = new Area();
+
+        area.set(0, 0, this.width, this.height);
+        this.morphs.resizer().parent(area).set(120, 30, 0, 0).w(1, -120).h(1, -30);
+        this.morphs.resize(this.width, this.height);
     }
 
     private void fillData()
@@ -221,6 +265,9 @@ public class GuiActor extends GuiScreen
         this.actor.renderYawOffset = this.actor.prevRenderYawOffset = this.actor.rotationYawHead = this.actor.prevRotationYawHead = this.actor.rotationYaw = this.actor.prevRotationYaw = (float) this.rotateX.getValue();
         this.actor.rotationPitch = this.actor.prevRotationPitch = (float) this.rotateY.getValue();
 
-        this.morphs.drawScreen(mouseX, mouseY, partialTicks);
+        if (this.morphs.isVisible())
+        {
+            this.morphs.draw(this.tooltip, mouseX, mouseY, partialTicks);
+        }
     }
 }

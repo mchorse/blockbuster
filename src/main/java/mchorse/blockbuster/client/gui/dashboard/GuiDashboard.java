@@ -6,7 +6,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup;
+import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.utils.Resizer;
@@ -39,7 +39,8 @@ public class GuiDashboard extends GuiBase
     public GuiRecordingEditorPanel recordingEditorPanel;
     public GuiMainPanel mainPanel;
 
-    public GuiMorphsPopup morphs;
+    public GuiCreativeMorphsMenu morphs;
+    public GuiDelegateElement<GuiCreativeMorphsMenu> morphDelegate;
 
     private boolean mainMenu;
 
@@ -80,6 +81,7 @@ public class GuiDashboard extends GuiBase
     {
         if (mc != null && mc.world != null && this.directorPanel == null)
         {
+            this.morphDelegate = new GuiDelegateElement<GuiCreativeMorphsMenu>(mc, null);
             this.directorPanel = new GuiDirectorPanel(mc, this);
             this.modelPanel = new GuiModelBlockPanel(mc, this);
             this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
@@ -102,10 +104,11 @@ public class GuiDashboard extends GuiBase
             EntityPlayer player = mc.player;
             IMorphing morphing = player == null ? null : Morphing.get(player);
 
-            this.morphs = new GuiMorphsPopup(6, null, morphing);
+            this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
             this.directorPanel.open();
             this.modelPanel.open();
             this.recordingEditorPanel.open();
+            this.morphDelegate.setDelegate(this.morphs);
         }
 
         this.modelEditorPanel.open();
@@ -122,7 +125,10 @@ public class GuiDashboard extends GuiBase
     {
         if (this.morphs != null)
         {
-            this.morphs.hide(true);
+            this.morphs.callback = null;
+            this.morphs.setVisible(false);
+            this.morphs.setFilter("");
+            this.morphs.setSelected(null);
         }
 
         if (this.panel.delegate != null)
@@ -182,17 +188,6 @@ public class GuiDashboard extends GuiBase
         this.panel.resizer().x.value = this.mainMenu ? 0 : 32;
 
         super.initGui();
-    }
-
-    @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height)
-    {
-        super.setWorldAndResolution(mc, width, height);
-
-        if (this.mc.world != null)
-        {
-            this.morphs.setWorldAndResolution(mc, width, height);
-        }
     }
 
     @Override

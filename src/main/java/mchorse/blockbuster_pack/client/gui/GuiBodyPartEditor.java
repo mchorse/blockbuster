@@ -3,7 +3,7 @@ package mchorse.blockbuster_pack.client.gui;
 import java.util.List;
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.elements.GuiMorphsPopup.GuiCreativeMorphsMenu;
+import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph.BodyPart;
