@@ -70,14 +70,12 @@ public class GuiDashboard extends GuiBase
 
     public GuiDashboard setMainMenu(boolean main)
     {
-        this.createWorldPanels(this.mc);
-        this.onOpen();
         this.mainMenu = main;
 
         return this;
     }
 
-    private void createWorldPanels(Minecraft mc)
+    public void createWorldPanels(Minecraft mc)
     {
         if (mc != null && mc.theWorld != null && this.directorPanel == null)
         {
@@ -90,6 +88,9 @@ public class GuiDashboard extends GuiBase
 
     public GuiDashboard open()
     {
+        this.createWorldPanels(this.mc);
+        this.onOpen();
+
         Minecraft.getMinecraft().displayGuiScreen(this);
 
         return this;
@@ -113,16 +114,16 @@ public class GuiDashboard extends GuiBase
 
         this.modelEditorPanel.open();
 
-        if (this.panel.delegate != null)
-        {
-            this.panel.delegate.appear();
-        }
-
         return this;
     }
 
     public GuiDashboard openPanel(GuiDashboardPanel element)
     {
+        if (element == null)
+        {
+            element = this.panel.delegate;
+        }
+
         if (this.morphs != null)
         {
             this.morphs.callback = null;
@@ -149,6 +150,7 @@ public class GuiDashboard extends GuiBase
     public void clear()
     {
         this.morphs = null;
+        this.morphDelegate = null;
         this.directorPanel = null;
         this.modelPanel = null;
         this.recordingEditorPanel = null;

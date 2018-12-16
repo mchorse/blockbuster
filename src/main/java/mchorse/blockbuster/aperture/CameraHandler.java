@@ -188,7 +188,6 @@ public class CameraHandler
 
             editor.panel.resizer().h(1, show ? -150 : -70);
             editor.scrub.resizer().y(1, show ? -100 : -20);
-            b.resizer().y(1, show ? -98 : -18);
 
             editor.panel.resize(editor.width, editor.height);
             editor.scrub.resize(editor.width, editor.height);
@@ -217,7 +216,7 @@ public class CameraHandler
         elements.setVisible(false);
         elements.add(drawable, record.selector, record.editor);
 
-        toggle.resizer().parent(editor.area).set(0, 0, 16, 16).x(1, -28).y(1, -18);
+        toggle.resizer().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(1, 2).y(2);
 
         editor.scrub.resizer().x(30).w(1, -60);
 
@@ -292,6 +291,7 @@ public class CameraHandler
                 dashboard.recordingEditorPanel.selector.resizer().parent(editor.area);
                 dashboard.recordingEditorPanel.editor.resizer().parent(editor.area);
                 dashboard.recordingEditorPanel.records.resizer().parent(editor.area);
+                dashboard.recordingEditorPanel.records.setVisible(false);
                 dashboard.recordingEditorPanel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
                 dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
             }
