@@ -191,10 +191,12 @@ public class ClientProxy extends CommonProxy
             public void onResourceManagerReload(IResourceManager resourceManager)
             {
                 boolean wasntNull = dashboard != null;
+
                 dashboard = null;
 
                 if (wasntNull)
                 {
+                    /* Reinitiate the recording GUI integration */
                     GuiCameraEditor editor = mchorse.aperture.ClientProxy.getCameraEditor();
                     CameraEditorEvent.Init event = new CameraEditorEvent.Init(editor);
 

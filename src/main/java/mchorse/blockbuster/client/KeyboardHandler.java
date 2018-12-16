@@ -7,7 +7,6 @@ import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -65,7 +64,7 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            ClientProxy.getDashboard(false).open();
+            ClientProxy.getDashboard(false).open().openPanel(null);
         }
 
         if (this.cameraMarker.isPressed())

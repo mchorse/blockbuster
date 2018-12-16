@@ -6,6 +6,8 @@ blockbuster.success:
         texture_filter_linear: "{f}材质的过滤器已变更成线性！"
         texture_filter_nearest: "{f}材质的过滤器已变更成最近的临近物！"
         
+        convert_skin: "{f}成功转换 %s{r}/%s{r} 皮肤！"
+        
     director:
         play: "{f}在(%s{f}, %s{f}, %s{f})的导演方块已经开始播放了！"
         stop: "{f}在(%s{f}, %s{f}, %s{f})的导演方块已经停止播放了！"
@@ -17,6 +19,7 @@ blockbuster.success:
     model:
         export:
             saved: "{f}实体模型 %s{f} 已经保存在 %s{f}。"
+            obj: "{f}成功导出了 %s{f} 模型的 OBJ！"
         
         reload: "{f}服务器已经重载了模型！"
         

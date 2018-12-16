@@ -29,6 +29,8 @@ blockbuster.gui.me:
         swinging: 跑动
         idle: 静止
         invert: 反转
+        wheel: 旋转
+        wing: 飞翔
         
         rename: 重命名
         parent: 父级
@@ -73,6 +75,9 @@ blockbuster.gui.me:
         title: 姿势
         new_pose: "为新的姿势输入名字："
         import_pose: "在此输入一个姿势的 NBT 数据来导入它到现在的姿势："
+        import_pose_tooltip: "使用 NBT 标签来导入姿势的属性"
+        copy_pose: "选择要从中复制当前肢体属性的姿势。"
+        copy_pose_tooltip: "从另一个姿势复制姿势属性"
         standard: "你无法移除默认姿势…"
         hitbox: 碰撞箱
     
