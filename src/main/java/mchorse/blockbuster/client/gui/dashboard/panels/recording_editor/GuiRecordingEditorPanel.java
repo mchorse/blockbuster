@@ -274,6 +274,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
             }
         };
         this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
+        this.dashboard.morphDelegate.resize(this.dashboard.width, this.dashboard.height);
 
         if (this.editor.delegate != null)
         {
