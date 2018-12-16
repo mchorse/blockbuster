@@ -85,10 +85,10 @@ blockbuster:
                     {r}{l}註意{r}：這些自動生成的模型不完美，你需要在 McME 進一步編輯獲得最佳效果。
             
             export_obj:
-                |
-                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
-                    
-                    {r}轉換名為 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默認材質，如果存在的話也包括 MTL 檔案）。導出的 OBJ 模型在 Blockbuster 的 config 檔案夾中的 {l}export{r} 檔案夾。
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}轉換名為 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默認材質，如果存在的話也包括 MTL 檔案）。導出的 OBJ 模型在 Blockbuster 的 config 檔案夾中的 {l}export{r} 檔案夾。
 
             clear:
                 |
@@ -139,8 +139,8 @@ blockbuster:
                     {r}停止錄制動作。如果玩家沒有錄制任何東西，什麽都不會發生。
                     
         on_head.help: "{r}{o}在頭上的命令{r}。這個命令可以將主要用手拿著的東西直接放入頭上的佩戴槽，無需受任何 NBT 標籤的困擾。"
-        spectate.help:
-            |
-                {r}{o}觀察者命令{r}。這個命令可以讓給定的玩家觀察給定的實體。
-                
-                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}
+        spectate.help:
+            |
+                {r}{o}觀察者命令{r}。這個命令可以讓給定的玩家觀察給定的實體。
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}

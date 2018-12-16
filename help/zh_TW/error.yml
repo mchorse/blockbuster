@@ -17,11 +17,11 @@ blockbuster.error:
         replace_texture_one: "{f}材質 %s{f} 沒有被載入！"
         
         no_player: "{f}無法找到玩家 %s{f}！"
-        no_entity: "{f}無法找到使用目標選擇器給定的實體 %s{f}！"
-        
-        convert_model: "{f}給定了錯誤的模型 %s{f}！它必須要是 {7}steve{f} 或者 {7}fred{f}。"
-        convert_skin: "{f}在轉換 %s{f}/%s{f} 皮膚過程中，出現了一個錯誤：%s{f}"
-        convert_skin_size: "{f}皮膚的大小是 %s{f}x%s{f}，然而皮膚是必須要以 1:1 或 2:1 為比例的！"
+        no_entity: "{f}無法找到使用目標選擇器給定的實體 %s{f}！"
+        
+        convert_model: "{f}給定了錯誤的模型 %s{f}！它必須要是 {7}steve{f} 或者 {7}fred{f}。"
+        nvert_skin: "{f}在轉換 %s{f}/%s{f} 皮膚過程中，出現了一個錯誤：%s{f}"
+          convert_skin_size: "{f}皮膚的大小是 %s{f}x%s{f}，然而皮膚是必須要以 1:1 或 2:1 為比例的！"
 
     # Director block error strings
     director:
@@ -38,7 +38,7 @@ blockbuster.error:
             error_save: "{f}無法保存導出的模型！"
             wrong_type: "{f}無法以形式 %s{f} 導出模型（因為它沒有渲染器，或者不是活的實體渲染器）。"
             no_model: "{f}無法將模型 %s{f} 導出為 OBJ，因為無法找到這個模型！"
-            obj: "{f}無法導出模型 %s{f}！"
+            obj: "{f}無法導出模型 %s{f}！"
         
         reload: 你需要成為 OP 用戶才能重載模型！
     
