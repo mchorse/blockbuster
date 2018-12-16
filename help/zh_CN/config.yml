@@ -12,7 +12,7 @@ blockbuster.config:
     model_block:
         title: 模型方块
         
-        model_block_disable_culling_workaround: 禁用剔除变通方法
+        model_block_disable_item_rendering: 关闭物品渲染
 
     recording:
         title: 录制
@@ -24,7 +24,8 @@ blockbuster.config:
         record_sync_rate: 录制 tick 的同步率
         record_attack_on_swipe: 挥动手攻击
         record_commands: 录制命令
-
+        record_chat_prefix: 聊天动作的前缀
+        
     actor:
         title: 演员
 
