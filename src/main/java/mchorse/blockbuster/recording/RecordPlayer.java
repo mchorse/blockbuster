@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -164,8 +165,9 @@ public class RecordPlayer
 
     /**
      * Make an actor go to the given tick
+     * @param replay 
      */
-    public void goTo(int tick, boolean actions)
+    public void goTo(int tick, boolean actions, Replay replay)
     {
         int min = Math.min(this.tick, tick);
         int max = Math.max(this.tick, tick);
@@ -185,6 +187,11 @@ public class RecordPlayer
         if (actions)
         {
             this.record.applyAction(tick, this.actor);
+
+            if (tick != 0 && replay != null)
+            {
+                this.record.seekMorphAction(this.actor, tick, replay);
+            }
         }
 
         if (this.actor.isServerWorld())

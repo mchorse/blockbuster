@@ -290,13 +290,14 @@ public class CameraHandler
             {
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+                GuiRecordingEditorPanel panel = dashboard.recordingEditorPanel;
 
-                dashboard.openPanel(dashboard.recordingEditorPanel);
-                dashboard.recordingEditorPanel.selector.resizer().parent(editor.area);
-                dashboard.recordingEditorPanel.editor.resizer().parent(editor.area);
-                dashboard.recordingEditorPanel.records.resizer().parent(editor.area);
-                dashboard.recordingEditorPanel.records.setVisible(false);
-                dashboard.recordingEditorPanel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
+                dashboard.openPanel(panel);
+                panel.selector.resizer().parent(editor.area);
+                panel.editor.resizer().parent(editor.area);
+                panel.records.resizer().parent(editor.area);
+                panel.records.setVisible(false);
+                panel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
                 dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
             }
 
