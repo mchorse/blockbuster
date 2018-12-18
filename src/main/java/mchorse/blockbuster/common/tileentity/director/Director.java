@@ -495,12 +495,14 @@ public class Director
     {
         for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
+            Replay replay = entry.getKey();
+
             if (tick == 0)
             {
-                entry.getKey().apply(entry.getValue().actor);
+                replay.apply(entry.getValue().actor);
             }
 
-            entry.getValue().goTo(tick, actions);
+            entry.getValue().goTo(tick, actions, replay);
         }
     }
 

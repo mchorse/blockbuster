@@ -10,8 +10,10 @@ import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.recording.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -193,6 +195,45 @@ public class Record
     }
 
     /**
+     * Seek the nearest morph action
+     */
+    public void seekMorphAction(EntityLivingBase actor, int tick, Replay replay)
+    {
+        if (tick >= this.getLength())
+        {
+            return;
+        }
+
+        /* Hopefully this wouldn't cause a mess */
+        int threshold = Math.max(tick - 500, 0);
+
+        while (tick > threshold)
+        {
+            List<Action> actions = this.actions.get(tick);
+
+            if (actions == null)
+            {
+                tick--;
+
+                continue;
+            }
+
+            for (Action action : actions)
+            {
+                if (action instanceof MorphAction)
+                {
+                    action.apply(actor);
+                    return;
+                }
+            }
+
+            tick--;
+        }
+
+        replay.apply(actor);
+    }
+
+    /**
      * Reset the actor based on this record
      */
     public void reset(EntityLivingBase actor)
@@ -343,6 +384,7 @@ public class Record
     /**
      * Create a copy of this record
      */
+    @Override
     public Record clone()
     {
         Record record = new Record(this.filename);
