@@ -286,7 +286,7 @@ public class CameraHandler
                 }
             }
 
-            if (toOpen instanceof GuiCameraEditor)
+            if (toOpenCamera)
             {
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
