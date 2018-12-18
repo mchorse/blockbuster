@@ -172,6 +172,10 @@ public class CameraHandler
     {
         GuiCameraEditor editor = event.editor;
         GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+
+        dashboard.createWorldPanels(dashboard.mc);
+        dashboard.onOpen();
+
         GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
 
         GuiElements<IGuiElement> elements = new GuiElements<>();

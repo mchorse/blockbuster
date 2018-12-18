@@ -51,11 +51,6 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
     {
-        if (super.mouseClicked(mouseX, mouseY, mouseButton))
-        {
-            return true;
-        }
-
         this.inventory.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (this.slot.area.isInside(mouseX, mouseY))
@@ -63,7 +58,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
             this.inventory.visible = true;
         }
 
-        return false;
+        return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
