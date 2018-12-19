@@ -98,7 +98,7 @@ public class MorphBodyPart implements IBodyPart
     {
         MorphBodyPart part = new MorphBodyPart();
 
-        part.morph = this.morph.clone(isRemote);
+        part.morph = this.morph == null ? null : this.morph.clone(isRemote);
         part.translate[0] = this.translate[0];
         part.translate[1] = this.translate[1];
         part.translate[2] = this.translate[2];
