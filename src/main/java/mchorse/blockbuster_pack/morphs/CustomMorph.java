@@ -552,6 +552,7 @@ public class CustomMorph extends AbstractMorph
 
         if (tag.hasKey("BodyParts", 9))
         {
+            this.parts.clear();
             NBTTagList bodyParts = tag.getTagList("BodyParts", 10);
 
             for (int i = 0, c = bodyParts.tagCount(); i < c; i++)
