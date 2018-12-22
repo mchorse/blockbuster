@@ -102,6 +102,17 @@ public class CameraHandler
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Method(modid = "aperture")
+    public static void reloadCameraEditor()
+    {
+        /* Reinitiate the recording GUI integration */
+        GuiCameraEditor editor = mchorse.aperture.ClientProxy.getCameraEditor();
+        CameraEditorEvent.Init event = new CameraEditorEvent.Init(editor);
+
+        mchorse.aperture.ClientProxy.EVENT_BUS.post(event);
+    }
+
     @Method(modid = "aperture")
     public static void handlePlaybackItem(EntityPlayer player, NBTTagCompound tag)
     {
