@@ -18,6 +18,7 @@ blockbuster.gui:
     break: Сломать
     select: Выбрать
     ok: Oк
+    no_data: Доступная информация отсутствует...
     
     # Morphs popup strings
     morphs:
@@ -69,6 +70,9 @@ blockbuster.gui:
         edit_record: Редактировать запись
         update_data: Обновить данные
         update_data_tooltip: Обновляет данные игрока в файле записи
+        rename_prefix: Переименовать префикс
+        rename_prefix_tooltip: Переименовывает ID воспрозведения записи с новым префиксом
+        rename_prefix_popup: "Введите новый префикс:"
     
     # Actor configuration GUI strings
     actor:
@@ -191,16 +195,27 @@ blockbuster.gui:
         camera_mode: Режим камеры
         profile: Имя профиля
 
-        nothing: Ничего не делать
+        nothing: Не делать ничего
         play: Только воспроизвести
         load_profile: Загрузить и воспроизвести
     
     builder:
-        pose_sneak: Поза применится, когда вы будете красться
-        model: Модель
-        skin: Скин
+        pose_editor: редактор поз
+        body_part: Части тела
+        materials: Материалы
+        nbt: NBT
         pose: Поза
-        custom_pose: Пользовательская поза
+        
+        pick_skin: Выбрать скин
+        pose_sneak: Крадущаяся поза
+        pose: Поза
+        
+        obj_materials: Материалы OBJ
+        pick_texture: Выберите текстуру
+        
+        limbs: Конечности
+        body_parts: Части тела
+        use_target: Использовать цель
     
     aperture:
         config:
