@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
+import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph.BodyPart;
@@ -12,8 +13,11 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.metamorph.capabilities.morphing.IMorphing;
+import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -48,7 +52,7 @@ public class GuiBodyPartEditor extends GuiElement
     private GuiTrackpadElement rz;
 
     private GuiStringListElement limbs;
-    private GuiElements editor = new GuiElements();
+    private GuiElements<IGuiElement> editor = new GuiElements<IGuiElement>();
 
     private BodyPart part;
 
@@ -91,7 +95,9 @@ public class GuiBodyPartEditor extends GuiElement
         {
             if (this.morphPicker == null)
             {
-                this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, null);
+                IMorphing morphing = Morphing.get(this.mc.thePlayer);
+
+                this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
                 this.morphPicker.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -10).h(1, -10);
                 this.morphPicker.callback = (morph) ->
                 {
@@ -103,6 +109,8 @@ public class GuiBodyPartEditor extends GuiElement
                 this.morphPicker.resize(screen.width, screen.height);
                 this.children.add(this.morphPicker);
             }
+
+            GuiUtils.unfocusAllTextFields(this.children);
 
             this.morphPicker.setSelected(this.part.part.morph);
             this.morphPicker.setVisible(true);

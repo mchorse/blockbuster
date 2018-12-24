@@ -1,5 +1,11 @@
 package mchorse.blockbuster.client.gui.utils;
 
+import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElements;
+import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
+import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -97,5 +103,53 @@ public class GuiUtils
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+    /**
+     * Unfocus all text field elements recursively 
+     */
+    public static void unfocusAllTextFields(GuiElements<IGuiElement> elements)
+    {
+        /* Just in case */
+        if (elements == null || !elements.isVisible())
+        {
+            return;
+        }
+
+        for (IGuiElement element : elements.elements)
+        {
+            unfocusElement(element);
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static void unfocusElement(IGuiElement element)
+    {
+        if (element == null || !element.isVisible())
+        {
+            return;
+        }
+
+        if (element instanceof GuiElements)
+        {
+            unfocusAllTextFields((GuiElements) element);
+        }
+        else if (element instanceof GuiTextElement)
+        {
+            ((GuiTextElement) element).field.setFocused(false);
+        }
+        else if (element instanceof GuiTrackpadElement)
+        {
+            ((GuiTrackpadElement) element).trackpad.text.setFocused(false);
+        }
+        else if (element instanceof GuiDelegateElement)
+        {
+            unfocusElement(((GuiDelegateElement) element).delegate);
+        }
+
+        if (element instanceof GuiElement)
+        {
+            unfocusAllTextFields(((GuiElement) element).children);
+        }
     }
 }
