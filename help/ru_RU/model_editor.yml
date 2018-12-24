@@ -29,8 +29,10 @@ blockbuster.gui.me:
         swinging: Качается
         idle: Колебается
         invert: Инвертировать
+        wheel: Колесо
+        wing: Крыло
         
-        rename: Назвать
+        rename: Переназвать
         parent: Привязать
         page: Переключить страницу
         
@@ -73,8 +75,11 @@ blockbuster.gui.me:
         title: Позы
         new_pose: "Впишите имя для новой позы:"
         import_pose: "Впишите сюда NBT данные позы для импорта в текущую позу:"
+        import_pose_tooltip: "Импортируйте свойста позы посредством NBT тэга"
+        copy_pose: "Выберите позу из которой вы хотите скопировать свойства для текущей конечности."
+        copy_pose_tooltip: "Копировать свойства позы из другой позы"
         standard: "Вы не можете удалить одну из стандартных поз..."
-        hitbox: Каркас
+        hitbox: Хитбокс
     
     tooltips:
         models: Модели
@@ -83,4 +88,4 @@ blockbuster.gui.me:
         limbs: Конечности
         swipe: Взмах
         swing: Включить бег
-        items: Включить вещи
+        items: Включить предметы

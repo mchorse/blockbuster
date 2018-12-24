@@ -5,6 +5,8 @@ blockbuster.success:
         
         texture_filter_linear: "{f}Фильтрация текстуры была сменена на линейную!"
         texture_filter_nearest: "{f}Фильтрация текстуры была сменена на ближайший!"
+
+        convert_skin: "{f}Скин %s{r}/%s{r} успешно сконвертирован!"
     
     director:
         play: "{f}Блок режиссёра в точке (%s{f}, %s{f}, %s{f}) начал воспроизведение!"
@@ -17,6 +19,7 @@ blockbuster.success:
     model:
         export:
             saved: "{f}Модель сущности %s{f} была сохранена в %s{f}."
+            obj: "{f} Модель %s{f} была успешно экспортирована в OBJ!"
         
         reload: "{f}Сервер перезагрузил модели!"
         
