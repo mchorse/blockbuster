@@ -12,7 +12,7 @@ blockbuster.config:
     model_block:
         title: Блоки-модели
         
-        model_block_disable_culling_workaround: Выключить методы обхода
+        model_block_disable_item_rendering: Выключить рендеринг предметов
     
     recording:
         title: Записи
@@ -24,6 +24,7 @@ blockbuster.config:
         record_sync_rate: Показатель синхронизации тиков
         record_attack_on_swipe: Атака взмахом
         record_commands: Запись команд
+        record_chat_prefix: Префикс действия в чате
     
     actor:
         title: Актёры

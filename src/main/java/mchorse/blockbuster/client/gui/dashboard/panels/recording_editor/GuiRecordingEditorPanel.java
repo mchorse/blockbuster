@@ -301,6 +301,11 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     public void addRecords(List<String> records)
     {
         this.records.add(records);
+
+        if (this.record != null)
+        {
+            this.records.records.list.setCurrent(this.record.filename);
+        }
     }
 
     public void selectRecord(String str)
