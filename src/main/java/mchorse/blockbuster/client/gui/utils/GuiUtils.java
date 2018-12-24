@@ -7,11 +7,11 @@ import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
@@ -52,7 +52,7 @@ public class GuiUtils
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
-        rendermanager.doRenderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         rendermanager.setRenderShadow(true);
 
         ent.renderYawOffset = f;
@@ -91,7 +91,7 @@ public class GuiUtils
         GlStateManager.shadeModel(7425);
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
         vertexbuffer.pos(right, top, zLevel).color(r2, g2, b2, a2).endVertex();
         vertexbuffer.pos(left, top, zLevel).color(r1, g1, b1, a1).endVertex();
