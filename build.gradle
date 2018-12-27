@@ -34,7 +34,9 @@ minecraft
     clientJvmArgs = ["-Xmx1G", "-Dfml.coreMods.load=" + coremodPath]
     serverJvmArgs = ["-Xmx1G"]
     
-    replace "@VERSION@", project.version
+    replace "%VERSION%", project.version
+    replace "%METAMORPH%", project.metamorph
+    replace "%MCLIB%", project.mclib
 }
 
 dependencies 
