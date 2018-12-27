@@ -47,6 +47,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
     /* General options */
     public GuiTexturePicker textures;
     public GuiButtonElement<GuiButton> skin;
+    public GuiButtonElement<GuiButton> reset;
     public GuiStringListElement poses;
     public GuiButtonElement<GuiCheckBox> poseOnSneak;
 
@@ -76,6 +77,13 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.textures.setVisible(true);
         });
 
+        this.reset = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
+        {
+            this.getMorph().currentPose = "";
+            this.poses.setCurrent("");
+            this.updateModelRenderer();
+        });
+
         this.poseOnSneak = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.pose_sneak"), false, (b) ->
         {
             this.getMorph().currentPoseOnSneak = b.button.isChecked();
@@ -89,11 +97,12 @@ public class GuiCustomMorph extends GuiAbstractMorph
         });
 
         this.skin.resizer().parent(this.area).set(10, 10, 105, 20);
+        this.reset.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
         this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -49);
-        this.poses.resizer().parent(this.area).set(10, 50, 105, 0).h(1, -105);
+        this.poses.resizer().parent(this.area).set(10, 75, 105, 0).h(1, -130);
         this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
 
-        this.general.add(this.skin, this.poses, this.poseOnSneak, this.textures);
+        this.general.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.textures);
 
         /* Materials view */
         this.materialList = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str));
