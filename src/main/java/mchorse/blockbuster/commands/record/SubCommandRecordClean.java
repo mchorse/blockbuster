@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class SubCommandRecordClean extends SubCommandRecordBase
 {
-    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch", "fall_distance", "sprinting", "sneaking", "active_hands");
+    public static final Set<String> PROPERTIES = ImmutableSet.of("x", "y", "z", "yaw", "yaw_head", "pitch", "fall_distance", "sprinting", "sneaking", "active_hands", "mounted");
 
     @Override
     public int getRequiredArgs()
@@ -103,15 +103,15 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         }
         else if (property.equals("yaw"))
         {
-            return (float) frame.yaw;
+            return frame.yaw;
         }
         else if (property.equals("yaw_head"))
         {
-            return (float) frame.yawHead;
+            return frame.yawHead;
         }
         else if (property.equals("pitch"))
         {
-            return (float) frame.pitch;
+            return frame.pitch;
         }
         else if (property.equals("fall_distance"))
         {
@@ -128,6 +128,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("active_hands"))
         {
             return frame.activeHands;
+        }
+        else if (property.equals("mounted"))
+        {
+            return frame.isMounted ? 1 : 0;
         }
 
         return 0;
@@ -174,6 +178,10 @@ public class SubCommandRecordClean extends SubCommandRecordBase
         else if (property.equals("active_hands"))
         {
             frame.activeHands = (int) value;
+        }
+        else if (property.equals("mounted"))
+        {
+            frame.isMounted = value == 1;
         }
     }
 
