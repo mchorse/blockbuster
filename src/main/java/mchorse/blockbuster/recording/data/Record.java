@@ -203,8 +203,8 @@ public class Record
             return;
         }
 
-        /* Hopefully this wouldn't cause a mess */
-        int threshold = Math.max(tick - 500, 0);
+        /* I hope it won't cause a lag... |+| */
+        int threshold = 0;
 
         while (tick > threshold)
         {
