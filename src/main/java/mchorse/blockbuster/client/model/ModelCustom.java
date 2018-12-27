@@ -267,7 +267,7 @@ public class ModelCustom extends ModelBiped
 
             if (limb.limb.wheel)
             {
-                limb.rotateAngleX += limbSwing;
+                limb.rotateAngleX += limbSwing * factor;
 
                 if (limb.limb.looking)
                 {

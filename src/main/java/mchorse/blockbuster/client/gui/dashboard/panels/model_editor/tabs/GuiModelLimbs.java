@@ -334,6 +334,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.swinging.button.setIsChecked(limb.swinging);
         this.idle.button.setIsChecked(limb.idle);
         this.invert.button.setIsChecked(limb.invert);
+        this.wheel.button.setIsChecked(limb.wheel);
+        this.wing.button.setIsChecked(limb.wing);
     }
 
     @Override
