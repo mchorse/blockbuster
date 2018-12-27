@@ -55,7 +55,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *          of custom models)</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@[%METAMORPH%,);mclib@[%MCLIB%,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json")
+@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json")
 public class Blockbuster
 {
     /* Mod info */
