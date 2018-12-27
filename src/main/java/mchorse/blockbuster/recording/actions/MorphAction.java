@@ -3,7 +3,6 @@ package mchorse.blockbuster.recording.actions;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.MorphUtils;
-import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,12 +32,7 @@ public class MorphAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
-        AbstractMorph morph = EntityUtils.getMorph(actor);
-
-        if (this.morph != null)
-        {
-            morph = this.morph.clone(false);
-        }
+        AbstractMorph morph = this.morph == null ? null : this.morph.clone(false);
 
         if (actor instanceof EntityPlayer)
         {

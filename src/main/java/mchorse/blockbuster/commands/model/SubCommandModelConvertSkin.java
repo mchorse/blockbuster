@@ -30,14 +30,6 @@ import net.minecraft.util.math.BlockPos;
  */
 public class SubCommandModelConvertSkin extends CommandBase
 {
-    /**
-     * @link https://codereview.stackexchange.com/questions/172849/checking-if-a-number-is-power-of-2-or-not 
-     */
-    public static boolean isPowerOfTwo(int number)
-    {
-        return number > 0 && ((number & (number - 1)) == 0);
-    }
-
     @Override
     public String getName()
     {
@@ -75,7 +67,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             int w = image.getWidth();
             int h = image.getHeight();
 
-            if (!(isPowerOfTwo(w) && isPowerOfTwo(h) && (w == h || w == h * 2)))
+            if (!(w % 64 == 0 && h % 64 == 0 && (w == h || w == h * 2)))
             {
                 throw new CommandException("blockbuster.error.commands.convert_skin_size", w, h);
             }

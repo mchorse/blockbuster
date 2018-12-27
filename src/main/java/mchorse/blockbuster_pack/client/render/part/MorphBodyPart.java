@@ -141,9 +141,21 @@ public class MorphBodyPart implements IBodyPart
             this.morph.toNBT(morph);
             tag.setTag("Morph", morph);
 
-            tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
-            tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
-            tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+            if (this.translate[0] != 0 || this.translate[1] != 0 || this.translate[2] != 0)
+            {
+                tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
+            }
+
+            if (this.scale[0] != 0 || this.scale[1] != 0 || this.scale[2] != 0)
+            {
+                tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
+            }
+
+            if (this.rotate[0] != 0 || this.rotate[1] != 0 || this.rotate[2] != 0)
+            {
+                tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+            }
+
             if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         }
     }
