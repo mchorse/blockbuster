@@ -7,9 +7,12 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
+import mchorse.metamorph.network.Dispatcher;
+import mchorse.metamorph.network.common.PacketAcquireMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Creative morph menu, but with a close button 
@@ -17,10 +20,21 @@ import net.minecraft.client.gui.GuiButton;
 public class GuiCreativeMorphsMenu extends GuiCreativeMorphs
 {
     private GuiButtonElement<GuiButton> close;
+    private GuiButtonElement<GuiButton> acquire;
 
     public GuiCreativeMorphsMenu(Minecraft mc, int perRow, AbstractMorph selected, IMorphing morphing)
     {
         super(mc, perRow, selected, morphing);
+
+        this.acquire = GuiButtonElement.button(mc, I18n.format("metamorph.gui.acquire"), (b) ->
+        {
+            MorphCell cell = this.getSelected();
+
+            if (cell != null)
+            {
+                Dispatcher.sendToServer(new PacketAcquireMorph(cell.current().morph));
+            }
+        });
 
         this.close = GuiButtonElement.button(mc, "X", (b) ->
         {
@@ -32,10 +46,12 @@ public class GuiCreativeMorphsMenu extends GuiCreativeMorphs
             this.setVisible(false);
         });
 
-        this.close.resizer().parent(this.area).set(10, 10, 20, 20);
-        this.children.add(this.close);
+        this.acquire.resizer().parent(this.area).set(10, 10, 60, 20);
+        this.close.resizer().parent(this.area).set(0, 10, 20, 20).x(1, -30);
+        this.edit.resizer().x(1, -35 - 25 - 55);
+        this.children.add(this.acquire, this.close);
 
-        this.search.resizer().set(35, 10, 0, 20).w(1, -130);
+        this.search.resizer().set(75, 10, 0, 20).w(1, -130 - 65);
 
         this.setVisible(false);
         this.shiftX = 8;
@@ -67,6 +83,7 @@ public class GuiCreativeMorphsMenu extends GuiCreativeMorphs
     {
         super.toggleEditMode();
 
+        this.acquire.setVisible(this.editor.delegate == null);
         this.close.setVisible(this.editor.delegate == null);
     }
 
