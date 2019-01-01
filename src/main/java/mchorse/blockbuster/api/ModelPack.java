@@ -1,6 +1,8 @@
 package mchorse.blockbuster.api;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -225,10 +227,14 @@ public class ModelPack
                 return null;
             }
 
-            OBJParser parser = new OBJParser(this.objModel, model.providesMtl ? this.mtlFile : null);
+            OBJParser parser = null;
 
             try
             {
+                InputStream obj = this.objModel == null ? null : new FileInputStream(this.objModel);
+                InputStream mtl = model.providesMtl ? (this.mtlFile == null ? null : new FileInputStream(this.mtlFile)) : null;
+
+                parser = new OBJParser(obj, mtl);
                 parser.read();
                 parser.setupTextures(key, this.objModel.getParentFile());
                 model.materials.putAll(parser.materials);
