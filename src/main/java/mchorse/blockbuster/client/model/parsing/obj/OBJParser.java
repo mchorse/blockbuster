@@ -2,7 +2,6 @@ package mchorse.blockbuster.client.model.parsing.obj;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ import mchorse.blockbuster.utils.TextureLocation;
 public class OBJParser
 {
     /* Input files */
-    public File objFile;
-    public File mtlFile;
+    public InputStream objFile;
+    public InputStream mtlFile;
 
     /* Collected data */
     public List<Vector3f> vertices = new ArrayList<Vector3f>();
@@ -32,13 +31,13 @@ public class OBJParser
     /**
      * Read all lines from a file (needs a text file) 
      */
-    public static List<String> readAllLines(File file) throws Exception
+    public static List<String> readAllLines(InputStream stream) throws Exception
     {
         List<String> list = new ArrayList<String>();
 
         try
         {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 
             String line;
             while ((line = br.readLine()) != null)
@@ -61,28 +60,10 @@ public class OBJParser
      * 
      * TODO: rewrite to using {@link InputStream}
      */
-    public OBJParser(File objFile, File mtlFile)
+    public OBJParser(InputStream objFile, InputStream mtlFile)
     {
         this.objFile = objFile;
         this.mtlFile = mtlFile;
-    }
-
-    /**
-     * Setup material textures 
-     */
-    public void setupTextures(String key, File folder)
-    {
-        /* Create a texture location for materials */
-        for (OBJMaterial material : this.materials.values())
-        {
-            if (material.useTexture && material.texture == null)
-            {
-                material.texture = new TextureLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
-
-                /* Create folder for every material */
-                new File(folder, "skins/" + material.name + "/").mkdirs();
-            }
-        }
     }
 
     /**
@@ -98,6 +79,24 @@ public class OBJParser
 
         this.readMTL();
         this.readOBJ();
+    }
+
+    /**
+     * Setup material textures
+     */
+    public void setupTextures(String key, File folder)
+    {
+        /* Create a texture location for materials */
+        for (OBJMaterial material : this.materials.values())
+        {
+            if (material.useTexture && material.texture == null)
+            {
+                material.texture = new TextureLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
+
+                /* Create folder for every material */
+                new File(folder, "skins/" + material.name + "/").mkdirs();
+            }
+        }
     }
 
     /**
@@ -126,8 +125,7 @@ public class OBJParser
 
             if (first.equals("newmtl"))
             {
-                material = new OBJMaterial();
-                material.name = tokens[1];
+                material = new OBJMaterial(tokens[1]);
 
                 this.materials.put(material.name, material);
             }
@@ -350,8 +348,8 @@ public class OBJParser
     }
 
     /**
-     * Substitute class for a 2d vector which comes with joml library 
-     */
+     * Substitute class for a 2d vector which comes with joml library
+    */
     protected static class Vector2f
     {
         public float x;
@@ -365,7 +363,7 @@ public class OBJParser
     }
 
     /**
-     * Substitute class for a 3d vector which comes with joml library 
+     * Substitute class for a 3d vector which comes with joml library
      */
     protected static class Vector3f
     {
