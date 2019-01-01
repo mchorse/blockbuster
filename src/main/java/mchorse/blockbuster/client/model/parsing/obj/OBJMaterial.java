@@ -11,11 +11,16 @@ public class OBJMaterial
 {
     public String name = "";
 
-    public float r;
-    public float g;
-    public float b;
+    public float r = 1;
+    public float g = 1;
+    public float b = 1;
 
     public boolean useTexture;
     public boolean linear = false;
     public ResourceLocation texture;
+
+    public OBJMaterial(String name)
+    {
+        this.name = name;
+    }
 }
