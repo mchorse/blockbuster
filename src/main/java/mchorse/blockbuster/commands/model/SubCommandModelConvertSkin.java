@@ -66,8 +66,10 @@ public class SubCommandModelConvertSkin extends CommandBase
             BufferedImage image = ImageIO.read(resource.getInputStream());
             int w = image.getWidth();
             int h = image.getHeight();
-
-            if (!(w % 64 == 0 && h % 64 == 0 && (w == h || w == h * 2)))
+            boolean one = w == h;
+            
+            /* Check for correct aspect ratio */
+            if (!(w % 64 == 0 && h % (one ? 64 : 32) == 0 && (one || w == h * 2)))
             {
                 throw new CommandException("blockbuster.error.commands.convert_skin_size", w, h);
             }
