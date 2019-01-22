@@ -272,7 +272,7 @@ public class CustomMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (this.model != null)
+        if (this.model != null && this.renderer != null)
         {
             this.initBodyParts();
 
