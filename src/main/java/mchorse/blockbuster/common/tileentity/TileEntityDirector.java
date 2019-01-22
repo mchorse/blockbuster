@@ -58,6 +58,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     /**
      * Debug ticks and check whether actors are still playing 
      */
+    @Override
     public void update()
     {
         if (Blockbuster.proxy.config.debug_playback_ticks)
@@ -235,7 +236,10 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
      */
     public void open(EntityPlayer player, BlockPos pos)
     {
-        Dispatcher.sendTo(new PacketDirectorCast(pos, this.director), (EntityPlayerMP) player);
+        if (player instanceof EntityPlayerMP)
+        {
+            Dispatcher.sendTo(new PacketDirectorCast(pos, this.director), (EntityPlayerMP) player);
+        }
     }
 
     /**
