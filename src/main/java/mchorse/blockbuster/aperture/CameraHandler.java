@@ -187,10 +187,10 @@ public class CameraHandler
         GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
 
         dashboard.createWorldPanels(dashboard.mc);
-        dashboard.onOpen();
 
         GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
 
+        /* Just in case */
         if (record == null)
         {
             return;
