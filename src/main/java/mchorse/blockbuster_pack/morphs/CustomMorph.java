@@ -128,7 +128,7 @@ public class CustomMorph extends AbstractMorph
             poseName = ((EntityActor) target).isMounted ? "riding" : poseName;
         }
 
-        return model.getPose(poseName);
+        return this.model == null ? null : this.model.getPose(poseName);
     }
 
     public String getKey()
@@ -153,7 +153,7 @@ public class CustomMorph extends AbstractMorph
     {
         ModelCustom model = ModelCustom.MODELS.get(this.getKey());
 
-        if (model != null)
+        if (model != null && this.model != null)
         {
             Model data = model.model;
 
