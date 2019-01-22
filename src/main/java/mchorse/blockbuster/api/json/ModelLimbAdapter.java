@@ -58,6 +58,7 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
 
         this.addBoolean(map, "lighting", src.lighting, true);
         this.addBoolean(map, "shading", src.shading, true);
+        this.addBoolean(map, "smooth", src.smooth, false);
         this.addBoolean(map, "is3D", src.is3D, false);
 
         this.addBoolean(map, "mirror", src.mirror, false);
