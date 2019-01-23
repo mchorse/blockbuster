@@ -1,8 +1,6 @@
 package mchorse.blockbuster.api;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
-
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 
 /**
  * Model pack class
@@ -29,6 +25,11 @@ import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 public class ModelPack
 {
     /**
+     * List of ignored models
+     */
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred");
+
+    /**
      * Cached models
      */
     public Map<String, ModelEntry> models = new HashMap<String, ModelEntry>();
@@ -43,10 +44,10 @@ public class ModelPack
      */
     public List<File> folders = new ArrayList<File>();
 
-    /**
-     * List of ignored models
-     */
-    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred");
+    public ModelPack()
+    {
+
+    }
 
     /**
      * Add a folder to the list of folders to where to look up models and skins
@@ -192,59 +193,6 @@ public class ModelPack
                     this.skins.put(filename, map);
                 }
             }
-        }
-    }
-
-    /**
-     * Model entry 
-     */
-    public static class ModelEntry
-    {
-        public File customModel;
-        public File objModel;
-        public File mtlFile;
-
-        public ModelEntry(File customModel, File objModel, File mtlFile)
-        {
-            this.customModel = customModel;
-            this.objModel = objModel;
-            this.mtlFile = mtlFile;
-        }
-
-        public long lastModified()
-        {
-            long a = this.customModel == null ? 0 : this.customModel.lastModified();
-            long b = this.objModel == null ? 0 : this.objModel.lastModified();
-            long c = this.mtlFile == null ? 0 : this.mtlFile.lastModified();
-
-            return Math.max(Math.max(a, b), c);
-        }
-
-        public OBJParser createOBJParser(String key, Model model)
-        {
-            if (!model.providesObj)
-            {
-                return null;
-            }
-
-            OBJParser parser = null;
-
-            try
-            {
-                InputStream obj = this.objModel == null ? null : new FileInputStream(this.objModel);
-                InputStream mtl = model.providesMtl ? (this.mtlFile == null ? null : new FileInputStream(this.mtlFile)) : null;
-
-                parser = new OBJParser(obj, mtl);
-                parser.read();
-                parser.setupTextures(key, this.objModel.getParentFile());
-                model.materials.putAll(parser.materials);
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-
-            return parser;
         }
     }
 }

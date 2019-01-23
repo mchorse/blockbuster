@@ -84,7 +84,7 @@ public class MainMenuHandler
         GuiScreen gui = event.getGui();
 
         boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
-        boolean isBlockbuster = gui instanceof GuiDashboard || gui instanceof GuiActor;
+        boolean isBlockbuster = gui instanceof GuiActor;
         boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiDashboard;
 
         if (gui instanceof GuiMainMenu)

@@ -55,6 +55,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiButtonElement<GuiCheckBox> mirror;
     private GuiButtonElement<GuiCheckBox> lighting;
     private GuiButtonElement<GuiCheckBox> shading;
+    private GuiButtonElement<GuiCheckBox> smooth;
     private GuiButtonElement<GuiCheckBox> is3D;
 
     private GuiButtonElement<GuiCirculate> holding;
@@ -142,6 +143,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         });
         this.lighting = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.panel.limb.lighting = b.button.isChecked());
         this.shading = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.shading"), false, (b) -> this.panel.limb.shading = b.button.isChecked());
+        this.smooth = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.smooth"), false, (b) -> this.panel.limb.smooth = b.button.isChecked());
         this.is3D = GuiButtonElement.checkbox(mc, "3D", false, (b) -> this.panel.limb.is3D = b.button.isChecked());
 
         this.holding = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) ->
@@ -170,6 +172,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.lighting.resizer().relative(this.opacity.resizer()).set(60, 25, 60, 11);
         this.shading.resizer().relative(this.lighting.resizer()).set(0, 16, 60, 11);
+        this.smooth.resizer().relative(this.shading.resizer()).set(0, 16, 60, 11);
 
         this.holding.resizer().relative(this.is3D.resizer()).set(0, 25, 56, 20);
 
@@ -181,7 +184,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wheel.resizer().relative(this.swinging.resizer()).set(0, 16, 60, 11);
         this.wing.resizer().relative(this.wheel.resizer()).set(60, 0, 60, 11);
 
-        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert, this.wheel, this.wing);
+        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.smooth, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert, this.wheel, this.wing);
         this.second.setVisible(false);
         this.children.add(this.first, this.second);
 
@@ -325,6 +328,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.mirror.button.setIsChecked(limb.mirror);
         this.lighting.button.setIsChecked(limb.lighting);
         this.shading.button.setIsChecked(limb.shading);
+        this.smooth.button.setIsChecked(limb.smooth);
         this.is3D.button.setIsChecked(limb.is3D);
 
         this.holding.button.setValue(limb.holding.ordinal());

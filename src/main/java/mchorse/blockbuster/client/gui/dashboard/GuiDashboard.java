@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
@@ -7,6 +9,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlock
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
+import mchorse.blockbuster.common.ClientProxy;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.utils.Resizer;
@@ -16,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -105,6 +109,7 @@ public class GuiDashboard extends GuiBase
             EntityPlayer player = mc.player;
             IMorphing morphing = player == null ? null : Morphing.get(player);
 
+            this.reloadModels();
             this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
             this.directorPanel.open();
             this.modelPanel.open();
@@ -115,6 +120,25 @@ public class GuiDashboard extends GuiBase
         this.modelEditorPanel.open();
 
         return this;
+    }
+
+    private void reloadModels()
+    {
+        /* Reload models and skin */
+        ModelPack pack = Blockbuster.proxy.models.pack;
+
+        if (pack == null)
+        {
+            pack = Blockbuster.proxy.getPack();
+
+            if (Minecraft.getMinecraft().isSingleplayer())
+            {
+                pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
+            }
+        }
+
+        Blockbuster.proxy.loadModels(pack, false);
+        ClientProxy.actorPack.pack.reload();
     }
 
     public GuiDashboard openPanel(GuiDashboardPanel element)

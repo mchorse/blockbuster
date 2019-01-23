@@ -8,9 +8,10 @@ import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelEntry;
+import mchorse.blockbuster.api.ModelEntry.FileEntry;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelLimb;
-import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
@@ -203,15 +204,18 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             {
                 try
                 {
-                    if (entry.objModel != null) FileUtils.copyFile(entry.objModel, new File(folder, "model.obj"));
-                    if (entry.mtlFile != null) FileUtils.copyFile(entry.mtlFile, new File(folder, "model.mtl"));
+                    entry.objModel.copyTo(new File(folder, "model.obj"));
+                    entry.mtlFile.copyTo(new File(folder, "model.mtl"));
 
-                    File skins = new File(entry.customModel.getParentFile(), "skins");
-                    File dest = new File(folder, "skins");
-
-                    if (skins.exists() && !skins.equals(dest))
+                    if (entry.customModel instanceof FileEntry)
                     {
-                        FileUtils.copyDirectory(skins, dest);
+                        File skins = new File(((FileEntry) entry.customModel).file.getParentFile(), "skins");
+                        File dest = new File(folder, "skins");
+
+                        if (skins.exists() && !skins.equals(dest))
+                        {
+                            FileUtils.copyDirectory(skins, dest);
+                        }
                     }
                 }
                 catch (Exception e)
