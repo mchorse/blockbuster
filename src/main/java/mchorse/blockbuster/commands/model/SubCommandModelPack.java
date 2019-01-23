@@ -9,13 +9,13 @@ public class SubCommandModelPack extends CommandBase
 {
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "pack";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.model.export_obj";
     }
