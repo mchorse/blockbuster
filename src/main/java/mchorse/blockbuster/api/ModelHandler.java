@@ -1,6 +1,5 @@
 package mchorse.blockbuster.api;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser.OBJDataMesh;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -67,7 +65,7 @@ public class ModelHandler
                 }
                 else
                 {
-                    InputStream modelStream = new FileInputStream(entry.customModel);
+                    InputStream modelStream = entry.customModel.getStream();
 
                     this.addModel(model, new ModelCell(Model.parse(modelStream), timestamp));
                     modelStream.close();

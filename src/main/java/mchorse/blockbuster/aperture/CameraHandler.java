@@ -107,10 +107,12 @@ public class CameraHandler
     public static void reloadCameraEditor()
     {
         /* Reinitiate the recording GUI integration */
-        GuiCameraEditor editor = mchorse.aperture.ClientProxy.getCameraEditor();
-        CameraEditorEvent.Init event = new CameraEditorEvent.Init(editor);
+        GuiCameraEditor editor = ClientProxy.cameraEditor;
 
-        mchorse.aperture.ClientProxy.EVENT_BUS.post(event);
+        if (editor != null)
+        {
+            ClientProxy.EVENT_BUS.post(new CameraEditorEvent.Init(editor));
+        }
     }
 
     @Method(modid = "aperture")
@@ -185,9 +187,14 @@ public class CameraHandler
         GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
 
         dashboard.createWorldPanels(dashboard.mc);
-        dashboard.onOpen();
 
         GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
+
+        /* Just in case */
+        if (record == null)
+        {
+            return;
+        }
 
         GuiElements<IGuiElement> elements = new GuiElements<>();
         GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) ->

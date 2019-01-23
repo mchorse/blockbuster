@@ -25,6 +25,6 @@ public class BBCoreModInfo extends DummyModContainer
     @Override
     public String getVersion()
     {
-        return "@VERSION@";
+        return "%VERSION%";
     }
 }

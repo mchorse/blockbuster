@@ -2,7 +2,6 @@ package mchorse.blockbuster.api;
 
 import java.util.Map;
 
-import mchorse.blockbuster.api.ModelPack.ModelEntry;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;

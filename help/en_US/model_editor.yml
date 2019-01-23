@@ -19,6 +19,7 @@ blockbuster.gui.me:
         mirror: Mirror
         lighting: Lighting
         shading: Shading
+        smooth: Smooth
         hold: Held items
         none: None
         right: Right

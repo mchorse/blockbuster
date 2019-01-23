@@ -7,7 +7,6 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
@@ -122,6 +121,11 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             RenderHelper.disableStandardItemLighting();
         }
+
+        if (this.limb.smooth)
+        {
+            GL11.glShadeModel(GL11.GL_SMOOTH);
+        }
     }
 
     /**
@@ -141,8 +145,14 @@ public class ModelCustomRenderer extends ModelRenderer
             GlStateManager.enableLight(1);
             GlStateManager.enableColorMaterial();
         }
+
+        if (this.limb.smooth)
+        {
+            GL11.glShadeModel(GL11.GL_FLAT);
+        }
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public void render(float scale)
     {
@@ -171,7 +181,7 @@ public class ModelCustomRenderer extends ModelRenderer
                         {
                             for (int k = 0; k < this.childModels.size(); ++k)
                             {
-                                ((ModelRenderer) this.childModels.get(k)).render(scale);
+                                this.childModels.get(k).render(scale);
                             }
                         }
                     }
@@ -185,7 +195,7 @@ public class ModelCustomRenderer extends ModelRenderer
                         {
                             for (int j = 0; j < this.childModels.size(); ++j)
                             {
-                                ((ModelRenderer) this.childModels.get(j)).render(scale);
+                                this.childModels.get(j).render(scale);
                             }
                         }
 
@@ -218,7 +228,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     {
                         for (int i = 0; i < this.childModels.size(); ++i)
                         {
-                            ((ModelRenderer) this.childModels.get(i)).render(scale);
+                            this.childModels.get(i).render(scale);
                         }
                     }
                 }
@@ -231,6 +241,7 @@ public class ModelCustomRenderer extends ModelRenderer
         }
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public void renderWithRotation(float scale)
     {
@@ -275,6 +286,7 @@ public class ModelCustomRenderer extends ModelRenderer
     /**
      * Allows the changing of Angles after a box has been rendered
      */
+    @Override
     @SideOnly(Side.CLIENT)
     public void postRender(float scale)
     {
@@ -335,7 +347,7 @@ public class ModelCustomRenderer extends ModelRenderer
 
         for (int i = 0; i < this.cubeList.size(); ++i)
         {
-            ((ModelBox) this.cubeList.get(i)).render(vertexbuffer, scale);
+            this.cubeList.get(i).render(vertexbuffer, scale);
         }
 
         GlStateManager.glEndList();

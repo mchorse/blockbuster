@@ -27,6 +27,7 @@ public class ModelLimb
     public boolean mirror;
     public boolean lighting = true;
     public boolean shading = true;
+    public boolean smooth = false;
     public boolean is3D = false;
 
     /* Game play */
@@ -62,6 +63,7 @@ public class ModelLimb
         b.mirror = this.mirror;
         b.lighting = this.lighting;
         b.shading = this.shading;
+        b.smooth = this.smooth;
         b.is3D = this.is3D;
 
         b.holding = this.holding;
