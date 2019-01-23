@@ -101,7 +101,7 @@ public class ActorsPack implements IResourcePack
             new Thread(new URLDownloadThread(location)).start();
         });
 
-        /*  */
+        /* Make it a black pixel in case it fails */
         return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/entity/black.png");
     }
 
