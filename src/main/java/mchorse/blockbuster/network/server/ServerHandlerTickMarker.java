@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.server;
 
-import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.actions.ChatAction;

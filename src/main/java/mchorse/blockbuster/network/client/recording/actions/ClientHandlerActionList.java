@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.recording.actions;
 
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;

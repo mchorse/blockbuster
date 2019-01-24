@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;

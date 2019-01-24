@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;

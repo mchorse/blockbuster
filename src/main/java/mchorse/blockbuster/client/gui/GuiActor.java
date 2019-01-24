@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorRotate;

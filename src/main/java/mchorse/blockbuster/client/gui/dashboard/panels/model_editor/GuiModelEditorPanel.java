@@ -7,6 +7,8 @@ import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelEntry;
 import mchorse.blockbuster.api.ModelEntry.FileEntry;
@@ -24,8 +26,6 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
-import mchorse.blockbuster.common.ClientProxy;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;

@@ -1,13 +1,12 @@
 package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
-import mchorse.metamorph.client.gui.GuiCreativeMenu;
-import mchorse.metamorph.client.gui.GuiSurvivalMenu;
+import mchorse.metamorph.api.events.ReloadMorphs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -83,33 +82,33 @@ public class MainMenuHandler
 
         GuiScreen gui = event.getGui();
 
-        boolean isMetamorph = gui instanceof GuiCreativeMenu || gui instanceof GuiSurvivalMenu;
-        boolean isBlockbuster = gui instanceof GuiActor;
-        boolean exitME = gui == null && Minecraft.getMinecraft().currentScreen instanceof GuiDashboard;
-
         if (gui instanceof GuiMainMenu)
         {
             ModelExtrudedLayer.clear();
             ClientProxy.getDashboard(true).clear();
         }
+    }
 
-        if (isMetamorph || isBlockbuster || exitME)
+    /**
+     * On morphs creative picker compilation, reload all morphs 
+     */
+    @SubscribeEvent
+    public void onMorphsReload(ReloadMorphs event)
+    {
+        /* Reload models and skin */
+        ModelPack pack = Blockbuster.proxy.models.pack;
+
+        if (pack == null)
         {
-            /* Reload models and skin */
-            ModelPack pack = Blockbuster.proxy.models.pack;
+            pack = Blockbuster.proxy.getPack();
 
-            if (pack == null)
+            if (Minecraft.getMinecraft().isSingleplayer())
             {
-                pack = Blockbuster.proxy.getPack();
-
-                if (Minecraft.getMinecraft().isSingleplayer())
-                {
-                    pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
-                }
+                pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
             }
-
-            Blockbuster.proxy.loadModels(pack, false);
-            ClientProxy.actorPack.pack.reload();
         }
+
+        ClientProxy.actorPack.pack.reload();
+        Blockbuster.proxy.loadModels(pack, false);
     }
 }

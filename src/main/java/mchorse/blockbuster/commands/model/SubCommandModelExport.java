@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.metamorph.commands.CommandMorph;
 import net.minecraft.client.Minecraft;

@@ -2,11 +2,11 @@ package mchorse.blockbuster_pack.client.gui;
 
 import java.io.File;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;

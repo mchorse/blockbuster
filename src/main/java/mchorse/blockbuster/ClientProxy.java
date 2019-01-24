@@ -1,10 +1,9 @@
-package mchorse.blockbuster.common;
+package mchorse.blockbuster;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
 import mchorse.blockbuster.api.ModelHandler;

@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.command.CommandBase;

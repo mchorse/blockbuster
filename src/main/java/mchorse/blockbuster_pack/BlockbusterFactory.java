@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;

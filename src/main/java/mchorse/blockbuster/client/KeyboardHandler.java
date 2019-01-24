@@ -2,8 +2,8 @@ package mchorse.blockbuster.client;
 
 import org.lwjgl.input.Keyboard;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
