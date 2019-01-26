@@ -64,8 +64,8 @@ public class Blockbuster
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
     /* Proxies */
-    public static final String CLIENT_PROXY = "mchorse.blockbuster.common.ClientProxy";
-    public static final String SERVER_PROXY = "mchorse.blockbuster.common.CommonProxy";
+    public static final String CLIENT_PROXY = "mchorse.blockbuster.ClientProxy";
+    public static final String SERVER_PROXY = "mchorse.blockbuster.CommonProxy";
 
     /* Creative tab */
     public static CreativeTabs blockbusterTab;

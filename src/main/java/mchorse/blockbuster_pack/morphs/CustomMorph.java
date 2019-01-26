@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.common.base.Objects;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -240,12 +241,7 @@ public class CustomMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public boolean renderHand(EntityPlayer player, EnumHand hand)
     {
-        if (this.renderer == null || !(this.renderer instanceof RenderCustomModel))
-        {
-            return false;
-        }
-
-        RenderCustomModel renderer = (RenderCustomModel) this.renderer;
+        RenderCustomModel renderer = ClientProxy.actorRenderer;
 
         /* This */
         renderer.current = this;
@@ -272,11 +268,11 @@ public class CustomMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (this.model != null && this.renderer != null)
+        if (this.model != null)
         {
             this.initBodyParts();
 
-            RenderCustomModel render = (RenderCustomModel) this.renderer;
+            RenderCustomModel render = ClientProxy.actorRenderer;
 
             render.current = this;
             render.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -459,11 +455,6 @@ public class CustomMorph extends AbstractMorph
         for (BodyPart part : this.parts)
         {
             morph.parts.add(part.clone(isRemote));
-        }
-
-        if (isRemote)
-        {
-            morph.renderer = this.renderer;
         }
 
         return morph;

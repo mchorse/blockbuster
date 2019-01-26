@@ -3,6 +3,7 @@ package mchorse.blockbuster.api;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,6 +78,22 @@ public class ModelHandler
             }
         }
 
+        /* Make sure default models don't get reloaded every time, 
+         * unless substituted */
+        Iterator<String> it = keys.iterator();
+
+        while (it.hasNext())
+        {
+            String key = it.next();
+            ModelCell cell = this.models.get(key);
+
+            if (cell.timestamp == 0 && ModelPack.IGNORED_MODELS.contains(key))
+            {
+                it.remove();
+            }
+        }
+
+        /* Remove unloaded models */
         for (String key : keys)
         {
             this.removeModel(key);
@@ -104,8 +121,10 @@ public class ModelHandler
                 this.addModel("fred", new ModelCell(Model.parse(loader.getResourceAsStream(path + "fred.json")), 0));
             }
 
-            this.addModel("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
-            keys.remove("yike");
+            if (!this.models.containsKey("yike"))
+            {
+                this.addModel("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
+            }
         }
         catch (Exception e)
         {

@@ -129,11 +129,11 @@ public class CommonProxy
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
 
         /* Morphing */
-        MorphManager.INSTANCE.factories.add(this.factory = new BlockbusterFactory());
-
-        /* Load models */
         this.models = this.getHandler();
-        this.loadModels(this.getPack(), true);
+        this.factory = new BlockbusterFactory();
+        this.factory.models = this.models;
+
+        MorphManager.INSTANCE.factories.add(this.factory);
     }
 
     /**
@@ -167,9 +167,6 @@ public class CommonProxy
     {
         this.models.pack = pack;
         this.models.loadModels(pack, force);
-
-        this.factory.models = this.models;
-        this.factory.registerModels();
     }
 
     /**

@@ -27,7 +27,7 @@ public class ModelPack
     /**
      * List of ignored models
      */
-    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred");
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "yike");
 
     /**
      * Cached models
@@ -46,7 +46,7 @@ public class ModelPack
 
     public ModelPack()
     {
-
+        /* TODO: implement reading of loading models from the jar */
     }
 
     /**
