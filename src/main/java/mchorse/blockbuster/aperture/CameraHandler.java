@@ -146,7 +146,7 @@ public class CameraHandler
             Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
         }
 
-        GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.dashboard;
+        GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.dashboard;
 
         if (dashboard != null && dashboard.recordingEditorPanel.selector.isVisible())
         {
@@ -184,7 +184,7 @@ public class CameraHandler
     public void onCameraEditorInit(CameraEditorEvent.Init event)
     {
         GuiCameraEditor editor = event.editor;
-        GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+        GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
         dashboard.createWorldPanels(dashboard.mc);
 
@@ -307,7 +307,7 @@ public class CameraHandler
             if (toOpenCamera)
             {
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
-                GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+                GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
                 dashboard.createWorldPanels(dashboard.mc);
                 dashboard.onOpen();
@@ -325,7 +325,7 @@ public class CameraHandler
 
             if (current instanceof GuiCameraEditor && !toOpenCamera)
             {
-                GuiDashboard dashboard = mchorse.blockbuster.common.ClientProxy.getDashboard(false);
+                GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
                 dashboard.recordingEditorPanel.save();
             }

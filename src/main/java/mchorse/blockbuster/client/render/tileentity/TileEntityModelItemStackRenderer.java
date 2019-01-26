@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;

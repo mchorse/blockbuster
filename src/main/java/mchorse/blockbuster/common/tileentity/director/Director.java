@@ -12,7 +12,7 @@ import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.fake.FakeContext;

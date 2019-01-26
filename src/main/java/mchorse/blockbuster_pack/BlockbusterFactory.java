@@ -1,14 +1,11 @@
 package mchorse.blockbuster_pack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
@@ -34,39 +31,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BlockbusterFactory implements IMorphFactory
 {
-    public Map<String, CustomMorph> morphs = new HashMap<String, CustomMorph>();
     public ModelHandler models;
 
     @Override
     public void register(MorphManager manager)
-    {
-        this.registerModels();
-    }
-
-    public void registerModels()
-    {
-        this.morphs.clear();
-        this.morphs.put("yike", this.createMorph("yike"));
-        this.morphs.put("alex", this.createMorph("alex"));
-        this.morphs.put("steve", this.createMorph("steve"));
-        this.morphs.put("fred", this.createMorph("fred"));
-
-        for (String model : this.models.pack.getModels())
-        {
-            this.morphs.put(model, this.createMorph(model));
-        }
-    }
-
-    private CustomMorph createMorph(String name)
-    {
-        CustomMorph morph = new CustomMorph();
-        ModelCell entry = this.models.models.get(name);
-
-        morph.name = "blockbuster." + name;
-        morph.model = entry == null ? null : entry.model;
-
-        return morph;
-    }
+    {}
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -82,24 +51,15 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiImageMorph(mc));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void updateRenderers()
-    {
-        for (CustomMorph morph : this.morphs.values())
-        {
-            morph.renderer = ClientProxy.actorRenderer;
-        }
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public String displayNameForMorph(AbstractMorph morph)
     {
         String[] splits = morph.name.split("\\.");
 
-        if (splits.length >= 2 && splits[0].equals("blockbuster") && this.morphs.containsKey(splits[1]))
+        if (splits.length >= 2 && splits[0].equals("blockbuster") && this.models.models.containsKey(splits[1]))
         {
-            String name = this.morphs.get(splits[1]).model.name;
+            String name = this.models.models.get(splits[1]).model.name;
 
             return name.isEmpty() ? splits[1] : name;
         }
@@ -122,18 +82,15 @@ public class BlockbusterFactory implements IMorphFactory
             return image;
         }
 
-        CustomMorph morph = this.morphs.get(name);
+        CustomMorph morph = new CustomMorph();
+        ModelCell entry = this.models.models.get(name);
 
-        if (morph != null)
+        if (entry != null)
         {
-            morph = (CustomMorph) morph.clone(Blockbuster.proxy.isClient());
-            morph.fromNBT(tag);
+            morph.model = entry.model;
         }
-        else
-        {
-            morph = new CustomMorph();
-            morph.fromNBT(tag);
-        }
+
+        morph.fromNBT(tag);
 
         return morph;
     }
@@ -141,10 +98,13 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public void getMorphs(MorphList morphs, World world)
     {
-        for (Map.Entry<String, CustomMorph> morph : this.morphs.entrySet())
+        for (Map.Entry<String, ModelCell> entry : this.models.models.entrySet())
         {
-            String key = morph.getKey();
-            CustomMorph original = morph.getValue();
+            String key = entry.getKey();
+            CustomMorph original = new CustomMorph();
+
+            original.name = "blockbuster." + key;
+            original.model = entry.getValue().model;
 
             if (key.equals("yike") || original.model == null)
             {

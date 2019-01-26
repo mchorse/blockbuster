@@ -1,14 +1,16 @@
-package mchorse.blockbuster.common;
+package mchorse.blockbuster;
 
 import java.io.File;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
+import mchorse.blockbuster.common.BlockbusterTab;
+import mchorse.blockbuster.common.EventHandler;
+import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
@@ -137,11 +139,11 @@ public class CommonProxy
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
 
         /* Morphing */
-        MorphManager.INSTANCE.factories.add(this.factory = new BlockbusterFactory());
-
-        /* Load models */
         this.models = this.getHandler();
-        this.loadModels(this.getPack(), true);
+        this.factory = new BlockbusterFactory();
+        this.factory.models = this.models;
+
+        MorphManager.INSTANCE.factories.add(this.factory);
     }
 
     /**
@@ -175,9 +177,6 @@ public class CommonProxy
     {
         this.models.pack = pack;
         this.models.loadModels(pack, force);
-
-        this.factory.models = this.models;
-        this.factory.registerModels();
     }
 
     /**

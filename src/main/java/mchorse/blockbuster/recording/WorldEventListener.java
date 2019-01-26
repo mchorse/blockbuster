@@ -3,7 +3,7 @@ package mchorse.blockbuster.recording;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.actions.Action;

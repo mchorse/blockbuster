@@ -132,7 +132,7 @@ public class ModelEntry
         @Override
         public InputStream getStream() throws IOException
         {
-            return Blockbuster.class.getResourceAsStream(this.path);
+            return this.path == null ? null : Blockbuster.class.getResourceAsStream(this.path);
         }
 
         @Override

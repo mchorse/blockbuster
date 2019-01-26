@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
@@ -67,7 +67,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             int w = image.getWidth();
             int h = image.getHeight();
             boolean one = w == h;
-            
+
             /* Check for correct aspect ratio */
             if (!(w % 64 == 0 && h % (one ? 64 : 32) == 0 && (one || w == h * 2)))
             {

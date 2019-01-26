@@ -2,6 +2,7 @@ package mchorse.blockbuster.commands;
 
 import java.io.FileNotFoundException;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
 import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
@@ -12,7 +13,6 @@ import mchorse.blockbuster.commands.record.SubCommandRecordProlong;
 import mchorse.blockbuster.commands.record.SubCommandRecordRemove;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
 import mchorse.blockbuster.commands.record.SubCommandRecordTP;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.command.CommandException;
 
