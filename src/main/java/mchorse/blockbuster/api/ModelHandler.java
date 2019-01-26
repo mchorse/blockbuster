@@ -60,14 +60,14 @@ public class ModelHandler
 
             try
             {
-                if (entry.customModel == null)
+                InputStream modelStream = entry.customModel.getStream();
+
+                if (modelStream == null)
                 {
                     this.addModel(model, new ModelCell(this.generateObjModel(model, entry), timestamp));
                 }
                 else
                 {
-                    InputStream modelStream = entry.customModel.getStream();
-
                     this.addModel(model, new ModelCell(Model.parse(modelStream), timestamp));
                     modelStream.close();
                 }
@@ -143,7 +143,7 @@ public class ModelHandler
 
         data.name = model;
 
-        if (entry.mtlFile == null)
+        if (!entry.mtlFile.exists())
         {
             data.providesMtl = false;
         }

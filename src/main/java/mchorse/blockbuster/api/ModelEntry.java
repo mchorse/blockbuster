@@ -85,6 +85,8 @@ public class ModelEntry
     {
         public InputStream getStream() throws IOException;
 
+        public boolean exists();
+
         public long lastModified();
 
         public void copyTo(File file) throws IOException;
@@ -103,6 +105,12 @@ public class ModelEntry
         public InputStream getStream() throws IOException
         {
             return this.file == null ? null : new FileInputStream(this.file);
+        }
+
+        @Override
+        public boolean exists()
+        {
+            return this.file == null ? false : this.file.exists();
         }
 
         @Override
@@ -133,6 +141,12 @@ public class ModelEntry
         public InputStream getStream() throws IOException
         {
             return this.path == null ? null : Blockbuster.class.getResourceAsStream(this.path);
+        }
+
+        @Override
+        public boolean exists()
+        {
+            return this.path == null ? false : Blockbuster.class.getResource(this.path) != null;
         }
 
         @Override
