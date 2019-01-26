@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.action;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandAction;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.command.CommandBase;

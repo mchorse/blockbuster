@@ -1,8 +1,8 @@
 package mchorse.blockbuster.commands.model;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelPack;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketReloadModels;
 import net.minecraft.client.Minecraft;

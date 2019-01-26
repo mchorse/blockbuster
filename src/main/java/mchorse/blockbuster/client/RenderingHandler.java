@@ -5,9 +5,9 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;

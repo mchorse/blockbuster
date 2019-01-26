@@ -9,11 +9,11 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporterOBJ;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;

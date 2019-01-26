@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.server.recording;
 
-import mchorse.blockbuster.common.CommonProxy;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
 import mchorse.blockbuster.recording.MPMHelper;
 import mchorse.blockbuster.recording.data.Record;

@@ -2,8 +2,8 @@ package mchorse.blockbuster.network.server.recording;
 
 import java.io.IOException;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.Recording;
-import mchorse.blockbuster.common.CommonProxy;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.FrameChunk;

@@ -3,7 +3,7 @@ package mchorse.blockbuster.network.client.recording;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;

@@ -1,7 +1,7 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.utils.TextureLocation;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;

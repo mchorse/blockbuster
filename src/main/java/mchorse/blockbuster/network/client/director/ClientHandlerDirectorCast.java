@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.client.director;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.ClientProxy;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;

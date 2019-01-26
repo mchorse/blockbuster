@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client.recording;
 
-import mchorse.blockbuster.common.ClientProxy;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.network.ClientMessageHandler;

@@ -1,19 +1,17 @@
-package mchorse.blockbuster.common;
+package mchorse.blockbuster;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
 import mchorse.blockbuster.api.ModelHandler;
-import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.gui.MainMenuHandler;
+import mchorse.blockbuster.client.gui.MenuHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
@@ -104,6 +102,7 @@ public class ClientProxy extends CommonProxy
         final ModelResourceLocation modelStatic = new ModelResourceLocation(Blockbuster.path("model_static"), "inventory");
         final ModelResourceLocation model = new ModelResourceLocation(Blockbuster.path("model"), "inventory");
 
+        /* Register model block's configurable render disable */
         Item item = Item.getItemFromBlock(Blockbuster.modelBlock);
         ModelBakery.registerItemVariants(item, model, modelStatic);
 
@@ -177,13 +176,23 @@ public class ClientProxy extends CommonProxy
     {
         Minecraft mc = Minecraft.getMinecraft();
 
+        /* Register manually models for all chroma blocks */
+        Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
+        ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
+
+        for (ChromaColor color : ChromaColor.values())
+        {
+            mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
+        }
+
+        /* Initiate rendering overlay and renderer */
         recordingOverlay = new GuiRecordingOverlay(mc);
         actorRenderer = new RenderCustomActor(mc.getRenderManager(), null, 0);
 
         super.load(event);
 
         /* Event listeners */
-        MinecraftForge.EVENT_BUS.register(new MainMenuHandler());
+        MinecraftForge.EVENT_BUS.register(new MenuHandler());
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
@@ -212,22 +221,6 @@ public class ClientProxy extends CommonProxy
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
-
-        Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
-        ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
-
-        for (ChromaColor color : ChromaColor.values())
-        {
-            mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
-        }
-    }
-
-    @Override
-    public void loadModels(ModelPack pack, boolean force)
-    {
-        super.loadModels(pack, force);
-
-        this.factory.updateRenderers();
     }
 
     protected void registerItemModel(Block block, String path)
@@ -278,8 +271,6 @@ public class ClientProxy extends CommonProxy
     {
         String comment = I18n.format(key);
 
-        return comment;
-        // return comment.equals(key) ? defaultComment : key;
-        // ??? ^
+        return comment.equals(key) ? defaultComment : key;
     }
 }
