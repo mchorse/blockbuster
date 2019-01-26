@@ -8,6 +8,7 @@ blockbuster.config:
         auto_refresh_models: Refresh models and skins
         debug_playback_ticks: Debug ticks
         green_screen_sky: Green sky
+        url_skins_sync_download: Synchronous URL downloads
     
     model_block:
         title: Model block

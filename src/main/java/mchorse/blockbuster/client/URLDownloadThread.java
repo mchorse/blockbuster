@@ -37,31 +37,38 @@ public class URLDownloadThread implements Runnable
         this.url = url;
     }
 
+    public static InputStream downloadImage(final ResourceLocation url) throws IOException
+    {
+        URLConnection con = new URL(url.toString()).openConnection();
+        con.setRequestProperty("User-Agent", USER_AGENT);
+
+        return con.getInputStream();
+    }
+
+    public static void addToManager(ResourceLocation url, InputStream is) throws IOException
+    {
+        BufferedImage image = ImageIO.read(is);
+
+        SimpleTexture texture = new SimpleTexture(url);
+        TextureUtil.uploadTextureImageAllocate(texture.getGlTextureId(), image, false, false);
+
+        TextureManager manager = Minecraft.getMinecraft().renderEngine;
+        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+
+        map.put(url, texture);
+    }
+
     @Override
     public void run()
     {
-        try
+        Minecraft.getMinecraft().addScheduledTask(() ->
         {
-            URLConnection con = new URL(this.url.toString()).openConnection();
-            con.setRequestProperty("User-Agent", USER_AGENT);
-
-            InputStream input = con.getInputStream();
-            BufferedImage image = ImageIO.read(input);
-
-            Minecraft.getMinecraft().addScheduledTask(() ->
+            try
             {
-                SimpleTexture texture = new SimpleTexture(this.url);
-                TextureUtil.uploadTextureImageAllocate(texture.getGlTextureId(), image, false, false);
-
-                TextureManager manager = Minecraft.getMinecraft().renderEngine;
-                Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
-
-                map.put(this.url, texture);
-            });
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+                addToManager(this.url, downloadImage(this.url));
+            }
+            catch (IOException e)
+            {}
+        });
     }
 }

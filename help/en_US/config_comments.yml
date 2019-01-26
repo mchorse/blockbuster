@@ -5,6 +5,7 @@ blockbuster.config.comments:
         auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
         debug_playback_ticks: Write ticks in the log during director block recording
         green_screen_sky: Makes the sky fully green for chroma keying purposes
+        url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
 
     model_block:
         model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)

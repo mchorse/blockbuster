@@ -11,8 +11,8 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -96,10 +96,19 @@ public class ActorsPack implements IResourcePack
      */
     private InputStream hanldeURLSkins(ResourceLocation location)
     {
-        Minecraft.getMinecraft().addScheduledTask(() ->
+        try
         {
-            new Thread(new URLDownloadThread(location)).start();
-        });
+            if (Blockbuster.proxy.config.url_skins_sync_download)
+            {
+                return URLDownloadThread.downloadImage(location);
+            }
+            else
+            {
+                new Thread(new URLDownloadThread(location)).start();
+            }
+        }
+        catch (IOException e)
+        {}
 
         /* Make it a black pixel in case it fails */
         return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/entity/black.png");
