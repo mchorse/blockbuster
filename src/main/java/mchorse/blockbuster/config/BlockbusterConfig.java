@@ -44,6 +44,11 @@ public class BlockbusterConfig
      */
     public boolean green_screen_sky;
 
+    /**
+     * Whether URL skins should be downloaded synchronously
+     */
+    public boolean url_skins_sync_download;
+
     /* Model block */
 
     /**
@@ -164,6 +169,7 @@ public class BlockbusterConfig
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");
         this.debug_playback_ticks = this.getBoolean("debug_playback_ticks", general, false, "Write ticks in the log during director block recording");
         this.green_screen_sky = this.getBoolean("green_screen_sky", general, false, "Makes the sky fully green for chroma keying purposes");
+        this.url_skins_sync_download = this.getBoolean("url_skins_sync_download", general, true, "Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin");
 
         /* Model block */
         this.model_block_disable_item_rendering = this.getBoolean("model_block_disable_item_rendering", model, false, "Whether model block item rendering should be disabled");

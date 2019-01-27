@@ -26,7 +26,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
-import mchorse.blockbuster.utils.TextureLocation;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -314,7 +314,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (skins != null && !skins.isEmpty())
             {
-                this.renderTexture = new TextureLocation("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
+                this.renderTexture = RLUtils.create("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
             }
         }
 
@@ -325,7 +325,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         if (this.renderTexture == null)
         {
-            this.renderTexture = new ResourceLocation("blockbuster", "textures/entity/actor.png");
+            this.renderTexture = RLUtils.create("blockbuster", "textures/entity/actor.png");
         }
 
         this.limbs.fillData(this.model);

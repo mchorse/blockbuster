@@ -19,6 +19,7 @@ blockbuster.gui:
     select: Select
     ok: Ok
     no_data: No data available...
+    multi_skin: Multi-skin
     
     # Morphs popup strings
     morphs:
