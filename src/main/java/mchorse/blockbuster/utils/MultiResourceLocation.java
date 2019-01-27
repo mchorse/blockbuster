@@ -19,11 +19,31 @@ public class MultiResourceLocation extends ResourceLocation
     public MultiResourceLocation(String resourceName)
     {
         super(resourceName);
+        this.children.add(RLUtils.create(resourceName));
     }
 
     public MultiResourceLocation(String resourceDomainIn, String resourcePathIn)
     {
         super(resourceDomainIn, resourcePathIn);
+        this.children.add(RLUtils.create(resourceDomainIn, resourcePathIn));
+    }
+
+    @Override
+    public String getResourceDomain()
+    {
+        return this.children.isEmpty() ? "" : this.children.get(0).getResourceDomain();
+    }
+
+    @Override
+    public String getResourcePath()
+    {
+        return this.children.isEmpty() ? "" : this.children.get(0).getResourcePath();
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getResourceDomain() + ':' + this.getResourcePath();
     }
 
     @Override

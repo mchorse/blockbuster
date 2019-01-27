@@ -5,18 +5,20 @@ import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiImageMorph extends GuiAbstractMorph
 {
-    public GuiElements general = new GuiElements();
+    public GuiElements<GuiElement> general = new GuiElements<GuiElement>();
 
     public GuiTexturePicker picker;
     public GuiButtonElement<GuiButton> texture;
@@ -84,6 +86,14 @@ public class GuiImageMorph extends GuiAbstractMorph
     public boolean canEdit(AbstractMorph morph)
     {
         return morph instanceof ImageMorph;
+    }
+
+    @Override
+    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    {
+        GlStateManager.pushMatrix();
+        super.drawMorph(mouseX, mouseY, partialTicks);
+        GlStateManager.popMatrix();
     }
 
     @Override

@@ -119,8 +119,10 @@ public class ActorsPack implements IResourcePack
             BufferedImage image = ImageIO.read(this.getInputStream(RLUtils.create(multi.toString())));
             Graphics g = image.getGraphics();
 
-            for (ResourceLocation child : multi.children)
+            for (int i = 1; i < multi.children.size(); i++)
             {
+                ResourceLocation child = multi.children.get(i);
+
                 if (this.resourceExists(child))
                 {
                     try

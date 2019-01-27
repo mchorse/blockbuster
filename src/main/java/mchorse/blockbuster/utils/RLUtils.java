@@ -91,8 +91,6 @@ public class RLUtils
             MultiResourceLocation multi = (MultiResourceLocation) location;
             NBTTagList list = new NBTTagList();
 
-            list.appendTag(new NBTTagString(multi.toString()));
-
             for (ResourceLocation child : multi.children)
             {
                 list.appendTag(new NBTTagString(child.toString()));
@@ -114,8 +112,6 @@ public class RLUtils
         {
             MultiResourceLocation multi = (MultiResourceLocation) location;
             JsonArray array = new JsonArray();
-
-            array.add(new JsonPrimitive(multi.toString()));
 
             for (ResourceLocation child : multi.children)
             {
@@ -139,6 +135,7 @@ public class RLUtils
             MultiResourceLocation multi = (MultiResourceLocation) location;
             MultiResourceLocation newMulti = new MultiResourceLocation(multi.toString());
 
+            newMulti.children.clear();
             newMulti.children.addAll(multi.children);
 
             return newMulti;
