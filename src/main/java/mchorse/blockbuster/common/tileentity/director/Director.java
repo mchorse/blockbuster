@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.tileentity.director;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
 import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -29,6 +31,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketClientSettings;
 import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.EnumHandSide;
@@ -442,9 +445,38 @@ public class Director
                     e.printStackTrace();
                 }
 
+                /* Stupid Mojang/Forge devs made the proper constructor 
+                 * that allows to pass values into the CPacketClientSettings
+                 * client side only, what the fuck? There is no client 
+                 * side code there, for fuck's sake, why?...   
+                 */
+                PacketBuffer buffer = new PacketBuffer(Unpooled.buffer(64));
+
+                /* I have to use the fucking buffer like a retard in 
+                 * order to pass the values I wanted to... At least I 
+                 * didn't had to resort to reflection. Why you have to 
+                 * be so overprotective of this shit? */
+                buffer.writeString("en_US");
+                buffer.writeByte((byte) 10);
+                buffer.writeEnumValue(EnumChatVisibility.FULL);
+                buffer.writeBoolean(true);
+                buffer.writeByte(127);
+                buffer.writeEnumValue(EnumHandSide.RIGHT);
+
+                CPacketClientSettings packet = new CPacketClientSettings();
+
+                try
+                {
+                    packet.readPacketData(buffer);
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
                 /* Skins layers don't show up by default, for some 
                  * reason, thus I have to manually set it myself */
-                player.handleClientSettings(new CPacketClientSettings("en_US", 10, EnumChatVisibility.FULL, true, 127, EnumHandSide.RIGHT));
+                player.handleClientSettings(packet);
                 player.connection = new NetHandlerPlayServer(world.getMinecraftServer(), manager, player);
                 actor = player;
             }
