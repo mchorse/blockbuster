@@ -1,6 +1,9 @@
 package mchorse.blockbuster.client;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,10 +12,14 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
 import com.google.common.collect.ImmutableSet;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
+import mchorse.blockbuster.utils.MultiResourceLocation;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -48,6 +55,16 @@ public class ActorsPack implements IResourcePack
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException
     {
+        if (location instanceof MultiResourceLocation)
+        {
+            MultiResourceLocation multi = (MultiResourceLocation) location;
+
+            if (!multi.children.isEmpty())
+            {
+                return this.hanldeMultiLayered(multi);
+            }
+        }
+
         String domain = location.getResourceDomain();
         String path = location.getResourcePath();
 
@@ -89,6 +106,47 @@ public class ActorsPack implements IResourcePack
         }
 
         throw new FileNotFoundException(location.toString());
+    }
+
+    /**
+     * Merge pixels together, that should allow creating very fine 
+     * merged multi layered skins (^_^)ok
+     */
+    private InputStream hanldeMultiLayered(MultiResourceLocation multi)
+    {
+        try
+        {
+            BufferedImage image = ImageIO.read(this.getInputStream(RLUtils.create(multi.toString())));
+            Graphics g = image.getGraphics();
+
+            for (ResourceLocation child : multi.children)
+            {
+                if (this.resourceExists(child))
+                {
+                    try
+                    {
+                        BufferedImage childImage = ImageIO.read(this.getInputStream(child));
+
+                        g.drawImage(childImage, 0, 0, null);
+                    }
+                    catch (Exception e)
+                    {}
+                }
+            }
+
+            g.dispose();
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", stream);
+
+            return new ByteArrayInputStream(stream.toByteArray());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**

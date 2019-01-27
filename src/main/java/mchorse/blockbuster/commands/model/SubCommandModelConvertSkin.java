@@ -11,6 +11,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.command.CommandBase;
@@ -57,7 +58,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             throw new CommandException("blockbuster.error.commands.convert_model", model);
         }
 
-        ResourceLocation location = new ResourceLocation("blockbuster.actors", model + "/" + skin);
+        ResourceLocation location = RLUtils.create("blockbuster.actors", model + "/" + skin);
 
         try
         {
@@ -66,7 +67,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             int w = image.getWidth();
             int h = image.getHeight();
             boolean one = w == h;
-            
+
             /* Check for correct aspect ratio */
             if (!(w % 64 == 0 && h % (one ? 64 : 32) == 0 && (one || w == h * 2)))
             {

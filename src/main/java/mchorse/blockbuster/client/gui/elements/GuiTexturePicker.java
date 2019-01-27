@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -28,7 +29,7 @@ public class GuiTexturePicker extends GuiElement
 
         this.text = new GuiTextElement(mc, 1000, (str) ->
         {
-            ResourceLocation rl = str.isEmpty() ? null : new ResourceLocation(str);
+            ResourceLocation rl = str.isEmpty() ? null : RLUtils.create(str);
 
             if (this.callback != null)
             {

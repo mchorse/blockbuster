@@ -6,6 +6,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -17,7 +18,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -136,7 +136,7 @@ public class BlockbusterFactory implements IMorphFactory
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
-                actor.skin = new ResourceLocation("blockbuster.actors", skin);
+                actor.skin = RLUtils.create("blockbuster.actors", skin);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
             }
         }
@@ -145,7 +145,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             ImageMorph image = new ImageMorph();
 
-            image.texture = new ResourceLocation("blockbuster.actors", "image/" + texture);
+            image.texture = RLUtils.create("blockbuster.actors", "image/" + texture);
             morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
     }

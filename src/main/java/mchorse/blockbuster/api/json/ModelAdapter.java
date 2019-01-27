@@ -18,6 +18,7 @@ import com.google.gson.JsonSerializer;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
+import mchorse.blockbuster.utils.RLUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -49,9 +50,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
 
         if (object.has("default"))
         {
-            String type = object.get("default").getAsString();
-
-            model.defaultTexture = new ResourceLocation(type);
+            model.defaultTexture = RLUtils.create(object.get("default"));
         }
 
         return model;
@@ -85,7 +84,7 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
 
         if (src.defaultTexture != null)
         {
-            map.addProperty("default", src.defaultTexture.toString());
+            map.add("default", RLUtils.writeJson(src.defaultTexture));
         }
 
         if (src.scale[0] != 1 || src.scale[1] != 1 || src.scale[2] != 1)

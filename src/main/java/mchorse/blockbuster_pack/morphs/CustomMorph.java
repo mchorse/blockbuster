@@ -13,6 +13,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.client.render.part.IBodyPart;
 import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
@@ -467,7 +468,7 @@ public class CustomMorph extends AbstractMorph
 
         if (this.skin != null)
         {
-            tag.setString("Skin", this.skin.toString());
+            tag.setTag("Skin", RLUtils.writeNbt(this.skin));
         }
 
         if (!this.currentPose.isEmpty()) tag.setString("Pose", this.currentPose);
@@ -484,7 +485,7 @@ public class CustomMorph extends AbstractMorph
 
             for (Map.Entry<String, ResourceLocation> entry : this.materials.entrySet())
             {
-                materials.setString(entry.getKey(), entry.getValue().toString());
+                materials.setTag(entry.getKey(), RLUtils.writeNbt(entry.getValue()));
             }
 
             tag.setTag("Materials", materials);
@@ -515,9 +516,9 @@ public class CustomMorph extends AbstractMorph
     {
         super.fromNBT(tag);
 
-        if (tag.hasKey("Skin", 8))
+        if (tag.hasKey("Skin"))
         {
-            this.skin = new ResourceLocation(tag.getString("Skin"));
+            this.skin = RLUtils.create(tag.getTag("Skin"));
         }
 
         this.currentPose = tag.getString("Pose");
@@ -537,7 +538,7 @@ public class CustomMorph extends AbstractMorph
 
             for (String key : materials.getKeySet())
             {
-                this.materials.put(key, new ResourceLocation(materials.getString(key)));
+                this.materials.put(key, RLUtils.create(materials.getTag(key)));
             }
         }
 

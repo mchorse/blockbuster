@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
@@ -11,7 +12,6 @@ import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiImageMorph extends GuiAbstractMorph
@@ -97,7 +97,7 @@ public class GuiImageMorph extends GuiAbstractMorph
 
         for (String skin : ClientProxy.actorPack.pack.getSkins("image"))
         {
-            this.picker.picker.add(new ResourceLocation("b.a:image/" + skin));
+            this.picker.picker.add(RLUtils.create("b.a:image/" + skin));
         }
 
         this.picker.picker.sort();
