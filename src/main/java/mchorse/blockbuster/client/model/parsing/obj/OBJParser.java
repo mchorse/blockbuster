@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.commands.SubCommandBase;
-import mchorse.blockbuster.utils.TextureLocation;
+import mchorse.blockbuster.utils.RLUtils;
 
 /**
  * OBJ and MTL parser and loader
@@ -91,7 +91,7 @@ public class OBJParser
         {
             if (material.useTexture && material.texture == null)
             {
-                material.texture = new TextureLocation("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
+                material.texture = RLUtils.create("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
 
                 /* Create folder for every material */
                 new File(folder, "skins/" + material.name + "/").mkdirs();
@@ -149,7 +149,7 @@ public class OBJParser
             {
                 String texture = String.join(" ", SubCommandBase.dropFirstArgument(tokens));
 
-                material.texture = new TextureLocation(texture);
+                material.texture = RLUtils.create(texture);
             }
         }
     }

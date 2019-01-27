@@ -2,7 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.utils.TextureLocation;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -207,7 +207,7 @@ public class ImageMorph extends AbstractMorph
         super.toNBT(tag);
 
         if (this.scale != 1) tag.setFloat("Scale", this.scale);
-        if (this.texture != null) tag.setString("Texture", this.texture.toString());
+        if (this.texture != null) tag.setTag("Texture", RLUtils.writeNbt(this.texture));
         if (this.shaded != false) tag.setBoolean("Shaded", this.shaded);
     }
 
@@ -217,7 +217,7 @@ public class ImageMorph extends AbstractMorph
         super.fromNBT(tag);
 
         if (tag.hasKey("Scale")) this.scale = tag.getFloat("Scale");
-        if (tag.hasKey("Texture", 8)) this.texture = new TextureLocation(tag.getString("Texture"));
+        if (tag.hasKey("Texture")) this.texture = RLUtils.create(tag.getTag("Texture"));
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
     }
 }

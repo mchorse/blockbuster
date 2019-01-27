@@ -7,7 +7,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRend
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.utils.TextureLocation;
+import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -182,7 +182,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
                         if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif"))
                         {
-                            this.materialPicker.picker.add(new TextureLocation("b.a", model.getName() + "/skins/" + str + "/" + name));
+                            this.materialPicker.picker.add(RLUtils.create("b.a", model.getName() + "/skins/" + str + "/" + name));
                         }
                     }
                 }
@@ -285,12 +285,12 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         for (String skin : ClientProxy.actorPack.pack.getSkins(key))
         {
-            this.textures.picker.add(new TextureLocation("b.a:" + key + "/" + skin));
+            this.textures.picker.add(RLUtils.create("b.a:" + key + "/" + skin));
         }
 
         for (String skin : ClientProxy.actorPack.pack.getSkins(custom.model.skins))
         {
-            this.textures.picker.add(new TextureLocation("b.a:" + custom.model.skins + "/" + skin));
+            this.textures.picker.add(RLUtils.create("b.a:" + custom.model.skins + "/" + skin));
         }
 
         this.textures.picker.sort();
