@@ -3,6 +3,8 @@ package mchorse.blockbuster.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Objects;
+
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -22,5 +24,44 @@ public class MultiResourceLocation extends ResourceLocation
     public MultiResourceLocation(String resourceDomainIn, String resourcePathIn)
     {
         super(resourceDomainIn, resourcePathIn);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof MultiResourceLocation)
+        {
+            MultiResourceLocation multi = (MultiResourceLocation) obj;
+
+            boolean same = Objects.equal(this.resourceDomain, multi.resourceDomain);
+
+            same = same && Objects.equal(this.resourcePath, multi.resourcePath);
+            same = same && this.children.size() == multi.children.size();
+
+            if (same)
+            {
+                for (int i = 0, c = this.children.size(); i < c; i++)
+                {
+                    same = same && Objects.equal(this.children.get(i), multi.children.get(i));
+                }
+            }
+
+            return same;
+        }
+
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = super.hashCode();
+
+        for (int i = 0, c = this.children.size(); i < c; i++)
+        {
+            hash = 31 * hash + this.children.hashCode();
+        }
+
+        return hash;
     }
 }
