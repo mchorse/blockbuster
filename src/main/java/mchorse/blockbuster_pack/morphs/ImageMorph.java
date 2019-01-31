@@ -166,7 +166,7 @@ public class ImageMorph extends AbstractMorph
 
         morph.name = this.name;
         morph.settings = this.settings;
-        morph.texture = this.texture;
+        morph.texture = RLUtils.clone(this.texture);
         morph.scale = this.scale;
         morph.shaded = this.shaded;
 

@@ -434,7 +434,7 @@ public class CustomMorph extends AbstractMorph
         CustomMorph morph = new CustomMorph();
 
         morph.name = this.name;
-        morph.skin = this.skin;
+        morph.skin = RLUtils.clone(this.skin);
 
         morph.currentPose = this.currentPose;
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
@@ -447,7 +447,11 @@ public class CustomMorph extends AbstractMorph
         if (!this.materials.isEmpty())
         {
             morph.materials.clear();
-            morph.materials.putAll(this.materials);
+
+            for (Map.Entry<String, ResourceLocation> entry : this.materials.entrySet())
+            {
+                morph.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
+            }
         }
 
         morph.settings = this.settings;
