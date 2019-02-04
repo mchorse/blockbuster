@@ -29,7 +29,6 @@ import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs.MorphCell;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -472,13 +471,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             if (this.replay != null)
             {
-                MorphCell cell = this.dashboard.morphs.getSelected();
                 AbstractMorph morph = this.replay.morph;
-
-                if (morph == null && cell != null)
-                {
-                    morph = cell.current().morph;
-                }
 
                 if (morph != null)
                 {

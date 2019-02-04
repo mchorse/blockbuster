@@ -231,7 +231,7 @@ public class Frame
 
         if (FLAGS != null)
         {
-            byte flags = ((Byte) actor.getDataManager().get(FLAGS)).byteValue();
+            byte flags = actor.getDataManager().get(FLAGS).byteValue();
 
             actor.getDataManager().set(FLAGS, (byte) (flag ? flags | (1 << i) : flags & ~(1 << i)));
         }
@@ -240,6 +240,7 @@ public class Frame
     /**
      * Create a copy of this frame 
      */
+    @Override
     public Frame clone()
     {
         Frame frame = new Frame();

@@ -147,9 +147,9 @@ public class Record
 
         frame.apply(actor, force);
 
-        if (actor.worldObj.isRemote)
+        if (actor.worldObj.isRemote && Blockbuster.proxy.config.actor_y)
         {
-            /* actor.posY = frame.y; */
+            actor.posY = frame.y;
         }
 
         if (tick != 0)

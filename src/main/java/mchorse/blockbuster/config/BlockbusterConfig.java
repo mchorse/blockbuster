@@ -125,6 +125,11 @@ public class BlockbusterConfig
      */
     public boolean actor_swish_swipe;
 
+    /**
+     * Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp) 
+     */
+    public boolean actor_y;
+
     /* Damage control */
 
     /**
@@ -190,6 +195,7 @@ public class BlockbusterConfig
         this.actor_rendering_range = this.getInt("actor_rendering_range", actor, 256, 64, 1024, "How far actors are seen?");
         this.actor_always_render_names = this.getBoolean("actor_always_render_names", actor, false, "Enable unconditional actor nametag rendering");
         this.actor_swish_swipe = this.getBoolean("actor_swish_swipe", actor, false, "Do actors emit swish sound when swiping?");
+        this.actor_y = this.getBoolean("actor_y", actor, false, "Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp)");
 
         /* Damage control */
         this.damage_control = this.getBoolean("damage_control", damage, true, "Whether damage control is enabled");
