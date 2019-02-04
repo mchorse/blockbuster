@@ -6,13 +6,11 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
+import mchorse.blockbuster.aperture.network.client.ClientHandlerAperture;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
-import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
-import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.aperture.network.common.PacketAperture;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
-import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
-import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
@@ -20,7 +18,6 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
-import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -70,6 +67,11 @@ public class CameraHandler
     public static boolean actions = true;
 
     /**
+     * Whether Aperture is present on the server 
+     */
+    public static boolean server = false;
+
+    /**
      * Camera editor integrations
      */
     @SideOnly(Side.CLIENT)
@@ -93,13 +95,9 @@ public class CameraHandler
     @Method(modid = "aperture")
     public static void registerMessages()
     {
-        /* Camera management */
-        Dispatcher.DISPATCHER.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
-
-        Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
-        Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
+        Dispatcher.DISPATCHER.register(PacketAperture.class, ClientHandlerAperture.class, Side.CLIENT);
     }
 
     @SideOnly(Side.CLIENT)
@@ -119,7 +117,7 @@ public class CameraHandler
     public static void handlePlaybackItem(EntityPlayer player, NBTTagCompound tag)
     {
         /* To allow actors using playback item without a crash */
-        if (player instanceof EntityPlayerMP)
+        if (player instanceof EntityPlayerMP && server)
         {
             if (tag.hasKey("CameraPlay"))
             {

@@ -2,6 +2,11 @@ package mchorse.blockbuster.network;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
+import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
+import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
@@ -48,6 +53,7 @@ import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
+import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
@@ -127,6 +133,11 @@ public class Dispatcher
 
             /* Miscellaneous */
             register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+
+            /* Camera management */
+            register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+            register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
+            register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
 
             if (CameraHandler.isApertureLoaded())
             {
