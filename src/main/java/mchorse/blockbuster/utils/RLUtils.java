@@ -20,11 +20,21 @@ public class RLUtils
 {
     public static ResourceLocation create(String path)
     {
+        if (path.startsWith("blockbuster.actors:"))
+        {
+            path = "b.a" + path.substring(18);
+        }
+
         return new ResourceLocation(path);
     }
 
     public static ResourceLocation create(String domain, String path)
     {
+        if (domain.equals("blockbuster.actors"))
+        {
+            domain = "b.a";
+        }
+
         return new ResourceLocation(domain, path);
     }
 
@@ -162,7 +172,7 @@ public class RLUtils
         {
             String prefix = (skin.indexOf("/") == -1 ? model + "/" : "");
 
-            return create("blockbuster.actors", prefix + skin);
+            return create("b.a", prefix + skin);
         }
 
         return create(skin);
@@ -178,7 +188,7 @@ public class RLUtils
             return "";
         }
 
-        if (skin.getResourceDomain().equals("blockbuster.actors"))
+        if (skin.getResourceDomain().equals("b.a"))
         {
             String[] splits = skin.getResourcePath().split("/");
 

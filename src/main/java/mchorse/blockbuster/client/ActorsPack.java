@@ -220,12 +220,12 @@ public class ActorsPack implements IResourcePack
      * Get resource domains
      *
      * Having multiple domains seems like a nice idea for aliases. 
-     * I'm totally using it for URL skins and "blockbuster.actors" alias.
+     * I'm totally using it for URL skins
      */
     @Override
     public Set<String> getResourceDomains()
     {
-        return ImmutableSet.<String>of("blockbuster.actors", "b.a", "http", "https");
+        return ImmutableSet.<String>of("b.a", "http", "https");
     }
 
     @Override

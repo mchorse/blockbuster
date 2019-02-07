@@ -20,8 +20,8 @@ import net.minecraft.util.ResourceLocation;
  * Command /model clear
  *
  * This sub-command is responsible for clearing texture cache from the textures
- * which were fetched from blockbuster.actors domains, and were cached as
- * dynamic texture (purple checkered).
+ * which were fetched from b.a domains, and were cached as dynamic 
+ * texture (purple checkered).
  */
 public class SubCommandModelClear extends CommandBase
 {
@@ -56,7 +56,7 @@ public class SubCommandModelClear extends CommandBase
                 ResourceLocation key = entry.getKey();
                 String domain = key.getResourceDomain();
 
-                boolean bbDomain = domain.equals("blockbuster.actors") || domain.equals("b.a") || domain.equals("http") || domain.equals("https");
+                boolean bbDomain = domain.equals("b.a") || domain.equals("http") || domain.equals("https");
 
                 if (bbDomain && key.getResourcePath().startsWith(prefix))
                 {

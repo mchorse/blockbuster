@@ -314,7 +314,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
             if (skins != null && !skins.isEmpty())
             {
-                this.renderTexture = RLUtils.create("blockbuster.actors", name + "/" + skins.keySet().iterator().next());
+                this.renderTexture = RLUtils.create("b.a", name + "/" + skins.keySet().iterator().next());
             }
         }
 

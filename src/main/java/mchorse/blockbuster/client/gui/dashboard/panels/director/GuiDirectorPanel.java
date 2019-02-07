@@ -303,6 +303,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         if (this.director != null && this.pos != null)
         {
+            if (this.replay != null)
+            {
+                this.dashboard.morphs.finish();
+            }
+
             Dispatcher.sendToServer(new PacketDirectorCast(this.pos, this.director));
             TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
 
@@ -388,7 +393,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         if (this.replay != null)
         {
-            this.replay.morph = morph == null ? null : morph.clone(true);
+            this.replay.morph = morph;
         }
     }
 

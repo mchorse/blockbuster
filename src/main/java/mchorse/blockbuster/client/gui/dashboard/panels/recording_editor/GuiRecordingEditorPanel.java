@@ -270,7 +270,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         {
             if (this.editor.delegate != null)
             {
-                this.editor.delegate.setMorph(morph == null ? null : morph.clone(true));
+                this.editor.delegate.setMorph(morph);
             }
         };
         this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
