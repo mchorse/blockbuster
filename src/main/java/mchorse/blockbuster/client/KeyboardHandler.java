@@ -3,6 +3,7 @@ package mchorse.blockbuster.client;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
@@ -54,6 +55,11 @@ public class KeyboardHandler
         GuiDashboard.reset();
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
+
+        if (CameraHandler.isApertureLoaded())
+        {
+            CameraHandler.server = false;
+        }
     }
 
     /**

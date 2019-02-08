@@ -219,9 +219,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         if (this.model != null)
         {
             /* Update model's morph */
-            if (this.model.morph != null)
+            if (this.model != null)
             {
-                this.model.morph = this.model.morph.clone(true);
+                this.dashboard.morphs.finish();
             }
 
             PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), this.model.morph);

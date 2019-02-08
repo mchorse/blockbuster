@@ -58,7 +58,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             throw new CommandException("blockbuster.error.commands.convert_model", model);
         }
 
-        ResourceLocation location = RLUtils.create("blockbuster.actors", model + "/" + skin);
+        ResourceLocation location = RLUtils.create("b.a", model + "/" + skin);
 
         try
         {

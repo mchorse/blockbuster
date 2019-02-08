@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
+import mchorse.blockbuster.core.transformers.SimpleReloadableResourceManagerTransformer;
 import mchorse.blockbuster.core.transformers.TileEntityItemStackRendererTransformer;
 import mchorse.blockbuster.core.transformers.WorldTransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -22,6 +23,7 @@ public class BBCoreClassTransformer implements IClassTransformer
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private TileEntityItemStackRendererTransformer isr = new TileEntityItemStackRendererTransformer();
+    private SimpleReloadableResourceManagerTransformer resourcePack = new SimpleReloadableResourceManagerTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -43,6 +45,12 @@ public class BBCoreClassTransformer implements IClassTransformer
             System.out.println("BBCoreMod: Transforming TEISR class (" + name + ")");
 
             return this.isr.transform(name, basicClass);
+        }
+        else if (this.checkName(name, "cae", "net.minecraft.client.resources.SimpleReloadableResourceManager"))
+        {
+            System.out.println("BBCoreMod: Transforming SimpleReloadableResourceManager class (" + name + ")");
+
+            return this.resourcePack.transform(name, basicClass);
         }
 
         return basicClass;

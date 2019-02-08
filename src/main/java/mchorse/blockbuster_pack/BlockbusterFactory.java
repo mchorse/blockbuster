@@ -136,7 +136,7 @@ public class BlockbusterFactory implements IMorphFactory
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
-                actor.skin = RLUtils.create("blockbuster.actors", skin);
+                actor.skin = RLUtils.create("b.a", skin);
                 morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
             }
         }
@@ -145,7 +145,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             ImageMorph image = new ImageMorph();
 
-            image.texture = RLUtils.create("blockbuster.actors", "image/" + texture);
+            image.texture = RLUtils.create("b.a", "image/" + texture);
             morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
     }

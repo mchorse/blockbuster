@@ -91,7 +91,7 @@ public class OBJParser
         {
             if (material.useTexture && material.texture == null)
             {
-                material.texture = RLUtils.create("blockbuster.actors", key + "/skins/" + material.name + "/default.png");
+                material.texture = RLUtils.create("b.a", key + "/skins/" + material.name + "/default.png");
 
                 /* Create folder for every material */
                 new File(folder, "skins/" + material.name + "/").mkdirs();
