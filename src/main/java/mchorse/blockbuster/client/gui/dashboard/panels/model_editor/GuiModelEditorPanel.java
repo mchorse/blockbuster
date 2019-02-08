@@ -96,7 +96,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.modelRenderer);
 
         this.models = new GuiModelModels(mc, this);
-        this.models.resizer().set(20, 0, 120, 180).parent(this.area);
+        this.models.resizer().set(20, 0, 140, 0).h(1, -20).parent(this.area);
         this.models.setVisible(false);
         this.children.add(this.models);
 
