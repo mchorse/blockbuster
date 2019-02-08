@@ -5,9 +5,9 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster.client.gui.utils.GuiUtils;
+import mchorse.blockbuster_pack.client.render.part.BodyPart;
 import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
-import mchorse.blockbuster_pack.morphs.CustomMorph.BodyPart;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;

@@ -13,6 +13,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * Morph body part
+ */
 public class MorphBodyPart implements IBodyPart
 {
     public AbstractMorph morph;
@@ -124,10 +127,7 @@ public class MorphBodyPart implements IBodyPart
         ModelPose.readFloatList(tag.getTagList("S", 5), this.scale);
         ModelPose.readFloatList(tag.getTagList("R", 5), this.rotate);
 
-        if (tag.hasKey("Target"))
-        {
-            this.useTarget = tag.getBoolean("Target");
-        }
+        if (tag.hasKey("Target")) this.useTarget = tag.getBoolean("Target");
     }
 
     @Override
@@ -139,23 +139,23 @@ public class MorphBodyPart implements IBodyPart
 
             this.morph.toNBT(morph);
             tag.setTag("Morph", morph);
-
-            if (this.translate[0] != 0 || this.translate[1] != 0 || this.translate[2] != 0)
-            {
-                tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
-            }
-
-            if (this.scale[0] != 0 || this.scale[1] != 0 || this.scale[2] != 0)
-            {
-                tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
-            }
-
-            if (this.rotate[0] != 0 || this.rotate[1] != 0 || this.rotate[2] != 0)
-            {
-                tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
-            }
-
-            if (this.useTarget) tag.setBoolean("Target", this.useTarget);
         }
+
+        if (this.translate[0] != 0 || this.translate[1] != 0 || this.translate[2] != 0)
+        {
+            tag.setTag("T", ModelPose.writeFloatList(new NBTTagList(), this.translate));
+        }
+
+        if (this.scale[0] != 0 || this.scale[1] != 0 || this.scale[2] != 0)
+        {
+            tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
+        }
+
+        if (this.rotate[0] != 0 || this.rotate[1] != 0 || this.rotate[2] != 0)
+        {
+            tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
+        }
+
+        if (this.useTarget) tag.setBoolean("Target", this.useTarget);
     }
 }
