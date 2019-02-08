@@ -11,6 +11,7 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
 import mchorse.aperture.client.gui.GuiCameraEditor;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
@@ -52,7 +53,10 @@ public class GuiPlayback extends GuiScreen
             this.profiles.add(new ClientDestination(filename));
         }
 
-        Dispatcher.sendToServer(new PacketRequestProfiles());
+        if (CameraHandler.server)
+        {
+            Dispatcher.sendToServer(new PacketRequestProfiles());
+        }
     }
 
     @Override

@@ -1,14 +1,28 @@
 package mchorse.blockbuster.utils;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.SimpleResource;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * {@link ResourceLocation} utility methods
@@ -18,13 +32,70 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RLUtils
 {
+    /**
+     * Get stream for multi resource location 
+     */
+    @SideOnly(Side.CLIENT)
+    public static IResource getStreamForMultiskin(MultiResourceLocation multi)
+    {
+        if (multi.children.isEmpty())
+        {
+            return null;
+        }
+
+        try
+        {
+            IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+            BufferedImage image = ImageIO.read(manager.getResource(multi.children.get(0)).getInputStream());
+            Graphics g = image.getGraphics();
+
+            for (int i = 1; i < multi.children.size(); i++)
+            {
+                ResourceLocation child = multi.children.get(i);
+
+                try
+                {
+                    IResource resource = manager.getResource(child);
+                    BufferedImage childImage = ImageIO.read(resource.getInputStream());
+
+                    g.drawImage(childImage, 0, 0, null);
+                }
+                catch (Exception e)
+                {}
+            }
+
+            g.dispose();
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", stream);
+
+            return new SimpleResource("BB multiskin handler", multi, new ByteArrayInputStream(stream.toByteArray()), null, null);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static ResourceLocation create(String path)
     {
+        if (path.startsWith("blockbuster.actors:"))
+        {
+            path = "b.a" + path.substring(18);
+        }
+
         return new TextureLocation(path);
     }
 
     public static ResourceLocation create(String domain, String path)
     {
+        if (domain.equals("blockbuster.actors"))
+        {
+            domain = "b.a";
+        }
+
         return new TextureLocation(domain, path);
     }
 
@@ -162,7 +233,7 @@ public class RLUtils
         {
             String prefix = (skin.indexOf("/") == -1 ? model + "/" : "");
 
-            return create("blockbuster.actors", prefix + skin);
+            return create("b.a", prefix + skin);
         }
 
         return create(skin);
@@ -178,7 +249,7 @@ public class RLUtils
             return "";
         }
 
-        if (skin.getResourceDomain().equals("blockbuster.actors"))
+        if (skin.getResourceDomain().equals("b.a"))
         {
             String[] splits = skin.getResourcePath().split("/");
 

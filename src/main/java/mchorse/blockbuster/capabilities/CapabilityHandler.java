@@ -1,10 +1,13 @@
 package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.aperture.network.common.PacketAperture;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -52,6 +55,10 @@ public class CapabilityHandler
         IRecording recording = Recording.get(player);
 
         /* Do something? */
+        if (CameraHandler.isApertureLoaded())
+        {
+            Dispatcher.sendTo(new PacketAperture(), (EntityPlayerMP) player);
+        }
     }
 
     /**
