@@ -44,6 +44,7 @@ public class SimpleReloadableResourceManagerTransformer extends ClassTransformer
         if (label != null)
         {
             InsnList list = new InsnList();
+
             String desc = "(Lmchorse/blockbuster/utils/MultiResourceLocation;)L" + (BBCoreClassTransformer.obfuscated ? "bzx" : "net/minecraft/client/resources/IResource") + ";";
 
             list.add(new VarInsnNode(Opcodes.ALOAD, 1));
