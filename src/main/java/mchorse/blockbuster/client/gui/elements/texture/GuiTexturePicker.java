@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.gui.elements;
+package mchorse.blockbuster.client.gui.elements.texture;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +7,9 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.elements.texture.FileTree.AbstractEntry;
+import mchorse.blockbuster.client.gui.elements.texture.FileTree.FileEntry;
+import mchorse.blockbuster.client.gui.elements.texture.FileTree.FolderEntry;
 import mchorse.blockbuster.utils.MultiResourceLocation;
 import mchorse.blockbuster.utils.RLUtils;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -31,7 +34,7 @@ public class GuiTexturePicker extends GuiElement
 {
     public GuiTextElement text;
     public GuiButtonElement<GuiButton> pick;
-    public GuiResourceLocationList picker;
+    public GuiFolderEntryList picker;
 
     public GuiButtonElement<GuiButton> multi;
     public GuiButtonElement<GuiTextureButton> add;
@@ -47,8 +50,10 @@ public class GuiTexturePicker extends GuiElement
 
         this.text = new GuiTextElement(mc, 1000, (str) -> this.setCurrent(str.isEmpty() ? null : RLUtils.create(str)));
         this.pick = GuiButtonElement.button(mc, "X", (b) -> this.setVisible(false));
-        this.picker = new GuiResourceLocationList(mc, (rl) ->
+        this.picker = new GuiFolderEntryList(mc, (entry) ->
         {
+            ResourceLocation rl = entry.resource;
+
             this.setCurrent(rl);
             this.text.setText(rl == null ? "" : rl.toString());
         });
@@ -74,7 +79,7 @@ public class GuiTexturePicker extends GuiElement
 
     private void addMultiSkin()
     {
-        ResourceLocation rl = this.picker.getCurrent();
+        ResourceLocation rl = this.picker.getCurrentResource();
 
         if (rl == null && !this.text.field.getText().isEmpty())
         {
@@ -125,7 +130,7 @@ public class GuiTexturePicker extends GuiElement
 
     private void displayCurrent(ResourceLocation rl)
     {
-        this.picker.setCurrent(rl);
+        // this.picker.setCurrent(rl);
         this.text.setText(rl == null ? "" : rl.toString());
     }
 
@@ -135,7 +140,7 @@ public class GuiTexturePicker extends GuiElement
 
         if (this.picker.getCurrent() != null)
         {
-            this.setCurrent(this.picker.getCurrent());
+            this.setCurrent(this.picker.getCurrentResource());
         }
     }
 
@@ -151,7 +156,7 @@ public class GuiTexturePicker extends GuiElement
     {
         this.text.field.setText(skin == null ? "" : skin.toString());
         this.text.field.setCursorPositionZero();
-        this.picker.setCurrent(skin);
+        // this.picker.setCurrent(skin);
 
         this.setMultiSkin(skin);
     }
@@ -210,7 +215,7 @@ public class GuiTexturePicker extends GuiElement
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
 
-        ResourceLocation loc = this.picker.getCurrent();
+        ResourceLocation loc = this.picker.getCurrentResource();
 
         /* Draw preview */
         if (loc != null)
@@ -289,6 +294,74 @@ public class GuiTexturePicker extends GuiElement
             }
 
             this.font.drawStringWithShadow(element.toString(), x + 4, y + 4, hover ? 16777120 : 0xffffff);
+        }
+    }
+
+    public static class GuiFolderEntryList extends GuiListElement<AbstractEntry>
+    {
+        public Consumer<FileEntry> fileCallback;
+
+        public GuiFolderEntryList(Minecraft mc, Consumer<FileEntry> fileCallback)
+        {
+            super(mc, null);
+
+            this.callback = (entry) ->
+            {
+                if (entry instanceof FileEntry)
+                {
+                    if (this.fileCallback != null)
+                    {
+                        this.fileCallback.accept(((FileEntry) entry));
+                    }
+                }
+                else if (entry instanceof FolderEntry)
+                {
+                    this.setList(((FolderEntry) entry).entries);
+                    this.update();
+                    this.current = -1;
+                }
+            };
+            this.fileCallback = fileCallback;
+            this.scroll.scrollItemSize = 16;
+        }
+
+        public ResourceLocation getCurrentResource()
+        {
+            AbstractEntry entry = this.getCurrent();
+
+            if (entry != null && entry instanceof FileEntry)
+            {
+                return ((FileEntry) entry).resource;
+            }
+
+            return null;
+        }
+
+        @Override
+        public void sort()
+        {}
+
+        @Override
+        public void drawElement(AbstractEntry element, int i, int x, int y, boolean hover)
+        {
+            if (this.current == i)
+            {
+                Gui.drawRect(x, y, x + this.scroll.w, y + this.scroll.scrollItemSize, 0x880088ff);
+            }
+
+            this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+
+            GlStateManager.color(1, 1, 1, hover ? 0.8F : 0.6F);
+            if (element instanceof FolderEntry)
+            {
+                Gui.drawScaledCustomSizeModalRect(x + 2, y + 2, 112, 64, 16, 16, 16, 16, 256, 256);
+            }
+            else
+            {
+                Gui.drawScaledCustomSizeModalRect(x + 2, y + 2, 96, 64, 16, 16, 16, 16, 256, 256);
+            }
+
+            this.font.drawStringWithShadow(element.title, x + 20, y + 6, hover ? 16777120 : 0xffffff);
         }
     }
 }

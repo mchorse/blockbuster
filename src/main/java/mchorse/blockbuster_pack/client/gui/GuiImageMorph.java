@@ -1,8 +1,8 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster.client.gui.elements.texture.BlockbusterTree;
+import mchorse.blockbuster.client.gui.elements.texture.GuiTexturePicker;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -102,13 +102,11 @@ public class GuiImageMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         ImageMorph image = this.getMorph();
+        BlockbusterTree tree = new BlockbusterTree(ClientProxy.actorPack.pack.folders.get(0));
 
-        this.picker.picker.clear();
-
-        for (String skin : ClientProxy.actorPack.pack.getSkins("image"))
-        {
-            this.picker.picker.add(RLUtils.create("b.a:image/" + skin));
-        }
+        tree.update();
+        this.picker.picker.setList(tree.getEntryForName("image").entries);
+        this.picker.picker.update();
 
         this.picker.picker.sort();
         this.picker.set(image.texture);
