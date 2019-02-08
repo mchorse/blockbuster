@@ -18,13 +18,13 @@ public class MultiResourceLocation extends ResourceLocation
 
     public MultiResourceLocation(String resourceName)
     {
-        super(resourceName);
+        super("it_would_be_very_ironic:if_this_would_work");
         this.children.add(RLUtils.create(resourceName));
     }
 
     public MultiResourceLocation(String resourceDomainIn, String resourcePathIn)
     {
-        super(resourceDomainIn, resourcePathIn);
+        super("it_would_be_very_ironic", "if_this_would_work");
         this.children.add(RLUtils.create(resourceDomainIn, resourcePathIn));
     }
 
@@ -37,13 +37,34 @@ public class MultiResourceLocation extends ResourceLocation
     @Override
     public String getResourcePath()
     {
-        return this.children.isEmpty() ? "" : this.children.get(0).getResourcePath();
+        int c = this.children.size();
+
+        if (c == 0)
+        {
+            return "";
+        }
+
+        String str = this.children.get(0).getResourcePath();
+
+        if (c > 1)
+        {
+            str += "[";
+
+            for (int i = 1; i < c; i++)
+            {
+                str += this.children.get(i);
+            }
+
+            str += "]";
+        }
+
+        return str;
     }
 
     @Override
     public String toString()
     {
-        return this.getResourceDomain() + ':' + this.getResourcePath();
+        return super.toString();
     }
 
     @Override
@@ -53,10 +74,7 @@ public class MultiResourceLocation extends ResourceLocation
         {
             MultiResourceLocation multi = (MultiResourceLocation) obj;
 
-            boolean same = Objects.equal(this.resourceDomain, multi.resourceDomain);
-
-            same = same && Objects.equal(this.resourcePath, multi.resourcePath);
-            same = same && this.children.size() == multi.children.size();
+            boolean same = this.children.size() == multi.children.size();
 
             if (same)
             {

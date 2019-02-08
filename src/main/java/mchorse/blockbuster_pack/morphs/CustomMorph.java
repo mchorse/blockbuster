@@ -388,32 +388,13 @@ public class CustomMorph extends AbstractMorph
             }
 
             result = result && Objects.equal(this.currentPose, morph.currentPose);
+            result = result && Objects.equal(this.skin, morph.skin);
+            result = result && Objects.equal(this.customPose, morph.customPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
 
-            if (this.customPose != null && morph.customPose != null)
-            {
-                result = result && this.customPose.equals(morph.customPose);
-            }
-            /* If one of them isn't a null, then clearly different */
-            else if (this.customPose != morph.customPose)
-            {
-                result = false;
-            }
-
-            if (this.skin == null && morph.skin == null)
-            {
-                return result;
-            }
-            else if (this.skin != null && morph.skin != null && morph.skin.equals(this.skin))
-            {
-                return result;
-            }
-            else
-            {
-                return false;
-            }
+            return result;
         }
 
         return result;
