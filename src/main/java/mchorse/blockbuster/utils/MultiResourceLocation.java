@@ -10,7 +10,9 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Multiple resource location class
  * 
- * This bad boy allows constructing a single texture out of several
+ * This bad boy allows constructing a single texture out of several 
+ * {@link ResourceLocation}s. It doesn't really make sense for other 
+ * types of resources beside pictures.
  */
 public class MultiResourceLocation extends ResourceLocation
 {
@@ -18,13 +20,15 @@ public class MultiResourceLocation extends ResourceLocation
 
     public MultiResourceLocation(String resourceName)
     {
-        super("it_would_be_very_ironic:if_this_would_work");
+        /* This needed so there would less chances to match with an 
+         * actual ResourceLocation */
+        super("it_would_be_very_ironic:if_this_would_match_with_regular_rls");
         this.children.add(RLUtils.create(resourceName));
     }
 
     public MultiResourceLocation(String resourceDomainIn, String resourcePathIn)
     {
-        super("it_would_be_very_ironic", "if_this_would_work");
+        super("it_would_be_very_ironic", "if_this_would_match_with_regular_rls");
         this.children.add(RLUtils.create(resourceDomainIn, resourcePathIn));
     }
 
@@ -37,34 +41,17 @@ public class MultiResourceLocation extends ResourceLocation
     @Override
     public String getResourcePath()
     {
-        int c = this.children.size();
-
-        if (c == 0)
-        {
-            return "";
-        }
-
-        String str = this.children.get(0).getResourcePath();
-
-        if (c > 1)
-        {
-            str += "[";
-
-            for (int i = 1; i < c; i++)
-            {
-                str += this.children.get(i);
-            }
-
-            str += "]";
-        }
-
-        return str;
+        return this.children.isEmpty() ? "" : this.children.get(0).getResourcePath();
     }
 
+    /**
+     * This is mostly for looks, but it doesn't really makes sense by  
+     * itself
+     */
     @Override
     public String toString()
     {
-        return super.toString();
+        return this.getResourceDomain() + ":" + this.getResourcePath();
     }
 
     @Override

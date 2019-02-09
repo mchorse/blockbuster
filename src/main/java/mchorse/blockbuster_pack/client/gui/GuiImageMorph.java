@@ -102,14 +102,14 @@ public class GuiImageMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         ImageMorph image = this.getMorph();
-        BlockbusterTree tree = new BlockbusterTree(ClientProxy.actorPack.pack.folders.get(0));
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        tree.update();
+        tree.rebuild();
         this.picker.picker.setList(tree.getEntryForName("image").entries);
         this.picker.picker.update();
 
         this.picker.picker.sort();
-        this.picker.set(image.texture);
+        this.picker.fill(image.texture);
         this.scale.setValue(image.scale);
         this.shaded.button.setIsChecked(image.shaded);
     }

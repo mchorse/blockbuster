@@ -158,14 +158,14 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.materialList.setCurrent(str);
 
         ResourceLocation rl = this.getMorph().materials.get(str);
-        BlockbusterTree tree = new BlockbusterTree(ClientProxy.actorPack.pack.folders.get(0));
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        tree.update();
+        tree.rebuild();
         this.materialPicker.picker.setList(tree.getEntryForName(this.getMorph().getKey()).entries);
         this.materialPicker.picker.update();
 
         this.materialPicker.picker.sort();
-        this.materialPicker.set(rl);
+        this.materialPicker.fill(rl);
     }
 
     private void setCurrentMaterialRL(ResourceLocation rl)
@@ -257,14 +257,14 @@ public class GuiCustomMorph extends GuiAbstractMorph
         String key = custom.getKey();
         String skinsKey = custom.model.skins;
 
-        BlockbusterTree tree = new BlockbusterTree(ClientProxy.actorPack.pack.folders.get(0));
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        tree.update();
+        tree.rebuild();
         this.textures.picker.setList(tree.getEntryForName(skinsKey.isEmpty() ? key : skinsKey).entries);
         this.textures.picker.update();
 
         this.textures.picker.sort();
-        this.textures.set(custom.skin);
+        this.textures.fill(custom.skin);
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
 

@@ -1,54 +1,68 @@
 package mchorse.blockbuster.client.gui.elements.texture;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
 
-import net.minecraft.util.ResourceLocation;
+import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FolderEntry;
 
-public class FileTree
+/**
+ * File tree
+ * 
+ * The implementations of file tree are responsible for creating full 
+ * tree of files, so that {@link GuiTexturePicker} could navigate it.
+ */
+public abstract class FileTree
 {
+    /**
+     * Abstract entry sorter. Sorts folders on top first, and then by 
+     * the display title name   
+     */
+    public static Comparator<AbstractEntry> SORTER = new EntrySorter();
+
+    /**
+     * Root entry, this top folder should be populated in 
+     * {@link #rebuild()} method.
+     */
     public FolderEntry root = new FolderEntry("root", null);
 
-    public void update()
-    {}
+    /**
+     * Does the tree needs a rebuild 
+     */
+    public boolean needsRebuild = true;
 
-    public static abstract class AbstractEntry
+    /**
+     * Rebuild the file tree 
+     */
+    public abstract void rebuild();
+
+    /**
+     * Adds a "back to parent directory" entry 
+     */
+    public void addBackEntry(FolderEntry entry)
     {
-        public String title = "";
+        FolderEntry top = new FolderEntry("../", entry);
 
-        public AbstractEntry(String title)
-        {
-            this.title = title;
-        }
-
-        public boolean isFolder()
-        {
-            return this instanceof FolderEntry;
-        }
+        top.entries = entry.parent.entries;
+        entry.entries.add(top);
     }
 
-    public static class FolderEntry extends AbstractEntry
+    /**
+     * Get a top level folder for given name    
+     */
+    public FolderEntry getEntryForName(String name)
     {
-        public FolderEntry parent;
-        public List<AbstractEntry> entries = new ArrayList<AbstractEntry>();
-
-        public FolderEntry(String title, FolderEntry parent)
+        for (AbstractEntry entry : this.root.entries)
         {
-            super(title);
+            if (entry instanceof FolderEntry)
+            {
+                FolderEntry folder = (FolderEntry) entry;
 
-            this.parent = parent;
+                if (folder.title.equalsIgnoreCase(name))
+                {
+                    return folder;
+                }
+            }
         }
-    }
 
-    public static class FileEntry extends AbstractEntry
-    {
-        public ResourceLocation resource;
-
-        public FileEntry(String title, ResourceLocation resource)
-        {
-            super(title);
-
-            this.resource = resource;
-        }
+        return this.root;
     }
 }

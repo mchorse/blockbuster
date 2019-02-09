@@ -2,23 +2,37 @@ package mchorse.blockbuster.client.gui.elements.texture;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.Comparator;
 
+import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FileEntry;
+import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FolderEntry;
 import mchorse.blockbuster.utils.RLUtils;
 
+/**
+ * Blockbuster custom model system's file tree
+ * 
+ * This bad boy looks through the models' skins folder and recursively 
+ * collects all the stuff.  
+ */
 public class BlockbusterTree extends FileTree
 {
+    /**
+     * Folder in which the tree must look for the files
+     */
     public File folder;
 
     public BlockbusterTree(File folder)
     {
         this.folder = folder;
-        this.update();
     }
 
     @Override
-    public void update()
+    public void rebuild()
     {
+        if (!this.needsRebuild)
+        {
+            return;
+        }
+
         this.root.entries.clear();
 
         for (File file : this.folder.listFiles())
@@ -33,18 +47,22 @@ public class BlockbusterTree extends FileTree
                     this.addEntries(skins, entry, file.getName() + "/skins");
                 }
 
-                this.root.entries.add(entry);
+                /* Skip empty folder */
+                if (!entry.entries.isEmpty())
+                {
+                    this.root.entries.add(entry);
+                }
             }
         }
+
+        this.needsRebuild = false;
     }
 
+    /**
+     * Add recursively entries to given folder entry 
+     */
     public void addEntries(File skins, FolderEntry entry, String prefix)
     {
-        FolderEntry top = new FolderEntry("../", entry);
-
-        top.entries = entry.parent.entries;
-        entry.entries.add(top);
-
         for (File skin : skins.listFiles())
         {
             AbstractEntry skinEntry = null;
@@ -59,6 +77,7 @@ public class BlockbusterTree extends FileTree
                 }
                 else if (skin.isFile())
                 {
+                    /* Only textures files should be shown */
                     if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif"))
                     {
                         skinEntry = new FileEntry(name, RLUtils.create("b.a", prefix + "/" + name));
@@ -72,36 +91,14 @@ public class BlockbusterTree extends FileTree
             }
         }
 
-        Collections.sort(entry.entries, new Comparator<AbstractEntry>()
+        /* Don't add anything to empty folder */
+        if (entry.entries.isEmpty())
         {
-            @Override
-            public int compare(AbstractEntry o1, AbstractEntry o2)
-            {
-                if (o1 instanceof FolderEntry && !(o2 instanceof FolderEntry))
-                {
-                    return -1;
-                }
-
-                return o1.title.compareToIgnoreCase(o2.title);
-            }
-        });
-    }
-
-    public FolderEntry getEntryForName(String name)
-    {
-        for (AbstractEntry entry : this.root.entries)
-        {
-            if (entry instanceof FolderEntry)
-            {
-                FolderEntry folder = (FolderEntry) entry;
-
-                if (folder.title.equalsIgnoreCase(name))
-                {
-                    return folder;
-                }
-            }
+            return;
         }
 
-        return this.root;
+        this.addBackEntry(entry);
+
+        Collections.sort(entry.entries, FileTree.SORTER);
     }
 }
