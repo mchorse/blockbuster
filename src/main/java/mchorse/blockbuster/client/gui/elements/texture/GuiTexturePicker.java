@@ -5,13 +5,13 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.utils.MultiResourceLocation;
-import mchorse.blockbuster.utils.RLUtils;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.utils.resources.MultiResourceLocation;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

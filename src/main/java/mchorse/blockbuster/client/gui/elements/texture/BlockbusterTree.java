@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FileEntry;
 import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FolderEntry;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 
 /**
  * Blockbuster custom model system's file tree

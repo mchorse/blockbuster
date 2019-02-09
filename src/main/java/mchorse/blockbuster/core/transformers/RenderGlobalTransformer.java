@@ -9,7 +9,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mchorse.blockbuster.core.ClassTransformer;
+import mchorse.mclib.utils.coremod.ClassTransformer;
 
 public class RenderGlobalTransformer extends ClassTransformer
 {

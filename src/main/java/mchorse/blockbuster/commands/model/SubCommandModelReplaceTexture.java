@@ -5,7 +5,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.utils.L10n;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;

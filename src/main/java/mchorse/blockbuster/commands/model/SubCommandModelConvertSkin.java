@@ -11,7 +11,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.command.CommandBase;
