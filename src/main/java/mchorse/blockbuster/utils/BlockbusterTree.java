@@ -1,10 +1,12 @@
-package mchorse.blockbuster.client.gui.elements.texture;
+package mchorse.blockbuster.utils;
 
 import java.io.File;
 import java.util.Collections;
 
-import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FileEntry;
-import mchorse.blockbuster.client.gui.elements.texture.AbstractEntry.FolderEntry;
+import mchorse.mclib.utils.files.AbstractEntry;
+import mchorse.mclib.utils.files.AbstractEntry.FileEntry;
+import mchorse.mclib.utils.files.AbstractEntry.FolderEntry;
+import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.resources.RLUtils;
 
 /**
