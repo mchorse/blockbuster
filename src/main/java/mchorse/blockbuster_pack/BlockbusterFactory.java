@@ -6,11 +6,11 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
-import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;

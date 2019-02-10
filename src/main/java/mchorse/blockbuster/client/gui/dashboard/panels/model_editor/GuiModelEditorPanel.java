@@ -26,13 +26,13 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
-import mchorse.blockbuster.utils.RLUtils;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -96,7 +96,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.children.add(this.modelRenderer);
 
         this.models = new GuiModelModels(mc, this);
-        this.models.resizer().set(20, 0, 120, 180).parent(this.area);
+        this.models.resizer().set(20, 0, 140, 0).h(1, -20).parent(this.area);
         this.models.setVisible(false);
         this.children.add(this.models);
 

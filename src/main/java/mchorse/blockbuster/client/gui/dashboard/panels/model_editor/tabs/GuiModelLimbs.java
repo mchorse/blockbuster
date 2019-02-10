@@ -176,7 +176,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.holding.resizer().relative(this.is3D.resizer()).set(0, 25, 56, 20);
 
-        this.swiping.resizer().relative(this.holding.resizer()).set(60, 6, 60, 11);
+        this.swiping.resizer().relative(this.idle.resizer()).set(0, -16, 60, 11);
         this.looking.resizer().relative(this.holding.resizer()).set(0, 25, 60, 11);
         this.idle.resizer().relative(this.looking.resizer()).set(60, 0, 60, 11);
         this.swinging.resizer().relative(this.looking.resizer()).set(0, 16, 60, 11);

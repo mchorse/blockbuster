@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.utils.L10n;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;

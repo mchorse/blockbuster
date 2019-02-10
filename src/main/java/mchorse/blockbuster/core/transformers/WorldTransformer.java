@@ -9,8 +9,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mchorse.blockbuster.core.BBCoreClassTransformer;
-import mchorse.blockbuster.core.ClassMethodTransformer;
+import mchorse.mclib.utils.coremod.ClassMethodTransformer;
+import mchorse.mclib.utils.coremod.CoreClassTransformer;
 
 public class WorldTransformer extends ClassMethodTransformer
 {
@@ -43,7 +43,7 @@ public class WorldTransformer extends ClassMethodTransformer
             if (i == 2)
             {
                 InsnList newList = new InsnList();
-                String desc = BBCoreClassTransformer.obfuscated ? "(Lamu;Let;Lawt;I)V" : "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)V";
+                String desc = CoreClassTransformer.get("(Lamu;Let;Lawt;I)V", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)V");
 
                 newList.add(new VarInsnNode(Opcodes.ALOAD, 0));
                 newList.add(new VarInsnNode(Opcodes.ALOAD, 1));

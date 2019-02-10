@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.commands.SubCommandBase;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 
 /**
  * OBJ and MTL parser and loader

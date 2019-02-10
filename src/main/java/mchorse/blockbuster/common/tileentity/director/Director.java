@@ -599,8 +599,15 @@ public class Director
      */
     public void setPlaying(boolean playing)
     {
+        boolean changed = playing != this.playing;
+
         this.playing = playing;
         this.tile.playBlock(playing);
+
+        if (changed)
+        {
+            TileEntityDirector.playing += playing ? 1 : -1;
+        }
     }
 
     /**

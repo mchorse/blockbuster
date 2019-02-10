@@ -1,12 +1,12 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
+import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
@@ -102,16 +102,14 @@ public class GuiImageMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         ImageMorph image = this.getMorph();
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        this.picker.picker.clear();
-
-        for (String skin : ClientProxy.actorPack.pack.getSkins("image"))
-        {
-            this.picker.picker.add(RLUtils.create("b.a:image/" + skin));
-        }
+        tree.rebuild();
+        this.picker.picker.setList(tree.getEntryForName("image").entries);
+        this.picker.picker.update();
 
         this.picker.picker.sort();
-        this.picker.set(image.texture);
+        this.picker.fill(image.texture);
         this.scale.setValue(image.scale);
         this.shaded.button.setIsChecked(image.shaded);
     }

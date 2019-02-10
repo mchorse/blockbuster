@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 

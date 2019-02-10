@@ -1,19 +1,17 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import java.io.File;
-
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
-import mchorse.blockbuster.client.gui.elements.GuiTexturePicker;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
+import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.utils.GuiDrawable;
@@ -160,37 +158,14 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.materialList.setCurrent(str);
 
         ResourceLocation rl = this.getMorph().materials.get(str);
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        this.materialPicker.picker.clear();
-
-        for (File folder : ClientProxy.actorPack.pack.folders)
-        {
-            for (File model : folder.listFiles())
-            {
-                if (!model.isDirectory())
-                {
-                    continue;
-                }
-
-                File material = new File(model, "skins/" + str);
-
-                if (material.exists())
-                {
-                    for (File texture : material.listFiles())
-                    {
-                        String name = texture.getName();
-
-                        if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".gif"))
-                        {
-                            this.materialPicker.picker.add(RLUtils.create("b.a", model.getName() + "/skins/" + str + "/" + name));
-                        }
-                    }
-                }
-            }
-        }
+        tree.rebuild();
+        this.materialPicker.picker.setList(tree.getEntryForName(this.getMorph().getKey()).entries);
+        this.materialPicker.picker.update();
 
         this.materialPicker.picker.sort();
-        this.materialPicker.set(rl);
+        this.materialPicker.fill(rl);
     }
 
     private void setCurrentMaterialRL(ResourceLocation rl)
@@ -280,21 +255,16 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         CustomMorph custom = (CustomMorph) morph;
         String key = custom.getKey();
+        String skinsKey = custom.model.skins;
 
-        this.textures.picker.clear();
+        BlockbusterTree tree = ClientProxy.fileTree;
 
-        for (String skin : ClientProxy.actorPack.pack.getSkins(key))
-        {
-            this.textures.picker.add(RLUtils.create("b.a:" + key + "/" + skin));
-        }
-
-        for (String skin : ClientProxy.actorPack.pack.getSkins(custom.model.skins))
-        {
-            this.textures.picker.add(RLUtils.create("b.a:" + custom.model.skins + "/" + skin));
-        }
+        tree.rebuild();
+        this.textures.picker.setList(tree.getEntryForName(skinsKey.isEmpty() ? key : skinsKey).entries);
+        this.textures.picker.update();
 
         this.textures.picker.sort();
-        this.textures.set(custom.skin);
+        this.textures.fill(custom.skin);
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
 
