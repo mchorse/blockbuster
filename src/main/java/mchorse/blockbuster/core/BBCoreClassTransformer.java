@@ -11,61 +11,41 @@ import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
-import mchorse.blockbuster.core.transformers.SimpleReloadableResourceManagerTransformer;
 import mchorse.blockbuster.core.transformers.TileEntityItemStackRendererTransformer;
 import mchorse.blockbuster.core.transformers.WorldTransformer;
-import net.minecraft.launchwrapper.IClassTransformer;
+import mchorse.mclib.utils.coremod.CoreClassTransformer;
 
-public class BBCoreClassTransformer implements IClassTransformer
+public class BBCoreClassTransformer extends CoreClassTransformer
 {
     public static boolean obfuscated = false;
 
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private TileEntityItemStackRendererTransformer isr = new TileEntityItemStackRendererTransformer();
-    private SimpleReloadableResourceManagerTransformer resourcePack = new SimpleReloadableResourceManagerTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
     {
-        if (this.checkName(name, "ajs", "net.minecraft.world.World"))
+        if (checkName(name, "ajs", "net.minecraft.world.World"))
         {
             System.out.println("BBCoreMod: Transforming World class (" + name + ")");
 
             return this.world.transform(name, basicClass);
         }
-        else if (this.checkName(name, "bqm", "net.minecraft.client.renderer.RenderGlobal"))
+        else if (checkName(name, "bqm", "net.minecraft.client.renderer.RenderGlobal"))
         {
             System.out.println("BBCoreMod: Transforming RenderGlobal class (" + name + ")");
 
             return this.render.transform(name, basicClass);
         }
-        else if (this.checkName(name, "bqc", "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer"))
+        else if (checkName(name, "bqc", "net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer"))
         {
             System.out.println("BBCoreMod: Transforming TEISR class (" + name + ")");
 
             return this.isr.transform(name, basicClass);
         }
-        else if (this.checkName(name, "cae", "net.minecraft.client.resources.SimpleReloadableResourceManager"))
-        {
-            System.out.println("BBCoreMod: Transforming SimpleReloadableResourceManager class (" + name + ")");
-
-            return this.resourcePack.transform(name, basicClass);
-        }
 
         return basicClass;
-    }
-
-    public boolean checkName(String name, String notch, String mcp)
-    {
-        if (name.equals(mcp) || name.equals(notch))
-        {
-            obfuscated = name.equals(notch);
-
-            return true;
-        }
-
-        return false;
     }
 
     public static void debugInstructions(InsnList list)

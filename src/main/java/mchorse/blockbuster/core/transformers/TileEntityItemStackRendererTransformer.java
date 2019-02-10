@@ -9,8 +9,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mchorse.blockbuster.core.BBCoreClassTransformer;
-import mchorse.blockbuster.core.ClassMethodTransformer;
+import mchorse.mclib.utils.coremod.ClassMethodTransformer;
+import mchorse.mclib.utils.coremod.CoreClassTransformer;
 
 public class TileEntityItemStackRendererTransformer extends ClassMethodTransformer
 {
@@ -30,7 +30,7 @@ public class TileEntityItemStackRendererTransformer extends ClassMethodTransform
         if (label != null)
         {
             InsnList list = new InsnList();
-            String desc = BBCoreClassTransformer.obfuscated ? "(Lafj;)Z" : "(Lnet/minecraft/item/ItemStack;)Z";
+            String desc = CoreClassTransformer.get("(Lafj;)Z", "(Lnet/minecraft/item/ItemStack;)Z");
 
             list.add(new VarInsnNode(Opcodes.ALOAD, 1));
             list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/client/RenderingHandler", "renderItemStack", desc, false));

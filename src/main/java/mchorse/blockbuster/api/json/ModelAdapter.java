@@ -18,7 +18,7 @@ import com.google.gson.JsonSerializer;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**

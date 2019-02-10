@@ -2,7 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

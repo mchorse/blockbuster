@@ -13,10 +13,9 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.utils.RLUtils;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
-import mchorse.blockbuster_pack.client.render.part.IBodyPart;
-import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
+import mchorse.blockbuster_pack.client.render.part.BodyPart;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -388,32 +387,13 @@ public class CustomMorph extends AbstractMorph
             }
 
             result = result && Objects.equal(this.currentPose, morph.currentPose);
+            result = result && Objects.equal(this.skin, morph.skin);
+            result = result && Objects.equal(this.customPose, morph.customPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
 
-            if (this.customPose != null && morph.customPose != null)
-            {
-                result = result && this.customPose.equals(morph.customPose);
-            }
-            /* If one of them isn't a null, then clearly different */
-            else if (this.customPose != morph.customPose)
-            {
-                result = false;
-            }
-
-            if (this.skin == null && morph.skin == null)
-            {
-                return result;
-            }
-            else if (this.skin != null && morph.skin != null && morph.skin.equals(this.skin))
-            {
-                return result;
-            }
-            else
-            {
-                return false;
-            }
+            return result;
         }
 
         return result;
@@ -559,79 +539,6 @@ public class CustomMorph extends AbstractMorph
                 part.fromNBT(bodyPart);
                 this.parts.add(part);
             }
-        }
-    }
-
-    public static class BodyPart implements IBodyPart
-    {
-        public String limb = "";
-        public MorphBodyPart part;
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public void init()
-        {
-            if (this.part != null) this.part.init();
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public void render(EntityLivingBase entity, float partialTicks)
-        {
-            if (this.part != null) this.part.render(entity, partialTicks);
-        }
-
-        @Override
-        @SideOnly(Side.CLIENT)
-        public void update(EntityLivingBase entity)
-        {
-            if (this.part != null) this.part.update(entity);
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            boolean result = super.equals(obj);
-
-            if (obj instanceof BodyPart)
-            {
-                BodyPart part = (BodyPart) obj;
-
-                result = result && Objects.equal(this.limb, part.limb);
-                result = result && Objects.equal(this.part, part.part);
-            }
-
-            return result;
-        }
-
-        public BodyPart clone(boolean isRemote)
-        {
-            BodyPart part = new BodyPart();
-
-            part.limb = this.limb;
-            part.part = this.part.clone(isRemote);
-
-            return part;
-        }
-
-        @Override
-        public void toNBT(NBTTagCompound tag)
-        {
-            if (this.part == null)
-            {
-                return;
-            }
-
-            if (!this.limb.isEmpty()) tag.setString("Limb", this.limb);
-            this.part.toNBT(tag);
-        }
-
-        @Override
-        public void fromNBT(NBTTagCompound tag)
-        {
-            this.limb = tag.getString("Limb");
-            this.part = new MorphBodyPart();
-            this.part.fromNBT(tag);
         }
     }
 }

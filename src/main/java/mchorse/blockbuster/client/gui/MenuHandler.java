@@ -32,6 +32,7 @@ public class MenuHandler
             return;
         }
 
+        ClientProxy.fileTree.needsRebuild = true;
         GuiScreen gui = event.getGui();
 
         if (gui instanceof GuiMainMenu)

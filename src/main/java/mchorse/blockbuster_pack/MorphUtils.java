@@ -1,7 +1,7 @@
 package mchorse.blockbuster_pack;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.utils.RLUtils;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;

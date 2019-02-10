@@ -191,8 +191,8 @@ public class ActorsPack implements IResourcePack
     }
 
     /**
-     * I don't think that my actor resources pack should have an icon. However
-     * that icon would look really badass/sexy.
+     * I don't think that my actor resources pack should have an icon. 
+     * However that icon would look really badass/sexy.
      */
     @Override
     public BufferedImage getPackImage() throws IOException

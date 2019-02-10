@@ -32,6 +32,8 @@ import net.minecraft.world.World;
  */
 public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
 {
+    public static int playing = 0;
+
     /**
      * Director instance which is responsible for managing and storing 
      * director block information and actors
@@ -64,6 +66,21 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
         if (Blockbuster.proxy.config.debug_playback_ticks)
         {
             this.director.logTicks();
+        }
+
+        IBlockState state = this.getWorld().getBlockState(this.pos);
+        boolean hidden = state.getValue(BlockDirector.HIDDEN);
+
+        if (this.director.hide)
+        {
+            if (playing > 0 && !hidden)
+            {
+                this.getWorld().setBlockState(this.pos, state.withProperty(BlockDirector.HIDDEN, true));
+            }
+            else if (playing <= 0 && hidden)
+            {
+                this.getWorld().setBlockState(this.pos, state.withProperty(BlockDirector.HIDDEN, false));
+            }
         }
 
         boolean isRemote = this.world.isRemote;
@@ -209,6 +226,15 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
      */
     public void playBlock(boolean isPlaying)
     {
+        this.playBlock(isPlaying, this.director.hide ? isPlaying : false);
+    }
+
+    /**
+     * Set the state of the block playing (needed to update redstone 
+     * thingy-stuff)
+     */
+    public void playBlock(boolean isPlaying, boolean isHidden)
+    {
         IBlockState state = this.world.getBlockState(this.pos);
 
         if (!this.director.disableStates)
@@ -216,7 +242,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
             state = state.withProperty(BlockDirector.PLAYING, isPlaying);
         }
 
-        state = state.withProperty(BlockDirector.HIDDEN, this.director.hide ? isPlaying : false);
+        state = state.withProperty(BlockDirector.HIDDEN, isHidden);
 
         this.world.setBlockState(this.getPos(), state);
     }
