@@ -8,9 +8,10 @@ import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -26,9 +27,13 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiSequencerMorph extends GuiAbstractMorph
 {
-    private GuiElements<GuiElement> elements = new GuiElements<GuiElement>();
-    private GuiListElement<SequenceEntry> list;
+    private GuiDelegateElement<IGuiElement> view;
+    public GuiButtonElement<GuiButton> toggleNbt;
 
+    private GuiElements<IGuiElement> general = new GuiElements<IGuiElement>();
+    private GuiElements<IGuiElement> elements = new GuiElements<IGuiElement>();
+
+    private GuiListElement<SequenceEntry> list;
     private GuiButtonElement<GuiButton> addPart;
     private GuiButtonElement<GuiButton> removePart;
 
@@ -43,6 +48,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     {
         super(mc);
 
+        this.view = new GuiDelegateElement<IGuiElement>(mc, this.general);
         this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry));
         this.addPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.add"), (b) ->
         {
@@ -72,7 +78,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
                 IMorphing morphing = Morphing.get(this.mc.thePlayer);
 
                 this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
-                this.morphPicker.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -10).h(1, -10);
+                this.morphPicker.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
                 this.morphPicker.callback = (morph) -> this.entry.morph = morph;
 
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
@@ -108,13 +114,33 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         this.duration.resizer().relative(this.pick.resizer()).set(0, 25, 105, 20);
         this.reverse.resizer().relative(this.removePart.resizer()).set(55, 4, this.reverse.button.width, 11);
 
+        this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
+        this.toggleNbt.resizer().parent(this.area).set(0, 10, 40, 20).x(1, -50).y(1, -25);
+
         this.elements.add(this.pick, this.duration);
-        this.children.add(this.addPart, this.removePart, this.list, this.reverse, this.elements);
+        this.general.add(this.addPart, this.removePart, this.list, this.reverse, this.elements);
+        this.children.add(this.view, this.toggleNbt);
 
         this.data.setVisible(false);
         this.data.resizer().y(1, -55);
 
         this.finish.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -25);
+    }
+
+    private void toggleNbt()
+    {
+        if (this.view.delegate == null)
+        {
+            this.startEdit(this.morph);
+            this.view.setDelegate(this.general);
+            this.data.setVisible(false);
+        }
+        else
+        {
+            this.view.setDelegate(null);
+            this.updateNBT();
+            this.data.setVisible(true);
+        }
     }
 
     private void select(SequenceEntry entry)
@@ -157,8 +183,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.list.area.draw(0x88000000);
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.sequencer.morphs"), this.list.area.x, this.list.area.y - 12, 0xffffff);
+        if (this.view.delegate == this.general)
+        {
+            this.list.area.draw(0x88000000);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.sequencer.morphs"), this.list.area.x, this.list.area.y - 12, 0xffffff);
+        }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
