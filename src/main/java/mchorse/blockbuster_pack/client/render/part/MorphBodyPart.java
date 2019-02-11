@@ -21,7 +21,7 @@ public class MorphBodyPart implements IBodyPart
     public AbstractMorph morph;
     public float[] translate = new float[3];
     public float[] scale = new float[] {1, 1, 1};
-    public float[] rotate = new float[3];
+    public float[] rotate = new float[] {180F, 0F, 0F};
     public boolean useTarget = false;
 
     @SideOnly(Side.CLIENT)
