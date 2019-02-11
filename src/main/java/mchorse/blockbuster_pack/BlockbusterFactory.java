@@ -8,8 +8,10 @@ import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
+import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -17,6 +19,7 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,12 +52,18 @@ public class BlockbusterFactory implements IMorphFactory
 
         editors.add(new GuiCustomMorph(mc));
         editors.add(new GuiImageMorph(mc));
+        editors.add(new GuiSequencerMorph(mc));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public String displayNameForMorph(AbstractMorph morph)
     {
+        if (morph instanceof SequencerMorph)
+        {
+            return I18n.format("blockbuster.morph.sequencer");
+        }
+
         String[] splits = morph.name.split("\\.");
 
         if (splits.length >= 2 && splits[0].equals("blockbuster") && this.models.models.containsKey(splits[1]))
@@ -82,6 +91,15 @@ public class BlockbusterFactory implements IMorphFactory
             return image;
         }
 
+        if (name.equals("sequencer"))
+        {
+            SequencerMorph seq = new SequencerMorph();
+
+            seq.fromNBT(tag);
+
+            return seq;
+        }
+
         CustomMorph morph = new CustomMorph();
         ModelCell entry = this.models.models.get(name);
 
@@ -98,6 +116,7 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public void getMorphs(MorphList morphs, World world)
     {
+        /* Custom model morphs */
         for (Map.Entry<String, ModelCell> entry : this.models.models.entrySet())
         {
             String key = entry.getKey();
@@ -141,6 +160,7 @@ public class BlockbusterFactory implements IMorphFactory
             }
         }
 
+        /* Image morphs */
         for (String texture : this.models.pack.getSkins("image"))
         {
             ImageMorph image = new ImageMorph();
@@ -148,11 +168,14 @@ public class BlockbusterFactory implements IMorphFactory
             image.texture = RLUtils.create("b.a", "image/" + texture);
             morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
+
+        /* Sequencer morph */
+        morphs.addMorph("sequencer", "blockbuster", new SequencerMorph());
     }
 
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer");
     }
 }

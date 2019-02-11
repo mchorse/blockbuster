@@ -216,6 +216,12 @@ blockbuster.gui:
         limbs: Limbs
         body_parts: Body parts
         use_target: Use target
+        
+    sequencer:
+        duration: Duration
+        reverse: Reverse
+        no_morph: (no morph)
+        morphs: Morphs
     
     aperture:
         config:
