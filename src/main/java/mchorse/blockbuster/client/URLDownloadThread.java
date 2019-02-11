@@ -42,7 +42,14 @@ public class URLDownloadThread implements Runnable
         URLConnection con = new URL(url.toString()).openConnection();
         con.setRequestProperty("User-Agent", USER_AGENT);
 
-        return con.getInputStream();
+        InputStream stream = con.getInputStream();
+
+        if (!con.getHeaderField("Content-Type").startsWith("image/"))
+        {
+            return null;
+        }
+
+        return stream;
     }
 
     public static void addToManager(ResourceLocation url, InputStream is) throws IOException
@@ -65,7 +72,12 @@ public class URLDownloadThread implements Runnable
         {
             try
             {
-                addToManager(this.url, downloadImage(this.url));
+                InputStream stream = downloadImage(this.url);
+
+                if (stream != null)
+                {
+                    addToManager(this.url, stream);
+                }
             }
             catch (IOException e)
             {}

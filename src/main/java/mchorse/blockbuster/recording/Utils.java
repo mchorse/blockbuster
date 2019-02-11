@@ -219,7 +219,7 @@ public class Utils
         }
         else if (record == null)
         {
-            L10n.error(player, "recording.not_exist", filename);
+            L10n.error(player, "recording.not_found", filename);
         }
     }
 
