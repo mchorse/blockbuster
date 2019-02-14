@@ -124,7 +124,7 @@ public class CommonProxy
         GameRegistry.register(new ItemBlock(model).setRegistryName(model.getRegistryName()));
 
         GameRegistry.register(Blockbuster.greenBlock = green);
-        GameRegistry.register(new ItemBlock(green).setRegistryName(green.getRegistryName()));
+        GameRegistry.register(new ItemBlockGreen(green, true).setRegistryName(green.getRegistryName()));
 
         Blockbuster.modelBlockItem = Item.getItemFromBlock(Blockbuster.modelBlock);
 
