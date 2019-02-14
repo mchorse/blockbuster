@@ -24,6 +24,8 @@ public class MorphActionAction extends Action
         {
             Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
 
+            if (frame == null) return;
+
             float yaw = actor.rotationYaw;
             float yawHead = actor.rotationYaw;
             float pitch = actor.rotationPitch;

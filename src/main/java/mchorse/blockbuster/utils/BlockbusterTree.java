@@ -74,8 +74,15 @@ public class BlockbusterTree extends FileTree
             {
                 if (skin.isDirectory())
                 {
-                    skinEntry = new FolderEntry(name, entry);
-                    this.addEntries(skin, (FolderEntry) skinEntry, prefix + "/" + name);
+                    FolderEntry folder = new FolderEntry(name, entry);
+                    this.addEntries(skin, folder, prefix + "/" + name);
+
+                    if (folder.entries.isEmpty())
+                    {
+                        continue;
+                    }
+
+                    skinEntry = folder;
                 }
                 else if (skin.isFile())
                 {

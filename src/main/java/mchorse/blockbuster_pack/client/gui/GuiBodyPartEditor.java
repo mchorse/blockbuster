@@ -98,7 +98,7 @@ public class GuiBodyPartEditor extends GuiElement
                 IMorphing morphing = Morphing.get(this.mc.player);
 
                 this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
-                this.morphPicker.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -10).h(1, -10);
+                this.morphPicker.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
                 this.morphPicker.callback = (morph) ->
                 {
                     if (this.part != null) this.part.part.morph = morph;

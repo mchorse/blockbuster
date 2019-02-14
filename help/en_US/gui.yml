@@ -18,8 +18,6 @@ blockbuster.gui:
     break: Break
     select: Select
     ok: Ok
-    no_data: No data available...
-    multi_skin: Multi-skin
     
     # Morphs popup strings
     morphs:
@@ -38,6 +36,7 @@ blockbuster.gui:
         model: Model block
         model_editor: Model editor
         player_recording: Player recording editor
+        texture: Texture manager
     
     # Main page of dashboard
     main:
@@ -216,6 +215,21 @@ blockbuster.gui:
         limbs: Limbs
         body_parts: Body parts
         use_target: Use target
+        
+    sequencer:
+        duration: Duration
+        reverse: Reverse
+        no_morph: (no morph)
+        morphs: Morphs
+    
+    texture:
+        title: Texture manager
+        subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
+        linear: Linear
+        linear_tooltip: When enabled, texture looks smooth
+        mipmap: Mipmap
+        mipmap_tooltip: When enabled, looks less noisy far away
+        replace: Replace
     
     aperture:
         config:

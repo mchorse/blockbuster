@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client;
 
 import java.awt.image.BufferedImage;
-import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -54,6 +53,8 @@ public class MipmapTexture extends SimpleTexture
             GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL12.GL_TEXTURE_MAX_LEVEL, 3);
             GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0.0F);
             GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
 
             ByteBuffer buffer = GLAllocation.createDirectByteBuffer(w * h * 4);
             int[] pixels = new int[w * h];
@@ -79,7 +80,7 @@ public class MipmapTexture extends SimpleTexture
         }
         finally
         {
-            IOUtils.closeQuietly((Closeable) resource);
+            IOUtils.closeQuietly(resource);
         }
     }
 }

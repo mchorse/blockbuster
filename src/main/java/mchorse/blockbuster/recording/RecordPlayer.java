@@ -92,7 +92,7 @@ public class RecordPlayer
      */
     public Frame getCurrentFrame()
     {
-        return this.record.frames.get(this.getTick());
+        return this.record.getFrame(this.getTick());
     }
 
     public void next()

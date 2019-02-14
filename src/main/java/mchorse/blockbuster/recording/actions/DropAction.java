@@ -46,7 +46,7 @@ public class DropAction extends Action
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
         ItemStack items = new ItemStack(this.itemData);
 
-        if (items == null)
+        if (items == null || frame == null)
         {
             return;
         }
