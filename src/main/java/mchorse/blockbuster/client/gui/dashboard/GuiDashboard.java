@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
@@ -37,6 +38,7 @@ public class GuiDashboard extends GuiBase
     public GuiModelBlockPanel modelPanel;
     public GuiModelEditorPanel modelEditorPanel;
     public GuiRecordingEditorPanel recordingEditorPanel;
+    public GuiTextureManagerPanel texturePanel;
     public GuiMainPanel mainPanel;
 
     public GuiCreativeMorphsMenu morphs;
@@ -57,6 +59,7 @@ public class GuiDashboard extends GuiBase
         this.mc = mc;
         this.modelEditorPanel = new GuiModelEditorPanel(mc, this);
         this.mainPanel = new GuiMainPanel(mc, this);
+        this.texturePanel = new GuiTextureManagerPanel(mc, this);
 
         this.panel = new GuiDelegateElement<GuiDashboardPanel>(mc, this.mainPanel);
         this.panel.resizer().set(32, 0, 1, 1).parent(this.area).w(1F, -32).h(1F, 0);
@@ -113,6 +116,7 @@ public class GuiDashboard extends GuiBase
         }
 
         this.modelEditorPanel.open();
+        this.texturePanel.open();
 
         return this;
     }
@@ -176,6 +180,8 @@ public class GuiDashboard extends GuiBase
             this.recordingEditorPanel.close();
             this.mainPanel.close();
         }
+
+        this.texturePanel.close();
 
         this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
     }
