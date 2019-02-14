@@ -75,7 +75,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         {
             if (this.morphPicker == null)
             {
-                IMorphing morphing = Morphing.get(this.mc.thePlayer);
+                IMorphing morphing = Morphing.get(this.mc.player);
 
                 this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
                 this.morphPicker.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
