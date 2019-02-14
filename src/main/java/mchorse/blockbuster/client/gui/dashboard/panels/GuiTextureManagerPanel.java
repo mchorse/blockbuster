@@ -12,7 +12,11 @@ import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationList;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
+import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -41,6 +45,8 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     public GuiButtonElement<GuiCheckBox> linear;
     public GuiButtonElement<GuiCheckBox> mipmap;
     public GuiButtonElement<GuiButton> remove;
+    public GuiButtonElement<GuiButton> replace;
+    public GuiDelegateElement<IGuiElement> modal;
 
     private ResourceLocation rl;
     private String title = I18n.format("blockbuster.gui.texture.title");
@@ -56,13 +62,17 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         this.mipmap = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.button.isChecked()));
         this.mipmap.tooltip(I18n.format("blockbuster.gui.texture.mipmap_tooltip"), TooltipDirection.LEFT);
         this.remove = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.remove"), (b) -> this.remove());
+        this.replace = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.texture.replace"), (b) -> this.replace());
+        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
 
         this.textures.resizer().parent(this.area).set(10, 50, 0, 0).w(1, -30 - 128).h(1, -60);
         this.remove.resizer().parent(this.area).set(0, 0, 128, 20).x(1, -138).y(1, -30);
-        this.linear.resizer().relative(this.remove.resizer()).set(0, -16, 64, 11);
+        this.replace.resizer().relative(this.remove.resizer()).set(0, -25, 128, 20);
+        this.linear.resizer().relative(this.replace.resizer()).set(0, -16, 64, 11);
         this.mipmap.resizer().relative(this.linear.resizer()).set(64, 0, 64, 11);
+        this.modal.resizer().parent(this.area).set(10, 50, 0, 0).w(1, -30 - 128).h(1, -60);
 
-        this.children.add(this.textures, this.linear, this.mipmap, this.remove);
+        this.children.add(this.textures, this.linear, this.mipmap, this.replace, this.remove, this.modal);
     }
 
     private void pickRL(ResourceLocation rl)
@@ -146,6 +156,33 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         this.textures.remove(this.rl);
         this.textures.current--;
         this.pickRL(this.textures.getCurrent());
+    }
+
+    private void replace()
+    {
+        if (this.rl == null) return;
+
+        GuiPromptModal modal = new GuiPromptModal(this.mc, this.modal, I18n.format("blockbuster.gui.texture.replace_modal"), (string) -> this.replace(string));
+        modal.text.field.setMaxStringLength(2000);
+        modal.setValue(this.rl.toString());
+
+        this.modal.setDelegate(modal);
+    }
+
+    private void replace(String string)
+    {
+        if (this.rl.toString().equals(string))
+        {
+            return;
+        }
+
+        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(this.mc.renderEngine);
+        ITextureObject texture = map.get(RLUtils.create(string));
+
+        if (texture != null)
+        {
+            map.put(this.rl, texture);
+        }
     }
 
     @Override

@@ -229,6 +229,7 @@ blockbuster.gui:
         linear_tooltip: When enabled, texture looks smooth
         mipmap: Mipmap
         mipmap_tooltip: When enabled, looks less noisy far away
+        replace: Replace
     
     aperture:
         config:
