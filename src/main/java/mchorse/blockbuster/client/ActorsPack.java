@@ -100,7 +100,14 @@ public class ActorsPack implements IResourcePack
         {
             if (Blockbuster.proxy.config.url_skins_sync_download)
             {
-                return URLDownloadThread.downloadImage(location);
+                InputStream stream = URLDownloadThread.downloadImage(location);
+
+                if (stream == null)
+                {
+                    throw new IOException("Couldn't download image...");
+                }
+
+                return stream;
             }
             else
             {

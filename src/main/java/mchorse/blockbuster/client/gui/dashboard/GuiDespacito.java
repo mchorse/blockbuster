@@ -49,6 +49,10 @@ public class GuiDespacito extends GuiElement
         element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.player_recording"), TooltipDirection.RIGHT);
         resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
         this.children.add(element.setResizer(resizer));
+
+        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.DYE, 1, 1)), (button) -> dashboard.openPanel(dashboard.texturePanel)).tooltip(I18n.format("blockbuster.gui.dashboard.texture"), TooltipDirection.RIGHT);
+        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
+        this.children.add(element.setResizer(resizer));
     }
 
     @Override

@@ -39,6 +39,8 @@ public class ItemUseAction extends Action
             Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
             EntityPlayer player = actor instanceof EntityActor ? ((EntityActor) actor).fakePlayer : (EntityPlayer) actor;
 
+            if (frame == null) return;
+
             player.posX = actor.posX;
             player.posY = actor.posY;
             player.posZ = actor.posZ;

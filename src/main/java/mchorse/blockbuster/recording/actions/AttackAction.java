@@ -29,6 +29,9 @@ public class AttackAction extends DamageAction
     public void apply(EntityLivingBase actor)
     {
         Frame frame = EntityUtils.getRecordPlayer(actor).getCurrentFrame();
+
+        if (frame == null) return;
+
         float yaw = actor.rotationYaw;
         float pitch = actor.rotationPitch;
         float yawHead = actor.rotationYawHead;
