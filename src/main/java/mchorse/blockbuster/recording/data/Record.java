@@ -106,7 +106,7 @@ public class Record
     }
 
     /**
-     * Get an action by given tick and index 
+     * Get an action on given tick and index 
      */
     public Action getAction(int tick, int index)
     {
@@ -121,6 +121,19 @@ public class Record
         }
 
         return null;
+    }
+
+    /**
+     * Get frame on given tick 
+     */
+    public Frame getFrame(int tick)
+    {
+        if (tick >= this.frames.size() || tick < 0)
+        {
+            return null;
+        }
+
+        return this.frames.get(tick);
     }
 
     /**
