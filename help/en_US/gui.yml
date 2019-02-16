@@ -230,7 +230,7 @@ blockbuster.gui:
         mipmap: Mipmap
         mipmap_tooltip: When enabled, looks less noisy far away
         replace: Replace
-        replace_modal: Type in the resource location of {l}already loaded{r} texture which you want to replace with: 
+        replace_modal: "Type in the resource location of {l}already loaded{r} texture which you want to replace with:"
     
     aperture:
         config:
