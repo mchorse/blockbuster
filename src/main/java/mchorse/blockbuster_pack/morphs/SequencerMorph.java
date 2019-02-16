@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,6 +67,21 @@ public class SequencerMorph extends AbstractMorph
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         this.updateCycle();
+
+        if (this.morphs.isEmpty())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            if (mc.currentScreen != null)
+            {
+                GlStateManager.color(1, 1, 1);
+                GlStateManager.enableAlpha();
+                mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+                /* Fuck you, Gui class, for not making the methods static */
+                mc.currentScreen.drawTexturedModalRect(x - 8, y - 20, 32, 16, 16, 16);
+                GlStateManager.disableAlpha();
+            }
+        }
 
         if (this.currentMorph != null)
         {
@@ -146,7 +164,7 @@ public class SequencerMorph extends AbstractMorph
 
         for (SequenceEntry entry : this.morphs)
         {
-            morph.morphs.add(entry);
+            morph.morphs.add(entry.clone());
         }
 
         morph.reverse = this.reverse;
@@ -271,6 +289,18 @@ public class SequencerMorph extends AbstractMorph
         public SequenceEntry(AbstractMorph morph)
         {
             this.morph = morph;
+        }
+
+        public SequenceEntry(AbstractMorph morph, int duration)
+        {
+            this.morph = morph;
+            this.duration = duration;
+        }
+
+        @Override
+        public SequenceEntry clone()
+        {
+            return new SequenceEntry(this.morph, this.duration);
         }
 
         @Override
