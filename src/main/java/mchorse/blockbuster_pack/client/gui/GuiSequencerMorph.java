@@ -147,13 +147,17 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     {
         this.entry = entry;
 
-        if (this.morphPicker != null)
+        if (entry != null)
         {
-            this.morphPicker.setSelected(entry.morph);
+            if (this.morphPicker != null)
+            {
+                this.morphPicker.setSelected(entry.morph);
+            }
+
+            this.duration.setValue(entry.duration);
         }
 
-        this.duration.setValue(entry.duration);
-        this.elements.setVisible(true);
+        this.elements.setVisible(entry != null);
     }
 
     @Override
