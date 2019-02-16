@@ -68,11 +68,11 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
             this.director.logTicks();
         }
 
-        IBlockState state = this.getWorld().getBlockState(this.pos);
-        boolean hidden = state.getValue(BlockDirector.HIDDEN);
-
         if (this.director.hide)
         {
+            IBlockState state = this.getWorld().getBlockState(this.pos);
+            boolean hidden = state.getValue(BlockDirector.HIDDEN);
+
             if (playing > 0 && !hidden)
             {
                 this.getWorld().setBlockState(this.pos, state.withProperty(BlockDirector.HIDDEN, true));
