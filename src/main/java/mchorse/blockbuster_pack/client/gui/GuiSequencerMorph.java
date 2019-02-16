@@ -194,7 +194,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
 
             if (morph != null)
             {
-                morph.renderOnScreen(this.mc.thePlayer, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
+                morph.renderOnScreen(this.mc.player, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
             }
         }
         catch (Exception e)
