@@ -208,11 +208,13 @@ public class CameraHandler
 
             editor.panel.resizer().h(1, show ? -150 : -70);
             editor.scrub.resizer().y(1, show ? -100 : -20);
+            record.records.resizer().h(1, show ? -80 : 0);
 
             editor.panel.resize(editor.width, editor.height);
             editor.scrub.resize(editor.width, editor.height);
             b.resize(editor.width, editor.height);
             record.open.resize(editor.width, editor.height);
+            record.records.resize(editor.width, editor.height);
 
             b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
         });
@@ -230,6 +232,7 @@ public class CameraHandler
         if (cameraEditorElements == null)
         {
             cameraEditorElements = new GuiElements<IGuiElement>();
+            editor.elements.elements.remove(editor.scrub);
             editor.elements.add(cameraEditorElements);
         }
 
@@ -241,7 +244,7 @@ public class CameraHandler
         editor.scrub.resizer().x(30).w(1, -60);
 
         cameraEditorElements.elements.clear();
-        cameraEditorElements.add(toggle, record.open, elements, record.records, dashboard.morphDelegate);
+        cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements, dashboard.morphDelegate);
     }
 
     /**
