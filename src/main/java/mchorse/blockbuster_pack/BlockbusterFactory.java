@@ -12,6 +12,7 @@ import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -169,8 +170,24 @@ public class BlockbusterFactory implements IMorphFactory
             morphs.addMorphVariant(image.name, "blockbuster", texture, image);
         }
 
-        /* Sequencer morph */
-        morphs.addMorph("sequencer", "blockbuster", new SequencerMorph());
+        /* Sequencer morphs */
+        CustomMorph steve = new CustomMorph();
+        steve.name = "blockbuster.fred";
+        steve.model = this.models.models.get("fred").model;
+
+        CustomMorph alex = new CustomMorph();
+        alex.name = "blockbuster.alex";
+        alex.model = this.models.models.get("alex").model;
+
+        SequencerMorph steveAlex = new SequencerMorph();
+        SequenceEntry steveEntry = new SequenceEntry(steve, 10);
+        SequenceEntry alexEntry = new SequenceEntry(alex, 10);
+
+        steveAlex.morphs.add(steveEntry);
+        steveAlex.morphs.add(alexEntry);
+
+        morphs.addMorphVariant("sequencer", "blockbuster", "default", steveAlex);
+        morphs.addMorphVariant("sequencer", "blockbuster", "empty", new SequencerMorph());
     }
 
     @Override

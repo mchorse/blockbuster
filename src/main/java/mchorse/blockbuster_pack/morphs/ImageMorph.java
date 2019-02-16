@@ -1,5 +1,7 @@
 package mchorse.blockbuster_pack.morphs;
 
+import java.util.Objects;
+
 import org.lwjgl.opengl.GL11;
 
 import mchorse.mclib.utils.resources.RLUtils;
@@ -7,6 +9,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -35,9 +38,14 @@ public class ImageMorph extends AbstractMorph
     public float scale = 1;
 
     /**
-     * Whether image morph gets shaded 
+     * Whether an image morph gets shaded 
      */
-    public boolean shaded;
+    public boolean shaded = true;
+
+    /**
+     * Whether an image morph is affected by light map 
+     */
+    public boolean lighting = true;
 
     public ImageMorph()
     {
@@ -70,9 +78,17 @@ public class ImageMorph extends AbstractMorph
             return;
         }
 
+        float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+        float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+
         if (!this.shaded)
         {
             RenderHelper.disableStandardItemLighting();
+        }
+
+        if (!this.lighting)
+        {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
         }
 
         GL11.glPushMatrix();
@@ -91,11 +107,16 @@ public class ImageMorph extends AbstractMorph
             GlStateManager.enableLight(1);
             GlStateManager.enableColorMaterial();
         }
+
+        if (!this.lighting)
+        {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+        }
     }
 
     private void renderPicture(float scale, boolean flipX)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
 
         int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int h = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
@@ -169,6 +190,7 @@ public class ImageMorph extends AbstractMorph
         morph.texture = RLUtils.clone(this.texture);
         morph.scale = this.scale;
         morph.shaded = this.shaded;
+        morph.lighting = this.lighting;
 
         return morph;
     }
@@ -182,8 +204,10 @@ public class ImageMorph extends AbstractMorph
         {
             ImageMorph image = (ImageMorph) obj;
 
-            result = result && image.texture.equals(this.texture);
+            result = result && Objects.equals(image.texture, this.texture);
             result = result && image.scale == this.scale;
+            result = result && image.shaded == this.shaded;
+            result = result && image.lighting == this.lighting;
         }
 
         return result;
@@ -208,7 +232,8 @@ public class ImageMorph extends AbstractMorph
 
         if (this.scale != 1) tag.setFloat("Scale", this.scale);
         if (this.texture != null) tag.setTag("Texture", RLUtils.writeNbt(this.texture));
-        if (this.shaded != false) tag.setBoolean("Shaded", this.shaded);
+        if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
+        if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
     }
 
     @Override
@@ -219,5 +244,6 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Scale")) this.scale = tag.getFloat("Scale");
         if (tag.hasKey("Texture")) this.texture = RLUtils.create(tag.getTag("Texture"));
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
+        if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
     }
 }

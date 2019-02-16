@@ -151,7 +151,7 @@ public class MorphBodyPart implements IBodyPart
             tag.setTag("S", ModelPose.writeFloatList(new NBTTagList(), this.scale));
         }
 
-        if (this.rotate[0] != 0 || this.rotate[1] != 0 || this.rotate[2] != 0)
+        if (this.rotate[0] != 180 || this.rotate[1] != 0 || this.rotate[2] != 0)
         {
             tag.setTag("R", ModelPose.writeFloatList(new NBTTagList(), this.rotate));
         }

@@ -24,6 +24,7 @@ public class GuiImageMorph extends GuiAbstractMorph
     public GuiButtonElement<GuiButton> texture;
     public GuiTrackpadElement scale;
     public GuiButtonElement<GuiCheckBox> shaded;
+    public GuiButtonElement<GuiCheckBox> lighting;
 
     public GuiButtonElement<GuiButton> toggleNbt;
 
@@ -42,6 +43,11 @@ public class GuiImageMorph extends GuiAbstractMorph
             this.getMorph().shaded = b.button.isChecked();
         });
 
+        this.lighting = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.lighting"), false, (b) ->
+        {
+            this.getMorph().lighting = b.button.isChecked();
+        });
+
         this.picker = new GuiTexturePicker(mc, (rl) ->
         {
             this.getMorph().texture = rl;
@@ -51,6 +57,7 @@ public class GuiImageMorph extends GuiAbstractMorph
         this.texture.resizer().parent(this.area).set(0, 50, 115, 20).x(1, -125);
         this.scale.resizer().relative(this.texture.resizer()).set(0, 25, 115, 20);
         this.shaded.resizer().relative(this.scale.resizer()).set(0, 25, 80, 11);
+        this.lighting.resizer().relative(this.shaded.resizer()).set(0, 16, 80, 11);
         this.picker.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
 
         this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
@@ -58,7 +65,7 @@ public class GuiImageMorph extends GuiAbstractMorph
 
         this.data.setVisible(false);
 
-        this.general.add(this.texture, this.scale, this.shaded);
+        this.general.add(this.texture, this.scale, this.shaded, this.lighting);
         this.children.add(this.general, this.toggleNbt, this.picker);
     }
 
@@ -112,5 +119,6 @@ public class GuiImageMorph extends GuiAbstractMorph
         this.picker.fill(image.texture);
         this.scale.setValue(image.scale);
         this.shaded.button.setIsChecked(image.shaded);
+        this.lighting.button.setIsChecked(image.lighting);
     }
 }

@@ -147,13 +147,18 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     {
         this.entry = entry;
 
-        if (this.morphPicker != null)
+        if (entry != null)
         {
-            this.morphPicker.setSelected(entry.morph);
+            if (this.morphPicker != null)
+            {
+                this.morphPicker.setSelected(entry.morph);
+            }
+
+            this.duration.setValue(entry.duration);
+            this.getMorph().currentMorph = entry.morph;
         }
 
-        this.duration.setValue(entry.duration);
-        this.elements.setVisible(true);
+        this.elements.setVisible(entry != null);
     }
 
     @Override
@@ -178,6 +183,22 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     public SequencerMorph getMorph()
     {
         return (SequencerMorph) this.morph;
+    }
+
+    @Override
+    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    {
+        try
+        {
+            AbstractMorph morph = this.getMorph().currentMorph;
+
+            if (morph != null)
+            {
+                morph.renderOnScreen(this.mc.player, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
+            }
+        }
+        catch (Exception e)
+        {}
     }
 
     @Override
