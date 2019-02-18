@@ -79,7 +79,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
 
                 this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
                 this.morphPicker.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-                this.morphPicker.callback = (morph) -> this.entry.morph = morph;
+                this.morphPicker.callback = (morph) -> this.setMorph(morph);
 
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
@@ -125,6 +125,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         this.data.resizer().y(1, -55);
 
         this.finish.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -25);
+    }
+
+    private void setMorph(AbstractMorph morph)
+    {
+        if (this.entry != null)
+        {
+            this.entry.morph = morph;
+            this.getMorph().currentMorph = morph;
+        }
     }
 
     private void toggleNbt()

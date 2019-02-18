@@ -21,7 +21,7 @@ public class GuiRecordList extends GuiElement
 
         this.panel = panel;
         this.records = new GuiStringSearchListElement(mc, (str) -> this.panel.selectRecord(str));
-        this.records.resizer().parent(this.area).set(10, 35, 0, 0).h(1, -35).w(1, -20);
+        this.records.resizer().parent(this.area).set(10, 35, 0, 0).h(1, -45).w(1, -20);
         this.records.label = I18n.format("blockbuster.gui.search") + "...";
 
         this.createChildren().children.add(this.records);
