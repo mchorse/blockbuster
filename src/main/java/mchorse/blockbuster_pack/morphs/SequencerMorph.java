@@ -168,6 +168,7 @@ public class SequencerMorph extends AbstractMorph
         }
 
         morph.reverse = this.reverse;
+        morph.currentMorph = this.currentMorph;
 
         return morph;
     }
@@ -259,6 +260,11 @@ public class SequencerMorph extends AbstractMorph
                 if (morphTag.hasKey("Morph", NBT.TAG_COMPOUND))
                 {
                     morph = MorphManager.INSTANCE.morphFromNBT(morphTag.getCompoundTag("Morph"));
+                }
+
+                if (i == 0)
+                {
+                    this.currentMorph = morph;
                 }
 
                 SequenceEntry entry = new SequenceEntry(morph);
