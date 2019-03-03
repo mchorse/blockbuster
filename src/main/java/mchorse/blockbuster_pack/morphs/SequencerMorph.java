@@ -133,6 +133,10 @@ public class SequencerMorph extends AbstractMorph
         this.updateMorph(this.timer);
     }
 
+    /**
+     * Update the current morph, make sure that we have currently the 
+     * correct morph.
+     */
     protected void updateMorph(float timer)
     {
         if (timer >= this.duration)
@@ -158,9 +162,20 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.currentMorph = entry.morph;
+                this.setCurrentMorph(entry.morph);
                 this.duration += entry.duration;
             }
+        }
+    }
+
+    /**
+     * Set current morph, make sure it's mergeable and stuff 
+     */
+    public void setCurrentMorph(AbstractMorph morph)
+    {
+        if (this.currentMorph == null || (this.currentMorph != null && !this.currentMorph.canMerge(morph)))
+        {
+            this.currentMorph = morph;
         }
     }
 
@@ -275,7 +290,7 @@ public class SequencerMorph extends AbstractMorph
 
                 if (i == 0)
                 {
-                    this.currentMorph = morph;
+                    this.setCurrentMorph(morph);
                 }
 
                 SequenceEntry entry = new SequenceEntry(morph);
