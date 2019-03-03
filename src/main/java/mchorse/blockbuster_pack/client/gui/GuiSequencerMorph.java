@@ -95,10 +95,10 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         {
             if (this.entry != null)
             {
-                this.entry.duration = value.intValue();
+                this.entry.duration = value;
             }
         });
-        this.duration.setLimit(0, Float.MAX_VALUE, true);
+        this.duration.setLimit(0, Float.MAX_VALUE, false);
 
         this.reverse = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.sequencer.reverse"), false, (b) ->
         {
