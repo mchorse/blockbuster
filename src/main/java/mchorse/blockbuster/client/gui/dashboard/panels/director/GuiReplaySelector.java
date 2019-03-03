@@ -26,8 +26,8 @@ public class GuiReplaySelector extends GuiElement
 {
     private Director director;
     private Consumer<Replay> callback;
-    private ScrollArea scroll;
-    private int current = -1;
+    public ScrollArea scroll;
+    public int current = -1;
 
     public GuiReplaySelector(Minecraft mc, Consumer<Replay> callback)
     {

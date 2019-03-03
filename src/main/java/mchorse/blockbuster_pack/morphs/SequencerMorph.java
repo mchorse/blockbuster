@@ -50,7 +50,7 @@ public class SequencerMorph extends AbstractMorph
     /**
      * Duration of the current  
      */
-    public int duration;
+    public float duration;
 
     /**
      * Reverse playback 
@@ -93,6 +93,8 @@ public class SequencerMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        this.updateMorph(this.timer + partialTicks);
+
         if (this.currentMorph != null)
         {
             this.currentMorph.render(entity, x, y, z, entityYaw, partialTicks);
@@ -127,7 +129,17 @@ public class SequencerMorph extends AbstractMorph
      */
     protected void updateCycle()
     {
-        if (this.timer++ >= this.duration)
+        this.timer++;
+        this.updateMorph(this.timer);
+    }
+
+    /**
+     * Update the current morph, make sure that we have currently the 
+     * correct morph.
+     */
+    protected void updateMorph(float timer)
+    {
+        if (timer >= this.duration)
         {
             int size = this.morphs.size();
 
@@ -136,21 +148,34 @@ public class SequencerMorph extends AbstractMorph
             if (this.current >= size)
             {
                 this.current = 0;
+                this.timer = 0;
+                this.duration = 0;
             }
             else if (this.current < 0)
             {
                 this.current = size - 1;
+                this.timer = 0;
+                this.duration = 0;
             }
 
             if (this.current >= 0 && this.current < size)
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.currentMorph = entry.morph;
-                this.duration = entry.duration;
+                this.setCurrentMorph(entry.morph);
+                this.duration += entry.duration;
             }
+        }
+    }
 
-            this.timer = 0;
+    /**
+     * Set current morph, make sure it's mergeable and stuff 
+     */
+    public void setCurrentMorph(AbstractMorph morph)
+    {
+        if (this.currentMorph == null || (this.currentMorph != null && !this.currentMorph.canMerge(morph)))
+        {
+            this.currentMorph = morph;
         }
     }
 
@@ -206,7 +231,8 @@ public class SequencerMorph extends AbstractMorph
     {
         super.reset();
 
-        this.timer = this.current = this.duration = 0;
+        this.timer = this.current = 0;
+        this.duration = 0;
         this.reverse = false;
         this.currentMorph = null;
         this.morphs.clear();
@@ -233,7 +259,7 @@ public class SequencerMorph extends AbstractMorph
                     entryTag.setTag("Morph", morphTag);
                 }
 
-                entryTag.setInteger("Duration", entry.duration);
+                entryTag.setFloat("Duration", entry.duration);
                 list.appendTag(entryTag);
             }
 
@@ -264,14 +290,14 @@ public class SequencerMorph extends AbstractMorph
 
                 if (i == 0)
                 {
-                    this.currentMorph = morph;
+                    this.setCurrentMorph(morph);
                 }
 
                 SequenceEntry entry = new SequenceEntry(morph);
 
                 if (morphTag.hasKey("Duration", NBT.TAG_ANY_NUMERIC))
                 {
-                    entry.duration = morphTag.getInteger("Duration");
+                    entry.duration = morphTag.getFloat("Duration");
                 }
 
                 this.morphs.add(entry);
@@ -290,14 +316,14 @@ public class SequencerMorph extends AbstractMorph
     public static class SequenceEntry
     {
         public AbstractMorph morph;
-        public int duration = 5;
+        public float duration = 5;
 
         public SequenceEntry(AbstractMorph morph)
         {
             this.morph = morph;
         }
 
-        public SequenceEntry(AbstractMorph morph, int duration)
+        public SequenceEntry(AbstractMorph morph, float duration)
         {
             this.morph = morph;
             this.duration = duration;

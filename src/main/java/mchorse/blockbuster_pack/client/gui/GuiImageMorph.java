@@ -1,7 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -109,14 +108,12 @@ public class GuiImageMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         ImageMorph image = this.getMorph();
-        BlockbusterTree tree = ClientProxy.fileTree;
 
-        tree.rebuild();
-        this.picker.picker.setList(tree.getEntryForName("image").entries);
-        this.picker.picker.update();
-
-        this.picker.picker.sort();
+        this.picker.tree = ClientProxy.fileTree;
+        this.picker.tree.rebuild();
         this.picker.fill(image.texture);
+        this.picker.picker.sort();
+
         this.scale.setValue(image.scale);
         this.shaded.button.setIsChecked(image.shaded);
         this.lighting.button.setIsChecked(image.lighting);

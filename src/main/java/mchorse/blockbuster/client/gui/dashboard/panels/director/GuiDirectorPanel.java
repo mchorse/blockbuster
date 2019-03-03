@@ -180,7 +180,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         /* Additional utility buttons */
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
         {
-            mchorse.blockbuster.client.gui.utils.GuiUtils.unfocusAllTextFields(this.children);
+            this.children.unfocus();
             this.dashboard.morphs.setVisible(true);
         });
         element.resizer().set(10, 70, 80, 20).parent(this.area).x(0.5F, -40).y(1, -86);
@@ -375,6 +375,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.director.dupe(this.director.replays.indexOf(this.replay), true);
         this.selector.update();
+
+        this.setReplay(this.director.replays.get(this.director.replays.size() - 1));
+        this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
     }
 
     /**

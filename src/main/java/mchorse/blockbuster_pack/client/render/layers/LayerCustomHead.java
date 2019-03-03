@@ -132,7 +132,7 @@ public class LayerCustomHead implements LayerRenderer<EntityLivingBase>
             /* Custom block rendering */
             GlStateManager.translate(-w / 4 + offsetX, h / 4 - offsetY, d / 4 - offsetZ);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.scale(0.5625F * w, -0.5625F * h, -0.5625F * d);
+            GlStateManager.scale(0.625F * w, -0.625F * h, -0.625F * d);
 
             mc.getItemRenderer().renderItem(entity, stack, ItemCameraTransforms.TransformType.HEAD);
         }
