@@ -73,6 +73,13 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
             IBlockState state = this.getWorld().getBlockState(this.pos);
             boolean hidden = state.getValue(BlockDirector.HIDDEN);
 
+            if (state.getBlock() != Blockbuster.directorBlock)
+            {
+                this.invalidate();
+
+                return;
+            }
+
             if (playing > 0 && !hidden)
             {
                 this.getWorld().setBlockState(this.pos, state.withProperty(BlockDirector.HIDDEN, true));
@@ -236,6 +243,13 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     public void playBlock(boolean isPlaying, boolean isHidden)
     {
         IBlockState state = this.world.getBlockState(this.pos);
+
+        if (state.getBlock() != Blockbuster.directorBlock)
+        {
+            this.invalidate();
+
+            return;
+        }
 
         if (!this.director.disableStates)
         {

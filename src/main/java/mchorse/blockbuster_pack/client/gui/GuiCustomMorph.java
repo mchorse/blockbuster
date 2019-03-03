@@ -4,7 +4,6 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.DummyEntity;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -158,14 +157,11 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.materialList.setCurrent(str);
 
         ResourceLocation rl = this.getMorph().materials.get(str);
-        BlockbusterTree tree = ClientProxy.fileTree;
 
-        tree.rebuild();
-        this.materialPicker.picker.setList(tree.getEntryForName(this.getMorph().getKey()).entries);
-        this.materialPicker.picker.update();
-
-        this.materialPicker.picker.sort();
+        this.materialPicker.tree = ClientProxy.fileTree;
+        this.materialPicker.tree.rebuild();
         this.materialPicker.fill(rl);
+        this.materialPicker.picker.sort();
     }
 
     private void setCurrentMaterialRL(ResourceLocation rl)
@@ -254,17 +250,12 @@ public class GuiCustomMorph extends GuiAbstractMorph
         super.startEdit(morph);
 
         CustomMorph custom = (CustomMorph) morph;
-        String key = custom.getKey();
-        String skinsKey = custom.model.skins;
 
-        BlockbusterTree tree = ClientProxy.fileTree;
-
-        tree.rebuild();
-        this.textures.picker.setList(tree.getEntryForName(skinsKey.isEmpty() ? key : skinsKey).entries);
-        this.textures.picker.update();
-
-        this.textures.picker.sort();
+        this.textures.tree = ClientProxy.fileTree;
+        this.textures.tree.rebuild();
         this.textures.fill(custom.skin);
+        this.textures.picker.sort();
+
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
 

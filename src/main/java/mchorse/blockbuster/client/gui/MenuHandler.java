@@ -3,12 +3,18 @@ package mchorse.blockbuster.client.gui;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelPack;
+import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
+import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.metamorph.api.events.ReloadMorphs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +26,46 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MenuHandler
 {
+    public static final ResourceLocation TEXTURES = new ResourceLocation("blockbuster:textures/gui/model_editor.png");
+
+    /**    
+    * Button in the main menu to get into model editor 
+    */
+    public GuiTextureButton openModelEditor;
+
+    public MenuHandler()
+    {
+        this.openModelEditor = new GuiTextureButton(-300, 5, 5, TEXTURES);
+        this.openModelEditor.setTexPos(0, 0).setActiveTexPos(0, 16);
+    }
+
+    @SubscribeEvent
+    public void onGuiInit(InitGuiEvent event)
+    {
+        GuiScreen screen = event.getGui();
+
+        if (screen instanceof GuiIngameMenu)
+        {
+            event.getButtonList().add(this.openModelEditor);
+        }
+    }
+
+    @SubscribeEvent
+    public void onActionPerformed(ActionPerformedEvent event)
+    {
+        GuiScreen screen = event.getGui();
+
+        if (screen instanceof GuiIngameMenu)
+        {
+            if (event.getButton() == this.openModelEditor)
+            {
+                GuiDashboard dashboard = ClientProxy.getDashboard(screen instanceof GuiMainMenu);
+
+                dashboard.open().openPanel(dashboard.modelEditorPanel);
+            }
+        }
+    }
+
     /**
      * Refresh models, skins and morphs upon entering in Metamorph and/or
      * Blockbuster GUIs.

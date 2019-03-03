@@ -81,6 +81,8 @@ public class ImageMorph extends AbstractMorph
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 
+        GlStateManager.enableRescaleNormal();
+
         if (!this.shaded)
         {
             RenderHelper.disableStandardItemLighting();
@@ -112,6 +114,8 @@ public class ImageMorph extends AbstractMorph
         {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         }
+
+        GlStateManager.disableRescaleNormal();
     }
 
     private void renderPicture(float scale, boolean flipX)

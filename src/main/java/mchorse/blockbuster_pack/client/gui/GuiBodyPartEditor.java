@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
-import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster_pack.client.render.part.BodyPart;
 import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -110,8 +109,7 @@ public class GuiBodyPartEditor extends GuiElement
                 this.children.add(this.morphPicker);
             }
 
-            GuiUtils.unfocusAllTextFields(this.children);
-
+            this.children.unfocus();
             this.morphPicker.setSelected(this.part.part.morph);
             this.morphPicker.setVisible(true);
         });
