@@ -180,7 +180,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         /* Additional utility buttons */
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
         {
-            mchorse.blockbuster.client.gui.utils.GuiUtils.unfocusAllTextFields(this.children);
+            this.children.unfocus();
             this.dashboard.morphs.setVisible(true);
         });
         element.resizer().set(10, 70, 80, 20).parent(this.area).x(0.5F, -40).y(1, -86);

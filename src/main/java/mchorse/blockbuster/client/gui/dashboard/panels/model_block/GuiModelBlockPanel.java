@@ -7,7 +7,6 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
@@ -132,7 +131,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         /* Buttons */
         this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (button) ->
         {
-            GuiUtils.unfocusAllTextFields(this.children);
+            this.children.unfocus();
             this.dashboard.morphs.setVisible(true);
         }));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()).tooltip(I18n.format("blockbuster.gui.model_block.one_tooltip"), TooltipDirection.LEFT));

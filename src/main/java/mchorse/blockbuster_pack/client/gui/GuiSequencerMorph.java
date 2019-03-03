@@ -3,7 +3,6 @@ package mchorse.blockbuster_pack.client.gui;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
-import mchorse.blockbuster.client.gui.utils.GuiUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -87,8 +86,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
                 this.children.add(this.morphPicker);
             }
 
-            GuiUtils.unfocusAllTextFields(this.children);
-
+            this.children.unfocus();
             this.morphPicker.setSelected(this.entry == null ? null : this.entry.morph);
             this.morphPicker.setVisible(true);
         });
