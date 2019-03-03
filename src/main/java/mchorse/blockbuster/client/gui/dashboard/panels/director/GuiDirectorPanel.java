@@ -375,6 +375,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.director.dupe(this.director.replays.indexOf(this.replay), true);
         this.selector.update();
+
+        this.setReplay(this.director.replays.get(this.director.replays.size() - 1));
+        this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
     }
 
     /**
