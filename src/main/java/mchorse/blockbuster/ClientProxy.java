@@ -23,6 +23,7 @@ import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
+import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -67,7 +68,6 @@ public class ClientProxy extends CommonProxy
     public static RenderCustomActor actorRenderer;
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
-    public static BlockbusterTree fileTree;
 
     /**
      * Create dashboard GUI dynamically 
@@ -147,7 +147,7 @@ public class ClientProxy extends CommonProxy
             actorPack.pack.reload();
 
             /* File tree */
-            fileTree = new BlockbusterTree(actorPack.pack.folders.get(0));
+            GlobalTree.TREE.trees.add(new BlockbusterTree(actorPack.pack.folders.get(0)));
 
             /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();

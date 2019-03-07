@@ -1,6 +1,5 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
@@ -158,8 +157,6 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         ResourceLocation rl = this.getMorph().materials.get(str);
 
-        this.materialPicker.tree = ClientProxy.fileTree;
-        this.materialPicker.tree.rebuild();
         this.materialPicker.fill(rl);
         this.materialPicker.picker.sort();
     }
@@ -251,8 +248,6 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         CustomMorph custom = (CustomMorph) morph;
 
-        this.textures.tree = ClientProxy.fileTree;
-        this.textures.tree.rebuild();
         this.textures.fill(custom.skin);
         this.textures.picker.sort();
 
