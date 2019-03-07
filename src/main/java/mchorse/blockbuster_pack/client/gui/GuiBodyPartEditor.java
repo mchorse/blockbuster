@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
-import mchorse.blockbuster_pack.client.render.part.BodyPart;
-import mchorse.blockbuster_pack.client.render.part.MorphBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -15,6 +13,8 @@ import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.bodypart.MorphBodyPart;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
