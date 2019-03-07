@@ -1,6 +1,5 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -109,8 +108,6 @@ public class GuiImageMorph extends GuiAbstractMorph
 
         ImageMorph image = this.getMorph();
 
-        this.picker.tree = ClientProxy.fileTree;
-        this.picker.tree.rebuild();
         this.picker.fill(image.texture);
         this.picker.picker.sort();
 

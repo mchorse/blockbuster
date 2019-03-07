@@ -25,6 +25,7 @@ public class BlockbusterTree extends FileTree
     public BlockbusterTree(File folder)
     {
         this.folder = folder;
+        this.root.title = "b.a";
     }
 
     @Override
