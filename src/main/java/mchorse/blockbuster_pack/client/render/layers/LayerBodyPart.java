@@ -6,8 +6,8 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
-import mchorse.blockbuster_pack.client.render.part.BodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 
