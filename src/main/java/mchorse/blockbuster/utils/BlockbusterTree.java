@@ -43,11 +43,10 @@ public class BlockbusterTree extends FileTree
             if (file.isDirectory())
             {
                 FolderEntry entry = new FolderEntry(file.getName(), this.root);
-                File skins = new File(file, "skins");
 
-                if (skins.isDirectory())
+                if (file.isDirectory())
                 {
-                    this.addEntries(skins, entry, file.getName() + "/skins");
+                    this.addEntries(file, entry, file.getName());
                 }
 
                 /* Skip empty folder */
