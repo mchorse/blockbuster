@@ -18,7 +18,6 @@ blockbuster.gui:
     break: Сломать
     select: Выбрать
     ok: Oк
-    no_data: Доступная информация отсутствует...
     
     # Morphs popup strings
     morphs:
@@ -37,6 +36,7 @@ blockbuster.gui:
         model: Блок-модель
         model_editor: Редактор моделей
         player_recording: Редактор записей игрока
+        texture: Менеджер текстур
     
     # Main page of dashboard
     main:
@@ -216,6 +216,22 @@ blockbuster.gui:
         limbs: Конечности
         body_parts: Части тела
         use_target: Использовать цель
+
+    sequencer:
+        duration: Длина
+        reverse: Реверсировать
+        no_morph: (Морф отсутствует)
+        morphs: Морфы
+    
+    texture:
+        title: Менеджер текстур
+        subtitle: Этот интерфейс позволяет вам видеть и управлять загруженными Майнкрафтом текстурами во время игры
+        linear: Линейный
+        linear_tooltip: Если включено, то текстуры будут выглядеть гладко
+        mipmap: Mipmap
+        mipmap_tooltip: Если включено, то текстуры на дальних расстояниях будут выглядеть более детализированно
+        replace: Заменить
+        replace_modal: "Впишите директорию {l}уже загруженной{r} текстуры, которую вы хотите заменить на:"
     
     aperture:
         config:

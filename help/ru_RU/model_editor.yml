@@ -19,6 +19,7 @@ blockbuster.gui.me:
         mirror: Отражен
         lighting: Светится
         shading: Затенён
+        smooth: Гладкий
         hold: Предмет в руке
         none: Никакой
         right: Правой
