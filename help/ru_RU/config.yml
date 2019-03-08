@@ -8,6 +8,7 @@ blockbuster.config:
         auto_refresh_models: Автоматическое обновление скинов и моделей
         debug_playback_ticks: Тики отладки
         green_screen_sky: Зелёное небо
+        url_skins_sync_download: Синхронная загрузка ссылок
     
     model_block:
         title: Блоки-модели
@@ -34,6 +35,7 @@ blockbuster.config:
         actor_rendering_range: Диапазон отображения актеров
         actor_always_render_names: Всегда отображать имена актеров
         actor_swish_swipe: Вжух взмаха
+        actor_y: Исправить движение по оси Y
 
     damage_control:
         title: Контроль урона
