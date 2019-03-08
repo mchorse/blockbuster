@@ -12,6 +12,9 @@ blockbuster:
         model_block: Позволяет использовать морфы как статичные модели
         green_block: "%s хромаблок. Может быть использован для хромакеинга."
 
+    morph.sequencer: Секвенсер
+
+
 # Creative tabs
 itemGroup.blockbuster: Блокбастер
 
