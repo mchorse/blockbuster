@@ -144,12 +144,12 @@ public class BlockbusterFactory implements IMorphFactory
 
             for (String str : this.models.pack.getSkins(original.model.skins))
             {
-                skins.add(original.model.skins + "/" + str);
+                skins.add(original.model.skins + "/skins/" + str + ".png");
             }
 
             for (String str : this.models.pack.getSkins(key))
             {
-                skins.add(key + "/" + str);
+                skins.add(key + "/skins/" + str + ".png");
             }
 
             for (String skin : skins)
