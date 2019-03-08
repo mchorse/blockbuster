@@ -117,7 +117,7 @@ public class CameraHandler
     public static void handlePlaybackItem(EntityPlayer player, NBTTagCompound tag)
     {
         /* To allow actors using playback item without a crash */
-        if (player instanceof EntityPlayerMP && server)
+        if (player instanceof EntityPlayerMP)
         {
             if (tag.hasKey("CameraPlay"))
             {
