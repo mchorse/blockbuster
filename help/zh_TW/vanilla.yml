@@ -11,7 +11,9 @@ blockbuster:
         director_block: 管理回放和演員的方塊
         model_block: 以靜態方式放置偽裝實體
         green_block: "%s 色度方塊。可以用它來摳像。"
-        
+
+    morph.sequencer: 序列產生器
+
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
 

@@ -19,6 +19,7 @@ blockbuster.gui.me:
         mirror: 鏡像
         lighting: 光
         shading: 陰影
+        smooth: 平滑
         hold: 拿著物品
         none: 無
         right: 右
