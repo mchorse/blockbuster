@@ -4,7 +4,7 @@ blockbuster:
         playback_button: 切換導演方塊
         playback_director: 鏈接到 ({r}%d{7}, {r}%d{7}, {r}%d{7})
         playback_profile: 回放配置檔案 "{f}{o}%s{r}{7}"
-        playback_play: 回放攝像機
+        playback_play: 回放攝影機
 
         actor_config: 在演員上使用
         register: 關聯演員到導演方塊
@@ -25,8 +25,8 @@ tile.blockbuster:
 item:
     blockbuster:
         playback.name: 播放按鈕
-        register.name: 激活設備
-        actor_config.name: 演員設定設備
+        register.name: 激活裝置
+        actor_config.name: 演員設定裝置
 
 # Entity names
 entity.blockbuster.Actor.name: 演員
