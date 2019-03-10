@@ -5,6 +5,7 @@ blockbuster.config.comments:
         auto_refresh_models: 当进入 Metamorph 或 Blockbuster 的 GUI 时，自动刷新模型和皮肤？
         debug_playback_ticks: 当导演方块录制时，将 tick 时间写入日志文件
         green_screen_sky: 将天空完全变绿，用来键控抠像
+        url_skins_sync_download: 同步的下载来自 URL 的皮肤。它可能会在下载 3D 外表层的时候导致游戏假死。
 
     model_block:
         model_block_disable_item_rendering: 是否要关闭模型方块的物品渲染（有人想要关掉吗？）
@@ -25,6 +26,7 @@ blockbuster.config.comments:
         actor_rendering_range: 演员多远可见？
         actor_always_render_names: 开启无条件渲染演员名称
         actor_swish_swipe: 当演员挥手时是否产生刷刷声？
+        actor_y: 让演员使用正确的 Y 坐标值（可修复飞行时和跳跃时的问题，但会导致 Y 轴上的运动不平滑）
 
     damage_control:
         damage_control: 伤害控制是否开启

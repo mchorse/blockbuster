@@ -8,6 +8,7 @@ blockbuster.config:
         auto_refresh_models: 刷新模型和皮膚
         debug_playback_ticks: Debug ticks
         green_screen_sky: 綠色的天空
+        url_skins_sync_download: 同步的 URL 下載
         
     model_block:
         title: 模型方塊
@@ -34,6 +35,7 @@ blockbuster.config:
         actor_rendering_range: 演員渲染範圍
         actor_always_render_names: 總是渲染演員的名稱
         actor_swish_swipe: 手臂劃動刷刷聲
+        actor_y: 修復 Y 軸的運動
 
     damage_control:
         title: 傷害控制

@@ -13,12 +13,12 @@ blockbuster.success:
         stop: "{f}在(%s{f}, %s{f}, %s{f})的導演方塊已經停止播放了！"
         
         was_registered: "{f}這個演員已經鏈接到了導演方塊！"
-        attached_device: "{f}這個激活設備已經鏈接到了導演方塊！"
+        attached_device: "{f}這個激活裝置已經鏈接到了導演方塊！"
         attached_button: "{f}這個播放按鈕已經鏈接到了導演方塊！"
     
     model:
         export:
-            saved: "{f}實體模型 %s{f} 已經保存在 %s{f}。"
+            saved: "{f}實體模型 %s{f} 已經儲存在 %s{f}。"
             obj: "{f}成功導出了 %s{f} 模型的 OBJ！"
         
         reload: "{f}伺服器已經重載了模型！"
