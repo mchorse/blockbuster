@@ -1,0 +1,18 @@
+# Recording
+blockbuster:
+    # Parsing
+    parsing:
+        lacks_pose: Le modèle "%s" n'a pas de pose "%s" !
+        lacks_limbs: Le modèle "%s" n'a pas de membre !
+    
+    marker: "{6}{l}|{r} Record {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}difference is {7}%s{6}t{8}){r}."
+    recording: Recording to {7}%s{r}
+    "yes": "Oui"
+    "no": "Non"
+    eggs:
+        yike: "{l}OK{r}, {o}OK{r}, c'était une blague de {7}McHorse{r} ! Revenir à {6}YikeFilms{r}."
+    morph_error: Aucun modèle trouvé.
+
+# Metamorph category
+morph.category.blockbuster: Modèles de Blockbuster
+metamorph.builder.blockbuster: Modèles personnalisés
