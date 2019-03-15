@@ -1,0 +1,65 @@
+# Blockbuster error strings
+#
+# This file is responsible for storing error messages across whole mod (there 
+# are a lot of strings in the mod).
+
+blockbuster.error:
+    # Actor error strings
+    actor:
+        not_attached: "{f}Cet item n'est pas lié à un director block!"
+    
+    # General command errors
+    commands:
+        load_chunks: Impossible de charger tous les chuncks générés dans la distance de rendu ! Consulter les logs pour plus de détails.
+        
+        restore_texture: "{f}La texture %s{f} couldn't be restored, because it wasn't changed by this command."
+        replace_texture: "{f}Les textures %s{f} et %s{f} ne sont chargées"
+        replace_texture_one: "{f}La texture %s{f} n'est pas chargées!"
+        
+        no_player: "{f}Le joueur %s{f} n'a pas été trouvé"
+        no_entity: "{f}Given entity with target selector %s{f}, couldn't be found!"
+        
+        convert_model: "{f}Given wrong model %s{f}! It must be either {7}steve{f} or {7}fred{f}."
+        convert_skin: "{f}Une erreur est survenue durant la conversion au format %s{f}/%s{f} de la skin: %s{f}"
+        convert_skin_size: "{f}La taille du skin est %s{f}x%s{f}, elle ne respecte pas le ratio de 1:1 ou de 2:1 !"
+    
+    # Director block error strings
+    director:
+        playing: "{f}Le director block positionné en (%s{f}, %s{f}, %s{f}) est en lecture !"
+        stopped: "{f}Le director block positionné en (%s{f}, %s{f}, %s{f}) est arrêté !"
+        
+        missing: "{f}Il n'y a pas de director block en (%s{f}, %s{f}, %s{f})!"
+        no_director: "{f}Il n'existe pas de director block en (%s{f}, %s{f}, %s{f})."
+        empty_filename: "{f}Le director block a un replay qui n'a pas d'ID {7}Recording ID{f}. Veuillez renseigner {7}Recording ID{f}."
+    
+    # Errors for /model export
+    model:
+        export:
+            error_save: "{f}Can't save exported model!"
+            wrong_type: "{f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer)."
+            no_model: "{f}Can't export model %s{f} into OBJ, because it wasn't found!"
+            obj: "{f}Couldn't export model %s{f}!"
+        
+        reload: You supposed to be an OP user in order to reload models!
+    
+    # Record command errors
+    record:
+        no_action: "{f}L'enregistrement du joueur %s{f} n'a pas d'action au tick %s{f} !"
+        not_exist: "{f}L'enregistrement du joueur %s{f} n'existe pas !"
+        tick_out_range: "{f}L'action au tick %s{f} n'existe pas ! Elle devrait être entre {7}0{r} et %s{r}."
+        index_out_range: "{f}Index %s{f} is out of range! Should be between {7}0{r} and %s{r}."
+        already_empty: "{f}There are no actions at index %s{r} in player recording %s{r}!"
+        wrong_action: "{f}L'action de type %s{f} n'existe pas !"
+        add: "{f}Action of type %s{f} couldn't be added due to error: %s"
+        already_exists: "{f}Player recording by filename %s{f} already exists!"
+        couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
+        wrong_clean_property: "{f}Given wrong clean property %s{f}!"
+    
+    # Recording errors
+    recording:
+        read: "{f}Le fichier d'enregistrement %s{f} ne peut être lu ({7}ancienne version{f}, {7}corrompu{f}, ou ce n'est pas {7}un fichier d'enregistrement{f})."
+        logout: "{f}Arrêt de l'enregistrement %s{f}, parce que le joueur est déconnecté !"
+        not_found: "{f}Impossible de trouver le fichier d'enregistrement %s{f} !"
+        fill_filename: "{f}Merci de renseigner le champ {7}ID d'enregistrement{f} !"
+        empty_filename: "{f}Impossible d'enregistrer un joueur avec un {7}ID d'enregistrement{f} vide."
+        empty_record: "{f}Impossible de lire le playback %s{f}, parce qu'il est vide !"

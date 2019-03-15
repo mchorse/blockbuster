@@ -1,0 +1,33 @@
+blockbuster.config.comments:
+    general:
+        disable_teleport_playback_button: Permet ou non de se téléporter sur le directorblock en utilisant l'item playback + le sneak
+        extra_wubs: Une option qui ne sert à rien. Peut-être que si...?
+        auto_refresh_models: Rafraîchir les modèles et les skins quand on entre dans l'interface de Metamorph ou de Blockbuster ?
+        debug_playback_ticks: Ecrit les ticks dans le log pendant les enregistrements du director block
+        green_screen_sky: Change le ciel en fond vert pour des effets d'incrustation
+        url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
+
+    model_block:
+        model_block_disable_item_rendering: Désactive le rendu du model block
+
+    recording:
+        recording_countdown: Durée du décompte avant l'enregistrement (en secondes)
+        recording_delay: Frame delay de l'enregistrement
+        record_unload_time: Combien de temps faut-il pour décharger un enregistrement (en ticks)
+        record_unload: Activer le déchargement automatique des enregistrements ?
+        record_sync_rate: À quelle fréquence un enregistrement va-t-il se synchroniser avec le serveur ?
+        record_attack_on_swipe: Does attack action get recorded with swipe action?
+        record_commands: Does command action get recorded during recording?
+        record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)
+
+    actor:
+        actor_fall_damage: Les acteurs peuvent-ils subir des dommages ?
+        actor_tracking_range: Jusqu'à quelle distance les acteurs sont-ils suivis? (Reboot nécessaire).
+        actor_rendering_range: Jusqu'à quelle distance les acteurs sont-ils visibles?
+        actor_always_render_names: Constamment afficher le nom de l'acteur
+        actor_swish_swipe: Do actors emit swish sound when swiping?
+        actor_y: Donne aux acteurs une valeur correcte pour Y (Résoud des problèmes recontrés avec le vol stationnaire ou le saut, mais provoque des mouvements en Y saccadés)
+
+    damage_control:
+        damage_control: Activer ou non le contrôle des dommages terrain (Annule les destructions et reconstruit le terrain après un enregistrement type explosion)
+        damage_control_distance: Rayon auquel s'applique le contrôle des dommages terrain

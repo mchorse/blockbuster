@@ -1,0 +1,10 @@
+# Keys localization
+key:
+    blockbuster:
+        # Categories
+        category: Blockbuster
+        
+        dashboard: Tableau de bord
+        model_editor: Editeur de modèles
+        marker: Marqueur de tick
+        plause_director: Director Lecture/Pause

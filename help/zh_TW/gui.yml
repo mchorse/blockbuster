@@ -5,20 +5,19 @@ blockbuster.gui:
     done: 完成
     next: 下一個
     previous: 上一個
-    restore: 恢復默認
+    restore: 恢復預設
     reset: 初始化
-    add: 添加
+    add: 加入
     edit: 編輯
     remove: 移除
     record: 錄制
-    pick: 選擇生物
+    pick: 選取生物
     duplicate: 拷貝
-    search: 搜索
+    search: 搜尋
     cancel: 取消
     break: 破壞
-    select: 選擇
+    select: 選取
     ok: 好
-    no_data: 沒有數據可用……
     
     # Morphs popup strings
     morphs:
@@ -37,6 +36,7 @@ blockbuster.gui:
         model: 模型方塊
         model_editor: 模型編輯器
         player_recording: 玩家錄制編輯器
+        texture: 材質管理器
     
     # Main page of dashboard
     main:
@@ -50,8 +50,8 @@ blockbuster.gui:
     director:
         title: 導演方塊
         config: 導演方塊選項
-        not_selected: 選擇壹個導演方塊…
-        no_replays: 創建壹個回放…
+        not_selected: 選取一個導演方塊…
+        no_replays: 創建一個回放…
     
         display_title: 顯示標題
         start_command: 開始時執行命令
@@ -68,8 +68,8 @@ blockbuster.gui:
         fake_player: 假玩家
         health: 健康值
         edit_record: 編輯錄制
-        update_data: 更新數據
-        updata_data_tooltip: 更新在錄製檔案中的玩家數據
+        update_data: 更新資料
+        updata_data_tooltip: 更新在錄製檔案中的玩家資料
         rename_prefix: 重新命名前置代號
         rename_prefix_tooltip: 使用新的前置代號來重命名錄製 ID
         rename_prefix_popup: "鍵入一個新的前置代號："
@@ -78,7 +78,7 @@ blockbuster.gui:
     actor:
         title: 演員設定
         
-        default: 默認
+        default: 預設
         name: 名稱
         filename: 錄制 ID
         invincible: 可死亡嗎？
@@ -90,7 +90,7 @@ blockbuster.gui:
     # Model block GUI strings
     model_block:
         title: 模型方塊
-        not_selected: 選擇壹個模型方塊…
+        not_selected: 選取一個模型方塊…
         
         x: X
         "y": "Y"
@@ -110,7 +110,7 @@ blockbuster.gui:
     # Player recording editor GUI strings
     record_editor:
         title: 錄制
-        not_selected: 選擇壹個玩家錄制…
+        not_selected: 選取一個玩家錄制…
         action: 動作
         
         drop: 扔下方塊
@@ -124,16 +124,16 @@ blockbuster.gui:
         actions:
             chat: 
                 title: 聊天
-                desc: 本動作發送壹條消息
+                desc: 本動作傳送一條消息
             swipe: 
                 title: 揮手
                 desc: 本動作讓演員揮動主要手臂
             drop:
                 title: 丟東西
-                desc: 丟下壹個物品（就像按了 Q）
+                desc: 丟下一個物品（就像按了 Q）
             equip:
                 title: 穿戴物品
-                desc: 任何壹只手拿著東西或者穿戴了盔甲
+                desc: 任何一只手拿著東西或者穿戴了盔甲
                 
                 none: 無
                 main_hand: 主要手
@@ -144,16 +144,16 @@ blockbuster.gui:
                 off_hand: 次要手
             shoot_arrow:
                 title: 射箭
-                desc: 以給定的力量射出壹根普通箭
+                desc: 以給定的力量射出一根普通箭
             place_block:
                 title: 放置方塊
-                desc: 在給定的位置上放壹個指定的方塊
+                desc: 在給定的位置上放一個指定的方塊
             mounting:
                 title: 乘坐
                 desc: 乘坐或不乘坐前面的實體
             interact_block:
                 title: 方塊互動
-                desc: 讓演員與壹個方塊互動
+                desc: 讓演員與一個方塊互動
             break_block:
                 title: 破壞方塊
                 desc: 在給定的位置上破壞方塊
@@ -171,7 +171,7 @@ blockbuster.gui:
                 desc: 使用偽裝的動作，如果演員已在偽裝中
             command:
                 title: 命令
-                desc: 使用演員執行壹條命令
+                desc: 使用演員執行一條命令
             break_animation:
                 title: 破壞方塊動畫
                 desc: 在給定的方塊位置上進行裂痕動畫
@@ -192,7 +192,7 @@ blockbuster.gui:
     # Playback GUI
     playback:
         title: 播放設定
-        camera_mode: 攝像機模式
+        camera_mode: 攝影機模式
         profile: 檔案檔案名稱
 
         nothing: 什麽都不做
@@ -215,6 +215,23 @@ blockbuster.gui:
         limbs: 肢體
         body_parts: 身體部分
         use_target: 使用目標
+        
+    sequencer:
+        duration: 持續長度
+        reverse: 反轉
+        no_morph: （無偽裝）
+        morphs: 偽裝
+    
+    texture:
+        title: 材質管理器
+        subtitle: 此頁面可用于檢視和管理已在 Minecraft 運行時中載入的材質。
+        linear: 線性
+        linear_tooltip: 開啟后，材質會看起來平滑
+        mipmap: Mipmap
+        mipmap_tooltip: 開啟后，在遠方看的噪點會變少
+        replace: 替換
+        replace_modal: "請鍵入一個指向 {l}已載入的{r} 材質資源的位置，用作替換："
+    
         
     aperture:
         config:

@@ -1,0 +1,93 @@
+blockbuster.gui.me:
+    pick: Pick
+    none: "(none)"
+    
+    hitbox: Hitbox
+    looking: Looking
+    
+    limbs:
+        title: Limbs
+        
+        size: Limb size
+        texture: Texture offset
+        anchor: Anchor point
+        origin: OBJ origin
+        slot: Armor slot
+        
+        color: Color
+        opacity: Opacity
+        mirror: Mirror
+        lighting: Lighting
+        shading: Shading
+        smooth: Smooth
+        hold: Held items
+        none: None
+        right: Right
+        left: Left
+        
+        swiping: Swiping
+        looking: Looking
+        swinging: Swinging
+        idle: Idle
+        invert: Invert
+        wheel: Wheel
+        wing: Wing
+        
+        rename: Rename
+        parent: Parent
+        page: Switch page
+        
+        new_limb: Type in a name for a new limb...
+        last_limb: You can't remove the last limb...
+        rename_limb: "Rename current limb by typing in a new name:"
+        parent_limb: "Choose the parent limb for currently selected limb..."
+        
+        slots:
+            none: None
+            head: Helmet
+            chest: Chestplate
+            left_shoulder: Left shoulder
+            right_shoulder: Right shoulder
+            leggings: Body legs
+            left_leg: Left leg
+            right_leg: Right leg
+            left_foot: Left shoe
+            right_foot: Right shoe
+    
+    models:
+        title: Models
+        save: Save model
+        export: Create model from mob
+        name: "Enter name for the model:"
+        pick: "Pick mob you want to export limbs from:"
+        error: "Whoops, couldn't create a model, because an error happened: %s"
+    
+    options:
+        name: Display name
+        texture: Texture size
+        scale: Global scale
+        scale_gui: GUI scale
+        default: Default texture
+        skins: Skins folder
+        provides_obj: Provides OBJ
+        provides_mtl: Provides MTL
+    
+    poses:
+        title: Poses
+        new_pose: "Type in a name for a new pose:"
+        import_pose: "Type here NBT data of a pose to import it into current pose:"
+        import_pose_tooltip: "Import pose properties with NBT tag"
+        copy_pose: "Select the pose from which you want to copy properties for current limb."
+        copy_pose_tooltip: "Copy pose properties from another pose"
+        standard: "You cannot remove one of the standard poses..."
+        hitbox: Hitbox
+    
+    tooltips:
+        models: Models
+        poses: Poses
+        options: Model options
+        limbs: Limbs
+        
+        swipe: Swipe
+        swing: Toggle swing
+        items: Toggle items
