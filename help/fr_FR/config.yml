@@ -1,0 +1,44 @@
+# Config strings
+blockbuster.config:
+    general:
+        title: General
+        
+        disable_teleport_playback_button: Disable playback button teleport
+        extra_wubs: Extra Wubs
+        auto_refresh_models: Refresh models and skins
+        debug_playback_ticks: Debug ticks
+        green_screen_sky: Green sky
+        url_skins_sync_download: Synchronous URL downloads
+    
+    model_block:
+        title: Model block
+        
+        model_block_disable_item_rendering: Disable item rendering
+    
+    recording:
+        title: Recording
+
+        recording_countdown: Recording countdown
+        recording_delay: Recording frame skip
+        record_unload_time: Automatic record unload time
+        record_unload: Automatic record unloading
+        record_sync_rate: Record tick synchronization rate
+        record_attack_on_swipe: Attack on swipe
+        record_commands: Record commands
+        record_chat_prefix: Chat action prefix
+    
+    actor:
+        title: Actor
+        
+        actor_fall_damage: Actor fall damage
+        actor_tracking_range: Actor tracking range
+        actor_rendering_range: Actor rendering range
+        actor_always_render_names: Always render actor names
+        actor_swish_swipe: Swipe swish
+        actor_y: Fix Y motion
+
+    damage_control:
+        title: Damage control
+        
+        damage_control: Damage control
+        damage_control_distance: Damage distance

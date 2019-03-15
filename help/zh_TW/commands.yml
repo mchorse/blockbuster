@@ -16,31 +16,31 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
                     
-                    {r}添加一個動作，玩家通過 {7}<filename>{r} 在 {7}<tick>{r} 時間，和 {7}<action_type>{r} 的類別，加上在 {7}[data_tag]{r} 附加的的數據，導入錄制。
+                    {r}加入一個動作，玩家通過 {7}<filename>{r} 在 {7}<tick>{r} 時間，和 {7}<action_type>{r} 的類別，加上在 {7}[data_tag]{r} 附加的的資料，導入錄制。
             
             clean:
                 |
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
                     
-                    {r}這個命令會清除來自 {7}<filename>{r} 玩家錄制中給予的 {7}<property>{r}，從 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定義在 {7}[value]{r} 參數（接受絕對值），{7}[from]{r} tick 或者第壹幀。
+                    {r}這個命令會清除來自 {7}<filename>{r} 玩家錄制中給予的 {7}<property>{r}，從 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定義在 {7}[value]{r} 參數（接受絕對值），{7}[from]{r} tick 或者第一幀。
             
             dupe:
                 |
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
-                    {r}這個命令會將 {7}<filename>{r} 玩家錄制拷貝壹份到名為 {7}<new_filename>{r} 的新玩家錄制。
+                    {r}這個命令會將 {7}<filename>{r} 玩家錄制拷貝一份到名為 {7}<new_filename>{r} 的新玩家錄制。
             
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
                     
-                    {r}輸出數據在 {7}<tick>{r} 找到的動作在玩家錄制檔案 {7}<filename>{r}。
+                    {r}輸出資料在 {7}<tick>{r} 找到的動作在玩家錄制檔案 {7}<filename>{r}。
             
             info:
                 |
                     {l}{6}/{r}record {8}info{r} {7}<filename>{r}
                     
-                    {r}以 {7}<filename>{r} 輸出玩家錄制的數據，例如已保存的錄制版本，錄制時長...
+                    {r}以 {7}<filename>{r} 輸出玩家錄制的資料，例如已儲存的錄制版本，錄制時長...
             
             remove:
                 |
@@ -52,13 +52,13 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
                     
-                    {r}搜索動作，自願限制在 {7}[limit]{r}，給予的 {7}<action_type>{r} ，輸出tick時間，自願輸出數據標簽，在檔案名 {7}<filename>{r} 裏所找到的。
+                    {r}搜尋動作，自願限制在 {7}[limit]{r}，給予的 {7}<action_type>{r} ，輸出tick時間，自願輸出資料標簽，在檔案名 {7}<filename>{r} 裡所找到的。
                     
             origin:
                 |
                     {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
                     
-                    {r}這個命令會根據 {7}[x] [y] [z]{r}（如果三個都指定了）來改變玩家錄制的源（第壹幀）或者玩家現在的位置。你也許可能會用絕對值來圍繞 Y 軸旋轉玩家錄制。
+                    {r}這個命令會根據 {7}[x] [y] [z]{r}（如果三個都指定了）來改變玩家錄制的源（第一幀）或者玩家現在的位置。你也許可能會用絕對值來圍繞 Y 軸旋轉玩家錄制。
                     
             prolong:
                 |
@@ -70,7 +70,7 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
                     
-                    {r}這個命令會傳送玩家到名為 {7}<filename>{r} 玩家錄制中的第壹幀（或者指定的 {7}[tick]{r} 幀，如果有的話）
+                    {r}這個命令會傳送玩家到名為 {7}<filename>{r} 玩家錄制中的第一幀（或者指定的 {7}[tick]{r} 幀，如果有的話）
 
         # Model's commands
         model:
@@ -88,7 +88,7 @@ blockbuster:
                 |
                     {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
                     
-                    {r}轉換名為 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默認材質，如果存在的話也包括 MTL 檔案）。導出的 OBJ 模型在 Blockbuster 的 config 檔案夾中的 {l}export{r} 檔案夾。
+                    {r}轉換名為 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括預設材質，如果存在的話也包括 MTL 檔案）。導出的 OBJ 模型在 Blockbuster 的 config 檔案夾中的 {l}export{r} 檔案夾。
 
             clear:
                 |
@@ -100,7 +100,7 @@ blockbuster:
                 |
                     {l}{6}/{r}model {8}reload{r} {7}[force]{r}
                     
-                    {r}強制客戶端和伺服器重載模型（伺服器端只用於 OP 用戶），自定義使用 {7}[force]{r} 參數，如果是 {7}true{r} 的話就也會重新載入壹遍沒有改變時間戳的檔案。
+                    {r}強制客戶端和伺服器重載模型（伺服器端只用於 OP 用戶），自定義使用 {7}[force]{r} 參數，如果是 {7}true{r} 的話就也會重新載入一遍沒有改變時間戳的檔案。
                     
             replace_texture:
                 |
@@ -121,7 +121,7 @@ blockbuster:
                 |
                     {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
                     
-                    {r}播放檔案名 {7}<filename>{r} 裏的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}（模型）和 {7}[skin]{r} 和 {7}[invincibility]{r}（是否隱身）選項（{7}1{r}，{7}0{r}，{7}true{r} 或 {7}false{r} 可用）。
+                    {r}播放檔案名 {7}<filename>{r} 裡的回放。 這個次級命令也可接受自定義參數 {7}[name]{r}（演員的名字），他的 {7}[model]{r}（模型）和 {7}[skin]{r} 和 {7}[invincibility]{r}（是否隱身）選項（{7}1{r}，{7}0{r}，{7}true{r} 或 {7}false{r} 可用）。
             record: 
                 |
                     {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}

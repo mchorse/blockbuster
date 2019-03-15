@@ -1,0 +1,152 @@
+# Commands
+blockbuster:
+    commands:
+        # General commands (no SubCommandBase commands)
+        director: 
+            |
+                {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
+                
+                {r}Démarre, arrête  ou bascule (on/off) le director block positionné en  {7}<x>{r}, {7}<y>{r}, et {7}<z>{r} (Utiliser la touche F3 pour connaitre les coordonnées). Utiliser {7}loop{r} pour une lecture en boucle et {7}disable_state{r} pour la sortie Restone (sur les côtés du director block) en changeant leur {7}[flag]{r} valeur par ({7}true{r} ou {7}false{r}).
+
+        # Record's commands
+        record:
+            help: "{r}{o}Commande /record{r}. Cette commande fournie des sous-commandes pour la gestion des actions enregistrées pour chaque joueur."
+            
+            add: 
+                |
+                    {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}Ajoute une action à l'enregistrement l'acteur {7}<filename>{r} au tick {7}<tick>{r} de type {7}<action_type>{r} et de données complémentaires {7}[data_tag]{r}.
+            
+            clean:
+                |
+                    {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
+                    
+                    {r}Cette commande change la propriété {7}<property>{r} dans l'enregistrement de l'acteur {7}<filename>{r} entre le point d'entrée {7}[from]{r} et le point de sortie {7}[to]{r} ({7}[to]{r} non inclus) avec la valeur {7}[value]{r} si précisée (les valeurs relatives sont acceptées) sinon la valeur au point d'entrée {7}[from]{r} ou à la première frame.
+            
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}Cette commande duplique l'enregistrement de l'acteur {7}<filename>{r} pour créer l'enregistrement du nouvel acteur {7}<new_filename>{r} (Une fois cette commande exécutée, vous devez créer un nouvel acteur au nom de {7}<new_filename>{r} et choisir son morph).
+            
+            get:
+                |
+                    {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
+                    
+                    {r}Affiche les données présentes dans l'enregistrement de l'acteur {7}<filename>{r} au tick {7}<tick>{r}.
+            
+            info:
+                |
+                    {l}{6}/{r}record {8}info{r} {7}<filename>{r}
+                    
+                    {r}Affiche des informations sur l'enregistrement de l'acteur {7}<filename>{r}, comme sa version, son format, sa durée, etc.
+            
+            remove:
+                |
+                    {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
+                    
+                    {r}Supprime toutes les actions au tick {7}<tick>{r} dans l'enregistrement de l'acteur {7}<filename>{r} sur tous les index (Toutes les lignes). En spécifiant l'index {7}[index]{r} (= la ligne dans l'éditeur d'actions), la commande supprime uniquement l'action au tick {7}<tick>{r} à l'index {7}[index]{r}.
+            
+            search:
+                |
+                    {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
+                    
+                    {r}Recherche dans l'enregistrement de l'acteur {7}<filename>{r} les actions dont le type est {7}<action_type>{r} dans la limite (en option) {7}[limit]{r}, et affiche les ticks où elles sont enregistrées ainsi que les données associées.
+                    
+            origin:
+                |
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
+                    
+                    {r}Cette commande permet de repositionner un acteur après son enregistrement en spécifiant {7}[x] [y] [z]{r} (utiliser ~ pour des données relatives). Si {7}[x] [y] [z]{r} ne sont pas renseignés, l'acteur se repositionne à votre emplacement. {7}rotation{r} permet de tourner l'acteur en utisant des données relatives.   
+                    
+            prolong:
+                |
+                    {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
+                    
+                    {r}Cette commande permet d'ajouter plus de temps au début ou à la fin de l'enregistrement de l'acteur {7}<filename>{r}.
+                                
+            tp:
+                |
+                    {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
+                    
+                    {r}Cette commande permet de se téléporter à la position de l'acteur {7}<filename>{r} au début de son enregistrement ou au tick {7}[tick]{r} (en option).
+
+        # Model's commands
+        model:
+            help: "{r}{o}Commande Model{r}. Cette commande fournie des sous-commandes pour la gestion des modèles personnalisés."
+            
+            export:
+                |
+                    {l}{6}/{r}model {8}export{r} {7}<entity_name> [entity_tag]{r}
+                    
+                    {r}Exporte le modèle {7}<entity_name>{r} au format JSON. Le modèle est exporté dans le dossier export du dossier ".minecraft\config\blockbuster\export\". Utiliser {7}[entity_tag]{r} pour exporter un model avec des données en option.
+                    
+                    {r}{l}Attention{r}: l'exportation de modèles présente parfois des erreurs. Des corrections avec l'outil McME (https://mchorse.github.io/mcme/) sont parfois nécessaires.
+            
+            export_obj:
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}Convertit le model JSON  {7}<model_name>{r} en OBJ (avec sa texture par défaut si présente, et son fichier MTL). Les fichiers OBJ sont enregistrés dans le dossier ".minecraft\config\blockbuster\export\" {l}export{r} . 
+
+            clear:
+                |
+                    {l}{6}/{r}model {8}clear{r} {7}[path]{r}
+                    
+                    {r}Efface le cache des textures chargées dans Blockbuster. Si {7}[path]{r} est spécifié, cette commande effacera uniquement les textures qui commencent par {7}[path]{r}.
+            
+            convert:
+                |
+                    {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
+                    
+                    {r}Convertit un skin {7}<skin>{r} (nom du fichier sans extension {7}<steve|fred>{r} model) 64x64 ({7}fred{r}) en 64x32 ou 64x32 ({7}steve{r}) en 64x64.
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r} {7}[force]{r}
+                    
+                    {r}Recharge les modèles (nouveaux et modifiés) côté client et serveur (Utilisateurs OP seulement). L'option {7}[force]{r} peut être {7}true{r} afin de forcer le rechargement de tous les fichiers modifiés ou non sans tenir compte des dates de création.
+                    
+            replace_texture:
+                |
+                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
+                    
+                    {r}Remplace une texture {7}<target>{r} (préciser dans {7}<target>{r} sa localisation comme b.a:dossier/skin) par une texture {7}[replace]{r} (préciser dans {7}[replace]{r} sa localisation comme b.a:nouveau_dossier/nouvelle_skin). Si {7}[replace]{r} n'est pas précisé, alors la texture {7}<target>{r}'s sera restaurée.
+
+        # Action's commands
+        action:
+            help: "{r}{o}Action command{r}. Cette commande founie des sous-commandes pour la gestion des actions enregistrées."
+            
+            clear:
+                |
+                    {l}{6}/{r}action {8}clear{r}
+                    
+                    {r}Supprime tous les enregistrement côté client (utilisé pour forcer le déchargement des enregistrements côté client).
+            play: 
+                |
+                    {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
+                    
+                    {r}Lance le playback de l'acteur {7}<filename>{r}. Cette commande a différentes options: le nom de l'acteur {7}[name]{r}, son modèle {7}[model]{r} et son skin {7}[skin]{r} ainsi que son invincibilité {7}[invincibility]{r} avec les choix ({7}1{r}, {7}0{r}, {7}true{r} ou {7}false{r}).
+            record: 
+                |
+                    {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
+                    
+                    {r}Lance l'enregistrement de l'acteur {7}<filename>{r}. Si les coordonnées du director block {7}[x]{f}, {7}[y]{f} et {7}[z]{f} sont précisées, les actions des autres acteurs présents dans ce directorblock sont jouées durant l'enregistrement)
+            request: 
+                |
+                    {l}{6}/{r}action {8}request{r} {7}<filename>{r}
+                    
+                    {r}Charge depuis le serveur vers le client, l'action nommée {7}<filename>{r}.
+            stop: 
+                |
+                    {l}{6}/{r}action {8}stop{r}
+                    
+                    {r}Arrête l'enregistrement des actions.
+        
+        on_head.help: "{r}{o}Commande On head{r}. Cette commande place l'item tenu dans la main principale, sur la tête."
+        spectate.help: 
+            |
+                {r}{o}Commande Spectate{r}. Cette commande vous permet de prendre la place d'une entité et de voir ce qu'elle regarde (Ex: /spectate nom_du_joueur @e[type=pig]).
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}

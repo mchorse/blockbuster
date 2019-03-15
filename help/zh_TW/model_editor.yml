@@ -1,5 +1,5 @@
 blockbuster.gui.me:
-    pick: 選擇
+    pick: 選取
     none: "（無）"
     
     hitbox: 碰撞箱
@@ -19,6 +19,7 @@ blockbuster.gui.me:
         mirror: 鏡像
         lighting: 光
         shading: 陰影
+        smooth: 平滑
         hold: 拿著物品
         none: 無
         right: 右
@@ -36,10 +37,10 @@ blockbuster.gui.me:
         parent: 父級
         page: 換頁
         
-        new_limb: 為新肢體鍵入壹個名字…
-        last_limb: 你不能移除最後壹個肢體…
+        new_limb: 為新肢體鍵入一個名字…
+        last_limb: 你不能移除最後一個肢體…
         rename_limb: "重命名當前肢體："
-        parent_limb: "為現在選中的肢體選擇壹個父級肢體…"
+        parent_limb: "為現在選中的肢體選取一個父級肢體…"
         
         slots:
             none: 無
@@ -55,18 +56,18 @@ blockbuster.gui.me:
     
     models:
         title: 模型
-        save: 保存模型
+        save: 儲存模型
         export: 從生物中新建模型
         name: "為模型鍵入名字："
-        pick: "選擇壹個你想從中導出肢體的生物："
-        error: "糟糕，由於壹個錯誤，導致無法新建模型：%s"
+        pick: "選取一個你想從中導出肢體的生物："
+        error: "糟糕，由於一個錯誤，導致無法新建模型：%s"
     
     options:
         name: 顯示名字
         texture: 材質尺寸
         scale: 全局縮放
         scale_gui: GUI 縮放
-        default: 默認材質
+        default: 預設材質
         skins: 皮膚檔案夾
         provides_obj: 提供 OBJ
         provides_mtl: 提供 MTL
@@ -74,11 +75,11 @@ blockbuster.gui.me:
     poses:
         title: 姿勢
         new_pose: "為新的姿勢鍵入名字："
-        import_pose: "在這鍵入一個姿勢的 NBT 數據來導入它到現在的姿勢："
+        import_pose: "在這鍵入一個姿勢的 NBT 資料來導入它到現在的姿勢："
         import_pose_tooltip: "使用 NBT 標籤來導入姿勢的屬性"
-        copy_pose: "選擇要從中復制當前肢體屬性的姿勢。"
+        copy_pose: "選取要從中復制當前肢體屬性的姿勢。"
         copy_pose_tooltip: "從另一個姿勢複製姿勢屬性"
-        standard: "你無法移除默認姿勢…"
+        standard: "你無法移除預設姿勢…"
         hitbox: 碰撞箱
     
     tooltips:

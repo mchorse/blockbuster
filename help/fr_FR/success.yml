@@ -1,0 +1,29 @@
+blockbuster.success:
+    commands:
+        mipmaped_texture: "{f}La texture %s{f} a été mipmappée avec succès!"
+        demipmaped_texture: "{f}Le mipmap de la texture %s{f} a été supprimé !"
+        
+        texture_filter_linear: "{f}Le filtre de texture a été changé en linéaire !"
+        texture_filter_nearest: "{f}Le filtre de texture a été changé nearest neighbor!"
+        
+        convert_skin: "{f}La texture a été convertie en %s{r}/%s{r} !"
+
+    director:
+        play: "{f}Le director block en (%s{f}, %s{f}, %s{f}) commence à jouer !"
+        stop: "{f}Le director block en (%s{f}, %s{f}, %s{f}) s'est arrêté !"
+        
+        was_registered: "{f}Cet acteur a été lié au director block avec succès !"
+        attached_device: "{f}L'outil de liaison a bien été attaché au director block!"
+        attached_button: "{f}Le bouton de lecture a été lié au director block avec succès!"
+    
+    model:
+        export:
+            saved: "{f}Le modèle %s{f} a été enregistré en %s{f}."
+            obj: "{f}Le modèle %s{f} a été exporté en OBJ avec succès !"
+        
+        reload: "{f}Le serveur a rechargé les modèles !"
+        
+    record:
+        changed_origin: "{f}L'origine de l'enregistrement de l'acteur %s{f} a été déplacée de (%s{f}, %s{f}, %s{f}) vers (%s{f}, %s{f}, %s{f})!"
+        duped: "{f}L'enregistrement de l'acteur %s{f} a été dupliqué avec succès en %s{f} ! (Il faut maintenant créer un acteur portant le nom %s{f})"
+        clean: "{f}Les propriétés %s{f} de l'acteur %s{f} ont été changées entre %s{f} et %s{f}!"

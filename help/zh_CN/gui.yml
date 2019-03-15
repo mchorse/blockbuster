@@ -18,7 +18,6 @@ blockbuster.gui:
     break: 破坏
     select: 选择
     ok: 好
-    no_data: 没有数据可用……
 
     # Morphs popup strings
     morphs:
@@ -37,6 +36,7 @@ blockbuster.gui:
         model: 模型方块
         model_editor: 模型编辑器
         player_recording: 玩家录制编辑器
+        texture: 材质管理器
     
     # Main page of dashboard
     main:
@@ -215,7 +215,23 @@ blockbuster.gui:
         limbs: 肢体
         body_parts: 身体部分
         use_target: 使用目标
-
+        
+    sequencer:
+        duration: 持续长度
+        reverse: 反转
+        no_morph: （没有伪装）
+        morphs: 伪装
+    
+    texture:
+        title: 材质管理器
+        subtitle: 这个界面可以用来查看和管理已经在 Minecraft 运行时中载入的材质。
+        linear: 线性
+        linear_tooltip: 打开后，材质会看起来平滑
+        mipmap: Mipmap
+        mipmap_tooltip: 打开后，在远处看不会有那么多噪点
+        replace: 替换
+        replace_modal: "请输入一个前往 {l}已经载入的{r} 材质资源的位置，用来替换："
+    
     aperture:
         config:
             title: 演员

@@ -1,0 +1,241 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: Done
+    next: Next
+    previous: Previous
+    restore: Restore Default
+    reset: Reset
+    add: Add
+    edit: Edit
+    remove: Remove
+    record: Record
+    pick: Pick morph
+    duplicate: Duplicate
+    search: Search
+    cancel: Cancel
+    break: Break
+    select: Select
+    ok: Ok
+    
+    # Morphs popup strings
+    morphs:
+        acquire: "Acquire morph"
+        pose: Pose
+        sneak: Apply on sneak
+        reset: Reset pose
+    
+    confirm:
+        title: Confirm Breaking Director Block
+        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
+    
+    dashboard: 
+        main: Dashboard
+        director: Director block
+        model: Model block
+        model_editor: Model editor
+        player_recording: Player recording editor
+        texture: Texture manager
+    
+    # Main page of dashboard
+    main:
+        resources: Resources
+        wiki: Wiki
+        discord: Discord
+        
+        options: Options
+    
+    # Director block GUI strings
+    director:
+        title: Director blocks
+        config: Director block options
+        not_selected: Select a director block...
+        no_replays: Create a replay...
+    
+        display_title: Display title
+        start_command: On start command
+        stop_command: On stop command
+        loops: Loops
+        disable_states: Disable states
+        hide: Hide during playback
+        
+        id: Recording ID
+        name: Name tag
+        invincible: Invincible
+        invisible: Invisible
+        enabled: Enabled
+        fake_player: Fake player
+        health: Health
+        edit_record: Edit record
+        update_data: Update data
+        update_data_tooltip: Updates player data in record file
+        rename_prefix: Rename prefix
+        rename_prefix_tooltip: Renames replay recording ID with a new prefix  
+        rename_prefix_popup: "Enter a new prefix:"
+    
+    # Actor configuration GUI strings
+    actor:
+        title: Actor Configuration
+        
+        default: Default
+        name: Name
+        filename: Recording ID
+        invincible: Can be killed?
+        invisible: Is visible?
+        attached: Attached to actor
+        yaw: Yaw 
+        pitch: Pitch 
+    
+    # Model block GUI strings
+    model_block:
+        title: Model blocks
+        not_selected: Select a model block...
+        
+        x: X
+        "y": "Y"
+        z: Z
+        yaw: Yaw
+        pitch: Pitch
+        body: Body yaw
+        one: One
+        one_tooltip: Uniform one slider scale
+        shadow: Shadow
+        
+        entity: Entity
+        translate: Translate
+        rotate: Rotate
+        scale: Scale
+    
+    # Player recording editor GUI strings
+    record_editor:
+        title: Recordings
+        not_selected: Select a player recording...
+        action: action
+        
+        drop: Drop block
+        damage: Damage
+        progress: Progress
+        mounting: Mounting
+        meta: Meta value
+        arrow_charge: Arrow charge
+        no_fields: This action doesn't have any editable fields...
+        
+        actions:
+            chat: 
+                title: Chat
+                desc: This action outputs a chat message
+            swipe: 
+                title: Swipe
+                desc: This action makes the actor swing his main hand
+            drop:
+                title: Item drop
+                desc: Throws an item down (as if Q key was pressed)
+            equip:
+                title: Equip an item
+                desc: Equips an item in one of the hand or armor slots
+                
+                none: None
+                main_hand: Main hand
+                feet: Feet
+                legs: Leggings
+                chest: Chest
+                head: Head
+                off_hand: Off hand
+            shoot_arrow:
+                title: Shoot arrow
+                desc: Shoots a regular arrow with given force
+            place_block:
+                title: Place block
+                desc: Places a specified block on given block position
+            mounting:
+                title: Mounting
+                desc: Mounts or unmounts an entity standing in front
+            interact_block:
+                title: Interact block
+                desc: Makes actor interact with a block
+            break_block:
+                title: Break block
+                desc: Breaks a block at given position
+            morph:
+                title: Morph
+                desc: Morphs the actor into picked morph
+            attack:
+                title: Attack
+                desc: Deals damage to an entity in front of actor (make sure to change difficulty from peaceful, if you want to use it with players) 
+            damage:
+                title: Damage
+                desc: Inflicts some damage to the actor entity
+            morph_action:
+                title: Morph action
+                desc: Uses morph's action, if the actor is morphed
+            command:
+                title: Command
+                desc: Executes a command using the actor 
+            break_animation:
+                title: Break block animation
+                desc: Performs a breaking block animation (block cracks) on given block position
+            use_item:
+                title: Item use
+                desc: Uses an item currently held in given hand
+            use_item_block:
+                title: Item block use
+                desc: Uses an item currently held in given hand on a block with given facing and a hit vector
+                
+                down: Down
+                up: Up
+                north: North
+                south: South
+                west: West
+                east: East
+    
+    # Playback GUI
+    playback:
+        title: Playback configuration
+        camera_mode: Camera mode
+        profile: Profile filename
+
+        nothing: Do nothing
+        play: Play only
+        load_profile: Load and play
+    
+    builder:
+        pose_editor: Pose editor
+        body_part: Body part
+        materials: Materials
+        nbt: NBT
+        
+        pick_skin: Pick skin
+        pose_sneak: Sneaking pose
+        pose: Pose
+        
+        obj_materials: OBJ materials
+        pick_texture: Pick texture
+        
+        limbs: Limbs
+        body_parts: Body parts
+        use_target: Use target
+        
+    sequencer:
+        duration: Duration
+        reverse: Reverse
+        no_morph: (no morph)
+        morphs: Morphs
+    
+    texture:
+        title: Texture manager
+        subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
+        linear: Linear
+        linear_tooltip: When enabled, texture looks smooth
+        mipmap: Mipmap
+        mipmap_tooltip: When enabled, looks less noisy far away
+        replace: Replace
+        replace_modal: "Type in the resource location of {l}already loaded{r} texture which you want to replace with:"
+    
+    aperture:
+        config:
+            title: Director
+            
+            reload: Reload actors
+            actions: Preview actions
+            reload_scene: Reload scene

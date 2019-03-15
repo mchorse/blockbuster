@@ -1,0 +1,44 @@
+# Item tooltips
+blockbuster:
+    info:
+        playback_button: Bascule le director block
+        playback_director: Attaché à ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_profile: Joue le profil "{f}{o}%s{r}{7}"
+        playback_play: Joue la camera
+
+        actor_config: Use on actor
+        register: Ties actors to director block
+        director_block: Manages actors and replays
+        model_block: Allows to place morphs as static models
+        green_block: "%s chroma block. Can be used for chroma keying."
+
+    morph.sequencer: Sequencer
+
+# Creative tabs
+itemGroup.blockbuster: Blockbuster
+
+# Block name
+tile.blockbuster:
+    director.name: Director block
+    model.name: Model block
+    green.name: Chroma block
+
+# Item names
+item:
+    blockbuster:
+        playback.name: Playback button
+        register.name: Registering device
+        actor_config.name: Actor configuration device
+
+# Entity names
+entity.blockbuster.Actor.name: Actor
+
+blockbuster.chroma_blocks:
+    0: Green
+    1: Blue
+    2: Red
+    3: Yellow
+    4: Cyan
+    5: Purple
+    6: White
+    7: Black
