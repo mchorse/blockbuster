@@ -2,45 +2,45 @@
 
 blockbuster.gui:
     # General strings
-    done: Done
-    next: Next
-    previous: Previous
-    restore: Restore Default
-    reset: Reset
-    add: Add
-    edit: Edit
-    remove: Remove
-    record: Record
-    pick: Pick morph
-    duplicate: Duplicate
-    search: Search
-    cancel: Cancel
-    break: Break
-    select: Select
+    done: Valider
+    next: Suivant
+    previous: Précedent
+    restore: Remettre à défaut
+    reset: Réinitialiser
+    add: Ajouter
+    edit: Editer
+    remove: Suprrimer
+    record: Enregistrer
+    pick: Choisir un morph
+    duplicate: Dupliquer
+    search: Rechercher
+    cancel: Annuler
+    break: Casser
+    select: Selectionner
     ok: Ok
     
     # Morphs popup strings
     morphs:
-        acquire: "Acquire morph"
+        acquire: "Acquérir le morph"
         pose: Pose
-        sneak: Apply on sneak
-        reset: Reset pose
+        sneak: Appliquer sur le sneak
+        reset: Réinitialiser la pose
     
     confirm:
-        title: Confirm Breaking Director Block
-        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
+        title: Confirmation de la destruction du Director Block
+        description: Le Director Block positionné en ({7}%s{f}, {7}%s{f}, {7}%s{f}) contient {7}%s{f} replays. Etes-vous sûrs de vouloir le détruire ? Ces replays seront {c}supprimés{r} {l}définitivement{r}.
     
     dashboard: 
-        main: Dashboard
+        main: Tableau de bord
         director: Director block
         model: Model block
-        model_editor: Model editor
-        player_recording: Player recording editor
-        texture: Texture manager
+        model_editor: Editeur de modèle
+        player_recording: Editeur d'enregitrement
+        texture: Gestion des textures
     
     # Main page of dashboard
     main:
-        resources: Resources
+        resources: Ressources
         wiki: Wiki
         discord: Discord
         
@@ -49,40 +49,40 @@ blockbuster.gui:
     # Director block GUI strings
     director:
         title: Director blocks
-        config: Director block options
-        not_selected: Select a director block...
-        no_replays: Create a replay...
+        config: Option du Director block
+        not_selected: Veuillez selectionner un director block...
+        no_replays: Veuillez créer un replay...
     
-        display_title: Display title
-        start_command: On start command
-        stop_command: On stop command
-        loops: Loops
-        disable_states: Disable states
-        hide: Hide during playback
+        display_title: Titre
+        start_command: Commande lancée à la lecture du playback (Ex. /playsound son_1 master @p ~ ~ ~ 100)
+        stop_command: Commande lancée à l'arrêt de lecture du playback (Ex. /stopsound @p)
+        loops: Boucles
+        disable_states: Désactiver la sortie redstone sur le côté du director block
+        hide: Cacher le director block durant le playback
         
-        id: Recording ID
-        name: Name tag
+        id: ID d'enregistrement
+        name: Nom
         invincible: Invincible
         invisible: Invisible
-        enabled: Enabled
+        enabled: Activé
         fake_player: Fake player
-        health: Health
-        edit_record: Edit record
-        update_data: Update data
-        update_data_tooltip: Updates player data in record file
-        rename_prefix: Rename prefix
+        health: Santé
+        edit_record: Editer l'enregistrement
+        update_data: Mettre à jour les datas
+        update_data_tooltip: Mettre à jour les datas dans le fichier d'enregistrement
+        rename_prefix: Renamer le prefix
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
-        rename_prefix_popup: "Enter a new prefix:"
+        rename_prefix_popup: "Entrer un nouveau prefix:"
     
     # Actor configuration GUI strings
     actor:
-        title: Actor Configuration
+        title: Configuration d'acteurs
         
-        default: Default
+        default: Defaut
         name: Name
-        filename: Recording ID
-        invincible: Can be killed?
-        invisible: Is visible?
+        filename: ID d'enregistrement
+        invincible: Acteur immortel ?
+        invisible: Acteur invisible ?
         attached: Attached to actor
         yaw: Yaw 
         pitch: Pitch 
@@ -90,7 +90,7 @@ blockbuster.gui:
     # Model block GUI strings
     model_block:
         title: Model blocks
-        not_selected: Select a model block...
+        not_selected: Selectionner un model block...
         
         x: X
         "y": "Y"
@@ -100,54 +100,54 @@ blockbuster.gui:
         body: Body yaw
         one: One
         one_tooltip: Uniform one slider scale
-        shadow: Shadow
+        shadow: Ombre
         
-        entity: Entity
-        translate: Translate
-        rotate: Rotate
-        scale: Scale
+        entity: Entitée
+        translate: Déplacer
+        rotate: Tourner
+        scale: Echelle
     
     # Player recording editor GUI strings
     record_editor:
-        title: Recordings
-        not_selected: Select a player recording...
+        title: Enregistrements
+        not_selected: Selectioner un enregistrement...
         action: action
         
-        drop: Drop block
-        damage: Damage
+        drop: Jeter un block
+        damage: Dommage
         progress: Progress
         mounting: Mounting
         meta: Meta value
         arrow_charge: Arrow charge
-        no_fields: This action doesn't have any editable fields...
+        no_fields: Cette action n'a pas de champs éditables...
         
         actions:
             chat: 
                 title: Chat
-                desc: This action outputs a chat message
+                desc: Cette action envoie un message au chat
             swipe: 
                 title: Swipe
                 desc: This action makes the actor swing his main hand
             drop:
-                title: Item drop
-                desc: Throws an item down (as if Q key was pressed)
+                title: Jeter un item
+                desc: Jette un item (identique à la touche par defaut)
             equip:
-                title: Equip an item
-                desc: Equips an item in one of the hand or armor slots
+                title: Equiper avec un item
+                desc: Equipe an item in one of the hand or armor slots
                 
-                none: None
-                main_hand: Main hand
+                none: aucun
+                main_hand: Main principale
                 feet: Feet
                 legs: Leggings
-                chest: Chest
-                head: Head
-                off_hand: Off hand
+                chest: Coffre
+                head: Tête
+                off_hand: Main secondaire
             shoot_arrow:
                 title: Shoot arrow
                 desc: Shoots a regular arrow with given force
             place_block:
-                title: Place block
-                desc: Places a specified block on given block position
+                title: Place un block
+                desc: Place a block (au choix) on given block position
             mounting:
                 title: Mounting
                 desc: Mounts or unmounts an entity standing in front
@@ -155,20 +155,20 @@ blockbuster.gui:
                 title: Interact block
                 desc: Makes actor interact with a block
             break_block:
-                title: Break block
-                desc: Breaks a block at given position
+                title: Détruire un block
+                desc: Détruit un block at given position
             morph:
                 title: Morph
-                desc: Morphs the actor into picked morph
+                desc: Morph l'acteur dans le morph choisi
             attack:
-                title: Attack
-                desc: Deals damage to an entity in front of actor (make sure to change difficulty from peaceful, if you want to use it with players) 
+                title: Attaque
+                desc: Provoque des dommages à l'entitée qui se trouve en face de l'acteur (Passer de difficile from paisible, pour l'utiliser avec des acteurs) 
             damage:
-                title: Damage
-                desc: Inflicts some damage to the actor entity
+                title: Dommage
+                desc: Inflige des dommages à l'acteur
             morph_action:
                 title: Morph action
-                desc: Uses morph's action, if the actor is morphed
+                desc: Utilise les actions du morph, si l'acteur est transformé
             command:
                 title: Command
                 desc: Executes a command using the actor 
@@ -182,60 +182,60 @@ blockbuster.gui:
                 title: Item block use
                 desc: Uses an item currently held in given hand on a block with given facing and a hit vector
                 
-                down: Down
-                up: Up
-                north: North
-                south: South
-                west: West
-                east: East
+                down: Bas
+                up: Haut
+                north: Nord
+                south: Sud
+                west: Ouest
+                east: Est
     
     # Playback GUI
     playback:
-        title: Playback configuration
-        camera_mode: Camera mode
-        profile: Profile filename
+        title: Configuration du playback
+        camera_mode: Mode de camera
+        profile: Nom du profil
 
-        nothing: Do nothing
-        play: Play only
-        load_profile: Load and play
+        nothing: Ne rien faire
+        play: Lire seulement
+        load_profile: Charger et lire
     
     builder:
-        pose_editor: Pose editor
-        body_part: Body part
-        materials: Materials
+        pose_editor: Editeur de pose
+        body_part: Parties du corps
+        materials: Materiaux
         nbt: NBT
         
-        pick_skin: Pick skin
-        pose_sneak: Sneaking pose
+        pick_skin: Prendre un skin
+        pose_sneak: Pose du Sneak
         pose: Pose
         
-        obj_materials: OBJ materials
-        pick_texture: Pick texture
+        obj_materials: Materiaux OBJ
+        pick_texture: Prendre une texture
         
-        limbs: Limbs
-        body_parts: Body parts
+        limbs: Membres
+        body_parts: Parties du corps
         use_target: Use target
         
     sequencer:
-        duration: Duration
-        reverse: Reverse
-        no_morph: (no morph)
+        duration: Durée
+        reverse: Inverser
+        no_morph: (pas de morph)
         morphs: Morphs
     
     texture:
-        title: Texture manager
-        subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
+        title: Gestion des textures
+        subtitle: Cette interface vous permet de voir et de gérer vos textures chargées dans Minecraft
         linear: Linear
-        linear_tooltip: When enabled, texture looks smooth
+        linear_tooltip: Si activé, les textures sont adoucies
         mipmap: Mipmap
-        mipmap_tooltip: When enabled, looks less noisy far away
-        replace: Replace
+        mipmap_tooltip: Active la réduction de bruit
+        replace: Remplace
         replace_modal: "Type in the resource location of {l}already loaded{r} texture which you want to replace with:"
     
     aperture:
         config:
             title: Director
             
-            reload: Reload actors
-            actions: Preview actions
-            reload_scene: Reload scene
+            reload: Recharger les acteurs
+            actions: Aperçu des actions
+            reload_scene: Recharger la scene
