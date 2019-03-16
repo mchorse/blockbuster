@@ -579,7 +579,7 @@ public class Director
 
     public void renamePrefix(String newPrefix)
     {
-        Pattern pattern = Pattern.compile("^([^_]+)_");
+        Pattern pattern = Pattern.compile("^(.+)_([^_]+)$");
 
         for (Replay replay : this.replays)
         {
@@ -587,9 +587,7 @@ public class Director
 
             if (matcher.find())
             {
-                String suffix = replay.id.substring(matcher.end());
-
-                replay.id = newPrefix + "_" + suffix;
+                replay.id = newPrefix + "_" + matcher.group(2);
             }
         }
     }
