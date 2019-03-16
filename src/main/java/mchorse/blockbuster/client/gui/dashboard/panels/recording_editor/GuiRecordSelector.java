@@ -260,11 +260,15 @@ public class GuiRecordSelector extends GuiElement
 
         for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
         {
-            int x = this.scroll.x - this.scroll.scroll + i * h;
-
             if (i % 5 == 0)
             {
-                this.font.drawStringWithShadow(String.valueOf(i), x, this.scroll.y - 12, 0xffffff);
+                int x = this.scroll.x - this.scroll.scroll + i * h;
+                int y = this.scroll.getY(1) - 12;
+
+                String str = String.valueOf(i);
+
+                this.drawGradientRect(x + 1, y - 6, x + h, y + 12, 0x00000000, 0x88000000);
+                this.font.drawStringWithShadow(str, x - this.font.getStringWidth(str) / 2 + 17, y, 0xffffff);
             }
         }
 
