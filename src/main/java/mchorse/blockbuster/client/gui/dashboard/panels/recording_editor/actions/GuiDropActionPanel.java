@@ -36,6 +36,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction> implements II
     {
         super.fill(action);
 
+        this.inventory.player = this.mc.thePlayer;
         this.slot.stack = action.itemData == null ? null : ItemStack.loadItemStackFromNBT(action.itemData);
     }
 

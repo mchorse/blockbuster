@@ -204,6 +204,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
     public void open()
     {
         this.updateList();
+        this.inventory.player = this.mc.thePlayer;
 
         /* Resetting the current model block, if it was removed from the world */
         if (this.model != null && this.mc.theWorld.getTileEntity(this.model.getPos()) == null)
