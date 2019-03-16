@@ -288,16 +288,17 @@ public class SequencerMorph extends AbstractMorph
                     morph = MorphManager.INSTANCE.morphFromNBT(morphTag.getCompoundTag("Morph"));
                 }
 
-                if (i == 0)
-                {
-                    this.setCurrentMorph(morph);
-                }
-
                 SequenceEntry entry = new SequenceEntry(morph);
 
                 if (morphTag.hasKey("Duration", NBT.TAG_ANY_NUMERIC))
                 {
                     entry.duration = morphTag.getFloat("Duration");
+                }
+
+                if (i == 0)
+                {
+                    this.duration = entry.duration;
+                    this.setCurrentMorph(morph);
                 }
 
                 this.morphs.add(entry);

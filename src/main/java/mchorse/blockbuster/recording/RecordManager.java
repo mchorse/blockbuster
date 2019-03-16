@@ -254,8 +254,6 @@ public class RecordManager
             return;
         }
 
-        actor.record.reset(actor.actor);
-
         if (actor.actor.getHealth() > 0.0F)
         {
             if (actor.kill)

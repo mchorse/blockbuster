@@ -1,6 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelRenderer;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -326,7 +326,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
     /**
      * Model renderer, but it also renders body parts 
      */
-    public static class GuiModelRendererBodyPart extends GuiModelRenderer
+    public static class GuiModelRendererBodyPart extends GuiBBModelRenderer
     {
         public CustomMorph morph;
 

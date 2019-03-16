@@ -71,14 +71,17 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
         if (this.director.hide)
         {
             IBlockState state = this.getWorld().getBlockState(this.pos);
-            boolean hidden = state.getValue(BlockDirector.HIDDEN);
 
+            /* Somehow this happens, so I must check before accessing 
+             * any of the block properties */
             if (state.getBlock() != Blockbuster.directorBlock)
             {
                 this.invalidate();
 
                 return;
             }
+
+            boolean hidden = state.getValue(BlockDirector.HIDDEN);
 
             if (playing > 0 && !hidden)
             {

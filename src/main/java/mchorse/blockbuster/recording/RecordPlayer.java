@@ -14,6 +14,7 @@ import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  * Record player class
@@ -230,7 +231,7 @@ public class RecordPlayer
             {
                 this.actor.readEntityFromNBT(this.record.playerData);
 
-                if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", 10))
+                if (MPMHelper.isLoaded() && this.record.playerData.hasKey("MPMData", NBT.TAG_COMPOUND))
                 {
                     MPMHelper.setMPMData((EntityPlayer) this.actor, this.record.playerData.getCompoundTag("MPMData"));
                 }

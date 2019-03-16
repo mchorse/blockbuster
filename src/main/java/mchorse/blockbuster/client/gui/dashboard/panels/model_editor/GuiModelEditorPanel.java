@@ -43,7 +43,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiModelEditorPanel extends GuiDashboardPanel
 {
     /* GUI stuff */
-    public GuiModelRenderer modelRenderer;
+    public GuiBBModelRenderer modelRenderer;
 
     private GuiButtonElement<GuiTextureButton> openModels;
     private GuiButtonElement<GuiTextureButton> openPoses;
@@ -91,7 +91,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        this.modelRenderer = new GuiModelRenderer(mc);
+        this.modelRenderer = new GuiBBModelRenderer(mc);
         this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
 

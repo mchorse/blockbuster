@@ -14,13 +14,19 @@ public class ClientHandlerActions extends ClientMessageHandler<PacketActions>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketActions message)
     {
-        Record record = new Record(message.filename);
+        Record record = ClientProxy.manager.records.get(message.filename);
+
+        if (record == null)
+        {
+            record = new Record(message.filename);
+            ClientProxy.manager.records.put(message.filename, record);
+        }
 
         if (record != null)
         {
             record.actions = message.actions;
 
-            if (ClientProxy.dashboard != null)
+            if (ClientProxy.dashboard != null && ClientProxy.dashboard.recordingEditorPanel != null)
             {
                 ClientProxy.dashboard.recordingEditorPanel.selectRecord(record);
             }

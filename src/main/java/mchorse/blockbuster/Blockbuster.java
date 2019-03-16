@@ -6,7 +6,6 @@ import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.commands.CommandRecordSound;
 import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import net.minecraft.block.Block;
@@ -141,7 +140,6 @@ public class Blockbuster
         event.registerServerCommand(new CommandAction());
         event.registerServerCommand(new CommandDirector());
         event.registerServerCommand(new CommandRecord());
-        event.registerServerCommand(new CommandRecordSound());
         event.registerServerCommand(new CommandSpectate());
         event.registerServerCommand(new CommandOnHead());
     }

@@ -51,6 +51,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     {
         super.fill(action);
 
+        this.inventory.player = this.mc.player;
         this.slot.stack = action.itemData == null ? ItemStack.EMPTY : new ItemStack(action.itemData);
         this.armor.button.setValue(action.armorSlot + 1);
     }

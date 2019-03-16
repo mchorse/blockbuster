@@ -18,6 +18,8 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.director.fake.FakeContext;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
@@ -192,9 +194,22 @@ public class Director
     {
         int count = 0;
 
-        for (RecordPlayer record : this.actors.values())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
-            if ((record.isFinished() && record.playing) || record.actor.isDead)
+            Replay replay = entry.getKey();
+            RecordPlayer actor = entry.getValue();
+
+            if (this.loops && actor.isFinished())
+            {
+                actor.record.reset(actor.actor);
+                actor.tick = 0;
+                actor.record.applyFrame(0, actor.actor, true);
+                actor.record.applyAction(0, actor.actor);
+                Dispatcher.sendToTracked(actor.actor, new PacketPlayback(actor.actor.getEntityId(), true, replay.id));
+                CommonProxy.manager.players.put(actor.actor, actor);
+            }
+
+            if ((actor.isFinished() && actor.playing) || actor.actor.isDead)
             {
                 count++;
             }
@@ -211,25 +226,9 @@ public class Director
      */
     public void checkActors()
     {
-        if (this.areActorsPlay())
+        if (this.areActorsPlay() && !this.loops)
         {
-            if (this.loops)
-            {
-                /* TODO: improve looping */
-                for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
-                {
-                    Replay replay = entry.getKey();
-                    RecordPlayer actor = entry.getValue();
-                    boolean notAttached = true;
-
-                    actor.stopPlaying();
-                    actor.startPlaying(replay.id, 0, !this.loops);
-                }
-            }
-            else
-            {
-                this.stopPlayback();
-            }
+            this.stopPlayback();
         }
     }
 
@@ -375,6 +374,7 @@ public class Director
         {
             RecordPlayer actor = entry.getValue();
 
+            actor.kill = true;
             actor.stopPlaying();
         }
 
@@ -579,7 +579,7 @@ public class Director
 
     public void renamePrefix(String newPrefix)
     {
-        Pattern pattern = Pattern.compile("^([^_]+)_");
+        Pattern pattern = Pattern.compile("^(.+)_([^_]+)$");
 
         for (Replay replay : this.replays)
         {
@@ -587,9 +587,7 @@ public class Director
 
             if (matcher.find())
             {
-                String suffix = replay.id.substring(matcher.end());
-
-                replay.id = newPrefix + "_" + suffix;
+                replay.id = newPrefix + "_" + matcher.group(2);
             }
         }
     }
