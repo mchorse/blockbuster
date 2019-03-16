@@ -77,8 +77,6 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
     private void pickRL(ResourceLocation rl)
     {
-        this.rl = rl;
-
         if (this.rl == null)
         {
             this.linear.button.setIsChecked(false);
@@ -86,15 +84,21 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         }
         else
         {
-            this.mc.renderEngine.bindTexture(rl);
+            try
+            {
+                this.mc.renderEngine.bindTexture(rl);
 
-            int filter = GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER);
+                int filter = GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER);
 
-            boolean mipmap = ReflectionUtils.getTextures(this.mc.renderEngine).get(rl) instanceof MipmapTexture;
-            boolean linear = filter == GL11.GL_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_NEAREST;
+                boolean mipmap = ReflectionUtils.getTextures(this.mc.renderEngine).get(rl) instanceof MipmapTexture;
+                boolean linear = filter == GL11.GL_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_NEAREST;
 
-            this.linear.button.setIsChecked(linear);
-            this.mipmap.button.setIsChecked(mipmap);
+                this.linear.button.setIsChecked(linear);
+                this.mipmap.button.setIsChecked(mipmap);
+                this.rl = rl;
+            }
+            catch (Exception e)
+            {}
         }
     }
 
