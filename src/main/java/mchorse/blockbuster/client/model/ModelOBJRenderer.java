@@ -12,7 +12,7 @@ import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser.Mesh;
 import mchorse.blockbuster.client.render.RenderCustomModel;
-import mchorse.blockbuster.commands.model.SubCommandModelClear;
+import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
@@ -173,7 +173,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
         ITextureObject texture = manager.getTexture(material.texture);
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(manager);
 
         if (texture != null && !(texture instanceof MipmapTexture))
         {

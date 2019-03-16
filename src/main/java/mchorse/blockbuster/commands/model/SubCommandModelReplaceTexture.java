@@ -5,6 +5,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.commands.McCommandBase;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -50,7 +51,7 @@ public class SubCommandModelReplaceTexture extends McCommandBase
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(manager);
 
         if (map != null)
         {

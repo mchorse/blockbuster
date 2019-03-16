@@ -49,4 +49,13 @@ public abstract class Action
      */
     public void toNBT(NBTTagCompound tag)
     {}
+
+    /**
+     * Whether this action is safe. Safe action means that it doesn't 
+     * modify the world, at max, only its user. 
+     */
+    public boolean isSafe()
+    {
+        return false;
+    }
 }

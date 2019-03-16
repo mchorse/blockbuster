@@ -79,4 +79,10 @@ public class MorphAction extends Action
     {
         MorphUtils.morphToNBT(tag, this.morph);
     }
+
+    @Override
+    public boolean isSafe()
+    {
+        return true;
+    }
 }

@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -54,7 +55,7 @@ public class SubCommandModelTexture extends CommandBase
 
         ResourceLocation texture = RLUtils.create(args[0]);
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(manager);
         ITextureObject tex = map.get(texture);
 
         if (tex == null)
@@ -129,7 +130,7 @@ public class SubCommandModelTexture extends CommandBase
         if (args.length == 1)
         {
             TextureManager manager = Minecraft.getMinecraft().renderEngine;
-            Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+            Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(manager);
             List<String> keys = new ArrayList<String>();
 
             for (ResourceLocation key : map.keySet())

@@ -26,4 +26,10 @@ public class SwipeAction extends Action
             actor.world.playSound((EntityPlayer) null, actor.posX, actor.posY, actor.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, actor.getSoundCategory(), 1.0F, 1.0F);
         }
     }
+
+    @Override
+    public boolean isSafe()
+    {
+        return true;
+    }
 }

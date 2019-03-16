@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
@@ -84,9 +85,16 @@ public class BlockDirector extends Block implements ITileEntityProvider
         return !state.getValue(HIDDEN);
     }
 
+    @Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return state.getValue(HIDDEN) ? EnumBlockRenderType.ENTITYBLOCK_ANIMATED : super.getRenderType(state);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+    {
+        return state.getValue(HIDDEN) ? null : super.getCollisionBoundingBox(state, worldIn, pos);
     }
 
     /* States */

@@ -8,9 +8,11 @@ import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
+import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -54,6 +56,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiCustomMorph(mc));
         editors.add(new GuiImageMorph(mc));
         editors.add(new GuiSequencerMorph(mc));
+        editors.add(new GuiRecordMorph(mc));
     }
 
     @Override
@@ -63,6 +66,11 @@ public class BlockbusterFactory implements IMorphFactory
         if (morph instanceof SequencerMorph)
         {
             return I18n.format("blockbuster.morph.sequencer");
+        }
+
+        if (morph instanceof RecordMorph)
+        {
+            return I18n.format("blockbuster.morph.record");
         }
 
         String[] splits = morph.name.split("\\.");
@@ -99,6 +107,15 @@ public class BlockbusterFactory implements IMorphFactory
             seq.fromNBT(tag);
 
             return seq;
+        }
+
+        if (name.equals("record"))
+        {
+            RecordMorph record = new RecordMorph();
+
+            record.fromNBT(tag);
+
+            return record;
         }
 
         CustomMorph morph = new CustomMorph();
@@ -188,6 +205,9 @@ public class BlockbusterFactory implements IMorphFactory
 
         morphs.addMorphVariant("sequencer", "blockbuster", "default", steveAlex);
         morphs.addMorphVariant("sequencer", "blockbuster", "empty", new SequencerMorph());
+
+        /* Record morph */
+        morphs.addMorphVariant("record", "blockbuster", "default", new RecordMorph());
     }
 
     @Override
