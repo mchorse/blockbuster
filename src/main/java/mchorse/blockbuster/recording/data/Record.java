@@ -190,6 +190,15 @@ public class Record
      */
     public void applyAction(int tick, EntityLivingBase actor)
     {
+        this.applyAction(tick, actor, false);
+    }
+
+    /**
+     * Apply an action at the given tick on the given actor. Don't pass tick
+     * value less than 0, otherwise you might experience game crash.
+     */
+    public void applyAction(int tick, EntityLivingBase actor, boolean safe)
+    {
         if (tick >= this.actions.size() || tick < 0)
         {
             return;
@@ -201,6 +210,12 @@ public class Record
         {
             for (Action action : actions)
             {
+                if (safe && !action.isSafe())
+                {
+                    System.out.println(action);
+                    continue;
+                }
+
                 action.apply(actor);
             }
         }

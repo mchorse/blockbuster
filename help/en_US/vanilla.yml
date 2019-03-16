@@ -12,7 +12,9 @@ blockbuster:
         model_block: Allows to place morphs as static models
         green_block: "%s chroma block. Can be used for chroma keying."
 
-    morph.sequencer: Sequencer
+    morph:
+        sequencer: Sequencer
+        record: Record
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster

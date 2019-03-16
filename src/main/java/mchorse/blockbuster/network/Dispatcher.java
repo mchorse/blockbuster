@@ -40,6 +40,7 @@ import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
+import mchorse.blockbuster.network.common.recording.PacketRequestRecording;
 import mchorse.blockbuster.network.common.recording.PacketRequestedFrames;
 import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.network.common.recording.PacketUnloadFrames;
@@ -65,6 +66,7 @@ import mchorse.blockbuster.network.server.director.sync.ServerHandlerDirectorPla
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
+import mchorse.blockbuster.network.server.recording.ServerHandlerRequestRecording;
 import mchorse.blockbuster.network.server.recording.ServerHandlerUpdatePlayerData;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerAction;
 import mchorse.blockbuster.network.server.recording.actions.ServerHandlerRequestAction;
@@ -112,6 +114,7 @@ public class Dispatcher
             register(PacketActions.class, ClientHandlerActions.class, Side.CLIENT);
             register(PacketRequestAction.class, ServerHandlerRequestAction.class, Side.SERVER);
             register(PacketRequestActions.class, ServerHandlerRequestActions.class, Side.SERVER);
+            register(PacketRequestRecording.class, ServerHandlerRequestRecording.class, Side.SERVER);
             register(PacketActionList.class, ClientHandlerActionList.class, Side.CLIENT);
 
             /* Director block management messages */

@@ -96,6 +96,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public boolean wasAttached;
 
+    /**
+     * Whether the control of playback should be manual 
+     */
+    public boolean manual = false;
+
     public EntityActor(World worldIn)
     {
         super(worldIn);
@@ -246,12 +251,21 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         this.pickUpNearByItems();
 
-        if (this.playback != null && this.playback.playing)
+        if (this.playback != null)
         {
-            this.playback.next();
+            if (this.manual)
+            {
+                this.playback.record.applyFrame(this.playback.tick, this, true);
+                this.playback.record.applyAction(this.playback.tick, this, true);
+                this.playback.tick++;
+            }
+            else if (this.playback.playing)
+            {
+                this.playback.next();
+            }
         }
 
-        if (!this.worldObj.isRemote && this.playback != null && this.playback.playing)
+        if (!this.worldObj.isRemote && this.playback != null && this.playback.playing && !this.manual)
         {
             int tick = this.playback.tick;
 
@@ -474,7 +488,10 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void notifyPlayers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
+        if (!this.manual)
+        {
+            Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
+        }
     }
 
     /* Reading/writing to disk */

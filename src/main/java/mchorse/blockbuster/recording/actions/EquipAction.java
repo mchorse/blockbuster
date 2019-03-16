@@ -105,4 +105,10 @@ public class EquipAction extends Action
             tag.setTag("Data", this.itemData);
         }
     }
+
+    @Override
+    public boolean isSafe()
+    {
+        return true;
+    }
 }
