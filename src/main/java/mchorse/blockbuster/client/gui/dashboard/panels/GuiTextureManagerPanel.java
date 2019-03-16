@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.commands.model.SubCommandModelClear;
 import mchorse.blockbuster.commands.model.SubCommandModelTexture;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -16,6 +15,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationList;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
+import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -90,7 +90,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
             int filter = GL11.glGetTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER);
 
-            boolean mipmap = SubCommandModelClear.getTextures(this.mc.renderEngine).get(rl) instanceof MipmapTexture;
+            boolean mipmap = ReflectionUtils.getTextures(this.mc.renderEngine).get(rl) instanceof MipmapTexture;
             boolean linear = filter == GL11.GL_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_LINEAR || filter == GL11.GL_LINEAR_MIPMAP_NEAREST;
 
             this.linear.button.setIsChecked(linear);
@@ -117,7 +117,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     {
         if (this.rl == null) return;
 
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(this.mc.renderEngine);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
         ITextureObject tex = map.get(this.rl);
 
         boolean mipmapped = tex instanceof MipmapTexture;
@@ -150,7 +150,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     {
         if (this.rl == null) return;
 
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(this.mc.renderEngine);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
         GlStateManager.deleteTexture(map.remove(this.rl).getGlTextureId());
 
         this.textures.remove(this.rl);
@@ -176,7 +176,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
             return;
         }
 
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(this.mc.renderEngine);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
         ITextureObject texture = map.get(RLUtils.create(string));
 
         if (texture != null)
@@ -188,7 +188,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     @Override
     public void open()
     {
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(this.mc.renderEngine);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
 
         this.textures.clear();
         this.textures.getList().addAll(map.keySet());

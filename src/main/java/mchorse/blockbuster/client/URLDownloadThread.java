@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import mchorse.blockbuster.commands.model.SubCommandModelClear;
+import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -60,7 +60,7 @@ public class URLDownloadThread implements Runnable
         TextureUtil.uploadTextureImageAllocate(texture.getGlTextureId(), image, false, false);
 
         TextureManager manager = Minecraft.getMinecraft().renderEngine;
-        Map<ResourceLocation, ITextureObject> map = SubCommandModelClear.getTextures(manager);
+        Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(manager);
 
         map.put(url, texture);
     }
