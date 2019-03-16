@@ -81,6 +81,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         {
             this.linear.button.setIsChecked(false);
             this.mipmap.button.setIsChecked(false);
+            this.rl = rl;
         }
         else
         {
