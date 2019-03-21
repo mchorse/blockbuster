@@ -602,7 +602,7 @@ public class Director
         this.playing = playing;
         this.tile.playBlock(playing);
 
-        if (changed)
+        if (changed && !this.loops)
         {
             TileEntityDirector.playing += playing ? 1 : -1;
         }
