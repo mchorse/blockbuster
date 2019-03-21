@@ -1,13 +1,14 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
@@ -26,7 +27,7 @@ public class GuiRecordMorph extends GuiAbstractMorph
     private GuiElements<IGuiElement> general = new GuiElements<IGuiElement>();
     private GuiElements<IGuiElement> elements = new GuiElements<IGuiElement>();
 
-    private GuiTextElement record;
+    private GuiStringSearchListElement records;
     private GuiButtonElement<GuiButton> pick;
     private GuiCreativeMorphs morphPicker;
 
@@ -35,7 +36,7 @@ public class GuiRecordMorph extends GuiAbstractMorph
         super(mc);
 
         this.view = new GuiDelegateElement<IGuiElement>(mc, this.general);
-        this.record = new GuiTextElement(mc, 120, (str) -> this.getMorph().setRecord(str));
+        this.records = new GuiStringSearchListElement(mc, (str) -> this.getMorph().setRecord(str));
         this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
         {
             if (this.morphPicker == null)
@@ -57,13 +58,13 @@ public class GuiRecordMorph extends GuiAbstractMorph
             this.morphPicker.setVisible(true);
         });
 
-        this.record.resizer().parent(this.area).set(0, 25, 105, 20).x(1, -115);
-        this.pick.resizer().relative(this.record.resizer()).set(0, 25, 105, 20);
+        this.records.resizer().parent(this.area).set(0, 25, 105, 20).x(1, -115);
+        this.pick.resizer().relative(this.records.resizer()).set(0, 25, 105, 20);
 
         this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
         this.toggleNbt.resizer().parent(this.area).set(0, 10, 40, 20).x(1, -50).y(1, -25);
 
-        this.elements.add(this.pick, this.record);
+        this.elements.add(this.pick, this.records);
         this.general.add(this.elements);
         this.children.add(this.view, this.toggleNbt);
 
@@ -112,7 +113,13 @@ public class GuiRecordMorph extends GuiAbstractMorph
 
         RecordMorph record = this.getMorph();
 
-        this.record.setText(record.record);
+        if (ClientProxy.dashboard != null)
+        {
+            this.records.elements.addAll(ClientProxy.dashboard.recordingEditorPanel.records.records.elements);
+        }
+
+        this.records.elements.clear();
+        this.records.list.setCurrent(record.record);
 
         if (this.morphPicker != null)
         {
@@ -123,7 +130,7 @@ public class GuiRecordMorph extends GuiAbstractMorph
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.record.area.x, this.record.area.y - 12, error ? 0xffff3355 : 0xcccccc);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, error ? 0xffff3355 : 0xcccccc);
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }
 }

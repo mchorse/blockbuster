@@ -212,7 +212,6 @@ public class Record
             {
                 if (safe && !action.isSafe())
                 {
-                    System.out.println(action);
                     continue;
                 }
 

@@ -11,6 +11,7 @@ import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
+import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.director.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
@@ -28,6 +29,8 @@ import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
+import mchorse.blockbuster.network.common.PacketStructure;
+import mchorse.blockbuster.network.common.PacketStructureRequest;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
@@ -56,6 +59,7 @@ import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
+import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.director.ServerHandlerDirectorCast;
@@ -141,6 +145,10 @@ public class Dispatcher
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
             register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
             register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
+
+            /* Structure morph */
+            register(PacketStructure.class, ClientHandlerStructure.class, Side.CLIENT);
+            register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
 
             if (CameraHandler.isApertureLoaded())
             {

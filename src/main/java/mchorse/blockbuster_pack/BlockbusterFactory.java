@@ -15,6 +15,7 @@ import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -118,6 +119,15 @@ public class BlockbusterFactory implements IMorphFactory
             return record;
         }
 
+        if (name.equals("structure"))
+        {
+            StructureMorph struct = new StructureMorph();
+
+            struct.fromNBT(tag);
+
+            return struct;
+        }
+
         CustomMorph morph = new CustomMorph();
         ModelCell entry = this.models.models.get(name);
 
@@ -208,6 +218,18 @@ public class BlockbusterFactory implements IMorphFactory
 
         /* Record morph */
         morphs.addMorphVariant("record", "blockbuster_extra", "default", new RecordMorph());
+
+        /* Structure morph */
+        // StructureMorph.cleanStructures();
+        StructureMorph.request();
+
+        for (String key : StructureMorph.STRUCTURES.keySet())
+        {
+            StructureMorph morph = new StructureMorph();
+
+            morph.structure = key;
+            morphs.addMorphVariant("structure", "blockbuster_extra", key, morph);
+        }
     }
 
     @Override
