@@ -203,11 +203,11 @@ public class BlockbusterFactory implements IMorphFactory
         steveAlex.morphs.add(steveEntry);
         steveAlex.morphs.add(alexEntry);
 
-        morphs.addMorphVariant("sequencer", "blockbuster", "default", steveAlex);
-        morphs.addMorphVariant("sequencer", "blockbuster", "empty", new SequencerMorph());
+        morphs.addMorphVariant("sequencer", "blockbuster_extra", "default", steveAlex);
+        morphs.addMorphVariant("sequencer", "blockbuster_extra", "empty", new SequencerMorph());
 
         /* Record morph */
-        morphs.addMorphVariant("record", "blockbuster", "default", new RecordMorph());
+        morphs.addMorphVariant("record", "blockbuster_extra", "default", new RecordMorph());
     }
 
     @Override
