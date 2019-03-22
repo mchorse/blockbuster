@@ -21,8 +21,14 @@ public class ServerHandlerStructureRequest extends ServerMessageHandler<PacketSt
     public static List<String> getAllStructures()
     {
         List<String> structures = new ArrayList<String>();
+        File files = new File(DimensionManager.getCurrentSaveRootDirectory(), "structures");
 
-        for (File file : new File(DimensionManager.getCurrentSaveRootDirectory(), "structures").listFiles())
+        if (!files.isDirectory())
+        {
+            return structures;
+        }
+
+        for (File file : files.listFiles())
         {
             String name = file.getName();
 
