@@ -152,6 +152,7 @@ public class ModelHandler
 
         /* Generate limbs */
         OBJParser parser = entry.createOBJParser(model, data);
+        boolean remove = true;
 
         if (parser != null)
         {
@@ -161,7 +162,17 @@ public class ModelHandler
 
                 limb.name = mesh.name;
                 data.limbs.put(mesh.name, limb);
+
+                if (mesh.name.equals("body"))
+                {
+                    remove = false;
+                }
             }
+        }
+
+        if (remove)
+        {
+            data.removeLimb(data.limbs.get("body"));
         }
 
         data.fillInMissing();
