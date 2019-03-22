@@ -259,6 +259,8 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
 
+        custom.initiated = false;
+        custom.initBodyParts();
         this.updateModelRenderer();
         this.modelRenderer.morph = custom;
         this.modelRenderer.limb = null;
