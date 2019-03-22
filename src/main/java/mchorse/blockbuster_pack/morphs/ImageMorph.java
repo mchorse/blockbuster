@@ -63,6 +63,7 @@ public class ImageMorph extends AbstractMorph
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y - scale / 2, 100);
+        GL11.glScalef(1.5F, 1.5F, 1.5F);
 
         this.renderPicture(scale, false);
 

@@ -46,6 +46,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -59,6 +61,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.MultiPlaceEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -82,6 +85,25 @@ public class ActionHandler
      * damage control of tile entities) 
      */
     public static TileEntity lastTE;
+
+    /** 
+     * Adds a world event listener  
+     */
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event)
+    {
+        World world = event.getWorld();
+
+        if (!world.isRemote)
+        {
+            world.addEventListener(new WorldEventListener(world));
+        }
+
+        if (world instanceof WorldServer && ((WorldServer) world).provider.getDimension() == 0)
+        {
+            Blockbuster.reloadServerModels(true);
+        }
+    }
 
     @SubscribeEvent
     public void onItemUse(PlayerInteractEvent.RightClickItem event)

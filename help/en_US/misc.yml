@@ -14,5 +14,8 @@ blockbuster:
     morph_error: No model found
 
 # Metamorph category
-morph.category.blockbuster: Blockbuster models
+morph.category:
+    blockbuster: Blockbuster models
+    blockbuster_extra: Blockbuster extra
+
 metamorph.builder.blockbuster: Custom model builder

@@ -265,6 +265,6 @@ public class ClientProxy extends CommonProxy
     {
         String comment = I18n.format(key);
 
-        return comment.equals(key) ? defaultComment : key;
+        return comment.equals(key) ? defaultComment : comment;
     }
 }
