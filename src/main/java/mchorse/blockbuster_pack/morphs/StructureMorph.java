@@ -11,6 +11,7 @@ import mchorse.blockbuster.network.common.PacketStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -91,10 +92,20 @@ public class StructureMorph extends AbstractMorph
         {
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GlStateManager.enableAlpha();
+            GlStateManager.enableBlend();
+
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
             renderer.render();
             GlStateManager.popMatrix();
+
+            GlStateManager.disableBlend();
+            GlStateManager.disableAlpha();
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+            RenderHelper.enableStandardItemLighting();
         }
     }
 

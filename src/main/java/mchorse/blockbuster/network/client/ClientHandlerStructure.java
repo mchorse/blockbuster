@@ -71,42 +71,42 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
 
         Profiler profiler = new Profiler();
         Template template = new Template();
+        PlacementSettings placement = new PlacementSettings();
+
         WorldSettings settings = new WorldSettings(0, GameType.CREATIVE, true, false, WorldType.DEFAULT);
         WorldInfo info = new WorldInfo(settings, message.name);
-        WorldProvider provider = new WorldProviderSurface();
+        WorldProvider provider = new FakeWorldProvider();
         World world = new FakeWorld(null, info, provider, profiler, true);
 
         provider.registerWorld(world);
-        world.setWorldTime(6000);
-        world.calculateInitialSkylight();
-        world.calculateInitialWeatherBody();
         template.read(message.tag);
 
+        BlockPos origin = new BlockPos(1, 1, 1);
         int w = template.getSize().getX();
         int h = template.getSize().getY();
         int d = template.getSize().getZ();
 
-        for (int x = 0, cx = w / 16 + 1; x < cx; x++)
+        for (int x = 0, cx = (w + 2) / 16 + 1; x < cx; x++)
         {
-            for (int z = 0, cz = d / 16 + 1; z < cz; z++)
+            for (int z = 0, cz = (d + 2) / 16 + 1; z < cz; z++)
             {
                 ((ChunkProviderClient) world.getChunkProvider()).loadChunk(x, z);
             }
         }
 
-        template.addBlocksToWorld(world, new BlockPos(0, 2, 0), new PlacementSettings());
+        template.addBlocksToWorld(world, origin, placement);
 
         /* Create buffer */
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
-        int i = GLAllocation.generateDisplayLists(1);
+        int list = GLAllocation.generateDisplayLists(1);
 
-        GlStateManager.glNewList(i, 4864);
+        GlStateManager.glNewList(list, 4864);
         buffer.begin(7, DefaultVertexFormats.BLOCK);
-        buffer.setTranslation(-w / 2F, -2, -d / 2F);
+        buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
 
-        for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(0, 2, 0), new BlockPos(w, h + 2, d)))
+        for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(origin, origin.add(w, h, d)))
         {
             IBlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
@@ -129,7 +129,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             renderer.delete();
         }
 
-        renderer = new StructureRenderer(i, new BlockPos(w, h, d));
+        renderer = new StructureRenderer(list, new BlockPos(w, h, d));
         StructureMorph.STRUCTURES.put(message.name, renderer);
     }
 
@@ -156,6 +156,20 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             this.clientChunkProvider = new ChunkProviderClient(this);
 
             return this.clientChunkProvider;
+        }
+
+        @Override
+        public boolean isAreaLoaded(BlockPos center, int radius, boolean allowEmpty)
+        {
+            return true;
+        }
+    }
+
+    public static class FakeWorldProvider extends WorldProviderSurface
+    {
+        public FakeWorldProvider()
+        {
+            this.hasNoSky = false;
         }
     }
 }
