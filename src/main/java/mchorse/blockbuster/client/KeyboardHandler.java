@@ -56,7 +56,7 @@ public class KeyboardHandler
         GuiDashboard.reset();
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
-        StructureMorph.cleanStructures();
+        StructureMorph.cleanUp();
 
         if (CameraHandler.isApertureLoaded())
         {

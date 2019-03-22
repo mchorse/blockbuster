@@ -22,9 +22,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StructureMorph extends AbstractMorph
 {
+    /**
+     * Map of baked structures 
+     */
     @SideOnly(Side.CLIENT)
     public static final Map<String, StructureRenderer> STRUCTURES = new HashMap<String, StructureRenderer>();
 
+    /**
+     * The name of the structure which should be rendered 
+     */
     public String structure = "";
 
     @SideOnly(Side.CLIENT)
@@ -37,7 +43,7 @@ public class StructureMorph extends AbstractMorph
     }
 
     @SideOnly(Side.CLIENT)
-    public static void cleanStructures()
+    public static void cleanUp()
     {
         for (StructureRenderer renderer : STRUCTURES.values())
         {
@@ -92,6 +98,7 @@ public class StructureMorph extends AbstractMorph
         {
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
+            /* These states are important to enable */
             RenderHelper.disableStandardItemLighting();
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
@@ -162,6 +169,12 @@ public class StructureMorph extends AbstractMorph
         tag.setString("Structure", this.structure);
     }
 
+    /**
+     * Structure renderer
+     * 
+     * All it does is renders compiled display list and also has the 
+     * method {@link #delete()} to clean up GL memory. 
+     */
     @SideOnly(Side.CLIENT)
     public static class StructureRenderer
     {

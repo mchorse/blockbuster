@@ -46,7 +46,29 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         {
             try
             {
-                createFakeWorld(message);
+                /* Remove the structure if null was sent */
+                if (message.tag == null)
+                {
+                    StructureRenderer renderer = StructureMorph.STRUCTURES.remove(message.name);
+
+                    if (renderer != null)
+                    {
+                        renderer.delete();
+                    }
+
+                    return;
+                }
+
+                /* Finally clean the old one, if there was, and fill the structure */
+                StructureRenderer renderer = createListFromTemplate(message);
+                StructureRenderer old = StructureMorph.STRUCTURES.remove(message.name);
+
+                if (old != null)
+                {
+                    old.delete();
+                }
+
+                StructureMorph.STRUCTURES.put(message.name, renderer);
             }
             catch (Exception e)
             {
@@ -55,18 +77,19 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         });
     }
 
-    private void createFakeWorld(PacketStructure message)
+    /**
+     * This method creates a renderable display list which allows 
+     * rendering fully baked into a display list.
+     * 
+     * This was harder than I thought...
+     * 
+     * TODO: make translucent render correctly (at least with itself)
+     */
+    private StructureRenderer createListFromTemplate(PacketStructure message)
     {
         if (global == null)
         {
             global = new RenderGlobal(Minecraft.getMinecraft());
-        }
-
-        if (message.tag == null)
-        {
-            /* TODO: remove world */
-
-            return;
         }
 
         Profiler profiler = new Profiler();
@@ -75,7 +98,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
 
         WorldSettings settings = new WorldSettings(0, GameType.CREATIVE, true, false, WorldType.DEFAULT);
         WorldInfo info = new WorldInfo(settings, message.name);
-        WorldProvider provider = new FakeWorldProvider();
+        WorldProvider provider = new WorldProviderSurface();
         World world = new FakeWorld(null, info, provider, profiler, true);
 
         provider.registerWorld(world);
@@ -96,12 +119,13 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
 
         template.addBlocksToWorld(world, origin, placement);
 
-        /* Create buffer */
+        /* Create display list */
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         Tessellator tess = Tessellator.getInstance();
         VertexBuffer buffer = tess.getBuffer();
         int list = GLAllocation.generateDisplayLists(1);
 
+        /* Centerize the geometry */
         GlStateManager.glNewList(list, 4864);
         buffer.begin(7, DefaultVertexFormats.BLOCK);
         buffer.setTranslation(-w / 2F - origin.getX(), -origin.getY(), -d / 2F - origin.getZ());
@@ -121,18 +145,14 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         tess.draw();
         GlStateManager.glEndList();
 
-        /* Finally clean the old one, if there was, and fill the structure */
-        StructureRenderer renderer = StructureMorph.STRUCTURES.get(message.name);
-
-        if (renderer != null)
-        {
-            renderer.delete();
-        }
-
-        renderer = new StructureRenderer(list, new BlockPos(w, h, d));
-        StructureMorph.STRUCTURES.put(message.name, renderer);
+        return new StructureRenderer(list, template.getSize());
     }
 
+    /**
+     * Fake world class
+     * 
+     * Because the base world isn't enough to make this thing work
+     */
     public static class FakeWorld extends World
     {
         public ChunkProviderClient clientChunkProvider;
@@ -141,6 +161,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         {
             super(saveHandlerIn, info, providerIn, profilerIn, client);
 
+            /* If not called, there would be NPE any time blocks accessed */
             this.chunkProvider = this.createChunkProvider();
         }
 
@@ -158,18 +179,15 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             return this.clientChunkProvider;
         }
 
+        /**
+         * This method fixes issues with lighting not being updated 
+         * when structure template is being pasted into constructed 
+         * world.
+         */
         @Override
         public boolean isAreaLoaded(BlockPos center, int radius, boolean allowEmpty)
         {
             return true;
-        }
-    }
-
-    public static class FakeWorldProvider extends WorldProviderSurface
-    {
-        public FakeWorldProvider()
-        {
-            this.hasNoSky = false;
         }
     }
 }
