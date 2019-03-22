@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
@@ -48,6 +49,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiDirectorPanel extends GuiDashboardPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
+    public static final Pattern RECORDING_ID = Pattern.compile("^[\\w,\\s-_]*$");
 
     private GuiElements<IGuiElement> subChildren;
     private GuiDelegateElement<IGuiElement> mainView;
@@ -133,6 +135,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
+        this.id.field.setValidator((str) -> RECORDING_ID.matcher(str).matches());
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.invincible = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.button.isChecked());
         this.invisible = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.button.isChecked());
