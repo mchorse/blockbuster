@@ -102,7 +102,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         WorldProvider provider = new WorldProviderSurface();
         World world = new FakeWorld(null, info, provider, profiler, true);
 
-        provider.registerWorld(world);
+        provider.setWorld(world);
         template.read(message.tag);
 
         BlockPos origin = new BlockPos(1, 1, 1);
