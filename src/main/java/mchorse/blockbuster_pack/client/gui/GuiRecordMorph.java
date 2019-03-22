@@ -58,8 +58,8 @@ public class GuiRecordMorph extends GuiAbstractMorph
             this.morphPicker.setVisible(true);
         });
 
-        this.records.resizer().parent(this.area).set(0, 25, 105, 20).x(1, -115);
-        this.pick.resizer().relative(this.records.resizer()).set(0, 25, 105, 20);
+        this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -85);
+        this.pick.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -55);
 
         this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
         this.toggleNbt.resizer().parent(this.area).set(0, 10, 40, 20).x(1, -50).y(1, -25);
@@ -113,12 +113,14 @@ public class GuiRecordMorph extends GuiAbstractMorph
 
         RecordMorph record = this.getMorph();
 
-        if (ClientProxy.dashboard != null)
+        this.records.elements.clear();
+
+        if (ClientProxy.dashboard != null && ClientProxy.dashboard.recordingEditorPanel != null)
         {
             this.records.elements.addAll(ClientProxy.dashboard.recordingEditorPanel.records.records.elements);
+            this.records.filter("", true);
         }
 
-        this.records.elements.clear();
         this.records.list.setCurrent(record.record);
 
         if (this.morphPicker != null)
@@ -130,6 +132,7 @@ public class GuiRecordMorph extends GuiAbstractMorph
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
+        this.records.area.draw(0x88000000);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, error ? 0xffff3355 : 0xcccccc);
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

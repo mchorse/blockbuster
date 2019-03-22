@@ -55,12 +55,14 @@ import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
+import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
+import mchorse.blockbuster.network.server.ServerHandlerStructureListRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.director.ServerHandlerConfirmBreak;
@@ -152,6 +154,7 @@ public class Dispatcher
             register(PacketStructure.class, ClientHandlerStructure.class, Side.CLIENT);
             register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
             register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
+            register(PacketStructureListRequest.class, ServerHandlerStructureListRequest.class, Side.SERVER);
 
             if (CameraHandler.isApertureLoaded())
             {

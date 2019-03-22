@@ -9,6 +9,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -56,7 +57,8 @@ public class KeyboardHandler
         GuiDashboard.reset();
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
-        StructureMorph.cleanUp();
+
+        Minecraft.getMinecraft().addScheduledTask(() -> StructureMorph.cleanUp());
 
         if (CameraHandler.isApertureLoaded())
         {

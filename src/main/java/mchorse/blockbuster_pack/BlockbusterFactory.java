@@ -6,6 +6,8 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
@@ -232,6 +234,8 @@ public class BlockbusterFactory implements IMorphFactory
         morphs.addMorphVariant("record", "blockbuster_extra", "default", new RecordMorph());
 
         /* Structure morph */
+        Dispatcher.sendToServer(new PacketStructureListRequest());
+
         for (String key : StructureMorph.STRUCTURES.keySet())
         {
             StructureMorph morph = new StructureMorph();
