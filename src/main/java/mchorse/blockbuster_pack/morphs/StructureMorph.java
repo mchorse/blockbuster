@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketStructureRequest;
+import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -55,7 +55,7 @@ public class StructureMorph extends AbstractMorph
 
     public StructureMorph()
     {
-        this.name = "blockbuster.structure";
+        this.name = "structure";
     }
 
     @Override
@@ -66,6 +66,17 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
+            if (renderer.list < 0)
+            {
+                if (renderer.list == -1)
+                {
+                    renderer.list = -2;
+                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure, 0));
+                }
+
+                return;
+            }
+
             int max = Math.max(renderer.size.getX(), Math.max(renderer.size.getY(), renderer.size.getZ()));
 
             scale /= 0.65F * max;
@@ -74,6 +85,7 @@ public class StructureMorph extends AbstractMorph
 
             GlStateManager.enableDepth();
             GlStateManager.enableAlpha();
+            GlStateManager.disableCull();
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, 0);
             GlStateManager.scale(scale, scale, scale);
@@ -83,6 +95,7 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             renderer.render();
             GlStateManager.popMatrix();
+            GlStateManager.enableCull();
             GlStateManager.disableAlpha();
             GlStateManager.disableDepth();
         }
@@ -96,6 +109,17 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
+            if (renderer.list < 0)
+            {
+                if (renderer.list == -1)
+                {
+                    renderer.list = -2;
+                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure, 0));
+                }
+
+                return;
+            }
+
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
             /* These states are important to enable */
@@ -112,7 +136,11 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.shadeModel(GL11.GL_FLAT);
-            RenderHelper.enableStandardItemLighting();
+
+            GlStateManager.enableLighting();
+            GlStateManager.enableLight(0);
+            GlStateManager.enableLight(1);
+            GlStateManager.enableColorMaterial();
         }
     }
 
@@ -125,7 +153,7 @@ public class StructureMorph extends AbstractMorph
         morph.settings = this.settings;
         morph.structure = this.structure;
 
-        return null;
+        return morph;
     }
 
     @Override
@@ -178,8 +206,11 @@ public class StructureMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public static class StructureRenderer
     {
-        public int list;
-        public BlockPos size;
+        public int list = -1;
+        public BlockPos size = BlockPos.ORIGIN;
+
+        public StructureRenderer()
+        {}
 
         public StructureRenderer(int list, BlockPos size)
         {
@@ -194,7 +225,7 @@ public class StructureMorph extends AbstractMorph
 
         public void delete()
         {
-            if (this.list != -1)
+            if (this.list > 0)
             {
                 GL11.glDeleteLists(this.list, 1);
             }

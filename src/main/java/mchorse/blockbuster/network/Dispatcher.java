@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
+import mchorse.blockbuster.network.client.ClientHandlerStructureList;
 import mchorse.blockbuster.network.client.director.ClientHandlerConfirmBreak;
 import mchorse.blockbuster.network.client.director.ClientHandlerDirectorCast;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
@@ -29,8 +30,6 @@ import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
-import mchorse.blockbuster.network.common.PacketStructure;
-import mchorse.blockbuster.network.common.PacketStructureRequest;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
@@ -54,6 +53,9 @@ import mchorse.blockbuster.network.common.recording.actions.PacketActionList;
 import mchorse.blockbuster.network.common.recording.actions.PacketActions;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
+import mchorse.blockbuster.network.common.structure.PacketStructure;
+import mchorse.blockbuster.network.common.structure.PacketStructureList;
+import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
@@ -149,6 +151,7 @@ public class Dispatcher
             /* Structure morph */
             register(PacketStructure.class, ClientHandlerStructure.class, Side.CLIENT);
             register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
+            register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
 
             if (CameraHandler.isApertureLoaded())
             {

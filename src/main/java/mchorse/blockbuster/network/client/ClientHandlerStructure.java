@@ -1,6 +1,6 @@
 package mchorse.blockbuster.network.client;
 
-import mchorse.blockbuster.network.common.PacketStructure;
+import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.network.ClientMessageHandler;
@@ -85,6 +85,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
      * 
      * TODO: make translucent render correctly (at least with itself)
      */
+    @SideOnly(Side.CLIENT)
     private StructureRenderer createListFromTemplate(PacketStructure message)
     {
         if (global == null)
@@ -153,6 +154,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
      * 
      * Because the base world isn't enough to make this thing work
      */
+    @SideOnly(Side.CLIENT)
     public static class FakeWorld extends World
     {
         public ChunkProviderClient clientChunkProvider;

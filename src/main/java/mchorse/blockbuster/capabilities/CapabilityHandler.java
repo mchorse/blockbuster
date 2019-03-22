@@ -3,11 +3,11 @@ package mchorse.blockbuster.capabilities;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketAperture;
-import mchorse.blockbuster.capabilities.recording.IRecording;
-import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.structure.PacketStructureList;
+import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.utils.EntityUtils;
@@ -48,14 +48,15 @@ public class CapabilityHandler
     @SubscribeEvent
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
-        EntityPlayer player = event.player;
-        IRecording recording = Recording.get(player);
+        EntityPlayerMP player = (EntityPlayerMP) event.player;
 
         /* Do something? */
         if (CameraHandler.isApertureLoaded())
         {
-            Dispatcher.sendTo(new PacketAperture(), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketAperture(), player);
         }
+
+        Dispatcher.sendTo(new PacketStructureList(ServerHandlerStructureRequest.getAllStructures()), player);
     }
 
     /**

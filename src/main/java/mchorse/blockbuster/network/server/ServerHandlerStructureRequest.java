@@ -1,46 +1,74 @@
 package mchorse.blockbuster.network.server;
 
-import java.lang.reflect.Field;
-import java.util.Map;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketStructure;
-import mchorse.blockbuster.network.common.PacketStructureRequest;
+import mchorse.blockbuster.network.common.structure.PacketStructure;
+import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
+import net.minecraftforge.common.DimensionManager;
 
 public class ServerHandlerStructureRequest extends ServerMessageHandler<PacketStructureRequest>
 {
+    public static List<String> getAllStructures()
+    {
+        List<String> structures = new ArrayList<String>();
+
+        for (File file : new File(DimensionManager.getCurrentSaveRootDirectory(), "structures").listFiles())
+        {
+            String name = file.getName();
+
+            if (file.isFile() && name.endsWith(".nbt"))
+            {
+                structures.add(name.substring(0, name.lastIndexOf(".")));
+            }
+        }
+
+        return structures;
+    }
+
     @Override
-    @SuppressWarnings("unchecked")
     public void run(EntityPlayerMP player, PacketStructureRequest message)
     {
         WorldServer world = player.getServerWorld();
         TemplateManager manager = world.getStructureTemplateManager();
 
-        Field field = manager.getClass().getDeclaredFields()[0];
-
-        field.setAccessible(true);
-
         try
         {
-            Map<String, Template> templates = (Map<String, Template>) field.get(manager);
-
-            for (Map.Entry<String, Template> entry : templates.entrySet())
+            if (!message.name.isEmpty())
             {
-                NBTTagCompound tag = new NBTTagCompound();
-                entry.getValue().writeToNBT(tag);
+                this.sendTemplate(player, message.name, manager.getTemplate(player.mcServer, new ResourceLocation(message.name)));
 
-                Dispatcher.sendTo(new PacketStructure(entry.getKey(), tag), player);
+                return;
+            }
+
+            for (String struct : getAllStructures())
+            {
+                this.sendTemplate(player, struct, manager.getTemplate(player.mcServer, new ResourceLocation(struct)));
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Send the template to a player 
+     */
+    public void sendTemplate(EntityPlayerMP player, String key, Template template)
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        template.writeToNBT(tag);
+        Dispatcher.sendTo(new PacketStructure(key, tag), player);
     }
 }

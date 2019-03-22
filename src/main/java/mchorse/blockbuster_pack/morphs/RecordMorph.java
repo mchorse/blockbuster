@@ -95,7 +95,7 @@ public class RecordMorph extends AbstractMorph
 
             Record record = ClientProxy.manager.records.get(this.record);
 
-            if (record == null)
+            if (record == null && !this.record.isEmpty())
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }

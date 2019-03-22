@@ -64,6 +64,11 @@ public class BlockbusterFactory implements IMorphFactory
     @SideOnly(Side.CLIENT)
     public String displayNameForMorph(AbstractMorph morph)
     {
+        if (morph instanceof ImageMorph)
+        {
+            return I18n.format("blockbuster.morph.image");
+        }
+
         if (morph instanceof SequencerMorph)
         {
             return I18n.format("blockbuster.morph.sequencer");
@@ -72,6 +77,11 @@ public class BlockbusterFactory implements IMorphFactory
         if (morph instanceof RecordMorph)
         {
             return I18n.format("blockbuster.morph.record");
+        }
+
+        if (morph instanceof StructureMorph)
+        {
+            return I18n.format("blockbuster.morph.structure");
         }
 
         String[] splits = morph.name.split("\\.");
@@ -92,6 +102,7 @@ public class BlockbusterFactory implements IMorphFactory
         String name = tag.getString("Name");
         name = name.substring(name.indexOf(".") + 1);
 
+        /* Utility */
         if (name.equals("image"))
         {
             ImageMorph image = new ImageMorph();
@@ -128,6 +139,7 @@ public class BlockbusterFactory implements IMorphFactory
             return struct;
         }
 
+        /* Custom model morphs */
         CustomMorph morph = new CustomMorph();
         ModelCell entry = this.models.models.get(name);
 
@@ -194,7 +206,7 @@ public class BlockbusterFactory implements IMorphFactory
             ImageMorph image = new ImageMorph();
 
             image.texture = RLUtils.create("b.a", "image/" + texture);
-            morphs.addMorphVariant(image.name, "blockbuster", texture, image);
+            morphs.addMorphVariant(image.name, "blockbuster_extra", texture, image);
         }
 
         /* Sequencer morphs */
@@ -220,9 +232,6 @@ public class BlockbusterFactory implements IMorphFactory
         morphs.addMorphVariant("record", "blockbuster_extra", "default", new RecordMorph());
 
         /* Structure morph */
-        // StructureMorph.cleanStructures();
-        StructureMorph.request();
-
         for (String key : StructureMorph.STRUCTURES.keySet())
         {
             StructureMorph morph = new StructureMorph();
@@ -235,6 +244,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure");
     }
 }
