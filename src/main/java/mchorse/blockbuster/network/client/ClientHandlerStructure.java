@@ -4,19 +4,21 @@ import mchorse.blockbuster.network.common.PacketStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.network.ClientMessageHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
-import net.minecraft.client.renderer.ChunkRenderContainer;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.RenderList;
-import net.minecraft.client.renderer.chunk.ChunkRenderDispatcher;
-import net.minecraft.client.renderer.chunk.ListedRenderChunk;
-import net.minecraft.client.renderer.chunk.RenderChunk;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
@@ -67,67 +69,57 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             return;
         }
 
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         Profiler profiler = new Profiler();
         Template template = new Template();
         WorldSettings settings = new WorldSettings(0, GameType.CREATIVE, true, false, WorldType.DEFAULT);
+        WorldInfo info = new WorldInfo(settings, message.name);
         WorldProvider provider = new WorldProviderSurface();
-        World world = new FakeWorld(null, new WorldInfo(settings, message.name), provider, profiler, true);
+        World world = new FakeWorld(null, info, provider, profiler, true);
 
         provider.registerWorld(world);
+        world.setWorldTime(6000);
+        world.calculateInitialSkylight();
+        world.calculateInitialWeatherBody();
         template.read(message.tag);
 
         int w = template.getSize().getX();
         int h = template.getSize().getY();
         int d = template.getSize().getZ();
-        int cx = w / 16 + 1;
-        int cy = h / 16 + 1;
-        int cz = d / 16 + 1;
-        int i = 0;
 
-        for (int x = 0; x < cx; x++)
+        for (int x = 0, cx = w / 16 + 1; x < cx; x++)
         {
-            for (int z = 0; z < cz; z++)
+            for (int z = 0, cz = d / 16 + 1; z < cz; z++)
             {
                 ((ChunkProviderClient) world.getChunkProvider()).loadChunk(x, z);
             }
         }
 
-        template.addBlocksToWorld(world, BlockPos.ORIGIN, new PlacementSettings());
+        template.addBlocksToWorld(world, new BlockPos(0, 2, 0), new PlacementSettings());
 
-        double px = player.posX;
-        double py = player.posY;
-        double pz = player.posZ;
+        /* Create buffer */
+        BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+        Tessellator tess = Tessellator.getInstance();
+        VertexBuffer buffer = tess.getBuffer();
+        int i = GLAllocation.generateDisplayLists(1);
 
-        player.posX = 0;
-        player.posY = 0;
-        player.posZ = 0;
+        GlStateManager.glNewList(i, 4864);
+        buffer.begin(7, DefaultVertexFormats.BLOCK);
+        buffer.setTranslation(-w / 2F, -2, -d / 2F);
 
-        ChunkRenderContainer container = new RenderList();
-        ChunkRenderDispatcher dispatcher = new ChunkRenderDispatcher();
-        RenderChunk[] chunks = new RenderChunk[cx * cy * cz];
-        container.initialize(0, 0, 0);
-
-        for (int x = 0; x < cx; x++)
+        for (BlockPos.MutableBlockPos pos : BlockPos.getAllInBoxMutable(new BlockPos(0, 2, 0), new BlockPos(w, h + 2, d)))
         {
-            for (int y = 0; y < cy; y++)
+            IBlockState state = world.getBlockState(pos);
+            Block block = state.getBlock();
+
+            if (block.getDefaultState().getRenderType() != EnumBlockRenderType.INVISIBLE)
             {
-                for (int z = 0; z < cz; z++)
-                {
-                    RenderChunk chunk = new FakeChunk(world, global, i);
-
-                    chunk.setPosition(x * 16, y * 16, z * 16);
-                    dispatcher.updateChunkNow(chunk);
-                    chunks[i] = chunk;
-
-                    i++;
-                }
+                dispatcher.renderBlock(state, pos, world, buffer);
             }
         }
 
-        player.posX = px;
-        player.posY = py;
-        player.posZ = pz;
+        buffer.setTranslation(0, 0, 0);
+        tess.draw();
+        GlStateManager.glEndList();
 
         /* Finally clean the old one, if there was, and fill the structure */
         StructureRenderer renderer = StructureMorph.STRUCTURES.get(message.name);
@@ -137,7 +129,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
             renderer.delete();
         }
 
-        renderer = new StructureRenderer(container, chunks, new BlockPos(w, h, d));
+        renderer = new StructureRenderer(i, new BlockPos(w, h, d));
         StructureMorph.STRUCTURES.put(message.name, renderer);
     }
 
@@ -162,34 +154,8 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         protected IChunkProvider createChunkProvider()
         {
             this.clientChunkProvider = new ChunkProviderClient(this);
+
             return this.clientChunkProvider;
-        }
-    }
-
-    public static class FakeChunk extends ListedRenderChunk
-    {
-        public FakeChunk(World p_i47120_1_, RenderGlobal p_i47120_2_, int p_i47120_3_)
-        {
-            super(p_i47120_1_, p_i47120_2_, p_i47120_3_);
-        }
-
-        @Override
-        protected ChunkCache createRegionRenderCache(World world, BlockPos from, BlockPos to, int subtract)
-        {
-            return new FakeChunkCache(world, from, to, subtract);
-        }
-
-        @Override
-        public void multModelviewMatrix()
-        {}
-    }
-
-    public static class FakeChunkCache extends ChunkCache
-    {
-        public FakeChunkCache(World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)
-        {
-            super(worldIn, posFromIn, posToIn, subIn);
-            this.hasExtendedLevels = false;
         }
     }
 }

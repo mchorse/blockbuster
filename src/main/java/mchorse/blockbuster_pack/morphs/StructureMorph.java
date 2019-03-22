@@ -4,16 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import org.lwjgl.opengl.GL11;
+
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.client.renderer.ChunkRenderContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.chunk.RenderChunk;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -58,11 +59,25 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
+            int max = Math.max(renderer.size.getX(), Math.max(renderer.size.getY(), renderer.size.getZ()));
+
+            scale /= 0.65F * max;
+
+            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+            GlStateManager.enableDepth();
+            GlStateManager.enableAlpha();
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, 0);
             GlStateManager.scale(scale, scale, scale);
+            GlStateManager.rotate(45.0F, -1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(45.0F, 0.0F, -1.0F, 0.0F);
+            GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             renderer.render();
             GlStateManager.popMatrix();
+            GlStateManager.disableAlpha();
+            GlStateManager.disableDepth();
         }
     }
 
@@ -74,11 +89,10 @@ public class StructureMorph extends AbstractMorph
 
         if (renderer != null)
         {
-            GlStateManager.color(1, 1, 1);
+            Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
-            // GlStateManager.scale(16, 16, 16);
             renderer.render();
             GlStateManager.popMatrix();
         }
@@ -140,32 +154,25 @@ public class StructureMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public static class StructureRenderer
     {
-        public ChunkRenderContainer renderer;
-        public RenderChunk[] chunks;
+        public int list;
         public BlockPos size;
 
-        public StructureRenderer(ChunkRenderContainer renderer, RenderChunk[] chunks, BlockPos size)
+        public StructureRenderer(int list, BlockPos size)
         {
-            this.renderer = renderer;
-            this.chunks = chunks;
+            this.list = list;
             this.size = size;
         }
 
         public void render()
         {
-            for (RenderChunk chunk : this.chunks)
-            {
-                this.renderer.addRenderChunk(chunk, BlockRenderLayer.SOLID);
-            }
-
-            this.renderer.renderChunkLayer(BlockRenderLayer.SOLID);
+            GL11.glCallList(this.list);
         }
 
         public void delete()
         {
-            for (RenderChunk chunk : this.chunks)
+            if (this.list != -1)
             {
-                chunk.deleteGlResources();
+                GL11.glDeleteLists(this.list, 1);
             }
         }
     }
