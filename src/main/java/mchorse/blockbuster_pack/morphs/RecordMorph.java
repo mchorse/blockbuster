@@ -13,11 +13,15 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.mclib.client.gui.widgets.GuiInventory;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -26,6 +30,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RecordMorph extends AbstractMorph
 {
+    /**
+     * Record morph's icon in GUI 
+     */
+    public static final ItemStack ICON = new ItemStack(Items.RECORD_13);
+
     @SideOnly(Side.CLIENT)
     public EntityActor actor;
 
@@ -51,7 +60,18 @@ public class RecordMorph extends AbstractMorph
     {
         this.initiateActor(player.world);
 
-        if (this.actor.morph != null)
+        if (this.initial == null)
+        {
+            /* Render icon when initial morph isn't available */
+            scale = (float) Math.ceil(scale / 16);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x + 1, y - 9, 0);
+            GlStateManager.scale(scale, scale, 1);
+            GuiInventory.drawItemStack(ICON, -8, -8, null);
+            GlStateManager.popMatrix();
+        }
+        else if (this.actor.morph != null)
         {
             this.actor.morph.renderOnScreen(player, x, y, scale, alpha);
         }
@@ -95,7 +115,7 @@ public class RecordMorph extends AbstractMorph
 
             Record record = ClientProxy.manager.records.get(this.record);
 
-            if (record == null)
+            if (record == null && !this.record.isEmpty())
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }

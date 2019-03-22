@@ -12,7 +12,9 @@ blockbuster:
         model_block: 以静态方式放置伪装实体
         green_block: "%s 色度方块。可以用来抠像。"
 
-    morph.sequencer: 序列发生器
+    morph:
+        sequencer: 序列发生器
+        record: 录制
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster

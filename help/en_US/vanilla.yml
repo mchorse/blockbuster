@@ -13,8 +13,10 @@ blockbuster:
         green_block: "%s chroma block. Can be used for chroma keying."
 
     morph:
+        image: Image 
         sequencer: Sequencer
         record: Record
+        structure: Structure
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster

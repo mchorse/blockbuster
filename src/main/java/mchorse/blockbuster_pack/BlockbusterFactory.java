@@ -6,6 +6,8 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
@@ -15,6 +17,7 @@ import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -63,6 +66,11 @@ public class BlockbusterFactory implements IMorphFactory
     @SideOnly(Side.CLIENT)
     public String displayNameForMorph(AbstractMorph morph)
     {
+        if (morph instanceof ImageMorph)
+        {
+            return I18n.format("blockbuster.morph.image");
+        }
+
         if (morph instanceof SequencerMorph)
         {
             return I18n.format("blockbuster.morph.sequencer");
@@ -71,6 +79,11 @@ public class BlockbusterFactory implements IMorphFactory
         if (morph instanceof RecordMorph)
         {
             return I18n.format("blockbuster.morph.record");
+        }
+
+        if (morph instanceof StructureMorph)
+        {
+            return I18n.format("blockbuster.morph.structure");
         }
 
         String[] splits = morph.name.split("\\.");
@@ -91,6 +104,7 @@ public class BlockbusterFactory implements IMorphFactory
         String name = tag.getString("Name");
         name = name.substring(name.indexOf(".") + 1);
 
+        /* Utility */
         if (name.equals("image"))
         {
             ImageMorph image = new ImageMorph();
@@ -118,6 +132,16 @@ public class BlockbusterFactory implements IMorphFactory
             return record;
         }
 
+        if (name.equals("structure"))
+        {
+            StructureMorph struct = new StructureMorph();
+
+            struct.fromNBT(tag);
+
+            return struct;
+        }
+
+        /* Custom model morphs */
         CustomMorph morph = new CustomMorph();
         ModelCell entry = this.models.models.get(name);
 
@@ -184,7 +208,7 @@ public class BlockbusterFactory implements IMorphFactory
             ImageMorph image = new ImageMorph();
 
             image.texture = RLUtils.create("b.a", "image/" + texture);
-            morphs.addMorphVariant(image.name, "blockbuster", texture, image);
+            morphs.addMorphVariant(image.name, "blockbuster_extra", texture, image);
         }
 
         /* Sequencer morphs */
@@ -203,16 +227,27 @@ public class BlockbusterFactory implements IMorphFactory
         steveAlex.morphs.add(steveEntry);
         steveAlex.morphs.add(alexEntry);
 
-        morphs.addMorphVariant("sequencer", "blockbuster", "default", steveAlex);
-        morphs.addMorphVariant("sequencer", "blockbuster", "empty", new SequencerMorph());
+        morphs.addMorphVariant("sequencer", "blockbuster_extra", "default", steveAlex);
+        morphs.addMorphVariant("sequencer", "blockbuster_extra", "empty", new SequencerMorph());
 
         /* Record morph */
-        morphs.addMorphVariant("record", "blockbuster", "default", new RecordMorph());
+        morphs.addMorphVariant("record", "blockbuster_extra", "default", new RecordMorph());
+
+        /* Structure morph */
+        Dispatcher.sendToServer(new PacketStructureListRequest());
+
+        for (String key : StructureMorph.STRUCTURES.keySet())
+        {
+            StructureMorph morph = new StructureMorph();
+
+            morph.structure = key;
+            morphs.addMorphVariant("structure", "blockbuster_extra", key, morph);
+        }
     }
 
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure");
     }
 }
