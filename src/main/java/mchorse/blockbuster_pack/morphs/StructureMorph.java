@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,11 +17,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.management.PlayerList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -142,6 +145,7 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             renderer.render();
+            renderer.renderTEs();
             GlStateManager.popMatrix();
             GlStateManager.enableCull();
             GlStateManager.disableAlpha();
@@ -171,16 +175,16 @@ public class StructureMorph extends AbstractMorph
             Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
             /* These states are important to enable */
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
+
             RenderHelper.disableStandardItemLighting();
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, z);
             renderer.render();
-            GlStateManager.popMatrix();
 
             GlStateManager.disableBlend();
             GlStateManager.disableAlpha();
@@ -190,6 +194,10 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.enableLight(0);
             GlStateManager.enableLight(1);
             GlStateManager.enableColorMaterial();
+
+            renderer.renderTEs();
+
+            GlStateManager.popMatrix();
         }
     }
 
@@ -257,19 +265,37 @@ public class StructureMorph extends AbstractMorph
     {
         public int list = -1;
         public BlockPos size = BlockPos.ORIGIN;
+        public List<TileEntity> tes;
 
         public StructureRenderer()
         {}
 
-        public StructureRenderer(int list, BlockPos size)
+        public StructureRenderer(int list, BlockPos size, List<TileEntity> tes)
         {
             this.list = list;
             this.size = size;
+            this.tes = tes;
         }
 
         public void render()
         {
             GL11.glCallList(this.list);
+        }
+
+        public void renderTEs()
+        {
+            if (this.tes == null)
+            {
+                return;
+            }
+
+            for (TileEntity te : this.tes)
+            {
+                BlockPos pos = te.getPos();
+                TileEntityRendererDispatcher.instance.renderTileEntityAt(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
+            }
+
+            GlStateManager.disableLighting();
         }
 
         public void delete()
@@ -278,6 +304,7 @@ public class StructureMorph extends AbstractMorph
             {
                 GL11.glDeleteLists(this.list, 1);
                 this.list = -1;
+                this.tes = null;
             }
         }
     }

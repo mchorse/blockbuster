@@ -1,5 +1,8 @@
 package mchorse.blockbuster.network.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
@@ -12,11 +15,11 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameType;
@@ -35,9 +38,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure>
 {
-    @SideOnly(Side.CLIENT)
-    public static RenderGlobal global;
-
     @Override
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketStructure message)
@@ -88,11 +88,6 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
     @SideOnly(Side.CLIENT)
     private StructureRenderer createListFromTemplate(PacketStructure message)
     {
-        if (global == null)
-        {
-            global = new RenderGlobal(Minecraft.getMinecraft());
-        }
-
         Profiler profiler = new Profiler();
         Template template = new Template();
         PlacementSettings placement = new PlacementSettings();
@@ -101,6 +96,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         WorldInfo info = new WorldInfo(settings, message.name);
         WorldProvider provider = new WorldProviderSurface();
         World world = new FakeWorld(null, info, provider, profiler, true);
+        List<TileEntity> tes = new ArrayList<TileEntity>();
 
         provider.registerWorld(world);
         template.read(message.tag);
@@ -119,6 +115,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         }
 
         template.addBlocksToWorld(world, origin, placement);
+        tes.addAll(world.loadedTileEntityList);
 
         /* Create display list */
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -146,7 +143,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
         tess.draw();
         GlStateManager.glEndList();
 
-        return new StructureRenderer(list, template.getSize());
+        return new StructureRenderer(list, template.getSize(), tes);
     }
 
     /**
