@@ -130,6 +130,17 @@ public class GuiRecordMorph extends GuiAbstractMorph
     }
 
     @Override
+    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    {
+        try
+        {
+            this.getMorph().initial.renderOnScreen(this.mc.thePlayer, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
+        }
+        catch (Exception e)
+        {}
+    }
+
+    @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         this.records.area.draw(0x88000000);

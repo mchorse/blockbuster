@@ -163,6 +163,7 @@ public class RecordMorph extends AbstractMorph
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = 0;
                     this.actor.playback.record.applyAction(0, this.actor, true);
+                    this.actor.morph = this.initial;
                 }
             }
         }
