@@ -127,6 +127,7 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
