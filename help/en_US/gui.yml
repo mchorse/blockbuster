@@ -218,6 +218,7 @@ blockbuster.gui:
         
     sequencer:
         duration: Duration
+        random: Random
         reverse: Reverse
         no_morph: (no morph)
         morphs: Morphs
