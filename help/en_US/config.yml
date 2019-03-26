@@ -33,6 +33,7 @@ blockbuster.config:
         actor_fall_damage: Actor fall damage
         actor_tracking_range: Actor tracking range
         actor_rendering_range: Actor rendering range
+        actor_always_render: Always render actor
         actor_always_render_names: Always render actor names
         actor_swish_swipe: Swipe swish
         actor_y: Fix Y motion
