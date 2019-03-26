@@ -74,13 +74,7 @@ public class ModelExtrudedLayer
 
         if (id != -1)
         {
-            // GlStateManager.disableTexture2D();
-            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-
             GL11.glCallList(id);
-
-            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            // GlStateManager.enableTexture2D();
         }
 
         /* Clean up cache */
@@ -161,6 +155,7 @@ public class ModelExtrudedLayer
         int d = renderer.limb.size[2];
         int offsetX = renderer.limb.texture[0];
         int offsetY = renderer.limb.texture[1];
+        boolean mirror = renderer.limb.mirror;
 
         /* Top & bottom */
         int x = (offsetX + d) * stepX;

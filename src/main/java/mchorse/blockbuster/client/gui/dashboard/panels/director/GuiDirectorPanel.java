@@ -156,7 +156,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
-        GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 0, 48, 16, (b) ->
+        GuiElement element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 0, 48, 16, (b) ->
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
         }).tooltip(I18n.format("blockbuster.gui.director.config"), TooltipDirection.LEFT);
@@ -165,17 +165,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.subChildren.add(element);
 
         /* Add, duplicate and remove replay buttons */
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip(I18n.format("blockbuster.gui.add"), TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addReplay()).tooltip(I18n.format("blockbuster.gui.add"), TooltipDirection.LEFT);
         element.resizer().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeReplay()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
         element.resizer().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removeReplay()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
         element.resizer().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
         this.replays.add(element);

@@ -76,7 +76,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 GlStateManager.color(1, 1, 1);
                 GlStateManager.enableAlpha();
-                mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+                mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
                 /* Fuck you, Gui class, for not making the methods static */
                 mc.currentScreen.drawTexturedModalRect(x - 8, y - 20, 32, 16, 16, 16);
                 GlStateManager.disableAlpha();

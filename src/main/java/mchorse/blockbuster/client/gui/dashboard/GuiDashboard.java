@@ -29,7 +29,7 @@ public class GuiDashboard extends GuiBase
     /**
      * Icons texture used across all dashboard panels 
      */
-    public static final ResourceLocation ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
+    public static final ResourceLocation GUI_ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
 
     public GuiDelegateElement<GuiDashboardPanel> panel;
     public GuiDespacito sidebar;

@@ -195,7 +195,7 @@ public class CameraHandler
         }
 
         GuiElements<IGuiElement> elements = new GuiElements<>();
-        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) ->
+        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) ->
         {
             if (!record.selector.isVisible())
             {

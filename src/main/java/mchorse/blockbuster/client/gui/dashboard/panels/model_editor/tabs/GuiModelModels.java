@@ -45,8 +45,8 @@ public class GuiModelModels extends GuiModelEditorTab
         this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).w(1, 0);
         this.children.add(this.modelList);
 
-        this.save = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 112, 32, 112, 48, (b) -> this.saveModel()).tooltip(I18n.format("blockbuster.gui.me.models.save"), TooltipDirection.BOTTOM);
-        this.export = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 64, 64, 80, (b) -> this.exportModel()).tooltip(I18n.format("blockbuster.gui.me.models.export"), TooltipDirection.BOTTOM);
+        this.save = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 112, 32, 112, 48, (b) -> this.saveModel()).tooltip(I18n.format("blockbuster.gui.me.models.save"), TooltipDirection.BOTTOM);
+        this.export = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) -> this.exportModel()).tooltip(I18n.format("blockbuster.gui.me.models.export"), TooltipDirection.BOTTOM);
 
         this.save.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -18);
         this.export.resizer().set(-20, 0, 16, 16).relative(this.save.resizer());
