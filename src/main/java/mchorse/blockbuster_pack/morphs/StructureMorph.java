@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -7,7 +8,9 @@ import java.util.Objects;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
+import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,8 +18,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,6 +36,11 @@ public class StructureMorph extends AbstractMorph
     public static final Map<String, StructureRenderer> STRUCTURES = new HashMap<String, StructureRenderer>();
 
     /**
+     * Cache of structures 
+     */
+    public static final Map<String, Long> STRUCTURE_CACHE = new HashMap<String, Long>();
+
+    /**
      * The name of the structure which should be rendered 
      */
     public String structure = "";
@@ -39,6 +51,42 @@ public class StructureMorph extends AbstractMorph
         if (STRUCTURES.isEmpty())
         {
             Dispatcher.sendToServer(new PacketStructureRequest());
+        }
+    }
+
+    /**
+     * Update structures 
+     */
+    public static void checkStructures()
+    {
+        for (String name : ServerHandlerStructureRequest.getAllStructures())
+        {
+            File file = ServerHandlerStructureRequest.getStructureFolder(name);
+            Long modified = STRUCTURE_CACHE.get(name);
+
+            if (modified == null)
+            {
+                modified = file.lastModified();
+                STRUCTURE_CACHE.put(name, modified);
+            }
+
+            if (modified != null && modified.longValue() < file.lastModified())
+            {
+                STRUCTURE_CACHE.put(name, file.lastModified());
+
+                IMessage packet = new PacketStructure(name, null);
+                PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+                for (String username : players.getAllUsernames())
+                {
+                    EntityPlayerMP player = players.getPlayerByUsername(username);
+
+                    if (player != null)
+                    {
+                        Dispatcher.sendTo(packet, player);
+                    }
+                }
+            }
         }
     }
 
@@ -71,7 +119,7 @@ public class StructureMorph extends AbstractMorph
                 if (renderer.list == -1)
                 {
                     renderer.list = -2;
-                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure, 0));
+                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
                 return;
@@ -114,7 +162,7 @@ public class StructureMorph extends AbstractMorph
                 if (renderer.list == -1)
                 {
                     renderer.list = -2;
-                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure, 0));
+                    Dispatcher.sendToServer(new PacketStructureRequest(this.structure));
                 }
 
                 return;
@@ -229,6 +277,7 @@ public class StructureMorph extends AbstractMorph
             if (this.list > 0)
             {
                 GL11.glDeleteLists(this.list, 1);
+                this.list = -1;
             }
         }
     }

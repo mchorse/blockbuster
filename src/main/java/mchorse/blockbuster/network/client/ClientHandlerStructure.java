@@ -49,7 +49,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
                 /* Remove the structure if null was sent */
                 if (message.tag == null)
                 {
-                    StructureRenderer renderer = StructureMorph.STRUCTURES.remove(message.name);
+                    StructureRenderer renderer = StructureMorph.STRUCTURES.get(message.name);
 
                     if (renderer != null)
                     {
