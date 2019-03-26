@@ -11,6 +11,7 @@ import java.util.Scanner;
 import com.google.common.base.Objects;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
@@ -36,55 +37,69 @@ public class Model
      * Scheme version. Would be used in future versions for extracting and
      * exporting purposes.
      */
+    @Expose
     public String scheme = "1.3";
 
     /**
      * Not really sure what to do with this one.
      */
+    @Expose
     public String name = "";
 
     /**
      * Default texture for this model
      */
+    @Expose
     public ResourceLocation defaultTexture;
 
     /**
      * Texture size. First element is width, second is height.
      */
+    @Expose
     public int[] texture = new int[] {64, 32};
 
     /**
      * Scale of the model 
      */
+    @Expose
     public float[] scale = new float[] {1, 1, 1};
 
     /**
      * Scale to be displayed in GUI 
      */
+    @Expose
     public float scaleGui = 1;
 
     /**
      * Class for the custom model 
      */
+    @Expose
     public String model = "";
 
     /**
      * Does this model provides OBJ model
      */
+    @Expose
     public boolean providesObj = false;
 
     /**
      * Does this model provides MTL file
      */
+    @Expose
     public boolean providesMtl = false;
 
     /**
      * Skins folder 
      */
+    @Expose
     public String skins = "";
 
+    @Expose
     public Map<String, ModelLimb> limbs = new HashMap<String, ModelLimb>();
+
+    @Expose
     public Map<String, ModelPose> poses = new HashMap<String, ModelPose>();
+
     public Map<String, OBJMaterial> materials = new HashMap<String, OBJMaterial>();
 
     /**
@@ -106,7 +121,7 @@ public class Model
      */
     public static Model parse(String json) throws Exception
     {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).registerTypeAdapter(ModelLimb.class, new ModelLimbAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Model.class, new ModelAdapter()).registerTypeAdapter(ModelLimb.class, new ModelLimbAdapter()).excludeFieldsWithoutExposeAnnotation().create();
         Model data = gson.fromJson(json, Model.class);
 
         for (String key : REQUIRED_POSES)
