@@ -9,7 +9,7 @@ blockbuster.gui:
     reset: Réinitialiser
     add: Ajouter
     edit: Editer
-    remove: Suprrimer
+    remove: Supprimer
     record: Enregistrer
     pick: Choisir un morph
     duplicate: Dupliquer
@@ -70,7 +70,7 @@ blockbuster.gui:
         edit_record: Editer l'enregistrement
         update_data: Mettre à jour les datas
         update_data_tooltip: Mettre à jour les datas dans le fichier d'enregistrement
-        rename_prefix: Renamer le prefix
+        rename_prefix: Renommer le prefix
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
         rename_prefix_popup: "Entrer un nouveau prefix:"
     
@@ -143,7 +143,7 @@ blockbuster.gui:
                 head: Tête
                 off_hand: Main secondaire
             shoot_arrow:
-                title: Shoot arrow
+                title: Lance une fleche
                 desc: Shoots a regular arrow with given force
             place_block:
                 title: Place un block
@@ -152,7 +152,7 @@ blockbuster.gui:
                 title: Mounting
                 desc: Mounts or unmounts an entity standing in front
             interact_block:
-                title: Interact block
+                title: Interaction avec le block
                 desc: Makes actor interact with a block
             break_block:
                 title: Détruire un block
