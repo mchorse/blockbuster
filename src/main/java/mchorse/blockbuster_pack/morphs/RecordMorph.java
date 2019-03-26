@@ -86,11 +86,14 @@ public class RecordMorph extends AbstractMorph
         {
             if (this.actor.playback.record != null)
             {
-                Frame first = this.actor.playback.record.frames.get(0);
+                Frame first = this.actor.playback.record.getFrame(0);
 
-                x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
-                y += (this.actor.prevPosY + (this.actor.posY - this.actor.prevPosY) * partialTicks) - first.y;
-                z += (this.actor.prevPosZ + (this.actor.posZ - this.actor.prevPosZ) * partialTicks) - first.z;
+                if (first != null)
+                {
+                    x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
+                    y += (this.actor.prevPosY + (this.actor.posY - this.actor.prevPosY) * partialTicks) - first.y;
+                    z += (this.actor.prevPosZ + (this.actor.posZ - this.actor.prevPosZ) * partialTicks) - first.z;
+                }
             }
 
             this.actor.morph.render(this.actor, x, y, z, entityYaw, partialTicks);
