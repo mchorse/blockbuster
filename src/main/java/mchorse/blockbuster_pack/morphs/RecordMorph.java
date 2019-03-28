@@ -50,6 +50,8 @@ public class RecordMorph extends AbstractMorph
      */
     public String record = "";
 
+    private boolean initiate;
+
     public RecordMorph()
     {
         this.name = "blockbuster.record";
@@ -88,6 +90,14 @@ public class RecordMorph extends AbstractMorph
             {
                 Frame first = this.actor.playback.record.getFrame(0);
 
+                if (!this.initiate)
+                {
+                    this.actor.prevPosX = this.actor.posX = first.x;
+                    this.actor.prevPosY = this.actor.posY = first.y;
+                    this.actor.prevPosZ = this.actor.posZ = first.z;
+                    this.initiate = true;
+                }
+
                 if (first != null)
                 {
                     x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
@@ -106,6 +116,7 @@ public class RecordMorph extends AbstractMorph
         if (this.reload)
         {
             this.actor = null;
+            this.initiate = false;
             this.reload = false;
         }
 
