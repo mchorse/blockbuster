@@ -34,7 +34,7 @@ public class GuiImageMorph extends GuiAbstractMorph
         this.texture = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
         {
             this.picker.setVisible(true);
-            this.picker.tree.rebuild();
+            this.picker.refresh();
         });
 
         this.scale = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.scale"), (value) ->

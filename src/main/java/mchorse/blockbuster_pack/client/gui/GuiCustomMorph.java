@@ -75,7 +75,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
         {
             this.textures.setVisible(true);
-            this.textures.tree.rebuild();
+            this.textures.refresh();
         });
 
         this.reset = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
@@ -122,7 +122,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.pickMaterialTexture = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
         {
             this.materialPicker.setVisible(true);
-            this.materialPicker.tree.rebuild();
+            this.materialPicker.refresh();
         });
         this.materialPicker = new GuiTexturePicker(mc, (rl) -> this.setCurrentMaterialRL(rl));
 
