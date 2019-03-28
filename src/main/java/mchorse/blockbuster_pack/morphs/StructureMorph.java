@@ -293,7 +293,7 @@ public class StructureMorph extends AbstractMorph
             for (TileEntity te : this.tes)
             {
                 BlockPos pos = te.getPos();
-                TileEntityRendererDispatcher.instance.renderTileEntityAt(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
+                TileEntityRendererDispatcher.instance.render(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
             }
         }
 
