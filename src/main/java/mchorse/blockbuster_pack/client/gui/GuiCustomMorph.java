@@ -32,7 +32,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
     public GuiElements<IGuiElement> general = new GuiElements<IGuiElement>();
     public GuiElements<IGuiElement> materials = new GuiElements<IGuiElement>();
     public GuiPoseEditor poseEditor;
-    public GuiBodyPartEditor bodyPart;
+    public GuiCustomBodyPartEditor bodyPart;
 
     public GuiDelegateElement<IGuiElement> view;
     public GuiModelRendererBodyPart modelRenderer;
@@ -115,7 +115,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.scale.resizer().parent(this.area).set(10, 10, 105, 20).x(1, -115);
         this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
-        this.general.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.textures, this.scale, this.scaleGui);
+        this.general.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures);
 
         /* Materials view */
         this.materialList = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str));
@@ -168,7 +168,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         /* External editors */
         this.poseEditor = new GuiPoseEditor(mc, this);
-        this.bodyPart = new GuiBodyPartEditor(mc, this);
+        this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
     }
 
     private void setCurrentMaterial(String str)
@@ -308,7 +308,8 @@ public class GuiCustomMorph extends GuiAbstractMorph
         }
 
         this.poseEditor.startEditing(custom);
-        this.bodyPart.startEditing(custom);
+        this.bodyPart.setLimbs(custom.model.limbs.keySet());
+        this.bodyPart.startEditing(custom.parts);
     }
 
     public CustomMorph getMorph()

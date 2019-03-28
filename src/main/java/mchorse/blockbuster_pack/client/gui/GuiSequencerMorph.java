@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.client.gui;
 
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -17,6 +16,7 @@ import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -52,7 +52,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry));
         this.addPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.add"), (b) ->
         {
-            SequenceEntry entry = new SequenceEntry(null);
+            SequenceEntry current = this.list.getCurrent();
+            SequenceEntry entry = new SequenceEntry(current == null ? null : current.morph.clone(true));
 
             this.list.getList().add(entry);
             this.select(entry);

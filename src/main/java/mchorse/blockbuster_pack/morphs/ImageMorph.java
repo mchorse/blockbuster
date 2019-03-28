@@ -104,7 +104,6 @@ public class ImageMorph extends AbstractMorph
 
         if (this.billboard)
         {
-            /* TODO: implement */
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
             entityYaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks;
