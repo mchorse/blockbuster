@@ -141,8 +141,9 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     protected void preRenderCallback(EntityLivingBase entity, float partialTickTime)
     {
         Model model = ((ModelCustom) this.mainModel).model;
+        float scale = this.current == null ? 1.0F : this.current.scale;
 
-        GlStateManager.scale(model.scale[0], model.scale[1], model.scale[2]);
+        GlStateManager.scale(model.scale[0] * scale, model.scale[1] * scale, model.scale[2] * scale);
     }
 
     /**

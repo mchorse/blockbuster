@@ -61,7 +61,7 @@ public class GuiDespacito extends GuiElement
         int h = this.area.h;
         int x = this.area.x + this.area.w;
 
-        this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+        this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
         GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 32, this.area.w, h, 32, 32, 0, 0);
         mchorse.mclib.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000, 0x00000000, 0);
         mchorse.mclib.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);

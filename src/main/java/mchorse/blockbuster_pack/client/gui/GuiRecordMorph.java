@@ -1,7 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -14,6 +13,7 @@ import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -127,6 +127,17 @@ public class GuiRecordMorph extends GuiAbstractMorph
         {
             this.morphPicker.setSelected(record.initial);
         }
+    }
+
+    @Override
+    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    {
+        try
+        {
+            this.getMorph().initial.renderOnScreen(this.mc.player, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
+        }
+        catch (Exception e)
+        {}
     }
 
     @Override

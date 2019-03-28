@@ -34,6 +34,7 @@ public class ModelUtils
         builder.registerTypeAdapter(Model.class, new ModelAdapter());
         builder.registerTypeAdapter(ModelLimb.class, new ModelLimbAdapter());
         builder.registerTypeAdapter(ModelPose.class, new ModelPoseAdapter());
+        builder.excludeFieldsWithoutExposeAnnotation();
 
         Gson gson = builder.create();
         StringWriter writer = new StringWriter();

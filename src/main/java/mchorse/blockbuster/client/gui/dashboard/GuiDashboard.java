@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
@@ -7,12 +8,12 @@ import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
-import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.utils.Resizer;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
+import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +30,7 @@ public class GuiDashboard extends GuiBase
     /**
      * Icons texture used across all dashboard panels 
      */
-    public static final ResourceLocation ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
+    public static final ResourceLocation GUI_ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
 
     public GuiDelegateElement<GuiDashboardPanel> panel;
     public GuiDespacito sidebar;
@@ -78,7 +79,7 @@ public class GuiDashboard extends GuiBase
         return this;
     }
 
-    public void createWorldPanels(Minecraft mc)
+    public void createWorldPanels(Minecraft mc, boolean reloadCamera)
     {
         if (mc != null && mc.world != null && this.directorPanel == null)
         {
@@ -86,12 +87,17 @@ public class GuiDashboard extends GuiBase
             this.directorPanel = new GuiDirectorPanel(mc, this);
             this.modelPanel = new GuiModelBlockPanel(mc, this);
             this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
+
+            if (reloadCamera && CameraHandler.isApertureLoaded())
+            {
+                CameraHandler.reloadCameraEditor();
+            }
         }
     }
 
     public GuiDashboard open()
     {
-        this.createWorldPanels(this.mc);
+        this.createWorldPanels(this.mc, true);
         this.onOpen();
 
         Minecraft.getMinecraft().displayGuiScreen(this);

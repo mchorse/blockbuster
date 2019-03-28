@@ -21,7 +21,7 @@ public class ServerHandlerStructureRequest extends ServerMessageHandler<PacketSt
     public static List<String> getAllStructures()
     {
         List<String> structures = new ArrayList<String>();
-        File files = new File(DimensionManager.getCurrentSaveRootDirectory(), "structures");
+        File files = getStructureFolder("");
 
         if (!files.isDirectory())
         {
@@ -39,6 +39,11 @@ public class ServerHandlerStructureRequest extends ServerMessageHandler<PacketSt
         }
 
         return structures;
+    }
+
+    public static File getStructureFolder(String name)
+    {
+        return new File(DimensionManager.getCurrentSaveRootDirectory(), "structures" + (name.isEmpty() ? "" : "/" + name + ".nbt"));
     }
 
     @Override

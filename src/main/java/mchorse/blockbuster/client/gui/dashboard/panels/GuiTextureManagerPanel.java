@@ -7,7 +7,6 @@ import org.lwjgl.opengl.GL11;
 import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.commands.model.SubCommandModelTexture;
-import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -240,7 +239,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
             x -= fw + 10;
 
-            this.mc.renderEngine.bindTexture(GuiBase.ICONS);
+            this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
             GuiUtils.drawContinuousTexturedBox(x, y, 0, 96, fw, fh, 32, 32, 0, 0);
             this.mc.renderEngine.bindTexture(this.rl);
 

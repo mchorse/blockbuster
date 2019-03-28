@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.client.gui;
 
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.elements.GuiCreativeMorphsMenu;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -17,6 +16,7 @@ import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -38,6 +38,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
 
     private GuiButtonElement<GuiButton> pick;
     private GuiTrackpadElement duration;
+    private GuiTrackpadElement random;
     private GuiButtonElement<GuiCheckBox> reverse;
     private GuiCreativeMorphs morphPicker;
 
@@ -51,7 +52,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry));
         this.addPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.add"), (b) ->
         {
-            SequenceEntry entry = new SequenceEntry(null);
+            SequenceEntry current = this.list.getCurrent();
+            SequenceEntry entry = new SequenceEntry(current == null ? null : current.morph.clone(true));
 
             this.list.getList().add(entry);
             this.select(entry);
@@ -100,6 +102,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         });
         this.duration.setLimit(0, Float.MAX_VALUE, false);
 
+        this.random = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.sequencer.random"), (value) ->
+        {
+            if (this.entry != null)
+            {
+                this.entry.random = value;
+            }
+        });
+        this.random.setLimit(0, Float.MAX_VALUE, false);
+
         this.reverse = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.sequencer.reverse"), false, (b) ->
         {
             this.getMorph().reverse = b.button.isChecked();
@@ -110,12 +121,13 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         this.removePart.resizer().relative(this.addPart.resizer()).set(55, 0, 50, 20);
         this.list.resizer().parent(this.area).set(10, 50, 105, 0).h(1, -85);
         this.duration.resizer().relative(this.pick.resizer()).set(0, 25, 105, 20);
+        this.random.resizer().relative(this.duration.resizer()).set(0, 25, 105, 20);
         this.reverse.resizer().relative(this.removePart.resizer()).set(55, 4, this.reverse.button.width, 11);
 
         this.toggleNbt = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.nbt"), (b) -> this.toggleNbt());
         this.toggleNbt.resizer().parent(this.area).set(0, 10, 40, 20).x(1, -50).y(1, -25);
 
-        this.elements.add(this.pick, this.duration);
+        this.elements.add(this.pick, this.duration, this.random);
         this.general.add(this.addPart, this.removePart, this.list, this.reverse, this.elements);
         this.children.add(this.view, this.toggleNbt);
 
@@ -162,6 +174,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
             }
 
             this.duration.setValue(entry.duration);
+            this.random.setValue(entry.random);
             this.getMorph().currentMorph = entry.morph;
         }
 

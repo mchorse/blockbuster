@@ -8,6 +8,7 @@ import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -135,6 +136,7 @@ public class Blockbuster
     public void serverStarting(FMLServerStartingEvent event)
     {
         TileEntityDirector.playing = 0;
+        StructureMorph.STRUCTURE_CACHE.clear();
 
         /* Register commands */
         event.registerServerCommand(new CommandAction());

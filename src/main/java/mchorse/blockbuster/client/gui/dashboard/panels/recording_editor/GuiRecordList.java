@@ -46,7 +46,7 @@ public class GuiRecordList extends GuiElement
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+        this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
         net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 64, this.area.w, this.area.h, 32, 32, 0, 0);
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 30, 0x44000000);
 

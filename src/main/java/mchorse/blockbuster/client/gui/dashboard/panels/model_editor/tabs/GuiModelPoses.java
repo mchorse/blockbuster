@@ -82,10 +82,10 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.children.add(this.translate, this.scale, this.rotation, this.hitbox);
 
         /* Buttons */
-        this.addPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addPose());
-        this.removePose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removePose());
-        this.importPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 32, 80, 48, (b) -> this.importPose()).tooltip(I18n.format("blockbuster.gui.me.poses.import_pose_tooltip"), TooltipDirection.BOTTOM);
-        this.copyPose = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 80, 64, 80, 80, (b) -> this.copyPose()).tooltip(I18n.format("blockbuster.gui.me.poses.copy_pose_tooltip"), TooltipDirection.BOTTOM);
+        this.addPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addPose());
+        this.removePose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removePose());
+        this.importPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 80, 32, 80, 48, (b) -> this.importPose()).tooltip(I18n.format("blockbuster.gui.me.poses.import_pose_tooltip"), TooltipDirection.BOTTOM);
+        this.copyPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 80, 64, 80, 80, (b) -> this.copyPose()).tooltip(I18n.format("blockbuster.gui.me.poses.copy_pose_tooltip"), TooltipDirection.BOTTOM);
 
         this.copyPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -78);
         this.importPose.resizer().set(20, 0, 16, 16).relative(this.copyPose.resizer());

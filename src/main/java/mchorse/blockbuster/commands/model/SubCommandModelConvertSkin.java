@@ -7,6 +7,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -146,6 +147,16 @@ public class SubCommandModelConvertSkin extends CommandBase
         if (args.length == 1)
         {
             return getListOfStringsMatchingLastWord(args, "steve", "fred");
+        }
+
+        if (args.length == 2)
+        {
+            Map<String, File> skins = ClientProxy.actorPack.pack.skins.get(args[0]);
+
+            if (skins != null)
+            {
+                return getListOfStringsMatchingLastWord(args, skins.keySet());
+            }
         }
 
         return super.getTabCompletions(server, sender, args, pos);

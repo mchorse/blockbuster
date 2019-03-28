@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,17 @@ public class RenderActor extends RenderLiving<EntityActor>
     protected ResourceLocation getEntityTexture(EntityActor entity)
     {
         return defaultTexture;
+    }
+
+    @Override
+    public boolean shouldRender(EntityActor livingEntity, ICamera camera, double camX, double camY, double camZ)
+    {
+        if (Blockbuster.proxy.config.actor_always_render)
+        {
+            return true;
+        }
+
+        return super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }
 
     @Override

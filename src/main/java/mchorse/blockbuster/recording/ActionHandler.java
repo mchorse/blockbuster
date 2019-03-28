@@ -30,6 +30,7 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.metamorph.api.events.MorphActionEvent;
 import mchorse.metamorph.api.events.MorphEvent;
 import net.minecraft.block.Block;
@@ -85,6 +86,8 @@ public class ActionHandler
      * damage control of tile entities) 
      */
     public static TileEntity lastTE;
+
+    private int timer;
 
     /** 
      * Adds a world event listener  
@@ -553,6 +556,16 @@ public class ActionHandler
             {
                 model.model.update();
             }
+        }
+        else
+        {
+            if (this.timer % 100 == 0)
+            {
+                StructureMorph.checkStructures();
+                this.timer = 0;
+            }
+
+            this.timer += 1;
         }
     }
 }

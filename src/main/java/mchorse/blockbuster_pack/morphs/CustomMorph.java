@@ -1,8 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Objects;
@@ -17,7 +15,7 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -34,6 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -81,19 +80,24 @@ public class CustomMorph extends AbstractMorph
     public Map<String, ResourceLocation> materials = new HashMap<String, ResourceLocation>();
 
     /**
+     * Scale of this model
+     */
+    public float scale = 1F;
+
+    /**
+     * Scale of this model in morph GUIs
+     */
+    public float scaleGui = 1F;
+
+    /**
      * This flag allows to fail {@link #equals(Object)} equality test 
      */
     public boolean notComparible;
 
     /**
-     * List of body parts (on client side only)
+     * Body part manager 
      */
-    public List<BodyPart> parts = new ArrayList<BodyPart>();
-
-    /**
-     * Whether body parts were initiated 
-     */
-    public boolean initiated;
+    public BodyPartManager parts = new BodyPartManager();
 
     /**
      * Cached key value 
@@ -160,7 +164,7 @@ public class CustomMorph extends AbstractMorph
 
             if (data != null && (data.defaultTexture != null || data.providesMtl || this.skin != null))
             {
-                this.initBodyParts();
+                this.parts.initBodyParts();
 
                 model.materials = this.materials;
                 model.pose = this.getPose(player);
@@ -169,7 +173,7 @@ public class CustomMorph extends AbstractMorph
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
                 RenderCustomModel.bindLastTexture(texture);
 
-                this.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
+                this.drawModel(model, player, x, y, scale * data.scaleGui * this.scaleGui, alpha);
             }
         }
         else
@@ -270,7 +274,7 @@ public class CustomMorph extends AbstractMorph
     {
         if (this.model != null)
         {
-            this.initBodyParts();
+            this.parts.initBodyParts();
 
             RenderCustomModel render = ClientProxy.actorRenderer;
 
@@ -284,20 +288,6 @@ public class CustomMorph extends AbstractMorph
             RenderManager manager = mc.getRenderManager();
 
             EntityRenderer.drawNameplate(font, this.getKey(), (float) x, (float) y + 1, (float) z, 0, manager.playerViewY, manager.playerViewX, mc.gameSettings.thirdPersonView == 2, entity.isSneaking());
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void initBodyParts()
-    {
-        if (!this.initiated)
-        {
-            for (BodyPart part : this.parts)
-            {
-                part.init();
-            }
-
-            this.initiated = true;
         }
     }
 
@@ -315,27 +305,10 @@ public class CustomMorph extends AbstractMorph
 
         if (target.world.isRemote)
         {
-            this.updateBodyLimbs(target);
+            this.parts.updateBodyLimbs(target);
         }
 
         super.update(target, cap);
-    }
-
-    /**
-     * Update body limbs 
-     */
-    @SideOnly(Side.CLIENT)
-    private void updateBodyLimbs(EntityLivingBase target)
-    {
-        if (this.parts == null)
-        {
-            return;
-        }
-
-        for (BodyPart part : this.parts)
-        {
-            part.update(target);
-        }
     }
 
     /**
@@ -349,20 +322,20 @@ public class CustomMorph extends AbstractMorph
         {
             float[] pose = this.pose.size;
 
-            this.updateSize(target, pose[0], pose[1]);
+            this.updateSize(target, pose[0] * this.scale, pose[1] * this.scale);
         }
     }
 
     @Override
     public float getWidth(EntityLivingBase target)
     {
-        return this.pose != null ? this.pose.size[0] : 0.6F;
+        return (this.pose != null ? this.pose.size[0] : 0.6F) * this.scale;
     }
 
     @Override
     public float getHeight(EntityLivingBase target)
     {
-        return this.pose != null ? this.pose.size[1] : 1.8F;
+        return (this.pose != null ? this.pose.size[1] : 1.8F) * this.scale;
     }
 
     /**
@@ -390,6 +363,8 @@ public class CustomMorph extends AbstractMorph
             result = result && Objects.equal(this.skin, morph.skin);
             result = result && Objects.equal(this.customPose, morph.customPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
+            result = result && this.scale == morph.scale;
+            result = result && this.scaleGui == morph.scaleGui;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
 
@@ -405,7 +380,8 @@ public class CustomMorph extends AbstractMorph
         super.reset();
 
         this.key = null;
-        this.initiated = false;
+        this.parts.reset();
+        this.scale = this.scaleGui = 1F;
     }
 
     @Override
@@ -418,6 +394,8 @@ public class CustomMorph extends AbstractMorph
 
         morph.currentPose = this.currentPose;
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
+        morph.scale = this.scale;
+        morph.scaleGui = this.scaleGui;
 
         if (this.customPose != null)
         {
@@ -436,11 +414,7 @@ public class CustomMorph extends AbstractMorph
 
         morph.settings = this.settings;
         morph.model = this.model;
-
-        for (BodyPart part : this.parts)
-        {
-            morph.parts.add(part.clone(isRemote));
-        }
+        morph.parts.copy(this.parts, isRemote);
 
         return morph;
     }
@@ -457,6 +431,8 @@ public class CustomMorph extends AbstractMorph
 
         if (!this.currentPose.isEmpty()) tag.setString("Pose", this.currentPose);
         if (this.currentPoseOnSneak) tag.setBoolean("Sneak", this.currentPoseOnSneak);
+        if (this.scale != 1F) tag.setFloat("Scale", this.scale);
+        if (this.scaleGui != 1F) tag.setFloat("ScaleGUI", this.scaleGui);
 
         if (this.customPose != null)
         {
@@ -475,22 +451,10 @@ public class CustomMorph extends AbstractMorph
             tag.setTag("Materials", materials);
         }
 
-        if (!this.parts.isEmpty())
+        NBTTagList bodyParts = this.parts.toNBT();
+
+        if (bodyParts != null)
         {
-            NBTTagList bodyParts = new NBTTagList();
-
-            for (BodyPart part : this.parts)
-            {
-                NBTTagCompound bodyPart = new NBTTagCompound();
-
-                part.toNBT(bodyPart);
-
-                if (!bodyPart.hasNoTags())
-                {
-                    bodyParts.appendTag(bodyPart);
-                }
-            }
-
             tag.setTag("BodyParts", bodyParts);
         }
     }
@@ -507,6 +471,8 @@ public class CustomMorph extends AbstractMorph
 
         this.currentPose = tag.getString("Pose");
         this.currentPoseOnSneak = tag.getBoolean("Sneak");
+        if (tag.hasKey("Scale", NBT.TAG_ANY_NUMERIC)) this.scale = tag.getFloat("Scale");
+        if (tag.hasKey("ScaleGUI", NBT.TAG_ANY_NUMERIC)) this.scaleGui = tag.getFloat("ScaleGUI");
 
         if (tag.hasKey("CustomPose", 10))
         {
@@ -528,17 +494,7 @@ public class CustomMorph extends AbstractMorph
 
         if (tag.hasKey("BodyParts", 9))
         {
-            this.parts.clear();
-            NBTTagList bodyParts = tag.getTagList("BodyParts", 10);
-
-            for (int i = 0, c = bodyParts.tagCount(); i < c; i++)
-            {
-                NBTTagCompound bodyPart = bodyParts.getCompoundTagAt(i);
-                BodyPart part = new BodyPart();
-
-                part.fromNBT(bodyPart);
-                this.parts.add(part);
-            }
+            this.parts.fromNBT(tag.getTagList("BodyParts", 10));
         }
     }
 }
