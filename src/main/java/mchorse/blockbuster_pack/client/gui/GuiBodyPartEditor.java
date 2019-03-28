@@ -13,6 +13,10 @@ import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.widgets.GuiInventory;
+import mchorse.mclib.client.gui.widgets.GuiInventory.IInventoryPicker;
+import mchorse.mclib.client.gui.widgets.GuiSlot;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.MorphBodyPart;
@@ -24,12 +28,13 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiBodyPartEditor extends GuiElement
+public class GuiBodyPartEditor extends GuiElement implements IInventoryPicker
 {
     public GuiCustomMorph parent;
 
@@ -56,6 +61,10 @@ public class GuiBodyPartEditor extends GuiElement
 
     private BodyPartManager parts;
     private BodyPart part;
+
+    private GuiInventory inventory;
+    private GuiSlot[] slots = new GuiSlot[6];
+    private GuiSlot active;
 
     public GuiBodyPartEditor(Minecraft mc, GuiCustomMorph parent)
     {
@@ -178,12 +187,39 @@ public class GuiBodyPartEditor extends GuiElement
         this.editor.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.limbs, this.pickMorph, this.useTarget);
         this.children.add(this.addPart, this.removePart, this.bodyParts);
         this.children.add(this.editor);
+
+        /* Inventory */
+        this.inventory = new GuiInventory(this, mc.thePlayer);
+
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            this.slots[i] = new GuiSlot(i);
+        }
+    }
+
+    @Override
+    public void pickItem(GuiInventory inventory, ItemStack stack)
+    {
+        if (this.active != null)
+        {
+            this.active.stack = stack == null ? null : stack.copy();
+            this.part.part.slots[this.active.slot] = this.active.stack;
+            this.inventory.visible = false;
+            this.part.part.updateEntity();
+        }
     }
 
     @Override
     public void resize(int width, int height)
     {
         super.resize(width, height);
+
+        for (int i = 0; i < this.slots.length; i++)
+        {
+            this.slots[i].update(this.area.getX(0.5F) + 30 * i - 90, this.area.y + 10);
+        }
+
+        this.inventory.update(this.area.getX(0.5F), this.area.getY(0.5F) - 40);
 
         if (this.morphPicker != null)
         {
@@ -193,6 +229,9 @@ public class GuiBodyPartEditor extends GuiElement
 
     public void startEditing(CustomMorph custom)
     {
+        this.inventory.player = this.mc.thePlayer;
+        this.parts = custom.parts;
+
         this.limbs.clear();
         this.limbs.add(custom.model.limbs.keySet());
         this.limbs.sort();
@@ -241,12 +280,59 @@ public class GuiBodyPartEditor extends GuiElement
             this.rz.trackpad.setValue(part.rotate[2]);
 
             this.useTarget.button.setIsChecked(part.useTarget);
+
+            for (int i = 0; i < this.slots.length; i++)
+            {
+                this.slots[i].stack = part.slots[i];
+            }
         }
+    }
+
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        if (super.mouseClicked(mouseX, mouseY, mouseButton))
+        {
+            return true;
+        }
+
+        this.inventory.mouseClicked(mouseX, mouseY, mouseButton);
+        this.active = null;
+
+        for (GuiSlot slot : this.slots)
+        {
+            if (slot.area.isInside(mouseX, mouseY))
+            {
+                this.active = slot;
+                this.inventory.visible = true;
+            }
+        }
+
+        if (this.active != null || (this.inventory.visible && this.inventory.area.isInside(mouseX, mouseY)))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
+        for (GuiSlot slot : this.slots)
+        {
+            slot.draw(mouseX, mouseY, partialTicks);
+        }
+
+        if (this.active != null)
+        {
+            Area a = this.active.area;
+
+            Gui.drawRect(a.x, a.y, a.x + a.w, a.y + a.h, 0x880088ff);
+        }
+
+        this.inventory.draw(mouseX, mouseY, partialTicks);
+
         Gui.drawRect(this.bodyParts.area.x, this.bodyParts.area.y, this.bodyParts.area.getX(1), this.bodyParts.area.getY(1), 0x88000000);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.body_parts"), this.bodyParts.area.x, this.bodyParts.area.y - 12, 0xffffff);
 
