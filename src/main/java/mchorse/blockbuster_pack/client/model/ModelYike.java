@@ -27,6 +27,9 @@ public class ModelYike extends ModelCustom implements IModelCustom
     {
         super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
 
-        this.anchor.rotateAngleZ = (ageInTicks % 360) * (entityIn.isSprinting() ? 0.7F : 0.5F);
+        if (this.anchor != null)
+        {
+            this.anchor.rotateAngleZ = (ageInTicks % 360) * (entityIn.isSprinting() ? 0.7F : 0.5F);
+        }
     }
 }

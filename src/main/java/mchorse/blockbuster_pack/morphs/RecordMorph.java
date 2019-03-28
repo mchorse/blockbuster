@@ -50,6 +50,8 @@ public class RecordMorph extends AbstractMorph
      */
     public String record = "";
 
+    private boolean initiate;
+
     public RecordMorph()
     {
         this.name = "blockbuster.record";
@@ -86,11 +88,22 @@ public class RecordMorph extends AbstractMorph
         {
             if (this.actor.playback.record != null)
             {
-                Frame first = this.actor.playback.record.frames.get(0);
+                Frame first = this.actor.playback.record.getFrame(0);
 
-                x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
-                y += (this.actor.prevPosY + (this.actor.posY - this.actor.prevPosY) * partialTicks) - first.y;
-                z += (this.actor.prevPosZ + (this.actor.posZ - this.actor.prevPosZ) * partialTicks) - first.z;
+                if (!this.initiate)
+                {
+                    this.actor.prevPosX = this.actor.posX = first.x;
+                    this.actor.prevPosY = this.actor.posY = first.y;
+                    this.actor.prevPosZ = this.actor.posZ = first.z;
+                    this.initiate = true;
+                }
+
+                if (first != null)
+                {
+                    x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
+                    y += (this.actor.prevPosY + (this.actor.posY - this.actor.prevPosY) * partialTicks) - first.y;
+                    z += (this.actor.prevPosZ + (this.actor.posZ - this.actor.prevPosZ) * partialTicks) - first.z;
+                }
             }
 
             this.actor.morph.render(this.actor, x, y, z, entityYaw, partialTicks);
@@ -103,6 +116,7 @@ public class RecordMorph extends AbstractMorph
         if (this.reload)
         {
             this.actor = null;
+            this.initiate = false;
             this.reload = false;
         }
 
@@ -160,6 +174,7 @@ public class RecordMorph extends AbstractMorph
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = 0;
                     this.actor.playback.record.applyAction(0, this.actor, true);
+                    this.actor.morph = this.initial;
                 }
             }
         }

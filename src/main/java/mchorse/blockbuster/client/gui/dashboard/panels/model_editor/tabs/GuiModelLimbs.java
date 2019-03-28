@@ -189,9 +189,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.children.add(this.first, this.second);
 
         /* Buttons */
-        this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
-        this.dupeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 48, 32, 48, 48, (b) -> this.dupeLimb());
-        this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
+        this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
+        this.dupeLimb = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeLimb());
+        this.removeLimb = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removeLimb());
         this.renameLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
         this.parentLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
 

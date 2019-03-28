@@ -61,11 +61,11 @@ public class GuiMainPanel extends GuiDashboardPanel
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink("https://discord.gg/qfxrqUF"));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 80, 20).relative(resizer)));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
         resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.ICONS, 16, 0, 16, 16, (button) -> openWebLink("https://twitter.com/McHorsy"));
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink("https://twitter.com/McHorsy"));
         resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
         this.children.add(element.setResizer(resizer));
 

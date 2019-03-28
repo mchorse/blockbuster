@@ -53,7 +53,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
 
     public static void renderBodyParts(EntityLivingBase target, CustomMorph morph, ModelCustom model, float partialTicks, float scale)
     {
-        for (BodyPart part : morph.parts)
+        for (BodyPart part : morph.parts.parts)
         {
             for (ModelCustomRenderer limb : model.limbs)
             {

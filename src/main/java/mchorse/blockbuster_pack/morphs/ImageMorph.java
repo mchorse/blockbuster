@@ -47,6 +47,11 @@ public class ImageMorph extends AbstractMorph
      */
     public boolean lighting = true;
 
+    /**
+     * Whether an image morph should be always look at the player
+     */
+    public boolean billboard = false;
+
     public ImageMorph()
     {
         this.name = "blockbuster.image";
@@ -96,8 +101,29 @@ public class ImageMorph extends AbstractMorph
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
-        GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(180.0F - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+
+        if (this.billboard)
+        {
+            EntityPlayer player = Minecraft.getMinecraft().player;
+
+            entityYaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks;
+            float entityPitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
+
+            GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
+
+            if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 2)
+            {
+                GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+            }
+        }
+        else
+        {
+            float entityPitch = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+
+            GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
+        }
 
         this.renderPicture(this.scale, true);
 
@@ -196,6 +222,7 @@ public class ImageMorph extends AbstractMorph
         morph.scale = this.scale;
         morph.shaded = this.shaded;
         morph.lighting = this.lighting;
+        morph.billboard = this.billboard;
 
         return morph;
     }
@@ -213,6 +240,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.scale == this.scale;
             result = result && image.shaded == this.shaded;
             result = result && image.lighting == this.lighting;
+            result = result && image.billboard == this.billboard;
         }
 
         return result;
@@ -239,6 +267,7 @@ public class ImageMorph extends AbstractMorph
         if (this.texture != null) tag.setTag("Texture", RLUtils.writeNbt(this.texture));
         if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
+        if (this.billboard == true) tag.setBoolean("Billboard", this.billboard);
     }
 
     @Override
@@ -250,5 +279,6 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Texture")) this.texture = RLUtils.create(tag.getTag("Texture"));
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
+        if (tag.hasKey("Billboard")) this.billboard = tag.getBoolean("Billboard");
     }
 }

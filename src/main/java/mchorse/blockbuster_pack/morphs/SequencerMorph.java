@@ -76,7 +76,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 GlStateManager.color(1, 1, 1);
                 GlStateManager.enableAlpha();
-                mc.renderEngine.bindTexture(GuiDashboard.ICONS);
+                mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
                 /* Fuck you, Gui class, for not making the methods static */
                 mc.currentScreen.drawTexturedModalRect(x - 8, y - 20, 32, 16, 16, 16);
                 GlStateManager.disableAlpha();
@@ -163,7 +163,7 @@ public class SequencerMorph extends AbstractMorph
                 SequenceEntry entry = this.morphs.get(this.current);
 
                 this.setCurrentMorph(entry.morph);
-                this.duration += entry.duration;
+                this.duration += entry.getDuration();
             }
         }
     }
@@ -260,6 +260,7 @@ public class SequencerMorph extends AbstractMorph
                 }
 
                 entryTag.setFloat("Duration", entry.duration);
+                entryTag.setFloat("Random", entry.random);
                 list.appendTag(entryTag);
             }
 
@@ -295,9 +296,14 @@ public class SequencerMorph extends AbstractMorph
                     entry.duration = morphTag.getFloat("Duration");
                 }
 
+                if (morphTag.hasKey("Random", NBT.TAG_ANY_NUMERIC))
+                {
+                    entry.random = morphTag.getFloat("Random");
+                }
+
                 if (i == 0)
                 {
-                    this.duration = entry.duration;
+                    this.duration = entry.getDuration();
                     this.setCurrentMorph(morph);
                 }
 
@@ -318,6 +324,7 @@ public class SequencerMorph extends AbstractMorph
     {
         public AbstractMorph morph;
         public float duration = 5;
+        public float random = 0;
 
         public SequenceEntry(AbstractMorph morph)
         {
@@ -326,14 +333,25 @@ public class SequencerMorph extends AbstractMorph
 
         public SequenceEntry(AbstractMorph morph, float duration)
         {
+            this(morph, duration, 0);
+        }
+
+        public SequenceEntry(AbstractMorph morph, float duration, float random)
+        {
             this.morph = morph;
             this.duration = duration;
+            this.random = random;
+        }
+
+        public float getDuration()
+        {
+            return this.duration + (this.random != 0 ? (float) Math.random() * this.random : 0);
         }
 
         @Override
         public SequenceEntry clone()
         {
-            return new SequenceEntry(this.morph, this.duration);
+            return new SequenceEntry(this.morph, this.duration, this.random);
         }
 
         @Override
@@ -343,7 +361,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = (SequenceEntry) obj;
 
-                return this.duration == entry.duration && Objects.equals(this.morph, entry.morph);
+                return this.duration == entry.duration && this.random == entry.random && Objects.equals(this.morph, entry.morph);
             }
 
             return super.equals(obj);

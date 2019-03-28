@@ -9,6 +9,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
+import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.utils.GuiDrawable;
@@ -31,7 +32,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
     public GuiElements<IGuiElement> general = new GuiElements<IGuiElement>();
     public GuiElements<IGuiElement> materials = new GuiElements<IGuiElement>();
     public GuiPoseEditor poseEditor;
-    public GuiBodyPartEditor bodyPart;
+    public GuiCustomBodyPartEditor bodyPart;
 
     public GuiDelegateElement<IGuiElement> view;
     public GuiModelRendererBodyPart modelRenderer;
@@ -47,6 +48,8 @@ public class GuiCustomMorph extends GuiAbstractMorph
     public GuiButtonElement<GuiButton> reset;
     public GuiStringListElement poses;
     public GuiButtonElement<GuiCheckBox> poseOnSneak;
+    public GuiTrackpadElement scale;
+    public GuiTrackpadElement scaleGui;
 
     /* Materials */
     public GuiStringListElement materialList;
@@ -72,7 +75,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
         {
             this.textures.setVisible(true);
-            this.textures.tree.rebuild();
+            this.textures.refresh();
         });
 
         this.reset = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
@@ -94,20 +97,32 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.updateModelRenderer();
         });
 
+        this.scale = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale"), (value) ->
+        {
+            this.getMorph().scale = value;
+        });
+
+        this.scaleGui = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale_gui"), (value) ->
+        {
+            this.getMorph().scaleGui = value;
+        });
+
         this.skin.resizer().parent(this.area).set(10, 10, 105, 20);
         this.reset.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
         this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -49);
         this.poses.resizer().parent(this.area).set(10, 75, 105, 0).h(1, -130);
         this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+        this.scale.resizer().parent(this.area).set(10, 10, 105, 20).x(1, -115);
+        this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
-        this.general.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.textures);
+        this.general.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures);
 
         /* Materials view */
         this.materialList = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str));
         this.pickMaterialTexture = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
         {
             this.materialPicker.setVisible(true);
-            this.materialPicker.tree.rebuild();
+            this.materialPicker.refresh();
         });
         this.materialPicker = new GuiTexturePicker(mc, (rl) -> this.setCurrentMaterialRL(rl));
 
@@ -153,7 +168,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         /* External editors */
         this.poseEditor = new GuiPoseEditor(mc, this);
-        this.bodyPart = new GuiBodyPartEditor(mc, this);
+        this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
     }
 
     private void setCurrentMaterial(String str)
@@ -258,9 +273,10 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
+        this.scale.setValue(custom.scale);
+        this.scaleGui.setValue(custom.scaleGui);
 
-        custom.initiated = false;
-        custom.initBodyParts();
+        custom.parts.reinitBodyParts();
         this.updateModelRenderer();
         this.modelRenderer.morph = custom;
         this.modelRenderer.limb = null;
@@ -292,7 +308,8 @@ public class GuiCustomMorph extends GuiAbstractMorph
         }
 
         this.poseEditor.startEditing(custom);
-        this.bodyPart.startEditing(custom);
+        this.bodyPart.setLimbs(custom.model.limbs.keySet());
+        this.bodyPart.startEditing(custom.parts);
     }
 
     public CustomMorph getMorph()
@@ -335,6 +352,12 @@ public class GuiCustomMorph extends GuiAbstractMorph
         public GuiModelRendererBodyPart(Minecraft mc)
         {
             super(mc);
+        }
+
+        @Override
+        protected float getScale()
+        {
+            return this.morph == null ? 1F : this.morph.scale;
         }
 
         @Override

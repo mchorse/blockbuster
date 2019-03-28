@@ -116,6 +116,11 @@ public class BlockbusterConfig
     public int actor_rendering_range;
 
     /**
+     * Whether actor should be always rendered
+     */
+    public boolean actor_always_render;
+
+    /**
      * Enable unconditional actor nametag rendering
      */
     public boolean actor_always_render_names;
@@ -193,6 +198,7 @@ public class BlockbusterConfig
         this.actor_fall_damage = this.getBoolean("actor_fall_damage", actor, true, "Do actors receive fall damage?");
         this.actor_tracking_range = this.getInt("actor_tracking_range", actor, 256, 64, 1024, "How far actors are tracked? Requires restart of the game.");
         this.actor_rendering_range = this.getInt("actor_rendering_range", actor, 256, 64, 1024, "How far actors are seen?");
+        this.actor_always_render = this.getBoolean("actor_always_render", actor, false, "Make actor always rendered, no matter where it is or its hitbox size");
         this.actor_always_render_names = this.getBoolean("actor_always_render_names", actor, false, "Enable unconditional actor nametag rendering");
         this.actor_swish_swipe = this.getBoolean("actor_swish_swipe", actor, false, "Do actors emit swish sound when swiping?");
         this.actor_y = this.getBoolean("actor_y", actor, false, "Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp)");

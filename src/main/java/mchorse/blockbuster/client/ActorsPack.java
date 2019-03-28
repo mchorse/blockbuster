@@ -58,7 +58,7 @@ public class ActorsPack implements IResourcePack
 
         String[] splits = path.split("/");
 
-        if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
+        if (splits.length == 2 && !splits[1].contains("."))
         {
             return new FileInputStream(this.pack.skins.get(splits[0]).get(splits[1]));
         }
@@ -141,7 +141,7 @@ public class ActorsPack implements IResourcePack
         /* Handle models path */
         String[] splits = path.split("/");
 
-        if (splits.length == 2 && !path.matches("\\.[\\w\\d_]+$"))
+        if (splits.length == 2 && !splits[1].contains("."))
         {
             Map<String, File> skins = this.pack.skins.get(splits[0]);
 
