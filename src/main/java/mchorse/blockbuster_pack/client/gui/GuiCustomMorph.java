@@ -276,8 +276,7 @@ public class GuiCustomMorph extends GuiAbstractMorph
         this.scale.setValue(custom.scale);
         this.scaleGui.setValue(custom.scaleGui);
 
-        custom.initiated = false;
-        custom.initBodyParts();
+        custom.parts.reinitBodyParts();
         this.updateModelRenderer();
         this.modelRenderer.morph = custom;
         this.modelRenderer.limb = null;

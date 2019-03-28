@@ -14,6 +14,7 @@ import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.MorphBodyPart;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
@@ -53,6 +54,7 @@ public class GuiBodyPartEditor extends GuiElement
     private GuiStringListElement limbs;
     private GuiElements<IGuiElement> editor = new GuiElements<IGuiElement>();
 
+    private BodyPartManager parts;
     private BodyPart part;
 
     public GuiBodyPartEditor(Minecraft mc, GuiCustomMorph parent)
@@ -127,7 +129,7 @@ public class GuiBodyPartEditor extends GuiElement
                 part.limb = limb;
             }
 
-            this.parent.getMorph().parts.add(part);
+            this.parts.parts.add(part);
             this.bodyParts.update();
             this.bodyParts.setCurrent(part);
             this.part = part;
@@ -141,7 +143,7 @@ public class GuiBodyPartEditor extends GuiElement
                 return;
             }
 
-            List<BodyPart> parts = this.parent.getMorph().parts;
+            List<BodyPart> parts = this.parts.parts;
             int index = parts.indexOf(this.part);
 
             if (index != -1)
@@ -195,9 +197,9 @@ public class GuiBodyPartEditor extends GuiElement
         this.limbs.add(custom.model.limbs.keySet());
         this.limbs.sort();
 
-        this.bodyParts.setList(custom.parts);
+        this.bodyParts.setList(custom.parts.parts);
         this.bodyParts.update();
-        this.setPart(custom.parts.isEmpty() ? null : custom.parts.get(0));
+        this.setPart(custom.parts.parts.isEmpty() ? null : custom.parts.parts.get(0));
     }
 
     public void setupBodyEditor()
@@ -205,7 +207,7 @@ public class GuiBodyPartEditor extends GuiElement
         CustomMorph morph = this.parent.getMorph();
 
         this.bodyParts.update();
-        this.setPart(morph.parts.isEmpty() ? null : morph.parts.get(0));
+        this.setPart(morph.parts.parts.isEmpty() ? null : morph.parts.parts.get(0));
     }
 
     private void setPart(BodyPart part)
