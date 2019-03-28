@@ -1,5 +1,7 @@
 package mchorse.blockbuster.aperture;
 
+import java.util.function.Consumer;
+
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.client.gui.GuiCameraEditor;
@@ -184,7 +186,7 @@ public class CameraHandler
         GuiCameraEditor editor = event.editor;
         GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
-        dashboard.createWorldPanels(dashboard.mc);
+        dashboard.createWorldPanels(dashboard.mc, false);
 
         GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
 
@@ -195,15 +197,8 @@ public class CameraHandler
         }
 
         GuiElements<IGuiElement> elements = new GuiElements<>();
-        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) ->
+        Consumer<GuiButtonElement<GuiTextureButton>> refresh = (b) ->
         {
-            if (!record.selector.isVisible())
-            {
-                return;
-            }
-
-            elements.setVisible(!elements.isVisible());
-
             boolean show = elements.isVisible();
 
             editor.panel.resizer().h(1, show ? -150 : -70);
@@ -217,6 +212,17 @@ public class CameraHandler
             record.records.resize(editor.width, editor.height);
 
             b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
+        };
+
+        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) ->
+        {
+            if (!record.selector.isVisible())
+            {
+                return;
+            }
+
+            elements.setVisible(!elements.isVisible());
+            refresh.accept(b);
         });
 
         GuiDrawable drawable = new GuiDrawable((v) ->
@@ -245,6 +251,7 @@ public class CameraHandler
 
         cameraEditorElements.elements.clear();
         cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements, dashboard.morphDelegate);
+        refresh.accept(toggle);
     }
 
     /**
@@ -310,7 +317,7 @@ public class CameraHandler
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
-                dashboard.createWorldPanels(dashboard.mc);
+                dashboard.createWorldPanels(dashboard.mc, true);
                 dashboard.onOpen();
 
                 GuiRecordingEditorPanel panel = dashboard.recordingEditorPanel;

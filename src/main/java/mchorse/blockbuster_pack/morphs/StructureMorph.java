@@ -146,6 +146,7 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             renderer.render();
             renderer.renderTEs();
+            GlStateManager.disableLighting();
             GlStateManager.popMatrix();
             GlStateManager.enableCull();
             GlStateManager.disableAlpha();
@@ -294,8 +295,6 @@ public class StructureMorph extends AbstractMorph
                 BlockPos pos = te.getPos();
                 TileEntityRendererDispatcher.instance.renderTileEntityAt(te, pos.getX() - this.size.getX() / 2D - 1, pos.getY() - 1, pos.getZ() - this.size.getZ() / 2D - 1, 0);
             }
-
-            GlStateManager.disableLighting();
         }
 
         public void delete()

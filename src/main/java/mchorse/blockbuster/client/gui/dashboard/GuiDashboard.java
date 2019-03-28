@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
@@ -78,7 +79,7 @@ public class GuiDashboard extends GuiBase
         return this;
     }
 
-    public void createWorldPanels(Minecraft mc)
+    public void createWorldPanels(Minecraft mc, boolean reloadCamera)
     {
         if (mc != null && mc.theWorld != null && this.directorPanel == null)
         {
@@ -86,12 +87,17 @@ public class GuiDashboard extends GuiBase
             this.directorPanel = new GuiDirectorPanel(mc, this);
             this.modelPanel = new GuiModelBlockPanel(mc, this);
             this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
+
+            if (reloadCamera && CameraHandler.isApertureLoaded())
+            {
+                CameraHandler.reloadCameraEditor();
+            }
         }
     }
 
     public GuiDashboard open()
     {
-        this.createWorldPanels(this.mc);
+        this.createWorldPanels(this.mc, true);
         this.onOpen();
 
         Minecraft.getMinecraft().displayGuiScreen(this);

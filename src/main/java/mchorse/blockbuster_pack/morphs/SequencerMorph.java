@@ -260,6 +260,7 @@ public class SequencerMorph extends AbstractMorph
                 }
 
                 entryTag.setFloat("Duration", entry.duration);
+                entryTag.setFloat("Random", entry.random);
                 list.appendTag(entryTag);
             }
 
@@ -293,6 +294,11 @@ public class SequencerMorph extends AbstractMorph
                 if (morphTag.hasKey("Duration", NBT.TAG_ANY_NUMERIC))
                 {
                     entry.duration = morphTag.getFloat("Duration");
+                }
+
+                if (morphTag.hasKey("Random", NBT.TAG_ANY_NUMERIC))
+                {
+                    entry.random = morphTag.getFloat("Random");
                 }
 
                 if (i == 0)
