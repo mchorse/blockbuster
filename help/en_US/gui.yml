@@ -18,6 +18,7 @@ blockbuster.gui:
     break: Break
     select: Select
     ok: Ok
+    billboard: Look at player
     
     # Morphs popup strings
     morphs:
