@@ -34,6 +34,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -79,6 +80,16 @@ public class CustomMorph extends AbstractMorph
      * Map of textures designated to specific OBJ materials 
      */
     public Map<String, ResourceLocation> materials = new HashMap<String, ResourceLocation>();
+
+    /**
+     * Scale of this model
+     */
+    public float scale = 1F;
+
+    /**
+     * Scale of this model in morph GUIs
+     */
+    public float scaleGui = 1F;
 
     /**
      * This flag allows to fail {@link #equals(Object)} equality test 
@@ -169,7 +180,7 @@ public class CustomMorph extends AbstractMorph
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
                 RenderCustomModel.bindLastTexture(texture);
 
-                this.drawModel(model, player, x, y, scale * data.scaleGui, alpha);
+                this.drawModel(model, player, x, y, scale * data.scaleGui * this.scaleGui, alpha);
             }
         }
         else
@@ -349,20 +360,20 @@ public class CustomMorph extends AbstractMorph
         {
             float[] pose = this.pose.size;
 
-            this.updateSize(target, pose[0], pose[1]);
+            this.updateSize(target, pose[0] * this.scale, pose[1] * this.scale);
         }
     }
 
     @Override
     public float getWidth(EntityLivingBase target)
     {
-        return this.pose != null ? this.pose.size[0] : 0.6F;
+        return (this.pose != null ? this.pose.size[0] : 0.6F) * this.scale;
     }
 
     @Override
     public float getHeight(EntityLivingBase target)
     {
-        return this.pose != null ? this.pose.size[1] : 1.8F;
+        return (this.pose != null ? this.pose.size[1] : 1.8F) * this.scale;
     }
 
     /**
@@ -390,6 +401,8 @@ public class CustomMorph extends AbstractMorph
             result = result && Objects.equal(this.skin, morph.skin);
             result = result && Objects.equal(this.customPose, morph.customPose);
             result = result && this.currentPoseOnSneak == morph.currentPoseOnSneak;
+            result = result && this.scale == morph.scale;
+            result = result && this.scaleGui == morph.scaleGui;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
 
@@ -406,6 +419,7 @@ public class CustomMorph extends AbstractMorph
 
         this.key = null;
         this.initiated = false;
+        this.scale = this.scaleGui = 1F;
     }
 
     @Override
@@ -418,6 +432,8 @@ public class CustomMorph extends AbstractMorph
 
         morph.currentPose = this.currentPose;
         morph.currentPoseOnSneak = this.currentPoseOnSneak;
+        morph.scale = this.scale;
+        morph.scaleGui = this.scaleGui;
 
         if (this.customPose != null)
         {
@@ -457,6 +473,8 @@ public class CustomMorph extends AbstractMorph
 
         if (!this.currentPose.isEmpty()) tag.setString("Pose", this.currentPose);
         if (this.currentPoseOnSneak) tag.setBoolean("Sneak", this.currentPoseOnSneak);
+        if (this.scale != 1F) tag.setFloat("Scale", this.scale);
+        if (this.scaleGui != 1F) tag.setFloat("ScaleGUI", this.scaleGui);
 
         if (this.customPose != null)
         {
@@ -507,6 +525,8 @@ public class CustomMorph extends AbstractMorph
 
         this.currentPose = tag.getString("Pose");
         this.currentPoseOnSneak = tag.getBoolean("Sneak");
+        if (tag.hasKey("Scale", NBT.TAG_ANY_NUMERIC)) this.scale = tag.getFloat("Scale");
+        if (tag.hasKey("ScaleGUI", NBT.TAG_ANY_NUMERIC)) this.scaleGui = tag.getFloat("ScaleGUI");
 
         if (tag.hasKey("CustomPose", 10))
         {

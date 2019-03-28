@@ -82,6 +82,11 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         }
     }
 
+    protected float getScale()
+    {
+        return 1;
+    }
+
     @Override
     protected void drawModel(float headYaw, float headPitch, int mouseX, int mouseY, float partial)
     {
@@ -101,9 +106,11 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         model.setLivingAnimations(this.dummy, headYaw, headPitch, partial);
         model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
 
+        float scale = this.getScale();
+
         GlStateManager.pushMatrix();
         GlStateManager.scale(model.model.scale[0], model.model.scale[1], model.model.scale[2]);
-        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+        GlStateManager.scale(-1.0F * scale, -1.0F * scale, 1.0F * scale);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
         if (this.texture != null)
