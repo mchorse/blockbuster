@@ -1,4 +1,4 @@
-# Recording
+  # Recording
 blockbuster:
     # Parsing
     parsing:
@@ -11,7 +11,11 @@ blockbuster:
     "no": "否"
     eggs:
         yike: "{l}好吧{r}，{o}好吧{r}，那是 {7}McHorse{r} 的笑话！现在切换回 {6}YikeFilms{r}。"
+    morph_error: 没有找到模型
 
 # Metamorph category
-morph.category.blockbuster: Blockbuster 模型
+morph.category:
+    blockbuster: Blockbuster 模型
+    blockbuster_extra: Blockbuster 附加
+    
 metamorph.builder.blockbuster: 自定义模型制作器

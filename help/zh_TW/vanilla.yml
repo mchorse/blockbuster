@@ -13,8 +13,10 @@ blockbuster:
         green_block: "%s 色度方塊。可以用它來摳像。"
 
     morph:
+        image: 圖像
         sequencer: 序列產生器
         record: 錄製
+        structure: 結構
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster
