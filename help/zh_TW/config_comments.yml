@@ -24,6 +24,7 @@ blockbuster.config.comments:
         actor_fall_damage: 演員是否會掉落傷害？
         actor_tracking_range: 演員跟蹤會多遠？需要重啟遊戲。
         actor_rendering_range: 演員多遠可見？
+        actor_always_render: 讓演員始終渲染，無關它的位置和碰撞箱大小
         actor_always_render_names: 開啟無條件渲染演員名稱
         actor_swish_swipe: 當演員揮手時是否產生刷刷聲？
         actor_y: 讓演員使用正確的 Y 坐標值（可修復飛行和跳躍時的問題，但會引起 Y 軸上的運動不平滑）

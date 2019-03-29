@@ -33,6 +33,7 @@ blockbuster.config:
         actor_fall_damage: 演员掉落伤害
         actor_tracking_range: 演员跟踪范围
         actor_rendering_range: 演员渲染范围
+        actor_always_render: 总是渲染演员
         actor_always_render_names: 总是渲染演员的名称
         actor_swish_swipe: 手臂划动刷刷声
         actor_y: 修复 Y 轴运动
