@@ -305,7 +305,7 @@ public class CustomMorph extends AbstractMorph
 
         if (target.world.isRemote)
         {
-            this.parts.updateBodyLimbs(target);
+            this.parts.updateBodyLimbs(target, cap);
         }
 
         super.update(target, cap);
