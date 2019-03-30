@@ -18,6 +18,7 @@ blockbuster.gui:
     break: 破壞
     select: 選取
     ok: 好
+    billboard: 看向玩家
     
     # Morphs popup strings
     morphs:
@@ -218,6 +219,7 @@ blockbuster.gui:
         
     sequencer:
         duration: 持續長度
+        random: 隨機
         reverse: 反轉
         no_morph: （無偽裝）
         morphs: 偽裝
