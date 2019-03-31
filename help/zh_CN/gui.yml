@@ -31,36 +31,36 @@ blockbuster.gui:
         title: 确认破坏导演方块
         description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的导演方块总共含 {7}%s{f} 个回放。你真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
 
-    dashboard: 
+    dashboard:
         main: 仪表盘
         director: 导演方块
         model: 模型方块
         model_editor: 模型编辑器
         player_recording: 玩家录制编辑器
         texture: 材质管理器
-    
+
     # Main page of dashboard
     main:
         resources: 资源
         wiki: 百科
         discord: Discord
-        
+
         options: 选项
-    
+
     # Director block GUI strings
     director:
         title: 导演方块
         config: 导演方块选项
         not_selected: 选择一个导演方块…
         no_replays: 创建一个回放…
-    
+
         display_title: 显示标题
         start_command: 开始时执行命令
         stop_command: 停止时执行命令
         loops: 循环
         disable_states: 停用状态
         hide: 在回放时隐藏
-        
+
         id: 录制 ID
         name: 名称标签
         invincible: 无敌
@@ -78,7 +78,7 @@ blockbuster.gui:
     # Actor configuration GUI strings
     actor:
         title: 演员设定
-        
+
         default: 默认
         name: 名称
         filename: 录制ID
@@ -92,7 +92,7 @@ blockbuster.gui:
     model_block:
         title: 模型方块
         not_selected: 选择一个模型方块…
-        
+
         x: X
         "y": "Y"
         z: Z
@@ -102,18 +102,18 @@ blockbuster.gui:
         one: 整体
         one_tooltip: 整体缩放
         shadow: 阴影
-        
+
         entity: 实体
-        translate: 翻译
+        translate: 平移
         rotate: 翻滚
         scale: 缩放
-        
+
     # Player recording editor GUI strings
     record_editor:
         title: 录制
         not_selected: 选择一个玩家录制…
         action: 动作
-        
+
         drop: 扔下方块
         damage: 伤害
         progress: 进度
@@ -121,12 +121,12 @@ blockbuster.gui:
         meta: 元值
         arrow_charge: 拉弓力度
         no_fields: 这个动作没有可用的编辑栏…
-        
+
         actions:
-            chat: 
+            chat:
                 title: 聊天
                 desc: 本动作发送一条消息
-            swipe: 
+            swipe:
                 title: 挥手
                 desc: 本动作让演员挥动主要手臂
             drop:
@@ -135,7 +135,7 @@ blockbuster.gui:
             equip:
                 title: 穿戴物品
                 desc: 任何一只手拿着东西或者穿戴了盔甲
-                
+
                 none: 无
                 main_hand: 主要手
                 feet: 脚
@@ -182,14 +182,14 @@ blockbuster.gui:
             use_item_block:
                 title: 在方块上使用物品
                 desc: 在演员正对着的方块使用手上拿着的物品
-                
+
                 down: 下
                 up: 上
                 north: 北
                 south: 南
                 west: 西
                 east: 东
-    
+
     # Playback GUI
     playback:
         title: 播放设定
@@ -199,31 +199,31 @@ blockbuster.gui:
         nothing: 什么都不做
         play: 仅播放
         load_profile: 读取并播放
-        
+
     builder:
         pose_editor: 姿势编辑器
         body_part: 身体部分
         materials: 材料
         nbt: NBT
-        
+
         pick_skin: 选择皮肤
         pose_sneak: 潜行的姿势
         pose: 姿势
-        
+
         obj_materials: OBJ 材料
         pick_texture: 选择材质
-        
+
         limbs: 肢体
         body_parts: 身体部分
         use_target: 使用目标
-        
+
     sequencer:
         duration: 持续长度
         random: 随机
         reverse: 反转
         no_morph: （没有伪装）
         morphs: 伪装
-    
+
     texture:
         title: 材质管理器
         subtitle: 这个界面可以用来查看和管理已经在 Minecraft 运行时中载入的材质。
@@ -233,7 +233,7 @@ blockbuster.gui:
         mipmap_tooltip: 打开后，在远处看不会有那么多噪点
         replace: 替换
         replace_modal: "请输入一个前往 {l}已经载入的{r} 材质资源的位置，用来替换："
-    
+
     aperture:
         config:
             title: 演员
