@@ -19,7 +19,7 @@ blockbuster.gui:
     select: 選取
     ok: 好
     billboard: 看向玩家
-    
+
     # Morphs popup strings
     morphs:
         acquire: "獲得偽裝"
@@ -31,36 +31,36 @@ blockbuster.gui:
         title: 確認破壞導演方塊
         description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊總共含 {7}%s{f} 個回放。你真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
 
-    dashboard: 
+    dashboard:
         main: 儀表盤
         director: 導演方塊
         model: 模型方塊
         model_editor: 模型編輯器
         player_recording: 玩家錄制編輯器
         texture: 材質管理器
-    
+
     # Main page of dashboard
     main:
         resources: 資源
         wiki: 百科
         discord: Discord
-        
+
         options: 選項
-        
+
     # Director block GUI strings
     director:
         title: 導演方塊
         config: 導演方塊選項
         not_selected: 選取一個導演方塊…
         no_replays: 創建一個回放…
-    
+
         display_title: 顯示標題
         start_command: 開始時執行命令
         stop_command: 停止時執行命令
         loops: 循環
         disable_states: 停用狀態
         hide: 在回放時隱藏
-        
+
         id: 錄制 ID
         name: 名稱標簽
         invincible: 無敵
@@ -78,7 +78,7 @@ blockbuster.gui:
     # Actor configuration GUI strings
     actor:
         title: 演員設定
-        
+
         default: 預設
         name: 名稱
         filename: 錄制 ID
@@ -92,7 +92,7 @@ blockbuster.gui:
     model_block:
         title: 模型方塊
         not_selected: 選取一個模型方塊…
-        
+
         x: X
         "y": "Y"
         z: Z
@@ -102,18 +102,18 @@ blockbuster.gui:
         one: 整體
         one_tooltip: 整體縮放
         shadow: 陰影
-        
+
         entity: 實體
-        translate: 翻譯
+        translate: 平移
         rotate: 翻滾
         scale: 縮放
-        
+
     # Player recording editor GUI strings
     record_editor:
         title: 錄制
         not_selected: 選取一個玩家錄制…
         action: 動作
-        
+
         drop: 扔下方塊
         damage: 傷害
         progress: 進度
@@ -121,12 +121,12 @@ blockbuster.gui:
         meta: 元值
         arrow_charge: 拉弓力度
         no_fields: 這個動作沒有可用的編輯欄…
-        
+
         actions:
-            chat: 
+            chat:
                 title: 聊天
                 desc: 本動作傳送一條消息
-            swipe: 
+            swipe:
                 title: 揮手
                 desc: 本動作讓演員揮動主要手臂
             drop:
@@ -135,7 +135,7 @@ blockbuster.gui:
             equip:
                 title: 穿戴物品
                 desc: 任何一只手拿著東西或者穿戴了盔甲
-                
+
                 none: 無
                 main_hand: 主要手
                 feet: 腳
@@ -182,14 +182,14 @@ blockbuster.gui:
             use_item_block:
                 title: 在方塊上使用物品
                 desc: 在演員正對著的方塊使用手上拿著的物品
-                
+
                 down: 下
                 up: 上
                 north: 北
                 south: 南
                 west: 西
                 east: 東
-    
+
     # Playback GUI
     playback:
         title: 播放設定
@@ -199,31 +199,31 @@ blockbuster.gui:
         nothing: 什麽都不做
         play: 僅播放
         load_profile: 讀取並播放
-        
+
     builder:
         pose_editor: 姿勢編輯器
         body_part: 身體部分
         materials: 材料
         nbt: NBT
-        
+
         pick_skin: 選定皮膚
         pose_sneak: 潛行的姿勢
         pose: 姿勢
-        
+
         obj_materials: OBJ 材料
         pick_texture: 選定材質
-        
+
         limbs: 肢體
         body_parts: 身體部分
         use_target: 使用目標
-        
+
     sequencer:
         duration: 持續長度
         random: 隨機
         reverse: 反轉
         no_morph: （無偽裝）
         morphs: 偽裝
-    
+
     texture:
         title: 材質管理器
         subtitle: 此頁面可用于檢視和管理已在 Minecraft 運行時中載入的材質。
@@ -233,8 +233,8 @@ blockbuster.gui:
         mipmap_tooltip: 開啟后，在遠方看的噪點會變少
         replace: 替換
         replace_modal: "請鍵入一個指向 {l}已載入的{r} 材質資源的位置，用作替換："
-    
-        
+
+
     aperture:
         config:
             title: 演員
