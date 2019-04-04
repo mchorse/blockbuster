@@ -143,6 +143,24 @@ public class Model
     }
 
     /**
+     * Checks whether this model has textured materials 
+     */
+    public boolean hasTexturedMaterials()
+    {
+        if (this.materials.isEmpty())
+        {
+            return false;
+        }
+
+        for (OBJMaterial material : this.materials.values())
+        {
+            if (material.useTexture) return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Add a limb into a model
      */
     public ModelLimb addLimb(String name)

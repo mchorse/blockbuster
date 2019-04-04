@@ -170,6 +170,11 @@ public class RecordPlayer
      */
     public void goTo(int tick, boolean actions, Replay replay)
     {
+        int preDelay = this.record.preDelay;
+        int original = tick;
+
+        tick -= preDelay;
+
         int min = Math.min(this.tick, tick);
         int max = Math.max(this.tick, tick);
 
@@ -177,11 +182,11 @@ public class RecordPlayer
         {
             for (int i = min; i < max; i++)
             {
-                this.record.applyAction(i - this.record.preDelay, this.actor);
+                this.record.applyAction(i, this.actor);
             }
         }
 
-        this.tick = tick;
+        this.tick = original;
         this.record.resetUnload();
         this.record.applyFrame(tick, this.actor, true);
 

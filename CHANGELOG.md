@@ -2,6 +2,83 @@
 
 Blockbuster's change log.
 
+## Version 1.6
+
+This big massive update probably isn't as big as `1.5`, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than `1.5.3`.
+
+This update adds three new types of special Blockbuster exclusive morphs, in addition to `image` morph: Sequencer, Record and Structure morphs. It also adds another several major features: multiskin, improved texture picker, custom model smooth shading, hide all director blocks (if hide on playback is enabled) upon playback, item slots support in body parts, several new image and custom model morph properties and dozens of bug fixes!
+
+#### General
+
+* Added following config options:
+    * Added `Actors > Fix Y` config option, which uses actual Y value recorded on the client side, instead of the interpolated from server, which in turn fixes hovering when jumping around, but at the cost of sharp vertical movement
+    * Added `Actors > Always render` which makes body actor entities render always no matter hitbox size (suggested by Andruxioid)
+* Added multi-skin feature to texture picker which allows constructing a single texture out of multiple textures
+* Added texture manager panel where you can explore textures loaded by Minecraft
+* Change the location of ticks in player recording editor grid
+* Change the texture picker to capable of browsing folders
+* Fix crash related to body actors using playback button (reported by ChrissyPixy)
+* Fix issue with duplicated player recording in the list
+* Fix `@VERSION` in blockbuster_core mod (reported by Andruxioid, I think)
+* Fix issue with URL skins doesn't work with extruded layers and /model texture (reported by Jubb)
+* Fix clickable item slots through the morph picker
+* Fix crash related to tick out of bounds (I assume with pre delay) (reported by STH)
+* Fix NPE with image morphs when stupid png URLs lead to those stupid websites instead of an actual PNG
+* Fix 1.11.2 chroma blocks appear all as green (reported by SlySuptic)
+* Fix item transformations on the head for model block
+* Fix crash when picking up a texture in texture manager (reported by Andruxioid)
+* Fix inventory GUI desync after player's death
+* Fix config comments display (reported by GroupM)
+* Remove model editor button from main menu
+
+#### Aperture integration
+
+* Changed the player recording list in camera editor to not fully 
+* Fix crash camera editor initiation (reported by ycwei982 and zoombie)
+* Fix packets in Aperture's integration which kicks players (found by FairFox)
+* Fix Play and Load camera mode doesn't work on dedicated server (reported by Olrik&Flynn)
+* Fix some weird desync when recording editor elements are in camera editor (reported by Andruxioid and Agirres)
+
+#### Custom models
+
+* Added `smooth` shading property to custom models and model editor which makes the triangular shading much smoother
+* Fix issue with default model not being completely loaded on start up
+* Fix small space with export mob model and add search bar (suggested by Joziah2)
+* Fix `body` limb when generating JSON model from auto OBJ
+* Fix writing materials to `model.json`
+* Fix extruded layers to support mirroring
+
+#### Director block
+
+* Change all director blocks to invisible when one starts playing (and hide on playback is enabled) (suggested by GroupM)
+* Changed hidden block to have no collision when walking through them (suggested by Jubb)
+* Change the way rename prefix works (replace everything until last `_` and a number)
+* Fix issue with fake players on the server side in Director#collectActors() (reported by FairFox and Cactuz)
+* Fix issue with illegal property shit when tile entity director tries to check for hidden blocks (reported by Andruxioid and terbin)
+* Fix director block's loop mode cloning actors (reported by HerrBergmann and Lycoon)
+* Fix/prohibit inserting invisible characters into Recording ID
+
+#### Morphs
+
+* Added new types of morphs:
+    * Added `sequencer` morph, which takes in any number of morphs and switches between them based on given delay between every sequence (with possible randromizer), which allows creating animated morphs
+    * Added `record` morph, which takes a morph and given player recording and plays it in a loop within the morph, this way it's possible to add alive passengers within models through body part system and etc. (loosely based on ideas of HerrBergmann)
+    * Added `structure` morph, which allows using saved `nbt` structures via the structure block (suggested by El\_Redstoniano)
+* Added support for item slots in body part system
+* Added a couple of properties to `image` morph:
+    * `lighting` option which allows to disable light map on the image morph (suggested by Morris)
+    * `billboard` (Look at player) option which allows orient the image morph to always look at the player
+* Added a couple of properties to custom model morph:
+    * `scale` option which allows scaling the model (like the global scale option in the model editor)
+    * `scaleGui` option which allows scaling the model in GUI cells
+* Change body part's default rotation by X axis to `180.0` by default
+* Change morph picker to allow to nullify selected morph by clicking elsewhere in the morph picker
+* Fix NPE crash with `getPose()` (reported by STH)
+* Fix NPE crash related to custom (reported by Andruxioid)
+* Fix body part crash on the server (reported by Skorpion_G)
+* Fix shading when scaling of image morphs (i.e. enable normal rescale)
+* Fix body part system in morph editor GUI not showing up
+
 ## Version 1.5.3
 
 This patch update is quite massive in comparison to two previous patches. This update adds body part system, image morphs, a new Aperture integration, URL textures, few miscellaneous tweaks and lots of bug/crash fixes.

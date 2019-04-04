@@ -14,10 +14,12 @@ import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.gui.MenuHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
+import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
@@ -120,6 +122,7 @@ public class ClientProxy extends CommonProxy
 
         /* Tile entity */
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, modelRenderer = new TileEntityModelRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDirector.class, new TileEntityDirectorRenderer());
 
         this.injectResourcePack(CommonProxy.configFile.getAbsolutePath());
     }
