@@ -188,6 +188,17 @@ public class TileEntityModel extends TileEntity implements ITickable
 
     /* NBT methods */
 
+    /**
+     * That's important too for 
+     * {@link #onDataPacket(NetworkManager, SPacketUpdateTileEntity)} to 
+     * fix the flower pot thing. 
+     */
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
