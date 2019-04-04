@@ -55,7 +55,14 @@ public class GuiSequencerMorph extends GuiAbstractMorph
             SequenceEntry current = this.list.getCurrent();
             SequenceEntry entry = new SequenceEntry(current == null ? null : current.morph.clone(true));
 
+            if (current != null)
+            {
+                entry.duration = current.duration;
+                entry.random = current.random;
+            }
+
             this.list.getList().add(entry);
+            this.list.current = this.list.getList().size() - 1;
             this.select(entry);
             this.list.update();
         });
@@ -210,7 +217,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph
     {
         try
         {
-            AbstractMorph morph = this.getMorph().currentMorph;
+            AbstractMorph morph = this.entry == null ? null : this.entry.morph;
 
             if (morph != null)
             {

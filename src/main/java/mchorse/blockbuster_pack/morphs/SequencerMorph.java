@@ -176,7 +176,7 @@ public class SequencerMorph extends AbstractMorph
     {
         if (this.currentMorph == null || !this.currentMorph.canMerge(morph, isRemote))
         {
-            this.currentMorph = morph;
+            this.currentMorph = morph == null ? null : morph.clone(isRemote);
         }
     }
 
