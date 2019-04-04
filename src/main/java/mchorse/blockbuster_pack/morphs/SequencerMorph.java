@@ -163,7 +163,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.setCurrentMorph(entry.morph, isRemote);
+                this.setCurrentMorph(entry.morph == null ? null : entry.morph.clone(true), isRemote);
                 this.duration += entry.getDuration();
             }
         }
@@ -176,7 +176,7 @@ public class SequencerMorph extends AbstractMorph
     {
         if (this.currentMorph == null || !this.currentMorph.canMerge(morph, isRemote))
         {
-            this.currentMorph = morph == null ? null : morph.clone(isRemote);
+            this.currentMorph = morph;
         }
     }
 
@@ -304,8 +304,10 @@ public class SequencerMorph extends AbstractMorph
 
                 if (i == 0)
                 {
+                    boolean isRemote = FMLCommonHandler.instance().getSide() == Side.CLIENT;
+                    
                     this.duration = entry.getDuration();
-                    this.setCurrentMorph(morph, FMLCommonHandler.instance().getSide() == Side.CLIENT);
+                    this.setCurrentMorph(morph == null ? null : morph.clone(isRemote), isRemote);
                 }
 
                 this.morphs.add(entry);

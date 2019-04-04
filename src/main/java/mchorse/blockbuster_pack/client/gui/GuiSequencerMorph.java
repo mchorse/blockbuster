@@ -149,7 +149,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph
         if (this.entry != null)
         {
             this.entry.morph = morph;
-            this.getMorph().currentMorph = morph;
         }
     }
 
@@ -182,7 +181,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph
 
             this.duration.setValue(entry.duration);
             this.random.setValue(entry.random);
-            this.getMorph().currentMorph = entry.morph;
         }
 
         this.elements.setVisible(entry != null);
