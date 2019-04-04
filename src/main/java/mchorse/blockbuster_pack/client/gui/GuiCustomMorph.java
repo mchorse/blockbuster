@@ -1,7 +1,10 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import java.util.Map;
+
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -294,14 +297,21 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.poses.setCurrent(custom.currentPose);
         }
 
-        this.toggleMaterials.setEnabled(!custom.model.materials.isEmpty());
+        this.toggleMaterials.setEnabled(custom.model.hasTexturedMaterials());
 
         if (this.toggleMaterials.isEnabled())
         {
             this.materialList.clear();
-            this.materialList.add(custom.model.materials.keySet());
-            this.materialList.sort();
 
+            for (Map.Entry<String, OBJMaterial> entry : custom.model.materials.entrySet())
+            {
+                if (entry.getValue().useTexture)
+                {
+                    this.materialList.add(entry.getKey());
+                }
+            }
+
+            this.materialList.sort();
             this.materialPicker.setVisible(false);
 
             this.setCurrentMaterial(this.materialList.getList().get(0));
