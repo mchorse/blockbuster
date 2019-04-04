@@ -470,7 +470,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        if (this.morph == null || (this.morph != null && !this.morph.canMerge(morph)))
+        if (this.morph == null || !this.morph.canMerge(morph, this.worldObj.isRemote))
         {
             this.morph = morph;
         }

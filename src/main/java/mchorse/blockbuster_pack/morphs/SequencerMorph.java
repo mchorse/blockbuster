@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,7 +67,7 @@ public class SequencerMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
-        this.updateCycle();
+        this.updateCycle(true);
 
         if (this.morphs.isEmpty())
         {
@@ -93,7 +94,7 @@ public class SequencerMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.updateMorph(this.timer + partialTicks);
+        this.updateMorph(this.timer + partialTicks, true);
 
         if (this.currentMorph != null)
         {
@@ -116,7 +117,7 @@ public class SequencerMorph extends AbstractMorph
     @Override
     public void update(EntityLivingBase target, IMorphing cap)
     {
-        this.updateCycle();
+        this.updateCycle(target.worldObj.isRemote);
 
         if (this.currentMorph != null)
         {
@@ -127,17 +128,17 @@ public class SequencerMorph extends AbstractMorph
     /**
      * Update the cycle timer 
      */
-    protected void updateCycle()
+    protected void updateCycle(boolean isRemote)
     {
         this.timer++;
-        this.updateMorph(this.timer);
+        this.updateMorph(this.timer, isRemote);
     }
 
     /**
      * Update the current morph, make sure that we have currently the 
      * correct morph.
      */
-    protected void updateMorph(float timer)
+    protected void updateMorph(float timer, boolean isRemote)
     {
         if (timer >= this.duration)
         {
@@ -162,7 +163,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.setCurrentMorph(entry.morph);
+                this.setCurrentMorph(entry.morph, isRemote);
                 this.duration += entry.getDuration();
             }
         }
@@ -171,9 +172,9 @@ public class SequencerMorph extends AbstractMorph
     /**
      * Set current morph, make sure it's mergeable and stuff 
      */
-    public void setCurrentMorph(AbstractMorph morph)
+    public void setCurrentMorph(AbstractMorph morph, boolean isRemote)
     {
-        if (this.currentMorph == null || (this.currentMorph != null && !this.currentMorph.canMerge(morph)))
+        if (this.currentMorph == null || !this.currentMorph.canMerge(morph, isRemote))
         {
             this.currentMorph = morph;
         }
@@ -304,7 +305,7 @@ public class SequencerMorph extends AbstractMorph
                 if (i == 0)
                 {
                     this.duration = entry.getDuration();
-                    this.setCurrentMorph(morph);
+                    this.setCurrentMorph(morph, FMLCommonHandler.instance().getSide() == Side.CLIENT);
                 }
 
                 this.morphs.add(entry);
