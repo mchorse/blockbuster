@@ -1,7 +1,10 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import java.util.Map;
+
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
+import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -74,8 +77,9 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
         {
-            this.textures.setVisible(true);
             this.textures.refresh();
+            this.textures.fill(this.getMorph().skin);
+            this.textures.setVisible(true);
         });
 
         this.reset = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
@@ -173,12 +177,10 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
     private void setCurrentMaterial(String str)
     {
-        this.materialList.setCurrent(str);
-
         ResourceLocation rl = this.getMorph().materials.get(str);
 
+        this.materialList.setCurrent(str);
         this.materialPicker.fill(rl);
-        this.materialPicker.picker.sort();
     }
 
     private void setCurrentMaterialRL(ResourceLocation rl)
@@ -268,9 +270,6 @@ public class GuiCustomMorph extends GuiAbstractMorph
 
         CustomMorph custom = (CustomMorph) morph;
 
-        this.textures.fill(custom.skin);
-        this.textures.picker.sort();
-
         this.textures.setVisible(false);
         this.poseOnSneak.button.setIsChecked(custom.currentPoseOnSneak);
         this.scale.setValue(custom.scale);
@@ -294,14 +293,21 @@ public class GuiCustomMorph extends GuiAbstractMorph
             this.poses.setCurrent(custom.currentPose);
         }
 
-        this.toggleMaterials.setEnabled(!custom.model.materials.isEmpty());
+        this.toggleMaterials.setEnabled(custom.model.hasTexturedMaterials());
 
         if (this.toggleMaterials.isEnabled())
         {
             this.materialList.clear();
-            this.materialList.add(custom.model.materials.keySet());
-            this.materialList.sort();
 
+            for (Map.Entry<String, OBJMaterial> entry : custom.model.materials.entrySet())
+            {
+                if (entry.getValue().useTexture)
+                {
+                    this.materialList.add(entry.getKey());
+                }
+            }
+
+            this.materialList.sort();
             this.materialPicker.setVisible(false);
 
             this.setCurrentMaterial(this.materialList.getList().get(0));

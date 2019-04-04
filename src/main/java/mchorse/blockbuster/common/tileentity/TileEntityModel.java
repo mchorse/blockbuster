@@ -11,9 +11,9 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFlowerPot;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This little guy is responsible for storing visual data about model's 
  * rendering.
  */
-public class TileEntityModel extends TileEntityFlowerPot implements ITickable
+public class TileEntityModel extends TileEntity implements ITickable
 {
     public AbstractMorph morph;
     public EntityLivingBase entity;
@@ -188,10 +188,32 @@ public class TileEntityModel extends TileEntityFlowerPot implements ITickable
 
     /* NBT methods */
 
+    /**
+     * That's important too for 
+     * {@link #onDataPacket(NetworkManager, SPacketUpdateTileEntity)} to 
+     * fix the flower pot thing. 
+     */
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-        return new SPacketUpdateTileEntity(this.pos, 5, this.getUpdateTag());
+        return new SPacketUpdateTileEntity(this.pos, this.getBlockMetadata(), this.getUpdateTag());
+    }
+
+    /**
+     * This method fixes the old thing with flower pot thanks to asie!
+     * 
+     * @link https://www.reddit.com/r/feedthebeast/comments/b7h6fb/modders_what_embarrassingdirty_trick_did_you_do/ejtdydo/?context=3
+     */
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+    {
+        this.readFromNBT(pkt.getNbtCompound());
     }
 
     @Override
