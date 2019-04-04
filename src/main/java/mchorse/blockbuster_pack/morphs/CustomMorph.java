@@ -90,11 +90,6 @@ public class CustomMorph extends AbstractMorph
     public float scaleGui = 1F;
 
     /**
-     * This flag allows to fail {@link #equals(Object)} equality test 
-     */
-    public boolean notComparible;
-
-    /**
      * Body part manager 
      */
     public BodyPartManager parts = new BodyPartManager();
@@ -354,11 +349,6 @@ public class CustomMorph extends AbstractMorph
         {
             CustomMorph morph = (CustomMorph) object;
 
-            if (morph.notComparible || this.notComparible)
-            {
-                return false;
-            }
-
             result = result && Objects.equal(this.currentPose, morph.currentPose);
             result = result && Objects.equal(this.skin, morph.skin);
             result = result && Objects.equal(this.customPose, morph.customPose);
@@ -372,6 +362,33 @@ public class CustomMorph extends AbstractMorph
         }
 
         return result;
+    }
+
+    @Override
+    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    {
+        if (morph instanceof CustomMorph)
+        {
+            CustomMorph custom = (CustomMorph) morph;
+
+            this.currentPose = custom.currentPose;
+            this.skin = custom.skin;
+            this.customPose = custom.customPose == null ? null : custom.customPose.clone();
+            this.currentPoseOnSneak = custom.currentPoseOnSneak;
+            this.scale = custom.scale;
+            this.scaleGui = custom.scaleGui;
+            this.materials.clear();
+            for (Map.Entry<String, ResourceLocation> entry : custom.materials.entrySet())
+            {
+                this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
+            }
+            this.parts.merge(custom.parts, isRemote);
+            this.model = custom.model;
+
+            return true;
+        }
+
+        return super.canMerge(morph, isRemote);
     }
 
     @Override
