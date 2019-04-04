@@ -117,7 +117,7 @@ public class SequencerMorph extends AbstractMorph
     @Override
     public void update(EntityLivingBase target, IMorphing cap)
     {
-        this.updateCycle(target.worldObj.isRemote);
+        this.updateCycle(target.world.isRemote);
 
         if (this.currentMorph != null)
         {

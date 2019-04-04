@@ -42,7 +42,7 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            if (act.morph == null || (act.morph != null && !act.morph.canMerge(morph, actor.worldObj.isRemote)))
+            if (act.morph == null || (act.morph != null && !act.morph.canMerge(morph, actor.world.isRemote)))
             {
                 act.morph = morph;
             }

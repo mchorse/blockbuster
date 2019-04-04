@@ -19,7 +19,7 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
         /* Debug render (so people could find the block, lmao) */
         if (mc.gameSettings.showDebugInfo && !mc.gameSettings.hideGUI)
         {
-            IBlockState state = mc.theWorld.getBlockState(te.getPos());
+            IBlockState state = mc.world.getBlockState(te.getPos());
             boolean playing = state.getBlock() == Blockbuster.directorBlock ? state.getValue(BlockDirector.PLAYING) : false;
 
             GlStateManager.glLineWidth(1);
