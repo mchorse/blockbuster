@@ -371,8 +371,9 @@ public class CustomMorph extends AbstractMorph
         {
             CustomMorph custom = (CustomMorph) morph;
 
+            this.name = custom.name;
             this.currentPose = custom.currentPose;
-            this.skin = custom.skin;
+            this.skin = RLUtils.clone(custom.skin);
             this.customPose = custom.customPose == null ? null : custom.customPose.clone();
             this.currentPoseOnSneak = custom.currentPoseOnSneak;
             this.scale = custom.scale;
