@@ -90,16 +90,16 @@ public class RecordMorph extends AbstractMorph
             {
                 Frame first = this.actor.playback.record.getFrame(0);
 
-                if (!this.initiate)
-                {
-                    this.actor.prevPosX = this.actor.posX = first.x;
-                    this.actor.prevPosY = this.actor.posY = first.y;
-                    this.actor.prevPosZ = this.actor.posZ = first.z;
-                    this.initiate = true;
-                }
-
                 if (first != null)
                 {
+                    if (!this.initiate)
+                    {
+                        this.actor.prevPosX = this.actor.posX = first.x;
+                        this.actor.prevPosY = this.actor.posY = first.y;
+                        this.actor.prevPosZ = this.actor.posZ = first.z;
+                        this.initiate = true;
+                    }
+
                     x += (this.actor.prevPosX + (this.actor.posX - this.actor.prevPosX) * partialTicks) - first.x;
                     y += (this.actor.prevPosY + (this.actor.posY - this.actor.prevPosY) * partialTicks) - first.y;
                     z += (this.actor.prevPosZ + (this.actor.posZ - this.actor.prevPosZ) * partialTicks) - first.z;
@@ -123,7 +123,7 @@ public class RecordMorph extends AbstractMorph
         if (this.actor == null)
         {
             this.actor = new EntityActor(world);
-            this.actor.morph = this.initial;
+            this.actor.morph = this.initial == null ? null : this.initial.clone(world.isRemote);
             this.actor.playback = new RecordPlayer(null, Mode.FRAMES, this.actor);
             this.actor.manual = true;
 
