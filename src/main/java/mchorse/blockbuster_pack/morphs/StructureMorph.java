@@ -36,7 +36,7 @@ public class StructureMorph extends AbstractMorph
      * Map of baked structures 
      */
     @SideOnly(Side.CLIENT)
-    public static final Map<String, StructureRenderer> STRUCTURES = new HashMap<String, StructureRenderer>();
+    public static Map<String, StructureRenderer> STRUCTURES;
 
     /**
      * Cache of structures 
