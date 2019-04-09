@@ -2,6 +2,7 @@ package mchorse.blockbuster;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 
 import mchorse.blockbuster.aperture.CameraHandler;
@@ -25,6 +26,8 @@ import mchorse.blockbuster.recording.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -125,6 +128,9 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDirector.class, new TileEntityDirectorRenderer());
 
         this.injectResourcePack(CommonProxy.configFile.getAbsolutePath());
+
+        /* Structure morph */
+        StructureMorph.STRUCTURES = new HashMap<String, StructureRenderer>();
     }
 
     /**
