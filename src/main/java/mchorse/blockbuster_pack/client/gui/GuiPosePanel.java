@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * TODO: rename to panel not editor 
  */
 @SideOnly(Side.CLIENT)
-public class GuiPoseEditor extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
+public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
 {
     private GuiTrackpadElement tx;
     private GuiTrackpadElement ty;
@@ -40,7 +40,7 @@ public class GuiPoseEditor extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
     private ModelPose pose;
     private ModelTransform trans;
 
-    public GuiPoseEditor(Minecraft mc, GuiCustomMorph editor)
+    public GuiPosePanel(Minecraft mc, GuiCustomMorph editor)
     {
         super(mc, editor);
 

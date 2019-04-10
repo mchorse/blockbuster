@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 {
-    public GuiPoseEditor poseEditor;
+    public GuiPosePanel poseEditor;
     public GuiCustomBodyPartEditor bodyPart;
     public GuiCustomMorphPanel general;
     public GuiMaterialsPanel materials;
@@ -46,7 +46,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.children.elements.add(0, this.modelRenderer);
 
         /* Morph panels */
-        this.poseEditor = new GuiPoseEditor(mc, this);
+        this.poseEditor = new GuiPosePanel(mc, this);
         this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
         this.general = new GuiCustomMorphPanel(mc, this);
         this.materials = new GuiMaterialsPanel(mc, this);
