@@ -16,6 +16,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
+import mchorse.metamorph.bodypart.IBodyPartProvider;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -42,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 {
     /**
      * Morph's model
@@ -106,6 +107,12 @@ public class CustomMorph extends AbstractMorph
     {
         this.settings = this.settings.clone();
         this.settings.hands = true;
+    }
+
+    @Override
+    public BodyPartManager getBodyPart()
+    {
+        return this.parts;
     }
 
     /**

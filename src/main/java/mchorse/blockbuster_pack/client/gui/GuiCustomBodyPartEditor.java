@@ -2,17 +2,14 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.GuiBodyPartEditor;
+import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 
 public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
 {
-    public GuiCustomMorph parent;
-
-    public GuiCustomBodyPartEditor(Minecraft mc, GuiCustomMorph parent)
+    public GuiCustomBodyPartEditor(Minecraft mc, GuiAbstractMorph editor)
     {
-        super(mc);
-
-        this.parent = parent;
+        super(mc, editor);
     }
 
     @Override
@@ -22,14 +19,18 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
 
         if (part != null)
         {
-            this.parent.modelRenderer.limb = this.parent.getMorph().model.limbs.get(part.limb);
+            GuiCustomMorph parent = (GuiCustomMorph) this.editor;
+
+            parent.modelRenderer.limb = parent.morph.model.limbs.get(part.limb);
         }
     }
 
     @Override
     protected void pickLimb(String str)
     {
+        GuiCustomMorph parent = (GuiCustomMorph) this.editor;
+
         super.pickLimb(str);
-        this.parent.modelRenderer.limb = this.parent.getMorph().model.limbs.get(str);
+        parent.modelRenderer.limb = parent.morph.model.limbs.get(str);
     }
 }
