@@ -6,6 +6,9 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
+import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiCustomMorphPanel;
+import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiMaterialsPanel;
+import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiModelRendererBodyPart;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -13,6 +16,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.utils.GuiDrawable;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
@@ -43,6 +47,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.modelRenderer = new GuiModelRendererBodyPart(Minecraft.getMinecraft());
         this.modelRenderer.looking = false;
 
+        /* Nice shadow on bottom */
+        this.children.elements.add(0, new GuiDrawable((n) ->
+        {
+            this.drawGradientRect(0, this.area.getY(1) - 30, this.area.w, this.area.getY(1), 0x00000000, 0x88000000);
+        }));
         this.children.elements.add(0, this.modelRenderer);
 
         /* Morph panels */
