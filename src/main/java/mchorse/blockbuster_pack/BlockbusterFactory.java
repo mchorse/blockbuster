@@ -23,7 +23,7 @@ import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.client.gui.elements.GuiAbstractMorph;
+import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
@@ -207,7 +207,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             ImageMorph image = new ImageMorph();
 
-            image.texture = RLUtils.create("b.a", "image/" + texture);
+            image.texture = RLUtils.create("b.a", "image/skins/" + texture + ".png");
             morphs.addMorphVariant(image.name, "blockbuster_extra", texture, image);
         }
 

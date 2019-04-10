@@ -8,9 +8,9 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -18,11 +18,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * TODO: rename to panel not editor 
+ */
 @SideOnly(Side.CLIENT)
-public class GuiPoseEditor extends GuiElement
+public class GuiPoseEditor extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
 {
-    public GuiCustomMorph parent;
-
     private GuiTrackpadElement tx;
     private GuiTrackpadElement ty;
     private GuiTrackpadElement tz;
@@ -39,12 +40,9 @@ public class GuiPoseEditor extends GuiElement
     private ModelPose pose;
     private ModelTransform trans;
 
-    public GuiPoseEditor(Minecraft mc, GuiCustomMorph parent)
+    public GuiPoseEditor(Minecraft mc, GuiCustomMorph editor)
     {
-        super(mc);
-
-        this.parent = parent;
-        this.createChildren();
+        super(mc, editor);
 
         this.tx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.trans.translate[0] = value);
         this.ty = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.translate[1] = value);
@@ -56,7 +54,7 @@ public class GuiPoseEditor extends GuiElement
         this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.trans.rotate[1] = value);
         this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.trans.rotate[2] = value);
 
-        this.tx.resizer().set(0, 35, 60, 20).parent(this.area).x(0.5F, -95).y(1, -105);
+        this.tx.resizer().set(0, 0, 60, 20).parent(this.area).x(0.5F, -95).y(1, -75);
         this.ty.resizer().set(0, 25, 60, 20).relative(this.tx.resizer());
         this.tz.resizer().set(0, 25, 60, 20).relative(this.ty.resizer());
         this.sx.resizer().set(65, 0, 60, 20).relative(this.tx.resizer());
@@ -67,13 +65,13 @@ public class GuiPoseEditor extends GuiElement
         this.rz.resizer().set(0, 25, 60, 20).relative(this.ry.resizer());
 
         this.limbs = new GuiStringListElement(mc, (str) -> this.setLimb(str));
-        this.limbs.resizer().parent(this.area).set(10, 50, 105, 90).h(1, -85);
+        this.limbs.resizer().parent(this.area).set(10, 50, 105, 90).h(1, -55);
 
         this.resetPose = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
         {
-            this.parent.togglePose();
-            this.parent.getMorph().customPose = null;
-            this.parent.updateModelRenderer();
+            this.editor.setPanel(this.editor.general);
+            this.editor.morph.customPose = null;
+            this.editor.updateModelRenderer();
         });
 
         this.resetPose.resizer().parent(this.area).set(10, 10, 105, 20);
@@ -81,39 +79,11 @@ public class GuiPoseEditor extends GuiElement
         this.children.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.limbs, this.resetPose);
     }
 
-    public void startEditing(CustomMorph custom)
-    {
-        this.limbs.clear();
-        this.limbs.add(custom.model.limbs.keySet());
-        this.limbs.sort();
-    }
-
-    public void createPose()
-    {
-        CustomMorph custom = this.parent.getMorph();
-
-        if (custom.customPose == null)
-        {
-            this.pose = custom.getPose(this.mc.thePlayer).clone();
-            custom.customPose = this.pose;
-        }
-        else
-        {
-            this.pose = custom.customPose;
-        }
-
-        Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
-
-        this.setLimb(entry.getKey());
-        this.parent.modelRenderer.pose = this.pose;
-        this.limbs.setCurrent(entry.getKey());
-    }
-
     private void setLimb(String str)
     {
-        ModelLimb limb = this.parent.getMorph().model.limbs.get(str);
+        ModelLimb limb = this.editor.morph.model.limbs.get(str);
 
-        this.parent.modelRenderer.limb = limb;
+        this.editor.modelRenderer.limb = limb;
         this.setTransform(this.pose.limbs.get(str));
     }
 
@@ -135,6 +105,38 @@ public class GuiPoseEditor extends GuiElement
             this.ry.trackpad.setValue(trans.rotate[1]);
             this.rz.trackpad.setValue(trans.rotate[2]);
         }
+    }
+
+    @Override
+    public void fillData(CustomMorph morph)
+    {
+        super.fillData(morph);
+
+        this.limbs.clear();
+        this.limbs.add(this.morph.model.limbs.keySet());
+        this.limbs.sort();
+    }
+
+    @Override
+    public void startEditing()
+    {
+        CustomMorph custom = this.morph;
+
+        if (custom.customPose == null)
+        {
+            this.pose = custom.getPose(this.mc.thePlayer).clone();
+            custom.customPose = this.pose;
+        }
+        else
+        {
+            this.pose = custom.customPose;
+        }
+
+        Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
+
+        this.setLimb(entry.getKey());
+        this.editor.modelRenderer.pose = this.pose;
+        this.limbs.setCurrent(entry.getKey());
     }
 
     @Override
