@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client;
+package mchorse.blockbuster.client.textures;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,6 +28,37 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MipmapTexture extends SimpleTexture
 {
+    /**
+     * Create a byte buffer from buffered image 
+     */
+    public static ByteBuffer bytesFromBuffer(BufferedImage image)
+    {
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        ByteBuffer buffer = GLAllocation.createDirectByteBuffer(w * h * 4);
+        int[] pixels = new int[w * h];
+
+        image.getRGB(0, 0, w, h, pixels, 0, w);
+
+        for (int y = 0; y < h; y++)
+        {
+            for (int x = 0; x < w; x++)
+            {
+                int pixel = pixels[y * w + x];
+
+                buffer.put((byte) ((pixel >> 16) & 0xFF));
+                buffer.put((byte) ((pixel >> 8) & 0xFF));
+                buffer.put((byte) (pixel & 0xFF));
+                buffer.put((byte) ((pixel >> 24) & 0xFF));
+            }
+        }
+
+        buffer.flip();
+
+        return buffer;
+    }
+
     public MipmapTexture(ResourceLocation textureResourceLocation)
     {
         super(textureResourceLocation);
@@ -56,27 +87,7 @@ public class MipmapTexture extends SimpleTexture
             GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
             GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
 
-            ByteBuffer buffer = GLAllocation.createDirectByteBuffer(w * h * 4);
-            int[] pixels = new int[w * h];
-
-            image.getRGB(0, 0, w, h, pixels, 0, w);
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    int pixel = pixels[y * w + x];
-
-                    buffer.put((byte) ((pixel >> 16) & 0xFF));
-                    buffer.put((byte) ((pixel >> 8) & 0xFF));
-                    buffer.put((byte) (pixel & 0xFF));
-                    buffer.put((byte) ((pixel >> 24) & 0xFF));
-                }
-            }
-
-            buffer.flip();
-
-            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytesFromBuffer(image));
         }
         finally
         {
