@@ -13,6 +13,9 @@ import com.google.common.collect.ImmutableSet;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelPack;
+import mchorse.blockbuster.client.textures.GifProcessThread;
+import mchorse.blockbuster.client.textures.URLDownloadThread;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
@@ -51,6 +54,11 @@ public class ActorsPack implements IResourcePack
         String domain = location.getResourceDomain();
         String path = location.getResourcePath();
 
+        if (path.endsWith(".gif"))
+        {
+            this.handleGif(location);
+        }
+
         if ((domain.equals("http") || domain.equals("https")) && path.startsWith("//") && !path.endsWith(".mcmeta"))
         {
             return this.hanldeURLSkins(location);
@@ -67,7 +75,7 @@ public class ActorsPack implements IResourcePack
 
         /* In case this pack was used without checking for resource 
          * in other method first, find the file */
-        if (fileFile != null)
+        if (fileFile == null)
         {
             for (File file : this.pack.folders)
             {
@@ -89,6 +97,22 @@ public class ActorsPack implements IResourcePack
         }
 
         throw new FileNotFoundException(location.toString());
+    }
+
+    /**
+     * Handle creation of GIF texture 
+     */
+    private void handleGif(ResourceLocation location)
+    {
+        if (GifProcessThread.THREADS.containsKey(location))
+        {
+            return;
+        }
+
+        new Thread(() ->
+        {
+            Minecraft.getMinecraft().addScheduledTask(() -> GifProcessThread.create(location));
+        }).start();
     }
 
     /**

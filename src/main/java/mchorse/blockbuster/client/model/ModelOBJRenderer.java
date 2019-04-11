@@ -7,11 +7,11 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
-import mchorse.blockbuster.client.MipmapTexture;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.blockbuster.client.model.parsing.obj.OBJParser.Mesh;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.client.textures.MipmapTexture;
 import mchorse.mclib.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;

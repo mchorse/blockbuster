@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client;
+package mchorse.blockbuster.client.textures;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -43,8 +43,9 @@ public class URLDownloadThread implements Runnable
         con.setRequestProperty("User-Agent", USER_AGENT);
 
         InputStream stream = con.getInputStream();
+        String type = con.getHeaderField("Content-Type");
 
-        if (!con.getHeaderField("Content-Type").startsWith("image/"))
+        if (!type.startsWith("image/"))
         {
             return null;
         }

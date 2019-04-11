@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.client.MipmapTexture;
+import mchorse.blockbuster.client.textures.MipmapTexture;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
