@@ -50,12 +50,12 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
         Minecraft mc = Minecraft.getMinecraft();
 
         /* No point to cause NPE xD */
-        if (mc.thePlayer == null)
+        if (mc.player == null)
         {
             return;
         }
 
-        int ticks = mc.thePlayer.ticksExisted;
+        int ticks = mc.player.ticksExisted;
         float partial = mc.getRenderPartialTicks();
         float diff = ticks - this.lastTick + partial;
 
