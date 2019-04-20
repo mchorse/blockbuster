@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
@@ -8,6 +10,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -16,7 +19,9 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,9 +35,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderingHandler
 {
+    private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
+
+    /**
+     * GIFs which should be updated 
+     */
+    public static Map<ResourceLocation, GifTexture> gifs = new HashMap<ResourceLocation, GifTexture>();
+
     private GuiRecordingOverlay overlay;
 
-    private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
+    /**
+     * Register GIF 
+     */
+    public static void registerGif(ResourceLocation rl, GifTexture texture)
+    {
+        GifTexture old = gifs.remove(rl);
+
+        if (old != null)
+        {
+            old.deleteGlTexture();
+        }
+
+        gifs.put(rl, texture);
+    }
 
     /**
      * Render green sky, this is getting invoked from the ASM patched 
@@ -125,6 +150,19 @@ public class RenderingHandler
         if (recorder != null)
         {
             list.add("Recording frame " + recorder.tick + " (delay: " + recorder.delay + ")");
+        }
+    }
+
+    /**
+     * On render last world event, this bad boy will tick all of the GIF 
+     * textures which were registered 
+     */
+    @SubscribeEvent
+    public void onRenderLast(RenderWorldLastEvent event)
+    {
+        for (GifTexture texture : gifs.values())
+        {
+            texture.tick();
         }
     }
 }
