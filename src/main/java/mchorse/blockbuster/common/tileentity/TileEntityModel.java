@@ -146,6 +146,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.sx = message.sx;
         this.sy = message.sy;
         this.sz = message.sz;
+        this.shadow = message.shadow;
 
         for (int i = 0; i < message.slots.length; i++)
         {
@@ -174,6 +175,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.sx = model.sx;
         this.sy = model.sy;
         this.sz = model.sz;
+        this.shadow = model.shadow;
         this.morph = model.morph;
 
         for (int i = 0; i < model.slots.length; i++)

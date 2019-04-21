@@ -7,10 +7,11 @@ import java.util.Map;
 
 import at.dhyan.open_imaging.GifDecoder;
 import at.dhyan.open_imaging.GifDecoder.GifImage;
+import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.MultiResourceLocation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -70,10 +71,14 @@ public class GifProcessThread implements Runnable
 
             if (old != null)
             {
-                GlStateManager.deleteTexture(old.getGlTextureId());
+                if (old instanceof AbstractTexture)
+                {
+                    ((AbstractTexture) old).deleteGlTexture();
+                }
             }
 
-            mc.renderEngine.loadTickableTexture(this.texture, texture);
+            map.put(this.texture, texture);
+            RenderingHandler.registerGif(this.texture, texture);
         }
         catch (Exception e)
         {

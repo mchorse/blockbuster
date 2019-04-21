@@ -102,6 +102,7 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
         this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
         this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
+        this.registerItemModel(Blockbuster.gunItem, Blockbuster.path("gun"));
 
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));

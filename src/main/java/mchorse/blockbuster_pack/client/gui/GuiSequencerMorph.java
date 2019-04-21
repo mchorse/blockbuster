@@ -156,13 +156,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.morph.reverse = b.button.isChecked();
             });
 
-            this.pick.resizer().parent(this.area).set(0, 10, 105, 20).x(1, -115);
+            this.pick.resizer().parent(this.area).set(0, 0, 105, 20).x(1, -115);
             this.addPart.resizer().parent(this.area).set(10, 10, 50, 20);
             this.removePart.resizer().relative(this.addPart.resizer()).set(55, 0, 50, 20);
             this.list.resizer().parent(this.area).set(10, 50, 105, 0).h(1, -60);
             this.duration.resizer().relative(this.pick.resizer()).set(0, 25, 105, 20);
             this.random.resizer().relative(this.duration.resizer()).set(0, 25, 105, 20);
             this.reverse.resizer().relative(this.removePart.resizer()).set(55, 4, this.reverse.button.width, 11);
+
+            this.pick.resizer().y(1, -(this.random.resizer().getY() + this.random.resizer().getH() + 10));
 
             this.elements.add(this.pick, this.duration, this.random);
             this.children.add(this.addPart, this.removePart, this.list, this.reverse, this.elements);
