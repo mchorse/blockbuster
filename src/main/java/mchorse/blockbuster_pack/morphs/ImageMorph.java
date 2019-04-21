@@ -189,9 +189,6 @@ public class ImageMorph extends AbstractMorph
         y2 *= scale;
 
         GlStateManager.disableCull();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer vertexbuffer = tessellator.getBuffer();
@@ -206,8 +203,6 @@ public class ImageMorph extends AbstractMorph
 
         tessellator.draw();
 
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
         GlStateManager.enableCull();
     }
 
