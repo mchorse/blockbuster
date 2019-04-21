@@ -17,6 +17,7 @@ import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemBlockGreen;
+import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -110,6 +111,7 @@ public class CommonProxy
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
+        this.registerItem(Blockbuster.gunItem = new ItemGun());
 
         /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());

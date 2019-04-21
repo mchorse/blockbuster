@@ -91,6 +91,10 @@ public class RenderingHandler
 
             return true;
         }
+        else if (stack.getItem() == Blockbuster.gunItem)
+        {
+            return true;
+        }
 
         return false;
     }
