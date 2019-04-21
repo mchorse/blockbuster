@@ -15,19 +15,23 @@ import net.minecraft.world.World;
 public class ItemGun extends Item
 {
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
+        ItemStack stack = player.getHeldItem(hand);
+
         if (world.isRemote)
         {
-            return super.onItemRightClick(stack, world, player, hand);
+            return super.onItemRightClick(world, player, hand);
         }
 
         return new ActionResult<ItemStack>(this.shoot(stack.getTagCompound(), player, world) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL, stack);
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+        ItemStack stack = player.getHeldItem(hand);
+
         if (world.isRemote)
         {
             return EnumActionResult.SUCCESS;
@@ -45,7 +49,7 @@ public class ItemGun extends Item
 
         EntityGunProjectile projectile = new EntityGunProjectile(world, tag);
 
-        world.spawnEntityInWorld(projectile);
+        world.spawnEntity(projectile);
 
         return true;
     }

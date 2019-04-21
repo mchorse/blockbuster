@@ -96,7 +96,7 @@ public class TileEntityGunItemStackRenderer
         {
             if (this.current != null)
             {
-                this.current.render(Minecraft.getMinecraft().thePlayer, 0, 0, 0, 0, partialTicks);
+                this.current.render(Minecraft.getMinecraft().player, 0, 0, 0, 0, partialTicks);
             }
         }
     }
