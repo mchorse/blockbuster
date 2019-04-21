@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.lwjgl.opengl.GL11;
 
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
@@ -147,7 +148,7 @@ public class ImageMorph extends AbstractMorph
 
     private void renderPicture(float scale, boolean flipX)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
+        GifTexture.bindTexture(this.texture);
 
         int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
         int h = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
