@@ -191,7 +191,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.replayEditor.add(element);
 
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
-        element.resizer().set(10, 55, 60, 20).parent(this.area).x(1, -70);
+        element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
