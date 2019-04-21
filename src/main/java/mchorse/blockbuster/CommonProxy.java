@@ -111,7 +111,7 @@ public class CommonProxy
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
-        this.registerItem(Blockbuster.gunItem = new ItemGun());
+        // this.registerItem(Blockbuster.gunItem = new ItemGun());
 
         /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());

@@ -6,8 +6,8 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -37,7 +37,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         if (lastTexture != null)
         {
-            Minecraft.getMinecraft().renderEngine.bindTexture(lastTexture);
+            GifTexture.bindTexture(lastTexture);
         }
     }
 
@@ -201,7 +201,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+            GifTexture.bindTexture(texture);
         }
 
         this.mainModel.swingProgress = 0.0F;
@@ -231,7 +231,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+            GifTexture.bindTexture(texture);
         }
 
         this.mainModel.swingProgress = 0.0F;
