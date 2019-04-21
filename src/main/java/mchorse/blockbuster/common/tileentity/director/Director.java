@@ -98,7 +98,7 @@ public class Director
     /**
      * Whether director block should be hidden when playback starts 
      */
-    public boolean hide;
+    public boolean hide = true;
 
     /**
      * Map of currently playing actors 
