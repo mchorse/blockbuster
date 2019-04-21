@@ -10,12 +10,15 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.ITickableTextureObject;
-import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 
 public class GifTexture extends AbstractTexture implements ITickableTextureObject
 {
+    public ResourceLocation texture;
     public List<GifElement> elements = new ArrayList<GifElement>();
     public int lastTick;
     public int timer;
@@ -24,6 +27,28 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
 
     public int width;
     public int height;
+
+    public static void bindTexture(ResourceLocation location)
+    {
+        TextureManager textures = Minecraft.getMinecraft().renderEngine;
+
+        textures.bindTexture(location);
+
+        if (location.getResourcePath().endsWith("gif"))
+        {
+            ITextureObject object = textures.getTexture(location);
+
+            if (object != null)
+            {
+                GlStateManager.bindTexture(object.getGlTextureId());
+            }
+        }
+    }
+
+    public GifTexture(ResourceLocation texture)
+    {
+        this.texture = texture;
+    }
 
     public void add(int delay, ByteBuffer buffer)
     {
@@ -114,11 +139,11 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
         public GifElement(int delay, int w, int h, ByteBuffer buffer)
         {
             this.delay = delay;
-            this.id = TextureUtil.glGenTextures();
+            this.id = GL11.glGenTextures();
 
-            GlStateManager.bindTexture(this.id);
-            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-            GlStateManager.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.id);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
             GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
         }

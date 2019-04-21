@@ -50,7 +50,7 @@ public class GifProcessThread implements Runnable
             InputStream stream = manager.getResource(this.texture).getInputStream();
 
             GifImage image = GifDecoder.read(stream);
-            GifTexture texture = new GifTexture();
+            GifTexture texture = new GifTexture(this.texture);
 
             texture.width = image.getWidth();
             texture.height = image.getHeight();
