@@ -76,6 +76,7 @@ public class Blockbuster
     public static Item registerItem;
     public static Item actorConfigItem;
     public static Item modelBlockItem;
+    public static Item gunItem;
 
     /* Blocks */
     public static Block directorBlock;

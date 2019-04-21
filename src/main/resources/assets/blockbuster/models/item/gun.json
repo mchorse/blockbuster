@@ -1,0 +1,10 @@
+{
+    "parent": "builtin/entity",
+    "display": {
+        "head": {
+            "rotation": [ 0, -180, 0 ],
+            "translation": [ 0, 6.376, 0],
+            "scale":[ 1.6, 1.6, 1.6 ]
+        }
+    }
+}

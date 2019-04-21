@@ -96,6 +96,16 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
         return this.elements.get(this.index).id;
     }
 
+    @Override
+    public void deleteGlTexture()
+    {
+        for (GifElement element : this.elements)
+        {
+            GlStateManager.deleteTexture(element.id);
+            element.id = -1;
+        }
+    }
+
     public static class GifElement
     {
         public int delay;
