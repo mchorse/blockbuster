@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.recording.RecordRecorder;
@@ -36,6 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderingHandler
 {
     private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
+    private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
 
     /**
      * GIFs which should be updated 
@@ -93,6 +95,8 @@ public class RenderingHandler
         }
         else if (stack.getItem() == Blockbuster.gunItem)
         {
+            gun.renderByItem(stack, Minecraft.getMinecraft().getRenderPartialTicks());
+
             return true;
         }
 

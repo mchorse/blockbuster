@@ -1,9 +1,14 @@
 package mchorse.blockbuster.common;
 
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * BB gun properties 
@@ -29,6 +34,9 @@ public class GunInfo
     public float gravity;
     public boolean killOnImpact;
 
+    @SideOnly(Side.CLIENT)
+    private EntityLivingBase entity;
+
     public GunInfo()
     {
         this.reset();
@@ -37,6 +45,18 @@ public class GunInfo
     public GunInfo(NBTTagCompound tag)
     {
         this.fromNBT(tag);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void createEntity()
+    {
+        if (this.entity != null)
+        {
+            return;
+        }
+
+        this.entity = new EntityActor(Minecraft.getMinecraft().theWorld);
+        this.entity.onGround = true;
     }
 
     public void reset()
@@ -123,5 +143,41 @@ public class GunInfo
         morph.toNBT(tag);
 
         return tag;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void update()
+    {
+        if (this.entity != null)
+        {
+            this.entity.ticksExisted++;
+
+            if (this.defaultMorph != null)
+            {
+                this.defaultMorph.update(this.entity, null);
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void render(float partialTicks)
+    {
+        if (this.entity == null)
+        {
+            this.createEntity();
+        }
+
+        if (this.defaultMorph != null && this.entity != null)
+        {
+            this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
+            this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
+            this.entity.rotationYawHead = entity.prevRotationYawHead = 0;
+            this.entity.rotationYaw = entity.prevRotationYaw = 0;
+            this.entity.rotationPitch = entity.prevRotationPitch = 0;
+            this.entity.renderYawOffset = entity.prevRenderYawOffset = 0;
+            this.entity.setVelocity(0, 0, 0);
+
+            this.defaultMorph.render(this.entity, 0.5F, 0, 0.5F, 0, partialTicks);
+        }
     }
 }
