@@ -18,6 +18,7 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemBlockGreen;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -125,6 +126,7 @@ public class CommonProxy
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, "Actor", 0xffc1ab33, 0xffa08d2b);
+        EntityRegistry.registerModEntity(EntityGunProjectile.class, "GunProjectile", this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 10, true);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");

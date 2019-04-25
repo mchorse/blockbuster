@@ -32,7 +32,8 @@ public class GunInfo
     public float speed;
     public float friction;
     public float gravity;
-    public boolean killOnImpact;
+    public boolean vanish;
+    public float damage;
 
     @SideOnly(Side.CLIENT)
     private EntityLivingBase entity;
@@ -74,7 +75,8 @@ public class GunInfo
         this.speed = 0.1F;
         this.friction = 0.95F;
         this.gravity = 0.01F;
-        this.killOnImpact = true;
+        this.vanish = true;
+        this.damage = 0F;
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -98,7 +100,8 @@ public class GunInfo
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
-        if (tag.hasKey("KillOnImpact")) this.killOnImpact = tag.getBoolean("KillOnImpact");
+        if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
+        if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
     }
 
     private AbstractMorph create(NBTTagCompound tag, String key)
@@ -132,7 +135,8 @@ public class GunInfo
         if (this.speed != 0.1F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.95F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.01F) tag.setFloat("Gravity", this.gravity);
-        if (!this.killOnImpact) tag.setBoolean("KillOnImpact", this.killOnImpact);
+        if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
+        if (this.damage != 0) tag.setFloat("Damage", this.damage);
 
         return tag;
     }
@@ -169,15 +173,35 @@ public class GunInfo
 
         if (this.defaultMorph != null && this.entity != null)
         {
-            this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
-            this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
-            this.entity.rotationYawHead = entity.prevRotationYawHead = 0;
-            this.entity.rotationYaw = entity.prevRotationYaw = 0;
-            this.entity.rotationPitch = entity.prevRotationPitch = 0;
-            this.entity.renderYawOffset = entity.prevRenderYawOffset = 0;
-            this.entity.setVelocity(0, 0, 0);
-
+            this.setupEntity();
             this.defaultMorph.render(this.entity, 0.5F, 0, 0.5F, 0, partialTicks);
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void renderProjectile(float partialTicks)
+    {
+        if (this.entity == null)
+        {
+            this.createEntity();
+        }
+
+        if (this.projectileMorph != null && this.entity != null)
+        {
+            this.setupEntity();
+            this.projectileMorph.render(this.entity, 0, 0, 0, 0, partialTicks);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void setupEntity()
+    {
+        this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
+        this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
+        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
+        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
+        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
+        this.entity.renderYawOffset = this.entity.prevRenderYawOffset = 0;
+        this.entity.setVelocity(0, 0, 0);
     }
 }

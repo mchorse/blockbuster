@@ -47,7 +47,8 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement speed;
     public GuiTrackpadElement friction;
     public GuiTrackpadElement gravity;
-    public GuiButtonElement<GuiCheckBox> killOnImpact;
+    public GuiButtonElement<GuiCheckBox> vanish;
+    public GuiTrackpadElement damage;
 
     public GuiGun(ItemStack stack)
     {
@@ -86,7 +87,8 @@ public class GuiGun extends GuiBase
         this.speed = new GuiTrackpadElement(mc, "Speed", (value) -> this.info.speed = value);
         this.friction = new GuiTrackpadElement(mc, "Friction", (value) -> this.info.friction = value);
         this.gravity = new GuiTrackpadElement(mc, "Gravity", (value) -> this.info.gravity = value);
-        this.killOnImpact = GuiButtonElement.checkbox(mc, "Vanish projectile", false, (b) -> this.info.killOnImpact = b.button.isChecked());
+        this.vanish = GuiButtonElement.checkbox(mc, "Vanish projectile", false, (b) -> this.info.vanish = b.button.isChecked());
+        this.damage = new GuiTrackpadElement(mc, "Damage", (value) -> this.info.damage = value);
 
         /* Placement of the elements */
         this.morphs.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
@@ -94,8 +96,8 @@ public class GuiGun extends GuiBase
         this.pickFiring.resizer().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.pickProjectile.resizer().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
         this.auto.resizer().relative(this.pickProjectile.resizer()).set(0, 25, 100, 11);
-        this.killOnImpact.resizer().relative(this.auto.resizer()).set(0, 16, 100, 11);
-        this.fireCommand.resizer().relative(this.killOnImpact.resizer()).set(0, 16, 100, 20);
+        this.vanish.resizer().relative(this.auto.resizer()).set(0, 16, 100, 11);
+        this.fireCommand.resizer().relative(this.vanish.resizer()).set(0, 16, 100, 20);
         this.tickCommand.resizer().relative(this.fireCommand.resizer()).set(0, 25, 100, 20);
         this.impactCommand.resizer().relative(this.tickCommand.resizer()).set(0, 25, 100, 20);
 
@@ -108,6 +110,7 @@ public class GuiGun extends GuiBase
         this.speed.resizer().relative(this.lifeSpan.resizer()).set(0, 25, 100, 20);
         this.friction.resizer().relative(this.speed.resizer()).set(0, 25, 100, 20);
         this.gravity.resizer().relative(this.friction.resizer()).set(0, 25, 100, 20);
+        this.damage.resizer().relative(this.gravity.resizer()).set(0, 25, 100, 20);
 
         this.firingDelay.setValue(this.info.delay);
         this.fireRate.setValue(this.info.fireRate);
@@ -122,13 +125,14 @@ public class GuiGun extends GuiBase
         this.speed.setValue(this.info.speed);
         this.friction.setValue(this.info.friction);
         this.gravity.setValue(this.info.gravity);
-        this.killOnImpact.button.setIsChecked(this.info.killOnImpact);
+        this.vanish.button.setIsChecked(this.info.vanish);
+        this.damage.setValue(this.info.damage);
 
         this.elements.add(this.pickDefault, this.pickFiring, this.pickProjectile);
         this.elements.add(this.firingDelay, this.fireRate);
         this.elements.add(this.auto, this.accuracy, this.projectiles);
         this.elements.add(this.fireCommand, this.tickCommand, this.impactCommand);
-        this.elements.add(this.ticking, this.lifeSpan, this.speed, this.friction, this.gravity, this.killOnImpact);
+        this.elements.add(this.ticking, this.lifeSpan, this.speed, this.friction, this.gravity, this.vanish, this.damage);
         this.elements.add(this.morphs);
     }
 
