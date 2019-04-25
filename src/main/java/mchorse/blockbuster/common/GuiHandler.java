@@ -5,6 +5,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.client.gui.GuiActor;
+import mchorse.blockbuster.client.gui.GuiGun;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -29,6 +30,7 @@ public class GuiHandler implements IGuiHandler
     public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int MODEL_BLOCK = 3;
+    public static final int GUN = 4;
 
     /**
      * Shortcut for {@link EntityPlayer#openGui(Object, int, World, int, int, int)}
@@ -76,6 +78,10 @@ public class GuiHandler implements IGuiHandler
             dashboard.modelPanel.openModelBlock(model);
 
             return dashboard;
+        }
+        else if (ID == GUN)
+        {
+            return new GuiGun(player.getHeldItemMainhand());
         }
 
         return null;

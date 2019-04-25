@@ -5,6 +5,9 @@ import java.io.File;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
+import mchorse.blockbuster.capabilities.gun.Gun;
+import mchorse.blockbuster.capabilities.gun.GunStorage;
+import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
@@ -111,7 +114,7 @@ public class CommonProxy
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
-        // this.registerItem(Blockbuster.gunItem = new ItemGun());
+        this.registerItem(Blockbuster.gunItem = new ItemGun());
 
         /* Blocks */
         this.registerBlock(Blockbuster.directorBlock = new BlockDirector());
@@ -129,6 +132,7 @@ public class CommonProxy
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
+        CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun.class);
 
         /* Morphing */
         this.models = this.getHandler();

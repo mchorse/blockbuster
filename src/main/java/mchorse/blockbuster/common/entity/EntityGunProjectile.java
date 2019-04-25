@@ -1,6 +1,7 @@
 package mchorse.blockbuster.common.entity;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.common.GunInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -8,10 +9,9 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityGunProjectile extends Entity implements IEntityAdditionalSpawnData
 {
-    public EntityGunProjectile(World worldIn, NBTTagCompound tag)
+    public EntityGunProjectile(World worldIn, GunInfo info)
     {
         super(worldIn);
-
     }
 
     @Override

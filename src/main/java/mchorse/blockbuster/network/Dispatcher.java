@@ -27,6 +27,7 @@ import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketGunInfo;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
@@ -58,6 +59,7 @@ import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
+import mchorse.blockbuster.network.server.ServerHandlerGunInfo;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
@@ -144,6 +146,7 @@ public class Dispatcher
 
             /* Miscellaneous */
             register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+            register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
 
             /* Camera management */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
