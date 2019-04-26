@@ -32,10 +32,7 @@ public class GuiGun extends GuiBase
     public GuiButtonElement<GuiButton> pickProjectile;
     public GuiButtonElement<GuiCheckBox> pitch;
 
-    public GuiTrackpadElement firingDelay;
-    public GuiTrackpadElement fireRate;
-
-    public GuiButtonElement<GuiCheckBox> auto;
+    public GuiTrackpadElement delay;
     public GuiTrackpadElement accuracy;
     public GuiTrackpadElement projectiles;
 
@@ -68,12 +65,9 @@ public class GuiGun extends GuiBase
         this.pickProjectile = GuiButtonElement.button(mc, "Projectile morph", (b) -> this.openMorphs(3));
         this.pitch = GuiButtonElement.checkbox(mc, "Pitch", false, (b) -> this.info.pitch = b.button.isChecked());
 
-        this.firingDelay = new GuiTrackpadElement(mc, "Fire delay", (value) -> this.info.delay = value.intValue());
-        this.firingDelay.setLimit(0, Integer.MAX_VALUE, true);
-        this.fireRate = new GuiTrackpadElement(mc, "Fire rate", (value) -> this.info.fireRate = value.intValue());
-        this.fireRate.setLimit(0, Integer.MAX_VALUE, true);
+        this.delay = new GuiTrackpadElement(mc, "Delay", (value) -> this.info.delay = value.intValue());
+        this.delay.setLimit(0, Integer.MAX_VALUE, true);
 
-        this.auto = GuiButtonElement.checkbox(mc, "Automatic", false, (b) -> this.info.auto = b.button.isChecked());
         this.accuracy = new GuiTrackpadElement(mc, "Accuracy", (value) -> this.info.accuracy = value);
         this.projectiles = new GuiTrackpadElement(mc, "Projectiles", (value) -> this.info.projectiles = value.intValue());
         this.projectiles.setLimit(0, Integer.MAX_VALUE, true);
@@ -98,15 +92,13 @@ public class GuiGun extends GuiBase
         this.pickFiring.resizer().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.pickProjectile.resizer().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
         this.pitch.resizer().relative(this.pickProjectile.resizer()).set(0, 25, 100, 11);
-        this.auto.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
-        this.vanish.resizer().relative(this.auto.resizer()).set(0, 16, 100, 11);
+        this.vanish.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
         this.fireCommand.resizer().relative(this.vanish.resizer()).set(0, 16, 100, 20);
         this.tickCommand.resizer().relative(this.fireCommand.resizer()).set(0, 25, 100, 20);
         this.impactCommand.resizer().relative(this.tickCommand.resizer()).set(0, 25, 100, 20);
 
-        this.firingDelay.resizer().parent(this.area).set(0, 10, 100, 20).x(1, -110);
-        this.fireRate.resizer().relative(this.firingDelay.resizer()).set(0, 25, 100, 20);
-        this.accuracy.resizer().relative(this.fireRate.resizer()).set(0, 25, 100, 20);
+        this.delay.resizer().parent(this.area).set(0, 10, 100, 20).x(1, -110);
+        this.accuracy.resizer().relative(this.delay.resizer()).set(0, 25, 100, 20);
         this.projectiles.resizer().relative(this.accuracy.resizer()).set(0, 25, 100, 20);
         this.ticking.resizer().relative(this.projectiles.resizer()).set(0, 25, 100, 20);
         this.lifeSpan.resizer().relative(this.ticking.resizer()).set(0, 25, 100, 20);
@@ -116,9 +108,7 @@ public class GuiGun extends GuiBase
         this.damage.resizer().relative(this.gravity.resizer()).set(0, 25, 100, 20);
 
         this.pitch.button.setIsChecked(this.info.pitch);
-        this.firingDelay.setValue(this.info.delay);
-        this.fireRate.setValue(this.info.fireRate);
-        this.auto.button.setIsChecked(this.info.auto);
+        this.delay.setValue(this.info.delay);
         this.accuracy.setValue(this.info.accuracy);
         this.projectiles.setValue(this.info.projectiles);
         this.fireCommand.setText(this.info.fireCommand);
@@ -133,8 +123,7 @@ public class GuiGun extends GuiBase
         this.damage.setValue(this.info.damage);
 
         this.elements.add(this.pickDefault, this.pickFiring, this.pickProjectile, this.pitch);
-        this.elements.add(this.firingDelay, this.fireRate);
-        this.elements.add(this.auto, this.accuracy, this.projectiles);
+        this.elements.add(this.delay, this.accuracy, this.projectiles);
         this.elements.add(this.fireCommand, this.tickCommand, this.impactCommand);
         this.elements.add(this.ticking, this.lifeSpan, this.speed, this.friction, this.gravity, this.vanish, this.damage);
         this.elements.add(this.morphs);

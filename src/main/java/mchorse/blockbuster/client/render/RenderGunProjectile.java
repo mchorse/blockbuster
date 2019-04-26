@@ -23,7 +23,7 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     @Override
     public void doRender(EntityGunProjectile entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (entity.props != null)
+        if (entity.props != null && entity.morph != null)
         {
             float scale = (entity.timer + partialTicks) / 10F;
 
@@ -42,7 +42,8 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
                 GlStateManager.rotate(-(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks) + 90, 1.0F, 0.0F, 0.0F);
             }
 
-            entity.props.renderProjectile(partialTicks);
+            entity.props.createEntity();
+            entity.morph.render(entity.props.entity, 0, 0, 0, 0, partialTicks);
 
             GlStateManager.popMatrix();
         }

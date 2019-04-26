@@ -10,6 +10,7 @@ import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerGunInfo;
+import mchorse.blockbuster.network.client.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
@@ -29,6 +30,7 @@ import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketGunInfo;
+import mchorse.blockbuster.network.common.PacketGunShot;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
@@ -145,10 +147,10 @@ public class Dispatcher
             /* Multiplayer */
             register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
 
-            /* Miscellaneous */
-            register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+            /* Guns */
             register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
+            register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
 
             /* Camera management */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
@@ -160,6 +162,9 @@ public class Dispatcher
             register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
             register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
             register(PacketStructureListRequest.class, ServerHandlerStructureListRequest.class, Side.SERVER);
+
+            /* Miscellaneous */
+            register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
 
             if (CameraHandler.isApertureLoaded())
             {

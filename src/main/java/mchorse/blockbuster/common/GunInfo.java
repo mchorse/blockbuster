@@ -21,8 +21,6 @@ public class GunInfo
     public boolean pitch;
 
     public int delay;
-    public int fireRate;
-    public boolean auto;
     public float accuracy;
     public int projectiles;
     public String fireCommand;
@@ -36,8 +34,11 @@ public class GunInfo
     public boolean vanish;
     public float damage;
 
+    private int shoot = 0;
+    private AbstractMorph current;
+
     @SideOnly(Side.CLIENT)
-    private EntityLivingBase entity;
+    public EntityLivingBase entity;
 
     public GunInfo()
     {
@@ -47,6 +48,23 @@ public class GunInfo
     public GunInfo(NBTTagCompound tag)
     {
         this.fromNBT(tag);
+    }
+
+    public void shot()
+    {
+        this.shoot = this.delay;
+        this.setCurrentMorph(this.firingMorph == null ? null : this.firingMorph.clone(true), true);
+    }
+
+    /**
+     * Set current morph, make sure it's mergeable and stuff 
+     */
+    public void setCurrentMorph(AbstractMorph morph, boolean isRemote)
+    {
+        if (this.current == null || !this.current.canMerge(morph, isRemote))
+        {
+            this.current = morph;
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -61,14 +79,65 @@ public class GunInfo
         this.entity.onGround = true;
     }
 
+    @SideOnly(Side.CLIENT)
+    public void update()
+    {
+        if (this.entity != null)
+        {
+            this.entity.ticksExisted++;
+
+            if (this.current != null)
+            {
+                this.current.update(this.entity, null);
+            }
+        }
+
+        if (this.shoot >= 0)
+        {
+            if (this.shoot == 0)
+            {
+                this.setCurrentMorph(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+            }
+
+            this.shoot--;
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void render(float partialTicks)
+    {
+        if (this.entity == null)
+        {
+            this.createEntity();
+        }
+
+        if (this.current != null && this.entity != null)
+        {
+            this.setupEntity();
+            this.current.render(this.entity, 0.5F, 0, 0.5F, 0, partialTicks);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void setupEntity()
+    {
+        /* Reset entity's values, just in case some weird shit is going 
+         * to happen in morph's update code*/
+        this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
+        this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
+        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
+        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
+        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
+        this.entity.renderYawOffset = this.entity.prevRenderYawOffset = 0;
+        this.entity.setVelocity(0, 0, 0);
+    }
+
     public void reset()
     {
         this.defaultMorph = this.firingMorph = this.projectileMorph = null;
         this.pitch = true;
 
         this.delay = 0;
-        this.fireRate = 5;
-        this.auto = false;
         this.accuracy = 0F;
         this.projectiles = 1;
         this.fireCommand = this.tickCommand = this.impactCommand = "";
@@ -91,8 +160,6 @@ public class GunInfo
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
 
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
-        if (tag.hasKey("FireRate")) this.fireRate = tag.getInteger("FireRate");
-        if (tag.hasKey("Auto")) this.auto = tag.getBoolean("Auto");
         if (tag.hasKey("Accuracy")) this.accuracy = tag.getFloat("Accuracy");
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
@@ -127,8 +194,6 @@ public class GunInfo
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
 
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
-        if (this.fireRate != 5) tag.setInteger("FireRate", this.fireRate);
-        if (this.auto) tag.setBoolean("Auto", this.auto);
         if (this.accuracy != 0F) tag.setFloat("Accuracy", this.accuracy);
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
@@ -151,61 +216,5 @@ public class GunInfo
         morph.toNBT(tag);
 
         return tag;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void update()
-    {
-        if (this.entity != null)
-        {
-            this.entity.ticksExisted++;
-
-            if (this.defaultMorph != null)
-            {
-                this.defaultMorph.update(this.entity, null);
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void render(float partialTicks)
-    {
-        if (this.entity == null)
-        {
-            this.createEntity();
-        }
-
-        if (this.defaultMorph != null && this.entity != null)
-        {
-            this.setupEntity();
-            this.defaultMorph.render(this.entity, 0.5F, 0, 0.5F, 0, partialTicks);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void renderProjectile(float partialTicks)
-    {
-        if (this.entity == null)
-        {
-            this.createEntity();
-        }
-
-        if (this.projectileMorph != null && this.entity != null)
-        {
-            this.setupEntity();
-            this.projectileMorph.render(this.entity, 0, 0, 0, 0, partialTicks);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void setupEntity()
-    {
-        this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
-        this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
-        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
-        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
-        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
-        this.entity.renderYawOffset = this.entity.prevRenderYawOffset = 0;
-        this.entity.setVelocity(0, 0, 0);
     }
 }

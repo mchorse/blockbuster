@@ -6,7 +6,10 @@ import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.common.GuiHandler;
 import mchorse.blockbuster.common.GunInfo;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketGunShot;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -84,6 +87,9 @@ public class ItemGun extends Item
         {
             player.getServer().commandManager.executeCommand(last, info.fireCommand);
         }
+
+        Dispatcher.sendTo(new PacketGunShot(player.getEntityId()), (EntityPlayerMP) player);
+        Dispatcher.sendToTracked(player, new PacketGunShot(player.getEntityId()));
 
         return true;
     }

@@ -2,6 +2,8 @@ package mchorse.blockbuster.common.entity;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.GunInfo;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -14,6 +16,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
     public GunInfo props;
+    public AbstractMorph morph;
     public int timer;
 
     public EntityGunProjectile(World worldIn)
@@ -26,6 +29,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         super(worldIn);
 
         this.props = props;
+
+        if (this.props != null)
+        {
+            this.morph = props.projectileMorph == null ? null : this.props.projectileMorph.clone(worldIn.isRemote);
+        }
     }
 
     @Override
@@ -81,6 +89,15 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             ByteBufUtils.writeTag(buffer, this.props.toNBT());
         }
+
+        buffer.writeBoolean(this.morph != null);
+
+        if (this.morph != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            this.morph.toNBT(tag);
+            ByteBufUtils.writeTag(buffer, tag);
+        }
     }
 
     @Override
@@ -89,6 +106,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         if (additionalData.readBoolean())
         {
             this.props = new GunInfo(ByteBufUtils.readTag(additionalData));
+        }
+
+        if (additionalData.readBoolean())
+        {
+            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(additionalData));
         }
     }
 
