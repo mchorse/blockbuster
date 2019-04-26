@@ -9,6 +9,7 @@ import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
+import mchorse.blockbuster.network.client.ClientHandlerGunInfo;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
@@ -147,6 +148,7 @@ public class Dispatcher
             /* Miscellaneous */
             register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
             register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
+            register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
 
             /* Camera management */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);

@@ -25,10 +25,22 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     {
         if (entity.props != null)
         {
+            float scale = (entity.timer + partialTicks) / 10F;
+
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
+
+            if (scale <= 1)
+            {
+                GlStateManager.scale(scale, scale, scale);
+            }
+
             GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(-(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks) + 90, 1.0F, 0.0F, 0.0F);
+
+            if (entity.props.pitch)
+            {
+                GlStateManager.rotate(-(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks) + 90, 1.0F, 0.0F, 0.0F);
+            }
 
             entity.props.renderProjectile(partialTicks);
 

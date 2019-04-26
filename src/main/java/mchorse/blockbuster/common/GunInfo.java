@@ -18,6 +18,7 @@ public class GunInfo
     public AbstractMorph defaultMorph;
     public AbstractMorph firingMorph;
     public AbstractMorph projectileMorph;
+    public boolean pitch;
 
     public int delay;
     public int fireRate;
@@ -63,6 +64,7 @@ public class GunInfo
     public void reset()
     {
         this.defaultMorph = this.firingMorph = this.projectileMorph = null;
+        this.pitch = true;
 
         this.delay = 0;
         this.fireRate = 5;
@@ -86,6 +88,7 @@ public class GunInfo
         this.defaultMorph = this.create(tag, "Morph");
         this.firingMorph = this.create(tag, "Fire");
         this.projectileMorph = this.create(tag, "Projectile");
+        if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
 
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
         if (tag.hasKey("FireRate")) this.fireRate = tag.getInteger("FireRate");
@@ -121,6 +124,7 @@ public class GunInfo
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
+        if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
 
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
         if (this.fireRate != 5) tag.setInteger("FireRate", this.fireRate);

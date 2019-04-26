@@ -30,6 +30,7 @@ public class GuiGun extends GuiBase
     public GuiButtonElement<GuiButton> pickDefault;
     public GuiButtonElement<GuiButton> pickFiring;
     public GuiButtonElement<GuiButton> pickProjectile;
+    public GuiButtonElement<GuiCheckBox> pitch;
 
     public GuiTrackpadElement firingDelay;
     public GuiTrackpadElement fireRate;
@@ -65,6 +66,7 @@ public class GuiGun extends GuiBase
         this.pickDefault = GuiButtonElement.button(mc, "Default morph", (b) -> this.openMorphs(1));
         this.pickFiring = GuiButtonElement.button(mc, "Firing morph", (b) -> this.openMorphs(2));
         this.pickProjectile = GuiButtonElement.button(mc, "Projectile morph", (b) -> this.openMorphs(3));
+        this.pitch = GuiButtonElement.checkbox(mc, "Pitch", false, (b) -> this.info.pitch = b.button.isChecked());
 
         this.firingDelay = new GuiTrackpadElement(mc, "Fire delay", (value) -> this.info.delay = value.intValue());
         this.firingDelay.setLimit(0, Integer.MAX_VALUE, true);
@@ -95,7 +97,8 @@ public class GuiGun extends GuiBase
         this.pickDefault.resizer().parent(this.area).set(10, 10, 100, 20);
         this.pickFiring.resizer().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.pickProjectile.resizer().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
-        this.auto.resizer().relative(this.pickProjectile.resizer()).set(0, 25, 100, 11);
+        this.pitch.resizer().relative(this.pickProjectile.resizer()).set(0, 25, 100, 11);
+        this.auto.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
         this.vanish.resizer().relative(this.auto.resizer()).set(0, 16, 100, 11);
         this.fireCommand.resizer().relative(this.vanish.resizer()).set(0, 16, 100, 20);
         this.tickCommand.resizer().relative(this.fireCommand.resizer()).set(0, 25, 100, 20);
@@ -112,6 +115,7 @@ public class GuiGun extends GuiBase
         this.gravity.resizer().relative(this.friction.resizer()).set(0, 25, 100, 20);
         this.damage.resizer().relative(this.gravity.resizer()).set(0, 25, 100, 20);
 
+        this.pitch.button.setIsChecked(this.info.pitch);
         this.firingDelay.setValue(this.info.delay);
         this.fireRate.setValue(this.info.fireRate);
         this.auto.button.setIsChecked(this.info.auto);
@@ -128,7 +132,7 @@ public class GuiGun extends GuiBase
         this.vanish.button.setIsChecked(this.info.vanish);
         this.damage.setValue(this.info.damage);
 
-        this.elements.add(this.pickDefault, this.pickFiring, this.pickProjectile);
+        this.elements.add(this.pickDefault, this.pickFiring, this.pickProjectile, this.pitch);
         this.elements.add(this.firingDelay, this.fireRate);
         this.elements.add(this.auto, this.accuracy, this.projectiles);
         this.elements.add(this.fireCommand, this.tickCommand, this.impactCommand);
@@ -160,7 +164,7 @@ public class GuiGun extends GuiBase
     {
         super.closeScreen();
 
-        Dispatcher.sendToServer(new PacketGunInfo(this.info.toNBT()));
+        Dispatcher.sendToServer(new PacketGunInfo(this.info.toNBT(), 0));
     }
 
     @Override

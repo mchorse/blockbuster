@@ -26,7 +26,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         super(worldIn);
 
         this.props = props;
-        this.timer = 2;
     }
 
     @Override
@@ -34,29 +33,35 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     {
         super.onUpdate();
 
-        if (this.props != null)
-        {
-            float friction = this.props.friction;
-
-            this.motionX *= friction;
-            this.motionY *= friction;
-            this.motionZ *= friction;
-        }
-
-        this.timer--;
+        this.timer++;
 
         if (this.props == null)
         {
             return;
         }
 
-        if (-(this.timer - 2) > this.props.lifeSpan)
+        /* Apply friction */
+        float friction = this.props.friction;
+
+        this.motionX *= friction;
+        this.motionY *= friction;
+        this.motionZ *= friction;
+
+        if (this.timer > this.props.lifeSpan)
         {
             this.setDead();
 
             if (!this.worldObj.isRemote && !this.props.impactCommand.isEmpty())
             {
                 this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+            }
+        }
+
+        if (this.props.ticking > 0 && this.timer % this.props.ticking == 0)
+        {
+            if (!this.worldObj.isRemote && !this.props.tickCommand.isEmpty())
+            {
+                this.getServer().commandManager.executeCommand(this, this.props.tickCommand);
             }
         }
     }
@@ -95,7 +100,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             return;
         }
 
-        if (this.props != null && this.timer <= 0)
+        if (this.props != null && this.timer >= 2)
         {
             if (!this.props.impactCommand.isEmpty())
             {
