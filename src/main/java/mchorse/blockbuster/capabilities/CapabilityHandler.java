@@ -3,8 +3,10 @@ package mchorse.blockbuster.capabilities;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.network.common.PacketAperture;
+import mchorse.blockbuster.capabilities.gun.GunProvider;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
@@ -14,6 +16,7 @@ import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
@@ -29,13 +32,14 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 public class CapabilityHandler
 {
     public static final ResourceLocation RECORDING_CAP = new ResourceLocation(Blockbuster.MODID, "recording_capability");
+    public static final ResourceLocation GUN_CAP = new ResourceLocation(Blockbuster.MODID, "gun");
 
     /**
      * Attach capabilities (well, only one, right now)
      */
     @SubscribeEvent
     @SuppressWarnings("deprecation")
-    public void attachCapability(AttachCapabilitiesEvent<Entity> event)
+    public void attachPlayerCapability(AttachCapabilitiesEvent<Entity> event)
     {
         if (!(event.getObject() instanceof EntityPlayer))
         {
@@ -43,6 +47,18 @@ public class CapabilityHandler
         }
 
         event.addCapability(RECORDING_CAP, new RecordingProvider());
+    }
+
+    /**
+     * Attach gun capability
+     */
+    @SubscribeEvent
+    @SuppressWarnings("deprecation")
+    public void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event)
+    {
+        if (!(event.getObject().getItem() instanceof ItemGun)) return;
+
+        event.addCapability(GUN_CAP, new GunProvider());
     }
 
     /**

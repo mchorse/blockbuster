@@ -4,70 +4,70 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.blockbuster.capabilities.gun.Gun;
+import mchorse.blockbuster.capabilities.gun.IGun;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Model block's TEISR
+ * Gun items's TEISR
  * 
- * This class is responsible for rendering model blocks in inventory
+ * This class is responsible for rendering gun items
  */
-public class TileEntityGunItemStackRenderer
+@SideOnly(Side.CLIENT)
+public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 {
     /**
      * A cache of model TEs
      */
-    public static final Map<NBTTagCompound, GunRenderer> models = new HashMap<NBTTagCompound, GunRenderer>();
+    public static final Map<ItemStack, GunEntry> models = new HashMap<ItemStack, GunEntry>();
 
+    @Override
     public void renderByItem(ItemStack stack, float partialTicks)
     {
-        if (stack.getItem() == Blockbuster.gunItem)
+        /* Removing from the cache unused models */
+        Iterator<GunEntry> it = models.values().iterator();
+
+        while (it.hasNext())
         {
-            /* Removing from the cache unused models */
-            Iterator<GunRenderer> it = models.values().iterator();
+            GunEntry model = it.next();
 
-            while (it.hasNext())
+            if (model.timer <= 0)
             {
-                GunRenderer model = it.next();
-
-                if (model.timer <= 0)
-                {
-                    it.remove();
-                }
-
-                model.timer--;
+                it.remove();
             }
 
-            NBTTagCompound tag = stack.getTagCompound();
+            model.timer--;
+        }
 
-            if (tag != null)
+        GunEntry model = models.get(stack);
+
+        if (model == null)
+        {
+            IGun gun = Gun.get(stack);
+
+            if (gun != null)
             {
-                GunRenderer model = models.get(tag);
-
-                if (model == null)
-                {
-                    model = new GunRenderer(tag);
-                    models.put(tag, model);
-                }
-
-                if (model != null)
-                {
-                    model.timer = 20;
-                    this.renderModel(model, partialTicks);
-                }
+                model = new GunEntry(gun);
+                models.put(stack, model);
             }
+        }
+
+        if (model != null)
+        {
+            model.timer = 20;
+            model.gun.getInfo().render(partialTicks);
+            this.reset();
         }
     }
 
-    public void renderModel(GunRenderer model, float partialTicks)
+    public void reset()
     {
-        model.render(partialTicks);
-
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager manager = mc.getTextureManager();
 
@@ -76,28 +76,14 @@ public class TileEntityGunItemStackRenderer
         mc.getTextureMapBlocks().setBlurMipmap(false, false);
     }
 
-    public static class GunRenderer
+    public static class GunEntry
     {
-        /* Logic fields */
         public int timer = 20;
-        public AbstractMorph current;
+        public IGun gun;
 
-        /* Rendering data */
-        public AbstractMorph defaultMorph;
-        public AbstractMorph shootingMorph;
-        public int shootingDelay;
-
-        public GunRenderer(NBTTagCompound tag)
+        public GunEntry(IGun gun)
         {
-
-        }
-
-        public void render(float partialTicks)
-        {
-            if (this.current != null)
-            {
-                this.current.render(Minecraft.getMinecraft().player, 0, 0, 0, 0, partialTicks);
-            }
+            this.gun = gun;
         }
     }
 }

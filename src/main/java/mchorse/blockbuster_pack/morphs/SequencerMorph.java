@@ -305,7 +305,7 @@ public class SequencerMorph extends AbstractMorph
                 if (i == 0)
                 {
                     boolean isRemote = FMLCommonHandler.instance().getSide() == Side.CLIENT;
-                    
+
                     this.duration = entry.getDuration();
                     this.setCurrentMorph(morph == null ? null : morph.clone(isRemote), isRemote);
                 }
@@ -369,5 +369,25 @@ public class SequencerMorph extends AbstractMorph
 
             return super.equals(obj);
         }
+    }
+
+    public AbstractMorph getRandom()
+    {
+        if (this.morphs.isEmpty())
+        {
+            return null;
+        }
+
+        return this.get((int) (Math.random() * this.morphs.size()));
+    }
+
+    public AbstractMorph get(int index)
+    {
+        if (index >= this.morphs.size() || index < 0)
+        {
+            return null;
+        }
+
+        return this.morphs.get(index).morph;
     }
 }

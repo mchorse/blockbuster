@@ -15,12 +15,15 @@ import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.gui.MenuHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.render.RenderActor;
+import mchorse.blockbuster.client.render.RenderGunProjectile;
 import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.recording.FrameHandler;
@@ -102,7 +105,7 @@ public class ClientProxy extends CommonProxy
         this.registerItemModel(Blockbuster.playbackItem, Blockbuster.path("playback"));
         this.registerItemModel(Blockbuster.registerItem, Blockbuster.path("register"));
         this.registerItemModel(Blockbuster.actorConfigItem, Blockbuster.path("actor_config"));
-        // this.registerItemModel(Blockbuster.gunItem, Blockbuster.path("gun"));
+        this.registerItemModel(Blockbuster.gunItem, Blockbuster.path("gun"));
 
         /* Blocks */
         this.registerItemModel(Blockbuster.directorBlock, Blockbuster.path("director"));
@@ -124,9 +127,11 @@ public class ClientProxy extends CommonProxy
         });
 
         Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
+        Blockbuster.gunItem.setTileEntityItemStackRenderer(new TileEntityGunItemStackRenderer());
 
         /* Entities */
         this.registerEntityRender(EntityActor.class, new RenderActor.FactoryActor());
+        this.registerEntityRender(EntityGunProjectile.class, new RenderGunProjectile.FactoryGunProjectile());
 
         /* Tile entity */
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityModel.class, modelRenderer = new TileEntityModelRenderer());
