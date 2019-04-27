@@ -115,7 +115,7 @@ public class KeyboardHandler
             Minecraft mc = Minecraft.getMinecraft();
             ItemStack stack = mc.player.getHeldItemMainhand();
 
-            if (stack != null && stack.getItem() == Blockbuster.gunItem)
+            if (stack.getItem() == Blockbuster.gunItem)
             {
                 mc.displayGuiScreen(new GuiGun(stack));
             }
