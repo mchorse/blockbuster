@@ -63,6 +63,11 @@ public class GunInfo
 
     public void shot()
     {
+        if (this.delay <= 0)
+        {
+            return;
+        }
+
         this.shoot = this.delay;
         this.setCurrentMorph(this.firingMorph == null ? null : this.firingMorph.clone(true), true);
     }
