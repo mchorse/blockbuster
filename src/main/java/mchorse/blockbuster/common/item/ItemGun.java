@@ -7,6 +7,8 @@ import mchorse.blockbuster.common.GunInfo;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketGunShot;
+import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -64,7 +66,21 @@ public class ItemGun extends Item
 
         for (int i = 0; i < info.projectiles; i++)
         {
-            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getInfo());
+            AbstractMorph morph = info.projectileMorph;
+
+            if (info.sequencer && morph instanceof SequencerMorph)
+            {
+                SequencerMorph seq = ((SequencerMorph) morph);
+
+                morph = info.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+            }
+
+            if (morph != null)
+            {
+                morph = morph.clone(world.isRemote);
+            }
+
+            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getInfo(), morph);
 
             projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
             projectile.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, info.speed, info.accuracy);

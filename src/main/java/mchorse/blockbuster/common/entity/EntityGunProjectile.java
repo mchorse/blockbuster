@@ -32,19 +32,15 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
     public EntityGunProjectile(World worldIn)
     {
-        this(worldIn, null);
+        this(worldIn, null, null);
     }
 
-    public EntityGunProjectile(World worldIn, GunInfo props)
+    public EntityGunProjectile(World worldIn, GunInfo props, AbstractMorph morph)
     {
         super(worldIn);
 
         this.props = props;
-
-        if (this.props != null)
-        {
-            this.morph = props.projectileMorph == null ? null : this.props.projectileMorph.clone(worldIn.isRemote);
-        }
+        this.morph = morph;
     }
 
     @Override

@@ -56,6 +56,8 @@ public class GuiGun extends GuiBase
     public GuiButtonElement<GuiCheckBox> pitch;
     public GuiButtonElement<GuiCheckBox> vanish;
     public GuiButtonElement<GuiCheckBox> bounce;
+    public GuiButtonElement<GuiCheckBox> sequencer;
+    public GuiButtonElement<GuiCheckBox> random;
     public GuiTrackpadElement damage;
     public GuiTrackpadElement ticking;
     public GuiTrackpadElement lifeSpan;
@@ -117,6 +119,8 @@ public class GuiGun extends GuiBase
         this.pitch = GuiButtonElement.checkbox(mc, "Pitch", false, (b) -> this.info.pitch = b.button.isChecked());
         this.vanish = GuiButtonElement.checkbox(mc, "Vanish", false, (b) -> this.info.vanish = b.button.isChecked());
         this.bounce = GuiButtonElement.checkbox(mc, "Bounce", false, (b) -> this.info.bounce = b.button.isChecked());
+        this.sequencer = GuiButtonElement.checkbox(mc, "Sequencer", false, (b) -> this.info.sequencer = b.button.isChecked());
+        this.random = GuiButtonElement.checkbox(mc, "Random", false, (b) -> this.info.random = b.button.isChecked());
         this.damage = new GuiTrackpadElement(mc, "Damage", (value) -> this.info.damage = value);
         this.ticking = new GuiTrackpadElement(mc, "Ticking", (value) -> this.info.ticking = value.intValue());
         this.ticking.setLimit(0, Integer.MAX_VALUE, true);
@@ -135,6 +139,8 @@ public class GuiGun extends GuiBase
         this.pitch.resizer().relative(this.yaw.resizer()).set(0, 16, 100, 11);
         this.vanish.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
         this.bounce.resizer().relative(this.vanish.resizer()).set(0, 16, 100, 11);
+        this.sequencer.resizer().relative(this.bounce.resizer()).set(0, 16, 100, 11);
+        this.random.resizer().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
         this.damage.resizer().parent(area).set(0, 10, 100, 20).x(1, -110);
         this.ticking.resizer().relative(this.damage.resizer()).set(0, 25, 100, 20);
         this.lifeSpan.resizer().relative(this.ticking.resizer()).set(0, 25, 100, 20);
@@ -144,7 +150,7 @@ public class GuiGun extends GuiBase
         this.hits.resizer().relative(this.gravity.resizer()).set(0, 25, 100, 20);
 
         this.projectileOptions.children.add(this.pickProjectile, this.tickCommand, this.impactCommand);
-        this.projectileOptions.children.add(this.yaw, this.pitch, this.vanish, this.bounce);
+        this.projectileOptions.children.add(this.yaw, this.pitch, this.vanish, this.bounce, this.sequencer, this.random);
         this.projectileOptions.children.add(this.damage, this.ticking, this.lifeSpan, this.speed, this.friction, this.gravity, this.hits);
 
         /* Placement of the elements */
@@ -158,6 +164,8 @@ public class GuiGun extends GuiBase
         this.pitch.button.setIsChecked(this.info.pitch);
         this.vanish.button.setIsChecked(this.info.vanish);
         this.bounce.button.setIsChecked(this.info.bounce);
+        this.sequencer.button.setIsChecked(this.info.sequencer);
+        this.random.button.setIsChecked(this.info.random);
         this.fireCommand.setText(this.info.fireCommand);
         this.tickCommand.setText(this.info.tickCommand);
         this.impactCommand.setText(this.info.impactCommand);

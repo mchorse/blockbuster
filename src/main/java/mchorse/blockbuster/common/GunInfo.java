@@ -35,6 +35,8 @@ public class GunInfo
     public float gravity;
     public boolean vanish;
     public boolean bounce;
+    public boolean sequencer;
+    public boolean random;
     public int hits;
     public float damage;
 
@@ -157,6 +159,8 @@ public class GunInfo
         this.gravity = 0.01F;
         this.vanish = true;
         this.bounce = false;
+        this.sequencer = false;
+        this.random = false;
         this.hits = 1;
         this.damage = 0F;
     }
@@ -184,6 +188,8 @@ public class GunInfo
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
+        if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
+        if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
     }
@@ -221,6 +227,8 @@ public class GunInfo
         if (this.gravity != 0.01F) tag.setFloat("Gravity", this.gravity);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
+        if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
+        if (this.random) tag.setBoolean("Random", this.random);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
 
