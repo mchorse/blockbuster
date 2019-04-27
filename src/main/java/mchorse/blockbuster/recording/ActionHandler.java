@@ -9,6 +9,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
 import mchorse.blockbuster.network.Dispatcher;
@@ -69,6 +71,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Event handler for recording purposes.
@@ -552,10 +556,7 @@ public class ActionHandler
         /* Update TEs in the model's TEISR */
         if (player.world.isRemote)
         {
-            for (TEModel model : TileEntityModelItemStackRenderer.models.values())
-            {
-                model.model.update();
-            }
+            this.updateClientTEISRs();
         }
         else
         {
@@ -566,6 +567,20 @@ public class ActionHandler
             }
 
             this.timer += 1;
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void updateClientTEISRs()
+    {
+        for (TEModel model : TileEntityModelItemStackRenderer.models.values())
+        {
+            model.model.update();
+        }
+
+        for (GunEntry model : TileEntityGunItemStackRenderer.models.values())
+        {
+            model.gun.getInfo().update();
         }
     }
 }

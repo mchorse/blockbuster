@@ -13,16 +13,18 @@ public class PacketActions implements IMessage
 {
     public String filename;
     public List<List<Action>> actions;
+    public boolean open;
 
     public PacketActions()
     {
         this.actions = new ArrayList<List<Action>>();
     }
 
-    public PacketActions(String filename, List<List<Action>> actions)
+    public PacketActions(String filename, List<List<Action>> actions, boolean open)
     {
         this.filename = filename;
         this.actions = actions;
+        this.open = open;
     }
 
     @Override
@@ -55,6 +57,8 @@ public class PacketActions implements IMessage
                 this.actions.add(null);
             }
         }
+
+        this.open = buf.readBoolean();
     }
 
     @Override
@@ -79,5 +83,7 @@ public class PacketActions implements IMessage
                 }
             }
         }
+
+        buf.writeBoolean(this.open);
     }
 }

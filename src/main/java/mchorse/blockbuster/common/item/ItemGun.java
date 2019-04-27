@@ -1,10 +1,18 @@
 package mchorse.blockbuster.common.item;
 
+import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.capabilities.gun.Gun;
+import mchorse.blockbuster.capabilities.gun.IGun;
+import mchorse.blockbuster.common.GunInfo;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketGunShot;
+import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -14,17 +22,20 @@ import net.minecraft.world.World;
 
 public class ItemGun extends Item
 {
+    public ItemGun()
+    {
+        this.setMaxStackSize(1);
+        this.setRegistryName("gun");
+        this.setUnlocalizedName("blockbuster.gun");
+        this.setCreativeTab(Blockbuster.blockbusterTab);
+    }
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
         ItemStack stack = player.getHeldItem(hand);
 
-        if (world.isRemote)
-        {
-            return super.onItemRightClick(world, player, hand);
-        }
-
-        return new ActionResult<ItemStack>(this.shoot(stack.getTagCompound(), player, world) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL, stack);
+        return new ActionResult<ItemStack>(this.shootIt(stack, player, world), stack);
     }
 
     @Override
@@ -32,24 +43,66 @@ public class ItemGun extends Item
     {
         ItemStack stack = player.getHeldItem(hand);
 
+        return this.shootIt(stack, player, world);
+    }
+
+    public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
+    {
         if (world.isRemote)
         {
             return EnumActionResult.SUCCESS;
         }
 
-        return this.shoot(stack.getTagCompound(), player, world) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+        return this.shoot(stack, player, world) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
     }
 
-    public boolean shoot(NBTTagCompound tag, EntityPlayer player, World world)
+    public boolean shoot(ItemStack stack, EntityPlayer player, World world)
     {
-        if (tag == null)
+        IGun gun = Gun.get(stack);
+
+        if (gun == null)
         {
             return false;
         }
 
-        EntityGunProjectile projectile = new EntityGunProjectile(world, tag);
+        GunInfo info = gun.getInfo();
+        EntityGunProjectile last = null;
 
-        world.spawnEntity(projectile);
+        for (int i = 0; i < info.projectiles; i++)
+        {
+            AbstractMorph morph = info.projectileMorph;
+
+            if (info.sequencer && morph instanceof SequencerMorph)
+            {
+                SequencerMorph seq = ((SequencerMorph) morph);
+
+                morph = info.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+            }
+
+            if (morph != null)
+            {
+                morph = morph.clone(world.isRemote);
+            }
+
+            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getInfo(), morph);
+
+            projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+            projectile.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, info.speed, info.accuracy);
+            world.spawnEntity(projectile);
+            last = projectile;
+        }
+
+        if (!info.fireCommand.isEmpty() && last != null)
+        {
+            player.getServer().commandManager.executeCommand(last, info.fireCommand);
+        }
+
+        if (player instanceof EntityPlayerMP)
+        {
+            Dispatcher.sendTo(new PacketGunShot(player.getEntityId()), (EntityPlayerMP) player);
+        }
+
+        Dispatcher.sendToTracked(player, new PacketGunShot(player.getEntityId()));
 
         return true;
     }

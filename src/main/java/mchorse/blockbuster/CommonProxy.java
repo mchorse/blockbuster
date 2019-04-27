@@ -5,6 +5,9 @@ import java.io.File;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
+import mchorse.blockbuster.capabilities.gun.Gun;
+import mchorse.blockbuster.capabilities.gun.GunStorage;
+import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
@@ -15,6 +18,7 @@ import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.common.item.ItemBlockGreen;
 import mchorse.blockbuster.common.item.ItemGun;
@@ -112,7 +116,7 @@ public class CommonProxy
         this.registerItem(Blockbuster.registerItem = new ItemRegister());
         this.registerItem(Blockbuster.playbackItem = new ItemPlayback());
         this.registerItem(Blockbuster.actorConfigItem = new ItemActorConfig());
-        // this.registerItem(Blockbuster.gunItem = new ItemGun());
+        this.registerItem(Blockbuster.gunItem = new ItemGun());
 
         /* Blocks */
         Block director = new BlockDirector();
@@ -132,6 +136,7 @@ public class CommonProxy
 
         /* Entities */
         this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
+        EntityRegistry.registerModEntity(new ResourceLocation("blockbuster:projectile"), EntityGunProjectile.class, "blockbuster.GunProjectile", this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 10, true);
 
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
@@ -139,6 +144,7 @@ public class CommonProxy
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
+        CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun.class);
 
         /* Morphing */
         this.models = this.getHandler();
@@ -202,20 +208,6 @@ public class CommonProxy
     }
 
     /**
-    <<<<<<< HEAD
-    =======
-     * Register block (and also add register an item for the block)
-     */
-    protected void registerBlock(Block block)
-    {
-        ItemBlock item = block instanceof BlockGreen ? new ItemBlockGreen(block, true) : new ItemBlock(block);
-
-        GameRegistry.register(block);
-        GameRegistry.register(item.setRegistryName(block.getRegistryName()));
-    }
-
-    /**
-    >>>>>>> master
      * Thanks to animal bikes mod for this wonderful example! Kids, wanna learn
      * how to mod minecraft with forge? That's simple. Find mods for specific
      * minecraft version and decompile the .jar files with JD-GUI. Isn't that

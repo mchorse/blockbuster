@@ -311,7 +311,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     public void selectRecord(String str)
     {
         this.save();
-        Dispatcher.sendToServer(new PacketRequestAction(str));
+        Dispatcher.sendToServer(new PacketRequestAction(str, true));
     }
 
     public void selectAction(Action action)

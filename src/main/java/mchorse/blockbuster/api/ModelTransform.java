@@ -1,6 +1,15 @@
 package mchorse.blockbuster.api;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.base.Objects;
+
+import mchorse.mclib.utils.NBTUtils;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Transform class
@@ -27,13 +36,18 @@ public class ModelTransform
 
         for (int i = 0; i < a.length; i++)
         {
-            if (Math.abs(a[i] - b[i]) > 0.001F)
+            if (Math.abs(a[i] - b[i]) > 0.0001F)
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public boolean isDefault()
+    {
+        return this.equals(DEFAULT);
     }
 
     public void copy(ModelTransform transform)
@@ -72,6 +86,37 @@ public class ModelTransform
         b.scale = new float[] {this.scale[0], this.scale[1], this.scale[2]};
 
         return b;
+    }
+
+    public void fromNBT(NBTTagCompound tag)
+    {
+        if (tag.hasKey("P", NBT.TAG_LIST)) NBTUtils.readFloatList(tag.getTagList("P", 5), this.translate);
+        if (tag.hasKey("S", NBT.TAG_LIST)) NBTUtils.readFloatList(tag.getTagList("S", 5), this.scale);
+        if (tag.hasKey("R", NBT.TAG_LIST)) NBTUtils.readFloatList(tag.getTagList("R", 5), this.rotate);
+    }
+
+    public NBTTagCompound toNBT()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        if (!this.isDefault())
+        {
+            if (!equalFloatArray(DEFAULT.translate, this.translate)) tag.setTag("P", NBTUtils.writeFloatList(new NBTTagList(), this.translate));
+            if (!equalFloatArray(DEFAULT.scale, this.scale)) tag.setTag("S", NBTUtils.writeFloatList(new NBTTagList(), this.scale));
+            if (!equalFloatArray(DEFAULT.rotate, this.rotate)) tag.setTag("R", NBTUtils.writeFloatList(new NBTTagList(), this.rotate));
+        }
+
+        return tag;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void transform()
+    {
+        GL11.glTranslatef(this.translate[0], this.translate[1], this.translate[2]);
+        GL11.glRotatef(this.rotate[2], 0, 0, 1);
+        GL11.glRotatef(this.rotate[1], 0, 1, 0);
+        GL11.glRotatef(this.rotate[0], 1, 0, 0);
+        GL11.glScalef(this.scale[0], this.scale[1], this.scale[2]);
     }
 
     @Override

@@ -33,6 +33,7 @@ item:
         playback.name: Playback button
         register.name: Registering device
         actor_config.name: Actor configuration device
+        gun.name: BB gun
 
 # Entity names
 entity.blockbuster.Actor.name: Actor

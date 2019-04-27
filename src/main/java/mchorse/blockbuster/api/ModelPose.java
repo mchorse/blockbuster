@@ -72,13 +72,9 @@ public class ModelPose
 
             for (String key : poses.getKeySet())
             {
-                NBTTagCompound pose = poses.getCompoundTag(key);
                 ModelTransform trans = new ModelTransform();
 
-                NBTUtils.readFloatList(pose.getTagList("P", 5), trans.translate);
-                NBTUtils.readFloatList(pose.getTagList("S", 5), trans.scale);
-                NBTUtils.readFloatList(pose.getTagList("R", 5), trans.rotate);
-
+                trans.fromNBT(poses.getCompoundTag(key));
                 this.limbs.put(key, trans);
             }
         }
@@ -93,14 +89,7 @@ public class ModelPose
 
         for (Map.Entry<String, ModelTransform> entry : this.limbs.entrySet())
         {
-            NBTTagCompound pose = new NBTTagCompound();
-            ModelTransform trans = entry.getValue();
-
-            pose.setTag("P", NBTUtils.writeFloatList(new NBTTagList(), trans.translate));
-            pose.setTag("S", NBTUtils.writeFloatList(new NBTTagList(), trans.scale));
-            pose.setTag("R", NBTUtils.writeFloatList(new NBTTagList(), trans.rotate));
-
-            poses.setTag(entry.getKey(), pose);
+            poses.setTag(entry.getKey(), entry.getValue().toNBT());
         }
 
         return tag;

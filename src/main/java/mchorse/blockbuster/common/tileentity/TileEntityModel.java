@@ -222,7 +222,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
-        if (!this.shadow) compound.setBoolean("Shadow", this.shadow);
+        if (this.shadow) compound.setBoolean("Shadow", this.shadow);
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
