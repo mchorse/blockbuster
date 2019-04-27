@@ -1,5 +1,8 @@
 package mchorse.blockbuster.common;
 
+import org.lwjgl.opengl.GL11;
+
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -39,6 +42,9 @@ public class GunInfo
     public boolean random;
     public int hits;
     public float damage;
+
+    public ModelTransform gunTransform = new ModelTransform();
+    public ModelTransform projectileTransform = new ModelTransform();
 
     private int shoot = 0;
     private AbstractMorph current;
@@ -123,8 +129,14 @@ public class GunInfo
 
         if (this.current != null && this.entity != null)
         {
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.5F, 0, 0.5F);
+            this.gunTransform.transform();
+
             this.setupEntity();
-            this.current.render(this.entity, 0.5F, 0, 0.5F, 0, partialTicks);
+            this.current.render(this.entity, 0, 0, 0, 0, partialTicks);
+
+            GL11.glPopMatrix();
         }
     }
 
@@ -163,6 +175,9 @@ public class GunInfo
         this.random = false;
         this.hits = 1;
         this.damage = 0F;
+
+        this.gunTransform = new ModelTransform();
+        this.projectileTransform = new ModelTransform();
     }
 
     public void fromNBT(NBTTagCompound tag)
@@ -192,6 +207,9 @@ public class GunInfo
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
+
+        if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
+        if (tag.hasKey("Transform")) this.projectileTransform.fromNBT(tag.getCompoundTag("Transform"));
     }
 
     private AbstractMorph create(NBTTagCompound tag, String key)
@@ -231,6 +249,9 @@ public class GunInfo
         if (this.random) tag.setBoolean("Random", this.random);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
+
+        if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());
+        if (!this.projectileTransform.isDefault()) tag.setTag("Transform", this.projectileTransform.toNBT());
 
         return tag;
     }

@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.GunInfo;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketGunInfo;
+import mchorse.blockbuster_pack.client.gui.GuiPosePanel.GuiPoseTransformations;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -66,6 +67,11 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement gravity;
     public GuiTrackpadElement hits;
 
+    /* Transforms */
+    public GuiElement transformOptions;
+    public GuiPoseTransformations gun;
+    public GuiPoseTransformations projectile;
+
     public GuiGun(ItemStack stack)
     {
         this.info = Gun.get(stack).getInfo();
@@ -78,11 +84,14 @@ public class GuiGun extends GuiBase
         this.gunOptions.createChildren();
         this.projectileOptions = new GuiElement(mc);
         this.projectileOptions.createChildren();
+        this.transformOptions = new GuiElement(mc);
+        this.transformOptions.createChildren();
 
         this.panel = new GuiPanelBase<IGuiElement>(mc);
         this.panel.setPanel(this.gunOptions);
         this.panel.registerPanel(this.gunOptions, GuiDashboard.GUI_ICONS, "Fire properties", 48, 0, 48, 16);
         this.panel.registerPanel(this.projectileOptions, GuiDashboard.GUI_ICONS, "Projectile properties", 32, 96, 32, 112);
+        this.panel.registerPanel(this.transformOptions, GuiDashboard.GUI_ICONS, "Transformations", 80, 32, 80, 48);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, cap);
         this.morphs.callback = (morph) -> this.setMorph(morph);
@@ -153,6 +162,17 @@ public class GuiGun extends GuiBase
         this.projectileOptions.children.add(this.yaw, this.pitch, this.vanish, this.bounce, this.sequencer, this.random);
         this.projectileOptions.children.add(this.damage, this.ticking, this.lifeSpan, this.speed, this.friction, this.gravity, this.hits);
 
+        /* Gun transforms */
+        area = this.transformOptions.area;
+
+        this.gun = new GuiPoseTransformations(mc);
+        this.projectile = new GuiPoseTransformations(mc);
+
+        this.gun.resizer().parent(area).set(0, 30, 190, 70).x(0.5F, -95);
+        this.projectile.resizer().parent(area).set(0, 30, 190, 70).x(0.5F, -95).y(1, -80);
+
+        this.transformOptions.children.add(this.gun, this.projectile);
+
         /* Placement of the elements */
         this.morphs.resizer().parent(this.area).set(0, 0, 1, 1, Measure.RELATIVE);
         this.panel.resizer().parent(this.area).set(0, 35, 0, 0).w(1, 0).h(1, -35);
@@ -176,6 +196,8 @@ public class GuiGun extends GuiBase
         this.gravity.setValue(this.info.gravity);
         this.damage.setValue(this.info.damage);
         this.hits.setValue(this.info.hits);
+        this.gun.set(this.info.gunTransform);
+        this.projectile.set(this.info.projectileTransform);
 
         this.elements.add(this.panel, this.morphs);
     }
@@ -255,6 +277,11 @@ public class GuiGun extends GuiBase
 
             this.fontRendererObj.drawStringWithShadow("Command on tick", this.tickCommand.area.x, this.tickCommand.area.y - 12, 0xffffff);
             this.fontRendererObj.drawStringWithShadow("Command on impact", this.impactCommand.area.x, this.impactCommand.area.y - 12, 0xffffff);
+        }
+        else if (this.panel.view.delegate == this.transformOptions)
+        {
+            this.drawCenteredString(this.fontRendererObj, "Gun transforms", this.gun.area.getX(0.5F), this.gun.area.y - 28, 0xffffff);
+            this.drawCenteredString(this.fontRendererObj, "Projectile transforms", this.projectile.area.getX(0.5F), this.projectile.area.y - 28, 0xffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
