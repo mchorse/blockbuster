@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -215,6 +216,11 @@ public class GunInfo
 
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
         if (tag.hasKey("Transform")) this.projectileTransform.fromNBT(tag.getCompoundTag("Transform"));
+
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+        {
+            this.setCurrentMorph(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+        }
     }
 
     private AbstractMorph create(NBTTagCompound tag, String key)
