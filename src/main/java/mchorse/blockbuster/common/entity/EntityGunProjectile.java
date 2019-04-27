@@ -7,17 +7,25 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
+/**
+ * Gun projectile entity
+ * 
+ * This bad boy is responsible for being a gun projectile. It works in a 
+ * similar fashion as a snowball, but holds 
+ */
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
     public GunInfo props;
     public AbstractMorph morph;
     public int timer;
+    public int hits;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -42,6 +50,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         super.onUpdate();
 
         this.timer++;
+
+        if (this.morph != null)
+        {
+            this.props.createEntity(this.worldObj);
+            this.morph.update(this.props.entity, null);
+        }
 
         if (this.props == null)
         {
@@ -117,26 +131,37 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
-        if (this.worldObj.isRemote)
-        {
-            return;
-        }
+        this.hits++;
 
         if (this.props != null && this.timer >= 2)
         {
-            if (!this.props.impactCommand.isEmpty())
+            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
+
+            if (result.typeOfHit == Type.BLOCK && this.props.bounce && !shouldDie)
             {
-                this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+                Axis axis = result.sideHit.getAxis();
+
+                if (axis == Axis.X) this.motionX *= -1;
+                if (axis == Axis.Y) this.motionY *= -1;
+                if (axis == Axis.Z) this.motionZ *= -1;
             }
 
-            if (result.typeOfHit == Type.ENTITY)
+            if (!this.worldObj.isRemote)
             {
-                result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
-            }
+                if (!this.props.impactCommand.isEmpty())
+                {
+                    this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+                }
 
-            if (this.props.vanish)
-            {
-                this.setDead();
+                if (result.typeOfHit == Type.ENTITY)
+                {
+                    result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
+                }
+
+                if (shouldDie)
+                {
+                    this.setDead();
+                }
             }
         }
     }

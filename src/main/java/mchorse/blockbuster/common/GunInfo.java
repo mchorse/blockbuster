@@ -6,6 +6,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,6 +19,7 @@ public class GunInfo
     public AbstractMorph defaultMorph;
     public AbstractMorph firingMorph;
     public AbstractMorph projectileMorph;
+    public boolean yaw;
     public boolean pitch;
 
     public int delay;
@@ -32,12 +34,13 @@ public class GunInfo
     public float friction;
     public float gravity;
     public boolean vanish;
+    public boolean bounce;
+    public int hits;
     public float damage;
 
     private int shoot = 0;
     private AbstractMorph current;
 
-    @SideOnly(Side.CLIENT)
     public EntityLivingBase entity;
 
     public GunInfo()
@@ -70,12 +73,17 @@ public class GunInfo
     @SideOnly(Side.CLIENT)
     public void createEntity()
     {
+        this.createEntity(Minecraft.getMinecraft().theWorld);
+    }
+
+    public void createEntity(World world)
+    {
         if (this.entity != null)
         {
             return;
         }
 
-        this.entity = new EntityActor(Minecraft.getMinecraft().theWorld);
+        this.entity = new EntityActor(world);
         this.entity.onGround = true;
     }
 
@@ -135,6 +143,7 @@ public class GunInfo
     public void reset()
     {
         this.defaultMorph = this.firingMorph = this.projectileMorph = null;
+        this.yaw = true;
         this.pitch = true;
 
         this.delay = 0;
@@ -147,6 +156,8 @@ public class GunInfo
         this.friction = 0.95F;
         this.gravity = 0.01F;
         this.vanish = true;
+        this.bounce = false;
+        this.hits = 1;
         this.damage = 0F;
     }
 
@@ -157,6 +168,7 @@ public class GunInfo
         this.defaultMorph = this.create(tag, "Morph");
         this.firingMorph = this.create(tag, "Fire");
         this.projectileMorph = this.create(tag, "Projectile");
+        if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
         if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
 
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
@@ -171,6 +183,8 @@ public class GunInfo
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
+        if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
+        if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
     }
 
@@ -192,6 +206,7 @@ public class GunInfo
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
         if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
+        if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
 
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
         if (this.accuracy != 0F) tag.setFloat("Accuracy", this.accuracy);
@@ -205,6 +220,8 @@ public class GunInfo
         if (this.friction != 0.95F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.01F) tag.setFloat("Gravity", this.gravity);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
+        if (this.bounce) tag.setBoolean("Bounce", this.bounce);
+        if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
 
         return tag;
