@@ -162,7 +162,7 @@ public class RecordMorph extends AbstractMorph
                 {
                     /* Just to prevent it from spamming messages */
                     player.record.actions.add(new ArrayList<Action>());
-                    Dispatcher.sendToServer(new PacketRequestAction(this.record));
+                    Dispatcher.sendToServer(new PacketRequestAction(this.record, false));
                 }
             }
             else

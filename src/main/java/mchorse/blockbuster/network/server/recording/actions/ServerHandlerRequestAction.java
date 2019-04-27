@@ -24,7 +24,7 @@ public class ServerHandlerRequestAction extends ServerMessageHandler<PacketReque
 
         if (record != null)
         {
-            Dispatcher.sendTo(new PacketActions(message.filename, record.actions), player);
+            Dispatcher.sendTo(new PacketActions(message.filename, record.actions, message.open), player);
         }
     }
 }
