@@ -1,6 +1,7 @@
 package mchorse.blockbuster.common.entity;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunInfo;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -13,6 +14,8 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Gun projectile entity
@@ -172,5 +175,26 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         super.readEntityFromNBT(compound);
 
         this.setDead();
+    }
+
+    /**
+     * Is projectile in range in render distance
+     *
+     * This method is responsible for checking if this entity is 
+     * available for rendering. Rendering range is configurable.
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean isInRangeToRenderDist(double distance)
+    {
+        double d0 = this.getEntityBoundingBox().getAverageEdgeLength();
+
+        if (Double.isNaN(d0))
+        {
+            d0 = 1.0D;
+        }
+
+        d0 = d0 * Blockbuster.proxy.config.actor_rendering_range;
+        return distance < d0 * d0;
     }
 }

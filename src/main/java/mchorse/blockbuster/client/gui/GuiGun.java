@@ -173,6 +173,12 @@ public class GuiGun extends GuiBase
     }
 
     @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
+    @Override
     public void initGui()
     {
         this.area.set(0, 0, this.width, this.height);

@@ -1,7 +1,9 @@
 package mchorse.blockbuster.client.render;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -12,6 +14,17 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     protected RenderGunProjectile(RenderManager renderManager)
     {
         super(renderManager);
+    }
+
+    @Override
+    public boolean shouldRender(EntityGunProjectile livingEntity, ICamera camera, double camX, double camY, double camZ)
+    {
+        if (Blockbuster.proxy.config.actor_always_render)
+        {
+            return true;
+        }
+
+        return super.shouldRender(livingEntity, camera, camX, camY, camZ);
     }
 
     @Override
