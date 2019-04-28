@@ -87,6 +87,7 @@ blockbuster.gui.me:
         poses: Позы
         options: Настройки моделей
         limbs: Конечности
+
         swipe: Взмах
         swing: Включить бег
         items: Включить предметы

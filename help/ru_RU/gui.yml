@@ -9,7 +9,7 @@ blockbuster.gui:
     reset: Сбросить
     add: Добавить
     edit: Редактировать
-    remove: Убрать
+    remove: Удалить
     record: Записать
     pick: Выбрать морф
     duplicate: Дублировать
@@ -18,6 +18,7 @@ blockbuster.gui:
     break: Сломать
     select: Выбрать
     ok: Oк
+    billboard: Смотреть на игрока
     
     # Morphs popup strings
     morphs:
@@ -204,7 +205,6 @@ blockbuster.gui:
         body_part: Части тела
         materials: Материалы
         nbt: NBT
-        pose: Поза
         
         pick_skin: Выбрать скин
         pose_sneak: Крадущаяся поза
@@ -219,6 +219,7 @@ blockbuster.gui:
 
     sequencer:
         duration: Длина
+        random: Случайность
         reverse: Реверсировать
         no_morph: (Морф отсутствует)
         morphs: Морфы
