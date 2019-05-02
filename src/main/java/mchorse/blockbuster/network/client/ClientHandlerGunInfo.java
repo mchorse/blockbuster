@@ -22,7 +22,7 @@ public class ClientHandlerGunInfo extends ClientMessageHandler<PacketGunInfo>
 
             if (gun != null)
             {
-                gun.getInfo().fromNBT(message.tag);
+                gun.getProps().fromNBT(message.tag);
             }
         }
     }

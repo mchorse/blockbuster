@@ -22,7 +22,7 @@ public class ClientHandlerGunShot extends ClientMessageHandler<PacketGunShot>
 
             if (gun != null)
             {
-                gun.getInfo().shot();
+                gun.getProps().shot();
             }
         }
     }

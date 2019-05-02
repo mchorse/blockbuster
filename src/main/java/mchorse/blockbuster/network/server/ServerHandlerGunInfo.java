@@ -21,7 +21,7 @@ public class ServerHandlerGunInfo extends ServerMessageHandler<PacketGunInfo>
             return;
         }
 
-        gun.getInfo().fromNBT(message.tag);
+        gun.getProps().fromNBT(message.tag);
         Dispatcher.sendToTracked(player, new PacketGunInfo(message.tag, player.getEntityId()));
     }
 }

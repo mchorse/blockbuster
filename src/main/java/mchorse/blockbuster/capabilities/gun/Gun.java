@@ -1,11 +1,11 @@
 package mchorse.blockbuster.capabilities.gun;
 
-import mchorse.blockbuster.common.GunInfo;
+import mchorse.blockbuster.common.GunProps;
 import net.minecraft.item.ItemStack;
 
 public class Gun implements IGun
 {
-    public GunInfo info = new GunInfo();
+    public GunProps props = new GunProps();
 
     public static IGun get(ItemStack stack)
     {
@@ -13,8 +13,8 @@ public class Gun implements IGun
     }
 
     @Override
-    public GunInfo getInfo()
+    public GunProps getProps()
     {
-        return this.info;
+        return this.props;
     }
 }

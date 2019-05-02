@@ -11,7 +11,7 @@ public class GunStorage implements IStorage<IGun>
     @Override
     public NBTBase writeNBT(Capability<IGun> capability, IGun instance, EnumFacing side)
     {
-        return instance.getInfo().toNBT();
+        return instance.getProps().toNBT();
     }
 
     @Override
@@ -19,7 +19,7 @@ public class GunStorage implements IStorage<IGun>
     {
         if (nbt instanceof NBTTagCompound)
         {
-            instance.getInfo().fromNBT((NBTTagCompound) nbt);
+            instance.getProps().fromNBT((NBTTagCompound) nbt);
         }
     }
 }

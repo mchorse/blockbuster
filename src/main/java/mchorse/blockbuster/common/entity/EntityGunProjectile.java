@@ -4,7 +4,7 @@ import java.util.List;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.common.GunInfo;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
-    public GunInfo props;
+    public GunProps props;
     public AbstractMorph morph;
     public int timer;
     public int hits;
@@ -48,7 +48,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         this(worldIn, null, null);
     }
 
-    public EntityGunProjectile(World worldIn, GunInfo props, AbstractMorph morph)
+    public EntityGunProjectile(World worldIn, GunProps props, AbstractMorph morph)
     {
         super(worldIn);
 
@@ -137,24 +137,15 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {}
 
         while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
-        {
             this.prevRotationPitch += 360.0F;
-        }
-
         while (this.rotationYaw - this.prevRotationYaw < -180.0F)
-        {
             this.prevRotationYaw -= 360.0F;
-        }
-
         while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
-        {
             this.prevRotationYaw += 360.0F;
-        }
 
         this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
         this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
         float friction = this.props == null ? 1 : this.props.friction;
-        float gravity = this.getGravityVelocity();
 
         if (this.isInWater())
         {
@@ -172,7 +163,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         if (!this.hasNoGravity())
         {
-            this.motionY -= gravity;
+            this.motionY -= this.getGravityVelocity();
         }
 
         this.setPosition(this.posX, this.posY, this.posZ);
@@ -203,13 +194,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             return;
         }
-
-        /* Apply friction */
-        float friction = this.props.friction;
-
-        this.motionX *= friction;
-        this.motionY *= friction;
-        this.motionZ *= friction;
 
         if (this.timer > this.props.lifeSpan)
         {
@@ -261,7 +245,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     {
         if (additionalData.readBoolean())
         {
-            this.props = new GunInfo(ByteBufUtils.readTag(additionalData));
+            this.props = new GunProps(ByteBufUtils.readTag(additionalData));
         }
 
         if (additionalData.readBoolean())

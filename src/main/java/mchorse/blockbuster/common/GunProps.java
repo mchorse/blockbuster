@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * BB gun properties 
  */
-public class GunInfo
+public class GunProps
 {
     public AbstractMorph defaultMorph;
     public AbstractMorph firingMorph;
@@ -52,12 +52,12 @@ public class GunInfo
 
     public EntityLivingBase entity;
 
-    public GunInfo()
+    public GunProps()
     {
         this.reset();
     }
 
-    public GunInfo(NBTTagCompound tag)
+    public GunProps(NBTTagCompound tag)
     {
         this.fromNBT(tag);
     }
