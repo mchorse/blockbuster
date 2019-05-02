@@ -16,34 +16,48 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * BB gun properties 
+ * Blockbuster gun properties
+ * 
+ * This savage fellow is responsible for keeping all of the properties 
+ * that a gun can have. Those are including: gun properties itself, 
+ * projectile that will be spawned from the gun, and projectile impact 
+ * properties.
  */
 public class GunProps
 {
+    /* Gun properties */
     public AbstractMorph defaultMorph;
     public AbstractMorph firingMorph;
-    public AbstractMorph projectileMorph;
-    public boolean yaw;
-    public boolean pitch;
-
-    public int delay;
-    public float accuracy;
-    public int projectiles;
     public String fireCommand;
+    public int delay;
+    public int projectiles;
+    public float accuracy;
+
+    /* Projectile properties */
+    public AbstractMorph projectileMorph;
     public String tickCommand;
-    public String impactCommand;
     public int ticking;
     public int lifeSpan;
+    public boolean yaw;
+    public boolean pitch;
+    public boolean sequencer;
+    public boolean random;
+    public float hitboxX;
+    public float hitboxY;
     public float speed;
     public float friction;
     public float gravity;
+
+    /* Impact properties */
+    public AbstractMorph impactMorph;
+    public String impactCommand;
+    public int impactDelay;
     public boolean vanish;
     public boolean bounce;
-    public boolean sequencer;
-    public boolean random;
     public int hits;
     public float damage;
 
+    /* Transforms */
     public ModelTransform gunTransform = new ModelTransform();
     public ModelTransform projectileTransform = new ModelTransform();
 
@@ -154,8 +168,8 @@ public class GunProps
     {
         /* Reset entity's values, just in case some weird shit is going 
          * to happen in morph's update code*/
-        this.entity.setPositionAndRotation(0.5F, 0, 0.5F, 0, 0);
-        this.entity.setLocationAndAngles(0.5F, 0, 0.5F, 0, 0);
+        this.entity.setPositionAndRotation(0, 0, 0, 0, 0);
+        this.entity.setLocationAndAngles(0, 0, 0, 0, 0);
         this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
         this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
         this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
@@ -163,28 +177,46 @@ public class GunProps
         this.entity.setVelocity(0, 0, 0);
     }
 
+    /**
+     * Reset properties to default values 
+     */
     public void reset()
     {
-        this.defaultMorph = this.firingMorph = this.projectileMorph = null;
-        this.yaw = true;
-        this.pitch = true;
-
+        /* Gun properties */
+        this.defaultMorph = null;
+        this.firingMorph = null;
+        this.fireCommand = "";
         this.delay = 0;
-        this.accuracy = 0F;
         this.projectiles = 1;
-        this.fireCommand = this.tickCommand = this.impactCommand = "";
+        this.accuracy = 0F;
+
+        /* Projectile properties */
+        this.projectileMorph = null;
+        this.tickCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;
+        this.yaw = true;
+        this.pitch = true;
+        this.sequencer = false;
+        this.random = false;
+        this.hitboxX = 0.25F;
+        this.hitboxY = 0.25F;
         this.speed = 1.0F;
         this.friction = 0.99F;
         this.gravity = 0.03F;
+
+        /* Impact properties */
+        this.impactMorph = null;
+        this.impactCommand = "";
+        this.impactDelay = 0;
         this.vanish = true;
         this.bounce = false;
-        this.sequencer = false;
-        this.random = false;
         this.hits = 1;
         this.damage = 0F;
 
+        /* Impact properties */
+
+        /* Transforms */
         this.gunTransform = new ModelTransform();
         this.projectileTransform = new ModelTransform();
     }
@@ -193,30 +225,39 @@ public class GunProps
     {
         this.reset();
 
+        /* Gun properties */
         this.defaultMorph = this.create(tag, "Morph");
         this.firingMorph = this.create(tag, "Fire");
-        this.projectileMorph = this.create(tag, "Projectile");
-        if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
-        if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
-
-        if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
-        if (tag.hasKey("Accuracy")) this.accuracy = tag.getFloat("Accuracy");
-        if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
+        if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
+        if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
+        if (tag.hasKey("Accuracy")) this.accuracy = tag.getFloat("Accuracy");
+
+        /* Projectile properties */
+        this.projectileMorph = this.create(tag, "Projectile");
         if (tag.hasKey("TickCommand")) this.tickCommand = tag.getString("TickCommand");
-        if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
         if (tag.hasKey("Ticking")) this.ticking = tag.getInteger("Ticking");
         if (tag.hasKey("LifeSpan")) this.lifeSpan = tag.getInteger("LifeSpan");
+        if (tag.hasKey("Yaw")) this.yaw = tag.getBoolean("Yaw");
+        if (tag.hasKey("Pitch")) this.pitch = tag.getBoolean("Pitch");
+        if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
+        if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
+        if (tag.hasKey("HX")) this.hitboxX = tag.getFloat("HX");
+        if (tag.hasKey("HY")) this.hitboxY = tag.getFloat("HY");
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
         if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
+
+        /* Impact properties */
+        this.impactMorph = this.create(tag, "Impact");
+        if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
+        if (tag.hasKey("ImpactDelay")) this.impactDelay = tag.getInteger("ImpactDelay");
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
-        if (tag.hasKey("Sequencer")) this.sequencer = tag.getBoolean("Sequencer");
-        if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
 
+        /* Transforms */
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
         if (tag.hasKey("Transform")) this.projectileTransform.fromNBT(tag.getCompoundTag("Transform"));
 
@@ -240,30 +281,39 @@ public class GunProps
     {
         NBTTagCompound tag = new NBTTagCompound();
 
+        /* Gun properties */
         if (this.defaultMorph != null) tag.setTag("Morph", this.to(this.defaultMorph));
         if (this.firingMorph != null) tag.setTag("Fire", this.to(this.firingMorph));
-        if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
-        if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
-        if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
-
-        if (this.delay != 0) tag.setInteger("Delay", this.delay);
-        if (this.accuracy != 0F) tag.setFloat("Accuracy", this.accuracy);
-        if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
+        if (this.delay != 0) tag.setInteger("Delay", this.delay);
+        if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
+        if (this.accuracy != 0F) tag.setFloat("Accuracy", this.accuracy);
+
+        /* Projectile properties */
+        if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));
         if (!this.tickCommand.isEmpty()) tag.setString("TickCommand", this.tickCommand);
-        if (!this.impactCommand.isEmpty()) tag.setString("ImpactCommand", this.impactCommand);
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
+        if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
+        if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
+        if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
+        if (this.random) tag.setBoolean("Random", this.random);
+        if (this.hitboxX != 0.25F) tag.setFloat("HX", this.hitboxX);
+        if (this.hitboxY != 0.25F) tag.setFloat("HY", this.hitboxY);
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
+
+        /* Impact properties */
+        if (this.impactMorph != null) tag.setTag("Impact", this.to(this.impactMorph));
+        if (!this.impactCommand.isEmpty()) tag.setString("ImpactCommand", this.impactCommand);
+        if (this.impactDelay != 0) tag.setInteger("ImpactDelay", this.impactDelay);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
-        if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
-        if (this.random) tag.setBoolean("Random", this.random);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
 
+        /* Transforms */
         if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());
         if (!this.projectileTransform.isDefault()) tag.setTag("Transform", this.projectileTransform.toNBT());
 

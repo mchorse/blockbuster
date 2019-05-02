@@ -34,9 +34,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
     public GunProps props;
+    public AbstractMorph prevMorph;
     public AbstractMorph morph;
     public int timer;
     public int hits;
+    public int impact;
 
     /* Syncing on the client side the position */
     public int updatePos;
@@ -55,6 +57,14 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         this.props = props;
         this.morph = morph;
+        this.prevMorph = morph == null ? null : this.morph.clone(worldIn.isRemote);
+
+        if (props != null)
+        {
+            this.setSize(props.hitboxX, props.hitboxY);
+        }
+
+        this.impact = -1;
     }
 
     @Override
@@ -150,7 +160,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
             this.prevRotationYaw += 360.0F;
 
-        // this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
         this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
         float friction = this.props == null ? 1 : this.props.friction;
 
@@ -235,6 +245,22 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 this.getServer().commandManager.executeCommand(this, this.props.tickCommand);
             }
         }
+
+        if (this.impact >= 0)
+        {
+            if (this.impact == 0)
+            {
+                boolean remote = this.worldObj.isRemote;
+                AbstractMorph morph = this.prevMorph == null ? null : this.prevMorph.clone(remote);
+
+                if (this.morph == null || !this.morph.canMerge(morph, remote))
+                {
+                    this.morph = morph;
+                }
+            }
+
+            this.impact--;
+        }
     }
 
     @Override
@@ -270,7 +296,21 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (shouldDie)
                 {
                     this.setDead();
+                    return;
                 }
+            }
+
+            if (this.props.impactDelay > 0)
+            {
+                boolean remote = this.worldObj.isRemote;
+                AbstractMorph morph = this.props.impactMorph == null ? null : this.props.impactMorph.clone(remote);
+
+                if (this.morph == null || !this.morph.canMerge(morph, remote))
+                {
+                    this.morph = morph;
+                }
+
+                this.impact = this.props.impactDelay;
             }
         }
     }
@@ -309,11 +349,13 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         if (additionalData.readBoolean())
         {
             this.props = new GunProps(ByteBufUtils.readTag(additionalData));
+            this.setSize(this.props.hitboxX, this.props.hitboxY);
         }
 
         if (additionalData.readBoolean())
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(additionalData));
+            this.prevMorph = this.morph == null ? null : this.morph.clone(true);
         }
     }
 
