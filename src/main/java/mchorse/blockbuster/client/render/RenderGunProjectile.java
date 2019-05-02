@@ -49,6 +49,9 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
                 scale = 1;
             }
 
+            /* A small scale factor to avoid Z fighting */
+            scale += (entity.getEntityId() % 100) / 100000F;
+
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
 

@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Gun projectile entity
  * 
  * This bad boy is responsible for being a gun projectile. It works in a 
- * similar fashion as a snowball, but holds 
+ * similar fashion as a snowball, but holds a morph
  */
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
@@ -38,6 +38,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public int timer;
     public int hits;
 
+    /* Syncing on the client side the position */
     public int updatePos;
     public double targetX;
     public double targetY;
@@ -70,11 +71,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         this.onEntityUpdate();
 
-        if (this.throwableShake > 0)
-        {
-            --this.throwableShake;
-        }
-
+        /* Ray trace for impact */
         Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
         Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
         RayTraceResult result = this.worldObj.rayTraceBlocks(position, next);
@@ -87,6 +84,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         Entity entity = null;
         List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D));
         double d0 = 0.0D;
+        boolean impact = false;
 
         for (int i = 0; i < list.size(); ++i)
         {
@@ -123,10 +121,19 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             }
             else
             {
-                if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result))
+                {
+                    if (this.props != null && this.props.bounce && this.hits < this.props.hits)
+                    {
+                        impact = true;
+                    }
+
+                    this.onImpact(result);
+                }
             }
         }
 
+        /* Update position, motion and rotation */
         this.posX += this.motionX;
         this.posY += this.motionY;
         this.posZ += this.motionZ;
@@ -143,7 +150,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
             this.prevRotationYaw += 360.0F;
 
-        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+        // this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
         this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
         float friction = this.props == null ? 1 : this.props.friction;
 
@@ -157,6 +164,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             friction *= 0.8F;
         }
 
+        if (this.onGround)
+        {
+            friction *= 0.9F;
+        }
+
         this.motionX *= friction;
         this.motionY *= friction;
         this.motionZ *= friction;
@@ -166,10 +178,21 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.motionY -= this.getGravityVelocity();
         }
 
-        this.setPosition(this.posX, this.posY, this.posZ);
+        if (!impact)
+        {
+            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        }
+        else
+        {
+            this.setPosition(this.posX, this.posY, this.posZ);
+        }
+
         this.updateProjectile();
     }
 
+    /**
+     * Update projectile's properties 
+     */
     private void updateProjectile()
     {
         if (this.worldObj.isRemote && this.updatePos > 0)
@@ -215,46 +238,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     }
 
     @Override
-    protected float getGravityVelocity()
-    {
-        return this.props == null ? super.getGravityVelocity() : this.props.gravity;
-    }
-
-    @Override
-    public void writeSpawnData(ByteBuf buffer)
-    {
-        buffer.writeBoolean(this.props != null);
-
-        if (this.props != null)
-        {
-            ByteBufUtils.writeTag(buffer, this.props.toNBT());
-        }
-
-        buffer.writeBoolean(this.morph != null);
-
-        if (this.morph != null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-            this.morph.toNBT(tag);
-            ByteBufUtils.writeTag(buffer, tag);
-        }
-    }
-
-    @Override
-    public void readSpawnData(ByteBuf additionalData)
-    {
-        if (additionalData.readBoolean())
-        {
-            this.props = new GunProps(ByteBufUtils.readTag(additionalData));
-        }
-
-        if (additionalData.readBoolean())
-        {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(additionalData));
-        }
-    }
-
-    @Override
     protected void onImpact(RayTraceResult result)
     {
         this.hits++;
@@ -293,6 +276,65 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     }
 
     @Override
+    protected float getGravityVelocity()
+    {
+        return this.props == null ? super.getGravityVelocity() : this.props.gravity;
+    }
+
+    /* NBT and ByteBuf read/write methods */
+
+    @Override
+    public void writeSpawnData(ByteBuf buffer)
+    {
+        buffer.writeBoolean(this.props != null);
+
+        if (this.props != null)
+        {
+            ByteBufUtils.writeTag(buffer, this.props.toNBT());
+        }
+
+        buffer.writeBoolean(this.morph != null);
+
+        if (this.morph != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            this.morph.toNBT(tag);
+            ByteBufUtils.writeTag(buffer, tag);
+        }
+    }
+
+    @Override
+    public void readSpawnData(ByteBuf additionalData)
+    {
+        if (additionalData.readBoolean())
+        {
+            this.props = new GunProps(ByteBufUtils.readTag(additionalData));
+        }
+
+        if (additionalData.readBoolean())
+        {
+            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(additionalData));
+        }
+    }
+
+    /**
+     * Don't restore the entity from NBT, kill the projectile immediately 
+     */
+    @Override
+    public void readEntityFromNBT(NBTTagCompound compound)
+    {
+        super.readEntityFromNBT(compound);
+
+        this.setDead();
+    }
+
+    /* Client side methods */
+
+    /**
+     * Update position from the server, only in case if there is a big 
+     * desync enough to be noticeable 
+     */
+    @Override
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
     {
@@ -300,6 +342,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         double dy = this.posY - y;
         double dz = this.posZ - z;
         double dist = dx * dx + dy * dy + dz * dz;
+        double threshold = this.props == null ? 1 : this.props.speed * this.props.speed;
+
+        if (threshold < 1)
+        {
+            threshold = 1;
+        }
 
         if (dist > 2 * 2)
         {
@@ -308,14 +356,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.targetY = y;
             this.targetZ = z;
         }
-    }
-
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound)
-    {
-        super.readEntityFromNBT(compound);
-
-        this.setDead();
     }
 
     /**

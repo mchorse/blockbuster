@@ -99,6 +99,9 @@ public class GunProps
 
         this.entity = new EntityActor(world);
         this.entity.onGround = true;
+        this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
+        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
+        this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
     }
 
     @SideOnly(Side.CLIENT)
