@@ -172,9 +172,9 @@ public class GunInfo
         this.fireCommand = this.tickCommand = this.impactCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;
-        this.speed = 0.1F;
-        this.friction = 0.95F;
-        this.gravity = 0.01F;
+        this.speed = 1.0F;
+        this.friction = 0.99F;
+        this.gravity = 0.03F;
         this.vanish = true;
         this.bounce = false;
         this.sequencer = false;
@@ -251,9 +251,9 @@ public class GunInfo
         if (!this.impactCommand.isEmpty()) tag.setString("ImpactCommand", this.impactCommand);
         if (this.ticking != 0) tag.setInteger("Ticking", this.ticking);
         if (this.lifeSpan != 200) tag.setInteger("LifeSpan", this.lifeSpan);
-        if (this.speed != 0.1F) tag.setFloat("Speed", this.speed);
-        if (this.friction != 0.95F) tag.setFloat("Friction", this.friction);
-        if (this.gravity != 0.01F) tag.setFloat("Gravity", this.gravity);
+        if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
+        if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
+        if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
         if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);

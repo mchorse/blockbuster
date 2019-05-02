@@ -152,7 +152,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                     this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
                 }
 
-                if (result.typeOfHit == Type.ENTITY)
+                if (result.typeOfHit == Type.ENTITY && this.props.damage > 0)
                 {
                     result.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, null), this.props.damage);
                 }
