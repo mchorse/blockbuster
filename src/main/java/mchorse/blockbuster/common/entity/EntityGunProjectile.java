@@ -30,6 +30,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public int timer;
     public int hits;
 
+    public int updatePos;
+    public double targetX;
+    public double targetY;
+    public double targetZ;
+
     public EntityGunProjectile(World worldIn)
     {
         this(worldIn, null, null);
@@ -47,6 +52,16 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public void onUpdate()
     {
         super.onUpdate();
+
+        if (this.worldObj.isRemote && this.updatePos > 0)
+        {
+            double d0 = this.posX + (this.targetX - this.posX) / this.updatePos;
+            double d1 = this.posY + (this.targetY - this.posY) / this.updatePos;
+            double d2 = this.posZ + (this.targetZ - this.posZ) / this.updatePos;
+
+            this.updatePos--;
+            this.setPosition(d0, d1, d2);
+        }
 
         this.timer++;
 
@@ -162,6 +177,26 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                     this.setDead();
                 }
             }
+        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
+    {
+        this.setRotation(yaw, pitch);
+
+        double dx = this.posX - x;
+        double dy = this.posY - y;
+        double dz = this.posZ - z;
+        double dist = dx * dx + dy * dy + dz * dz;
+
+        if (dist > 2 * 2)
+        {
+            this.updatePos = posRotationIncrements;
+            this.targetX = x;
+            this.targetY = y;
+            this.targetZ = z;
         }
     }
 
