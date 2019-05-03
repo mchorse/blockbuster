@@ -5,7 +5,7 @@ import java.util.List;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
-import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -34,8 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityGunProjectile extends EntityThrowable implements IEntityAdditionalSpawnData
 {
     public GunProps props;
-    public AbstractMorph prevMorph;
-    public AbstractMorph morph;
+    public AbstractMorph original;
+    public Morph morph = new Morph();
     public int timer;
     public int hits;
     public int impact;
@@ -56,8 +56,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         super(worldIn);
 
         this.props = props;
-        this.morph = morph;
-        this.prevMorph = morph == null ? null : this.morph.clone(worldIn.isRemote);
+        this.morph.setDirect(morph);
+        this.original = this.morph.clone(worldIn.isRemote);
 
         if (props != null)
         {
@@ -217,13 +217,15 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         this.timer++;
 
-        if (this.morph != null)
+        AbstractMorph morph = this.morph.get();
+
+        if (morph != null)
         {
             this.props.createEntity(this.worldObj);
-            this.morph.update(this.props.entity, null);
+            morph.update(this.props.entity, null);
         }
 
-        if (this.props == null)
+        if (this.props == null || this.worldObj.isRemote)
         {
             return;
         }
@@ -232,18 +234,15 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.setDead();
 
-            if (!this.worldObj.isRemote && !this.props.impactCommand.isEmpty())
+            if (!this.props.impactCommand.isEmpty())
             {
                 this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
             }
         }
 
-        if (this.props.ticking > 0 && this.timer % this.props.ticking == 0)
+        if (this.props.ticking > 0 && this.timer % this.props.ticking == 0 && !this.props.tickCommand.isEmpty())
         {
-            if (!this.worldObj.isRemote && !this.props.tickCommand.isEmpty())
-            {
-                this.getServer().commandManager.executeCommand(this, this.props.tickCommand);
-            }
+            this.getServer().commandManager.executeCommand(this, this.props.tickCommand);
         }
 
         if (this.impact >= 0)
@@ -251,12 +250,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             if (this.impact == 0)
             {
                 boolean remote = this.worldObj.isRemote;
-                AbstractMorph morph = this.prevMorph == null ? null : this.prevMorph.clone(remote);
+                AbstractMorph original = this.original == null ? null : this.original.clone(remote);
 
-                if (this.morph == null || !this.morph.canMerge(morph, remote))
-                {
-                    this.morph = morph;
-                }
+                this.morph.set(original, remote);
             }
 
             this.impact--;
@@ -266,13 +262,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
-        this.hits++;
-
         if (this.props != null && this.timer >= 2)
         {
             boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
 
-            if (result.typeOfHit == Type.BLOCK && this.props.bounce && !shouldDie)
+            if (result.typeOfHit == Type.BLOCK && this.props.bounce && this.hits < this.props.hits)
             {
                 Axis axis = result.sideHit.getAxis();
 
@@ -305,14 +299,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 boolean remote = this.worldObj.isRemote;
                 AbstractMorph morph = this.props.impactMorph == null ? null : this.props.impactMorph.clone(remote);
 
-                if (this.morph == null || !this.morph.canMerge(morph, remote))
-                {
-                    this.morph = morph;
-                }
-
+                this.morph.set(morph, remote);
                 this.impact = this.props.impactDelay;
             }
         }
+
+        this.hits++;
     }
 
     @Override
@@ -333,13 +325,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             ByteBufUtils.writeTag(buffer, this.props.toNBT());
         }
 
-        buffer.writeBoolean(this.morph != null);
+        buffer.writeBoolean(this.morph.get() != null);
 
-        if (this.morph != null)
+        if (this.morph.get() != null)
         {
-            NBTTagCompound tag = new NBTTagCompound();
-            this.morph.toNBT(tag);
-            ByteBufUtils.writeTag(buffer, tag);
+            ByteBufUtils.writeTag(buffer, this.morph.toNBT());
         }
     }
 
@@ -354,8 +344,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         if (additionalData.readBoolean())
         {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(additionalData));
-            this.prevMorph = this.morph == null ? null : this.morph.clone(true);
+            this.morph.fromNBT(ByteBufUtils.readTag(additionalData));
         }
     }
 

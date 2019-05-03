@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
@@ -62,7 +63,7 @@ public class GunProps
     public ModelTransform projectileTransform = new ModelTransform();
 
     private int shoot = 0;
-    private AbstractMorph current;
+    private Morph current = new Morph();
 
     public EntityLivingBase entity;
 
@@ -84,18 +85,7 @@ public class GunProps
         }
 
         this.shoot = this.delay;
-        this.setCurrentMorph(this.firingMorph == null ? null : this.firingMorph.clone(true), true);
-    }
-
-    /**
-     * Set current morph, make sure it's mergeable and stuff 
-     */
-    public void setCurrentMorph(AbstractMorph morph, boolean isRemote)
-    {
-        if (this.current == null || !this.current.canMerge(morph, isRemote))
-        {
-            this.current = morph;
-        }
+        this.current.set(this.firingMorph == null ? null : this.firingMorph.clone(true), true);
     }
 
     @SideOnly(Side.CLIENT)
@@ -125,9 +115,11 @@ public class GunProps
         {
             this.entity.ticksExisted++;
 
-            if (this.current != null)
+            AbstractMorph morph = this.current.get();
+
+            if (morph != null)
             {
-                this.current.update(this.entity, null);
+                morph.update(this.entity, null);
             }
         }
 
@@ -135,7 +127,7 @@ public class GunProps
         {
             if (this.shoot == 0)
             {
-                this.setCurrentMorph(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+                this.current.set(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
             }
 
             this.shoot--;
@@ -150,14 +142,16 @@ public class GunProps
             this.createEntity();
         }
 
-        if (this.current != null && this.entity != null)
+        AbstractMorph morph = this.current.get();
+
+        if (morph != null && this.entity != null)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.5F, 0, 0.5F);
             this.gunTransform.transform();
 
             this.setupEntity();
-            this.current.render(this.entity, 0, 0, 0, 0, partialTicks);
+            morph.render(this.entity, 0, 0, 0, 0, partialTicks);
 
             GL11.glPopMatrix();
         }
@@ -263,7 +257,7 @@ public class GunProps
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            this.setCurrentMorph(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+            this.current.set(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
         }
     }
 

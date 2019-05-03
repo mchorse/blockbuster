@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
@@ -9,6 +10,12 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
+/**
+ * Gun projectile renderer
+ * 
+ * This bad boy is responsible for rendering the projectile shot from 
+ * the gun.
+ */
 public class RenderGunProjectile extends Render<EntityGunProjectile>
 {
     protected RenderGunProjectile(RenderManager renderManager)
@@ -36,7 +43,9 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     @Override
     public void doRender(EntityGunProjectile entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (entity.props != null && entity.morph != null)
+        AbstractMorph morph = entity.morph.get();
+
+        if (entity.props != null && morph != null)
         {
             float scale = (entity.timer + partialTicks) / 10F;
 
@@ -62,7 +71,7 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
 
             entity.props.projectileTransform.transform();
             entity.props.createEntity();
-            entity.morph.render(entity.props.entity, 0, 0, 0, 0, partialTicks);
+            morph.render(entity.props.entity, 0, 0, 0, 0, partialTicks);
 
             GlStateManager.popMatrix();
         }

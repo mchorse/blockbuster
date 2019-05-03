@@ -65,9 +65,11 @@ public class Replay
      */
     public void apply(EntityActor actor)
     {
+        boolean remote = actor.worldObj.isRemote;
+
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
-        actor.morph = this.morph == null ? null : this.morph.clone(actor.worldObj.isRemote);
+        actor.morph.set(this.morph == null ? null : this.morph.clone(remote), remote);
         actor.invisible = this.invisible;
         actor.setHealth(this.health);
         actor.notifyPlayers();
