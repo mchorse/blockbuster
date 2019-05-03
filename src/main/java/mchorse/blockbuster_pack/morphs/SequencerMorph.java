@@ -309,7 +309,7 @@ public class SequencerMorph extends AbstractMorph
                     boolean isRemote = FMLCommonHandler.instance().getSide() == Side.CLIENT;
 
                     this.duration = entry.getDuration();
-                    this.currentMorph.set(morph, isRemote);
+                    this.currentMorph.set(morph == null ? null : morph.clone(isRemote), isRemote);
                 }
 
                 this.morphs.add(entry);
