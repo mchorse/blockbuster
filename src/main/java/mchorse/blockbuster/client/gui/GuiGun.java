@@ -22,6 +22,7 @@ import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -98,10 +99,10 @@ public class GuiGun extends GuiBase
 
         this.panel = new GuiPanelBase<IGuiElement>(mc);
         this.panel.setPanel(this.gunOptions);
-        this.panel.registerPanel(this.gunOptions, GuiDashboard.GUI_ICONS, "Fire properties", 48, 0, 48, 16);
-        this.panel.registerPanel(this.projectileOptions, GuiDashboard.GUI_ICONS, "Projectile properties", 32, 96, 32, 112);
-        this.panel.registerPanel(this.impactOptions, GuiDashboard.GUI_ICONS, "Impact properties", 80, 64, 80, 80);
-        this.panel.registerPanel(this.transformOptions, GuiDashboard.GUI_ICONS, "Transformations", 80, 32, 80, 48);
+        this.panel.registerPanel(this.gunOptions, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.gun.fire_props"), 48, 0, 48, 16);
+        this.panel.registerPanel(this.projectileOptions, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.gun.projectile_props"), 32, 96, 32, 112);
+        this.panel.registerPanel(this.impactOptions, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.gun.impact_props"), 80, 64, 80, 80);
+        this.panel.registerPanel(this.transformOptions, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.gun.transforms"), 80, 32, 80, 48);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, cap);
         this.morphs.callback = (morph) -> this.setMorph(morph);
@@ -110,14 +111,14 @@ public class GuiGun extends GuiBase
         /* Gun options */
         Area area = this.gunOptions.area;
 
-        this.pickDefault = GuiButtonElement.button(mc, "Default morph", (b) -> this.openMorphs(1));
-        this.pickFiring = GuiButtonElement.button(mc, "Firing morph", (b) -> this.openMorphs(2));
+        this.pickDefault = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.gun.default_morph"), (b) -> this.openMorphs(1));
+        this.pickFiring = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.gun.fire_morph"), (b) -> this.openMorphs(2));
         this.fireCommand = new GuiTextElement(mc, 10000, (value) -> this.props.fireCommand = value);
-        this.delay = new GuiTrackpadElement(mc, "Delay", (value) -> this.props.delay = value.intValue());
+        this.delay = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.delay"), (value) -> this.props.delay = value.intValue());
         this.delay.setLimit(0, Integer.MAX_VALUE, true);
-        this.projectiles = new GuiTrackpadElement(mc, "Projectiles", (value) -> this.props.projectiles = value.intValue());
+        this.projectiles = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.projectiles"), (value) -> this.props.projectiles = value.intValue());
         this.projectiles.setLimit(0, Integer.MAX_VALUE, true);
-        this.accuracy = new GuiTrackpadElement(mc, "Accuracy", (value) -> this.props.accuracy = value);
+        this.accuracy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.accuracy"), (value) -> this.props.accuracy = value);
 
         this.pickDefault.resizer().parent(area).set(0, 0, 100, 20).x(0.25F, -50).y(1, -100);
         this.pickFiring.resizer().parent(area).set(0, 0, 100, 20).x(0.75F, -50).y(1, -100);
@@ -131,21 +132,21 @@ public class GuiGun extends GuiBase
         /* Projectile options */
         area = this.projectileOptions.area;
 
-        this.pickProjectile = GuiButtonElement.button(mc, "Projectile morph", (b) -> this.openMorphs(3));
+        this.pickProjectile = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.gun.projectile_morph"), (b) -> this.openMorphs(3));
         this.tickCommand = new GuiTextElement(mc, 10000, (value) -> this.props.tickCommand = value);
-        this.ticking = new GuiTrackpadElement(mc, "Ticking", (value) -> this.props.ticking = value.intValue());
+        this.ticking = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.ticking"), (value) -> this.props.ticking = value.intValue());
         this.ticking.setLimit(0, Integer.MAX_VALUE, true);
-        this.lifeSpan = new GuiTrackpadElement(mc, "Life span", (value) -> this.props.lifeSpan = value.intValue());
+        this.lifeSpan = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.life_span"), (value) -> this.props.lifeSpan = value.intValue());
         this.lifeSpan.setLimit(0, Integer.MAX_VALUE, true);
-        this.yaw = GuiButtonElement.checkbox(mc, "Yaw", false, (b) -> this.props.yaw = b.button.isChecked());
-        this.pitch = GuiButtonElement.checkbox(mc, "Pitch", false, (b) -> this.props.pitch = b.button.isChecked());
-        this.sequencer = GuiButtonElement.checkbox(mc, "Sequencer", false, (b) -> this.props.sequencer = b.button.isChecked());
-        this.random = GuiButtonElement.checkbox(mc, "Random", false, (b) -> this.props.random = b.button.isChecked());
-        this.hitboxX = new GuiTrackpadElement(mc, "Hitbox X", (value) -> this.props.hitboxX = value);
-        this.hitboxY = new GuiTrackpadElement(mc, "Hitbox Y", (value) -> this.props.hitboxY = value);
-        this.speed = new GuiTrackpadElement(mc, "Speed", (value) -> this.props.speed = value);
-        this.friction = new GuiTrackpadElement(mc, "Friction", (value) -> this.props.friction = value);
-        this.gravity = new GuiTrackpadElement(mc, "Gravity", (value) -> this.props.gravity = value);
+        this.yaw = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.yaw"), false, (b) -> this.props.yaw = b.button.isChecked());
+        this.pitch = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.pitch"), false, (b) -> this.props.pitch = b.button.isChecked());
+        this.sequencer = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.sequencer"), false, (b) -> this.props.sequencer = b.button.isChecked());
+        this.random = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.random"), false, (b) -> this.props.random = b.button.isChecked());
+        this.hitboxX = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.hitbox_x"), (value) -> this.props.hitboxX = value);
+        this.hitboxY = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.hitbox_y"), (value) -> this.props.hitboxY = value);
+        this.speed = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.speed"), (value) -> this.props.speed = value);
+        this.friction = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.friction"), (value) -> this.props.friction = value);
+        this.gravity = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.gravity"), (value) -> this.props.gravity = value);
 
         this.pickProjectile.resizer().parent(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
         this.tickCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
@@ -168,15 +169,15 @@ public class GuiGun extends GuiBase
         /* Impact options */
         area = this.impactOptions.area;
 
-        this.pickImpact = GuiButtonElement.button(mc, "Impact morph", (b) -> this.openMorphs(4));
-        this.impactDelay = new GuiTrackpadElement(mc, "Impact delay", (value) -> this.props.impactDelay = value.intValue());
+        this.pickImpact = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.gun.impact_morph"), (b) -> this.openMorphs(4));
+        this.impactDelay = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.impact_delay"), (value) -> this.props.impactDelay = value.intValue());
         this.impactDelay.setLimit(0, Integer.MAX_VALUE, true);
         this.impactCommand = new GuiTextElement(mc, 10000, (value) -> this.props.impactCommand = value);
-        this.vanish = GuiButtonElement.checkbox(mc, "Vanish", false, (b) -> this.props.vanish = b.button.isChecked());
-        this.bounce = GuiButtonElement.checkbox(mc, "Bounce", false, (b) -> this.props.bounce = b.button.isChecked());
-        this.hits = new GuiTrackpadElement(mc, "Hits", (value) -> this.props.hits = value.intValue());
+        this.vanish = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.vanish"), false, (b) -> this.props.vanish = b.button.isChecked());
+        this.bounce = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.bounce"), false, (b) -> this.props.bounce = b.button.isChecked());
+        this.hits = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.hits"), (value) -> this.props.hits = value.intValue());
         this.hits.setLimit(1, Integer.MAX_VALUE, true);
-        this.damage = new GuiTrackpadElement(mc, "Damage", (value) -> this.props.damage = value);
+        this.damage = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.damage"), (value) -> this.props.damage = value);
 
         this.pickImpact.resizer().parent(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
         this.impactCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
@@ -288,7 +289,7 @@ public class GuiGun extends GuiBase
 
         Gui.drawRect(0, 0, this.width, 35, 0x88000000);
         this.drawGradientRect(0, 35, this.width, 45, 0x88000000, 0x00000000);
-        this.fontRendererObj.drawStringWithShadow("Gun configuration", 10, 15, 0xffffffff);
+        this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.gun.title"), 10, 15, 0xffffffff);
 
         EntityPlayer player = this.mc.thePlayer;
         int w = this.area.w / 4;
@@ -305,7 +306,7 @@ public class GuiGun extends GuiBase
                 this.props.firingMorph.renderOnScreen(player, this.area.getX(0.5F) + w, this.area.getY(0.5F), w * 0.5F, 1);
             }
 
-            this.fontRendererObj.drawStringWithShadow("Command on fire", this.fireCommand.area.x, this.fireCommand.area.y - 12, 0xffffff);
+            this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.gun.fire_command"), this.fireCommand.area.x, this.fireCommand.area.y - 12, 0xffffff);
         }
         else if (this.panel.view.delegate == this.projectileOptions)
         {
@@ -314,7 +315,7 @@ public class GuiGun extends GuiBase
                 this.props.projectileMorph.renderOnScreen(player, this.area.getX(0.5F), this.area.getY(0.5F), w * 0.5F, 1);
             }
 
-            this.fontRendererObj.drawStringWithShadow("Command on tick", this.tickCommand.area.x, this.tickCommand.area.y - 12, 0xffffff);
+            this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.gun.tick_command"), this.tickCommand.area.x, this.tickCommand.area.y - 12, 0xffffff);
         }
         else if (this.panel.view.delegate == this.impactOptions)
         {
@@ -323,12 +324,12 @@ public class GuiGun extends GuiBase
                 this.props.impactMorph.renderOnScreen(player, this.area.getX(0.5F), this.area.getY(0.5F), w * 0.5F, 1);
             }
 
-            this.fontRendererObj.drawStringWithShadow("Command on impact", this.impactCommand.area.x, this.impactCommand.area.y - 12, 0xffffff);
+            this.fontRendererObj.drawStringWithShadow(I18n.format("blockbuster.gui.gun.impact_command"), this.impactCommand.area.x, this.impactCommand.area.y - 12, 0xffffff);
         }
         else if (this.panel.view.delegate == this.transformOptions)
         {
-            this.drawCenteredString(this.fontRendererObj, "Gun transforms", this.gun.area.getX(0.5F), this.gun.area.y - 28, 0xffffff);
-            this.drawCenteredString(this.fontRendererObj, "Projectile transforms", this.projectile.area.getX(0.5F), this.projectile.area.y - 28, 0xffffff);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("blockbuster.gui.gun.gun_transforms"), this.gun.area.getX(0.5F), this.gun.area.y - 28, 0xffffff);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("blockbuster.gui.gun.projectile_transforms"), this.projectile.area.getX(0.5F), this.projectile.area.y - 28, 0xffffff);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
