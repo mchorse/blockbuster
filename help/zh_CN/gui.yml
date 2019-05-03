@@ -246,7 +246,7 @@ blockbuster.gui:
         fire_command: 发射时执行以下命令：
         delay: 延迟
         projectiles: 炮弹
-        accuracy: 分散程度
+        scatter: 分散程度
         
         projectile_morph: 作为炮弹的伪装
         tick_command: 在 Tick 中的频率上执行以下命令：

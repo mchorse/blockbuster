@@ -246,7 +246,7 @@ blockbuster.gui:
         fire_command: Команда при выстреле
         delay: Задержка
         projectiles: Снаряды
-        accuracy: Разброс
+        scatter: Разброс
         
         projectile_morph: Морф снаряда
         tick_command: Команда при тике

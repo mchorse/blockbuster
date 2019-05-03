@@ -32,7 +32,7 @@ public class GunProps
     public String fireCommand;
     public int delay;
     public int projectiles;
-    public float accuracy;
+    public float scatter;
 
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -182,7 +182,7 @@ public class GunProps
         this.fireCommand = "";
         this.delay = 0;
         this.projectiles = 1;
-        this.accuracy = 0F;
+        this.scatter = 0F;
 
         /* Projectile properties */
         this.projectileMorph = null;
@@ -225,7 +225,7 @@ public class GunProps
         if (tag.hasKey("FireCommand")) this.fireCommand = tag.getString("FireCommand");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
-        if (tag.hasKey("Accuracy")) this.accuracy = tag.getFloat("Accuracy");
+        if (tag.hasKey("Scatter")) this.scatter = tag.getFloat("Scatter");
 
         /* Projectile properties */
         this.projectileMorph = this.create(tag, "Projectile");
@@ -281,7 +281,7 @@ public class GunProps
         if (!this.fireCommand.isEmpty()) tag.setString("FireCommand", this.fireCommand);
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
-        if (this.accuracy != 0F) tag.setFloat("Accuracy", this.accuracy);
+        if (this.scatter != 0F) tag.setFloat("Scatter", this.scatter);
 
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));

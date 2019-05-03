@@ -47,7 +47,7 @@ public class GuiGun extends GuiBase
     public GuiTextElement fireCommand;
     public GuiTrackpadElement delay;
     public GuiTrackpadElement projectiles;
-    public GuiTrackpadElement accuracy;
+    public GuiTrackpadElement scatter;
 
     /* Projectile options */
     public GuiElement projectileOptions;
@@ -118,16 +118,16 @@ public class GuiGun extends GuiBase
         this.delay.setLimit(0, Integer.MAX_VALUE, true);
         this.projectiles = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.projectiles"), (value) -> this.props.projectiles = value.intValue());
         this.projectiles.setLimit(0, Integer.MAX_VALUE, true);
-        this.accuracy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.accuracy"), (value) -> this.props.accuracy = value);
+        this.scatter = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.scatter"), (value) -> this.props.scatter = value);
 
         this.pickDefault.resizer().parent(area).set(0, 0, 100, 20).x(0.25F, -50).y(1, -100);
         this.pickFiring.resizer().parent(area).set(0, 0, 100, 20).x(0.75F, -50).y(1, -100);
         this.fireCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
         this.delay.resizer().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.projectiles.resizer().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
-        this.accuracy.resizer().parent(area).set(0, 0, 0, 20).x(0.25F, 55).y(1, -75).w(0.5F, -110);
+        this.scatter.resizer().parent(area).set(0, 0, 0, 20).x(0.25F, 55).y(1, -75).w(0.5F, -110);
 
-        this.gunOptions.children.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.accuracy, this.projectiles);
+        this.gunOptions.children.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.scatter, this.projectiles);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -209,7 +209,7 @@ public class GuiGun extends GuiBase
         this.fireCommand.setText(this.props.fireCommand);
         this.delay.setValue(this.props.delay);
         this.projectiles.setValue(this.props.projectiles);
-        this.accuracy.setValue(this.props.accuracy);
+        this.scatter.setValue(this.props.scatter);
 
         /* Projectile properties */
         this.tickCommand.setText(this.props.tickCommand);
