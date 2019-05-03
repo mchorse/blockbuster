@@ -1,8 +1,8 @@
 package mchorse.blockbuster.capabilities.gun;
 
-import mchorse.blockbuster.common.GunInfo;
+import mchorse.blockbuster.common.GunProps;
 
 public interface IGun
 {
-    public GunInfo getInfo();
+    public GunProps getProps();
 }

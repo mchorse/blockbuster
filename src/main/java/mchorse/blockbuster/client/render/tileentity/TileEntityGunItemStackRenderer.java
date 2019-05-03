@@ -61,7 +61,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         if (model != null)
         {
             model.timer = 20;
-            model.gun.getInfo().render(partialTicks);
+            model.gun.getProps().render(partialTicks);
             this.reset();
         }
     }

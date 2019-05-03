@@ -33,6 +33,7 @@ blockbuster.config:
         actor_fall_damage: Урон от падения для актёров
         actor_tracking_range: Диапазон отслеживания актёров
         actor_rendering_range: Диапазон отображения актеров
+        actor_always_render: Всегда отображать имена актёров
         actor_always_render_names: Всегда отображать имена актеров
         actor_swish_swipe: Вжух взмаха
         actor_y: Исправить движение по оси Y

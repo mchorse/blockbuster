@@ -17,7 +17,7 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster_pack.MorphUtils;
-import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
@@ -78,7 +78,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     /**
      * Metamorph's morph for this actor
      */
-    public AbstractMorph morph;
+    public Morph morph = new Morph();
 
     /* Elytra interpolated animated properties */
     public float rotateElytraX = 0.0F;
@@ -126,7 +126,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public AbstractMorph getMorph()
     {
-        return this.morph;
+        return this.morph.get();
     }
 
     /**
@@ -213,7 +213,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             tag.setString("Name", "blockbuster.steve");
         }
 
-        this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
+        this.morph.fromNBT(tag);
 
         return super.onInitialSpawn(difficulty, livingdata);
     }
@@ -404,9 +404,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         /* Explanation: Why do we update morph here? Because for some reason
          * the EntityMorph morphs don't turn smoothly in onLivingUpdate method */
-        if (this.morph != null)
+        AbstractMorph morph = this.morph.get();
+
+        if (morph != null)
         {
-            this.morph.update(this, null);
+            morph.update(this, null);
         }
 
         return f3;
@@ -471,11 +473,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        if (this.morph == null || !this.morph.canMerge(morph, this.world.isRemote))
-        {
-            this.morph = morph;
-        }
-
+        this.morph.set(morph, this.world.isRemote);
         this.invisible = invisible;
 
         if (!this.world.isRemote && notify)
@@ -491,7 +489,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         if (!this.manual)
         {
-            Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph, this.invisible));
+            Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph.get(), this.invisible));
         }
     }
 
@@ -502,7 +500,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super.readEntityFromNBT(tag);
 
-        this.morph = MorphUtils.morphFromNBT(tag);
+        this.morph.setDirect(MorphUtils.morphFromNBT(tag));
         this.invisible = tag.getBoolean("Invisible");
         this.wasAttached = tag.getBoolean("WasAttached");
 
@@ -517,7 +515,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super.writeEntityToNBT(tag);
 
-        MorphUtils.morphToNBT(tag, this.morph);
+        MorphUtils.morphToNBT(tag, this.morph.get());
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("WasAttached", this.wasAttached);
     }
@@ -532,7 +530,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
             this.setDead();
         }
 
-        MorphUtils.morphToBuf(buffer, this.morph);
+        MorphUtils.morphToBuf(buffer, this.morph.get());
 
         buffer.writeBoolean(this.invisible);
         buffer.writeBoolean(this.noClip);
@@ -553,7 +551,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     @Override
     public void readSpawnData(ByteBuf buffer)
     {
-        this.morph = MorphUtils.morphFromBuf(buffer);
+        this.morph.setDirect(MorphUtils.morphFromBuf(buffer));
         this.invisible = buffer.readBoolean();
         this.noClip = buffer.readBoolean();
 

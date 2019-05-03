@@ -12,8 +12,11 @@ blockbuster:
         model_block: Позволяет использовать морфы как статичные модели
         green_block: "%s хромаблок. Может быть использован для хромакеинга."
 
-    morph.sequencer: Секвенсер
-
+    morph:
+        image: Изображение 
+        sequencer: Секвенсер
+        record: Запись
+        structure: Структура
 
 # Creative tabs
 itemGroup.blockbuster: Блокбастер
@@ -30,6 +33,7 @@ item:
         playback.name: Кнопка воспроизведения
         register.name: Регистрирующее устройство
         actor_config.name: Устройство конфигурации актёра
+        gun.name: Оружие ББ
 
 # Entity names
 entity.blockbuster.Actor.name: Актёр
