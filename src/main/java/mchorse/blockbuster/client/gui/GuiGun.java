@@ -4,7 +4,7 @@ import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketGunInfo;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster_pack.client.gui.GuiPosePanel.GuiPoseTransformations;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;

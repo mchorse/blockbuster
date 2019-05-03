@@ -3,7 +3,7 @@ package mchorse.blockbuster.network.server;
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketGunInfo;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

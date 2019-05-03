@@ -52,6 +52,7 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
             if (entity.timer >= entity.props.lifeSpan - 10)
             {
                 scale = 1 - (entity.timer + partialTicks - entity.props.lifeSpan + 10) / 10F;
+                scale = scale < 0 ? 0 : scale;
             }
             else if (scale >= 1)
             {

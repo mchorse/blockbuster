@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.common;
+package mchorse.blockbuster.network.common.guns;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;

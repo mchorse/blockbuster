@@ -5,6 +5,8 @@ import java.util.List;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
@@ -188,14 +190,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.motionY -= this.getGravityVelocity();
         }
 
-        if (!impact)
-        {
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        }
-        else
-        {
-            this.setPosition(this.posX, this.posY, this.posZ);
-        }
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
 
         this.updateProjectile();
     }
@@ -253,6 +248,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 AbstractMorph original = this.original == null ? null : this.original.clone(remote);
 
                 this.morph.set(original, remote);
+
+                Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), original));
             }
 
             this.impact--;
@@ -266,7 +263,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
 
-            if (result.typeOfHit == Type.BLOCK && this.props.bounce && this.hits < this.props.hits)
+            if (result.typeOfHit == Type.BLOCK && this.props.bounce && this.hits <= this.props.hits)
             {
                 Axis axis = result.sideHit.getAxis();
 
@@ -292,15 +289,18 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                     this.setDead();
                     return;
                 }
-            }
 
-            if (this.props.impactDelay > 0)
-            {
-                boolean remote = this.worldObj.isRemote;
-                AbstractMorph morph = this.props.impactMorph == null ? null : this.props.impactMorph.clone(remote);
+                /* Change to impact morph */
+                if (this.props.impactDelay > 0)
+                {
+                    boolean remote = this.worldObj.isRemote;
+                    AbstractMorph morph = this.props.impactMorph == null ? null : this.props.impactMorph.clone(remote);
 
-                this.morph.set(morph, remote);
-                this.impact = this.props.impactDelay;
+                    this.morph.set(morph, remote);
+                    this.impact = this.props.impactDelay;
+
+                    Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), morph));
+                }
             }
         }
 

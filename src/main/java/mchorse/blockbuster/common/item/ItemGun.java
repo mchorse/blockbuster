@@ -6,7 +6,7 @@ import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketGunShot;
+import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.player.EntityPlayer;
