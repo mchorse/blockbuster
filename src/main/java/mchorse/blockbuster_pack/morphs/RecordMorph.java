@@ -73,9 +73,9 @@ public class RecordMorph extends AbstractMorph
             GuiInventory.drawItemStack(ICON, -8, -8, null);
             GlStateManager.popMatrix();
         }
-        else if (this.actor.morph != null)
+        else if (this.actor.getMorph() != null)
         {
-            this.actor.morph.renderOnScreen(player, x, y, scale, alpha);
+            this.actor.getMorph().renderOnScreen(player, x, y, scale, alpha);
         }
     }
 
@@ -84,7 +84,9 @@ public class RecordMorph extends AbstractMorph
     {
         this.initiateActor(entity.worldObj);
 
-        if (this.actor.morph != null)
+        AbstractMorph morph = this.actor.getMorph();
+
+        if (morph != null)
         {
             if (this.actor.playback.record != null)
             {
@@ -106,7 +108,7 @@ public class RecordMorph extends AbstractMorph
                 }
             }
 
-            this.actor.morph.render(this.actor, x, y, z, entityYaw, partialTicks);
+            morph.render(this.actor, x, y, z, entityYaw, partialTicks);
         }
     }
 
@@ -123,7 +125,7 @@ public class RecordMorph extends AbstractMorph
         if (this.actor == null)
         {
             this.actor = new EntityActor(world);
-            this.actor.morph = this.initial == null ? null : this.initial.clone(world.isRemote);
+            this.actor.morph.setDirect(this.initial == null ? null : this.initial.clone(world.isRemote));
             this.actor.playback = new RecordPlayer(null, Mode.FRAMES, this.actor);
             this.actor.manual = true;
 
@@ -174,7 +176,7 @@ public class RecordMorph extends AbstractMorph
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = 0;
                     this.actor.playback.record.applyAction(0, this.actor, true);
-                    this.actor.morph = this.initial;
+                    this.actor.morph.setDirect(this.initial);
                 }
             }
         }

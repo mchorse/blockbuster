@@ -233,7 +233,46 @@ blockbuster.gui:
         mipmap_tooltip: When enabled, looks less noisy far away
         replace: Replace
         replace_modal: "Type in the resource location of {l}already loaded{r} texture which you want to replace with:"
-    
+
+    gun:
+        title: Gun configuration
+        fire_props: Fire properties
+        projectile_props: Projectile properties
+        impact_props: Impact properties
+        transforms: Transformations
+        
+        default_morph: Default morph
+        fire_morph: Firing morph
+        fire_command: Command on fire
+        delay: Delay
+        projectiles: Projectiles
+        accuracy: Accuracy
+        
+        projectile_morph: Projectile morph
+        tick_command: Command on tick
+        ticking: Ticking
+        life_span: Life span
+        yaw: Yaw
+        pitch: Pitch
+        sequencer: Sequencer
+        random: Random
+        hitbox_x: Hitbox X
+        hitbox_y: Hitbox Y
+        speed: Speed
+        friction: Friction
+        gravity: Gravity
+        
+        impact_morph: Impact morph
+        impact_delay: Impact delay
+        impact_command: Command on impact
+        vanish: Vanish # or Spanish
+        bounce: Bounce
+        hits: Hits
+        damage: Damage
+        
+        gun_transforms: Gun transformations
+        projectile_transforms: Projectile transformations
+
     aperture:
         config:
             title: Director

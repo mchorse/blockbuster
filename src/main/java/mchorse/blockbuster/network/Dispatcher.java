@@ -10,6 +10,7 @@ import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
 import mchorse.blockbuster.network.client.ClientHandlerGunInfo;
+import mchorse.blockbuster.network.client.ClientHandlerGunProjectile;
 import mchorse.blockbuster.network.client.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
@@ -29,8 +30,6 @@ import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
-import mchorse.blockbuster.network.common.PacketGunInfo;
-import mchorse.blockbuster.network.common.PacketGunShot;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
@@ -41,6 +40,9 @@ import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
 import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
+import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
+import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -151,6 +153,7 @@ public class Dispatcher
             register(PacketGunInfo.class, ServerHandlerGunInfo.class, Side.SERVER);
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
+            register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
 
             /* Camera management */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);

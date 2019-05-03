@@ -2,7 +2,7 @@ package mchorse.blockbuster.network.client;
 
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.capabilities.gun.IGun;
-import mchorse.blockbuster.network.common.PacketGunInfo;
+import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ public class ClientHandlerGunInfo extends ClientMessageHandler<PacketGunInfo>
 
             if (gun != null)
             {
-                gun.getInfo().fromNBT(message.tag);
+                gun.getProps().fromNBT(message.tag);
             }
         }
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -36,7 +37,7 @@ public class SequencerMorph extends AbstractMorph
     /**
      * Current morph 
      */
-    public AbstractMorph currentMorph;
+    public Morph currentMorph = new Morph();
 
     /**
      * Index of current cell 
@@ -84,9 +85,11 @@ public class SequencerMorph extends AbstractMorph
             }
         }
 
-        if (this.currentMorph != null)
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph != null)
         {
-            this.currentMorph.renderOnScreen(player, x, y, scale, alpha);
+            morph.renderOnScreen(player, x, y, scale, alpha);
         }
     }
 
@@ -96,9 +99,11 @@ public class SequencerMorph extends AbstractMorph
     {
         this.updateMorph(this.timer + partialTicks, true);
 
-        if (this.currentMorph != null)
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph != null)
         {
-            this.currentMorph.render(entity, x, y, z, entityYaw, partialTicks);
+            morph.render(entity, x, y, z, entityYaw, partialTicks);
         }
     }
 
@@ -106,9 +111,11 @@ public class SequencerMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public boolean renderHand(EntityPlayer player, EnumHand hand)
     {
-        if (this.currentMorph != null)
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph != null)
         {
-            return this.currentMorph.renderHand(player, hand);
+            return morph.renderHand(player, hand);
         }
 
         return false;
@@ -119,9 +126,11 @@ public class SequencerMorph extends AbstractMorph
     {
         this.updateCycle(target.worldObj.isRemote);
 
-        if (this.currentMorph != null)
+        AbstractMorph morph = this.currentMorph.get();
+
+        if (morph != null)
         {
-            this.currentMorph.update(target, cap);
+            morph.update(target, cap);
         }
     }
 
@@ -163,20 +172,9 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.setCurrentMorph(entry.morph == null ? null : entry.morph.clone(true), isRemote);
+                this.currentMorph.set(entry.morph == null ? null : entry.morph.clone(true), isRemote);
                 this.duration += entry.getDuration();
             }
-        }
-    }
-
-    /**
-     * Set current morph, make sure it's mergeable and stuff 
-     */
-    public void setCurrentMorph(AbstractMorph morph, boolean isRemote)
-    {
-        if (this.currentMorph == null || !this.currentMorph.canMerge(morph, isRemote))
-        {
-            this.currentMorph = morph;
         }
     }
 
@@ -194,7 +192,7 @@ public class SequencerMorph extends AbstractMorph
         }
 
         morph.reverse = this.reverse;
-        morph.currentMorph = this.currentMorph;
+        morph.currentMorph.copy(this.currentMorph, isRemote);
 
         return morph;
     }
@@ -202,13 +200,17 @@ public class SequencerMorph extends AbstractMorph
     @Override
     public float getWidth(EntityLivingBase target)
     {
-        return this.currentMorph != null ? this.currentMorph.getWidth(target) : 0;
+        AbstractMorph morph = this.currentMorph.get();
+
+        return morph == null ? 0 : morph.getWidth(target);
     }
 
     @Override
     public float getHeight(EntityLivingBase target)
     {
-        return this.currentMorph != null ? this.currentMorph.getHeight(target) : 0;
+        AbstractMorph morph = this.currentMorph.get();
+
+        return morph == null ? 0 : morph.getHeight(target);
     }
 
     @Override
@@ -235,7 +237,7 @@ public class SequencerMorph extends AbstractMorph
         this.timer = this.current = 0;
         this.duration = 0;
         this.reverse = false;
-        this.currentMorph = null;
+        this.currentMorph.setDirect(null);
         this.morphs.clear();
     }
 
@@ -307,7 +309,7 @@ public class SequencerMorph extends AbstractMorph
                     boolean isRemote = FMLCommonHandler.instance().getSide() == Side.CLIENT;
 
                     this.duration = entry.getDuration();
-                    this.setCurrentMorph(morph == null ? null : morph.clone(isRemote), isRemote);
+                    this.currentMorph.set(morph, isRemote);
                 }
 
                 this.morphs.add(entry);
