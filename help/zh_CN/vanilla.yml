@@ -33,6 +33,7 @@ item:
         playback.name: 播放按钮
         register.name: 激活设备
         actor_config.name: 演员设置设备
+        gun.name: BB 枪
 
 # Entity names
 entity.blockbuster.Actor.name: 演员

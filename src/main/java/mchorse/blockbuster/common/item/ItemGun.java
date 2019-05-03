@@ -87,7 +87,7 @@ public class ItemGun extends Item
             EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
 
             projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-            projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.accuracy);
+            projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
             world.spawnEntity(projectile);
             last = projectile;
         }

@@ -104,9 +104,9 @@ blockbuster.gui:
         shadow: Тень
         
         entity: Существо
-        translate: Переместить
-        rotate: Вращать
-        scale: Масштабировать
+        translate: Перемещение
+        rotate: Вращение
+        scale: Масштаб
     
     # Player recording editor GUI strings
     record_editor:
@@ -233,6 +233,45 @@ blockbuster.gui:
         mipmap_tooltip: Если включено, то текстуры на дальних расстояниях будут выглядеть более детализированно
         replace: Заменить
         replace_modal: "Впишите директорию {l}уже загруженной{r} текстуры, которую вы хотите заменить на:"
+
+    gun:
+        title: Настройка оружия
+        fire_props: Свойства стрельбы
+        projectile_props: Свойства снарядов
+        impact_props: Свойства воздействия
+        transforms: Трансформации
+        
+        default_morph: Морф по умолчанию
+        fire_morph: Морф во время стрельбы
+        fire_command: Команда при выстреле
+        delay: Задержка
+        projectiles: Снаряды
+        scatter: Разброс
+        
+        projectile_morph: Морф снаряда
+        tick_command: Команда при тике
+        ticking: Частота тиков
+        life_span: Продолжительность жизни
+        yaw: Рыскание
+        pitch: Тангаж
+        sequencer: Секвенсер
+        random: Случайно
+        hitbox_x: Хитбокс X
+        hitbox_y: Хитбокс Y
+        speed: Скорость
+        friction: Трение
+        gravity: Гравитация
+        
+        impact_morph: Морф воздействия
+        impact_delay: Задержка воздействия
+        impact_command: Команда при воздействии
+        vanish: Исчезать #бляебать
+        bounce: Отскакивать
+        hits: Отскоки
+        damage: Урон
+        
+        gun_transforms: Трансформация оружия
+        projectile_transforms: Трансформация снаряда
     
     aperture:
         config:
