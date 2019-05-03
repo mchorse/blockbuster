@@ -250,7 +250,7 @@ blockbuster.gui:
         
         projectile_morph: Морф снаряда
         tick_command: Команда при тике
-        ticking: Тиканье
+        ticking: Частота тиков
         life_span: Продолжительность жизни
         yaw: Рыскание
         pitch: Тангаж
@@ -267,7 +267,7 @@ blockbuster.gui:
         impact_command: Команда при воздействии
         vanish: Исчезать #бляебать
         bounce: Отскакивать
-        hits: Удары
+        hits: Отскоки
         damage: Урон
         
         gun_transforms: Трансформация оружия
