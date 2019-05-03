@@ -3,10 +3,10 @@ package mchorse.blockbuster.common.item;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.capabilities.gun.IGun;
-import mchorse.blockbuster.common.GunInfo;
+import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketGunShot;
+import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,18 +65,18 @@ public class ItemGun extends Item
             return false;
         }
 
-        GunInfo info = gun.getInfo();
+        GunProps props = gun.getProps();
         EntityGunProjectile last = null;
 
-        for (int i = 0; i < info.projectiles; i++)
+        for (int i = 0; i < props.projectiles; i++)
         {
-            AbstractMorph morph = info.projectileMorph;
+            AbstractMorph morph = props.projectileMorph;
 
-            if (info.sequencer && morph instanceof SequencerMorph)
+            if (props.sequencer && morph instanceof SequencerMorph)
             {
                 SequencerMorph seq = ((SequencerMorph) morph);
 
-                morph = info.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+                morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
             }
 
             if (morph != null)
@@ -84,17 +84,17 @@ public class ItemGun extends Item
                 morph = morph.clone(world.isRemote);
             }
 
-            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getInfo(), morph);
+            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
 
             projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-            projectile.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, info.speed, info.accuracy);
+            projectile.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.accuracy);
             world.spawnEntity(projectile);
             last = projectile;
         }
 
-        if (!info.fireCommand.isEmpty() && last != null)
+        if (!props.fireCommand.isEmpty() && last != null)
         {
-            player.getServer().commandManager.executeCommand(last, info.fireCommand);
+            player.getServer().commandManager.executeCommand(last, props.fireCommand);
         }
 
         if (player instanceof EntityPlayerMP)
