@@ -7,6 +7,7 @@ import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class ServerHandlerGunInfo extends ServerMessageHandler<PacketGunInfo>
 {
@@ -22,6 +23,10 @@ public class ServerHandlerGunInfo extends ServerMessageHandler<PacketGunInfo>
         }
 
         gun.getProps().fromNBT(message.tag);
-        Dispatcher.sendToTracked(player, new PacketGunInfo(message.tag, player.getEntityId()));
+
+        IMessage packet = new PacketGunInfo(message.tag, player.getEntityId());
+
+        Dispatcher.sendTo(packet, player);
+        Dispatcher.sendToTracked(player, packet);
     }
 }
