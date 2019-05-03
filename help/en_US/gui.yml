@@ -107,6 +107,7 @@ blockbuster.gui:
         translate: Translate
         rotate: Rotate
         scale: Scale
+        damage: Damage
     
     # Player recording editor GUI strings
     record_editor:
