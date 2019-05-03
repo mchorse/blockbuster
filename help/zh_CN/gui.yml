@@ -233,6 +233,45 @@ blockbuster.gui:
         mipmap_tooltip: 打开后，在远处看不会有那么多噪点
         replace: 替换
         replace_modal: "请输入一个前往 {l}已经载入的{r} 材质资源的位置，用来替换："
+        
+    gun:
+        title: 枪的配置
+        fire_props: 发射的属性
+        projectile_props: 炮弹的属性
+        impact_props: 撞击的属性
+        transforms: 变换
+        
+        default_morph: 默认伪装
+        fire_morph: 发射时显示的伪装
+        fire_command: 发射时执行以下命令：
+        delay: 延迟
+        projectiles: 炮弹
+        accuracy: 分散程度
+        
+        projectile_morph: 作为炮弹的伪装
+        tick_command: 在 Tick 中的频率上执行以下命令：
+        ticking: Tick 中的频率
+        life_span: 存活时间
+        yaw: 偏航
+        pitch: 俯仰
+        sequencer: 序列
+        random: 随机
+        hitbox_x: 碰撞箱 X
+        hitbox_y: 碰撞箱 Y
+        speed: 速度
+        friction: 摩擦力
+        gravity: 引力
+        
+        impact_morph: 撞击后的伪装
+        impact_delay: 撞击的延迟
+        impact_command: 撞击时刻执行以下命令：
+        vanish: 消失 # or Spanish
+        bounce: 反弹
+        hits: 反弹次数
+        damage: 伤害
+        
+        gun_transforms: 枪的变换
+        projectile_transforms: 炮弹的变换
 
     aperture:
         config:
