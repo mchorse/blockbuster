@@ -234,6 +234,44 @@ blockbuster.gui:
         replace: 替換
         replace_modal: "請鍵入一個指向 {l}已載入的{r} 材質資源的位置，用作替換："
 
+    gun:
+        title: 槍的配置
+        fire_props: 發射的屬性
+        projectile_props: 炮彈的屬性
+        impact_props: 撞擊的屬性
+        transforms: 變換
+        
+        default_morph: 默認偽裝
+        fire_morph: 發射時顯示的偽裝
+        fire_command: 發射時執行以下命令：
+        delay: 延遲
+        projectiles: 炮彈
+        scatter: 分散程度
+        
+        projectile_morph: 作為炮彈的偽裝
+        tick_command: 在 Tick 中的頻率上執行以下命令：
+        ticking: Tick 中的頻率
+        life_span: 存活時間
+        yaw: 偏航
+        pitch: 俯仰
+        sequencer: 序列
+        random: 隨機
+        hitbox_x: 碰撞箱 X
+        hitbox_y: 碰撞箱 Y
+        speed: 速度
+        friction: 摩擦力
+        gravity: 引力
+        
+        impact_morph: 撞擊后的偽裝
+        impact_delay: 撞擊的延遲
+        impact_command: 撞擊時刻執行以下命令
+        vanish: 消失 # or Spanish
+        bounce: 反彈
+        hits: 反彈次數
+        damage: 傷害
+        
+        gun_transforms: 槍的變換
+        projectile_transforms: 炮彈的變換
 
     aperture:
         config:

@@ -246,7 +246,7 @@ blockbuster.gui:
         fire_command: Command on fire
         delay: Delay
         projectiles: Projectiles
-        accuracy: Accuracy
+        scatter: Scatter
         
         projectile_morph: Projectile morph
         tick_command: Command on tick
