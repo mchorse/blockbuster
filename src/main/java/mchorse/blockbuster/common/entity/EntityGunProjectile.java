@@ -48,6 +48,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double targetX;
     public double targetY;
     public double targetZ;
+    public boolean bounced;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -96,8 +97,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         Entity entity = null;
         List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D));
-        double d0 = 0.0D;
-        boolean impact = false;
+        double dist = 0.0D;
 
         for (int i = 0; i < list.size(); ++i)
         {
@@ -112,10 +112,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 {
                     double d1 = position.squareDistanceTo(ray.hitVec);
 
-                    if (d1 < d0 || d0 == 0.0D)
+                    if (d1 < dist || dist == 0.0D)
                     {
                         entity = current;
-                        d0 = d1;
+                        dist = d1;
                     }
                 }
             }
@@ -134,15 +134,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             }
             else
             {
-                if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result))
-                {
-                    if (this.props != null && this.props.bounce && this.hits < this.props.hits)
-                    {
-                        impact = true;
-                    }
-
-                    this.onImpact(result);
-                }
+                if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
             }
         }
 
@@ -191,7 +183,23 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.motionY -= this.getGravityVelocity();
         }
 
-        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+        if (this.bounced)
+        {
+            double mx = this.motionX;
+            double my = this.motionY;
+            double mz = this.motionZ;
+
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+
+            this.motionX = mx;
+            this.motionY = my;
+            this.motionZ = mz;
+            this.bounced = false;
+        }
+        else
+        {
+            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+        }
 
         this.updateProjectile();
     }
@@ -271,6 +279,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (axis == Axis.X) this.motionX *= -1;
                 if (axis == Axis.Y) this.motionY *= -1;
                 if (axis == Axis.Z) this.motionZ *= -1;
+
+                this.bounced = true;
             }
 
             if (!this.world.isRemote)
