@@ -54,7 +54,7 @@ Here is also a playlist of tutorials directly or indirectly related to Blockbust
 
 <a href="https://youtu.be/PFS2yjXnIGI?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/PFS2yjXnIGI/0.jpg"></a> 
 
-### Machinima Examples
+### Blockbuster machinimas
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Feel free to check out my crazy videos.
 
