@@ -14,6 +14,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -47,7 +48,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double targetX;
     public double targetY;
     public double targetZ;
-    public boolean bounced;
 
     public EntityGunProjectile(World worldIn)
     {
@@ -125,6 +125,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             result = new RayTraceResult(entity);
         }
 
+        /* Update position */
+        this.posX += this.motionX;
+        this.posY += this.motionY;
+        this.posZ += this.motionZ;
+
         if (result != null)
         {
             if (result.typeOfHit == RayTraceResult.Type.BLOCK && this.worldObj.getBlockState(result.getBlockPos()).getBlock() == Blocks.PORTAL)
@@ -138,9 +143,6 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         }
 
         /* Update position, motion and rotation */
-        this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;
         float distance = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
         this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
 
@@ -182,22 +184,13 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             this.motionY -= this.getGravityVelocity();
         }
 
-        if (this.bounced)
+        if (this.hits > this.props.hits)
         {
-            double mx = this.motionX;
-            double my = this.motionY;
-            double mz = this.motionZ;
-
             this.moveEntity(this.motionX, this.motionY, this.motionZ);
-
-            this.motionX = mx;
-            this.motionY = my;
-            this.motionZ = mz;
-            this.bounced = false;
         }
         else
         {
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
+            this.setPosition(this.posX, this.posY, this.posZ);
         }
 
         this.updateProjectile();
@@ -269,7 +262,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     {
         if (this.props != null && this.timer >= 2)
         {
-            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
+            boolean shouldDie = this.props.vanish && this.hits > this.props.hits;
 
             if (result.typeOfHit == Type.BLOCK && this.props.bounce && this.hits <= this.props.hits)
             {
@@ -279,14 +272,32 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (axis == Axis.Y) this.motionY *= -1;
                 if (axis == Axis.Z) this.motionZ *= -1;
 
-                this.bounced = true;
+                this.posX = result.hitVec.xCoord + this.width / 2 * result.sideHit.getFrontOffsetX();
+                this.posY = result.hitVec.yCoord - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
+                this.posZ = result.hitVec.zCoord + this.width / 2 * result.sideHit.getFrontOffsetZ();
             }
 
             if (!this.worldObj.isRemote)
             {
                 if (!this.props.impactCommand.isEmpty())
                 {
-                    this.getServer().commandManager.executeCommand(this, this.props.impactCommand);
+                    String command = this.props.impactCommand;
+                    int x = Math.round((float) this.posX);
+                    int y = Math.round((float) this.posY);
+                    int z = Math.round((float) this.posZ);
+
+                    if (result.typeOfHit == Type.BLOCK)
+                    {
+                        x = result.getBlockPos().getX();
+                        y = result.getBlockPos().getY();
+                        z = result.getBlockPos().getZ();
+                    }
+
+                    command = command.replaceAll("\\$\\{x\\}", String.valueOf(x));
+                    command = command.replaceAll("\\$\\{y\\}", String.valueOf(y));
+                    command = command.replaceAll("\\$\\{z\\}", String.valueOf(z));
+
+                    this.getServer().commandManager.executeCommand(this, command);
                 }
 
                 if (result.typeOfHit == Type.ENTITY && this.props.damage > 0)
