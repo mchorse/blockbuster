@@ -273,9 +273,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (axis == Axis.Y) this.motionY *= -1;
                 if (axis == Axis.Z) this.motionZ *= -1;
 
-                this.posX = result.hitVec.xCoord + this.width / 2 * result.sideHit.getFrontOffsetX();
-                this.posY = result.hitVec.yCoord - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
-                this.posZ = result.hitVec.zCoord + this.width / 2 * result.sideHit.getFrontOffsetZ();
+                this.posX = result.hitVec.x + this.width / 2 * result.sideHit.getFrontOffsetX();
+                this.posY = result.hitVec.y - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
+                this.posZ = result.hitVec.z + this.width / 2 * result.sideHit.getFrontOffsetZ();
             }
 
             if (!this.world.isRemote)
