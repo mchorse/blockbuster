@@ -68,7 +68,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
      * NullPointerException (and some math like the direction in which to open
      * the fence or something).
      */
-    public EntityPlayer fakePlayer;
+    public EntityFakePlayer fakePlayer;
 
     /**
      * In Soviet Russia, playback plays you
@@ -105,21 +105,7 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
     {
         super(worldIn);
 
-        this.fakePlayer = new EntityPlayer(worldIn, new GameProfile(null, "xXx_Fake_Player_420_xXx"))
-        {
-            @Override
-            public boolean isSpectator()
-            {
-                return false;
-            }
-
-            @Override
-            public boolean isCreative()
-            {
-                return false;
-            }
-        };
-
+        this.fakePlayer = new EntityFakePlayer(worldIn, this, new GameProfile(null, "xXx_Fake_Player_420_xXx"));
         this.fakePlayer.capabilities.isCreativeMode = true;
     }
 
@@ -613,5 +599,29 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
 
         d0 = d0 * Blockbuster.proxy.config.actor_rendering_range;
         return distance < d0 * d0;
+    }
+
+    public static class EntityFakePlayer extends EntityPlayer
+    {
+        public EntityActor actor;
+
+        public EntityFakePlayer(World world, EntityActor actor, GameProfile profile)
+        {
+            super(world, profile);
+
+            this.actor = actor;
+        }
+
+        @Override
+        public boolean isSpectator()
+        {
+            return false;
+        }
+
+        @Override
+        public boolean isCreative()
+        {
+            return false;
+        }
     }
 }
