@@ -117,12 +117,14 @@ public class TileEntityModel extends TileEntity implements ITickable
      * in the game)
      */
     @Override
+    @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
         return TileEntity.INFINITE_EXTENT_AABB;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared()
     {
         float range = Blockbuster.proxy.config.actor_rendering_range;
