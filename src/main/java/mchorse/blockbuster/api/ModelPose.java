@@ -21,6 +21,22 @@ public class ModelPose
     public float[] size = new float[] {1, 1, 1};
     public Map<String, ModelTransform> limbs = new HashMap<String, ModelTransform>();
 
+    /**
+     * Fill in missing transforms 
+     */
+    public void fillInMissing(ModelPose pose)
+    {
+        for (Map.Entry<String, ModelTransform> entry : pose.limbs.entrySet())
+        {
+            String key = entry.getKey();
+
+            if (!this.limbs.containsKey(key))
+            {
+                this.limbs.put(key, entry.getValue().clone());
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object obj)
     {

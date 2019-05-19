@@ -120,7 +120,15 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     public ModelPose getPose(EntityLivingBase target)
     {
-        if (this.customPose != null)
+        return this.getPose(target, false);
+    }
+
+    /**
+     * Get a pose for rendering
+     */
+    public ModelPose getPose(EntityLivingBase target, boolean ignoreCustom)
+    {
+        if (this.customPose != null && !ignoreCustom)
         {
             if (this.currentPoseOnSneak && target.isSneaking() || !this.currentPoseOnSneak)
             {
