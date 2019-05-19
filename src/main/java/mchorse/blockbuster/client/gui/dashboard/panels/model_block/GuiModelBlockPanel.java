@@ -101,21 +101,12 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         this.pitch.resizer().set(0, 25, 80, 20).relative(this.yaw.resizer);
         this.body.resizer().set(0, 25, 80, 20).relative(this.pitch.resizer);
 
-        /* Rotation */
-        this.subChildren.add(this.rx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.model.rx = value));
-        this.subChildren.add(this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.model.ry = value));
-        this.subChildren.add(this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.model.rz = value));
-
-        this.rx.resizer().set(0, 45, 80, 20).relative(this.body.resizer);
-        this.ry.resizer().set(0, 25, 80, 20).relative(this.rx.resizer);
-        this.rz.resizer().set(0, 25, 80, 20).relative(this.ry.resizer);
-
         /* Translation */
         this.subChildren.add(this.x = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.model.x = value));
         this.subChildren.add(this.y = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.model.y = value));
         this.subChildren.add(this.z = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.model.z = value));
 
-        this.x.resizer().set(0, 20, 80, 20).parent(this.area).x(1, -90);
+        this.x.resizer().set(0, 45, 80, 20).relative(this.body.resizer);
         this.y.resizer().set(0, 25, 80, 20).relative(this.x.resizer);
         this.z.resizer().set(0, 25, 80, 20).relative(this.y.resizer);
 
@@ -124,9 +115,18 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         this.subChildren.add(this.sy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.model.sy = value));
         this.subChildren.add(this.sz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.model.sz = value));
 
-        this.sx.resizer().set(0, 45, 80, 20).relative(this.z.resizer);
+        this.sx.resizer().set(0, 20, 80, 20).parent(this.area).x(1, -90);
         this.sy.resizer().set(0, 25, 80, 20).relative(this.sx.resizer);
         this.sz.resizer().set(0, 25, 80, 20).relative(this.sy.resizer);
+
+        /* Rotation */
+        this.subChildren.add(this.rx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.model.rx = value));
+        this.subChildren.add(this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.model.ry = value));
+        this.subChildren.add(this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.model.rz = value));
+
+        this.rx.resizer().set(0, 45, 80, 20).relative(this.sz.resizer);
+        this.ry.resizer().set(0, 25, 80, 20).relative(this.rx.resizer);
+        this.rz.resizer().set(0, 25, 80, 20).relative(this.ry.resizer);
 
         /* Buttons */
         this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (button) ->
@@ -267,12 +267,12 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
     {
         if (height >= 400)
         {
-            this.x.resizer().relative(this.rz.resizer).set(0, 0, 80, 20).x(0).y(45);
+            this.sx.resizer().relative(this.z.resizer).set(0, 0, 80, 20).x(0).y(45);
             this.yaw.resizer().y(0.5F, -175);
         }
         else
         {
-            this.x.resizer().parent(this.area).set(0, 20, 80, 20).x(1, -90).y(0.5F, -80);
+            this.sx.resizer().parent(this.area).set(0, 20, 80, 20).x(1, -90).y(0.5F, -80);
             this.yaw.resizer().y(0.5F, -80);
         }
 
