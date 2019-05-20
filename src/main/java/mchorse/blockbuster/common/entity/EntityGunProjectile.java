@@ -269,13 +269,14 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             boolean shouldDie = this.props.vanish && this.hits > this.props.hits;
 
-            if (result.typeOfHit == Type.BLOCK && this.props.bounce && this.hits <= this.props.hits)
+            if (result.typeOfHit == Type.BLOCK)
             {
                 Axis axis = result.sideHit.getAxis();
+                float factor = this.props.bounce && this.hits <= this.props.hits ? -1 : 0;
 
-                if (axis == Axis.X) this.motionX *= -1;
-                if (axis == Axis.Y) this.motionY *= -1;
-                if (axis == Axis.Z) this.motionZ *= -1;
+                if (axis == Axis.X) this.motionX *= factor;
+                if (axis == Axis.Y) this.motionY *= factor;
+                if (axis == Axis.Z) this.motionZ *= factor;
 
                 this.posX = result.hitVec.xCoord + this.width / 2 * result.sideHit.getFrontOffsetX();
                 this.posY = result.hitVec.yCoord - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
