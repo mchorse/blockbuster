@@ -108,8 +108,8 @@ public class ModelPack
         for (File folder : this.folders)
         {
             /* TODO: rewrite into one loop */
-            this.reloadModels(folder);
-            this.reloadSkins(folder);
+            this.reloadModels(folder, "");
+            this.reloadSkins(folder, "");
         }
     }
 
@@ -118,11 +118,13 @@ public class ModelPack
      *
      * Simply caches files in the map for retrieval in actor GUI
      */
-    protected void reloadModels(File folder)
+    protected void reloadModels(File folder, String prefix)
     {
         for (File file : folder.listFiles())
         {
-            if (file.getName().startsWith("__"))
+            String name = file.getName();
+
+            if (name.startsWith("__") || !file.isDirectory())
             {
                 continue;
             }
@@ -131,20 +133,22 @@ public class ModelPack
             File objModel = new File(file.getAbsolutePath() + "/model.obj");
             File mtlFile = new File(file.getAbsolutePath() + "/model.mtl");
 
-            if (!mtlFile.exists())
+            boolean mtlExists = mtlFile.exists();
+            boolean objExists = objModel.exists();
+            boolean modelExists = model.exists();
+
+            if (!mtlExists)
             {
                 mtlFile = null;
             }
 
-            if (file.isDirectory())
+            if (modelExists || objExists)
             {
-                boolean objExists = objModel.exists();
-                boolean modelExists = model.exists();
-
-                if (modelExists || objExists)
-                {
-                    this.models.put(file.getName(), new ModelEntry(modelExists ? model : null, objExists ? objModel : null, mtlFile));
-                }
+                this.models.put(prefix + name, new ModelEntry(modelExists ? model : null, objExists ? objModel : null, mtlFile));
+            }
+            else if (!file.getName().equals("skins"))
+            {
+                this.reloadModels(file, prefix + name + "/");
             }
         }
     }
@@ -156,23 +160,30 @@ public class ModelPack
      * (reloadModels) and scans all skins in the "skins" folder in model's
      * folder.
      */
-    protected void reloadSkins(File folder)
+    protected void reloadSkins(File folder, String prefix)
     {
         for (File file : folder.listFiles())
         {
-            if (file.getName().startsWith("__"))
+            String name = file.getName();
+
+            if (file.getName().startsWith("__") || !file.isDirectory())
             {
                 continue;
             }
 
+            String key = prefix + name;
             File skins = new File(file.getAbsolutePath() + "/skins/");
+            File model = new File(file.getAbsolutePath() + "/model.json");
+            File objModel = new File(file.getAbsolutePath() + "/model.obj");
 
-            if (file.isDirectory())
+            if (this.models.containsKey(key) || model.exists() || objModel.exists())
+            {
+                skins.mkdirs();
+            }
+
+            if (skins.isDirectory())
             {
                 Map<String, File> map = new HashMap<String, File>();
-                String filename = file.getName();
-
-                skins.mkdirs();
 
                 for (File skin : skins.listFiles())
                 {
@@ -184,14 +195,19 @@ public class ModelPack
                     }
                 }
 
-                if (this.skins.containsKey(filename))
+                if (this.skins.containsKey(key))
                 {
-                    this.skins.get(filename).putAll(map);
+                    this.skins.get(key).putAll(map);
                 }
                 else
                 {
-                    this.skins.put(filename, map);
+                    this.skins.put(key, map);
                 }
+            }
+
+            if (!file.getName().equals("skins"))
+            {
+                this.reloadSkins(file, prefix + name + "/");
             }
         }
     }
