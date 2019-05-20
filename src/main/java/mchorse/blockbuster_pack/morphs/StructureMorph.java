@@ -48,6 +48,11 @@ public class StructureMorph extends AbstractMorph
      */
     public String structure = "";
 
+    /**
+     * Whether the structure applies lightmap 
+     */
+    public boolean lighting;
+
     @SideOnly(Side.CLIENT)
     public static void request()
     {
@@ -179,7 +184,11 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
 
-            RenderHelper.disableStandardItemLighting();
+            if (!this.lighting)
+            {
+                RenderHelper.disableStandardItemLighting();
+            }
+
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -191,10 +200,13 @@ public class StructureMorph extends AbstractMorph
             GlStateManager.disableAlpha();
             GlStateManager.shadeModel(GL11.GL_FLAT);
 
-            GlStateManager.enableLighting();
-            GlStateManager.enableLight(0);
-            GlStateManager.enableLight(1);
-            GlStateManager.enableColorMaterial();
+            if (!this.lighting)
+            {
+                GlStateManager.enableLighting();
+                GlStateManager.enableLight(0);
+                GlStateManager.enableLight(1);
+                GlStateManager.enableColorMaterial();
+            }
 
             renderer.renderTEs();
 
@@ -246,13 +258,16 @@ public class StructureMorph extends AbstractMorph
     {
         super.fromNBT(tag);
         this.structure = tag.getString("Structure");
+        this.lighting = tag.getBoolean("Lighting");
     }
 
     @Override
     public void toNBT(NBTTagCompound tag)
     {
         super.toNBT(tag);
-        tag.setString("Structure", this.structure);
+
+        if (!this.structure.isEmpty()) tag.setString("Structure", this.structure);
+        if (this.lighting) tag.setBoolean("Lighting", this.lighting);
     }
 
     /**
