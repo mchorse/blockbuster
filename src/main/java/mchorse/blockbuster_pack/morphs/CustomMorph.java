@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.google.common.base.Objects;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
@@ -496,7 +498,17 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
+        String name = this.name;
+
         super.fromNBT(tag);
+
+        /* Replace the current model */
+        if (!name.equals(this.name))
+        {
+            ModelCell cell = Blockbuster.proxy.models.models.get(this.getKey());
+
+            this.model = cell == null ? this.model : cell.model;
+        }
 
         if (tag.hasKey("Skin"))
         {
