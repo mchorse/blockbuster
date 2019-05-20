@@ -4,11 +4,13 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -97,12 +99,15 @@ public class ItemGun extends Item
             player.getServer().commandManager.executeCommand(last, props.fireCommand);
         }
 
+        Entity entity = player instanceof EntityFakePlayer ? ((EntityFakePlayer) player).actor : player;
+        int id = entity.getEntityId();
+
         if (player instanceof EntityPlayerMP)
         {
-            Dispatcher.sendTo(new PacketGunShot(player.getEntityId()), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketGunShot(id), (EntityPlayerMP) player);
         }
 
-        Dispatcher.sendToTracked(player, new PacketGunShot(player.getEntityId()));
+        Dispatcher.sendToTracked(entity, new PacketGunShot(id));
 
         return true;
     }
