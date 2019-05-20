@@ -163,6 +163,8 @@ public class BlockbusterFactory implements IMorphFactory
         {
             String key = entry.getKey();
             CustomMorph original = new CustomMorph();
+            String category = "blockbuster";
+            String variant = key.contains("/") ? key.substring(0, key.lastIndexOf("/")) : "";
 
             original.name = "blockbuster." + key;
             original.model = entry.getValue().model;
@@ -177,7 +179,7 @@ public class BlockbusterFactory implements IMorphFactory
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
-                morphs.addMorphVariant(actor.name, "blockbuster", "", actor);
+                morphs.addMorphVariant(actor.name, category, variant, "", actor);
             }
 
             /* Morphs with skins */
@@ -198,7 +200,7 @@ public class BlockbusterFactory implements IMorphFactory
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
                 actor.skin = RLUtils.create("b.a", skin);
-                morphs.addMorphVariant(actor.name, "blockbuster", skin, actor);
+                morphs.addMorphVariant(actor.name, category, variant, skin, actor);
             }
         }
 
