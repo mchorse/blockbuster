@@ -74,7 +74,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     public void onUpdate()
     {
-        if (!this.worldObj.isBlockLoaded(this.getPosition(), false))
+        if (!this.world.isBlockLoaded(this.getPosition(), false))
         {
             this.setDead();
         }
