@@ -8,6 +8,10 @@ This big massive update probably isn't as big as `1.5`, however, it saturated wi
 
 This update adds three new types of special Blockbuster exclusive morphs, in addition to `image` morph: Sequencer, Record and Structure morphs. It also adds another several major features: multiskin, improved texture picker, custom model smooth shading, hide all director blocks (if hide on playback is enabled) upon playback, item slots support in body parts, several new image and custom model morph properties and dozens of bug fixes!
 
+**Compatible** with McLib `1.0.1`, Metamorph `1.1.8` and Aperture `1.3.1`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/wpfiLTrzTLs"><img src="https://img.youtube.com/vi/wpfiLTrzTLs/0.jpg"></a> 
+
 #### General
 
 * Added following config options:
@@ -15,8 +19,9 @@ This update adds three new types of special Blockbuster exclusive morphs, in add
     * Added `Actors > Always render` which makes body actor entities render always no matter hitbox size (suggested by Andruxioid)
 * Added multi-skin feature to texture picker which allows constructing a single texture out of multiple textures
 * Added texture manager panel where you can explore textures loaded by Minecraft
-* Added animated GIF support
+* Added animated GIF support (with reference work from [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java))
 * Added **BB gun** item, which allows to setup a firearm-like weapon which can shoot projectiles with lots of different configuration options
+* Add hierarchical model loading and sorting in `config/blockbuster/models` (suggested by Jubb)
 * Changed the location of ticks in player recording editor grid
 * Changed the texture picker to capable of browsing folders
 * Fixed crash related to body actors using playback button (reported by ChrissyPixy)
@@ -36,7 +41,7 @@ This update adds three new types of special Blockbuster exclusive morphs, in add
 
 #### Aperture integration
 
-* Changed the player recording list in camera editor to not fully 
+* Changed the player recording list in camera editor to not fully overlay the player recording editor
 * Fixed crash camera editor initiation (reported by ycwei982 and zoombie)
 * Fixed packets in Aperture's integration which kicks players (found by FairFox)
 * Fixed Play and Load camera mode doesn't work on dedicated server (reported by Olrik&Flynn)
@@ -89,7 +94,7 @@ This update adds three new types of special Blockbuster exclusive morphs, in add
 
 This patch update is quite massive in comparison to two previous patches. This update adds body part system, image morphs, a new Aperture integration, URL textures, few miscellaneous tweaks and lots of bug/crash fixes.
 
-**Compatible** with McLib `1.0`, Metamorph `1.1.7` and Aperture `1.2`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+**Compatible** with McLib `1.0`, Metamorph `1.1.7` and Aperture `1.2`. It doesn't mean that future versions of McLib, Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
 
 <a href="https://youtu.be/sWlh0LUvvMc"><img src="https://img.youtube.com/vi/sWlh0LUvvMc/0.jpg"></a> 
 

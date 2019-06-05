@@ -1,6 +1,7 @@
 {
     "homepage": "https://minecraft.curseforge.com/projects/blockbuster",
     "1.10.2": {
+        "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
         "1.5.3": "This patch update is quite massive in comparison to two previous patches. This update adds body part system, image morphs, a new Aperture integration, URL textures, few miscellaneous tweaks and lots of bug/crash fixes.",
         "1.5.2": "This patch update adds more colored blocks for chroma keying and fixes lots of things (including pose editor that I broke in 1.5.1).",
         "1.5.1": "This patch update fixes minor bugs introduced in 1.5, as well as fixing some of the older bugs. Also, this patch contains a little surprise for 1.10.2 and 1.11.2, allowing them enjoy 1.12.2 exclusive item model feature introduced in 1.5.",
@@ -8,6 +9,7 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "1.11.2": {
+        "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
         "1.5.3": "This patch update is quite massive in comparison to two previous patches. This update adds body part system, image morphs, a new Aperture integration, URL textures, few miscellaneous tweaks and lots of bug/crash fixes.",
         "1.5.2": "This patch update adds more colored blocks for chroma keying and fixes lots of things (including pose editor that I broke in 1.5.1).",
         "1.5.1": "This patch update fixes minor bugs introduced in 1.5, as well as fixing some of the older bugs. Also, this patch contains a little surprise for 1.10.2 and 1.11.2, allowing them enjoy 1.12.2 exclusive item model feature introduced in 1.5.",
@@ -15,6 +17,7 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "1.12.2": {
+        "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
         "1.5.3": "This patch update is quite massive in comparison to two previous patches. This update adds body part system, image morphs, a new Aperture integration, URL textures, few miscellaneous tweaks and lots of bug/crash fixes.",
         "1.5.2": "This patch update adds more colored blocks for chroma keying and fixes lots of things (including pose editor that I broke in 1.5.1).",
         "1.5.1": "This patch update fixes minor bugs introduced in 1.5, as well as fixing some of the older bugs. Also, this patch contains a little surprise for 1.10.2 and 1.11.2, allowing them enjoy 1.12.2 exclusive item model feature introduced in 1.5.",
@@ -22,11 +25,11 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.10.2-latest": "1.5.3",
-        "1.10.2-recommended": "1.5.3",
-        "1.11.2-latest": "1.5.3",
-        "1.11.2-recommended": "1.5.3",
-        "1.12.2-latest": "1.5.3",
-        "1.12.2-recommended": "1.5.3"
+        "1.10.2-latest": "1.6",
+        "1.10.2-recommended": "1.6",
+        "1.11.2-latest": "1.6",
+        "1.11.2-recommended": "1.6",
+        "1.12.2-latest": "1.6",
+        "1.12.2-recommended": "1.6"
     }
 }
