@@ -80,7 +80,7 @@ public class Replay
      */
     public void apply(EntityPlayer player)
     {
-        MorphAPI.morph(player, this.morph.clone(player.worldObj.isRemote), true);
+        MorphAPI.morph(player, this.morph == null ? null : this.morph.clone(player.worldObj.isRemote), true);
         player.setHealth(this.health);
     }
 
