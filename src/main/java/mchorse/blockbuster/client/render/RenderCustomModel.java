@@ -79,7 +79,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         lastTexture = location;
 
-        super.bindTexture(location);
+        GifTexture.bindTexture(location);
     }
 
     /**
