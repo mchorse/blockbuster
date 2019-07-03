@@ -217,6 +217,9 @@ blockbuster.gui:
         body_parts: Body parts
         use_target: Use target
         
+        animates: Animates
+        animation_duration: Duration
+        
     sequencer:
         duration: Duration
         random: Random

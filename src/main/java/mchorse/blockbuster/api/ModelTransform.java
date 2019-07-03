@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.Objects;
 
+import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -123,5 +124,15 @@ public class ModelTransform
     public String toString()
     {
         return Objects.toStringHelper(this).add("translate", this.translate).add("scale", this.scale).add("rotate", this.rotate).toString();
+    }
+
+    public void interpolate(ModelTransform a, ModelTransform b, float x)
+    {
+        for (int i = 0; i < this.translate.length; i++)
+        {
+            this.translate[i] = Interpolations.lerp(a.translate[i], b.translate[i], x);
+            this.scale[i] = Interpolations.lerp(a.scale[i], b.scale[i], x);
+            this.rotate[i] = Interpolations.lerp(a.rotate[i], b.rotate[i], x);
+        }
     }
 }

@@ -6,9 +6,6 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
-import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiCustomMorphPanel;
-import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiMaterialsPanel;
-import mchorse.blockbuster_pack.client.gui.GuiCustomMorph.GuiModelRendererBodyPart;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -129,6 +126,8 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         public GuiButtonElement<GuiCheckBox> poseOnSneak;
         public GuiTrackpadElement scale;
         public GuiTrackpadElement scaleGui;
+        public GuiButtonElement<GuiCheckBox> animates;
+        public GuiTrackpadElement animationDuration;
 
         public GuiCustomMorphPanel(Minecraft mc, GuiCustomMorph editor)
         {
@@ -177,6 +176,17 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.morph.scaleGui = value;
             });
 
+            this.animates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.animates"), false, (b) ->
+            {
+                this.morph.animation.animates = b.button.isChecked();
+            });
+
+            this.animationDuration = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.builder.animation_duration"), (value) ->
+            {
+                this.morph.animation.duration = value.intValue();
+            });
+            this.animationDuration.setLimit(0, Float.POSITIVE_INFINITY, true);
+
             this.skin.resizer().parent(this.area).set(10, 10, 105, 20);
             this.reset.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
             this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -21);
@@ -185,7 +195,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.scale.resizer().parent(this.area).set(10, 10, 105, 20).x(1, -115).y(1, -50);
             this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
-            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures);
+            this.animates.resizer().parent(this.area).set(0, 40, this.animates.button.width, this.animates.button.height).x(1, -110);
+            this.animationDuration.resizer().relative(this.animates.resizer()).set(0, 0, 100, 20).y(1, 5);
+
+            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures, this.animates, this.animationDuration);
         }
 
         @Override
@@ -197,6 +210,8 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.poseOnSneak.button.setIsChecked(morph.currentPoseOnSneak);
             this.scale.setValue(morph.scale);
             this.scaleGui.setValue(morph.scaleGui);
+            this.animates.button.setIsChecked(morph.animation.animates);
+            this.animationDuration.setValue(morph.animation.duration);
 
             this.poses.clear();
             this.poses.add(morph.model.poses.keySet());
