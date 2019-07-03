@@ -219,6 +219,7 @@ blockbuster.gui:
         
         animates: Animates
         animation_duration: Duration
+        pick_interpolation: Pick interpolation
         
     sequencer:
         duration: Duration
@@ -275,6 +276,18 @@ blockbuster.gui:
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations
+
+    interpolations:
+        linear: Linear
+        quad_in: Quadratic In
+        quad_out: Quadratic Out
+        quad_inout: Quadratic In/out
+        cubic_in: Cubic In
+        cubic_out: Cubic Out
+        cubic_inout: Cubic In/out
+        exp_in: Exponential In
+        exp_out: Exponential Out
+        exp_inout: Exponential In/out
 
     aperture:
         config:

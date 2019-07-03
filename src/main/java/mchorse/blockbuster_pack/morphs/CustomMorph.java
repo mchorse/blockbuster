@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
+import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -104,6 +105,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     public BodyPartManager parts = new BodyPartManager();
 
     /**
+     * Last pose that was used by this morph
+     */
+    private ModelPose lastPose;
+
+    /**
      * Cached key value 
      */
     private String key;
@@ -136,11 +142,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     public ModelPose getPose(EntityLivingBase target, boolean ignoreCustom, float partialTicks)
     {
+        this.lastPose = this.getCurrentPose(target, ignoreCustom);
+
         if (this.animation.isInProgress())
         {
-            return this.animation.calculatePose(this.getPose(), partialTicks);
+            return this.animation.calculatePose(this.lastPose, partialTicks);
         }
 
+        return this.lastPose;
+    }
+
+    private ModelPose getCurrentPose(EntityLivingBase target, boolean ignoreCustom)
+    {
         if (this.customPose != null && !ignoreCustom)
         {
             if (this.currentPoseOnSneak && target.isSneaking() || !this.currentPoseOnSneak)
@@ -157,16 +170,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         }
 
         return this.model == null ? null : this.model.getPose(poseName);
-    }
-
-    public ModelPose getPose()
-    {
-        if (this.customPose != null)
-        {
-            return this.customPose;
-        }
-
-        return this.model == null ? null : this.model.getPose(this.currentPose);
     }
 
     public String getKey()
@@ -412,7 +415,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         {
             CustomMorph custom = (CustomMorph) morph;
 
-            this.animation.last = this.getPose();
+            this.animation.last = this.lastPose;
             this.key = null;
             this.name = custom.name;
             this.currentPose = custom.currentPose;
@@ -590,6 +593,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     {
         public boolean animates;
         public int duration = 10;
+        public Interpolation interp = Interpolation.LINEAR;
         public ModelPose last;
         public ModelPose pose = new ModelPose();
 
@@ -600,13 +604,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.copy(animation);
             this.progress = 0;
             this.pose.limbs.clear();
-            this.pose.size = this.last.size;
         }
 
         public void copy(CustomAnimation animation)
         {
             this.animates = animation.animates;
             this.duration = animation.duration;
+            this.interp = animation.interp;
         }
 
         @Override
@@ -616,7 +620,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 CustomAnimation animation = (CustomAnimation) obj;
 
-                return this.animates == animation.animates && this.progress == animation.progress;
+                return this.animates == animation.animates && this.progress == animation.progress && this.interp == animation.interp;
             }
 
             return super.equals(obj);
@@ -656,7 +660,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                     this.pose.limbs.put(key, trans);
                 }
 
-                trans.interpolate(last, entry.getValue(), factor);
+                trans.interpolate(last, entry.getValue(), factor, this.interp);
+            }
+
+            for (int i = 0; i < this.pose.size.length; i++)
+            {
+                this.pose.size[i] = this.interp.interpolate(this.last.size[i], current.size[i], factor);
             }
 
             return this.pose;
@@ -668,6 +677,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
             if (this.animates) tag.setBoolean("Animates", this.animates);
             if (this.duration != 10) tag.setInteger("Duration", this.duration);
+            if (this.interp != Interpolation.LINEAR) tag.setInteger("Interp", this.interp.ordinal());
 
             return tag;
         }
@@ -676,6 +686,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         {
             if (tag.hasKey("Animates")) this.animates = tag.getBoolean("Animates");
             if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
+            if (tag.hasKey("Interp")) this.interp = Interpolation.values()[tag.getInteger("Interp")];
         }
     }
 }
