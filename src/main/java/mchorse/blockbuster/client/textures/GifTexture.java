@@ -126,7 +126,7 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
     {
         for (GifElement element : this.elements)
         {
-            GlStateManager.deleteTexture(element.id);
+            GL11.glDeleteTextures(element.id);
             element.id = -1;
         }
     }
