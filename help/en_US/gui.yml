@@ -227,6 +227,7 @@ blockbuster.gui:
         reverse: Reverse
         no_morph: (no morph)
         morphs: Morphs
+        random_order: Random order
     
     texture:
         title: Texture manager

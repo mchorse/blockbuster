@@ -59,6 +59,11 @@ public class SequencerMorph extends AbstractMorph
      */
     public boolean reverse;
 
+    /**
+     * Random order of sequencer playback
+     */
+    public boolean random;
+
     public SequencerMorph()
     {
         this.name = "sequencer";
@@ -153,19 +158,28 @@ public class SequencerMorph extends AbstractMorph
         {
             int size = this.morphs.size();
 
-            this.current += this.reverse ? -1 : 1;
-
-            if (this.current >= size)
+            if (this.random)
             {
-                this.current = 0;
+                this.current = (int) (Math.random() * size);
                 this.timer = 0;
                 this.duration = 0;
             }
-            else if (this.current < 0)
+            else
             {
-                this.current = size - 1;
-                this.timer = 0;
-                this.duration = 0;
+                this.current += this.reverse ? -1 : 1;
+
+                if (this.current >= size)
+                {
+                    this.current = 0;
+                    this.timer = 0;
+                    this.duration = 0;
+                }
+                else if (this.current < 0)
+                {
+                    this.current = size - 1;
+                    this.timer = 0;
+                    this.duration = 0;
+                }
             }
 
             if (this.current >= 0 && this.current < size)
@@ -192,6 +206,7 @@ public class SequencerMorph extends AbstractMorph
         }
 
         morph.reverse = this.reverse;
+        morph.random = this.random;
         morph.currentMorph.copy(this.currentMorph, isRemote);
 
         return morph;
@@ -271,6 +286,7 @@ public class SequencerMorph extends AbstractMorph
         }
 
         if (this.reverse) tag.setBoolean("Reverse", this.reverse);
+        if (this.random) tag.setBoolean("Random", this.random);
     }
 
     @Override
@@ -317,6 +333,7 @@ public class SequencerMorph extends AbstractMorph
         }
 
         this.reverse = tag.getBoolean("Reverse");
+        this.random = tag.getBoolean("Random");
     }
 
     /**
