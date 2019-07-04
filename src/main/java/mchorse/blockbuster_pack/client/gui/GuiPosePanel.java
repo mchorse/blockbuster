@@ -78,13 +78,13 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
 
         if (custom.customPose == null)
         {
-            this.pose = custom.getPose(this.mc.player).clone();
+            this.pose = custom.getPose(this.mc.player, 0).clone();
             custom.customPose = this.pose;
         }
         else
         {
             this.pose = custom.customPose;
-            this.pose.fillInMissing(custom.getPose(this.mc.player, true));
+            this.pose.fillInMissing(custom.getPose(this.mc.player, true, 0));
         }
 
         Map.Entry<String, ModelTransform> entry = this.pose.limbs.entrySet().iterator().next();
