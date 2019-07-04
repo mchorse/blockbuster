@@ -173,7 +173,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
                     {
                         GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                        this.renderDisplayList();
+                        this.renderRenderer();
 
                         if (this.childModels != null)
                         {
@@ -187,7 +187,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     {
                         GlStateManager.translate(this.rotationPointX * scale, this.rotationPointY * scale, this.rotationPointZ * scale);
                         GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                        this.renderDisplayList();
+                        this.renderRenderer();
 
                         if (this.childModels != null)
                         {
@@ -220,7 +220,7 @@ public class ModelCustomRenderer extends ModelRenderer
                     }
 
                     GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                    this.renderDisplayList();
+                    this.renderRenderer();
 
                     if (this.childModels != null)
                     {
@@ -269,7 +269,7 @@ public class ModelCustomRenderer extends ModelRenderer
                 }
 
                 GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                this.renderDisplayList();
+                this.renderRenderer();
                 GlStateManager.popMatrix();
             }
         }
@@ -346,10 +346,7 @@ public class ModelCustomRenderer extends ModelRenderer
         this.compiled = true;
     }
 
-    /**
-     * Render display list 
-     */
-    protected void renderDisplayList()
+    protected void renderRenderer()
     {
         if (this.limb.opacity <= 0)
         {
@@ -357,7 +354,15 @@ public class ModelCustomRenderer extends ModelRenderer
         }
 
         this.setup();
+        this.renderDisplayList();
+        this.disable();
+    }
 
+    /**
+     * Render display list 
+     */
+    protected void renderDisplayList()
+    {
         if (this.limb.is3D)
         {
             ModelExtrudedLayer.render3DLayer(this, RenderCustomModel.lastTexture);
@@ -366,8 +371,6 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             GL11.glCallList(this.displayList);
         }
-
-        this.disable();
     }
 
     /**
