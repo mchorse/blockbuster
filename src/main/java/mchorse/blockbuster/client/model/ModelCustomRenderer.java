@@ -156,6 +156,11 @@ public class ModelCustomRenderer extends ModelRenderer
     @SideOnly(Side.CLIENT)
     public void render(float scale)
     {
+        if (this.limb.opacity <= 0)
+        {
+            return;
+        }
+
         if (!this.isHidden)
         {
             if (this.showModel)
@@ -245,6 +250,11 @@ public class ModelCustomRenderer extends ModelRenderer
     @SideOnly(Side.CLIENT)
     public void renderWithRotation(float scale)
     {
+        if (this.limb.opacity <= 0)
+        {
+            return;
+        }
+
         if (!this.isHidden)
         {
             if (this.showModel)
