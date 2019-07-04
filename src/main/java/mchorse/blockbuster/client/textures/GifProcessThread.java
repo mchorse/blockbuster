@@ -56,18 +56,8 @@ public class GifProcessThread implements Runnable
             texture.height = image.getHeight();
             int frames = image.getFrameCount();
 
-            for (int i = 0; i < frames; i++)
-            {
-                BufferedImage buffer = image.getFrame(i);
-                int delay = image.getDelay(i);
-
-                texture.add(delay, MipmapTexture.bytesFromBuffer(buffer));
-            }
-
-            texture.calculateDuration();
-
             Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(mc.renderEngine);
-            ITextureObject old = map.get(this.texture);
+            ITextureObject old = map.remove(this.texture);
 
             if (old != null)
             {
@@ -79,6 +69,16 @@ public class GifProcessThread implements Runnable
 
             map.put(this.texture, texture);
             RenderingHandler.registerGif(this.texture, texture);
+
+            for (int i = 0; i < frames; i++)
+            {
+                BufferedImage buffer = image.getFrame(i);
+                int delay = image.getDelay(i);
+
+                texture.add(delay, MipmapTexture.bytesFromBuffer(buffer));
+            }
+
+            texture.calculateDuration();
         }
         catch (Exception e)
         {

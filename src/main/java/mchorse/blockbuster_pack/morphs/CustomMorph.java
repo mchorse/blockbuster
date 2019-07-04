@@ -10,10 +10,12 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
+import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -93,9 +95,19 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     public float scaleGui = 1F;
 
     /**
+     * Animation details
+     */
+    public CustomAnimation animation = new CustomAnimation();
+
+    /**
      * Body part manager 
      */
     public BodyPartManager parts = new BodyPartManager();
+
+    /**
+     * Last pose that was used by this morph
+     */
+    private ModelPose lastPose;
 
     /**
      * Cached key value 
@@ -120,15 +132,27 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     /**
      * Get a pose for rendering
      */
-    public ModelPose getPose(EntityLivingBase target)
+    public ModelPose getPose(EntityLivingBase target, float partialTicks)
     {
-        return this.getPose(target, false);
+        return this.getPose(target, false, partialTicks);
     }
 
     /**
      * Get a pose for rendering
      */
-    public ModelPose getPose(EntityLivingBase target, boolean ignoreCustom)
+    public ModelPose getPose(EntityLivingBase target, boolean ignoreCustom, float partialTicks)
+    {
+        this.lastPose = this.getCurrentPose(target, ignoreCustom);
+
+        if (this.animation.isInProgress())
+        {
+            return this.animation.calculatePose(this.lastPose, partialTicks);
+        }
+
+        return this.lastPose;
+    }
+
+    private ModelPose getCurrentPose(EntityLivingBase target, boolean ignoreCustom)
     {
         if (this.customPose != null && !ignoreCustom)
         {
@@ -179,7 +203,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                 this.parts.initBodyParts();
 
                 model.materials = this.materials;
-                model.pose = this.getPose(player);
+                model.pose = this.getPose(player, Minecraft.getMinecraft().getRenderPartialTicks());
                 model.swingProgress = 0;
 
                 ResourceLocation texture = this.skin == null ? data.defaultTexture : this.skin;
@@ -261,7 +285,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         /* This */
         renderer.current = this;
-        renderer.setupModel(player);
+        renderer.setupModel(player, Minecraft.getMinecraft().getRenderPartialTicks());
 
         if (renderer.getMainModel() == null)
         {
@@ -310,6 +334,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @Override
     public void update(EntityLivingBase target, IMorphing cap)
     {
+        this.animation.update();
+
         if (this.model != null)
         {
             this.updateSize(target, cap);
@@ -328,7 +354,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     public void updateSize(EntityLivingBase target, IMorphing cap)
     {
-        this.pose = this.getPose(target);
+        this.pose = this.getPose(target, 0);
 
         if (this.pose != null)
         {
@@ -374,6 +400,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             result = result && this.scaleGui == morph.scaleGui;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
+            result = result && this.animation.equals(morph.animation);
 
             return result;
         }
@@ -388,6 +415,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         {
             CustomMorph custom = (CustomMorph) morph;
 
+            this.animation.last = this.lastPose;
             this.key = null;
             this.name = custom.name;
             this.currentPose = custom.currentPose;
@@ -402,6 +430,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                 this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
             }
             this.parts.merge(custom.parts, isRemote);
+            this.animation.merge(custom.animation);
             this.model = custom.model;
 
             return true;
@@ -451,6 +480,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         morph.settings = this.settings;
         morph.model = this.model;
         morph.parts.copy(this.parts, isRemote);
+        morph.animation.copy(this.animation);
 
         return morph;
     }
@@ -492,6 +522,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         if (bodyParts != null)
         {
             tag.setTag("BodyParts", bodyParts);
+        }
+
+        NBTTagCompound animation = this.animation.toNBT();
+
+        if (!animation.hasNoTags())
+        {
+            tag.setTag("Animation", animation);
         }
     }
 
@@ -541,6 +578,115 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         if (tag.hasKey("BodyParts", 9))
         {
             this.parts.fromNBT(tag.getTagList("BodyParts", 10));
+        }
+
+        if (tag.hasKey("Animation"))
+        {
+            this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        }
+    }
+
+    /**
+     * Animation details 
+     */
+    public static class CustomAnimation
+    {
+        public boolean animates;
+        public int duration = 10;
+        public Interpolation interp = Interpolation.LINEAR;
+        public ModelPose last;
+        public ModelPose pose = new ModelPose();
+
+        private int progress = 0;
+
+        public void merge(CustomAnimation animation)
+        {
+            this.copy(animation);
+            this.progress = 0;
+            this.pose.limbs.clear();
+        }
+
+        public void copy(CustomAnimation animation)
+        {
+            this.animates = animation.animates;
+            this.duration = animation.duration;
+            this.interp = animation.interp;
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj instanceof CustomAnimation)
+            {
+                CustomAnimation animation = (CustomAnimation) obj;
+
+                return this.animates == animation.animates && this.progress == animation.progress && this.interp == animation.interp;
+            }
+
+            return super.equals(obj);
+        }
+
+        public void update()
+        {
+            if (this.animates)
+            {
+                this.progress++;
+            }
+        }
+
+        public boolean isInProgress()
+        {
+            return this.animates && this.progress < this.duration && this.last != null;
+        }
+
+        public ModelPose calculatePose(ModelPose current, float partialTicks)
+        {
+            float factor = (this.progress + partialTicks) / (float) this.duration;
+
+            for (Map.Entry<String, ModelTransform> entry : current.limbs.entrySet())
+            {
+                String key = entry.getKey();
+                ModelTransform trans = this.pose.limbs.get(key);
+                ModelTransform last = this.last.limbs.get(key);
+
+                if (last == null)
+                {
+                    continue;
+                }
+
+                if (trans == null)
+                {
+                    trans = new ModelTransform();
+                    this.pose.limbs.put(key, trans);
+                }
+
+                trans.interpolate(last, entry.getValue(), factor, this.interp);
+            }
+
+            for (int i = 0; i < this.pose.size.length; i++)
+            {
+                this.pose.size[i] = this.interp.interpolate(this.last.size[i], current.size[i], factor);
+            }
+
+            return this.pose;
+        }
+
+        public NBTTagCompound toNBT()
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            if (this.animates) tag.setBoolean("Animates", this.animates);
+            if (this.duration != 10) tag.setInteger("Duration", this.duration);
+            if (this.interp != Interpolation.LINEAR) tag.setInteger("Interp", this.interp.ordinal());
+
+            return tag;
+        }
+
+        public void fromNBT(NBTTagCompound tag)
+        {
+            if (tag.hasKey("Animates")) this.animates = tag.getBoolean("Animates");
+            if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
+            if (tag.hasKey("Interp")) this.interp = Interpolation.values()[tag.getInteger("Interp")];
         }
     }
 }

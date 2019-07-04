@@ -48,7 +48,7 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
         model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
 
         this.renderer.current = morph;
-        this.renderer.setupModel(entitylivingbaseIn);
+        this.renderer.setupModel(entitylivingbaseIn, partialTicks);
     }
 
     public static void renderBodyParts(EntityLivingBase target, CustomMorph morph, ModelCustom model, float partialTicks, float scale)

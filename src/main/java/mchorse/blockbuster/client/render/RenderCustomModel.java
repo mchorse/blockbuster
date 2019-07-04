@@ -94,7 +94,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.setupModel(entity);
+        this.setupModel(entity, partialTicks);
 
         if (this.mainModel != null)
         {
@@ -108,7 +108,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      * This method is responsible for picking the right model and pose based
      * on player properties.
      */
-    public void setupModel(EntityLivingBase entity)
+    public void setupModel(EntityLivingBase entity, float partialTicks)
     {
         Map<String, ModelCustom> models = ModelCustom.MODELS;
         ModelCustom model = null;
@@ -117,7 +117,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
         if (this.current != null)
         {
             model = models.get(this.current.getKey());
-            pose = this.current.getPose(entity);
+            pose = this.current.getPose(entity, partialTicks);
         }
 
         if (model != null)
