@@ -156,17 +156,10 @@ public class ModelCustomRenderer extends ModelRenderer
     @SideOnly(Side.CLIENT)
     public void render(float scale)
     {
-        if (this.limb.opacity <= 0)
-        {
-            return;
-        }
-
         if (!this.isHidden)
         {
             if (this.showModel)
             {
-                this.setup();
-
                 if (!this.compiled)
                 {
                     this.compileDisplayList(scale);
@@ -240,8 +233,6 @@ public class ModelCustomRenderer extends ModelRenderer
 
                 GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
                 GlStateManager.popMatrix();
-
-                this.disable();
             }
         }
     }
@@ -250,17 +241,10 @@ public class ModelCustomRenderer extends ModelRenderer
     @SideOnly(Side.CLIENT)
     public void renderWithRotation(float scale)
     {
-        if (this.limb.opacity <= 0)
-        {
-            return;
-        }
-
         if (!this.isHidden)
         {
             if (this.showModel)
             {
-                this.setup();
-
                 if (!this.compiled)
                 {
                     this.compileDisplayList(scale);
@@ -285,10 +269,8 @@ public class ModelCustomRenderer extends ModelRenderer
                 }
 
                 GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                GlStateManager.callList(this.displayList);
+                this.renderDisplayList();
                 GlStateManager.popMatrix();
-
-                this.disable();
             }
         }
     }
@@ -369,6 +351,13 @@ public class ModelCustomRenderer extends ModelRenderer
      */
     protected void renderDisplayList()
     {
+        if (this.limb.opacity <= 0)
+        {
+            return;
+        }
+
+        this.setup();
+
         if (this.limb.is3D)
         {
             ModelExtrudedLayer.render3DLayer(this, RenderCustomModel.lastTexture);
@@ -377,6 +366,8 @@ public class ModelCustomRenderer extends ModelRenderer
         {
             GL11.glCallList(this.displayList);
         }
+
+        this.disable();
     }
 
     /**
