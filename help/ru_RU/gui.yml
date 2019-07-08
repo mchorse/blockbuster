@@ -217,19 +217,24 @@ blockbuster.gui:
         body_parts: Части тела
         use_target: Использовать цель
 
+        animates: Анимируется
+        animation_duration: Продолжительность
+        pick_interpolation: Выбрать интерполяцию
+
     sequencer:
         duration: Длина
         random: Случайность
         reverse: Реверсировать
         no_morph: (Морф отсутствует)
         morphs: Морфы
+        random_order: Случайный порядок
     
     texture:
         title: Менеджер текстур
         subtitle: Этот интерфейс позволяет вам видеть и управлять загруженными Майнкрафтом текстурами во время игры
         linear: Линейный
         linear_tooltip: Если включено, то текстуры будут выглядеть гладко
-        mipmap: Mipmap
+        mipmap: Mip-карта
         mipmap_tooltip: Если включено, то текстуры на дальних расстояниях будут выглядеть более детализированно
         replace: Заменить
         replace_modal: "Впишите директорию {l}уже загруженной{r} текстуры, которую вы хотите заменить на:"
@@ -273,6 +278,18 @@ blockbuster.gui:
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда
     
+    interpolations:
+        linear: Линейная
+        quad_in: Квадратическое Ускорение
+        quad_out: Квадратическое Замедление
+        quad_inout: Квадратическое Торможение
+        cubic_in: Кубическое Ускорение
+        cubic_out: Кубическое Замедление
+        cubic_inout: Кубичесое Торможение
+        exp_in: Экспоненциальное Ускорение
+        exp_out: Экспоненциальное Замедление
+        exp_inout: Экспоненциальное Торможение
+
     aperture:
         config:
             title: Режиссёр
