@@ -217,12 +217,17 @@ blockbuster.gui:
         body_parts: 身體部分
         use_target: 使用目標
 
+        animates: 動畫
+        animation_duration: 持續長度
+        pick_interpolation: 選擇插值
+        
     sequencer:
         duration: 持續長度
         random: 隨機
         reverse: 反轉
         no_morph: （無偽裝）
         morphs: 偽裝
+        random_order: 隨機順序
 
     texture:
         title: 材質管理器
@@ -273,6 +278,18 @@ blockbuster.gui:
         gun_transforms: 槍的變換
         projectile_transforms: 炮彈的變換
 
+    interpolations:
+        linear: 線性
+        quad_in: 二次方緩入
+        quad_out: 二次方緩出
+        quad_inout: 二次方緩入/緩出
+        cubic_in: 三次曲線緩入
+        cubic_out: 三次曲線緩出
+        cubic_inout: 三次曲線緩入/緩出
+        exp_in: 指數緩入
+        exp_out: 指數緩出
+        exp_inout: 指數緩入/緩出
+        
     aperture:
         config:
             title: 演員
