@@ -1,6 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
+import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -49,5 +50,6 @@ public class SubCommandRecordProlong extends SubCommandRecordBase
         }
 
         record.dirty = true;
+        Utils.unloadRecord(record);
     }
 }

@@ -241,8 +241,8 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         {
             if (this.manual)
             {
-                this.playback.record.applyFrame(this.playback.tick, this, true);
-                this.playback.record.applyAction(this.playback.tick, this, true);
+                this.playback.applyFrame(this.playback.tick, this, true);
+                this.playback.applyAction(this.playback.tick, this, true);
                 this.playback.tick++;
             }
             else if (this.playback.playing)

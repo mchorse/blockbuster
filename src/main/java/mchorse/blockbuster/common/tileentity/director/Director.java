@@ -180,7 +180,7 @@ public class Director
 
             if (record != null)
             {
-                max = Math.max(max, record.getLength());
+                max = Math.max(max, record.getFullLength());
             }
         }
 
@@ -351,7 +351,7 @@ public class Director
 
             for (int i = 0; i <= tick; i++)
             {
-                actor.record.applyAction(i, actor.actor);
+                actor.record.applyAction(i - actor.record.preDelay, actor.actor);
             }
 
             j++;

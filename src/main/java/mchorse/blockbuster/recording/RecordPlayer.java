@@ -115,8 +115,8 @@ public class RecordPlayer
         {
             boolean both = this.mode == Mode.BOTH;
 
-            if (this.mode == Mode.ACTIONS || both) this.record.applyAction(this.tick - this.record.preDelay, actor);
-            if (this.mode == Mode.FRAMES || both) this.record.applyFrame(this.tick - this.record.preDelay, actor, false);
+            if (this.mode == Mode.ACTIONS || both) this.applyAction(this.tick, actor, false);
+            if (this.mode == Mode.FRAMES || both) this.applyFrame(this.tick, actor, false);
 
             this.delay = this.record.delay;
             this.record.resetUnload();
@@ -229,7 +229,7 @@ public class RecordPlayer
         this.tick = tick;
         this.kill = kill;
 
-        this.record.applyFrame(tick, this.actor, true);
+        this.applyFrame(tick, this.actor, true);
         EntityUtils.setRecordPlayer(this.actor, this);
 
         if (this.actor instanceof EntityActor)
@@ -262,5 +262,15 @@ public class RecordPlayer
         CommonProxy.manager.stopPlayback(this);
 
         this.actor.noClip = false;
+    }
+
+    public void applyFrame(int tick, EntityLivingBase target, boolean force)
+    {
+        this.record.applyFrame(tick - this.record.preDelay, target, force);
+    }
+
+    public void applyAction(int tick, EntityLivingBase target, boolean safe)
+    {
+        this.record.applyAction(tick - this.record.preDelay, target, safe);
     }
 }

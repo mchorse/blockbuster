@@ -28,7 +28,7 @@ public class ClientHandlerActorPause extends ClientMessageHandler<PacketActorPau
 
             if (playback.record != null)
             {
-                playback.record.applyFrame(message.tick, actor, true);
+                playback.applyFrame(message.tick, actor, true);
             }
         }
     }
