@@ -541,11 +541,11 @@ public class Director
     /**
      * Duplicate  
      */
-    public void dupe(int index, boolean isRemote)
+    public boolean dupe(int index, boolean isRemote)
     {
         if (index < 0 || index >= this.replays.size())
         {
-            return;
+            return false;
         }
 
         Replay replay = this.replays.get(index).clone(isRemote);
@@ -575,6 +575,8 @@ public class Director
 
         replay.id = prefix + "_" + (max + 1);
         this.replays.add(replay);
+
+        return true;
     }
 
     public void renamePrefix(String newPrefix)
