@@ -204,14 +204,9 @@ public class CameraHandler
             editor.panel.resizer().h(1, show ? -150 : -70);
             editor.scrub.resizer().y(1, show ? -100 : -20);
             record.records.resizer().h(1, show ? -80 : 0);
-
-            editor.panel.resize(editor.width, editor.height);
-            editor.scrub.resize(editor.width, editor.height);
-            b.resize(editor.width, editor.height);
-            record.open.resize(editor.width, editor.height);
-            record.records.resize(editor.width, editor.height);
-
             b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
+
+            editor.elements.resize(editor.width, editor.height);
         };
 
         GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) ->
