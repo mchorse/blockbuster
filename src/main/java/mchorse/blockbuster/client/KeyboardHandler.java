@@ -7,9 +7,11 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.GuiGun;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
+import mchorse.blockbuster.network.common.director.PacketDirectorRecord;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -33,6 +35,7 @@ public class KeyboardHandler
     private KeyBinding modelEditor;
     private KeyBinding cameraMarker;
     private KeyBinding plauseDirector;
+    private KeyBinding recordDirector;
     private KeyBinding openGun;
 
     /**
@@ -48,12 +51,14 @@ public class KeyboardHandler
         this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, category);
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, category);
         this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_NONE, category);
+        this.recordDirector = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_NONE, category);
         this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_NONE, category);
 
         ClientRegistry.registerKeyBinding(this.dashboard);
         ClientRegistry.registerKeyBinding(this.cameraMarker);
         ClientRegistry.registerKeyBinding(this.modelEditor);
         ClientRegistry.registerKeyBinding(this.plauseDirector);
+        ClientRegistry.registerKeyBinding(this.recordDirector);
         ClientRegistry.registerKeyBinding(this.openGun);
     }
 
@@ -106,6 +111,22 @@ public class KeyboardHandler
                 if (director != null)
                 {
                     Dispatcher.sendToServer(new PacketDirectorPlayback(director));
+                }
+            }
+        }
+
+        if (this.recordDirector.isPressed())
+        {
+            GuiDashboard dash = ClientProxy.dashboard;
+
+            if (dash != null && dash.directorPanel != null)
+            {
+                BlockPos director = dash.directorPanel.getPos();
+                Replay replay = dash.directorPanel.getReplay();
+
+                if (director != null && replay != null && !replay.id.isEmpty())
+                {
+                    Dispatcher.sendToServer(new PacketDirectorRecord(director, replay.id));
                 }
             }
         }

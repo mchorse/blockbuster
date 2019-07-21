@@ -228,6 +228,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this.pos;
     }
 
+    public Replay getReplay()
+    {
+        return this.replay;
+    }
+
     private void pickDirector(BlockPos pos)
     {
         this.close();
