@@ -514,9 +514,9 @@ public class Director
      */
     public void resume(int tick)
     {
-        for (RecordPlayer actor : this.actors.values())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
-            actor.resume(tick);
+            entry.getValue().resume(tick, entry.getKey());
         }
     }
 

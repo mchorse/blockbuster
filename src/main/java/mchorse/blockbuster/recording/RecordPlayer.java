@@ -142,6 +142,7 @@ public class RecordPlayer
     {
         this.playing = false;
         this.actor.noClip = true;
+        this.actor.setEntityInvulnerable(true);
 
         if (this.actor.isServerWorld())
         {
@@ -152,11 +153,16 @@ public class RecordPlayer
     /**
      * Resume the paused actor
      */
-    public void resume(int tick)
+    public void resume(int tick, Replay replay)
     {
         this.tick = tick;
         this.playing = true;
         this.actor.noClip = false;
+
+        if (!this.actor.worldObj.isRemote && replay != null)
+        {
+            this.actor.setEntityInvulnerable(replay.invincible);
+        }
 
         if (this.actor.isServerWorld())
         {
