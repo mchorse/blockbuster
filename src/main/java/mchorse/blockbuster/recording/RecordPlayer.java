@@ -181,8 +181,8 @@ public class RecordPlayer
 
         tick -= preDelay;
 
-        int min = Math.min(this.tick, tick);
-        int max = Math.max(this.tick, tick);
+        int min = Math.min(this.tick - this.record.preDelay, tick);
+        int max = Math.max(this.tick - this.record.preDelay, tick);
 
         if (actions)
         {
@@ -266,7 +266,14 @@ public class RecordPlayer
 
     public void applyFrame(int tick, EntityLivingBase target, boolean force)
     {
-        this.record.applyFrame(tick - this.record.preDelay, target, force);
+        tick -= this.record.preDelay;
+
+        if (tick < 0)
+        {
+            tick = 0;
+        }
+
+        this.record.applyFrame(tick, target, force);
     }
 
     public void applyAction(int tick, EntityLivingBase target, boolean safe)
