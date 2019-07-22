@@ -48,6 +48,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement delay;
     public GuiTrackpadElement projectiles;
     public GuiTrackpadElement scatter;
+    public GuiButtonElement<GuiCheckBox> launch;
 
     /* Projectile options */
     public GuiElement projectileOptions;
@@ -119,6 +120,7 @@ public class GuiGun extends GuiBase
         this.projectiles = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.projectiles"), (value) -> this.props.projectiles = value.intValue());
         this.projectiles.setLimit(0, Integer.MAX_VALUE, true);
         this.scatter = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.scatter"), (value) -> this.props.scatter = value);
+        this.launch = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.launch"), false, (b) -> this.props.launch = b.button.isChecked());
 
         this.pickDefault.resizer().parent(area).set(0, 0, 100, 20).x(0.25F, -50).y(1, -100);
         this.pickFiring.resizer().parent(area).set(0, 0, 100, 20).x(0.75F, -50).y(1, -100);
@@ -126,8 +128,9 @@ public class GuiGun extends GuiBase
         this.delay.resizer().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.projectiles.resizer().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
         this.scatter.resizer().parent(area).set(0, 0, 0, 20).x(0.25F, 55).y(1, -75).w(0.5F, -110);
+        this.launch.resizer().relative(this.scatter.resizer()).set(0, -5 - (20 + 11) / 2, this.launch.button.width, 11);
 
-        this.gunOptions.children.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.scatter, this.projectiles);
+        this.gunOptions.children.add(this.pickDefault, this.pickFiring, this.fireCommand, this.delay, this.projectiles, this.scatter, this.launch);
 
         /* Projectile options */
         area = this.projectileOptions.area;
@@ -210,6 +213,7 @@ public class GuiGun extends GuiBase
         this.delay.setValue(this.props.delay);
         this.projectiles.setValue(this.props.projectiles);
         this.scatter.setValue(this.props.scatter);
+        this.launch.button.setIsChecked(this.props.launch);
 
         /* Projectile properties */
         this.tickCommand.setText(this.props.tickCommand);

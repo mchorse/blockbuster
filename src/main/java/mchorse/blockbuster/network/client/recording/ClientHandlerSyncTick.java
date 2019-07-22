@@ -30,7 +30,7 @@ public class ClientHandlerSyncTick extends ClientMessageHandler<PacketSyncTick>
 
             if (!playback.playing)
             {
-                playback.record.applyFrame(message.tick, actor, false);
+                playback.applyFrame(message.tick, actor, false);
             }
         }
     }

@@ -33,6 +33,7 @@ public class GunProps
     public int delay;
     public int projectiles;
     public float scatter;
+    public boolean launch;
 
     /* Projectile properties */
     public AbstractMorph projectileMorph;
@@ -183,6 +184,7 @@ public class GunProps
         this.delay = 0;
         this.projectiles = 1;
         this.scatter = 0F;
+        this.launch = false;
 
         /* Projectile properties */
         this.projectileMorph = null;
@@ -226,6 +228,7 @@ public class GunProps
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
         if (tag.hasKey("Projectiles")) this.projectiles = tag.getInteger("Projectiles");
         if (tag.hasKey("Scatter")) this.scatter = tag.getFloat("Scatter");
+        if (tag.hasKey("Launch")) this.launch = tag.getBoolean("Launch");
 
         /* Projectile properties */
         this.projectileMorph = this.create(tag, "Projectile");
@@ -282,6 +285,7 @@ public class GunProps
         if (this.delay != 0) tag.setInteger("Delay", this.delay);
         if (this.projectiles != 1) tag.setInteger("Projectiles", this.projectiles);
         if (this.scatter != 0F) tag.setFloat("Scatter", this.scatter);
+        if (this.launch) tag.setBoolean("Launch", this.launch);
 
         /* Projectile properties */
         if (this.projectileMorph != null) tag.setTag("Projectile", this.to(this.projectileMorph));

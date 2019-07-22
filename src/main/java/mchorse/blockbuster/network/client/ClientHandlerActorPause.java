@@ -21,14 +21,14 @@ public class ClientHandlerActorPause extends ClientMessageHandler<PacketActorPau
         if (playback != null)
         {
             if (message.pause) playback.pause();
-            else playback.resume(message.tick);
+            else playback.resume(message.tick, null);
 
             playback.tick = message.tick;
             playback.playing = !message.pause;
 
             if (playback.record != null)
             {
-                playback.record.applyFrame(message.tick, actor, true);
+                playback.applyFrame(message.tick, actor, true);
             }
         }
     }

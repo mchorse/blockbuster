@@ -152,18 +152,20 @@ public class ItemPlayback extends Item
 
             TileEntity te = worldIn.getTileEntity(pos);
 
-            if (te == null || !(te instanceof TileEntityDirector) && player instanceof EntityPlayerMP)
+            if (te instanceof TileEntityDirector)
+            {
+                TileEntityDirector tile = (TileEntityDirector) te;
+
+                if (tile.director.togglePlayback() && CameraHandler.isApertureLoaded())
+                {
+                    CameraHandler.handlePlaybackItem(player, tag);
+                }
+            }
+            else if (player instanceof EntityPlayerMP)
             {
                 EntityUtils.sendStatusMessage((EntityPlayerMP) player, new TextComponentTranslation("blockbuster.error.director.missing", pos.getX(), pos.getY(), pos.getZ()));
 
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
-            }
-
-            TileEntityDirector tile = (TileEntityDirector) te;
-
-            if (tile.director.togglePlayback() && CameraHandler.isApertureLoaded())
-            {
-                CameraHandler.handlePlaybackItem(player, tag);
             }
         }
 

@@ -252,6 +252,7 @@ blockbuster.gui:
         delay: Delay
         projectiles: Projectiles
         scatter: Scatter
+        launch: Launch player
         
         projectile_morph: Projectile morph
         tick_command: Command on tick

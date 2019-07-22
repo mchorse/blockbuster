@@ -99,6 +99,14 @@ public class Record
     }
 
     /**
+     * Get the full length (including post and pre delays) of this record in frames/ticks
+     */
+    public int getFullLength()
+    {
+        return this.preDelay + this.getLength() + this.postDelay;
+    }
+
+    /**
      * Get the length of this record in frames/ticks
      */
     public int getLength()
@@ -146,9 +154,7 @@ public class Record
     }
 
     /**
-     * Apply a frame at given tick on the given actor. Don't pass tick value
-     * less than 0, otherwise you might experience <s>tranquility</s> game
-     * crash.
+     * Apply a frame at given tick on the given actor. 
      */
     public void applyFrame(int tick, EntityLivingBase actor, boolean force)
     {

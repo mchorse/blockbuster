@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,6 +55,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
     {
         private GuiStringSearchListElement records;
         private GuiButtonElement<GuiButton> pick;
+        private GuiButtonElement<GuiCheckBox> loop;
         private GuiCreativeMorphs morphPicker;
 
         public GuiRecordMorphPanel(Minecraft mc, GuiRecordMorph editor)
@@ -81,11 +83,16 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
                 this.morphPicker.setSelected(this.morph.initial);
                 this.morphPicker.setVisible(true);
             });
+            this.loop = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->
+            {
+                this.morph.loop = b.button.isChecked();
+            });
 
-            this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -60);
-            this.pick.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -30);
+            this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -21 - 25 - 30);
+            this.pick.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -21 - 25);
+            this.loop.resizer().parent(this.area).set(10, 0, this.loop.button.width, 11).y(1, -21);
 
-            this.children.add(this.pick, this.records);
+            this.children.add(this.pick, this.loop, this.records);
         }
 
         private void setMorph(AbstractMorph morph)
@@ -107,6 +114,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             }
 
             this.records.list.setCurrent(morph.record);
+            this.loop.button.setIsChecked(morph.loop);
 
             if (this.morphPicker != null)
             {

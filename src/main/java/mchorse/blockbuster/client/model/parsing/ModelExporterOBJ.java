@@ -1,7 +1,9 @@
 package mchorse.blockbuster.client.model.parsing;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Matrix3f;
@@ -152,8 +154,8 @@ public class ModelExporterOBJ
 
         Matrix4f scale = new Matrix4f();
         scale.setIdentity();
+        scale.rotZ((float) Math.PI);
         scale.setScale(1 / 16F);
-        scale.m11 = -scale.m11;
 
         for (Map.Entry<ModelLimb, Mesh> entry : meshes.entrySet())
         {
@@ -213,6 +215,11 @@ public class ModelExporterOBJ
             String uvs = "";
             String faces = "";
 
+            /* List of already added vectors, so we could make connected
+             * vertices, instead of separate faces (i.e. to simplify the work 
+             * on the modeler to do the remove doubles on every limb) */
+            List<Vector4f> vecs = new ArrayList<Vector4f>();
+
             for (TexturedQuad quad : quads)
             {
                 /* Calculating normal as done in TexturedQuad */
@@ -228,23 +235,35 @@ public class ModelExporterOBJ
 
                 /* We're iterating backward, because it's important for 
                  * normal generation. */
-                for (int i = quad.nVertices - 1; i >= 0; i--)
+                for (int i = 0; i < quad.nVertices; i++)
                 {
                     PositionTextureVertex vx = quad.vertexPositions[i];
                     Vector4f vec = new Vector4f((float) vx.vector3D.xCoord, (float) vx.vector3D.yCoord, (float) vx.vector3D.zCoord, 1);
 
                     mat.transform(vec);
-                    vertices += String.format("v %.4f %.4f %.4f\n", vec.x, vec.y, vec.z);
-                    uvs += String.format("vt %f %f\n", vx.texturePositionX, 1 - vx.texturePositionY);
-                    face += v + "/" + u + "/" + n + " ";
 
-                    v++;
+                    /* Find vector index */
+                    int vi = vecs.indexOf(vec);
+
+                    if (vi == -1)
+                    {
+                        /* If vector index is not found, add it and write it */
+                        vertices += String.format("v %.4f %.4f %.4f\n", vec.x, vec.y, vec.z);
+                        vi = vecs.size();
+                        vecs.add(vec);
+                    }
+
+                    uvs += String.format("vt %f %f\n", vx.texturePositionX, 1 - vx.texturePositionY);
+                    face += (v + vi) + "/" + u + "/" + n + " ";
+
                     u++;
                 }
 
                 faces += face.trim() + "\n";
                 n++;
             }
+
+            v += vecs.size();
 
             output += vertices + normals + uvs + faces;
         }

@@ -50,6 +50,11 @@ public class RecordMorph extends AbstractMorph
      */
     public String record = "";
 
+    /**
+     * Loop the actor 
+     */
+    public boolean loop = true;
+
     private boolean initiate;
 
     public RecordMorph()
@@ -171,7 +176,7 @@ public class RecordMorph extends AbstractMorph
             {
                 this.actor.onUpdate();
 
-                if (this.actor.playback.isFinished())
+                if (this.actor.playback.isFinished() && this.loop)
                 {
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = 0;
@@ -190,6 +195,7 @@ public class RecordMorph extends AbstractMorph
         morph.name = this.name;
         morph.settings = this.settings;
         morph.record = this.record;
+        morph.loop = this.loop;
 
         if (this.initial != null)
         {
@@ -222,6 +228,7 @@ public class RecordMorph extends AbstractMorph
 
             result = result && Objects.equals(record.record, this.record);
             result = result && Objects.equals(record.initial, this.initial);
+            result = result && record.loop == this.loop;
         }
 
         return result;
@@ -235,6 +242,7 @@ public class RecordMorph extends AbstractMorph
         this.initial = null;
         this.record = "";
         this.reload = true;
+        this.loop = true;
     }
 
     @Override
@@ -250,6 +258,11 @@ public class RecordMorph extends AbstractMorph
         if (tag.hasKey("Record", NBT.TAG_STRING))
         {
             this.record = tag.getString("Record");
+        }
+
+        if (tag.hasKey("Loop", NBT.TAG_ANY_NUMERIC))
+        {
+            this.loop = tag.getBoolean("Loop");
         }
     }
 
@@ -269,6 +282,11 @@ public class RecordMorph extends AbstractMorph
         if (!this.record.isEmpty())
         {
             tag.setString("Record", this.record);
+        }
+
+        if (!this.loop)
+        {
+            tag.setBoolean("Loop", this.loop);
         }
     }
 

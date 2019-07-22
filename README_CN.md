@@ -1,12 +1,12 @@
 ![Blockbuster](http://i.imgur.com/nqDKg1R.png)
 
-[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [Minecraft Forum 帖子](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2700216-blockbuster-machinima-studio-mod) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) – [中文百科](https://github.com/ycwei982/blockbuster/wiki) - [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap) – [中文用户QQ群](https://jq.qq.com/?_wv=1027&k=584nNVF)
+[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) – [中文百科](https://github.com/ycwei982/blockbuster/wiki) – [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉 mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap) – [中文用户QQ群](https://jq.qq.com/?_wv=1027&k=584nNVF)
 
-Blockbuster 是一个可以让你在 Minecraft 单人模式使用 NPC 演员和摄像机来制作短片/角色扮演的 mod。除了基本的录制和回放，它还提供很多各式的功能可以为你的视频添加一些原创性，超越纯演员演戏的可能性（查看 **特性** 部分）。
+Blockbuster 是一个可以帮助你在 Minecraft 中使用 NPC 演员和摄像机来制作短片/角色扮演的 mod。除了基本的录制和回放，它还提供很多各式的功能可以为你的视频添加一些原创性，超越纯演员演戏的可能性（查看 **特性** 部分）。
 
 本 mod 支持 Forge 版本的 Minecraft 1.10.2，1.11.2 和 1.12.2（要求 Forge 版本 **14.23.4.2638** 或更高），不支持网易我的世界中国版。
 
-Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph)。每次更新日志会写上支持的 Metamorph 版本。Blockbuster 也可以 **自愿地** 选择与 [Aperture](https://minecraft.curseforge.com/projects/aperture) mod 搭配使用。
+Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 和 [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib)。每次更新日志会写上支持的 Metamorph 版本。Blockbuster 也可以 **自愿地** 选择与 [Aperture](https://minecraft.curseforge.com/projects/aperture) mod 搭配使用。
 
 录制动作基于 [EchebKeso](https://twitter.com/EchebKeso) 的 Mocap 录制代码并加以修改。
 
@@ -21,13 +21,19 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 
 * **演员和玩家动作录制** – 最重要的部分，创作短片的根本。使用 Blockbuster 你可以录制你自己的行动并以演员回放。*录制部分的代码有些限制能录制的动作*。前往 [Blockbuster 百科](https://github.com/mchorse/blockbuster/wiki/Home) 了解限制的范围。
 * **导演方块** – 一个演员不是春，大量演员春满园。Blockbuster mod 提供一个装置叫做 *导演方块* 来控制已激活的演员。它也能被红石控制，使得链接到一些自定义的命令，红石电路的开始结束，或者是场景的结束更为方便。
-* **[Aperture](https://minecraft.curseforge.com/projects/aperture) 摄像机支持** – 摄像机是你表达短片的方式。Blockbuster 兼容了Aperture mod。当你加载了 Aperture，Blockbuster mod 能提供给你一些功能，比如：将摄像机配置文件连接到播放按钮，在摄像机 GUI 编辑器里边编辑导演方块中的玩家录制动作边预览。
 * **模型方块** – 除了演员，Blockbuster 也加了 *模型方块*，可以用于以静态方式放置自定义模型，创建出色的沉浸式场景。不仅如此，你也可以把那些模型或者生物拿在手上（这个功能仅在 1.12.2 版本可用）。
+* **BB 枪** – 一个用于右键射出投掷物的特殊物品。这个功能提供了各种各样的配置选项，不仅可以用来创建射击场景，还可以用于雪崩，假的物理，人群爆炸等等。
+* **[Aperture](https://minecraft.curseforge.com/projects/aperture) 摄像机支持** – 摄像机是你表达短片的方式。Blockbuster 兼容了Aperture mod。当你加载了 Aperture，Blockbuster mod 能提供给你一些功能，比如：将摄像机配置文件连接到播放按钮，在摄像机 GUI 编辑器里边编辑导演方块中的玩家录制动作边预览。
 * **自定义模型** – 仅录制一些普通的玩意不怎么有趣。Blockbuster mod 支持在游戏内编辑模型。用自定义的模型释放出你异想天开的能力吧！
 * **OBJ 模型** – 除了可以在游戏内模型编辑器创建的自定义模型，现在 Blockbuster 还支持比 JSON 模型更高一等的 OBJ 模型！
-* **动物支持** – 感谢 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的公开 API，Blockbuster 支持 Metamorph 所提供的任何活体模型作为 Blockbuster 的演员。
-* **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) 兼容性** – 感谢基于帧和录制的 mod，你可以通过一个按钮，让游戏内短片导出成视频文件。
+* **动物支持** – 感谢 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的公开 API，Blockbuster 支持 Metamorph 所提供的任何活体模型作为 Blockbuster 的演员，也包括 Blockbuster 和 [Emoticons](https://minecraft.curseforge.com/projects/emoticons) 所提供的模型。
+* **高级伪装** – 除了在伪装系统中激活自定义模型，Blockbuster 也添加了了特殊的模型，用于高级短片创作：
+    * **序列伪装** – 用于在给予的一堆伪装中自动轮换，依赖于在伪装之间设定的延时。
+    * **录制伪装** – 用于在伪装中播放玩家录制（在模型方块和身体部分系统很实用）。
+    * **结构伪装** – 用于伪装成使用结构方块后的建筑。
 * **绿幕功能** – Blockbuster 添加了发光的绿色方块，没有任何阴影；还有绿色的天空，使得搭建绿幕拍摄场景和后期处理你的短片更容易。
+* **动态 GIF 支持** – 现在你可以在 Blockbuster 中加入 GIF 格式的梗和表情包了。一切要感谢 [MrCrayfish 的家具 Mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) 和 [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java)。
+* **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) 兼容性** – 感谢基于帧和录制的 mod，你可以通过一个按钮，让游戏内短片导出成视频文件。
 * **多语言支持** – 除了英语，Blockbuster 也翻译成了俄语和中文，分别感谢 [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) 和 [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww)。
 
 ## 安装
@@ -40,19 +46,23 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 
 ### 教程视频
 
-这个播放列表教你如何使用。每次更新我都会发布一个更新日志视频讲解新版特性。
+这个播放列表是更新日志。几乎每次更新（除了纯 bug 修复和很少功能增加）都会附有一个更新视频，用来展示新功能，并且稍微展示如何使用。
 
-<a href="https://youtu.be/sWlh0LUvvMc?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/sWlh0LUvvMc/0.jpg"></a> 
+<a href="https://youtu.be/wpfiLTrzTLs?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/wpfiLTrzTLs/0.jpg"></a>
 
-还有个视频教你如何使用 Blockbuster mod 创作一个简单的短片。这个视频展示了导演方块的基础，如何链接演员到导演方块，以及设定摄像机：
+还有个教程是直接关联到 Blockbuster/Minecraft 的短片制作的。确保看看它，因为它包含着基本的 Blockbuster mod 教程，如何导入 OBJ 模型，等等。
 
-<a href="https://youtu.be/PFS2yjXnIGI?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/PFS2yjXnIGI/0.jpg"></a> 
+<a href="https://youtu.be/PFS2yjXnIGI?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/PFS2yjXnIGI/0.jpg"></a>
 
-### 实例短片
+### Blockbuster 短片
 
 这个播放列表展示了我测试 Blockbuster 时制作的一系列自我感觉良好的短片。欢迎来收看我做的脑洞大开的视频。
 
-<a href="https://youtu.be/1WHB5PeMhUE?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/1WHB5PeMhUE/0.jpg"></a> 
+<a href="https://youtu.be/1WHB5PeMhUE?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/1WHB5PeMhUE/0.jpg"></a>
+
+这里还有两百多个社区制作的视频。显然地，使用 Blockbuster 制作的视频肯定不止这些，但这些是我所知的：
+
+<a href="https://youtu.be/ALodBKJ7mZY?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/ALodBKJ7mZY/0.jpg"></a>
 
 ## mod 评测和转发者看这里
 
@@ -67,7 +77,7 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 
 如果你对此项目感兴趣，你可以关注我的社交媒体账号：
 
-[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse) 
+[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse)
 
 另外，如果你在 Patreon 上支持我的话，我会很感激的！
 
