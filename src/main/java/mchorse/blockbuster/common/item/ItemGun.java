@@ -11,6 +11,7 @@ import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -20,6 +21,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemGun extends Item
@@ -52,6 +54,18 @@ public class ItemGun extends Item
     {
         if (world.isRemote)
         {
+            IGun gun = Gun.get(stack);
+
+            if (gun != null)
+            {
+                GunProps props = gun.getProps();
+
+                if (props.launch)
+                {
+                    this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+                }
+            }
+
             return EnumActionResult.SUCCESS;
         }
 
@@ -68,35 +82,50 @@ public class ItemGun extends Item
         }
 
         GunProps props = gun.getProps();
-        EntityGunProjectile last = null;
 
-        for (int i = 0; i < props.projectiles; i++)
+        /* Launch the player is enabled */
+        if (props.launch)
         {
-            AbstractMorph morph = props.projectileMorph;
+            this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
 
-            if (props.sequencer && morph instanceof SequencerMorph)
+            if (!props.fireCommand.isEmpty())
             {
-                SequencerMorph seq = ((SequencerMorph) morph);
-
-                morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+                player.getServer().commandManager.executeCommand(player, props.fireCommand);
             }
-
-            if (morph != null)
-            {
-                morph = morph.clone(world.isRemote);
-            }
-
-            EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
-
-            projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-            projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
-            world.spawnEntity(projectile);
-            last = projectile;
         }
-
-        if (!props.fireCommand.isEmpty() && last != null)
+        /* Or otherwise launch bullets */
+        else
         {
-            player.getServer().commandManager.executeCommand(last, props.fireCommand);
+            EntityGunProjectile last = null;
+
+            for (int i = 0; i < props.projectiles; i++)
+            {
+                AbstractMorph morph = props.projectileMorph;
+
+                if (props.sequencer && morph instanceof SequencerMorph)
+                {
+                    SequencerMorph seq = ((SequencerMorph) morph);
+
+                    morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
+                }
+
+                if (morph != null)
+                {
+                    morph = morph.clone(world.isRemote);
+                }
+
+                EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
+
+                projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+                projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+                world.spawnEntity(projectile);
+                last = projectile;
+            }
+
+            if (!props.fireCommand.isEmpty() && last != null)
+            {
+                player.getServer().commandManager.executeCommand(last, props.fireCommand);
+            }
         }
 
         Entity entity = player instanceof EntityFakePlayer ? ((EntityFakePlayer) player).actor : player;
@@ -110,5 +139,30 @@ public class ItemGun extends Item
         Dispatcher.sendToTracked(entity, new PacketGunShot(id));
 
         return true;
+    }
+
+    private void setThrowableHeading(EntityLivingBase entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
+    {
+        float f = -MathHelper.sin(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
+        float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * 0.017453292F);
+        float f2 = MathHelper.cos(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
+        this.setThrowableHeading(entityThrower, (double) f, (double) f1, (double) f2, velocity, inaccuracy);
+    }
+
+    public void setThrowableHeading(EntityLivingBase entity, double x, double y, double z, float velocity, float inaccuracy)
+    {
+        float f = MathHelper.sqrt(x * x + y * y + z * z);
+        x = x / (double) f;
+        y = y / (double) f;
+        z = z / (double) f;
+        x = x + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
+        y = y + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
+        z = z + entity.getRNG().nextGaussian() * 0.007499999832361937D * (double) inaccuracy;
+        x = x * (double) velocity;
+        y = y * (double) velocity;
+        z = z * (double) velocity;
+        entity.motionX = x;
+        entity.motionY = y;
+        entity.motionZ = z;
     }
 }

@@ -228,6 +228,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this.pos;
     }
 
+    public Replay getReplay()
+    {
+        return this.replay;
+    }
+
     private void pickDirector(BlockPos pos)
     {
         this.close();
@@ -376,11 +381,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
      */
     private void dupeReplay()
     {
-        this.director.dupe(this.director.replays.indexOf(this.replay), true);
-        this.selector.update();
+        if (this.director.dupe(this.director.replays.indexOf(this.replay), true))
+        {
+            this.selector.update();
 
-        this.setReplay(this.director.replays.get(this.director.replays.size() - 1));
-        this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
+            this.setReplay(this.director.replays.get(this.director.replays.size() - 1));
+            this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
+        }
     }
 
     /**

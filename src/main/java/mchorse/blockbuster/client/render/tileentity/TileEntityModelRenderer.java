@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.render.tileentity;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (te.morph != null)
+        if (te.morph != null && !Blockbuster.proxy.config.model_block_disable_rendering)
         {
             if (this.renderer == null)
             {

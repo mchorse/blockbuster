@@ -52,6 +52,11 @@ public class BlockbusterConfig
     /* Model block */
 
     /**
+     * Whether model blocks should be rendered 
+     */
+    public boolean model_block_disable_rendering;
+
+    /**
      * Whether model block item rendering should be disabled 
      */
     public boolean model_block_disable_item_rendering;
@@ -182,6 +187,7 @@ public class BlockbusterConfig
         this.url_skins_sync_download = this.getBoolean("url_skins_sync_download", general, true, "Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin");
 
         /* Model block */
+        this.model_block_disable_rendering = this.getBoolean("model_block_disable_rendering", model, false, "Whether model blocks should be rendered");
         this.model_block_disable_item_rendering = this.getBoolean("model_block_disable_item_rendering", model, false, "Whether model block item rendering should be disabled");
 
         /* Recording */

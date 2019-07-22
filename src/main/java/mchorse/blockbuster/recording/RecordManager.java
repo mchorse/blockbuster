@@ -223,7 +223,7 @@ public class RecordManager
 
             playback.tick = tick;
             playback.kill = kill;
-            playback.record.applyFrame(tick, actor, true);
+            playback.applyFrame(tick, actor, true);
 
             EntityUtils.setRecordPlayer(actor, playback);
 

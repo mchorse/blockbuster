@@ -8,6 +8,7 @@ blockbuster.config.comments:
         url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
 
     model_block:
+        model_block_disable_rendering: Whether model blocks should be rendered
         model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
 
     recording:

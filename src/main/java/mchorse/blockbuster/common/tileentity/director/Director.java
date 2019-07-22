@@ -180,7 +180,7 @@ public class Director
 
             if (record != null)
             {
-                max = Math.max(max, record.getLength());
+                max = Math.max(max, record.getFullLength());
             }
         }
 
@@ -351,7 +351,7 @@ public class Director
 
             for (int i = 0; i <= tick; i++)
             {
-                actor.record.applyAction(i, actor.actor);
+                actor.record.applyAction(i - actor.record.preDelay, actor.actor);
             }
 
             j++;
@@ -514,9 +514,9 @@ public class Director
      */
     public void resume(int tick)
     {
-        for (RecordPlayer actor : this.actors.values())
+        for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
         {
-            actor.resume(tick);
+            entry.getValue().resume(tick, entry.getKey());
         }
     }
 
@@ -541,11 +541,11 @@ public class Director
     /**
      * Duplicate  
      */
-    public void dupe(int index, boolean isRemote)
+    public boolean dupe(int index, boolean isRemote)
     {
         if (index < 0 || index >= this.replays.size())
         {
-            return;
+            return false;
         }
 
         Replay replay = this.replays.get(index).clone(isRemote);
@@ -575,6 +575,8 @@ public class Director
 
         replay.id = prefix + "_" + (max + 1);
         this.replays.add(replay);
+
+        return true;
     }
 
     public void renamePrefix(String newPrefix)
