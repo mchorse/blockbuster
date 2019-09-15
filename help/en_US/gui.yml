@@ -219,6 +219,7 @@ blockbuster.gui:
         use_target: Use target
         
         animates: Animates
+        ignored: Ignored
         animation_duration: Duration
         pick_interpolation: Pick interpolation
         

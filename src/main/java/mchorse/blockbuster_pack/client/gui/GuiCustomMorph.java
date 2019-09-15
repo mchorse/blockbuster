@@ -133,6 +133,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         public GuiTrackpadElement scale;
         public GuiTrackpadElement scaleGui;
         public GuiButtonElement<GuiCheckBox> animates;
+        public GuiButtonElement<GuiCheckBox> ignored;
         public GuiTrackpadElement animationDuration;
         public GuiButtonElement<GuiButton> pickInterpolation;
         public GuiListElement<Interpolation> interpolations;
@@ -189,6 +190,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.morph.animation.animates = b.button.isChecked();
             });
 
+            this.ignored = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.ignored"), false, (b) ->
+            {
+                this.morph.animation.ignored = b.button.isChecked();
+            });
+
             this.animationDuration = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.builder.animation_duration"), (value) ->
             {
                 this.morph.animation.duration = value.intValue();
@@ -214,11 +220,13 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
             this.animates.resizer().parent(this.area).set(0, 40, this.animates.button.width, this.animates.button.height).x(1, -110);
-            this.animationDuration.resizer().relative(this.animates.resizer()).set(0, 0, 100, 20).y(1, 5);
+            this.ignored.resizer().relative(this.animates.resizer()).set(0, 0, this.ignored.button.width, this.ignored.button.height).y(1, 5);
+            this.animationDuration.resizer().relative(this.ignored.resizer()).set(0, 0, 100, 20).y(1, 5);
             this.pickInterpolation.resizer().relative(this.animationDuration.resizer()).set(0, 0, 100, 20).y(1, 5);
             this.interpolations.resizer().relative(this.pickInterpolation.resizer()).set(0, 20, 100, 96);
 
-            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures, this.animates, this.animationDuration, this.pickInterpolation, this.interpolations);
+            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures);
+            this.children.add(this.animates, this.ignored, this.animationDuration, this.pickInterpolation, this.interpolations);
         }
 
         @Override
