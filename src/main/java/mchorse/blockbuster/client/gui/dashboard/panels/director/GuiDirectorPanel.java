@@ -268,7 +268,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         if (!this.director.replays.isEmpty())
         {
-            this.setReplay(this.director.replays.get(0));
+            int current = this.director.replays.indexOf(this.replay);
+
+            this.setReplay(this.director.replays.get(current == -1 ? 0 : current));
         }
         else
         {
