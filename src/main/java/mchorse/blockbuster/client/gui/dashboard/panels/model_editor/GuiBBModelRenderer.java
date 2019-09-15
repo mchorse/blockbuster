@@ -33,6 +33,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
     public boolean items;
     public boolean aabb;
+    public boolean origin;
     public boolean looking = true;
 
     public Map<String, ResourceLocation> materials;
@@ -90,9 +91,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     @Override
     protected void drawModel(float headYaw, float headPitch, int mouseX, int mouseY, float partial)
     {
-        ModelCustom model = this.model;
         final float factor = 1 / 16F;
-
         float limbSwing = this.swing + partial;
 
         if (!this.looking)
@@ -100,11 +99,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             headYaw = headPitch = 0;
         }
 
-        model.materials = this.materials;
-        model.pose = this.pose;
-        model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * partial) / 6.0F, 0.0F, 1.0F);
-        model.setLivingAnimations(this.dummy, headYaw, headPitch, partial);
-        model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
+        this.updateModel(limbSwing, headYaw, headPitch, factor, partial);
 
         float scale = this.getScale();
 
@@ -125,6 +120,10 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partial, this.timer, mouseX, mouseY, factor);
         }
 
+        /* Render highlighting things on top */
+        this.updateModel(limbSwing, headYaw, headPitch, factor, partial);
+
+        GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
         GlStateManager.disableDepth();
         GlStateManager.disableLighting();
@@ -147,6 +146,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
 
         GlStateManager.popMatrix();
 
@@ -154,6 +154,15 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         {
             this.renderAABB();
         }
+    }
+
+    protected void updateModel(float limbSwing, float headYaw, float headPitch, float factor, float partial)
+    {
+        this.model.materials = this.materials;
+        this.model.pose = this.pose;
+        this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp_float(1.0F - (this.swipe - 1.0F * partial) / 6.0F, 0.0F, 1.0F);
+        this.model.setLivingAnimations(this.dummy, headYaw, headPitch, partial);
+        this.model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
     }
 
     protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
@@ -192,9 +201,6 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
 
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         /* Top */
         buffer.pos(minX, maxY, minZ).color(0, 0.6F, 1, alpha).endVertex();
@@ -231,12 +237,18 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         buffer.pos(maxX, maxY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
         buffer.pos(maxX, minY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
         buffer.pos(minX, minY, maxZ).color(0, 0.5F, 0.8F, alpha).endVertex();
+
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.disableCull();
+
         tessellator.draw();
 
+        GlStateManager.enableCull();
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
 
-        if (this.aabb)
+        if (this.origin)
         {
             GL11.glLineWidth(5);
             GL11.glBegin(GL11.GL_LINES);

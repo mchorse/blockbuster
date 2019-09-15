@@ -132,7 +132,10 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.swipe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 80, 0, 80, 16, (b) -> this.modelRenderer.swipe()).tooltip(I18n.format("blockbuster.gui.me.tooltips.models"), TooltipDirection.TOP);
         this.running = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 96, 0, 96, 16, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging).tooltip(I18n.format("blockbuster.gui.me.tooltips.swing"), TooltipDirection.TOP);
         this.items = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 112, 0, 112, 16, (b) -> this.modelRenderer.toggleItems()).tooltip(I18n.format("blockbuster.gui.me.tooltips.items"), TooltipDirection.TOP);
-        this.hitbox = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.hitbox"), this.modelRenderer.aabb, (b) -> this.modelRenderer.aabb = b.button.isChecked());
+        this.hitbox = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.hitbox"), this.modelRenderer.aabb, (b) ->
+        {
+            this.modelRenderer.aabb = this.modelRenderer.origin = b.button.isChecked();
+        });
         this.looking = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.looking"), this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.button.isChecked());
 
         this.swipe.resizer().set(0, 0, 16, 16).parent(this.area).x(0.5F, -38).y(1, -18);
