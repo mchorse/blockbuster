@@ -415,7 +415,16 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         {
             CustomMorph custom = (CustomMorph) morph;
 
-            this.animation.last = this.lastPose;
+            /* Don't suddenly end the animation in progress, interpolate */
+            if (this.animation.isInProgress())
+            {
+                this.animation.last = this.animation.calculatePose(this.lastPose, 1).clone();
+            }
+            else
+            {
+                this.animation.last = this.lastPose;
+            }
+
             this.key = null;
             this.name = custom.name;
             this.currentPose = custom.currentPose;
