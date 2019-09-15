@@ -18,6 +18,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -304,6 +305,7 @@ public class CameraHandler
                     }
 
                     Dispatcher.sendToServer(new PacketRequestLength(pos));
+                    Dispatcher.sendToServer(new PacketDirectorRequestCast(pos));
                 }
             }
 

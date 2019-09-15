@@ -233,6 +233,16 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this.replay;
     }
 
+    public List<Replay> getReplays()
+    {
+        if (this.director == null)
+        {
+            return null;
+        }
+
+        return this.director.replays;
+    }
+
     private void pickDirector(BlockPos pos)
     {
         this.close();
@@ -268,7 +278,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         if (!this.director.replays.isEmpty())
         {
-            this.setReplay(this.director.replays.get(0));
+            int current = this.director.replays.indexOf(this.replay);
+
+            this.setReplay(this.director.replays.get(current == -1 ? 0 : current));
         }
         else
         {
