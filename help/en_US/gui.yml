@@ -111,6 +111,7 @@ blockbuster.gui:
     # Player recording editor GUI strings
     record_editor:
         title: Recordings
+        directors: Director's records
         not_selected: Select a player recording...
         action: action
         
