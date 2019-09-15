@@ -415,12 +415,27 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         {
             CustomMorph custom = (CustomMorph) morph;
 
-            this.animation.last = this.lastPose;
+            /* Don't suddenly end the animation in progress, interpolate */
+            if (!custom.animation.ignored)
+            {
+                if (this.animation.isInProgress())
+                {
+                    this.animation.last = this.animation.calculatePose(this.lastPose, 1).clone();
+                }
+                else
+                {
+                    this.animation.last = this.lastPose;
+                }
+
+                this.currentPose = custom.currentPose;
+                this.customPose = custom.customPose == null ? null : custom.customPose.clone();
+
+                this.animation.merge(custom.animation);
+            }
+
             this.key = null;
             this.name = custom.name;
-            this.currentPose = custom.currentPose;
             this.skin = RLUtils.clone(custom.skin);
-            this.customPose = custom.customPose == null ? null : custom.customPose.clone();
             this.currentPoseOnSneak = custom.currentPoseOnSneak;
             this.scale = custom.scale;
             this.scaleGui = custom.scaleGui;
@@ -430,7 +445,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                 this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
             }
             this.parts.merge(custom.parts, isRemote);
-            this.animation.merge(custom.animation);
             this.model = custom.model;
 
             return true;
@@ -592,6 +606,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     public static class CustomAnimation
     {
         public boolean animates;
+        public boolean ignored;
         public int duration = 10;
         public Interpolation interp = Interpolation.LINEAR;
         public ModelPose last;
@@ -611,6 +626,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.animates = animation.animates;
             this.duration = animation.duration;
             this.interp = animation.interp;
+            this.ignored = animation.ignored;
         }
 
         @Override
@@ -676,6 +692,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             NBTTagCompound tag = new NBTTagCompound();
 
             if (this.animates) tag.setBoolean("Animates", this.animates);
+            if (this.ignored) tag.setBoolean("Ignored", this.ignored);
             if (this.duration != 10) tag.setInteger("Duration", this.duration);
             if (this.interp != Interpolation.LINEAR) tag.setInteger("Interp", this.interp.ordinal());
 
@@ -685,6 +702,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         public void fromNBT(NBTTagCompound tag)
         {
             if (tag.hasKey("Animates")) this.animates = tag.getBoolean("Animates");
+            if (tag.hasKey("Ignored")) this.ignored = tag.getBoolean("Ignored");
             if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
             if (tag.hasKey("Interp")) this.interp = Interpolation.values()[tag.getInteger("Interp")];
         }

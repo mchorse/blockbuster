@@ -106,29 +106,29 @@ public class ModelHandler
             ClassLoader loader = this.getClass().getClassLoader();
 
             /* Optionally load default models */
-            if (!this.models.containsKey("alex"))
-            {
-                this.addModel("alex", new ModelCell(Model.parse(loader.getResourceAsStream(path + "alex.json")), 0));
-            }
-
-            if (!this.models.containsKey("steve"))
-            {
-                this.addModel("steve", new ModelCell(Model.parse(loader.getResourceAsStream(path + "steve.json")), 0));
-            }
-
-            if (!this.models.containsKey("fred"))
-            {
-                this.addModel("fred", new ModelCell(Model.parse(loader.getResourceAsStream(path + "fred.json")), 0));
-            }
-
-            if (!this.models.containsKey("yike"))
-            {
-                this.addModel("yike", new ModelCell(Model.parse(loader.getResourceAsStream(path + "yike.json")), 0));
-            }
+            this.addDefaultModel("alex");
+            this.addDefaultModel("steve");
+            this.addDefaultModel("fred");
+            this.addDefaultModel("yike");
+            this.addDefaultModel("empty");
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Add a default model bundled with the mod 
+     */
+    private void addDefaultModel(String id) throws Exception
+    {
+        String path = "assets/blockbuster/models/entity/";
+        ClassLoader loader = this.getClass().getClassLoader();
+
+        if (!this.models.containsKey(id))
+        {
+            this.addModel(id, new ModelCell(Model.parse(loader.getResourceAsStream(path + id + ".json")), 0));
         }
     }
 
