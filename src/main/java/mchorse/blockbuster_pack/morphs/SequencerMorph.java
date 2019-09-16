@@ -186,7 +186,7 @@ public class SequencerMorph extends AbstractMorph
             {
                 SequenceEntry entry = this.morphs.get(this.current);
 
-                this.currentMorph.set(entry.morph == null ? null : entry.morph.clone(true), isRemote);
+                this.currentMorph.set(entry.morph == null ? null : entry.morph.clone(isRemote), isRemote);
                 this.duration += entry.getDuration();
             }
         }

@@ -418,6 +418,20 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             /* Don't suddenly end the animation in progress, interpolate */
             if (!custom.animation.ignored)
             {
+                /* If the last pose is null, it might case a first cycle freeze.
+                 * this should fix it. */
+                if (this.lastPose == null)
+                {
+                    if (this.customPose != null)
+                    {
+                        this.lastPose = this.customPose;
+                    }
+                    else if (this.model != null)
+                    {
+                        this.lastPose = this.model.getPose("standing");
+                    }
+                }
+
                 if (this.animation.isInProgress())
                 {
                     this.animation.last = this.animation.calculatePose(this.lastPose, 1).clone();
@@ -636,7 +650,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 CustomAnimation animation = (CustomAnimation) obj;
 
-                return this.animates == animation.animates && this.progress == animation.progress && this.interp == animation.interp;
+                return this.animates == animation.animates && this.ignored == animation.ignored && this.progress == animation.progress && this.interp == animation.interp;
             }
 
             return super.equals(obj);
