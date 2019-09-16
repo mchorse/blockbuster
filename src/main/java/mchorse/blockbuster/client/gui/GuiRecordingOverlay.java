@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -24,6 +26,7 @@ public class GuiRecordingOverlay extends Gui
     protected Minecraft mc;
     protected String caption;
     protected boolean isVisible = false;
+    protected boolean recording = false;
 
     public GuiRecordingOverlay(Minecraft mc)
     {
@@ -35,6 +38,7 @@ public class GuiRecordingOverlay extends Gui
     public void setCaption(String caption, boolean recording)
     {
         this.caption = recording ? I18n.format("blockbuster.recording", caption) : caption;
+        this.recording = recording;
     }
 
     public void setVisible(boolean isVisible)
@@ -59,6 +63,17 @@ public class GuiRecordingOverlay extends Gui
         }
 
         FontRenderer font = this.mc.fontRendererObj;
+        String caption = this.caption;
+
+        if (this.recording)
+        {
+            RecordRecorder recorder = ClientProxy.manager.recorders.get(Minecraft.getMinecraft().thePlayer);
+
+            if (recorder != null)
+            {
+                caption += "§r (§l" + recorder.tick + "§r)";
+            }
+        }
 
         this.mc.renderEngine.bindTexture(TEXTURE);
 
@@ -66,7 +81,7 @@ public class GuiRecordingOverlay extends Gui
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.drawTexturedModalRect(4, 4, 0, 0, 16, 16);
-        font.drawStringWithShadow(this.caption, 22, 8, 0xffffffff);
+        font.drawStringWithShadow(caption, 22, 8, 0xffffffff);
 
         GlStateManager.popAttrib();
     }
