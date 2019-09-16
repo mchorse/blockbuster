@@ -49,6 +49,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -492,7 +493,7 @@ public class ActionHandler
 
             if (record.countdown % 20 == 0)
             {
-                IMessage message = new PacketCaption("Starting in §7" + (record.countdown / 20));
+                IMessage message = new PacketCaption(new TextComponentTranslation("blockbuster.start_recording", record.recorder.record.filename, record.countdown / 20));
                 Dispatcher.sendTo(message, (EntityPlayerMP) record.player);
             }
 

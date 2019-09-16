@@ -239,6 +239,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.scale.setValue(morph.scale);
             this.scaleGui.setValue(morph.scaleGui);
             this.animates.button.setIsChecked(morph.animation.animates);
+            this.ignored.button.setIsChecked(morph.animation.ignored);
             this.animationDuration.setValue(morph.animation.duration);
             this.interpolations.setCurrent(morph.animation.interp);
             this.interpolations.setVisible(false);

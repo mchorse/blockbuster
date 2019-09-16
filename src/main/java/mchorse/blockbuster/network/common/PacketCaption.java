@@ -1,17 +1,19 @@
 package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextComponent.Serializer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketCaption implements IMessage
 {
-    public String caption = "";
+    public ITextComponent caption;
 
     public PacketCaption()
     {}
 
-    public PacketCaption(String caption)
+    public PacketCaption(ITextComponent caption)
     {
         this.caption = caption;
     }
@@ -19,12 +21,20 @@ public class PacketCaption implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.caption = ByteBufUtils.readUTF8String(buf);
+        if (buf.readBoolean())
+        {
+            this.caption = Serializer.jsonToComponent(ByteBufUtils.readUTF8String(buf));
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufUtils.writeUTF8String(buf, this.caption);
+        buf.writeBoolean(this.caption != null);
+
+        if (this.caption != null)
+        {
+            ByteBufUtils.writeUTF8String(buf, Serializer.componentToJson(this.caption));
+        }
     }
 }
