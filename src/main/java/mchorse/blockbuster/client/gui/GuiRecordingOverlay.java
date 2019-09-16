@@ -67,7 +67,7 @@ public class GuiRecordingOverlay extends Gui
 
         if (this.recording)
         {
-            RecordRecorder recorder = ClientProxy.manager.recorders.get(Minecraft.getMinecraft().thePlayer);
+            RecordRecorder recorder = ClientProxy.manager.recorders.get(Minecraft.getMinecraft().player);
 
             if (recorder != null)
             {
