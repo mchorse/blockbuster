@@ -13,7 +13,9 @@ public class ClientHandlerCaption extends ClientMessageHandler<PacketCaption>
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketCaption message)
     {
-        ClientProxy.recordingOverlay.setVisible(!message.caption.isEmpty());
-        ClientProxy.recordingOverlay.setCaption(message.caption, false);
+        String caption = message.caption == null ? "" : message.caption.getUnformattedText();
+
+        ClientProxy.recordingOverlay.setVisible(!caption.isEmpty());
+        ClientProxy.recordingOverlay.setCaption(caption, false);
     }
 }

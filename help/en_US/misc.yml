@@ -12,6 +12,7 @@ blockbuster:
     eggs:
         yike: "{l}Alright{r}, {o}alright{r}, that was {7}McHorse{r}'s joke! Switching back to {6}YikeFilms{r}."
     morph_error: No model found
+    start_recording: "Starting recording {7}%s{r} in {7}%s{r}"
 
 # Metamorph category
 morph.category:
