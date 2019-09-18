@@ -8,7 +8,8 @@ blockbuster.config.comments:
         url_skins_sync_download: 同步的下載來自 URL 的皮膚。它可能會在下載 3D 外部表層的時期讓遊戲沒有反應。
 
     model_block:
-        model_block_disable_item_rendering: 是否要關閉模型方塊的物品渲染（有人想要關掉嗎？）
+        model_block_disable_rendering: 是否要渲染模型方塊
+        model_block_disable_item_rendering: 是否要關閉模型方塊的背包內渲染（有人想要關掉嗎？）
         
     recording:
         recording_countdown: 錄制倒計時（秒）
