@@ -111,6 +111,7 @@ blockbuster.gui:
     # Player recording editor GUI strings
     record_editor:
         title: Записи
+        directors: Записи режиссёра
         not_selected: Выберите запись игрока...
         action: Действие
         
@@ -218,6 +219,7 @@ blockbuster.gui:
         use_target: Использовать цель
 
         animates: Анимируется
+        ignored: Игнорируется
         animation_duration: Продолжительность
         pick_interpolation: Выбрать интерполяцию
 
