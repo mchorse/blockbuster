@@ -13,7 +13,8 @@ blockbuster.config:
     model_block:
         title: Блоки-модели
         
-        model_block_disable_item_rendering: Выключить рендеринг предметов
+        model_block_disable_rendering: Выключить отображение блоков-моделей
+        model_block_disable_item_rendering: Выключить отображение предметов
     
     recording:
         title: Записи
