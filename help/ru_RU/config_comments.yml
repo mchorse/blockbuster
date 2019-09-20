@@ -8,7 +8,8 @@ blockbuster.config.comments:
         url_skins_sync_download: Синхронная загрузка интернет-ссылок на скины. Если эта настройка включена, то 3D слои будут работать с интернет-скинами, но игра может фризиться чтобы прогрузить скин при добавлении.
 
     model_block:
-        model_block_disable_culling_workaround: Должны ли быть выключены обходные методы отображения блоков-моделей
+        model_block_disable_rendering: Включено ли отображение блоков-моделей
+        model_block_disable_item_rendering: Необходимо ли выключить отобржание предметов в руках у блоков-моделей (да кому это надо вообще?)
 
     recording:
         recording_countdown: Отсчет до записи (в секундах)
