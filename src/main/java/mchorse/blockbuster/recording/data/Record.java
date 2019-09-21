@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.director.Replay;
@@ -476,6 +478,11 @@ public class Record
      */
     public void save(File file) throws IOException
     {
+        if (file.isFile())
+        {
+            this.savePastCopies(file);
+        }
+
         NBTTagCompound compound = new NBTTagCompound();
         NBTTagList frames = new NBTTagList();
 
@@ -532,6 +539,48 @@ public class Record
         compound.setTag("Frames", frames);
 
         CompressedStreamTools.writeCompressed(compound, new FileOutputStream(file));
+    }
+
+    /**
+     * This method removes the last file, and renames past versions of a recording files. 
+     * This should save countless hours of work in case somebody accidentally overwrote 
+     * a player recording.
+     */
+    private void savePastCopies(File file)
+    {
+        final int copies = 5;
+
+        int counter = copies;
+        String name = FilenameUtils.removeExtension(file.getName());
+
+        while (counter >= 0 && file.exists())
+        {
+            File current = this.getPastFile(file, name, counter);
+
+            if (current.exists()) 
+            {
+                if (counter == copies)
+                {
+                    current.delete();
+                }
+                else
+                {
+                    File previous = this.getPastFile(file, name, counter + 1);
+
+                    current.renameTo(previous);
+                }
+            }
+
+            counter--;
+        }
+    }
+
+    /**
+     * Get a path to the past copy of the file
+     */
+    private File getPastFile(File file, String name, int iteration)
+    {
+        return new File(file.getParentFile(), name + (iteration == 0 ? ".dat" : ".dat~" + iteration));
     }
 
     /**
