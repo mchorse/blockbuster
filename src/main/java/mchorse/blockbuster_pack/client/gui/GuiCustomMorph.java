@@ -225,8 +225,9 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.pickInterpolation.resizer().relative(this.animationDuration.resizer()).set(0, 0, 100, 20).y(1, 5);
             this.interpolations.resizer().relative(this.pickInterpolation.resizer()).set(0, 20, 100, 96);
 
-            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui, this.textures);
+            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui);
             this.children.add(this.animates, this.ignored, this.animationDuration, this.pickInterpolation, this.interpolations);
+            this.children.add(this.textures);
         }
 
         @Override
