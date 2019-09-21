@@ -12,6 +12,7 @@ blockbuster:
     eggs:
         yike: "{l}Ладно{r}, {o}ладно{r}, это была шутка от {7}McHorse{r}'а! Логинюсь обратно в {6}YikeFilms{r}."
     morph_error: Модели отсутсвуют
+    start_recording: "Старт записи {7}%s{r} в {7}%s{r}"
 
 # Metamorph category
 morph.category:
