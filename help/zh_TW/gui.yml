@@ -111,6 +111,7 @@ blockbuster.gui:
     # Player recording editor GUI strings
     record_editor:
         title: 錄制
+        directors: 導演方塊的錄製
         not_selected: 選取一個玩家錄制…
         action: 動作
 
@@ -218,6 +219,7 @@ blockbuster.gui:
         use_target: 使用目標
 
         animates: 動畫
+        ignored: 略過
         animation_duration: 持續長度
         pick_interpolation: 選擇插值
         
@@ -252,6 +254,7 @@ blockbuster.gui:
         delay: 延遲
         projectiles: 炮彈
         scatter: 分散程度
+        launch: 發射自己
         
         projectile_morph: 作為炮彈的偽裝
         tick_command: 在 Tick 中的頻率上執行以下命令：

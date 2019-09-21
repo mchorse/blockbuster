@@ -8,6 +8,7 @@ blockbuster.config.comments:
         url_skins_sync_download: 同步的下载来自 URL 的皮肤。它可能会在下载 3D 外表层的时候导致游戏假死。
 
     model_block:
+        model_block_disable_rendering: 是否要渲染模型方块
         model_block_disable_item_rendering: 是否要关闭模型方块的物品渲染（有人想要关掉吗？）
         
     recording:

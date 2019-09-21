@@ -13,7 +13,8 @@ blockbuster.config:
     model_block:
         title: 模型方块
         
-        model_block_disable_item_rendering: 关闭物品渲染
+        model_block_disable_rendering: 关闭模型方块渲染
+        model_block_disable_item_rendering: 关闭物品栏渲染
 
     recording:
         title: 录制
