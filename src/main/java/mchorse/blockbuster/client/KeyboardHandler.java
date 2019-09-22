@@ -50,7 +50,7 @@ public class KeyboardHandler
         this.dashboard = new KeyBinding("key.blockbuster.dashboard", Keyboard.KEY_0, category);
         this.cameraMarker = new KeyBinding("key.blockbuster.marker", Keyboard.KEY_V, category);
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, category);
-        this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RMETA, category);
+        this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
         this.recordDirector = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
         this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_NONE, category);
 
