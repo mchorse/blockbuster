@@ -92,6 +92,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.modelRenderer = new GuiBBModelRenderer(mc);
+        this.modelRenderer.pickingCallback = (limb) -> this.setLimb(limb);
         this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
 

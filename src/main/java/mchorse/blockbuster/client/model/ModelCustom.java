@@ -86,6 +86,24 @@ public class ModelCustom extends ModelBiped
         GlStateManager.disableBlend();
     }
 
+    public void renderForStencil(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    {
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        for (int i = 0; i < this.limbs.length; i ++)
+        {
+            this.limbs[i].setupStencilRendering(i + 1);
+        }
+
+        for (ModelRenderer limb : this.renderable)
+        {
+            limb.render(scale);
+        }
+
+        GlStateManager.disableBlend();
+    }
+
     /**
      * Set hands postures
      */
