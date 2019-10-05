@@ -222,6 +222,7 @@ public class StructureMorph extends AbstractMorph
         morph.name = this.name;
         morph.settings = this.settings;
         morph.structure = this.structure;
+        morph.lighting = this.lighting;
 
         return morph;
     }
@@ -248,6 +249,7 @@ public class StructureMorph extends AbstractMorph
             StructureMorph morph = (StructureMorph) obj;
 
             result = result && Objects.equals(this.structure, morph.structure);
+            result = result && this.lighting == morph.lighting;
         }
 
         return result;

@@ -39,7 +39,7 @@ Blockbuster mod provides you with lots of features to make cool machinimas/rolep
 
 ## Install
 
-Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available minecraft version. Also install following mods: [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib), and [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
+Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib), and [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
 
 After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong. 
 
@@ -49,21 +49,21 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/wpfiLTrzTLs?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/wpfiLTrzTLs/0.jpg"></a> 
+<a href="https://youtu.be/CI0WGNFLV4k?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CI0WGNFLV4k/0.jpg"></a> 
 
 Here is also a playlist of tutorials directly or indirectly related to Blockbuster/Minecraft machinima creation. Make sure to check it out, as it consists out of tutorials such as basics of Blockbuster mod, how to import OBJ models, etc.
 
-<a href="https://youtu.be/PFS2yjXnIGI?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/PFS2yjXnIGI/0.jpg"></a> 
+<a href="https://youtu.be/vo8fquY-TUM?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/vo8fquY-TUM/0.jpg"></a> 
 
 ### Blockbuster machinimas
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Feel free to check out my crazy videos.
 
-<a href="https://youtu.be/gqMh_R0FCAc?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/gqMh_R0FCAc/0.jpg"></a> 
+<a href="https://youtu.be/NJFaEepphzw?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/NJFaEepphzw/0.jpg"></a> 
 
-Here is also a playlist of 200+ community made videos with Blockbuster mod. There are certainly much more videos made with Blockbuster, but these are the ones that I'm aware of:
+Here is also a playlist of 300+ community made videos with Blockbuster mod:
 
-<a href="https://youtu.be/ALodBKJ7mZY?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/ALodBKJ7mZY/0.jpg"></a> 
+<a href="https://youtu.be/Ge_IsBloO1o?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/Ge_IsBloO1o/0.jpg"></a> 
 
 ## For mod reviewers and reposters
 
@@ -73,12 +73,12 @@ When reposting my mod on your own website or reviewing it, please consider follo
 * Make sure that information and description of my mod is legit. Misleading information, like Minecraft version support or non-existent features, is your responsibility.
 * By uploading a custom build of this mod, the build becomes your responsibility.
 * Provide the source link, please. [CurseForge](https://minecraft.curseforge.com/projects/blockbuster) page is preferable.
-* Provide a link to my [YouTube channel](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w), please. This will be really appreciated! 
+* Provide a link to my [YouTube channel](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw), please. This will be really appreciated! 
 * You can use Blockbuster [banner](http://i.imgur.com/nqDKg1R.png) or [cover](http://i.imgur.com/XgU8Tvx.png) for your repost page. Don't apply the watermark, though, that's just rude.
 
 If you're interested in this project, you might as well follow me on any of social media accounts listed below:
 
-[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCWVDjAcecHHa8UrEWMRGI8w) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse) 
+[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse) 
 
 Also, I would really appreciate if you will support me on Patreon!
 

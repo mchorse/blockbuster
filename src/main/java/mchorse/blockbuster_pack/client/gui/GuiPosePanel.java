@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
+public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> implements ILimbSelector
 {
     private GuiPoseTransformations transforms;
     private GuiStringListElement limbs;
@@ -48,12 +48,13 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
         this.children.add(this.limbs, this.resetPose, this.transforms);
     }
 
-    private void setLimb(String str)
+    @Override
+    public void setLimb(String limbName)
     {
-        ModelLimb limb = this.editor.morph.model.limbs.get(str);
+        ModelLimb limb = this.editor.morph.model.limbs.get(limbName);
 
         this.editor.modelRenderer.limb = limb;
-        this.setTransform(this.pose.limbs.get(str));
+        this.setTransform(this.pose.limbs.get(limbName));
     }
 
     public void setTransform(ModelTransform trans)
@@ -148,4 +149,5 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
             this.trans.rotate[2] = z;
         }
     }
+
 }

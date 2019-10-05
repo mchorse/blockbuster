@@ -1,7 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.model.ModelRenderer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
@@ -42,6 +46,9 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public ModelPose pose;
     public ModelLimb limb;
 
+    private boolean tryPicking;
+    public Consumer<String> pickingCallback;
+
     public GuiBBModelRenderer(Minecraft mc)
     {
         super(mc);
@@ -81,6 +88,27 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             this.swing = 0.0F;
             this.swingAmount = 0.0F;
         }
+    }
+
+    @Override
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    {
+        boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        if (this.dragging && GuiScreen.isCtrlKeyDown())
+        {
+            this.tryPicking = true;
+            this.dragging = false;
+        }
+
+        return result;
+    }
+
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        super.mouseReleased(mouseX, mouseY, state);
+        this.tryPicking = false;
     }
 
     protected float getScale()
@@ -168,6 +196,45 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
     {
         this.model.render(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
+
+        if (this.tryPicking)
+        {
+            /* OMG, thank you very much Forge! */
+            if (!Minecraft.getMinecraft().getFramebuffer().isStencilEnabled())
+            {
+                Minecraft.getMinecraft().getFramebuffer().enableStencil();
+            }
+
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+            int scale = Minecraft.getMinecraft().displayWidth / screen.width;
+            int x = yaw * scale;
+            int y = Minecraft.getMinecraft().displayHeight - pitch * scale - 1;
+
+            GL11.glClearStencil(0);
+            GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+
+            GL11.glEnable(GL11.GL_STENCIL_TEST);
+            GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+
+            this.model.renderForStencil(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
+
+            ByteBuffer buffer = ByteBuffer.allocateDirect(1);
+            GL11.glReadPixels(x, y, 1, 1, GL11.GL_STENCIL_INDEX, GL11.GL_UNSIGNED_BYTE, buffer);
+
+            buffer.rewind();
+
+            if (this.pickingCallback != null)
+            {
+                int value = buffer.get();
+
+                if (value > 0)
+                {
+                    this.pickingCallback.accept(this.model.limbs[value - 1].limb.name);
+                }
+            }
+
+            this.tryPicking = false;
+        }
     }
 
     /**
