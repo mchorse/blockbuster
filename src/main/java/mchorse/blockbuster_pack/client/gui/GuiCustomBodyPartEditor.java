@@ -5,7 +5,7 @@ import mchorse.metamorph.bodypart.GuiBodyPartEditor;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 
-public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
+public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements ILimbSelector
 {
     public GuiCustomBodyPartEditor(Minecraft mc, GuiAbstractMorph editor)
     {
@@ -26,11 +26,21 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
     }
 
     @Override
-    protected void pickLimb(String str)
+    protected void pickLimb(String limbName)
     {
         GuiCustomMorph parent = (GuiCustomMorph) this.editor;
 
-        super.pickLimb(str);
-        parent.modelRenderer.limb = parent.morph.model.limbs.get(str);
+        super.pickLimb(limbName);
+        parent.modelRenderer.limb = parent.morph.model.limbs.get(limbName);
+    }
+
+    @Override
+    public void setLimb(String limb)
+    {
+        try
+        {
+            this.pickLimb(limb);
+        }
+        catch (Exception e) {}
     }
 }

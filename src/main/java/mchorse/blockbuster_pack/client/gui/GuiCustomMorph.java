@@ -49,6 +49,13 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.modelRenderer = new GuiModelRendererBodyPart(Minecraft.getMinecraft());
         this.modelRenderer.looking = false;
         this.modelRenderer.origin = true;
+        this.modelRenderer.pickingCallback = (limb) ->
+        {
+            if (this.view.delegate instanceof ILimbSelector)
+            {
+                ((ILimbSelector) this.view.delegate).setLimb(limb);
+            }
+        };
 
         /* Nice shadow on bottom */
         this.children.elements.add(0, new GuiDrawable((n) ->

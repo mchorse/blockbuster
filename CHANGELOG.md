@@ -2,6 +2,38 @@
 
 Blockbuster's change log.
 
+## Version 1.6.1
+
+This is a small update which introduces animated poses, a couple of neat config options here and thered, some quality of life tweaks, and plenty of crash/bug fixes.
+
+**Compatible** with McLib `1.0.3`, Metamorph `1.1.9` and Aperture `1.3.2`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/CI0WGNFLV4k"><img src="https://img.youtube.com/vi/CI0WGNFLV4k/0.jpg"></a> 
+
+* Added random order option for `sequencer` morph
+* Added loop option for `record` morph
+* Added "Launch up the player" option for BB gun
+* Added a config option to disable model block rendering
+* Added animated poses feature for custom model morphs
+* Added `empty` default model
+* Added a keybind to record currently selected replay in director block menu
+* Added saving of 5 last versions of player recording
+* Added default keys for record and play/pause director block keybinds (right alt and right control respectively)
+* Changed limbs that have `0` opacity to not render at all
+* Changed damage/attack action not affecting character's health in camera editor preview mode (suggested by Ray from Slightly Insulted)
+* Changed director block GUI to prevent selecting first replay every time
+* Changed recordings list to display director block related player recordings
+* Changed the caption in the top left corner to display: which player recording is about to start recording, and the tick of currently recording player recording.
+* Fixed NPE crash with `null` morph replay (reported by Braigar)
+* Fixed pre delay not properly playback on the client
+* Fixed GIF not working with custom model morphs
+* Fixed GIF having one blank frame
+* Fixed Aperture to work with new changes from 1.3.2
+* Fixed `/model export_obj` exporting a mirrored detached (in terms of vertices) version of model
+* Fixed index out of bounds exception when duping in director block with no replays (reported by Afegor)
+* Fixed a crash related to actors using playback button, which was reported by Olrik&Flynn, but apparently I didn't fix it (reported by Serene Studios)
+* Fixed minor rendering issue with limb highlight with body part being the same model (reported by Andruxioid)
+
 ## Version 1.6
 
 This big massive update probably isn't as big as `1.5`, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than `1.5.3`.

@@ -40,6 +40,10 @@ public class ModelCustomRenderer extends ModelRenderer
     protected boolean compiled;
     protected int displayList = -1;
 
+    /* Stencil magic */
+    public int stencilIndex = -1;
+    public boolean stencilRendering = false;
+
     public ModelCustomRenderer(ModelBase model, int texOffX, int texOffY)
     {
         super(model, texOffX, texOffY);
@@ -54,6 +58,12 @@ public class ModelCustomRenderer extends ModelRenderer
 
         this.limb = limb;
         this.trasnform = transform;
+    }
+
+    public void setupStencilRendering(int stencilIndex)
+    {
+        this.stencilIndex = stencilIndex;
+        this.stencilRendering = true;
     }
 
     /**
@@ -351,6 +361,12 @@ public class ModelCustomRenderer extends ModelRenderer
         if (this.limb.opacity <= 0)
         {
             return;
+        }
+
+        if (this.stencilRendering)
+        {
+            GL11.glStencilFunc(GL11.GL_ALWAYS, this.stencilIndex, -1);
+            this.stencilRendering = false;
         }
 
         this.setup();
