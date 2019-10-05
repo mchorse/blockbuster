@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.minecraft.client.renderer.entity.Render;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.network.Dispatcher;
@@ -182,6 +183,7 @@ public class StructureMorph extends AbstractMorph
 
             /* These states are important to enable */
             GlStateManager.pushMatrix();
+            GlStateManager.enableRescaleNormal();
             GlStateManager.translate(x, y, z);
 
             if (!this.lighting)
@@ -208,6 +210,7 @@ public class StructureMorph extends AbstractMorph
                 GlStateManager.enableColorMaterial();
             }
 
+            GL11.glColor4f(1, 1, 1, 1);
             renderer.renderTEs();
 
             GlStateManager.popMatrix();
@@ -297,6 +300,7 @@ public class StructureMorph extends AbstractMorph
 
         public void render()
         {
+            GL11.glNormal3f(0, 1, 0);
             GL11.glCallList(this.list);
         }
 
