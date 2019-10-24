@@ -112,6 +112,7 @@ public class CameraHandler
 
         if (editor != null)
         {
+            cameraEditorElements = null;
             ClientProxy.EVENT_BUS.post(new CameraEditorEvent.Init(editor));
         }
     }
@@ -234,7 +235,7 @@ public class CameraHandler
         if (cameraEditorElements == null)
         {
             cameraEditorElements = new GuiElements<IGuiElement>();
-            editor.elements.elements.remove(editor.scrub);
+            editor.hidden.elements.remove(editor.scrub);
             editor.elements.add(cameraEditorElements);
         }
 

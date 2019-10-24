@@ -199,12 +199,6 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (this.tryPicking)
         {
-            /* OMG, thank you very much Forge! */
-            if (!Minecraft.getMinecraft().getFramebuffer().isStencilEnabled())
-            {
-                Minecraft.getMinecraft().getFramebuffer().enableStencil();
-            }
-
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
             int scale = Minecraft.getMinecraft().displayWidth / screen.width;
             int x = yaw * scale;
