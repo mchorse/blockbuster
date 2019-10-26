@@ -81,6 +81,11 @@ public class CameraHandler
     public static GuiElements<IGuiElement> cameraEditorElements;
 
     /**
+     * Reset camera editor elements
+     */
+    public static boolean resetCameraEditorElements;
+
+    /**
      * Check whether Aperture is loaded
      */
     public static boolean isApertureLoaded()
@@ -112,7 +117,7 @@ public class CameraHandler
 
         if (editor != null)
         {
-            cameraEditorElements = null;
+            resetCameraEditorElements = true;
             ClientProxy.EVENT_BUS.post(new CameraEditorEvent.Init(editor));
         }
     }
@@ -232,11 +237,18 @@ public class CameraHandler
             }
         });
 
-        if (cameraEditorElements == null)
+        if (cameraEditorElements == null || resetCameraEditorElements)
         {
+            if (resetCameraEditorElements)
+            {
+                editor.elements.elements.remove(cameraEditorElements);
+            }
+
             cameraEditorElements = new GuiElements<IGuiElement>();
             editor.hidden.elements.remove(editor.scrub);
             editor.elements.add(cameraEditorElements);
+
+            resetCameraEditorElements = false;
         }
 
         elements.setVisible(false);
@@ -328,8 +340,7 @@ public class CameraHandler
                 panel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
                 dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
             }
-
-            if (current instanceof GuiCameraEditor && !toOpenCamera)
+            else if (current instanceof GuiCameraEditor)
             {
                 GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard(false);
 
