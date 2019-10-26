@@ -292,6 +292,14 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this;
     }
 
+    public GuiDirectorPanel set(Director director, BlockPos pos)
+    {
+        this.director = director;
+        this.pos = pos;
+
+        return this;
+    }
+
     @Override
     public void appear()
     {
