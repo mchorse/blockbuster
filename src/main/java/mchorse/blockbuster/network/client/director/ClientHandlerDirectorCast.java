@@ -49,7 +49,7 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
         }
         else if (ClientProxy.dashboard != null)
         {
-            ClientProxy.dashboard.directorPanel.setDirector(message.director, message.pos);
+            ClientProxy.dashboard.directorPanel.set(message.director, message.pos);
         }
     }
 }
