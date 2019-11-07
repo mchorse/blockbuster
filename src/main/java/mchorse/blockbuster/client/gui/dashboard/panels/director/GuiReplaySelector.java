@@ -47,7 +47,8 @@ public class GuiReplaySelector extends GuiElement
 
     public void setReplay(Replay replay)
     {
-        if (this.director != null) {
+        if (this.director != null)
+        {
             this.current = this.director.replays.indexOf(replay);
         }
     }
