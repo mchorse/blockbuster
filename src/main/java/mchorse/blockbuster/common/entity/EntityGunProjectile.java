@@ -267,7 +267,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     {
         if (this.props != null && this.timer >= 2)
         {
-            boolean shouldDie = this.props.vanish && this.hits > this.props.hits;
+            boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
 
             if (result.typeOfHit == Type.BLOCK)
             {
