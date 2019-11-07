@@ -32,6 +32,13 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelExtrudedLayer
 {
+    public static final byte TOP_BIT = 0b1;
+    public static final byte BOTTOM_BIT = 0b10;
+    public static final byte FRONT_BIT = 0b100;
+    public static final byte BACK_BIT = 0b1000;
+    public static final byte LEFT_BIT = 0b10000;
+    public static final byte RIGHT_BIT = 0b100000;
+
     /**
      * Storage for extruded layers 
      */
@@ -145,7 +152,7 @@ public class ModelExtrudedLayer
      */
     private static void fillChunk(Chunk chunk, BufferedImage image, ModelCustomRenderer renderer)
     {
-        final int threshold = 0x00;
+        final int threshold = 0x80;
 
         int stepX = (int) (image.getWidth() / renderer.textureWidth);
         int stepY = (int) (image.getHeight() / renderer.textureHeight);
@@ -168,7 +175,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(i, h - 1, j, (byte) 1);
+                    chunk.setBlockBit(i, h - 1, j, TOP_BIT);
                 }
             }
         }
@@ -184,7 +191,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(i, 0, j, (byte) 2);
+                    chunk.setBlockBit(i, 0, j, BOTTOM_BIT);
                 }
             }
         }
@@ -201,7 +208,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(i, h - j - 1, d - 1, (byte) 3);
+                    chunk.setBlockBit(i, h - j - 1, d - 1, FRONT_BIT);
                 }
             }
         }
@@ -217,7 +224,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(w - i - 1, h - j - 1, 0, (byte) 4);
+                    chunk.setBlockBit(w - i - 1, h - j - 1, 0, BACK_BIT);
                 }
             }
         }
@@ -234,7 +241,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(0, h - j - 1, i, (byte) 5);
+                    chunk.setBlockBit(0, h - j - 1, i, LEFT_BIT);
                 }
             }
         }
@@ -246,11 +253,16 @@ public class ModelExtrudedLayer
         {
             for (int j = 0; j < h; j++)
             {
-                int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
+                int xx = x + i * stepX;
+                int yy = y + j * stepY;
+
+                int color = image.getRGB(xx, yy);
+                int alpha = color >> 24 & 0xff;
+                String c = Integer.toHexString(color);
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(w - 1, h - j - 1, i, (byte) 6);
+                    chunk.setBlockBit(w - 1, h - j - 1, d - i - 1, RIGHT_BIT);
                 }
             }
         }
@@ -291,6 +303,8 @@ public class ModelExtrudedLayer
         int offsetX = renderer.limb.texture[0];
         int offsetY = renderer.limb.texture[1];
         boolean mirror = renderer.limb.mirror;
+        Offset off = new Offset(0, 0);
+        Offset offmax = new Offset(0, 0);
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
@@ -310,46 +324,6 @@ public class ModelExtrudedLayer
 
                     float f = 1F / 16F;
 
-                    /* Right */
-                    float offX = offsetX + d + w + d - z - 1;
-                    float offY = offsetY + d + h - y - 1;
-
-                    /* Top */
-                    if (block == 1)
-                    {
-                        offX = offsetX + d + blockX;
-                        offY = offsetY + z;
-                    }
-                    /* Bottom */
-                    else if (block == 2)
-                    {
-                        offX = offsetX + d + w + blockX;
-                        offY = offsetY + z;
-                    }
-                    /* Front */
-                    else if (block == 3)
-                    {
-                        offX = offsetX + d + blockX;
-                        offY = offsetY + d + h - y - 1;
-                    }
-                    /* Back */
-                    else if (block == 4)
-                    {
-                        offX = offsetX + d * 2 + w * 2 - blockX - 1;
-                        offY = offsetY + d + h - y - 1;
-                    }
-                    /* Left */
-                    else if (block == 5)
-                    {
-                        offX = offsetX + z;
-                        offY = offsetY + d + h - y - 1;
-                    }
-
-                    float offMX = (offX + 1) / tw;
-                    float offMY = (offY + 1) / th;
-                    offX /= tw;
-                    offY /= th;
-
                     float aX = -renderer.limb.anchor[0] * w + w;
                     float aY = -renderer.limb.anchor[1] * h + h;
                     float aZ = -renderer.limb.anchor[2] * d + d;
@@ -361,58 +335,138 @@ public class ModelExtrudedLayer
                     /* Top & Bottom */
                     if (!chunk.hasBlock(blockX, y + 1, z))
                     {
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, -1, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, -1, 0).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & TOP_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, -1, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y - 1, z))
                     {
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(offX, offY).normal(0, 1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, 1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, 1, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, 1, 0).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & BOTTOM_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, 1, 0).endVertex();
                     }
 
                     /* Front & back */
                     if (!chunk.hasBlock(blockX, y, z + 1))
                     {
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offY).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(0, 0, -1).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(0, 0, -1).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & FRONT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, off.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, off.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, 0, -1).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y, z - 1))
                     {
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(0, 0, 1).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(0, 0, 1).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(0, 0, 1).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offMY).normal(0, 0, 1).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & BACK_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, offmax.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, offmax.y).normal(0, 0, 1).endVertex();
                     }
 
                     /* Left & Right */
                     if (!chunk.hasBlock(blockX + 1, y, z))
                     {
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offMX, offY).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offX, offY).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offX, offMY).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offMX, offMY).normal(1, 0, 0).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & RIGHT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, off.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, offmax.y).normal(1, 0, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX - 1, y, z))
                     {
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offMX, offY).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offMX, offMY).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(offX, offMY).normal(-1, 0, 0).endVertex();
+                        if (!calculateOffset(off, offmax, (byte) (block & LEFT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                            calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
+                        }
+
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, off.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, offmax.y).normal(-1, 0, 0).endVertex();
                     }
                 }
             }
         }
 
         Tessellator.getInstance().draw();
+    }
+
+    private static boolean calculateOffset(Offset offset, Offset max, byte block, int offsetX, int offsetY, int w, int h, int d, int x, int y, int z, float tw, float th) {
+        /* Right */
+        float offX = -1;
+        float offY = -1;
+
+        /* Top */
+        if ((block & TOP_BIT) != 0)
+        {
+            offX = offsetX + d + x;
+            offY = offsetY + z;
+        }
+        /* Bottom */
+        else if ((block & BOTTOM_BIT) != 0)
+        {
+            offX = offsetX + d + w + x;
+            offY = offsetY + z;
+        }
+        /* Front */
+        else if ((block & FRONT_BIT) != 0)
+        {
+            offX = offsetX + d + x;
+            offY = offsetY + d + h - y - 1;
+        }
+        /* Back */
+        else if ((block & BACK_BIT) != 0)
+        {
+            offX = offsetX + d * 2 + w * 2 - x - 1;
+            offY = offsetY + d + h - y - 1;
+        }
+        /* Left */
+        else if ((block & LEFT_BIT) != 0)
+        {
+            offX = offsetX + z;
+            offY = offsetY + d + h - y - 1;
+        }
+        else if ((block & RIGHT_BIT) != 0)
+        {
+            offX = offsetX + d + w + d - z - 1;
+            offY = offsetY + d + h - y - 1;
+        }
+
+        if (offX == -1 && offY == -1) {
+            return false;
+        }
+
+        float offMX = (offX + 1) / tw;
+        float offMY = (offY + 1) / th;
+        offX /= tw;
+        offY /= th;
+
+        offset.set(offX, offY);
+        max.set(offMX, offMY);
+
+        return true;
     }
 
     /**
@@ -542,6 +596,27 @@ public class ModelExtrudedLayer
         }
 
         /**
+         * Set block at given coordinates
+         */
+        public void setBlockBit(int x, int y, int z, byte bit)
+        {
+            if (x < 0 || y < 0 || z < 0 || x >= this.w || y >= this.h || z >= this.d)
+            {
+                return;
+            }
+
+            byte old = this.data[x + y * this.w + z * this.w * this.h];
+            byte block = (byte) (old | bit);
+
+            this.data[x + y * this.w + z * this.w * this.h] = block;
+
+            if (block != old)
+            {
+                this.stats += (block == 0) ? -1 : 1;
+            }
+        }
+
+        /**
          * Is this chunk has a block at given coordinates  
          */
         public boolean hasBlock(int x, int y, int z)
@@ -560,6 +635,20 @@ public class ModelExtrudedLayer
             }
 
             return this.data[x + y * this.w + z * this.w * this.h];
+        }
+    }
+
+    public static class Offset {
+        public float x;
+        public float y;
+
+        public Offset(float x, float y) {
+            this.set(x, y);
+        }
+
+        public void set(float x, float y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }
