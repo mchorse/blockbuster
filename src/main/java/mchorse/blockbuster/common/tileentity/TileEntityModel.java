@@ -1,5 +1,6 @@
 package mchorse.blockbuster.common.tileentity;
 
+import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
@@ -16,6 +17,8 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,6 +57,8 @@ public class TileEntityModel extends TileEntity implements ITickable
     public float sz = 1;
 
     public boolean shadow;
+    public boolean global = true;
+    public boolean enabled = true;
 
     public TileEntityModel()
     {
@@ -132,35 +137,6 @@ public class TileEntityModel extends TileEntity implements ITickable
         return range * range;
     }
 
-    public void copyData(PacketModifyModelBlock message)
-    {
-        this.order = message.order;
-        this.rotateYawHead = message.yaw;
-        this.rotatePitch = message.pitch;
-        this.rotateBody = message.body;
-        this.x = message.x;
-        this.y = message.y;
-        this.z = message.z;
-        this.rx = message.rx;
-        this.ry = message.ry;
-        this.rz = message.rz;
-        this.one = message.one;
-        this.sx = message.sx;
-        this.sy = message.sy;
-        this.sz = message.sz;
-        this.shadow = message.shadow;
-
-        for (int i = 0; i < message.slots.length; i++)
-        {
-            ItemStack stack = message.slots[i];
-
-            this.slots[i] = stack.copy();
-        }
-
-        this.setMorph(message.morph);
-        this.updateEntity();
-    }
-
     public void copyData(TileEntityModel model)
     {
         this.order = model.order;
@@ -178,6 +154,9 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.sy = model.sy;
         this.sz = model.sz;
         this.shadow = model.shadow;
+        this.global = model.global;
+        this.enabled = model.enabled;
+
         this.morph = model.morph;
 
         for (int i = 0; i < model.slots.length; i++)
@@ -224,7 +203,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setByte("Order", (byte) this.order.ordinal());
-        if (this.shadow) compound.setBoolean("Shadow", this.shadow);
+
         if (this.rotateYawHead != 0) compound.setFloat("Yaw", this.rotateYawHead);
         if (this.rotatePitch != 0) compound.setFloat("Pitch", this.rotatePitch);
         if (this.rotateBody != 0) compound.setFloat("Body", this.rotateBody);
@@ -239,6 +218,10 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (this.sx != 1) compound.setFloat("ScaleX", this.sx);
         if (this.sy != 1) compound.setFloat("ScaleY", this.sy);
         if (this.sz != 1) compound.setFloat("ScaleZ", this.sz);
+
+        if (this.shadow) compound.setBoolean("Shadow", this.shadow);
+        if (!this.global) compound.setBoolean("Global", !this.global);
+        if (!this.enabled) compound.setBoolean("Enabled", !this.enabled);
 
         NBTTagList list = new NBTTagList();
 
@@ -278,7 +261,6 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.order = RotationOrder.values()[compound.getByte("Order")];
         }
 
-        if (compound.hasKey("Shadow")) this.shadow = compound.getBoolean("Shadow");
         if (compound.hasKey("Yaw")) this.rotateYawHead = compound.getFloat("Yaw");
         if (compound.hasKey("Pitch")) this.rotatePitch = compound.getFloat("Pitch");
         if (compound.hasKey("Body")) this.rotateBody = compound.getFloat("Body");
@@ -293,6 +275,10 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (compound.hasKey("ScaleX")) this.sx = compound.getFloat("ScaleX");
         if (compound.hasKey("ScaleY")) this.sy = compound.getFloat("ScaleY");
         if (compound.hasKey("ScaleZ")) this.sz = compound.getFloat("ScaleZ");
+
+        if (compound.hasKey("Shadow")) this.shadow = compound.getBoolean("Shadow");
+        if (compound.hasKey("Global")) this.global = compound.getBoolean("Global");
+        if (compound.hasKey("Enabled")) this.enabled = compound.getBoolean("Enabled");
 
         if (compound.hasKey("Items", 9))
         {
@@ -310,6 +296,86 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (compound.hasKey("Morph", 10))
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(compound.getCompoundTag("Morph"));
+        }
+    }
+
+    public void fromBytes(ByteBuf buf)
+    {
+        this.order = RotationOrder.values()[buf.readByte()];
+
+        this.rotateYawHead = buf.readFloat();
+        this.rotatePitch = buf.readFloat();
+        this.rotateBody = buf.readFloat();
+
+        this.x = buf.readFloat();
+        this.y = buf.readFloat();
+        this.z = buf.readFloat();
+        this.rx = buf.readFloat();
+        this.ry = buf.readFloat();
+        this.rz = buf.readFloat();
+        this.one = buf.readBoolean();
+        this.sx = buf.readFloat();
+        this.sy = buf.readFloat();
+        this.sz = buf.readFloat();
+
+        this.shadow = buf.readBoolean();
+        this.global = buf.readBoolean();
+        this.enabled = buf.readBoolean();
+
+        for (int i = 0; i < 6; i++)
+        {
+            this.slots[i] = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : null;
+        }
+
+        if (buf.readBoolean())
+        {
+            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
+        }
+    }
+
+    public void toBytes(ByteBuf buf)
+    {
+        buf.writeByte(this.order.ordinal());
+
+        buf.writeFloat(this.rotateYawHead);
+        buf.writeFloat(this.rotatePitch);
+        buf.writeFloat(this.rotateBody);
+
+        buf.writeFloat(this.x);
+        buf.writeFloat(this.y);
+        buf.writeFloat(this.z);
+        buf.writeFloat(this.rx);
+        buf.writeFloat(this.ry);
+        buf.writeFloat(this.rz);
+        buf.writeBoolean(this.one);
+        buf.writeFloat(this.sx);
+        buf.writeFloat(this.sy);
+        buf.writeFloat(this.sz);
+
+        buf.writeBoolean(this.shadow);
+        buf.writeBoolean(this.global);
+        buf.writeBoolean(this.enabled);
+
+        for (int i = 0; i < 6; i++)
+        {
+            ItemStack stack = this.slots[i];
+
+            buf.writeBoolean(stack != null);
+
+            if (stack != null)
+            {
+                ByteBufUtils.writeItemStack(buf, stack);
+            }
+        }
+
+        buf.writeBoolean(this.morph != null);
+
+        if (this.morph != null)
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            this.morph.toNBT(tag);
+            ByteBufUtils.writeTag(buf, tag);
         }
     }
 

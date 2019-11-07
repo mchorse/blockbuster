@@ -47,7 +47,8 @@ public class GuiReplaySelector extends GuiElement
 
     public void setReplay(Replay replay)
     {
-        if (this.director != null) {
+        if (this.director != null)
+        {
             this.current = this.director.replays.indexOf(replay);
         }
     }
@@ -127,6 +128,8 @@ public class GuiReplaySelector extends GuiElement
         {
             int i = 0;
             int h = this.scroll.scrollItemSize;
+            int hoverX = -1;
+            String hovered = null;
 
             GuiScreen screen = this.mc.currentScreen;
             GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
@@ -150,15 +153,22 @@ public class GuiReplaySelector extends GuiElement
                     GlStateManager.disableAlpha();
                 }
 
-                if (hover && !replay.id.isEmpty())
+                if (hover && !replay.id.isEmpty() && hovered == null)
                 {
-                    int w = this.font.getStringWidth(replay.id);
-
-                    Gui.drawRect(x - w / 2 - 2, this.scroll.getY(0.5F) - 1, x + w / 2 + 2, this.scroll.getY(0.5F) + 9, 0x88000000);
-                    this.font.drawStringWithShadow(replay.id, x - w / 2, this.scroll.getY(0.5F), 0xffffff);
+                    hovered = replay.id;
+                    hoverX = x;
                 }
 
                 i++;
+            }
+
+            if (hovered != null)
+            {
+                int w = this.font.getStringWidth(hovered);
+                int x = hoverX - w / 2;
+
+                Gui.drawRect(x - 2, this.scroll.getY(0.5F) - 1, x + w + 2, this.scroll.getY(0.5F) + 9, 0x88000000);
+                this.font.drawStringWithShadow(hovered, x, this.scroll.getY(0.5F), 0xffffff);
             }
 
             GL11.glDisable(GL11.GL_SCISSOR_TEST);

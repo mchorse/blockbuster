@@ -335,7 +335,8 @@ public class ModelExtrudedLayer
                     /* Top & Bottom */
                     if (!chunk.hasBlock(blockX, y + 1, z))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & TOP_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & TOP_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -347,7 +348,8 @@ public class ModelExtrudedLayer
 
                     if (!chunk.hasBlock(blockX, y - 1, z))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & BOTTOM_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & BOTTOM_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -360,7 +362,8 @@ public class ModelExtrudedLayer
                     /* Front & back */
                     if (!chunk.hasBlock(blockX, y, z + 1))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & FRONT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & FRONT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -372,7 +375,8 @@ public class ModelExtrudedLayer
 
                     if (!chunk.hasBlock(blockX, y, z - 1))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & BACK_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & BACK_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -385,7 +389,8 @@ public class ModelExtrudedLayer
                     /* Left & Right */
                     if (!chunk.hasBlock(blockX + 1, y, z))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & RIGHT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & RIGHT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -397,7 +402,8 @@ public class ModelExtrudedLayer
 
                     if (!chunk.hasBlock(blockX - 1, y, z))
                     {
-                        if (!calculateOffset(off, offmax, (byte) (block & LEFT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th)) {
+                        if (!calculateOffset(off, offmax, (byte) (block & LEFT_BIT), offsetX, offsetY, w, h, d, blockX, y, z, tw, th))
+                        {
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
@@ -413,7 +419,8 @@ public class ModelExtrudedLayer
         Tessellator.getInstance().draw();
     }
 
-    private static boolean calculateOffset(Offset offset, Offset max, byte block, int offsetX, int offsetY, int w, int h, int d, int x, int y, int z, float tw, float th) {
+    private static boolean calculateOffset(Offset offset, Offset max, byte block, int offsetX, int offsetY, int w, int h, int d, int x, int y, int z, float tw, float th)
+    {
         /* Right */
         float offX = -1;
         float offY = -1;
@@ -454,7 +461,8 @@ public class ModelExtrudedLayer
             offY = offsetY + d + h - y - 1;
         }
 
-        if (offX == -1 && offY == -1) {
+        if (offX == -1 && offY == -1)
+        {
             return false;
         }
 
@@ -642,11 +650,13 @@ public class ModelExtrudedLayer
         public float x;
         public float y;
 
-        public Offset(float x, float y) {
+        public Offset(float x, float y)
+        {
             this.set(x, y);
         }
 
-        public void set(float x, float y) {
+        public void set(float x, float y)
+        {
             this.x = x;
             this.y = y;
         }

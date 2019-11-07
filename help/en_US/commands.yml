@@ -23,6 +23,12 @@ blockbuster:
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
                     
                     {r}This command cleans given {7}<property>{r} in {7}<filename>{r} player recording from {7}[from]{r} tick to {7}[to]{r} (not including {7}[to]{r}) tick to the value specified either in {7}[value]{r} argument (it accepts relative values) or the value at frame {7}[from]{r} or the first frame.
+
+            cut:
+                |
+                    {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
+
+                    {r}This command removes all actions in player recording {7}<filename>{r} before {7}<from>{r} and after {7}<to>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments).
             
             dupe:
                 |

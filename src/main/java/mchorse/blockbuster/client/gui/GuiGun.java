@@ -179,7 +179,7 @@ public class GuiGun extends GuiBase
         this.vanish = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.vanish"), false, (b) -> this.props.vanish = b.button.isChecked());
         this.bounce = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.bounce"), false, (b) -> this.props.bounce = b.button.isChecked());
         this.hits = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.hits"), (value) -> this.props.hits = value.intValue());
-        this.hits.setLimit(1, Integer.MAX_VALUE, true);
+        this.hits.setLimit(0, Integer.MAX_VALUE, true);
         this.damage = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.damage"), (value) -> this.props.damage = value);
 
         this.pickImpact.resizer().parent(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
