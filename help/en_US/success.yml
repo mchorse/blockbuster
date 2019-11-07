@@ -27,3 +27,5 @@ blockbuster.success:
         changed_origin: "{f}Player recording's origin was successfully changed from %s{f} from (%s{f}, %s{f}, %s{f}) to (%s{f}, %s{f}, %s{f})!"
         duped: "{f}Player recording %s{f} was successfully duplicated to %s{f}!"
         clean: "{f}Player recording %s{f} properties %s{f} were successfully cleaned from %s{f} to %s{f}!"
+        prolonged: "{f}Player recording %s{f} was prolonged. Its pre and post delays are: %s{f} and %s{f} (respectively)."
+        faded: "{f}Player recording %s{f}'s last %s{f} frames were faded."
