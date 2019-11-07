@@ -175,8 +175,10 @@ public class SubCommandModelConvertSkin extends CommandBase
                 List<String> strings = new ArrayList<String>();
                 String prefix = skin.contains("/") ? skin.substring(0, skin.lastIndexOf("/") + 1) : "";
 
-                for (AbstractEntry entry : skins.entries) {
-                    if (entry.title.contains("..")) {
+                for (AbstractEntry entry : skins.entries)
+                {
+                    if (entry.title.contains(".."))
+                    {
                         continue;
                     }
 

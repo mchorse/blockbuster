@@ -20,22 +20,32 @@ import net.minecraft.server.MinecraftServer;
 public class SubCommandRecordFade extends SubCommandRecordBase
 {
     @Override
-    public String getName() {
+    public int getRequiredArgs()
+    {
+        return 2;
+    }
+
+    @Override
+    public String getName()
+    {
         return "fade";
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender)
+    {
         return "blockbuster.commands.record.fade";
     }
 
     @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
         Record record = CommandRecord.getRecord(args[0]);
-        int fadeOut = CommandBase.parseInt(args[1], 1, record.getFullLength());
         int length = record.getLength();
+        int fadeOut = CommandBase.parseInt(args[1], 1, length);
 
-        if (length == 0) {
+        if (length == 0)
+        {
             L10n.error(sender, "record.empty", record.filename);
 
             return;
@@ -45,7 +55,8 @@ public class SubCommandRecordFade extends SubCommandRecordBase
         Frame first = record.getFrame(0);
         Frame last = record.getFrame(length - fadeOut - 1);
 
-        for (int i = 0; i < fadeOut; i ++) {
+        for (int i = 0; i < fadeOut; i ++)
+        {
             Frame current = record.getFrame(length - fadeOut + i);
             float x = i / (float) fadeOut;
 

@@ -40,6 +40,7 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements ILimbS
         try
         {
             this.pickLimb(limb);
+            this.limbs.setCurrent(limb);
         }
         catch (Exception e) {}
     }

@@ -54,6 +54,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         ModelLimb limb = this.editor.morph.model.limbs.get(limbName);
 
         this.editor.modelRenderer.limb = limb;
+        this.limbs.setCurrent(limbName);
         this.setTransform(this.pose.limbs.get(limbName));
     }
 
@@ -149,5 +150,4 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
             this.trans.rotate[2] = z;
         }
     }
-
 }

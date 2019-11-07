@@ -102,6 +102,10 @@ blockbuster.gui:
         one: One
         one_tooltip: Uniform one slider scale
         shadow: Shadow
+        global: Global
+        global_tooltip: Enables surpassing of chunk culling
+        enabled: Enabled
+        enabled_tooltip: Enables model block rendering
         
         entity: Entity
         translate: Translate
