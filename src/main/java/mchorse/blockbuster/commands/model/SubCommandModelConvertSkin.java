@@ -6,12 +6,17 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.mclib.McLib;
+import mchorse.mclib.utils.files.AbstractEntry;
+import mchorse.mclib.utils.files.GlobalTree;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
@@ -22,6 +27,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Command /model convert
@@ -59,7 +67,10 @@ public class SubCommandModelConvertSkin extends CommandBase
             throw new CommandException("blockbuster.error.commands.convert_model", model);
         }
 
-        ResourceLocation location = RLUtils.create("b.a", model + "/" + skin);
+        /* If extension or path exist, then it means we need to use the full path, not
+         * not the shortened version... */
+        String path = model + "/" + (skin.contains(".") || skin.contains("/") ? "skins/" + skin : skin);
+        ResourceLocation location = RLUtils.create("b.a", path);
 
         try
         {
@@ -77,9 +88,9 @@ public class SubCommandModelConvertSkin extends CommandBase
 
             BufferedImage target;
 
-            /* Convert to 64x64 */
             if (model.equals("steve"))
             {
+                /* Convert to 64x64 */
                 target = new BufferedImage(w, h * 2, 2);
 
                 Graphics graphics = target.getGraphics();
@@ -103,9 +114,9 @@ public class SubCommandModelConvertSkin extends CommandBase
                 this.drawImage(graphics, target, 44, 52, 40, 64, 40, 20, 44, 32, s);
                 this.drawImage(graphics, target, 48, 52, 44, 64, 52, 20, 56, 32, s);
             }
-            /* Else, convert from 64x64 to 64x32 */
             else
             {
+                /* Else, convert from 64x64 to 64x32 */
                 target = new BufferedImage(w, h / 2, 2);
 
                 Graphics graphics = target.getGraphics();
@@ -114,7 +125,8 @@ public class SubCommandModelConvertSkin extends CommandBase
 
             /* Set target to opposite model */
             String targetModel = model.equals("steve") ? "fred" : "steve";
-            ImageIO.write(target, "png", new File(ClientProxy.configFile, "models/" + targetModel + "/skins/" + skin + ".png"));
+            String name = FilenameUtils.getBaseName(skin);
+            ImageIO.write(target, "png", new File(ClientProxy.configFile, "models/" + targetModel + "/skins/" + name + ".png"));
 
             target.flush();
             image.flush();
@@ -149,13 +161,29 @@ public class SubCommandModelConvertSkin extends CommandBase
             return getListOfStringsMatchingLastWord(args, "steve", "fred");
         }
 
-        if (args.length == 2)
+        if (args.length == 2 && Arrays.asList("steve", "fred").contains(args[0]))
         {
-            Map<String, File> skins = ClientProxy.actorPack.pack.skins.get(args[0]);
+            GlobalTree.TREE.rebuild();
 
-            if (skins != null)
+            String skin = args[1];
+            String path = "b.a/" + args[0] + "/skins/" + skin;
+            AbstractEntry.FolderEntry skins = GlobalTree.TREE.getByPath(path, null);
+            String name = FilenameUtils.getName(path.substring(0, path.length() - 1));
+
+            if (skins != null && skins.title.equals(name))
             {
-                return getListOfStringsMatchingLastWord(args, skins.keySet());
+                List<String> strings = new ArrayList<String>();
+                String prefix = skin.contains("/") ? skin.substring(0, skin.lastIndexOf("/") + 1) : "";
+
+                for (AbstractEntry entry : skins.entries) {
+                    if (entry.title.contains("..")) {
+                        continue;
+                    }
+
+                    strings.add(prefix + entry.title);
+                }
+
+                return getListOfStringsMatchingLastWord(args, strings);
             }
         }
 
