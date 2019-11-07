@@ -6,6 +6,7 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.record.SubCommandRecordAdd;
 import mchorse.blockbuster.commands.record.SubCommandRecordClean;
 import mchorse.blockbuster.commands.record.SubCommandRecordDupe;
+import mchorse.blockbuster.commands.record.SubCommandRecordFade;
 import mchorse.blockbuster.commands.record.SubCommandRecordGet;
 import mchorse.blockbuster.commands.record.SubCommandRecordInfo;
 import mchorse.blockbuster.commands.record.SubCommandRecordOrigin;
@@ -30,6 +31,7 @@ public class CommandRecord extends SubCommandBase
         this.add(new SubCommandRecordAdd());
         this.add(new SubCommandRecordClean());
         this.add(new SubCommandRecordDupe());
+        this.add(new SubCommandRecordFade());
         this.add(new SubCommandRecordGet());
         this.add(new SubCommandRecordInfo());
         this.add(new SubCommandRecordOrigin());
