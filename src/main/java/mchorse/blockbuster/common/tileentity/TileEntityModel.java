@@ -167,6 +167,7 @@ public class TileEntityModel extends TileEntity implements ITickable
         }
 
         this.updateEntity();
+        this.markDirty();
     }
 
     /* NBT methods */
