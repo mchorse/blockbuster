@@ -57,6 +57,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
     private GuiButtonElement<GuiCheckBox> one;
     private GuiButtonElement<GuiCirculate> order;
     private GuiButtonElement<GuiCheckBox> shadow;
+    private GuiButtonElement<GuiCheckBox> global;
+    private GuiButtonElement<GuiCheckBox> enabled;
 
     private GuiModelBlockList list;
     private GuiElements<IGuiElement> subChildren;
@@ -136,9 +138,13 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         }));
         this.subChildren.add(this.one = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()).tooltip(I18n.format("blockbuster.gui.model_block.one_tooltip"), TooltipDirection.LEFT));
         this.subChildren.add(this.shadow = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.button.isChecked()));
+        this.subChildren.add(this.global = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.button.isChecked()).tooltip(I18n.format("blockbuster.gui.model_block.global_tooltip"), TooltipDirection.BOTTOM));
+        this.subChildren.add(this.enabled = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.button.isChecked()).tooltip(I18n.format("blockbuster.gui.model_block.enabled_tooltip"), TooltipDirection.BOTTOM));
 
         element.resizer().set(0, 10, 70, 20).parent(this.area).x(0.5F, -35);
-        this.shadow.resizer().set(80, 4, 30, 11).relative(element.resizer);
+        this.shadow.resizer().set(80, 4, this.shadow.button.width, 11).relative(element.resizer);
+        this.global.resizer().set(0, 16, this.global.button.width, 11).relative(this.shadow.resizer());
+        this.enabled.resizer().set(0, 16, this.enabled.button.width, 11).relative(this.global.resizer());
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
 
         GuiCirculate button = new GuiCirculate(0, 0, 0, 0, 0);
@@ -224,17 +230,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
                 this.dashboard.morphs.finish();
             }
 
-            PacketModifyModelBlock packet = new PacketModifyModelBlock(this.model.getPos(), this.model.morph);
-
-            packet.setBody(this.yaw.trackpad.value, this.pitch.trackpad.value, this.body.trackpad.value);
-            packet.setPos(this.x.trackpad.value, this.y.trackpad.value, this.z.trackpad.value);
-            packet.setRot(this.rx.trackpad.value, this.ry.trackpad.value, this.rz.trackpad.value);
-            packet.setScale(this.one.button.isChecked(), this.sx.trackpad.value, this.sy.trackpad.value, this.sz.trackpad.value);
-            packet.setOrder(RotationOrder.values()[this.order.button.getValue()]);
-            packet.setSlots(this.model.slots);
-            packet.shadow = this.model.shadow;
-
-            Dispatcher.sendToServer(packet);
+            Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
         }
     }
 
@@ -323,6 +319,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
             this.one.button.setIsChecked(this.model.one);
             this.order.button.setValue(this.model.order.ordinal());
             this.shadow.button.setIsChecked(this.model.shadow);
+            this.global.button.setIsChecked(this.model.global);
+            this.enabled.button.setIsChecked(this.model.enabled);
 
             this.toggleOne();
 

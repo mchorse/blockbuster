@@ -18,7 +18,7 @@ public class ClientHandlerModifyModelBlock extends ClientMessageHandler<PacketMo
 
         if (tile != null && tile instanceof TileEntityModel)
         {
-            ((TileEntityModel) tile).copyData(message);
+            ((TileEntityModel) tile).copyData(message.model);
         }
     }
 }
