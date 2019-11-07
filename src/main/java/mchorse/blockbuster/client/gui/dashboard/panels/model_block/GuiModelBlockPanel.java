@@ -141,11 +141,20 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
         this.subChildren.add(this.global = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.button.isChecked()).tooltip(I18n.format("blockbuster.gui.model_block.global_tooltip"), TooltipDirection.BOTTOM));
         this.subChildren.add(this.enabled = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.button.isChecked()).tooltip(I18n.format("blockbuster.gui.model_block.enabled_tooltip"), TooltipDirection.BOTTOM));
 
-        element.resizer().set(0, 10, 70, 20).parent(this.area).x(0.5F, -35);
-        this.shadow.resizer().set(80, 4, this.shadow.button.width, 11).relative(element.resizer);
+        element.resizer().set(0, 10, 90, 20).parent(this.area).x(0.5F, -45);
+        this.shadow.resizer().set(100, 4, this.shadow.button.width, 11).relative(element.resizer);
         this.global.resizer().set(0, 16, this.global.button.width, 11).relative(this.shadow.resizer());
         this.enabled.resizer().set(0, 16, this.enabled.button.width, 11).relative(this.global.resizer());
         this.one.resizer().set(50, -14, 30, 11).relative(this.sx.resizer);
+
+        GuiElement second = element;
+
+        this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.model_block.look"), (button) ->
+        {
+            this.model.ry = 180 - this.mc.thePlayer.rotationYaw;
+        }));
+
+        element.resizer().relative(second.resizer()).set(0, 25, 90, 20);
 
         GuiCirculate button = new GuiCirculate(0, 0, 0, 0, 0);
         button.addLabel("ZYX");

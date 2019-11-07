@@ -106,6 +106,7 @@ blockbuster.gui:
         global_tooltip: Enables surpassing of chunk culling
         enabled: Enabled
         enabled_tooltip: Enables model block rendering
+        look: Rotate at you
         
         entity: Entity
         translate: Translate
