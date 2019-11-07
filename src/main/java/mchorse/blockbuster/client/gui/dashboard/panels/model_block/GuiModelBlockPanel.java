@@ -151,7 +151,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
 
         this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.model_block.look"), (button) ->
         {
-            this.model.ry = 180 - this.mc.thePlayer.rotationYaw;
+            this.model.ry = 180 - this.mc.player.rotationYaw;
         }));
 
         element.resizer().relative(second.resizer()).set(0, 25, 90, 20);
