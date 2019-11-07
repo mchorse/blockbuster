@@ -29,7 +29,13 @@ blockbuster:
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
                     {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.
-            
+
+            fade:
+                |
+                    {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
+
+                    {r}This command fades out {7}<filename>{r} player recording to the first frame using linear interpolation that fades {7}<fade_out>{r} ticks.
+
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}

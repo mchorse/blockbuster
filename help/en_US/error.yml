@@ -54,6 +54,7 @@ blockbuster.error:
         already_exists: "{f}Player recording by filename %s{f} already exists!"
         couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
         wrong_clean_property: "{f}Given wrong clean property %s{f}!"
+        empty_record: "{f}Given player recording %s{f} is empty!"
     
     # Recording errors
     recording:
