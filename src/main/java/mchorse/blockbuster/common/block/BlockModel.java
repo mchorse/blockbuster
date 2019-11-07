@@ -78,7 +78,7 @@ public class BlockModel extends Block implements ITileEntityProvider
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack)
     {
-        this.lastYaw = MathHelper.wrapDegrees(180 - placer.rotationYaw);
+        this.lastYaw = placer.isSneaking() ? MathHelper.wrapDegrees(180 - placer.rotationYaw) : 0;
 
         return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, stack);
     }
