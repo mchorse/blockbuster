@@ -145,7 +145,7 @@ public class ModelExtrudedLayer
      */
     private static void fillChunk(Chunk chunk, BufferedImage image, ModelCustomRenderer renderer)
     {
-        final int threshold = 0x80;
+        final int threshold = 0x00;
 
         int stepX = (int) (image.getWidth() / renderer.textureWidth);
         int stepY = (int) (image.getHeight() / renderer.textureHeight);
@@ -226,7 +226,7 @@ public class ModelExtrudedLayer
         x = offsetX * stepX;
         y = (offsetY + d) * stepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < d; i++)
         {
             for (int j = 0; j < h; j++)
             {
@@ -242,7 +242,7 @@ public class ModelExtrudedLayer
         x = (offsetX + d + w) * stepX;
         y = (offsetY + d) * stepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < d; i++)
         {
             for (int j = 0; j < h; j++)
             {
@@ -250,7 +250,7 @@ public class ModelExtrudedLayer
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlock(w - 1, h - j - 1, d - i - 1, (byte) 6);
+                    chunk.setBlock(w - 1, h - j - 1, i, (byte) 6);
                 }
             }
         }
