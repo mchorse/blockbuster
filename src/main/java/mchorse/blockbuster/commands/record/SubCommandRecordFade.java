@@ -19,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
  */
 public class SubCommandRecordFade extends SubCommandRecordBase
 {
+    @Override
     public int getRequiredArgs()
     {
         return 2;
