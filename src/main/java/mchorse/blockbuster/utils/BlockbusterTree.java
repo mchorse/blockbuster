@@ -26,6 +26,7 @@ public class BlockbusterTree extends FileTree
     {
         this.folder = folder;
         this.root.title = "b.a";
+        this.root.file = folder;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class BlockbusterTree extends FileTree
         {
             if (file.isDirectory())
             {
-                FolderEntry entry = new FolderEntry(file.getName(), this.root);
+                FolderEntry entry = new FolderEntry(file.getName(), this.root, file);
 
                 if (file.isDirectory())
                 {
@@ -74,7 +75,7 @@ public class BlockbusterTree extends FileTree
             {
                 if (skin.isDirectory())
                 {
-                    FolderEntry folder = new FolderEntry(name, entry);
+                    FolderEntry folder = new FolderEntry(name, entry, skin);
                     this.addEntries(skin, folder, prefix + "/" + name);
 
                     if (folder.entries.isEmpty())
