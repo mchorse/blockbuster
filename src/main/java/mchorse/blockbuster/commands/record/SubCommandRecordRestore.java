@@ -21,13 +21,13 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "restore";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.record.restore";
     }
@@ -68,7 +68,7 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length == 2)
         {
             List<String> iterations = Utils.getReplayIterations(args[0]);
@@ -79,6 +79,6 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
             }
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }
