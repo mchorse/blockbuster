@@ -24,7 +24,8 @@ blockbuster.gui.me:
         none: None
         right: Right
         left: Left
-        
+
+        holding: Hold
         swiping: Swiping
         looking: Looking
         swinging: Swinging
