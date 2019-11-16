@@ -30,3 +30,4 @@ blockbuster.success:
         prolonged: "{f}Player recording %s{f} was prolonged. Its pre and post delays are: %s{f} and %s{f} (respectively)."
         faded: "{f}Player recording %s{f}'s last %s{f} frames were faded."
         cut: "{f}Player recording %s{f} was cut between %s{f} and %s{f} frames."
+        restored: "{f}Player recording %s{f}'s %s{f} iteration was restored!"

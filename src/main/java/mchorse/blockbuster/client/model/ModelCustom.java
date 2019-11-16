@@ -229,7 +229,7 @@ public class ModelCustom extends ModelBiped
                 limb.rotateAngleX += (MathHelper.sin(ageInTicks * 0.067F) * 0.05F) * factor;
             }
 
-            if (limb.limb.swiping && this.swingProgress > 0.0F)
+            if (limb.limb.swiping && !limb.limb.wing && this.swingProgress > 0.0F)
             {
                 float swing = this.swingProgress;
                 float bodyY = MathHelper.sin(MathHelper.sqrt(swing) * PI * 2F) * 0.2F;
@@ -260,7 +260,10 @@ public class ModelCustom extends ModelBiped
                     break;
 
                     case ITEM:
-                        limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
+                        if (limb.limb.hold)
+                        {
+                            limb.rotateAngleX = limb.rotateAngleX * 0.5F - PI / 10F;
+                        }
                     break;
                 }
 
@@ -295,7 +298,16 @@ public class ModelCustom extends ModelBiped
 
             if (limb.limb.wing)
             {
-                limb.rotateAngleY = MathHelper.cos(ageInTicks * 1.3F) * (float) Math.PI * 0.25F * (0.5F + limbSwingAmount) * (limb.limb.invert || limb.limb.mirror ? -1 : 1);
+                float wingFactor = MathHelper.cos(ageInTicks * 1.3F) * (float) Math.PI * 0.25F * (0.5F + limbSwingAmount) * factor;
+
+                if (limb.limb.swiping)
+                {
+                    limb.rotateAngleZ = wingFactor;
+                }
+                else
+                {
+                    limb.rotateAngleY = wingFactor;
+                }
             }
         }
     }
