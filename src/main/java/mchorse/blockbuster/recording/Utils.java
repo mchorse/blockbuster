@@ -158,6 +158,33 @@ public class Utils
     }
 
     /**
+     * Get list of all available replays
+     */
+    public static List<String> getReplayIterations(String replay)
+    {
+        List<String> list = new ArrayList<String>();
+        File replays = new File(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/records");
+        File[] files = replays.listFiles();
+
+        if (files == null)
+        {
+            return list;
+        }
+
+        for (File file : files)
+        {
+            String name = file.getName();
+
+            if (file.isFile() && name.startsWith(replay) && name.contains(".dat~"))
+            {
+                list.add(name.substring(name.indexOf("~") + 1));
+            }
+        }
+
+        return list;
+    }
+
+    /**
      * Send record frames to given player (from the server)
      */
     public static void sendRecord(String filename, EntityPlayerMP player)
