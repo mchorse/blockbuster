@@ -60,6 +60,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private GuiButtonElement<GuiCirculate> holding;
     private GuiButtonElement<GuiCirculate> slot;
+    private GuiButtonElement<GuiCheckBox> hold;
     private GuiButtonElement<GuiCheckBox> swiping;
     private GuiButtonElement<GuiCheckBox> looking;
     private GuiButtonElement<GuiCheckBox> swinging;
@@ -111,6 +112,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         });
         this.slot = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.panel.limb.slot = ArmorSlot.values()[b.button.getValue()]);
         this.slot.tooltip(I18n.format("blockbuster.gui.me.limbs.slot"), TooltipDirection.LEFT);
+        this.hold = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.holding"), false, (b) -> this.panel.limb.hold = b.button.isChecked());
 
         for (ArmorSlot slot : ArmorSlot.values())
         {
@@ -122,8 +124,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 35, 120, 20);
         this.origin.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
         this.slot.resizer().relative(this.origin.resizer()).set(0, 22, 120, 20);
+        this.hold.resizer().relative(this.slot.resizer()).set(0, 25, 60, 11);
 
-        this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot);
+        this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot, this.hold);
 
         /* Second category */
         this.second = new GuiElements<>();
@@ -333,6 +336,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.holding.button.setValue(limb.holding.ordinal());
         this.slot.button.setValue(limb.slot.ordinal());
+        this.hold.button.setIsChecked(limb.hold);
         this.swiping.button.setIsChecked(limb.swiping);
         this.looking.button.setIsChecked(limb.looking);
         this.swinging.button.setIsChecked(limb.swinging);

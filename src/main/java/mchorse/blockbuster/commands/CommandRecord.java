@@ -13,6 +13,7 @@ import mchorse.blockbuster.commands.record.SubCommandRecordInfo;
 import mchorse.blockbuster.commands.record.SubCommandRecordOrigin;
 import mchorse.blockbuster.commands.record.SubCommandRecordProlong;
 import mchorse.blockbuster.commands.record.SubCommandRecordRemove;
+import mchorse.blockbuster.commands.record.SubCommandRecordRestore;
 import mchorse.blockbuster.commands.record.SubCommandRecordSearch;
 import mchorse.blockbuster.commands.record.SubCommandRecordTP;
 import mchorse.blockbuster.recording.data.Record;
@@ -39,6 +40,7 @@ public class CommandRecord extends SubCommandBase
         this.add(new SubCommandRecordOrigin());
         this.add(new SubCommandRecordProlong());
         this.add(new SubCommandRecordRemove());
+        this.add(new SubCommandRecordRestore());
         this.add(new SubCommandRecordSearch());
         this.add(new SubCommandRecordTP());
     }

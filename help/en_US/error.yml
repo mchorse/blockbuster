@@ -55,7 +55,9 @@ blockbuster.error:
         couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
         wrong_clean_property: "{f}Given wrong clean property %s{f}!"
         empty_record: "{f}Given player recording %s{f} is empty!"
-    
+        not_exist_iteration: "{f}Given player recording by name %s{f}'s iteration %s{f} doesn't exist!"
+        cant_restore: "{f}Can't restore an iteration because temporary file exists while it shouldn't be..."
+
     # Recording errors
     recording:
         read: "{f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f})."

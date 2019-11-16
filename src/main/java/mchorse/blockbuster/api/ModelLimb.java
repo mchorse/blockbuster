@@ -33,6 +33,7 @@ public class ModelLimb
     /* Game play */
     public Holding holding = Holding.NONE;
     public ArmorSlot slot = ArmorSlot.NONE;
+    public boolean hold = true;
     public boolean swiping;
     public boolean looking;
     public boolean swinging;
@@ -68,6 +69,7 @@ public class ModelLimb
 
         b.holding = this.holding;
         b.slot = this.slot;
+        b.hold = this.hold;
         b.swiping = this.swiping;
         b.looking = this.looking;
         b.swinging = this.swinging;

@@ -59,6 +59,12 @@ blockbuster:
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
                     {r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}.
+
+            restore:
+                |
+                    {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
+
+                    {r}Restores previous version {7}<iteration>{r} of a player recording by name {7}<filename>{r}. For example {7}/record restore test 1{r} will swap {7}test.dat{r} and {7}test.dat~1{r} player recording files places.
             
             search:
                 |
