@@ -72,11 +72,11 @@ public class RenderActor extends RenderLiving<EntityActor>
 
             if (morph instanceof CustomMorph)
             {
-                Model model = ((CustomMorph) morph).model;
+                CustomMorph custom = (CustomMorph) morph;
 
-                if (model != null)
+                if (custom.model != null)
                 {
-                    shadow = model.getPose("standing").size[0];
+                    shadow = custom.getWidth(entity) * custom.model.scale[0];
                 }
             }
 
