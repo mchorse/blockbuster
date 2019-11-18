@@ -84,6 +84,8 @@ public class RenderActor extends RenderLiving<EntityActor>
 
             morph.render(entity, x, y, z, entityYaw, partialTicks);
         }
+
+        this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
     }
 
     /**
