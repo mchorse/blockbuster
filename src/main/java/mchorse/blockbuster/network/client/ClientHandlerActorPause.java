@@ -29,6 +29,7 @@ public class ClientHandlerActorPause extends ClientMessageHandler<PacketActorPau
             if (playback.record != null)
             {
                 playback.applyFrame(message.tick, actor, true);
+                actor.renderYawOffset = actor.prevRenderYawOffset = actor.rotationYawHead;
             }
         }
     }
