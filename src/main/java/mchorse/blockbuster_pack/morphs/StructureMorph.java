@@ -112,6 +112,8 @@ public class StructureMorph extends AbstractMorph
 
     public StructureMorph()
     {
+        super();
+
         this.name = "structure";
     }
 

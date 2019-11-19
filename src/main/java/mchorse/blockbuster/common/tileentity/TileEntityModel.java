@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -81,10 +82,14 @@ public class TileEntityModel extends TileEntity implements ITickable
         this.markDirty();
     }
 
-    @SideOnly(Side.CLIENT)
-    public void createEntity()
+    public void createEntity(World world)
     {
-        this.entity = new EntityActor(Minecraft.getMinecraft().theWorld);
+        if (world == null)
+        {
+            return;
+        }
+
+        this.entity = new EntityActor(world);
         this.entity.onGround = true;
         this.updateEntity();
     }
@@ -105,9 +110,17 @@ public class TileEntityModel extends TileEntity implements ITickable
     @Override
     public void update()
     {
+        if (this.entity == null)
+        {
+            this.createEntity(this.worldObj);
+        }
+
         if (this.entity != null)
         {
             this.entity.ticksExisted++;
+            this.entity.posX = this.pos.getX() + this.x + 0.5;
+            this.entity.posY = this.pos.getY() + this.y;
+            this.entity.posZ = this.pos.getZ() + this.z + 0.5;
 
             if (this.morph != null)
             {

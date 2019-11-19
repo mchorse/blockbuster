@@ -119,6 +119,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     public CustomMorph()
     {
+        super();
+
         this.settings = this.settings.clone();
         this.settings.hands = true;
     }
@@ -341,11 +343,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.updateSize(target, cap);
         }
 
-        if (target.worldObj.isRemote)
-        {
-            this.parts.updateBodyLimbs(target, cap);
-        }
-
+        this.parts.updateBodyLimbs(target, cap);
         super.update(target, cap);
     }
 

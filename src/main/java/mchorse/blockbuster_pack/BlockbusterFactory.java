@@ -10,10 +10,12 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
+import mchorse.blockbuster_pack.client.gui.GuiParticleMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
@@ -60,6 +62,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiImageMorph(mc));
         editors.add(new GuiSequencerMorph(mc));
         editors.add(new GuiRecordMorph(mc));
+        editors.add(new GuiParticleMorph(mc));
     }
 
     @Override
@@ -70,20 +73,25 @@ public class BlockbusterFactory implements IMorphFactory
         {
             return I18n.format("blockbuster.morph.image");
         }
-
-        if (morph instanceof SequencerMorph)
+        else if (morph instanceof SequencerMorph)
         {
             return I18n.format("blockbuster.morph.sequencer");
         }
-
-        if (morph instanceof RecordMorph)
+        else if (morph instanceof RecordMorph)
         {
             return I18n.format("blockbuster.morph.record");
         }
-
-        if (morph instanceof StructureMorph)
+        else if (morph instanceof StructureMorph)
         {
             return I18n.format("blockbuster.morph.structure");
+        }
+        else if (morph instanceof StructureMorph)
+        {
+            return I18n.format("blockbuster.morph.structure");
+        }
+        else if (morph instanceof ParticleMorph)
+        {
+            return I18n.format("blockbuster.morph.particle");
         }
 
         String[] splits = morph.name.split("\\.");
@@ -102,52 +110,42 @@ public class BlockbusterFactory implements IMorphFactory
     public AbstractMorph getMorphFromNBT(NBTTagCompound tag)
     {
         String name = tag.getString("Name");
+        AbstractMorph morph = null;
         name = name.substring(name.indexOf(".") + 1);
 
         /* Utility */
         if (name.equals("image"))
         {
-            ImageMorph image = new ImageMorph();
-
-            image.fromNBT(tag);
-
-            return image;
+            morph = new ImageMorph();
         }
-
-        if (name.equals("sequencer"))
+        else if (name.equals("sequencer"))
         {
-            SequencerMorph seq = new SequencerMorph();
-
-            seq.fromNBT(tag);
-
-            return seq;
+            morph = new SequencerMorph();
         }
-
-        if (name.equals("record"))
+        else if (name.equals("record"))
         {
-            RecordMorph record = new RecordMorph();
-
-            record.fromNBT(tag);
-
-            return record;
+            morph = new RecordMorph();
         }
-
-        if (name.equals("structure"))
+        else if (name.equals("structure"))
         {
-            StructureMorph struct = new StructureMorph();
-
-            struct.fromNBT(tag);
-
-            return struct;
+            morph = new StructureMorph();
         }
-
-        /* Custom model morphs */
-        CustomMorph morph = new CustomMorph();
-        ModelCell entry = this.models.models.get(name);
-
-        if (entry != null)
+        else if (name.equals("particle"))
         {
-            morph.model = entry.model;
+            morph = new ParticleMorph();
+        }
+        else
+        {
+            /* Custom model morphs */
+            CustomMorph custom = new CustomMorph();
+            ModelCell entry = this.models.models.get(name);
+
+            if (entry != null)
+            {
+                custom.model = entry.model;
+            }
+
+            morph = custom;
         }
 
         morph.fromNBT(tag);
@@ -245,11 +243,14 @@ public class BlockbusterFactory implements IMorphFactory
             morph.structure = key;
             morphs.addMorphVariant("structure", "blockbuster_extra", key, morph);
         }
+
+        /* Particle morph */
+        morphs.addMorph("particle", "blockbuster_extra", new ParticleMorph());
     }
 
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle");
     }
 }

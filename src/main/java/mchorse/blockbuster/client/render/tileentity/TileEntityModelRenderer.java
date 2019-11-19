@@ -41,7 +41,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             if (te.entity == null)
             {
-                te.createEntity();
+                te.createEntity(mc.theWorld);
             }
 
             if (te.entity == null)
