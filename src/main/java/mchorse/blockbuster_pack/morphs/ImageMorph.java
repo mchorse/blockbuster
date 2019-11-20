@@ -55,6 +55,8 @@ public class ImageMorph extends AbstractMorph
 
     public ImageMorph()
     {
+        super();
+
         this.name = "blockbuster.image";
     }
 

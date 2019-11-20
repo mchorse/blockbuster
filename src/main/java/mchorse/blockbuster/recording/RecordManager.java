@@ -258,6 +258,7 @@ public class RecordManager
         {
             if (actor.kill)
             {
+                actor.actor.dismountRidingEntity();
                 actor.actor.setDead();
 
                 if (actor.actor instanceof EntityPlayer)

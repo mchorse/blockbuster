@@ -235,7 +235,32 @@ blockbuster.gui:
         no_morph: (no morph)
         morphs: Morphs
         random_order: Random order
-    
+
+    particle:
+        tooltip: General properties
+        morph: Morph properties
+        vanilla: Vanilla properties
+        common: Common properties
+
+        type: Particle type
+        types:
+            vanilla: Vanilla
+            morph: Morph
+
+        pick_type: Pick type
+        pick_type_tooltip: Pick morph movement type
+
+        particle: Pick particle
+        frequency: Frequency
+        dx: Offset X
+        dy: Offset Y
+        dz: Offset Z
+        speed: Speed
+        count: Count
+        args: Additional arguments
+
+        fade: Fade
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime

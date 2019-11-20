@@ -23,6 +23,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -55,7 +56,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * scenes (like one from Van Helsing in beginning with big crowd with torches,
  * fire and stuff).
  */
-public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnData, IMorphProvider
+public class EntityActor extends EntityCreature implements IEntityAdditionalSpawnData, IMorphProvider
 {
     /**
      * This field is needed to make actors invisible. This is helpful for
@@ -571,6 +572,11 @@ public class EntityActor extends EntityLiving implements IEntityAdditionalSpawnD
         }
 
         this.setEntityInvulnerable(buffer.readBoolean());
+    }
+
+    @Override
+    public boolean canBeLeashedTo(EntityPlayer player) {
+        return !this.getLeashed();
     }
 
     /**

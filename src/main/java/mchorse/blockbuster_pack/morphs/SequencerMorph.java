@@ -66,6 +66,8 @@ public class SequencerMorph extends AbstractMorph
 
     public SequencerMorph()
     {
+        super();
+
         this.name = "sequencer";
     }
 
