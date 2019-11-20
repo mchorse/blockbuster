@@ -59,6 +59,8 @@ public class RecordMorph extends AbstractMorph
 
     public RecordMorph()
     {
+        super();
+
         this.name = "blockbuster.record";
     }
 
