@@ -275,7 +275,7 @@ public class ParticleMorph extends AbstractMorph
         if (tag.hasKey("Mode")) this.mode = tag.getString("Mode").equals(ParticleMode.MORPH.type) ? ParticleMode.MORPH : ParticleMode.VANILLA;
         if (tag.hasKey("Frequency")) this.frequency = tag.getInteger("Frequency");
 
-        if (tag.hasKey("MovementType")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("MovementType"));
+        if (tag.hasKey("Type")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("Type"));
         if (tag.hasKey("X")) this.vanillaX = tag.getDouble("X");
         if (tag.hasKey("Y")) this.vanillaY = tag.getDouble("Y");
         if (tag.hasKey("Z")) this.vanillaZ = tag.getDouble("Z");
@@ -304,7 +304,7 @@ public class ParticleMorph extends AbstractMorph
         tag.setString("Mode", this.mode.type);
         tag.setInteger("Frequency", this.frequency);
 
-        tag.setString("MovementType", this.vanillaType.getParticleName());
+        tag.setString("Type", this.vanillaType.getParticleName());
         tag.setDouble("X", this.vanillaX);
         tag.setDouble("Y", this.vanillaY);
         tag.setDouble("Z", this.vanillaZ);
