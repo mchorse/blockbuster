@@ -45,7 +45,7 @@ public class URLDownloadThread implements Runnable
         InputStream stream = con.getInputStream();
         String type = con.getHeaderField("Content-Type");
 
-        if (!type.startsWith("image/"))
+        if (type != null && !type.startsWith("image/"))
         {
             return null;
         }
