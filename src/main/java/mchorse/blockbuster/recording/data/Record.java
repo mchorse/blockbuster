@@ -527,7 +527,7 @@ public class Record
                     NBTTagCompound actionTag = new NBTTagCompound();
 
                     action.toNBT(actionTag);
-                    actionTag.setByte("MovementType", ActionRegistry.CLASS_TO_ID.get(action.getClass()));
+                    actionTag.setByte("Type", ActionRegistry.CLASS_TO_ID.get(action.getClass()));
                     actionsTag.appendTag(actionTag);
                 }
 
@@ -685,7 +685,7 @@ public class Record
 
     private Action actionFromNBT(NBTTagCompound tag, NBTTagCompound map) throws Exception
     {
-        byte type = tag.getByte("MovementType");
+        byte type = tag.getByte("Type");
         Action action = null;
 
         if (map == null)

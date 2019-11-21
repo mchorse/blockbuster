@@ -43,9 +43,9 @@ public class URLDownloadThread implements Runnable
         con.setRequestProperty("User-Agent", USER_AGENT);
 
         InputStream stream = con.getInputStream();
-        String type = con.getHeaderField("Content-MovementType");
+        String type = con.getHeaderField("Content-Type");
 
-        if (!type.startsWith("image/"))
+        if (type != null && !type.startsWith("image/"))
         {
             return null;
         }

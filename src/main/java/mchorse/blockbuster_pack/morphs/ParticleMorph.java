@@ -14,6 +14,8 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -87,6 +89,7 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         Minecraft.getMinecraft().getTextureManager().bindTexture(PARTICLE_TEXTURES);
@@ -102,9 +105,10 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
     {
-        if (this.mode == ParticleMode.MORPH && !this.morphParticles.isEmpty())
+        if (!this.morphParticles.isEmpty())
         {
             GL11.glPushMatrix();
             GL11.glTranslated(x, y, z);
@@ -125,7 +129,7 @@ public class ParticleMorph extends AbstractMorph
 
         boolean alive = this.duration < 0 || this.tick < this.duration;
 
-        if (this.tick % this.frequency == 0 && alive)
+        if (this.frequency != 0 && this.tick % this.frequency == 0 && alive)
         {
             if (!target.world.isRemote && this.mode == ParticleMode.VANILLA && this.vanillaType != null)
             {
@@ -142,7 +146,7 @@ public class ParticleMorph extends AbstractMorph
         }
 
         /* Update morph based particles */
-        if (target.world.isRemote && this.mode == ParticleMode.MORPH)
+        if (target.world.isRemote)
         {
             Iterator<MorphParticle> it = this.morphParticles.iterator();
 
@@ -174,6 +178,7 @@ public class ParticleMorph extends AbstractMorph
             /* Common properties */
             result = result && this.mode == particle.mode;
             result = result && this.frequency == particle.frequency;
+            result = result && this.duration == particle.duration;
 
             /* Vanilla properties */
             result = result && this.vanillaType == particle.vanillaType;
@@ -219,34 +224,53 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph clone(boolean b)
+    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    {
+        if (morph instanceof ParticleMorph)
+        {
+            this.copy((ParticleMorph) morph, isRemote);
+
+            return true;
+        }
+
+        return super.canMerge(morph, isRemote);
+    }
+
+    @Override
+    public AbstractMorph clone(boolean isRemote)
     {
         ParticleMorph morph = new ParticleMorph();
 
-        morph.mode = this.mode;
-        morph.frequency = this.frequency;
-
-        morph.vanillaType = this.vanillaType;
-        morph.vanillaX = this.vanillaX;
-        morph.vanillaY = this.vanillaY;
-        morph.vanillaZ = this.vanillaZ;
-        morph.vanillaDX = this.vanillaDX;
-        morph.vanillaDY = this.vanillaDY;
-        morph.vanillaDZ = this.vanillaDZ;
-        morph.speed = this.speed;
-        morph.count = this.count;
-        morph.arguments = this.arguments;
-
-        morph.morph = this.morph;
-        morph.movementType = this.movementType;
-        morph.yaw = this.yaw;
-        morph.pitch = this.pitch;
-        morph.sequencer = this.sequencer;
-        morph.random = this.random;
-        morph.fade = this.fade;
-        morph.lifeSpan = this.lifeSpan;
+        morph.copy(this, isRemote);
 
         return morph;
+    }
+
+    public void copy(ParticleMorph morph, boolean isRemote)
+    {
+        this.mode = morph.mode;
+        this.frequency = morph.frequency;
+        this.duration = morph.duration;
+
+        this.vanillaType = morph.vanillaType;
+        this.vanillaX = morph.vanillaX;
+        this.vanillaY = morph.vanillaY;
+        this.vanillaZ = morph.vanillaZ;
+        this.vanillaDX = morph.vanillaDX;
+        this.vanillaDY = morph.vanillaDY;
+        this.vanillaDZ = morph.vanillaDZ;
+        this.speed = morph.speed;
+        this.count = morph.count;
+        this.arguments = morph.arguments;
+
+        this.morph = morph.morph == null ? null : morph.morph.clone(isRemote);
+        this.movementType = morph.movementType;
+        this.yaw = morph.yaw;
+        this.pitch = morph.pitch;
+        this.sequencer = morph.sequencer;
+        this.random = morph.random;
+        this.fade = morph.fade;
+        this.lifeSpan = morph.lifeSpan;
     }
 
     @Override
@@ -274,8 +298,9 @@ public class ParticleMorph extends AbstractMorph
 
         if (tag.hasKey("Mode")) this.mode = tag.getString("Mode").equals(ParticleMode.MORPH.type) ? ParticleMode.MORPH : ParticleMode.VANILLA;
         if (tag.hasKey("Frequency")) this.frequency = tag.getInteger("Frequency");
+        if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
 
-        if (tag.hasKey("MovementType")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("MovementType"));
+        if (tag.hasKey("Type")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("Type"));
         if (tag.hasKey("X")) this.vanillaX = tag.getDouble("X");
         if (tag.hasKey("Y")) this.vanillaY = tag.getDouble("Y");
         if (tag.hasKey("Z")) this.vanillaZ = tag.getDouble("Z");
@@ -303,8 +328,9 @@ public class ParticleMorph extends AbstractMorph
 
         tag.setString("Mode", this.mode.type);
         tag.setInteger("Frequency", this.frequency);
+        tag.setInteger("Duration", this.duration);
 
-        tag.setString("MovementType", this.vanillaType.getParticleName());
+        tag.setString("Type", this.vanillaType.getParticleName());
         tag.setDouble("X", this.vanillaX);
         tag.setDouble("Y", this.vanillaY);
         tag.setDouble("Z", this.vanillaZ);
@@ -391,9 +417,9 @@ public class ParticleMorph extends AbstractMorph
         {
             GL11.glPushMatrix();
 
-            double x = Interpolations.lerp(this.prevX, this.x, partialTicks);
-            double y = Interpolations.lerp(this.prevY, this.y, partialTicks);
-            double z = Interpolations.lerp(this.prevZ, this.z, partialTicks);
+            double x = Interpolations.lerp(this.prevX, this.x, partialTicks) + this.parent.vanillaX;
+            double y = Interpolations.lerp(this.prevY, this.y, partialTicks) + this.parent.vanillaY;
+            double z = Interpolations.lerp(this.prevZ, this.z, partialTicks) + this.parent.vanillaZ;
             double scale = Interpolations.envelope(this.timer + partialTicks, this.parent.lifeSpan, this.parent.fade);
 
             GL11.glTranslated(x, y, z);
