@@ -43,6 +43,12 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
     }
 
     @Override
+    public boolean canEdit(AbstractMorph morph)
+    {
+        return morph instanceof ParticleMorph;
+    }
+
+    @Override
     protected void drawMorph(int mouseX, int mouseY, float partialTicks)
     {
         try {
