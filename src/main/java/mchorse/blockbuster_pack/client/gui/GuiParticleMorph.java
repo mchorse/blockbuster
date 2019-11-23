@@ -43,6 +43,12 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
     }
 
     @Override
+    public boolean canEdit(AbstractMorph morph)
+    {
+        return morph instanceof ParticleMorph;
+    }
+
+    @Override
     protected void drawMorph(int mouseX, int mouseY, float partialTicks)
     {
         try {
@@ -58,6 +64,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         public GuiButtonElement<GuiCirculate> mode;
         public GuiTrackpadElement frequency;
         public GuiTrackpadElement duration;
+        public GuiTrackpadElement delay;
 
         public GuiButtonElement<GuiButton> pickParticle;
         public GuiStringListElement type;
@@ -88,6 +95,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.frequency.setLimit(1, Integer.MAX_VALUE, true);
             this.duration = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.sequencer.duration"), (value) -> this.morph.duration = value.intValue());
             this.duration.setLimit(-1, Integer.MAX_VALUE, true);
+            this.delay = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.delay"), (value) -> this.morph.delay = value.intValue());
+            this.delay.setLimit(0, Integer.MAX_VALUE, true);
 
             this.pickParticle = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.particle.particle"), (b) -> this.type.toggleVisible());
             this.type = new GuiStringListElement(mc, (value) ->
@@ -140,6 +149,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.mode.resizer().parent(this.area).set(0, 35, 100, 20).x(1, -110);
             this.frequency.resizer().relative(this.pickParticle.resizer()).set(0, 25, 100, 20);
             this.duration.resizer().relative(this.frequency.resizer()).set(0, 25, 100, 20);
+            this.delay.resizer().relative(this.duration.resizer()).set(0, 25, 100, 20);
 
             this.pickParticle.resizer().relative(this.mode.resizer()).set(0, 25, 100, 20);
             this.type.resizer().relative(this.pickParticle.resizer()).set(0, 20, 100, 80);
@@ -153,7 +163,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.count.resizer().relative(this.dz.resizer()).set(0, 25, 100, 20);
             this.args.resizer().relative(this.speed.resizer()).set(0, 40, 100, 20);
 
-            this.children.add(this.mode, this.frequency, this.duration, this.pickParticle, this.x, this.y, this.z, this.dx, this.dy, this.dz, this.speed, this.count, this.args, this.type);
+            this.children.add(this.mode, this.frequency, this.duration, this.delay, this.pickParticle, this.x, this.y, this.z, this.dx, this.dy, this.dz, this.speed, this.count, this.args, this.type);
         }
 
         @Override
@@ -164,6 +174,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.mode.button.setValue(morph.mode == ParticleMorph.ParticleMode.MORPH ? 1 : 0);
             this.frequency.setValue(morph.frequency);
             this.duration.setValue(morph.duration);
+            this.delay.setValue(morph.delay);
 
             this.type.setVisible(false);
             this.type.setCurrentScroll(morph.vanillaType == null ? "" : morph.vanillaType.getParticleName());
@@ -209,6 +220,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         public GuiButtonElement<GuiCheckBox> random;
         public GuiTrackpadElement fade;
         public GuiTrackpadElement lifeSpan;
+        public GuiTrackpadElement maximum;
 
         public GuiParticleMorphMorphPanel(Minecraft mc, GuiParticleMorph editor)
         {
@@ -260,6 +272,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.fade.setLimit(0, Integer.MAX_VALUE, true);
             this.lifeSpan = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.life_span"), (value) -> this.morph.lifeSpan = value.intValue());
             this.lifeSpan.setLimit(0, Integer.MAX_VALUE, true);
+            this.maximum = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.particle.maximum"), (value) -> this.morph.maximum = value.intValue());
+            this.maximum.setLimit(1, Integer.MAX_VALUE, true);
 
             this.pickMorph.resizer().parent(this.area).set(10, 30, 100, 20);
             this.pickType.resizer().relative(this.pickMorph.resizer()).set(0, 25, 100, 20);
@@ -267,12 +281,13 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
             this.fade.resizer().relative(this.pickType.resizer()).set(0, 25, 100, 20);
             this.lifeSpan.resizer().relative(this.fade.resizer()).set(0, 25, 100, 20);
-            this.yaw.resizer().relative(this.lifeSpan.resizer()).set(0, 25, 100, 11);
+            this.maximum.resizer().relative(this.lifeSpan.resizer()).set(0, 25, 100, 20);
+            this.yaw.resizer().relative(this.pickMorph.resizer()).set(0, 0, 100, 11).x(1, 10);
             this.pitch.resizer().relative(this.yaw.resizer()).set(0, 16, 100, 11);
             this.sequencer.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
             this.random.resizer().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
 
-            this.children.add(this.pickMorph, this.morphPicker, this.pickType, this.yaw, this.pitch, this.sequencer, this.random, this.fade, this.lifeSpan, this.type);
+            this.children.add(this.pickMorph, this.morphPicker, this.pickType, this.yaw, this.pitch, this.sequencer, this.random, this.fade, this.lifeSpan, this.maximum, this.type);
         }
 
         @Override
@@ -294,6 +309,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.random.button.setIsChecked(morph.random);
             this.fade.setValue(morph.fade);
             this.lifeSpan.setValue(morph.lifeSpan);
+            this.maximum.setValue(morph.maximum);
         }
 
         @Override
