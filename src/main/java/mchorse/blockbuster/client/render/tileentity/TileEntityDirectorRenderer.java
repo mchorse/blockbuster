@@ -7,12 +7,14 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEntityDirector>
 {
@@ -26,9 +28,16 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
         {
             IBlockState state = mc.theWorld.getBlockState(te.getPos());
             boolean playing = state.getBlock() == Blockbuster.directorBlock ? state.getValue(BlockDirector.PLAYING) : false;
+            int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+
+            if (shader != 0)
+            {
+                OpenGlHelper.glUseProgram(0);
+            }
 
             GlStateManager.disableDepth();
             GlStateManager.disableLighting();
+            GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
 
             if (playing)
@@ -41,8 +50,14 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
             }
 
             GlStateManager.disableBlend();
+            GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
+
+            if (shader != 0)
+            {
+                OpenGlHelper.glUseProgram(shader);
+            }
         }
     }
 }
