@@ -260,6 +260,7 @@ blockbuster.gui:
         args: Additional arguments
 
         fade: Fade
+        maximum: Maximum
 
     texture:
         title: Texture manager

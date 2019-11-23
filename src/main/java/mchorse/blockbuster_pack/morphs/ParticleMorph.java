@@ -33,6 +33,7 @@ public class ParticleMorph extends AbstractMorph
     public ParticleMode mode = ParticleMode.VANILLA;
     public int frequency = 2;
     public int duration = -1;
+    public int delay = 0;
 
     /* Vanilla parameters */
     public EnumParticleTypes vanillaType = EnumParticleTypes.EXPLOSION_NORMAL;
@@ -55,6 +56,7 @@ public class ParticleMorph extends AbstractMorph
     public boolean random;
     public int fade = 10;
     public int lifeSpan = 50;
+    public int maximum = 25;
 
     /* Runtime fields */
     private int tick;
@@ -129,19 +131,31 @@ public class ParticleMorph extends AbstractMorph
 
         boolean alive = this.duration < 0 || this.tick < this.duration;
 
-        if (this.frequency != 0 && this.tick % this.frequency == 0 && alive)
+        if (this.frequency != 0 && this.tick >= this.delay && this.tick % this.frequency == 0 && alive)
         {
-            if (!target.worldObj.isRemote && this.mode == ParticleMode.VANILLA && this.vanillaType != null)
-            {
-                double x = target.posX + this.vanillaX;
-                double y = target.posY + this.vanillaY;
-                double z = target.posZ + this.vanillaZ;
+            final int max = 2500;
+            int particlesPerSecond = (int) (20 / (float) this.frequency * this.count);
 
-                ((WorldServer) target.worldObj).spawnParticle(this.vanillaType, true, x, y, z, this.count, this.vanillaDX, this.vanillaDY, this.vanillaDZ, this.speed, this.arguments);
-            }
-            else if (target.worldObj.isRemote && this.mode == ParticleMode.MORPH && this.morph != null && this.morphParticles.size() < this.count)
+            boolean vanillaCap = this.mode == ParticleMode.VANILLA && particlesPerSecond <= max;
+            boolean morphCap = this.mode == ParticleMode.MORPH && this.maximum <= max;
+
+            if (vanillaCap || morphCap)
             {
-                this.morphParticles.add(new MorphParticle(this));
+                if (!target.worldObj.isRemote && this.mode == ParticleMode.VANILLA && this.vanillaType != null)
+                {
+                    double x = target.posX + this.vanillaX;
+                    double y = target.posY + this.vanillaY;
+                    double z = target.posZ + this.vanillaZ;
+
+                    ((WorldServer) target.worldObj).spawnParticle(this.vanillaType, true, x, y, z, this.count, this.vanillaDX, this.vanillaDY, this.vanillaDZ, this.speed, this.arguments);
+                }
+                else if (target.worldObj.isRemote && this.mode == ParticleMode.MORPH && this.morph != null && this.morphParticles.size() < this.maximum)
+                {
+                    for (int i = 0; i < this.count && this.morphParticles.size() < this.maximum; i ++)
+                    {
+                        this.morphParticles.add(new MorphParticle(this));
+                    }
+                }
             }
         }
 
@@ -179,6 +193,7 @@ public class ParticleMorph extends AbstractMorph
             result = result && this.mode == particle.mode;
             result = result && this.frequency == particle.frequency;
             result = result && this.duration == particle.duration;
+            result = result && this.delay == particle.delay;
 
             /* Vanilla properties */
             result = result && this.vanillaType == particle.vanillaType;
@@ -218,6 +233,7 @@ public class ParticleMorph extends AbstractMorph
             result = result && this.random == particle.random;
             result = result && this.fade == particle.fade;
             result = result && this.lifeSpan == particle.lifeSpan;
+            result = result && this.maximum == particle.maximum;
         }
 
         return result;
@@ -229,6 +245,7 @@ public class ParticleMorph extends AbstractMorph
         if (morph instanceof ParticleMorph)
         {
             this.copy((ParticleMorph) morph, isRemote);
+            this.tick = this.morphIndex = 0;
 
             return true;
         }
@@ -251,6 +268,7 @@ public class ParticleMorph extends AbstractMorph
         this.mode = morph.mode;
         this.frequency = morph.frequency;
         this.duration = morph.duration;
+        this.delay = morph.delay;
 
         this.vanillaType = morph.vanillaType;
         this.vanillaX = morph.vanillaX;
@@ -271,6 +289,7 @@ public class ParticleMorph extends AbstractMorph
         this.random = morph.random;
         this.fade = morph.fade;
         this.lifeSpan = morph.lifeSpan;
+        this.maximum = morph.maximum;
     }
 
     @Override
@@ -299,6 +318,7 @@ public class ParticleMorph extends AbstractMorph
         if (tag.hasKey("Mode")) this.mode = tag.getString("Mode").equals(ParticleMode.MORPH.type) ? ParticleMode.MORPH : ParticleMode.VANILLA;
         if (tag.hasKey("Frequency")) this.frequency = tag.getInteger("Frequency");
         if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
+        if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
 
         if (tag.hasKey("Type")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("Type"));
         if (tag.hasKey("X")) this.vanillaX = tag.getDouble("X");
@@ -319,6 +339,7 @@ public class ParticleMorph extends AbstractMorph
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
         if (tag.hasKey("Fade")) this.fade = tag.getInteger("Fade");
         if (tag.hasKey("Life")) this.lifeSpan = tag.getInteger("Life");
+        if (tag.hasKey("Max")) this.maximum = tag.getInteger("Max");
     }
 
     @Override
@@ -329,6 +350,7 @@ public class ParticleMorph extends AbstractMorph
         tag.setString("Mode", this.mode.type);
         tag.setInteger("Frequency", this.frequency);
         tag.setInteger("Duration", this.duration);
+        tag.setInteger("Delay", this.delay);
 
         tag.setString("Type", this.vanillaType.getParticleName());
         tag.setDouble("X", this.vanillaX);
@@ -356,6 +378,7 @@ public class ParticleMorph extends AbstractMorph
         tag.setBoolean("Random", this.random);
         tag.setInteger("Fade", this.fade);
         tag.setInteger("Life", this.lifeSpan);
+        tag.setInteger("Max", this.maximum);
     }
 
     public static class MorphParticle
@@ -405,7 +428,7 @@ public class ParticleMorph extends AbstractMorph
             double dZ = this.z - this.prevZ;
 
             double horizontalDistance = (double) MathHelper.sqrt_double(dX * dX + dZ * dZ);
-            this.yaw = (float) (180 - MathHelper.atan2(dZ, dX) * 180 / Math.PI) + 90 ;
+            this.yaw = (float) (180 - MathHelper.atan2(dZ, dX) * 180 / Math.PI) + 90;
             this.pitch = (float) ((MathHelper.atan2(dY, horizontalDistance) * 180 / Math.PI));
 
             this.morph.update(entity, null);
