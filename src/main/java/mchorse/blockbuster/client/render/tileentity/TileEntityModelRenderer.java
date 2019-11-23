@@ -111,10 +111,8 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
         /* Debug render (so people could find the block, lmao) */
         if (mc.gameSettings.showDebugInfo && !mc.gameSettings.hideGUI)
         {
-            GlStateManager.glLineWidth(1);
             GlStateManager.disableDepth();
             GlStateManager.disableLighting();
-            GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
 
             GuiBBModelRenderer.drawCube(x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
@@ -140,7 +138,6 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GuiBBModelRenderer.drawCube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 0.5F, 1, 0.35F);
 
             GlStateManager.disableBlend();
-            GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
         }
