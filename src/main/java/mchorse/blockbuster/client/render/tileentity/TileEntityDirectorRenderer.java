@@ -24,7 +24,6 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
 
             GlStateManager.disableDepth();
             GlStateManager.disableLighting();
-            GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
 
             if (playing)
@@ -37,7 +36,6 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
             }
 
             GlStateManager.disableBlend();
-            GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
         }

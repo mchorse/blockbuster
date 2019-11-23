@@ -30,6 +30,8 @@ import net.minecraft.util.math.MathHelper;
  */
 public class GuiBBModelRenderer extends GuiModelRenderer
 {
+    public static final ResourceLocation PIXEL = new ResourceLocation("blockbuster", "textures/pixel.png");
+
     public boolean swinging;
     private float swing;
     private float swingAmount;
@@ -54,42 +56,45 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        GlStateManager.color(red, green, blue, alpha);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(PIXEL);
+
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         /* Top */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(minX, maxY, minZ).tex(0, 0).endVertex();
+        buffer.pos(minX, maxY, maxZ).tex(0, 1).endVertex();
+        buffer.pos(maxX, maxY, maxZ).tex(1, 1).endVertex();
+        buffer.pos(maxX, maxY, minZ).tex(1, 0).endVertex();
 
         /* Bottom */
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(minX, minY, minZ).tex(0, 0).endVertex();
+        buffer.pos(maxX, minY, minZ).tex(1, 0).endVertex();
+        buffer.pos(maxX, minY, maxZ).tex(1, 1).endVertex();
+        buffer.pos(minX, minY, maxZ).tex(0, 1).endVertex();
 
         /* Left */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(minX, maxY, minZ).tex(0, 1).endVertex();
+        buffer.pos(minX, minY, minZ).tex(0, 0).endVertex();
+        buffer.pos(minX, minY, maxZ).tex(1, 0).endVertex();
+        buffer.pos(minX, maxY, maxZ).tex(1, 1).endVertex();
 
         /* Right */
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(maxX, maxY, minZ).tex(0, 1).endVertex();
+        buffer.pos(maxX, maxY, maxZ).tex(1, 1).endVertex();
+        buffer.pos(maxX, minY, maxZ).tex(1, 0).endVertex();
+        buffer.pos(maxX, minY, minZ).tex(0, 0).endVertex();
 
         /* Front */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(minX, maxY, minZ).tex(0, 1).endVertex();
+        buffer.pos(maxX, maxY, minZ).tex(1, 1).endVertex();
+        buffer.pos(maxX, minY, minZ).tex(1, 0).endVertex();
+        buffer.pos(minX, minY, minZ).tex(0, 0).endVertex();
 
         /* Back */
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
+        buffer.pos(minX, maxY, maxZ).tex(0, 1).endVertex();
+        buffer.pos(minX, minY, maxZ).tex(0, 0).endVertex();
+        buffer.pos(maxX, minY, maxZ).tex(1, 0).endVertex();
+        buffer.pos(maxX, maxY, maxZ).tex(1, 1).endVertex();
 
         tessellator.draw();
     }
@@ -306,9 +311,11 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+        GlStateManager.enableTexture2D();
 
         drawCube(minX, minY, minZ, maxX, maxY, maxZ, 0F, 0.5F, 1F, alpha);
 
+        GlStateManager.disableTexture2D();
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
 
