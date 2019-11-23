@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import net.minecraft.client.Minecraft;
@@ -109,7 +110,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.disableDepth();
             GlStateManager.disableLighting();
             GlStateManager.disableTexture2D();
-            RenderGlobal.drawBoundingBox(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 1, 1, 1, 1);
+            GlStateManager.enableBlend();
+
+            GuiBBModelRenderer.drawCube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 0.5F, 1, 0.35F);
+
+            GlStateManager.disableBlend();
             GlStateManager.enableTexture2D();
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
