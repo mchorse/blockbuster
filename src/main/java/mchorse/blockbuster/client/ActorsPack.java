@@ -54,7 +54,7 @@ public class ActorsPack implements IResourcePack
         String domain = location.getResourceDomain();
         String path = location.getResourcePath();
 
-        if (path.endsWith(".gif"))
+        if (path.toLowerCase().endsWith(".gif"))
         {
             this.handleGif(location);
         }

@@ -70,6 +70,7 @@ public class BlockbusterTree extends FileTree
         {
             AbstractEntry skinEntry = null;
             String name = skin.getName();
+            String lowercase = name.toLowerCase();
 
             if (skin.exists())
             {
@@ -88,7 +89,7 @@ public class BlockbusterTree extends FileTree
                 else if (skin.isFile())
                 {
                     /* Only textures files should be shown */
-                    if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif"))
+                    if (lowercase.endsWith(".png") || lowercase.endsWith(".jpg") || lowercase.endsWith(".jpeg") || lowercase.endsWith(".gif"))
                     {
                         skinEntry = new FileEntry(name, RLUtils.create("b.a", prefix + "/" + name));
                     }
