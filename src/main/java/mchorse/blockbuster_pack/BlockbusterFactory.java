@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.network.Dispatcher;
@@ -20,6 +21,9 @@ import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FileEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphList;
@@ -29,6 +33,7 @@ import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -181,34 +186,57 @@ public class BlockbusterFactory implements IMorphFactory
             }
 
             /* Morphs with skins */
-            List<String> skins = new ArrayList<String>();
+            List<ResourceLocation> skins = new ArrayList<ResourceLocation>();
+            FolderEntry folder = ClientProxy.tree.getByPath(original.model.skins + "/skins", null);
 
-            for (String str : this.models.pack.getSkins(original.model.skins))
+            if (folder != null)
             {
-                skins.add(original.model.skins + "/skins/" + str + ".png");
+                for (AbstractEntry skinEntry : folder.getEntries())
+                {
+                    if (skinEntry instanceof FileEntry)
+                    {
+                        skins.add(((FileEntry) skinEntry).resource);
+                    }
+                }
             }
 
-            for (String str : this.models.pack.getSkins(key))
+            folder = ClientProxy.tree.getByPath(key + "/skins", null);
+
+            if (folder != null)
             {
-                skins.add(key + "/skins/" + str + ".png");
+                for (AbstractEntry skinEntry : folder.getEntries())
+                {
+                    if (skinEntry instanceof FileEntry)
+                    {
+                        skins.add(((FileEntry) skinEntry).resource);
+                    }
+                }
             }
 
-            for (String skin : skins)
+            for (ResourceLocation skin : skins)
             {
                 CustomMorph actor = (CustomMorph) original.clone(world.isRemote);
 
-                actor.skin = RLUtils.create("b.a", skin);
-                morphs.addMorphVariant(actor.name, category, variant, skin, actor);
+                actor.skin = skin;
+                morphs.addMorphVariant(actor.name, category, variant, skin.getResourcePath(), actor);
             }
         }
 
         /* Image morphs */
-        for (String texture : this.models.pack.getSkins("image"))
-        {
-            ImageMorph image = new ImageMorph();
+        FolderEntry folder = ClientProxy.tree.getByPath("image/skins", null);
 
-            image.texture = RLUtils.create("b.a", "image/skins/" + texture + ".png");
-            morphs.addMorphVariant(image.name, "blockbuster_extra", texture, image);
+        if (folder != null)
+        {
+            for (AbstractEntry skinEntry : folder.getEntries())
+            {
+                if (skinEntry instanceof FileEntry)
+                {
+                    ImageMorph image = new ImageMorph();
+
+                    image.texture = ((FileEntry) skinEntry).resource;
+                    morphs.addMorphVariant(image.name, "blockbuster_extra", image.texture.getResourcePath(), image);
+                }
+            }
         }
 
         /* Sequencer morphs */
