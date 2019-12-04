@@ -1,14 +1,9 @@
 package mchorse.blockbuster.utils;
 
 import java.io.File;
-import java.util.Collections;
 
-import mchorse.mclib.utils.files.AbstractEntry;
-import mchorse.mclib.utils.files.AbstractEntry.FileEntry;
-import mchorse.mclib.utils.files.AbstractEntry.FolderEntry;
 import mchorse.mclib.utils.files.FileTree;
 import mchorse.mclib.utils.files.entries.FolderImageEntry;
-import mchorse.mclib.utils.resources.RLUtils;
 
 /**
  * Blockbuster custom model system's file tree
