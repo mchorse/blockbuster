@@ -78,6 +78,7 @@ public class ClientProxy extends CommonProxy
     public static RenderCustomActor actorRenderer;
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
+    public static BlockbusterTree tree;
 
     /**
      * Create dashboard GUI dynamically 
@@ -173,7 +174,7 @@ public class ClientProxy extends CommonProxy
             }
 
             /* File tree */
-            GlobalTree.TREE.trees.add(new BlockbusterTree(actorPack.pack.folders.get(0)));
+            GlobalTree.TREE.register(tree = new BlockbusterTree(actorPack.pack.folders.get(0)));
 
             /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();

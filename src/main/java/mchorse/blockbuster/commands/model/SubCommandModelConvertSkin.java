@@ -15,8 +15,9 @@ import javax.imageio.ImageIO;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.McLib;
-import mchorse.mclib.utils.files.AbstractEntry;
 import mchorse.mclib.utils.files.GlobalTree;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
@@ -163,11 +164,9 @@ public class SubCommandModelConvertSkin extends CommandBase
 
         if (args.length == 2 && Arrays.asList("steve", "fred").contains(args[0]))
         {
-            GlobalTree.TREE.rebuild();
-
             String skin = args[1];
             String path = "b.a/" + args[0] + "/skins/" + skin;
-            AbstractEntry.FolderEntry skins = GlobalTree.TREE.getByPath(path, null);
+            FolderEntry skins = GlobalTree.TREE.getByPath(path, null);
             String name = FilenameUtils.getName(path.substring(0, path.length() - 1));
 
             if (skins != null && skins.title.equals(name))
@@ -175,7 +174,7 @@ public class SubCommandModelConvertSkin extends CommandBase
                 List<String> strings = new ArrayList<String>();
                 String prefix = skin.contains("/") ? skin.substring(0, skin.lastIndexOf("/") + 1) : "";
 
-                for (AbstractEntry entry : skins.entries)
+                for (AbstractEntry entry : skins.getEntries())
                 {
                     if (entry.title.contains(".."))
                     {

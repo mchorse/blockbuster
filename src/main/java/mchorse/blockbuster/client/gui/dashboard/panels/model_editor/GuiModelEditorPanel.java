@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.io.FileUtils;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.CommonProxy;
@@ -32,6 +30,8 @@ import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import org.apache.commons.io.FileUtils;
 
 public class GuiModelEditorPanel extends GuiDashboardPanel
 {
@@ -314,11 +315,17 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             Blockbuster.proxy.models.pack.reload();
 
-            Map<String, File> skins = Blockbuster.proxy.models.pack.skins.get(name);
+            FolderEntry folder = ClientProxy.tree.getByPath(name + "/skins", null);
 
-            if (skins != null && !skins.isEmpty())
+            if (folder != null)
             {
-                this.renderTexture = RLUtils.create("b.a", name + "/" + skins.keySet().iterator().next());
+                for (AbstractEntry file : folder.getEntries())
+                {
+                    if (file instanceof mchorse.mclib.utils.files.entries.FileEntry)
+                    {
+                        this.renderTexture = ((mchorse.mclib.utils.files.entries.FileEntry) file).resource;
+                    }
+                }
             }
         }
 

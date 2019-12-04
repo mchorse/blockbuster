@@ -54,7 +54,7 @@ public class ActorsPack implements IResourcePack
         String domain = location.getResourceDomain();
         String path = location.getResourcePath();
 
-        if (path.endsWith(".gif"))
+        if (path.toLowerCase().endsWith(".gif"))
         {
             this.handleGif(location);
         }
@@ -62,13 +62,6 @@ public class ActorsPack implements IResourcePack
         if ((domain.equals("http") || domain.equals("https")) && path.startsWith("//") && !path.endsWith(".mcmeta"))
         {
             return this.hanldeURLSkins(location);
-        }
-
-        String[] splits = path.split("/");
-
-        if (splits.length == 2 && !splits[1].contains("."))
-        {
-            return new FileInputStream(this.pack.skins.get(splits[0]).get(splits[1]));
         }
 
         File fileFile = this.lastFile;
@@ -163,15 +156,6 @@ public class ActorsPack implements IResourcePack
         }
 
         /* Handle models path */
-        String[] splits = path.split("/");
-
-        if (splits.length == 2 && !splits[1].contains("."))
-        {
-            Map<String, File> skins = this.pack.skins.get(splits[0]);
-
-            return skins != null && skins.containsKey(splits[1]);
-        }
-
         for (File file : this.pack.folders)
         {
             this.lastFile = new File(file, path);
