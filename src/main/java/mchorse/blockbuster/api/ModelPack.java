@@ -35,11 +35,6 @@ public class ModelPack
     public Map<String, ModelEntry> models = new HashMap<String, ModelEntry>();
 
     /**
-     * Cached skins
-     */
-    public Map<String, Map<String, File>> skins = new HashMap<String, Map<String, File>>();
-
-    /**
      * Folders which to check when reloading models and skins
      */
     public List<File> folders = new ArrayList<File>();
@@ -65,24 +60,6 @@ public class ModelPack
     }
 
     /**
-     * Get available skins for model
-     */
-    public List<String> getSkins(String model)
-    {
-        Set<String> keys = this.skins.containsKey(model) ? this.skins.get(model).keySet() : Collections.<String>emptySet();
-
-        return new ArrayList<String>(keys);
-    }
-
-    /**
-     * Get all available skins
-     */
-    public Map<String, Map<String, File>> getAllSkins()
-    {
-        return this.skins;
-    }
-
-    /**
      * Get available models
      */
     public List<String> getModels()
@@ -103,13 +80,10 @@ public class ModelPack
     public void reload()
     {
         this.models.clear();
-        this.skins.clear();
 
         for (File folder : this.folders)
         {
-            /* TODO: rewrite into one loop */
             this.reloadModels(folder, "");
-            this.reloadSkins(folder, "");
         }
     }
 
@@ -149,65 +123,6 @@ public class ModelPack
             else if (!file.getName().equals("skins"))
             {
                 this.reloadModels(file, prefix + name + "/");
-            }
-        }
-    }
-
-    /**
-     * Reload skins from model folders
-     *
-     * The algorithm of this method takes the same code from method that above
-     * (reloadModels) and scans all skins in the "skins" folder in model's
-     * folder.
-     */
-    protected void reloadSkins(File folder, String prefix)
-    {
-        for (File file : folder.listFiles())
-        {
-            String name = file.getName();
-
-            if (file.getName().startsWith("__") || !file.isDirectory())
-            {
-                continue;
-            }
-
-            String key = prefix + name;
-            File skins = new File(file.getAbsolutePath() + "/skins/");
-            File model = new File(file.getAbsolutePath() + "/model.json");
-            File objModel = new File(file.getAbsolutePath() + "/model.obj");
-
-            if (this.models.containsKey(key) || model.exists() || objModel.exists())
-            {
-                skins.mkdirs();
-            }
-
-            if (skins.isDirectory())
-            {
-                Map<String, File> map = new HashMap<String, File>();
-
-                for (File skin : skins.listFiles())
-                {
-                    int suffix = skin.getName().indexOf(".png");
-
-                    if (suffix != -1)
-                    {
-                        map.put(skin.getName().substring(0, suffix), skin);
-                    }
-                }
-
-                if (this.skins.containsKey(key))
-                {
-                    this.skins.get(key).putAll(map);
-                }
-                else
-                {
-                    this.skins.put(key, map);
-                }
-            }
-
-            if (!file.getName().equals("skins"))
-            {
-                this.reloadSkins(file, prefix + name + "/");
             }
         }
     }
