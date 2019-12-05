@@ -49,7 +49,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiDirectorPanel extends GuiDashboardPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
-    public static final Pattern RECORDING_ID = Pattern.compile("^[\\w,\\s-_]*$");
+    public static final Pattern RECORDING_ID = Pattern.compile("^[\\w,\\-_]*$");
 
     private GuiElements<IGuiElement> subChildren;
     private GuiDelegateElement<IGuiElement> mainView;
