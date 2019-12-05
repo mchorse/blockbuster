@@ -30,8 +30,10 @@ import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
+import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.MorphManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -152,6 +154,7 @@ public class CommonProxy
         this.factory.models = this.models;
 
         MorphManager.INSTANCE.factories.add(this.factory);
+        RLUtils.register(new BlockbusterResourceTransformer());
     }
 
     /**
@@ -179,7 +182,7 @@ public class CommonProxy
      *
      * This method is responsible only for loading domain models (in form of
      * data). For client models, you should look up {@link ClientProxy}'s
-     * {@link #loadModels(ModelPack)} method.
+     * {@link #loadModels(ModelPack, boolean)} method.
      */
     public void loadModels(ModelPack pack, boolean force)
     {

@@ -209,7 +209,12 @@ public class SequencerMorph extends AbstractMorph
 
         morph.reverse = this.reverse;
         morph.random = this.random;
+
+        /* Runtime properties */
         morph.currentMorph.copy(this.currentMorph, isRemote);
+        morph.timer = this.timer;
+        morph.current = this.current;
+        morph.duration = this.duration;
 
         return morph;
     }
@@ -241,6 +246,7 @@ public class SequencerMorph extends AbstractMorph
 
             result = result && Objects.equals(this.morphs, seq.morphs);
             result = result && this.reverse == seq.reverse;
+            result = result && this.random == seq.random;
         }
 
         return result;
@@ -334,8 +340,8 @@ public class SequencerMorph extends AbstractMorph
             }
         }
 
-        this.reverse = tag.getBoolean("Reverse");
-        this.random = tag.getBoolean("Random");
+        if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
+        if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
     }
 
     /**

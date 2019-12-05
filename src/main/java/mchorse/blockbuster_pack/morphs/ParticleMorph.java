@@ -34,6 +34,7 @@ public class ParticleMorph extends AbstractMorph
     public int frequency = 2;
     public int duration = -1;
     public int delay = 0;
+    public int cap = 2500;
 
     /* Vanilla parameters */
     public EnumParticleTypes vanillaType = EnumParticleTypes.EXPLOSION_NORMAL;
@@ -133,7 +134,7 @@ public class ParticleMorph extends AbstractMorph
 
         if (this.frequency != 0 && this.tick >= this.delay && this.tick % this.frequency == 0 && alive)
         {
-            final int max = 2500;
+            final int max = this.cap;
             int particlesPerSecond = (int) (20 / (float) this.frequency * this.count);
 
             boolean vanillaCap = this.mode == ParticleMode.VANILLA && particlesPerSecond <= max;
@@ -194,6 +195,7 @@ public class ParticleMorph extends AbstractMorph
             result = result && this.frequency == particle.frequency;
             result = result && this.duration == particle.duration;
             result = result && this.delay == particle.delay;
+            result = result && this.cap == particle.cap;
 
             /* Vanilla properties */
             result = result && this.vanillaType == particle.vanillaType;
@@ -269,6 +271,7 @@ public class ParticleMorph extends AbstractMorph
         this.frequency = morph.frequency;
         this.duration = morph.duration;
         this.delay = morph.delay;
+        this.cap = morph.cap;
 
         this.vanillaType = morph.vanillaType;
         this.vanillaX = morph.vanillaX;
@@ -319,6 +322,7 @@ public class ParticleMorph extends AbstractMorph
         if (tag.hasKey("Frequency")) this.frequency = tag.getInteger("Frequency");
         if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
         if (tag.hasKey("Delay")) this.delay = tag.getInteger("Delay");
+        if (tag.hasKey("Cap")) this.cap = tag.getInteger("Cap");
 
         if (tag.hasKey("Type")) this.vanillaType = EnumParticleTypes.getByName(tag.getString("Type"));
         if (tag.hasKey("X")) this.vanillaX = tag.getDouble("X");
@@ -351,6 +355,7 @@ public class ParticleMorph extends AbstractMorph
         tag.setInteger("Frequency", this.frequency);
         tag.setInteger("Duration", this.duration);
         tag.setInteger("Delay", this.delay);
+        tag.setInteger("Cap", this.cap);
 
         tag.setString("Type", this.vanillaType.getParticleName());
         tag.setDouble("X", this.vanillaX);
@@ -411,10 +416,20 @@ public class ParticleMorph extends AbstractMorph
             this.morph = morph.getMorph();
             this.movementType = morph.movementType;
             this.movementType.calculateInitial(this);
+
+            /* Stupid workaround to fix initial rotation */
+            this.timer = 1;
+            this.movementType.calculate(this);
+            this.calculateRotation();
+            this.movementType.calculateInitial(this);
+
+            this.prevYaw = this.yaw;
+            this.prevPitch = this.pitch;
         }
 
         public void update(EntityLivingBase entity)
         {
+            this.timer ++;
             this.prevX = this.x;
             this.prevY = this.y;
             this.prevZ = this.z;
@@ -422,7 +437,13 @@ public class ParticleMorph extends AbstractMorph
             this.prevPitch = this.pitch;
 
             this.movementType.calculate(this);
+            this.calculateRotation();
 
+            this.morph.update(entity, null);
+        }
+
+        private void calculateRotation()
+        {
             double dX = this.x - this.prevX;
             double dY = this.y - this.prevY;
             double dZ = this.z - this.prevZ;
@@ -430,10 +451,6 @@ public class ParticleMorph extends AbstractMorph
             double horizontalDistance = (double) MathHelper.sqrt(dX * dX + dZ * dZ);
             this.yaw = (float) (180 - MathHelper.atan2(dZ, dX) * 180 / Math.PI) + 90;
             this.pitch = (float) ((MathHelper.atan2(dY, horizontalDistance) * 180 / Math.PI));
-
-            this.morph.update(entity, null);
-
-            this.timer ++;
         }
 
         public void render(EntityLivingBase entity, float partialTicks)
