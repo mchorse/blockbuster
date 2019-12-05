@@ -65,6 +65,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         public GuiTrackpadElement frequency;
         public GuiTrackpadElement duration;
         public GuiTrackpadElement delay;
+        public GuiTrackpadElement cap;
 
         public GuiButtonElement<GuiButton> pickParticle;
         public GuiStringListElement type;
@@ -97,6 +98,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.duration.setLimit(-1, Integer.MAX_VALUE, true);
             this.delay = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.delay"), (value) -> this.morph.delay = value.intValue());
             this.delay.setLimit(0, Integer.MAX_VALUE, true);
+            this.cap = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.particle.cap"), (value) -> this.morph.cap = value.intValue());
+            this.cap.setLimit(0, Integer.MAX_VALUE, true);
 
             this.pickParticle = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.particle.particle"), (b) -> this.type.toggleVisible());
             this.type = new GuiStringListElement(mc, (value) ->
@@ -150,6 +153,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.frequency.resizer().relative(this.pickParticle.resizer()).set(0, 25, 100, 20);
             this.duration.resizer().relative(this.frequency.resizer()).set(0, 25, 100, 20);
             this.delay.resizer().relative(this.duration.resizer()).set(0, 25, 100, 20);
+            this.cap.resizer().relative(this.delay.resizer()).set(0, 25, 100, 20);
 
             this.pickParticle.resizer().relative(this.mode.resizer()).set(0, 25, 100, 20);
             this.type.resizer().relative(this.pickParticle.resizer()).set(0, 20, 100, 80);
@@ -163,7 +167,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.count.resizer().relative(this.dz.resizer()).set(0, 25, 100, 20);
             this.args.resizer().relative(this.speed.resizer()).set(0, 40, 100, 20);
 
-            this.children.add(this.mode, this.frequency, this.duration, this.delay, this.pickParticle, this.x, this.y, this.z, this.dx, this.dy, this.dz, this.speed, this.count, this.args, this.type);
+            this.children.add(this.mode, this.frequency, this.duration, this.delay, this.cap, this.pickParticle, this.x, this.y, this.z, this.dx, this.dy, this.dz, this.speed, this.count, this.args, this.type);
         }
 
         @Override
@@ -175,6 +179,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.frequency.setValue(morph.frequency);
             this.duration.setValue(morph.duration);
             this.delay.setValue(morph.delay);
+            this.cap.setValue(morph.cap);
 
             this.type.setVisible(false);
             this.type.setCurrentScroll(morph.vanillaType == null ? "" : morph.vanillaType.getParticleName());
