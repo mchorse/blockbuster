@@ -115,7 +115,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.createEntity(this.worldObj);
         }
 
-        if (this.entity != null)
+        if (this.entity != null && this.enabled)
         {
             this.entity.ticksExisted++;
             this.entity.posX = this.pos.getX() + this.x + 0.5;
