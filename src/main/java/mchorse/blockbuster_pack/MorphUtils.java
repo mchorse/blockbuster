@@ -105,7 +105,7 @@ public class MorphUtils
     public static AbstractMorph morphFromModel(String model, String skin)
     {
         NBTTagCompound morph = new NBTTagCompound();
-        ResourceLocation rl = RLUtils.fromString(skin, model.isEmpty() ? "steve" : model);
+        ResourceLocation rl = fromString(skin, model.isEmpty() ? "steve" : model);
 
         morph.setString("Name", "blockbuster." + model);
 
@@ -115,5 +115,25 @@ public class MorphUtils
         }
 
         return MorphManager.INSTANCE.morphFromNBT(morph);
+    }
+
+    /**
+     * Get resource location from actor's model and skin strings
+     */
+    public static ResourceLocation fromString(String skin, String model)
+    {
+        if (skin.isEmpty())
+        {
+            return null;
+        }
+
+        if (skin.indexOf(":") == -1)
+        {
+            String prefix = (skin.indexOf("/") == -1 ? model + "/" : "");
+
+            return RLUtils.create("b.a", prefix + skin);
+        }
+
+        return RLUtils.create(skin);
     }
 }

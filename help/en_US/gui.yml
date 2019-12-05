@@ -261,6 +261,7 @@ blockbuster.gui:
 
         fade: Fade
         maximum: Maximum
+        cap: Capacity
 
     texture:
         title: Texture manager
