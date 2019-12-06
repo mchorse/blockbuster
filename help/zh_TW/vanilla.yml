@@ -17,6 +17,7 @@ blockbuster:
         sequencer: 序列產生器
         record: 錄製
         structure: 結構
+        particle: 粒子
 
 # Creative tabs
 itemGroup.blockbuster: Blockbuster

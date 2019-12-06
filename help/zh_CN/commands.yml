@@ -24,11 +24,23 @@ blockbuster:
                     
                     {r}这个命令会清除来自 {7}<filename>{r} 玩家录制中给予的 {7}<property>{r}，从 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定义在 {7}[value]{r} 参数（接受绝对值），{7}[from]{r} tick 或者第一帧。
             
+            cut:
+                |
+                    {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
+
+                    {r}这个命令会在名为 {7}<filename>{r} 的玩家录制中，只保留 {7}<from>{r} 与 {7}<to>{r} 之间的动作，其他动作都会被删除（{7}<from>{r} 和 {7}<to>{r} 参数，是不包括前置和后置延迟的）。
+            
             dupe:
                 |
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
                     {r}这个命令会将 {7}<filename>{r} 玩家录制复制一份到名为 {7}<new_filename>{r} 的新玩家录制。
+
+            fade:
+                |
+                    {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
+
+                    {r}这个命令会在名为 {7}<filename>{r} 玩家录制使用掉末尾的 {7}<fade_out>{r} 的 tick 时长，以线性插值动画把生物拖到最初的位置。
             
             get:
                 |
@@ -47,7 +59,13 @@ blockbuster:
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
                     {r}在玩家录制文件 {7}<filename>{r} 中移除 {7}<tick>{r} 时的所有动作。如果你指定 {7}[index]{r}，此命令只会移除在 {7}[index]{r} {7}<tick>{r} 时的一个动作。
-            
+
+            restore:
+                |
+                    {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
+
+                    {r}为名为 {7}<filename>{r} 的玩家录制文件恢复到最近的第 {7}<iteration>{r} 版本。例如，{7}/record restore test 1{r} 会交换 {7}test.dat{r} 与 {7}test.dat~1{r} 之间的内容。
+                        
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
