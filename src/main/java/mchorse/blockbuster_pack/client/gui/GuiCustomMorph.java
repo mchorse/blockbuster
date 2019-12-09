@@ -287,6 +287,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 }
 
                 this.sort();
+                this.setBackground();
             }
 
             @Override
@@ -302,14 +303,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 });
 
                 this.update();
-            }
-
-            @Override
-            public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-            {
-                this.scroll.draw(0x88000000);
-
-                super.draw(tooltip, mouseX, mouseY, partialTicks);
             }
 
             @Override

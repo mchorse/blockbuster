@@ -56,6 +56,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.textures = new GuiResourceLocationList(mc, (rl) -> this.pickRL(rl));
+        this.textures.setBackground();
         this.linear = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.texture.linear"), false, (b) -> this.setLinear(b.button.isChecked()));
         this.linear.tooltip(I18n.format("blockbuster.gui.texture.linear_tooltip"), TooltipDirection.LEFT);
         this.mipmap = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.button.isChecked()));
@@ -206,7 +207,6 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.textures.area.draw(0x88000000);
         this.font.drawString(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
         this.font.drawSplitString(this.subtitle, this.area.x + 10, this.area.y + 26, this.area.w - 158, 0xcccccc);
 
