@@ -13,14 +13,8 @@ import mchorse.mclib.utils.files.entries.FolderImageEntry;
  */
 public class BlockbusterTree extends FileTree
 {
-    /**
-     * Folder in which the tree must look for the files
-     */
-    public File folder;
-
     public BlockbusterTree(File folder)
     {
-        this.folder = folder;
         this.root = new FolderImageEntry("b.a", folder, null);
     }
 }

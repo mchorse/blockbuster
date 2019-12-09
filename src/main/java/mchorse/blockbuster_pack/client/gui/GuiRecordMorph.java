@@ -63,6 +63,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             super(mc, editor);
 
             this.records = new GuiStringSearchListElement(mc, (str) -> this.morph.setRecord(str));
+            this.records.list.setBackground();
             this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
             {
                 if (this.morphPicker == null)
@@ -125,7 +126,6 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         @Override
         public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
         {
-            this.records.area.draw(0x88000000);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, 0xcccccc);
             super.draw(tooltip, mouseX, mouseY, partialTicks);
         }

@@ -84,6 +84,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             super(mc, editor);
 
             this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry));
+            this.list.setBackground();
             this.addPart = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.add"), (b) ->
             {
                 SequenceEntry current = this.list.getCurrent();
@@ -219,7 +220,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         @Override
         public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
         {
-            this.list.area.draw(0x88000000);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.sequencer.morphs"), this.list.area.x, this.list.area.y - 12, 0xffffff);
 
             super.draw(tooltip, mouseX, mouseY, partialTicks);
