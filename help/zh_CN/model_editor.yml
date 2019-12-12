@@ -25,6 +25,7 @@ blockbuster.gui.me:
         right: 右
         left: 左
         
+        holding: 拿着
         swiping: 挥手
         looking: 看着
         swinging: 跑动
