@@ -102,6 +102,11 @@ blockbuster.gui:
         one: 整体
         one_tooltip: 整体缩放
         shadow: 阴影
+        global: 全局
+        global_tooltip: 覆盖块删除行为
+        enabled: 启用
+        enabled_tooltip: 启用模型方块渲染
+        look: 转向你
 
         entity: 实体
         translate: 平移
@@ -230,6 +235,33 @@ blockbuster.gui:
         no_morph: （没有伪装）
         morphs: 伪装
         random_order: 随机顺序
+
+    particle:
+        tooltip: 通用属性
+        morph: 伪装属性
+        vanilla: 原版属性
+        common: 全局属性
+
+        type: 粒子类型
+        types:
+            vanilla: 原版
+            morph: 伪装
+
+        pick_type: 选择类型
+        pick_type_tooltip: 选择伪装移动类型
+
+        particle: 选择粒子
+        frequency: 频率
+        dx: 偏移 X
+        dy: 偏移 Y
+        dz: 偏移 Z
+        speed: 速度
+        count: 数量
+        args: 附加参数
+
+        fade: 淡出
+        maximum: 最大
+        cap: 容量
 
     texture:
         title: 材质管理器

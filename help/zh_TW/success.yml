@@ -27,3 +27,7 @@ blockbuster.success:
         changed_origin: "{f}玩家錄制的來源已經成功從 %s{f} 從 (%s{f}, %s{f}, %s{f}) 更換到 (%s{f}, %s{f}, %s{f})！"
         duped: "{f}玩家錄制 %s{f} 已成功復制到 %s{f}!"
         clean: "{f}玩家錄制 %s{f} 的屬性 %s{f} 已經成功從 %s{f} 到 %s{f} 清除！"
+        prolonged: "{f}已在玩家錄製 %s{f} 設定延遲。其回放的前、后延遲分別是：%s{f} 和 %s{f}。"
+        faded: "{f}玩家錄製 %s{f} 的最後 %s{f} 幀會用於拖到起點。"
+        cut: "{f}玩家錄製 %s{f} 已裁剪。留下了 %s{f} 幀和 %s{f} 幀之間的內容。"
+        restored: "{f}已恢復到玩家錄製 %s{f} 的第 %s{f} 版本！"

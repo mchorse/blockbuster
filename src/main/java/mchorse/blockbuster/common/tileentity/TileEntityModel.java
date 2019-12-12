@@ -234,8 +234,8 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (this.sz != 1) compound.setFloat("ScaleZ", this.sz);
 
         if (this.shadow) compound.setBoolean("Shadow", this.shadow);
-        if (!this.global) compound.setBoolean("Global", !this.global);
-        if (!this.enabled) compound.setBoolean("Enabled", !this.enabled);
+        if (!this.global) compound.setBoolean("Global", this.global);
+        if (!this.enabled) compound.setBoolean("Enabled", this.enabled);
 
         NBTTagList list = new NBTTagList();
 
