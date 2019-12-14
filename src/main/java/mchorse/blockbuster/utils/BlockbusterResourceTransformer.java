@@ -41,7 +41,7 @@ public class BlockbusterResourceTransformer implements IResourceTransformer
             location = DOMAIN + location.substring(OLD_DOMAIN.length());
         }
 
-        if (location.startsWith(DOMAIN + ":") && StringUtils.countMatches(location, "/") == 1 && location.indexOf(".") == -1)
+        if (location.startsWith(DOMAIN + ":") && StringUtils.countMatches(location, "/") == 1)
         {
             int index = location.indexOf(":");
 
