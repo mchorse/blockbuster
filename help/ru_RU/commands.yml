@@ -23,13 +23,27 @@ blockbuster:
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
                     
                     {r}Эта команда сбрасывает свойство {7}<property>{r} в файле {7}<filename>{r} записи игрока от {7}[from]{r} тика к {7}[to]{r} (не включая {7}[to]{r}) тика в значении, указанном в аргументе {7}[value]{r} (принимает относительные значения) или значение кадра {7}[from]{r} или первого кадра.
-            
+
+            cut:
+                |
+                    {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
+
+                    {r}Это команда удаляет все кадры из {7}<filename>{r} записи до {7}<before>{r} и после {7}<after>{r} (факторы проделения не должны идти в счет когда используются параметры {7}<before>{r} и {7}<after>{r}).
+
+
             dupe:
                 |
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
                     {r}Эта команда дублирует выбранную запись игрока {7}<filename>{r} и переносит её другому игроку в новый файл {7}<new_filename>{r}.
             
+            fade:
+                |
+                    {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
+
+                    {r}Эта команда сшивает {7}<filename>{r} запись с её началом используя линейную функцию используя последних {7}<fade_out>{r} кадров.
+
+
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
@@ -48,6 +62,13 @@ blockbuster:
                     
                     {r}Убирает все действия в тике {7}<tick>{r} в записи игрока {7}<filename>{r}. Если вы кажете индекс {7}[index]{r}, то команда удалит только действие в тике {7}<tick>{r} с индексом {7}[index]{r}.
             
+            restore:
+                |
+                    {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
+
+                    {r}Восстанавливает предыдущую версию с суффиксом {7}<iteration>{r} записи игрока с именем {7}<filename>{r}. К примеру {7}/record restore test 1{r} поменяет местами {7}test.dat{r} и {7}test.dat~1{r} записи игрока.
+
+
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}

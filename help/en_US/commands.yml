@@ -28,7 +28,7 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
 
-                    {r}This command removes all actions in player recording {7}<filename>{r} before {7}<from>{r} and after {7}<to>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments).
+                    {r}This command removes all actions in player recording {7}<filename>{r} before {7}<before>{r} and after {7}<after>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments).
             
             dupe:
                 |

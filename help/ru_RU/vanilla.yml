@@ -17,6 +17,7 @@ blockbuster:
         sequencer: Секвенсер
         record: Запись
         structure: Структура
+        particle: Частица
 
 # Creative tabs
 itemGroup.blockbuster: Блокбастер
