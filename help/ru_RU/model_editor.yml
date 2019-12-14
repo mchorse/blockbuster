@@ -25,6 +25,7 @@ blockbuster.gui.me:
         right: Правой
         left: Левой
         
+        holding: Взятый
         swiping: Взмахивает
         looking: Смотрит
         swinging: Качается
