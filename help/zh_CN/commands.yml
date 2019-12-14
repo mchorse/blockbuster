@@ -28,7 +28,7 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
 
-                    {r}这个命令会在名为 {7}<filename>{r} 的玩家录制中，只保留 {7}<from>{r} 与 {7}<to>{r} 之间的动作，其他动作都会被删除（{7}<from>{r} 和 {7}<to>{r} 参数，是不包括前置和后置延迟的）。
+                    {r}这个命令会在名为 {7}<filename>{r} 的玩家录制中，只保留 {7}<before>{r} 与 {7}<after>{r} 之间的动作，其他动作都会被删除（{7}<from>{r} 和 {7}<to>{r} 参数，是不包括前置和后置延迟的）。
             
             dupe:
                 |
