@@ -41,7 +41,7 @@ public class BlockbusterResourceTransformer implements IResourceTransformer
             location = DOMAIN + location.substring(OLD_DOMAIN.length());
         }
 
-        if (location.startsWith(DOMAIN + ":") && StringUtils.countMatches(location, "/") == 1)
+        if (location.startsWith(DOMAIN + ":") && StringUtils.countMatches(location, "/") == 1 && location.indexOf(".") == -1)
         {
             int index = location.indexOf(":");
 
@@ -56,6 +56,11 @@ public class BlockbusterResourceTransformer implements IResourceTransformer
 
     private String fixPath(String path)
     {
+        if (path.indexOf(".") != -1)
+        {
+            return path;
+        }
+
         String[] splits = path.split("/");
 
         if (splits.length != 2)
