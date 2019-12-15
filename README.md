@@ -11,6 +11,12 @@ Blockbuster mod depends upon [Metamorph](https://minecraft.curseforge.com/projec
 
 Recording and playback is based on, and rewritten from scratch, Mocap mod by [EchebKeso](https://twitter.com/EchebKeso).
 
+![MachinimaHub](https://i.imgur.com/jrK0WA2.png)
+
+If you're interested in any aspect of Minecraft machinimas, roleplays or animations (creation, watching, voice acting and etc.), [feel free to join](https://discord.gg/4YFUmJp) the MachinimaHub. **MachinimaHub** is a community run Discord server about machinimas (and other forms of story-telling videos such as first-person roleplays and animations). 
+
+Beside that, MachinimaHub has lots of Blockbuster users, so if you need any help feel free to hop on the server!
+
 ## FAQ
 
 **Q: Model block is invisible when I hold it in the hand. How to fix it? (1.12.2)**  
@@ -18,7 +24,7 @@ A: Looks like you're using Optifine D1 or below. Update Optifine to D2 or higher
 
 ## Features
 
-Blockbuster mod provides you with lots of features to make cool machinimas/roleplay series:
+Blockbuster mod provides you with lots of features to create outstanding machinimas/roleplay series:
 
 * **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) for more information about limitations.
 * **Director blocks** – special blocks which manage playback of multiple actors. With a director block, you can record an actor at a time, meanwhile reacting to previously recorded actors, making it possible to create complex scenes solo.
@@ -29,9 +35,11 @@ Blockbuster mod provides you with lots of features to make cool machinimas/rolep
 * **OBJ models** – beside custom models which can be created with in-game custom model editor, Blockbuster also supports OBJ models on top of custom JSON models!
 * **Morphs support** – thanks to [Metamorph](https://minecraft.curseforge.com/projects/metamorph)'s morph API, Blockbuster is capable of using any morphs which Metamorph provides to be used by Blockbuster actors. Including Blockbuster's provided morphs and [Emoticons](https://minecraft.curseforge.com/projects/emoticons)' morphs.
 * **Advanced morphs** – beside registering custom models into morph system, Blockbuster also provides special morphs for advanced machinima creation:
+	* **Image morph** – a morph which allows to display an image (on a plane).
     * **Sequencer morph** – a morph that switches between given morphs automatically, depending on delays set between multiple morphs.
     * **Record morph** – a morph that allows to playback a player recording within the morph itself (useful with model block or body part system).
     * **Structure morph** – a morph that allows to morph into a structure saved with structure block.
+    * **Particle morph** – a morph which allows to emote vanilla and morph particles.
 * **Green screen features** – Blockbuster adds glowing green blocks without any shading and an option to turn the sky fully green which makes it easier creating green screens for post processing of your machinimas. 
 * **Animated GIF support** – now you can put reaction and meme GIFs onto Blockbuster models and just as images. Credit goes to [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java).
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
@@ -61,7 +69,7 @@ This playlist consists out of videos that I've created a bunch of machinimas dur
 
 <a href="https://youtu.be/NJFaEepphzw?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/NJFaEepphzw/0.jpg"></a> 
 
-Here is also a playlist of 300+ community made videos with Blockbuster mod:
+Here is also a playlist of 400+ community made videos with Blockbuster mod:
 
 <a href="https://youtu.be/Ge_IsBloO1o?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/Ge_IsBloO1o/0.jpg"></a> 
 
