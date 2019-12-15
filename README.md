@@ -57,7 +57,7 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/CI0WGNFLV4k?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/CI0WGNFLV4k/0.jpg"></a> 
+<a href="https://youtu.be/aToxS732NfE?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/aToxS732NfE/0.jpg"></a> 
 
 Here is also a playlist of tutorials directly or indirectly related to Blockbuster/Minecraft machinima creation. Make sure to check it out, as it consists out of tutorials such as basics of Blockbuster mod, how to import OBJ models, etc.
 
@@ -67,11 +67,11 @@ Here is also a playlist of tutorials directly or indirectly related to Blockbust
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Feel free to check out my crazy videos.
 
-<a href="https://youtu.be/NJFaEepphzw?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/NJFaEepphzw/0.jpg"></a> 
+<a href="https://youtu.be/0h0KeuHaXM4?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/0h0KeuHaXM4/0.jpg"></a> 
 
 Here is also a playlist of 400+ community made videos with Blockbuster mod:
 
-<a href="https://youtu.be/Ge_IsBloO1o?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/Ge_IsBloO1o/0.jpg"></a> 
+<a href="https://youtu.be/8qSCBRFw9jM?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/8qSCBRFw9jM/0.jpg"></a> 
 
 ## For mod reviewers and reposters
 
