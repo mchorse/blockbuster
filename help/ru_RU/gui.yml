@@ -103,9 +103,9 @@ blockbuster.gui:
         one_tooltip: Единый слайдер масштаба
         shadow: Тень
         global: Глобальный
-        global_tooltip: Позволяет отрисовыать блок вне зоне камеры
-        enabled: Включено
-        enabled_tooltip: Включяет отрисовку и обновление блока
+        global_tooltip: Позволяет отображать чанки вне поля зрения камеры
+        enabled: Включён
+        enabled_tooltip: Включает отображение блока-модели
         look: Повернуть на себя
         
         entity: Существо
@@ -239,19 +239,19 @@ blockbuster.gui:
     particle:
         tooltip: Основные свойства
         morph: Свойства морфа
-        vanilla: Ванилла свойста
-        common: Основные свойста
+        vanilla: Свойства ваниллы
+        common: Общие свойства
 
-        type: Тип частицы
+        type: Тип частиц
         types:
-            vanilla: Ванилла
+            vanilla: Ванильные
             morph: Морф
 
         pick_type: Выбрать тип
         pick_type_tooltip: Выбрать тип движения частицы
 
-        particle: Выбрать частицу
-        frequency: Частотаст
+        particle: Выберите частицы
+        frequency: Частота
         dx: Смещение X
         dy: Смещение Y
         dz: Смещение Z
@@ -261,7 +261,7 @@ blockbuster.gui:
 
         fade: Исчезновение
         maximum: Максимум
-        cap: Емкость
+        cap: Ёмкость
 
     texture:
         title: Менеджер текстур
