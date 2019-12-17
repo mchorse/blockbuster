@@ -706,7 +706,7 @@ how many times you want.
   imported/exported and played
 * Added camera fixtures. Camera fixture is the definition of how camera should 
   behave. Following fixtures were added:
-    * Idle fixture – static camera shot 
+  	* Idle fixture – static camera shot 
     * Path fixture – linear-interpolated camera path way
     * Follow fixture – camera follows given entity from specified angle 
       (specified angle is determined when the fixture is being added) 
@@ -717,10 +717,10 @@ how many times you want.
 * Added `camera` command which allows players to manage profiles and fixtures
 * Added camera profile rendering
 * Added camera key bindings for:
-    * Removing last fixture
-    * Adding idle, look or follow fixture to current camera profile
-    * Toggle camera profile rendering
-    * Start or stop camera profile
+	* Removing last fixture
+	* Adding idle, look or follow fixture to current camera profile
+	* Toggle camera profile rendering
+	* Start or stop camera profile
 * Added lava and water support to place block action
 * Added playback button GUI and lores
 * Fixed actor's rotation when he is spawned with `/action play` command

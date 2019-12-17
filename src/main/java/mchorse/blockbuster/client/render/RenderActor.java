@@ -5,11 +5,21 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 /**
  * Render actor class
@@ -59,6 +69,8 @@ public class RenderActor extends RenderLiving<EntityActor>
 
         if (entity.invisible)
         {
+            this.renderPlayerRecordingName(entity, x, y, z);
+
             return;
         }
 
@@ -86,6 +98,77 @@ public class RenderActor extends RenderLiving<EntityActor>
         }
 
         this.renderLeash(entity, x, y, z, entityYaw, partialTicks);
+        this.renderPlayerRecordingName(entity, x, y, z);
+    }
+
+    /**
+     * Renders player recording name
+     */
+    private void renderPlayerRecordingName(EntityActor entity, double x, double y, double z)
+    {
+        if (!Minecraft.getMinecraft().gameSettings.showDebugInfo)
+        {
+            return;
+        }
+
+        final double maxDistance = 64;
+        double d0 = entity.getDistanceSqToEntity(this.renderManager.renderViewEntity);
+
+        if (d0 <= (maxDistance * maxDistance) && entity.playback != null && entity.playback.record != null)
+        {
+            float viewerYaw = this.renderManager.playerViewY;
+            float viewerPitch = this.renderManager.playerViewX;
+            boolean isThirdPersonFrontal = this.renderManager.options.thirdPersonView == 2;
+            float f2 = entity.height / 2;
+            String str = entity.playback.record.filename;
+            FontRenderer fontRendererIn = this.getFontRendererFromRenderManager();
+            int verticalShift = -fontRendererIn.FONT_HEIGHT / 2;
+
+            y += f2;
+
+            int shader = GL11.glGetInteger(GL20.GL_CURRENT_PROGRAM);
+
+            if (shader != 0)
+            {
+                OpenGlHelper.glUseProgram(0);
+            }
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, z);
+            GlStateManager.glNormal3f(0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-viewerYaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate((float)(isThirdPersonFrontal ? -1 : 1) * viewerPitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.scale(-0.025F, -0.025F, 0.025F);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            int i = fontRendererIn.getStringWidth(str) / 2;
+            GlStateManager.disableTexture2D();
+            Tessellator tessellator = Tessellator.getInstance();
+            VertexBuffer vertexbuffer = tessellator.getBuffer();
+            vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            vertexbuffer.pos((double)(-i - 1), (double)(-1 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            vertexbuffer.pos((double)(-i - 1), (double)(8 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            vertexbuffer.pos((double)(i + 1), (double)(8 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            vertexbuffer.pos((double)(i + 1), (double)(-1 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            tessellator.draw();
+            GlStateManager.enableTexture2D();
+
+            fontRendererIn.drawString(str, -fontRendererIn.getStringWidth(str) / 2, verticalShift, -1);
+
+            GlStateManager.enableDepth();
+            GlStateManager.enableLighting();
+            GlStateManager.disableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.popMatrix();
+
+            if (shader != 0)
+            {
+                OpenGlHelper.glUseProgram(shader);
+            }
+        }
     }
 
     /**
