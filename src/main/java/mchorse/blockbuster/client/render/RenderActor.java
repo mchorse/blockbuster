@@ -7,11 +7,10 @@ import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -112,7 +111,7 @@ public class RenderActor extends RenderLiving<EntityActor>
         }
 
         final double maxDistance = 64;
-        double d0 = entity.getDistanceSqToEntity(this.renderManager.renderViewEntity);
+        double d0 = entity.getDistanceSq(this.renderManager.renderViewEntity);
 
         if (d0 <= (maxDistance * maxDistance) && entity.playback != null && entity.playback.record != null)
         {
@@ -147,7 +146,7 @@ public class RenderActor extends RenderLiving<EntityActor>
             int i = fontRendererIn.getStringWidth(str) / 2;
             GlStateManager.disableTexture2D();
             Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer vertexbuffer = tessellator.getBuffer();
+            BufferBuilder vertexbuffer = tessellator.getBuffer();
             vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
             vertexbuffer.pos((double)(-i - 1), (double)(-1 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             vertexbuffer.pos((double)(-i - 1), (double)(8 + verticalShift), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
