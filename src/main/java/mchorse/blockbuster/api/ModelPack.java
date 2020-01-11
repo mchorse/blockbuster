@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
+import mchorse.blockbuster.api.loaders.IModelLoader;
+import mchorse.blockbuster.api.loaders.ModelLoaderJSON;
+import mchorse.blockbuster.api.loaders.ModelLoaderOBJ;
+import mchorse.blockbuster.api.loaders.ModelLoaderVOX;
+import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 
 /**
  * Model pack class
@@ -30,9 +35,14 @@ public class ModelPack
     public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "yike");
 
     /**
+     * List of model loaders
+     */
+    public List<IModelLoader> loaders = new ArrayList<IModelLoader>();
+
+    /**
      * Cached models
      */
-    public Map<String, ModelEntry> models = new HashMap<String, ModelEntry>();
+    public Map<String, IModelLazyLoader> models = new HashMap<String, IModelLazyLoader>();
 
     /**
      * Folders which to check when reloading models and skins
@@ -42,6 +52,9 @@ public class ModelPack
     public ModelPack()
     {
         /* TODO: implement reading of loading models from the jar */
+        this.loaders.add(new ModelLoaderVOX());
+        this.loaders.add(new ModelLoaderOBJ());
+        this.loaders.add(new ModelLoaderJSON());
     }
 
     /**
@@ -103,22 +116,23 @@ public class ModelPack
                 continue;
             }
 
-            File model = new File(file.getAbsolutePath() + "/model.json");
-            File objModel = new File(file.getAbsolutePath() + "/model.obj");
-            File mtlFile = new File(file.getAbsolutePath() + "/model.mtl");
+            IModelLazyLoader lazyLoader = null;
 
-            boolean mtlExists = mtlFile.exists();
-            boolean objExists = objModel.exists();
-            boolean modelExists = model.exists();
-
-            if (!mtlExists)
+            for (IModelLoader loader : this.loaders)
             {
-                mtlFile = null;
+                IModelLazyLoader localLoader = loader.load(file);
+
+                if (localLoader != null)
+                {
+                    lazyLoader = localLoader;
+
+                    break;
+                }
             }
 
-            if (modelExists || objExists)
+            if (lazyLoader != null)
             {
-                this.models.put(prefix + name, new ModelEntry(modelExists ? model : null, objExists ? objModel : null, mtlFile));
+                this.models.put(prefix + name, lazyLoader);
             }
             else if (!file.getName().equals("skins"))
             {

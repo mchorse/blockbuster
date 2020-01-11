@@ -27,9 +27,7 @@ import net.minecraft.util.math.Vec3d;
  * Model exporter OBJ class
  * 
  * <i>slaps roof of ModelExporterOBJ</i> this bad boy can convert so much 
- * OBJ models from Blockbuster JSON models. 
- * 
- * TODO: Connected quads
+ * OBJ models from Blockbuster JSON models.
  */
 public class ModelExporterOBJ
 {

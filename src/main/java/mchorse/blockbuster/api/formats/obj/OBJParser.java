@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.model.parsing.obj;
+package mchorse.blockbuster.api.formats.obj;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.api.formats.IMeshes;
+import mchorse.blockbuster.api.formats.Mesh;
 import mchorse.blockbuster.commands.SubCommandBase;
 import mchorse.mclib.utils.resources.RLUtils;
 
@@ -57,8 +59,6 @@ public class OBJParser
 
     /**
      * Construct OBJ parser with OBJ and MTL file references
-     * 
-     * TODO: rewrite to using {@link InputStream}
      */
     public OBJParser(InputStream objFile, InputStream mtlFile)
     {
@@ -235,18 +235,18 @@ public class OBJParser
     /**
      * From collected information, form mesh data
      */
-    public Map<String, MeshObject> compile()
+    public Map<String, IMeshes> compile()
     {
-        Map<String, MeshObject> meshes = new HashMap<String, MeshObject>();
+        Map<String, IMeshes> meshes = new HashMap<String, IMeshes>();
 
         for (OBJDataMesh obj : this.objects)
         {
-            MeshObject meshObject = new MeshObject();
+            MeshesOBJ meshObject = new MeshesOBJ();
 
             for (OBJDataGroup group : obj.groups)
             {
                 List<OBJFace> faces = group.faces;
-                Mesh mesh = new Mesh(faces.size());
+                MeshOBJ mesh = new MeshOBJ(faces.size());
 
                 int i = 0;
 
@@ -299,83 +299,6 @@ public class OBJParser
             mesh.normData[i * 3] = normal.x;
             mesh.normData[i * 3 + 1] = normal.y;
             mesh.normData[i * 3 + 2] = normal.z;
-        }
-    }
-
-    /**
-     * Mesh from OBJ file
-     * 
-     * It holds faces for every object found in OBJ file
-     */
-    public static class OBJDataMesh
-    {
-        public String name;
-        public List<OBJDataGroup> groups = new ArrayList<OBJDataGroup>();
-    }
-
-    public static class OBJDataGroup
-    {
-        public List<OBJFace> faces = new ArrayList<OBJFace>();
-        public OBJMaterial material;
-    }
-
-    public static class MeshObject
-    {
-        public List<Mesh> meshes = new ArrayList<Mesh>();
-    }
-
-    /**
-     * Holds the mesh data 
-     */
-    public static class Mesh
-    {
-        public float[] posData;
-        public float[] texData;
-        public float[] normData;
-        public OBJMaterial material;
-
-        public Mesh(int faces)
-        {
-            this(new float[faces * 9], new float[faces * 6], new float[faces * 9]);
-        }
-
-        public Mesh(float[] posData, float[] texData, float[] normData)
-        {
-            this.posData = posData;
-            this.texData = texData;
-            this.normData = normData;
-        }
-    }
-
-    /**
-     * Substitute class for a 2d vector which comes with joml library
-    */
-    protected static class Vector2f
-    {
-        public float x;
-        public float y;
-
-        public Vector2f(float x, float y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    /**
-     * Substitute class for a 3d vector which comes with joml library
-     */
-    protected static class Vector3f
-    {
-        public float x;
-        public float y;
-        public float z;
-
-        public Vector3f(float x, float y, float z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
         }
     }
 }

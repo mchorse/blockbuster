@@ -8,8 +8,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.ModelEntry;
-import mchorse.blockbuster.api.ModelEntry.FileEntry;
+import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
@@ -23,7 +22,6 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelU
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.model.parsing.ModelParser;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -70,8 +68,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     public ModelPose pose;
     public ModelLimb limb;
 
-    public ModelParser modelParser;
-    public OBJParser objParser;
+    public IModelLazyLoader modelEntry;
     public ModelCustom renderModel;
     public ResourceLocation renderTexture;
 
@@ -197,7 +194,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             FileUtils.write(file, output);
 
             mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(name);
-            ModelEntry entry = Blockbuster.proxy.models.pack.models.get(this.modelName);
+            IModelLazyLoader loader = Blockbuster.proxy.models.pack.models.get(this.modelName);
 
             if (model != null)
             {
@@ -205,23 +202,11 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             }
 
             /* Copy OBJ files */
-            if (entry != null)
+            if (loader != null)
             {
                 try
                 {
-                    entry.objModel.copyTo(new File(folder, "model.obj"));
-                    entry.mtlFile.copyTo(new File(folder, "model.mtl"));
-
-                    if (entry.customModel instanceof FileEntry)
-                    {
-                        File skins = new File(((FileEntry) entry.customModel).file.getParentFile(), "skins");
-                        File dest = new File(folder, "skins");
-
-                        if (skins.exists() && !skins.equals(dest))
-                        {
-                            FileUtils.copyDirectory(skins, dest);
-                        }
-                    }
+                    /* TODO: reimplement */
                 }
                 catch (Exception e)
                 {
@@ -230,7 +215,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             }
 
             Blockbuster.proxy.models.pack.reload();
-            Blockbuster.proxy.models.addModel(name, new ModelCell(this.model.clone(), file.lastModified()));
+            Blockbuster.proxy.models.addModel(name, loader, file.lastModified());
             this.modelName = name;
         }
         catch (Exception e)
@@ -272,7 +257,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             ModelExtrudedLayer.clearByModel(this.renderModel);
 
-            return this.modelParser.parseModel(this.model, ModelCustom.class);
+            return this.modelEntry.loadClientModel(this.modelName, this.model);
         }
         catch (Exception e)
         {
@@ -296,10 +281,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     {
         this.modelName = name;
         this.model = model.clone();
-
-        ModelEntry entry = ClientProxy.actorPack.pack.models.get(this.modelName);
-        this.objParser = entry == null ? null : entry.createOBJParser(this.modelName, this.model);
-        this.modelParser = new ModelParser(this.modelName, this.objParser == null ? null : objParser.compile());
+        this.modelEntry = ClientProxy.actorPack.pack.models.get(this.modelName);
 
         this.renderModel = this.buildModel();
         this.renderModel.pose = this.model.getPose("standing");

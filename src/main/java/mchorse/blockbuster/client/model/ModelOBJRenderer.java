@@ -3,13 +3,14 @@ package mchorse.blockbuster.client.model;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
+import mchorse.blockbuster.api.formats.obj.MeshOBJ;
+import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
-import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser.Mesh;
+import mchorse.blockbuster.api.formats.obj.OBJMaterial;
+import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.client.textures.MipmapTexture;
 import mchorse.mclib.utils.ReflectionUtils;
@@ -32,7 +33,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     /**
      * Mesh containing the data about the model
      */
-    public OBJParser.MeshObject mesh;
+    public MeshesOBJ mesh;
 
     /**
      * Display lists 
@@ -49,12 +50,11 @@ public class ModelOBJRenderer extends ModelCustomRenderer
      */
     protected int solidColorTex = -1;
 
-    public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, OBJParser.MeshObject mesh)
+    public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, MeshesOBJ mesh)
     {
         super(model, limb, transform);
 
         this.mesh = mesh;
-        this.compiled = false;
     }
 
     /**
@@ -74,7 +74,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             int count = 0;
 
             /* Generate a texture based on solid colored materials */
-            for (Mesh mesh : this.mesh.meshes)
+            for (MeshOBJ mesh : this.mesh.meshes)
             {
                 count += mesh.material != null && !mesh.material.useTexture ? 1 : 0;
             }
@@ -84,7 +84,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 ByteBuffer buffer = GLAllocation.createDirectByteBuffer(count * 4);
                 texture = GL11.glGenTextures();
 
-                for (Mesh mesh : this.mesh.meshes)
+                for (MeshOBJ mesh : this.mesh.meshes)
                 {
                     if (mesh.material != null && !mesh.material.useTexture)
                     {
@@ -109,7 +109,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
             /* Generate display lists */
             int j = 0;
 
-            for (Mesh mesh : this.mesh.meshes)
+            for (MeshOBJ mesh : this.mesh.meshes)
             {
                 OBJMaterial material = mesh.material;
 
@@ -121,7 +121,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 int id = GLAllocation.generateDisplayLists(1);
                 boolean hasColor = material != null && !mesh.material.useTexture;
 
-                GlStateManager.glNewList(id, 4864);
+                GlStateManager.glNewList(id, GL11.GL_COMPILE);
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
                 float texF = (j + 0.5F) / count;
 
