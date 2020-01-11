@@ -45,6 +45,7 @@ blockbuster.gui:
         wiki: Wiki
         discord: Discord
         tutorial: Video tutorial
+        models: Open Models...
         
         options: Options
     

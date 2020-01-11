@@ -1,16 +1,20 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Resizer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -25,6 +29,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiMainPanel extends GuiDashboardPanel
 {
     public List<GuiConfigOption> options = new ArrayList<GuiConfigOption>();
+    public GuiButtonElement<GuiButton> first;
 
     /**
      * Open web link in browser 
@@ -53,25 +58,6 @@ public class GuiMainPanel extends GuiDashboardPanel
     public GuiMainPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
-
-        GuiElement element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
-        Resizer resizer = new Resizer().set(10, 25, 100, 20).parent(this.area).x(1, -110);
-        this.children.add(element.setResizer(resizer));
-
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink("https://discord.gg/qfxrqUF"));
-        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
-        resizer = element.resizer();
-
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink("https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2&t=0s"));
-        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
-
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorsesMods"));
-        resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
-        this.children.add(element.setResizer(resizer));
-
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink("https://twitter.com/McHorsy"));
-        resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
-        this.children.add(element.setResizer(resizer));
 
         this.options.add(new GuiConfigOption("green_screen_sky", Configuration.CATEGORY_GENERAL));
         this.options.add(new GuiConfigOption("record_commands", "recording"));
@@ -102,6 +88,29 @@ public class GuiMainPanel extends GuiDashboardPanel
             previous = option.button;
             this.children.add(option.button);
         }
+
+        GuiElement element = this.first = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
+        Resizer resizer = new Resizer().set(0, 40, 100, 20).parent(this.area).relative(previous.resizer());
+        this.children.add(element.setResizer(resizer));
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink("https://discord.gg/qfxrqUF"));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
+        resizer = element.resizer();
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink("https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2&t=0s"));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
+        resizer = element.resizer();
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
+
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorsesMods"));
+        resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
+        this.children.add(element.setResizer(resizer));
+
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink("https://twitter.com/McHorsy"));
+        resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
+        this.children.add(element.setResizer(resizer));
     }
 
     private void setOption(GuiConfigOption option)
@@ -132,7 +141,7 @@ public class GuiMainPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.area.getX(1) - 110, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.first.area.x, this.first.area.y - 15, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.options"), this.area.x + 10, this.area.y + 10, 0xffffff);
         this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
 
