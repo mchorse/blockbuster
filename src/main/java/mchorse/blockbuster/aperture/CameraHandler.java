@@ -1,16 +1,12 @@
 package mchorse.blockbuster.aperture;
 
-import java.util.function.Consumer;
-
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
-import mchorse.blockbuster.aperture.network.client.ClientHandlerAperture;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
-import mchorse.blockbuster.aperture.network.common.PacketAperture;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
@@ -45,6 +41,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.function.Consumer;
+
 /**
  * Camera handler
  *
@@ -68,11 +66,6 @@ public class CameraHandler
      * Whether actions should played back also
      */
     public static boolean actions = true;
-
-    /**
-     * Whether Aperture is present on the server 
-     */
-    public static boolean server = false;
 
     /**
      * Camera editor integrations
@@ -105,7 +98,6 @@ public class CameraHandler
     {
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
-        Dispatcher.DISPATCHER.register(PacketAperture.class, ClientHandlerAperture.class, Side.CLIENT);
     }
 
     @SideOnly(Side.CLIENT)

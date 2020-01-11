@@ -55,13 +55,17 @@ public class GuiMainPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         GuiElement element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink("https://github.com/mchorse/blockbuster/wiki/"));
-        Resizer resizer = new Resizer().set(10, 25, 80, 20).parent(this.area).x(1, -90);
+        Resizer resizer = new Resizer().set(10, 25, 100, 20).parent(this.area).x(1, -110);
         this.children.add(element.setResizer(resizer));
 
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink("https://discord.gg/qfxrqUF"));
-        this.children.add(element.setResizer(new Resizer().set(0, 25, 80, 20).relative(resizer)));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
+        resizer = element.resizer();
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorse"));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink("https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2&t=0s"));
+        this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
+
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink("https://www.youtube.com/c/McHorsesMods"));
         resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
         this.children.add(element.setResizer(resizer));
 
@@ -128,7 +132,7 @@ public class GuiMainPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.area.getX(1) - 90, this.area.y + 10, 0xffffff);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.area.getX(1) - 110, this.area.y + 10, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.options"), this.area.x + 10, this.area.y + 10, 0xffffff);
         this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
 
