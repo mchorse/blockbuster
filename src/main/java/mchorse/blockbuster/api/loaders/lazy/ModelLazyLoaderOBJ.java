@@ -3,6 +3,7 @@ package mchorse.blockbuster.api.loaders.lazy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.obj.OBJDataMesh;
 import mchorse.blockbuster.api.resource.FileEntry;
@@ -151,6 +152,15 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 		if (data.limbs.isEmpty())
 		{
 			data.addLimb("body");
+		}
+
+		/* Flip around the X axis */
+		for (ModelPose pose : data.poses.values())
+		{
+			for (ModelTransform transform : pose.limbs.values())
+			{
+				transform.scale[0] *= -1;
+			}
 		}
 
 		return data;

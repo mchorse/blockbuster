@@ -39,7 +39,7 @@ public class ModelHandler
     {
         pack.reload();
 
-        /* Keys which are going to be used to determine whether the 
+        /* Keys which are going to be used to determine whether the
          * model was removed */
         Set<String> keys = new HashSet<String>(this.models.keySet());
 
@@ -68,7 +68,7 @@ public class ModelHandler
             }
         }
 
-        /* Make sure default models don't get reloaded every time, 
+        /* Make sure default models don't get reloaded every time,
          * unless substituted */
         Iterator<String> it = keys.iterator();
 
@@ -87,38 +87,6 @@ public class ModelHandler
         for (String key : keys)
         {
             this.removeModel(key);
-        }
-
-        /* Load default provided models */
-        try
-        {
-            String path = "assets/blockbuster/models/entity/";
-            ClassLoader loader = this.getClass().getClassLoader();
-
-            /* Optionally load default models */
-            this.addDefaultModel("alex");
-            this.addDefaultModel("steve");
-            this.addDefaultModel("fred");
-            this.addDefaultModel("yike");
-            this.addDefaultModel("empty");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Add a default model bundled with the mod 
-     */
-    private void addDefaultModel(String id) throws Exception
-    {
-        String path = "assets/blockbuster/models/entity/";
-        ClassLoader loader = this.getClass().getClassLoader();
-
-        if (!this.models.containsKey(id))
-        {
-            this.addModel(id, new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader)), 0);
         }
     }
 

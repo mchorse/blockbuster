@@ -37,7 +37,7 @@ public class VoxReader
         {
             Vox.VoxChunk chunk = this.readChunk(stream);
 
-            System.out.println(chunk.toString() + " " + chunk.size + " " + chunk.chunks);
+            /* System.out.println(chunk.toString() + " " + chunk.size + " " + chunk.chunks); */
 
             if (chunk.id == this.fourChars('P', 'A', 'C', 'K'))
             {

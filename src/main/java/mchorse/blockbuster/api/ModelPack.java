@@ -14,6 +14,8 @@ import mchorse.blockbuster.api.loaders.ModelLoaderJSON;
 import mchorse.blockbuster.api.loaders.ModelLoaderOBJ;
 import mchorse.blockbuster.api.loaders.ModelLoaderVOX;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
+import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
+import mchorse.blockbuster.api.resource.StreamEntry;
 
 /**
  * Model pack class
@@ -32,7 +34,7 @@ public class ModelPack
     /**
      * List of ignored models
      */
-    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "yike");
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "yike", "empty");
 
     /**
      * List of model loaders
@@ -98,6 +100,31 @@ public class ModelPack
         {
             this.reloadModels(folder, "");
         }
+
+        try
+        {
+            /* Load default provided models */
+            this.addDefaultModel("alex");
+            this.addDefaultModel("steve");
+            this.addDefaultModel("fred");
+            this.addDefaultModel("yike");
+            this.addDefaultModel("empty");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Add a default model bundled with the mod
+     */
+    private void addDefaultModel(String id) throws Exception
+    {
+        String path = "assets/blockbuster/models/entity/";
+        ClassLoader loader = this.getClass().getClassLoader();
+
+        this.models.put(id, new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader)));
     }
 
     /**
