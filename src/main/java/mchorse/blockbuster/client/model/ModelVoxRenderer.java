@@ -7,10 +7,10 @@ import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,7 +50,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     {
         if (this.mesh != null)
         {
-            VertexBuffer renderer = Tessellator.getInstance().getBuffer();
+            BufferBuilder renderer = Tessellator.getInstance().getBuffer();
 
             int texture = 0;
             int count = this.mesh.vox.palette.length;
