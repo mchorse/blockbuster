@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.model.parsing.obj;
+package mchorse.blockbuster.api.formats.obj;
 
 import net.minecraft.util.ResourceLocation;
 

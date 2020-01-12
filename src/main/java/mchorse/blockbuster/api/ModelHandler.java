@@ -1,6 +1,5 @@
 package mchorse.blockbuster.api;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,8 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser.OBJDataMesh;
+import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
+import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
+import mchorse.blockbuster.api.resource.StreamEntry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -39,16 +39,16 @@ public class ModelHandler
     {
         pack.reload();
 
-        /* Keys which are going to be used to determine whether the 
+        /* Keys which are going to be used to determine whether the
          * model was removed */
         Set<String> keys = new HashSet<String>(this.models.keySet());
 
         /* Load user provided models */
         for (String model : pack.getModels())
         {
-            ModelEntry entry = pack.models.get(model);
+            IModelLazyLoader loader = pack.models.get(model);
             ModelCell cell = this.models.get(model);
-            long timestamp = entry.lastModified();
+            long timestamp = loader.lastModified();
 
             keys.remove(model);
 
@@ -60,17 +60,7 @@ public class ModelHandler
 
             try
             {
-                InputStream modelStream = entry.customModel.getStream();
-
-                if (modelStream == null)
-                {
-                    this.addModel(model, new ModelCell(this.generateObjModel(model, entry), timestamp));
-                }
-                else
-                {
-                    this.addModel(model, new ModelCell(Model.parse(modelStream), timestamp));
-                    modelStream.close();
-                }
+                this.addModel(model, loader, timestamp);
             }
             catch (Exception e)
             {
@@ -78,7 +68,7 @@ public class ModelHandler
             }
         }
 
-        /* Make sure default models don't get reloaded every time, 
+        /* Make sure default models don't get reloaded every time,
          * unless substituted */
         Iterator<String> it = keys.iterator();
 
@@ -98,94 +88,14 @@ public class ModelHandler
         {
             this.removeModel(key);
         }
-
-        /* Load default provided models */
-        try
-        {
-            String path = "assets/blockbuster/models/entity/";
-            ClassLoader loader = this.getClass().getClassLoader();
-
-            /* Optionally load default models */
-            this.addDefaultModel("alex");
-            this.addDefaultModel("steve");
-            this.addDefaultModel("fred");
-            this.addDefaultModel("yike");
-            this.addDefaultModel("empty");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Add a default model bundled with the mod 
-     */
-    private void addDefaultModel(String id) throws Exception
-    {
-        String path = "assets/blockbuster/models/entity/";
-        ClassLoader loader = this.getClass().getClassLoader();
-
-        if (!this.models.containsKey(id))
-        {
-            this.addModel(id, new ModelCell(Model.parse(loader.getResourceAsStream(path + id + ".json")), 0));
-        }
-    }
-
-    /**
-     * Generate custom model based on given OBJ
-     */
-    private Model generateObjModel(String model, ModelEntry entry) throws Exception
-    {
-        /* Generate custom model for an OBJ model */
-        InputStream modelStream = this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/models/entity/obj.json");
-        Model data = Model.parse(modelStream);
-
-        data.name = model;
-
-        if (!entry.mtlFile.exists())
-        {
-            data.providesMtl = false;
-        }
-
-        modelStream.close();
-
-        /* Generate limbs */
-        OBJParser parser = entry.createOBJParser(model, data);
-        boolean remove = true;
-
-        if (parser != null)
-        {
-            for (OBJDataMesh mesh : parser.objects)
-            {
-                ModelLimb limb = new ModelLimb();
-
-                limb.name = mesh.name;
-                data.limbs.put(mesh.name, limb);
-
-                if (mesh.name.equals("body"))
-                {
-                    remove = false;
-                }
-            }
-        }
-
-        if (remove)
-        {
-            data.removeLimb(data.limbs.get("body"));
-        }
-
-        data.fillInMissing();
-
-        return data;
     }
 
     /**
      * Add model to the model handler 
      */
-    public void addModel(String name, ModelCell cell)
+    public void addModel(String name, IModelLazyLoader loader, long timestamp) throws Exception
     {
-        this.models.put(name, cell);
+        this.models.put(name, new ModelCell(loader.loadModel(name), timestamp));
     }
 
     /**

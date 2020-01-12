@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
+import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;

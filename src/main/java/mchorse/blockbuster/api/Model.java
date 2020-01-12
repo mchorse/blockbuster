@@ -15,7 +15,7 @@ import com.google.gson.annotations.Expose;
 
 import mchorse.blockbuster.api.json.ModelAdapter;
 import mchorse.blockbuster.api.json.ModelLimbAdapter;
-import mchorse.blockbuster.client.model.parsing.obj.OBJMaterial;
+import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -165,11 +165,7 @@ public class Model
      */
     public ModelLimb addLimb(String name)
     {
-        ModelLimb limb = new ModelLimb();
-
-        limb.name = name;
-
-        return this.addLimb(limb);
+        return this.addLimb(new ModelLimb(name));
     }
 
     /**

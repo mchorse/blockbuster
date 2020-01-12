@@ -37,15 +37,8 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
         }
 
         ModelCustom model = (ModelCustom) this.renderer.getMainModel();
-        ModelPose pose = model.pose;
-        float swingProgress = model.swingProgress;
 
-        renderBodyParts(entitylivingbaseIn, morph, model, partialTicks, scale);
-
-        /* Restore back properties */
-        model.swingProgress = swingProgress;
-        model.pose = pose;
-        model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entitylivingbaseIn);
+        renderBodyParts(entitylivingbaseIn, morph, model, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 
         this.renderer.current = morph;
         this.renderer.setupModel(entitylivingbaseIn, partialTicks);
@@ -53,6 +46,14 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
 
     public static void renderBodyParts(EntityLivingBase target, CustomMorph morph, ModelCustom model, float partialTicks, float scale)
     {
+        renderBodyParts(target, morph, model, 0, 0, partialTicks, 0, 0, 0, scale);
+    }
+
+    public static void renderBodyParts(EntityLivingBase target, CustomMorph morph, ModelCustom model, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    {
+        ModelPose pose = model.pose;
+        float swingProgress = model.swingProgress;
+
         for (BodyPart part : morph.parts.parts)
         {
             for (ModelCustomRenderer limb : model.limbs)
@@ -67,6 +68,11 @@ public class LayerBodyPart implements LayerRenderer<EntityLivingBase>
                     break;
                 }
             }
+
+            /* Restore back properties */
+            model.swingProgress = swingProgress;
+            model.pose = pose;
+            model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, target);
 
             /* No point to render here since if a limb wasn't found 
              * then it wouldn't be transformed correctly */

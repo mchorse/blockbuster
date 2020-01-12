@@ -70,11 +70,6 @@ public class KeyboardHandler
         ClientProxy.recordingOverlay.setVisible(false);
 
         Minecraft.getMinecraft().addScheduledTask(() -> StructureMorph.cleanUp());
-
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.server = false;
-        }
     }
 
     /**

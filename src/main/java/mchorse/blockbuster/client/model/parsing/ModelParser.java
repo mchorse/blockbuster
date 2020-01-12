@@ -12,10 +12,9 @@ import mchorse.blockbuster.api.ModelLimb.ArmorSlot;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
-import mchorse.blockbuster.client.model.ModelOBJRenderer;
-import mchorse.blockbuster.client.model.parsing.obj.OBJParser;
 import mchorse.metamorph.Metamorph;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -32,47 +31,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelParser
 {
     public String key;
-    public Map<String, OBJParser.MeshObject> meshes;
+    public Map<String, IMeshes> meshes;
 
     /**
      * Parse with default class 
      */
-    public static void parse(String key, Model data)
+    public static ModelCustom parse(String key, Model data)
     {
-        parse(key, data, ModelCustom.class, null);
+        return parse(key, data, ModelCustom.class, null);
     }
 
     /**
      * Parse with default class 
      */
-    public static void parse(String key, Model data, Map<String, OBJParser.MeshObject> meshes)
+    public static ModelCustom parse(String key, Model data, Map<String, IMeshes> meshes)
     {
-        parse(key, data, ModelCustom.class, meshes);
+        return parse(key, data, ModelCustom.class, meshes);
     }
 
     /**
      * Parse given input stream as JSON model, and then save this model in
      * the custom model repository
      */
-    public static void parse(String key, Model data, Class<? extends ModelCustom> clazz, Map<String, OBJParser.MeshObject> meshes)
+    public static ModelCustom parse(String key, Model data, Class<? extends ModelCustom> clazz, Map<String, IMeshes> meshes)
     {
         try
         {
-            ModelCustom model = new ModelParser(key, meshes).parseModel(data, clazz);
-            ModelCustom.MODELS.put(key, model);
+            return new ModelParser(key, meshes).parseModel(data, clazz);
         }
         catch (Exception e)
         {
             System.out.println("Model for key '" + key + "' couldn't converted to ModelCustom!");
             e.printStackTrace();
         }
+
+        return null;
     }
 
-    public ModelParser(String key, Map<String, OBJParser.MeshObject> meshes)
+    public ModelParser(String key, Map<String, IMeshes> meshes)
     {
         if (meshes == null)
         {
-            meshes = new HashMap<String, OBJParser.MeshObject>();
+            meshes = new HashMap<String, IMeshes>();
         }
 
         this.key = key;
@@ -174,7 +174,7 @@ public class ModelParser
      */
     protected ModelCustomRenderer createRenderer(ModelBase model, Model data, ModelLimb limb, ModelTransform transform)
     {
-        ModelCustomRenderer renderer;
+        ModelCustomRenderer renderer = null;
 
         float w = limb.size[0];
         float h = limb.size[1];
@@ -184,11 +184,14 @@ public class ModelParser
         float ay = limb.anchor[1];
         float az = limb.anchor[2];
 
-        if (this.meshes.containsKey(limb.name) && data.providesObj)
+        IMeshes meshes = this.meshes.get(limb.name);
+
+        if (meshes != null)
         {
-            renderer = new ModelOBJRenderer(model, limb, transform, this.meshes.get(limb.name));
+            renderer = meshes.createRenderer(data, model, limb, transform);
         }
-        else
+
+        if (renderer == null)
         {
             renderer = new ModelCustomRenderer(model, limb, transform);
             renderer.mirror = limb.mirror;

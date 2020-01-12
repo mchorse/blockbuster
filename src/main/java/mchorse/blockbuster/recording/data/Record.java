@@ -234,12 +234,12 @@ public class Record
      */
     public void seekMorphAction(EntityLivingBase actor, int tick, Replay replay)
     {
-        if (tick >= this.getLength())
+        if (tick >= this.actions.size())
         {
             return;
         }
 
-        /* I hope it won't cause a lag... |+| */
+        /* I hope it won't cause a lag...  */
         int threshold = 0;
 
         while (tick > threshold)

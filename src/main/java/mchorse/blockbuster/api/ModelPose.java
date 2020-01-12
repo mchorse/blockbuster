@@ -116,4 +116,11 @@ public class ModelPose
     {
         return Objects.toStringHelper(this).add("size", this.size).add("limbs", this.limbs).toString();
     }
+
+	public void setSize(float w, float h, float d)
+    {
+        this.size[0] = w;
+        this.size[1] = h;
+        this.size[2] = d;
+	}
 }
