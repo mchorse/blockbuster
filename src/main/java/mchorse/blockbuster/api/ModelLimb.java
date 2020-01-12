@@ -45,6 +45,14 @@ public class ModelLimb
     /* OBJ */
     public float[] origin = new float[] {0F, 0F, 0F};
 
+    public ModelLimb()
+    {}
+
+    public ModelLimb(String name)
+    {
+        this.name = name;
+    }
+
     /**
      * Clone a model limb
      */

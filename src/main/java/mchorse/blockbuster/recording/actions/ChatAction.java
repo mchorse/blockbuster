@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * Chat action
  *
  * Sends chat message with some formatting.
- * See {@link ChatAction#apply(mchorse.blockbuster.common.entity.EntityActor)} for more
- * information.
+ * See {@link ChatAction#apply(EntityLivingBase)} for more information.
  */
 public class ChatAction extends Action
 {

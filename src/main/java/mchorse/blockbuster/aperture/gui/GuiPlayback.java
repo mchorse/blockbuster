@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.aperture.ClientProxy;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -53,7 +54,7 @@ public class GuiPlayback extends GuiScreen
             this.profiles.add(new ClientDestination(filename));
         }
 
-        if (CameraHandler.server)
+        if (ClientProxy.server)
         {
             Dispatcher.sendToServer(new PacketRequestProfiles());
         }

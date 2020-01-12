@@ -2,7 +2,6 @@ package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.aperture.network.common.PacketAperture;
 import mchorse.blockbuster.capabilities.gun.GunProvider;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -68,12 +67,6 @@ public class CapabilityHandler
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
-
-        /* Do something? */
-        if (CameraHandler.isApertureLoaded())
-        {
-            Dispatcher.sendTo(new PacketAperture(), player);
-        }
 
         Dispatcher.sendTo(new PacketStructureList(ServerHandlerStructureRequest.getAllStructures()), player);
     }

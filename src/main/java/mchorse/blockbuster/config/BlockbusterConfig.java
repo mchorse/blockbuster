@@ -198,7 +198,7 @@ public class BlockbusterConfig
         this.record_sync_rate = this.getInt("record_sync_rate", recording, 6, 1, 30, "How often a recording is going to synchronize with the server");
         this.record_attack_on_swipe = this.getBoolean("record_attack_on_swipe", recording, false, "Does attack action get recorded with swipe action?");
         this.record_commands = this.getBoolean("record_commands", recording, true, "Does command action get recorded during recording?");
-        this.record_chat_prefix = this.getString("record_chat_action", recording, "", "Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)");
+        this.record_chat_prefix = this.getString("record_chat_prefix", recording, "", "Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)");
 
         /* Actor */
         this.actor_fall_damage = this.getBoolean("actor_fall_damage", actor, true, "Do actors receive fall damage?");
