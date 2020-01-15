@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client;
 
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.blockbuster.Blockbuster;
@@ -80,7 +81,9 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            ClientProxy.getDashboard(false).open().openPanel(null);
+            GuiDashboard dashboard = ClientProxy.getDashboard(false);
+
+            dashboard.open().openPanel(GuiScreen.isCtrlKeyDown() ? dashboard.mainPanel : null);
         }
 
         if (this.cameraMarker.isPressed())
