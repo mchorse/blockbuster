@@ -153,7 +153,7 @@ public class ActionHandler
         EntityPlayer player = event.getPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.worldObj.isRemote && events != null && player.isCreative())
+        if (!player.worldObj.isRemote && events != null)
         {
             events.add(new BreakBlockAction(event.getPos(), false));
         }
