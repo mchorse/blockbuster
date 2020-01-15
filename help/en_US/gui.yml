@@ -265,6 +265,9 @@ blockbuster.gui:
         maximum: Maximum
         cap: Capacity
 
+    record_morph:
+        random_skip: Random Skip
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime

@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -56,6 +57,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         private GuiStringSearchListElement records;
         private GuiButtonElement<GuiButton> pick;
         private GuiButtonElement<GuiCheckBox> loop;
+        private GuiTrackpadElement randomSkip;
         private GuiCreativeMorphs morphPicker;
 
         public GuiRecordMorphPanel(Minecraft mc, GuiRecordMorph editor)
@@ -88,12 +90,15 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             {
                 this.morph.loop = b.button.isChecked();
             });
+            this.randomSkip = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.record_morph.random_skip"), (value) -> this.morph.randomSkip = value.intValue());
+            this.randomSkip.setLimit(0, Integer.MAX_VALUE, true);
 
-            this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -21 - 25 - 30);
-            this.pick.resizer().parent(this.area).set(10, 0, 105, 20).y(1, -21 - 25);
-            this.loop.resizer().parent(this.area).set(10, 0, this.loop.button.width, 11).y(1, -21);
+            this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -35 - 25 - 16 - 25);
+            this.pick.resizer().relative(this.records.resizer()).set(0, 0, 105, 20).y(1, 5);
+            this.loop.resizer().relative(this.pick.resizer()).set(0, 25, this.loop.button.width, 11);
+            this.randomSkip.resizer().relative(this.loop.resizer()).set(0, 16, 100, 20);
 
-            this.children.add(this.pick, this.loop, this.records);
+            this.children.add(this.pick, this.loop, this.randomSkip, this.records);
         }
 
         private void setMorph(AbstractMorph morph)
@@ -116,6 +121,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 
             this.records.list.setCurrent(morph.record);
             this.loop.button.setIsChecked(morph.loop);
+            this.randomSkip.setValue(morph.randomSkip);
 
             if (this.morphPicker != null)
             {

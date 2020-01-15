@@ -55,6 +55,11 @@ public class RecordMorph extends AbstractMorph
      */
     public boolean loop = true;
 
+    /**
+     * Random skip factor
+     */
+    public int randomSkip;
+
     private boolean initiate;
 
     public RecordMorph()
@@ -69,20 +74,20 @@ public class RecordMorph extends AbstractMorph
     {
         this.initiateActor(player.worldObj);
 
-        if (this.initial == null)
-        {
-            /* Render icon when initial morph isn't available */
-            scale = (float) Math.ceil(scale / 16);
+        /* Render icon when initial morph isn't available */
+        float record = (float) Math.ceil(scale / 16);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x + 1, y - 9, 0);
-            GlStateManager.scale(scale, scale, 1);
-            GuiInventory.drawItemStack(ICON, -8, -8, null);
-            GlStateManager.popMatrix();
-        }
-        else if (this.actor.getMorph() != null)
+        GlStateManager.disableDepth();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 1, y - 9, 0);
+        GlStateManager.scale(record, record, 1);
+        GuiInventory.drawItemStack(ICON, -8, -8, null);
+        GlStateManager.popMatrix();
+        GlStateManager.enableDepth();
+
+        if (this.initial != null)
         {
-            this.actor.getMorph().renderOnScreen(player, x, y, scale, alpha);
+            this.initial.renderOnScreen(player, x, y, scale, alpha);
         }
     }
 
@@ -134,6 +139,7 @@ public class RecordMorph extends AbstractMorph
             this.actor = new EntityActor(world);
             this.actor.morph.setDirect(this.initial == null ? null : this.initial.clone(world.isRemote));
             this.actor.playback = new RecordPlayer(null, Mode.FRAMES, this.actor);
+            this.actor.playback.tick = (int) (this.randomSkip * Math.random());
             this.actor.manual = true;
 
             Record record = ClientProxy.manager.records.get(this.record);
@@ -181,7 +187,7 @@ public class RecordMorph extends AbstractMorph
                 if (this.actor.playback.isFinished() && this.loop)
                 {
                     this.actor.playback.record.reset(this.actor);
-                    this.actor.playback.tick = 0;
+                    this.actor.playback.tick = (int) (this.randomSkip * Math.random());
                     this.actor.playback.record.applyAction(0, this.actor, true);
                     this.actor.morph.setDirect(this.initial);
                 }
@@ -198,6 +204,7 @@ public class RecordMorph extends AbstractMorph
         morph.settings = this.settings;
         morph.record = this.record;
         morph.loop = this.loop;
+        morph.randomSkip = this.randomSkip;
 
         if (this.initial != null)
         {
@@ -245,6 +252,7 @@ public class RecordMorph extends AbstractMorph
         this.record = "";
         this.reload = true;
         this.loop = true;
+        this.randomSkip = 0;
     }
 
     @Override
@@ -265,6 +273,11 @@ public class RecordMorph extends AbstractMorph
         if (tag.hasKey("Loop", NBT.TAG_ANY_NUMERIC))
         {
             this.loop = tag.getBoolean("Loop");
+        }
+
+        if (tag.hasKey("RandomDelay", NBT.TAG_ANY_NUMERIC))
+        {
+            this.randomSkip = tag.getInteger("RandomDelay");
         }
     }
 
@@ -289,6 +302,11 @@ public class RecordMorph extends AbstractMorph
         if (!this.loop)
         {
             tag.setBoolean("Loop", this.loop);
+        }
+
+        if (this.randomSkip != 0)
+        {
+            tag.setInteger("RandomDelay", this.randomSkip);
         }
     }
 
