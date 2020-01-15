@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.server.director.sync;
 
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.common.tileentity.director.Director;
+import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;

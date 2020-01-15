@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.actions;
 
 import java.util.HashMap;
 import java.util.Map;

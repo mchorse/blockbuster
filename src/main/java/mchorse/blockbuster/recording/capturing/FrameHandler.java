@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.capturing;
 
 import mchorse.blockbuster.ClientProxy;
 import net.minecraft.entity.player.EntityPlayer;

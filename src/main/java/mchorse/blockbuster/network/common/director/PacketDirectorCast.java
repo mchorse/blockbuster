@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.common.director;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.common.tileentity.director.Director;
+import mchorse.blockbuster.recording.director.Director;
 import net.minecraft.util.math.BlockPos;
 
 public class PacketDirectorCast extends PacketDirector

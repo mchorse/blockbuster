@@ -1,4 +1,4 @@
-package mchorse.blockbuster.common.tileentity.director;
+package mchorse.blockbuster.recording.director;
 
 import net.minecraft.command.CommandResultStats.Type;
 import net.minecraft.command.ICommandSender;

@@ -6,7 +6,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.recording.director.Replay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;

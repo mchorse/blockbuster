@@ -1,6 +1,7 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.capturing;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.recording.RecordRecorder;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.SwipeAction;

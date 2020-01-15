@@ -1,4 +1,4 @@
-package mchorse.blockbuster.common.tileentity.director.fake;
+package mchorse.blockbuster.recording.director.fake;
 
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;

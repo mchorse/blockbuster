@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.recording.ActionRegistry;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

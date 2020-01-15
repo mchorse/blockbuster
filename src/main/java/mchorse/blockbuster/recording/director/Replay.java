@@ -1,4 +1,4 @@
-package mchorse.blockbuster.common.tileentity.director;
+package mchorse.blockbuster.recording.director;
 
 import com.google.common.base.Objects;
 

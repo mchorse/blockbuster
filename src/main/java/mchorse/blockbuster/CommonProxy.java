@@ -28,7 +28,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.recording.ActionHandler;
+import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;

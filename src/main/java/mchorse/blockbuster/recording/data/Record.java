@@ -13,8 +13,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.recording.ActionRegistry;
+import mchorse.blockbuster.recording.director.Replay;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;

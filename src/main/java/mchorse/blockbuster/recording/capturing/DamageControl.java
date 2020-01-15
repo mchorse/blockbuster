@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.capturing;
 
 import java.util.ArrayList;
 import java.util.List;

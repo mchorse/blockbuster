@@ -132,9 +132,11 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     @Override
     protected void renderDisplayList()
     {
+        GlStateManager.enableCull();
         GlStateManager.bindTexture(this.paletteTexture);
         GL11.glCallList(this.displayList);
         RenderCustomModel.bindLastTexture();
+        GlStateManager.disableCull();
     }
 
     @Override

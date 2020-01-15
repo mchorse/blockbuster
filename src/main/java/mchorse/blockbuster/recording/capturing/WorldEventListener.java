@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording;
+package mchorse.blockbuster.recording.capturing;
 
 import java.util.List;
 
@@ -116,7 +116,7 @@ public class WorldEventListener implements IWorldEventListener
             EntityPlayer player = (EntityPlayer) breaker;
             List<Action> events = CommonProxy.manager.getActions(player);
 
-            if (!player.worldObj.isRemote && events != null && progress <= 11)
+            if (!player.worldObj.isRemote && events != null)
             {
                 events.add(new BreakBlockAnimation(pos, progress));
             }

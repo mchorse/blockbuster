@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.tileentity.director.Director;
-import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.recording.director.Director;
+import mchorse.blockbuster.recording.director.Replay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.GuiUtils;

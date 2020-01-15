@@ -2,7 +2,7 @@ package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.recording.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;

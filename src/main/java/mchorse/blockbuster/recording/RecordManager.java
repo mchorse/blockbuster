@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.DamageAction;
+import mchorse.blockbuster.recording.capturing.DamageControl;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -49,7 +50,8 @@ public class RecordManager
     public Map<EntityPlayer, RecordRecorder> recorders = new HashMap<EntityPlayer, RecordRecorder>();
 
     /**
-     * No, not {@link EntityPlayer}s, say record pla-yers, pla-yers...
+     * Me: No, not {@link EntityPlayer}s, say record pla-yers, pla-yers...
+     * Also me in 2020: What a cringe...
      */
     public Map<EntityLivingBase, RecordPlayer> players = new HashMap<EntityLivingBase, RecordPlayer>();
 
