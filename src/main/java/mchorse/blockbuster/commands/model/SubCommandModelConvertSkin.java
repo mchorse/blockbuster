@@ -126,8 +126,10 @@ public class SubCommandModelConvertSkin extends CommandBase
 
             /* Set target to opposite model */
             String targetModel = model.equals("steve") ? "fred" : "steve";
-            String name = FilenameUtils.getBaseName(skin);
-            ImageIO.write(target, "png", new File(ClientProxy.configFile, "models/" + targetModel + "/skins/" + name + ".png"));
+            File file = new File(ClientProxy.configFile, "models/" + targetModel + "/skins/" + skin);
+
+            file.mkdirs();
+            ImageIO.write(target, "png", file);
 
             target.flush();
             image.flush();
@@ -167,7 +169,7 @@ public class SubCommandModelConvertSkin extends CommandBase
             String skin = args[1];
             String path = "b.a/" + args[0] + "/skins/" + skin;
             FolderEntry skins = GlobalTree.TREE.getByPath(path, null);
-            String name = FilenameUtils.getName(path.substring(0, path.length() - 1));
+            String name = FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(path));
 
             if (skins != null && skins.title.equals(name))
             {
