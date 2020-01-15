@@ -53,10 +53,7 @@ public class WorldEventListener implements IWorldEventListener
                 return;
             }
 
-            for (DamageControl damage : CommonProxy.manager.damage.values())
-            {
-                damage.addBlock(new BlockPos(pos), oldState, worldIn);
-            }
+            CommonProxy.damage.addBlock(pos, oldState, worldIn);
         }
     }
 
@@ -88,10 +85,7 @@ public class WorldEventListener implements IWorldEventListener
             return;
         }
 
-        for (DamageControl damage : CommonProxy.manager.damage.values())
-        {
-            damage.entities.add(entity);
-        }
+        CommonProxy.damage.addEntity(entity);
     }
 
     @Override

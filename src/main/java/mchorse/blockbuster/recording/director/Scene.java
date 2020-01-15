@@ -256,7 +256,7 @@ public class Scene
 		this.setPlaying(true);
 		this.sendCommand(this.startCommand);
 
-		CommonProxy.manager.addDamageControl(this, firstActor);
+		CommonProxy.damage.addDamageControl(this, firstActor);
 	}
 
 	/**
@@ -325,7 +325,7 @@ public class Scene
 
 			if (j == 0)
 			{
-				CommonProxy.manager.addDamageControl(this, actor.actor);
+				CommonProxy.damage.addDamageControl(this, actor.actor);
 			}
 
 			actor.playing = false;
@@ -361,7 +361,7 @@ public class Scene
 			actor.stopPlaying();
 		}
 
-		CommonProxy.manager.restoreDamageControl(this, this.getWorld());
+		CommonProxy.damage.restoreDamageControl(this, this.getWorld());
 
 		this.actors.clear();
 		this.setPlaying(false);

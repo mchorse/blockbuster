@@ -30,6 +30,8 @@ import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.recording.capturing.DamageControl;
+import mchorse.blockbuster.recording.capturing.DamageControlManager;
 import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
@@ -62,6 +64,11 @@ public class CommonProxy
      * Record manager for server side
      */
     public static RecordManager manager = new RecordManager();
+
+    /**
+     * Damage control manager
+     */
+    public static DamageControlManager damage = new DamageControlManager();
 
     /**
      * Incremented ID for entities

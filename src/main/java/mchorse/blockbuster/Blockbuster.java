@@ -151,5 +151,6 @@ public class Blockbuster
     public void serverStopping(FMLServerStoppingEvent event)
     {
         CommonProxy.manager.reset();
+        CommonProxy.damage.reset();
     }
 }

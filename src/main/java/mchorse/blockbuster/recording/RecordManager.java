@@ -2,11 +2,14 @@ package mchorse.blockbuster.recording;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -23,7 +26,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Record manager
@@ -59,11 +65,6 @@ public class RecordManager
      * Scheduled recordings
      */
     public Map<EntityPlayer, ScheduledRecording> scheduled = new HashMap<EntityPlayer, ScheduledRecording>();
-
-    /**
-     * Damage control objects
-     */
-    public Map<Object, DamageControl> damage = new HashMap<Object, DamageControl>();
 
     /**
      * Get action list for given player
@@ -125,7 +126,7 @@ public class RecordManager
 
         if (!player.worldObj.isRemote)
         {
-            this.addDamageControl(recorder, player);
+            CommonProxy.damage.addDamageControl(recorder, player);
         }
 
         if (countdown == 0 || player.worldObj.isRemote)
@@ -180,7 +181,7 @@ public class RecordManager
 
             if (notify)
             {
-                this.restoreDamageControl(recorder, player.worldObj);
+                CommonProxy.damage.restoreDamageControl(recorder, player.worldObj);
 
                 Dispatcher.sendTo(new PacketPlayerRecording(false, ""), (EntityPlayerMP) player);
             }
@@ -301,7 +302,6 @@ public class RecordManager
         this.chunks.clear();
         this.recorders.clear();
         this.players.clear();
-        this.damage.clear();
     }
 
     /**
@@ -340,29 +340,83 @@ public class RecordManager
         return record;
     }
 
-    /**
-     * Start observing damage made to terrain
-     */
-    public void addDamageControl(Object object, EntityLivingBase player)
+    public void tick()
     {
-        if (Blockbuster.proxy.config.damage_control)
+        if (Blockbuster.proxy.config.record_unload && !this.records.isEmpty())
         {
-            int dist = Blockbuster.proxy.config.damage_control_distance;
+            this.checkAndUnloadRecords();
+        }
 
-            this.damage.put(object, new DamageControl(player, dist));
+        if (!this.scheduled.isEmpty())
+        {
+            this.checkScheduled();
         }
     }
 
     /**
-     * Restore made damage
+     * Check for any unloaded record and unload it if needed requirements are
+     * met.
      */
-    public void restoreDamageControl(Object object, World world)
+    private void checkAndUnloadRecords()
     {
-        DamageControl control = this.damage.remove(object);
+        Iterator<Map.Entry<String, Record>> iterator = this.records.entrySet().iterator();
 
-        if (control != null)
+        while (iterator.hasNext())
         {
-            control.apply(world);
+            Record record = iterator.next().getValue();
+
+            record.unload--;
+
+            if (record.unload <= 0)
+            {
+                iterator.remove();
+                Utils.unloadRecord(record);
+
+                try
+                {
+                    if (record.dirty)
+                    {
+                        record.save(Utils.replayFile(record.filename));
+                        record.dirty = false;
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Check for scheduled records and countdown them.
+     */
+    private void checkScheduled()
+    {
+        Iterator<ScheduledRecording> it = this.scheduled.values().iterator();
+
+        while (it.hasNext())
+        {
+            ScheduledRecording record = it.next();
+
+            if (record.countdown % 20 == 0)
+            {
+                IMessage message = new PacketCaption(new TextComponentTranslation("blockbuster.start_recording", record.recorder.record.filename, record.countdown / 20));
+                Dispatcher.sendTo(message, (EntityPlayerMP) record.player);
+            }
+
+            if (record.countdown <= 0)
+            {
+                record.run();
+                this.recorders.put(record.player, record.recorder);
+                Dispatcher.sendTo(new PacketPlayerRecording(true, record.recorder.record.filename), (EntityPlayerMP) record.player);
+
+                it.remove();
+
+                continue;
+            }
+
+            record.countdown--;
         }
     }
 
