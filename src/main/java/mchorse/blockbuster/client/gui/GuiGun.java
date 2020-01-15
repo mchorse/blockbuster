@@ -65,6 +65,8 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement speed;
     public GuiTrackpadElement friction;
     public GuiTrackpadElement gravity;
+    public GuiTrackpadElement fadeIn;
+    public GuiTrackpadElement fadeOut;
 
     /* Impact options */
     public GuiElement impactOptions;
@@ -150,6 +152,10 @@ public class GuiGun extends GuiBase
         this.speed = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.speed"), (value) -> this.props.speed = value);
         this.friction = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.friction"), (value) -> this.props.friction = value);
         this.gravity = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.gravity"), (value) -> this.props.gravity = value);
+        this.fadeIn = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.fade_in"), (value) -> this.props.fadeIn = value.intValue());
+        this.fadeIn.setLimit(0, Integer.MAX_VALUE, true);
+        this.fadeOut = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.fade_out"), (value) -> this.props.fadeOut = value.intValue());
+        this.fadeOut.setLimit(0, Integer.MAX_VALUE, true);
 
         this.pickProjectile.resizer().parent(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
         this.tickCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
@@ -164,10 +170,12 @@ public class GuiGun extends GuiBase
         this.speed.resizer().parent(area).set(10, 10, 100, 20);
         this.friction.resizer().relative(this.speed.resizer()).set(0, 25, 100, 20);
         this.gravity.resizer().relative(this.friction.resizer()).set(0, 25, 100, 20);
+        this.fadeIn.resizer().relative(this.random.resizer()).set(0, 16, 100, 20);
+        this.fadeOut.resizer().relative(this.fadeIn.resizer()).set(0, 25, 100, 20);
 
         this.projectileOptions.children.add(this.pickProjectile, this.tickCommand);
         this.projectileOptions.children.add(this.yaw, this.pitch, this.sequencer, this.random);
-        this.projectileOptions.children.add(this.ticking, this.hitboxX, this.hitboxY, this.lifeSpan, this.speed, this.friction, this.gravity);
+        this.projectileOptions.children.add(this.ticking, this.hitboxX, this.hitboxY, this.lifeSpan, this.speed, this.friction, this.gravity, this.fadeIn, this.fadeOut);
 
         /* Impact options */
         area = this.impactOptions.area;
@@ -228,6 +236,8 @@ public class GuiGun extends GuiBase
         this.speed.setValue(this.props.speed);
         this.friction.setValue(this.props.friction);
         this.gravity.setValue(this.props.gravity);
+        this.fadeIn.setValue(this.props.fadeIn);
+        this.fadeOut.setValue(this.props.fadeOut);
 
         /* Impact properties */
         this.impactCommand.setText(this.props.impactCommand);

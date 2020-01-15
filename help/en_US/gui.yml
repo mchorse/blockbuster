@@ -44,7 +44,7 @@ blockbuster.gui:
         resources: Resources
         wiki: Wiki
         discord: Discord
-        tutorial: Video tutorial
+        tutorial: Video Tutorial
         models: Open Models...
         
         options: Options
@@ -303,7 +303,9 @@ blockbuster.gui:
         speed: Speed
         friction: Friction
         gravity: Gravity
-        
+        fade_in: Fade in
+        fade_out: Fade out
+
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact

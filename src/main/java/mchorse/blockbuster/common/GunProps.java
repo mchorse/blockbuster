@@ -49,6 +49,8 @@ public class GunProps
     public float speed;
     public float friction;
     public float gravity;
+    public int fadeIn;
+    public int fadeOut;
 
     /* Impact properties */
     public AbstractMorph impactMorph;
@@ -200,6 +202,7 @@ public class GunProps
         this.speed = 1.0F;
         this.friction = 0.99F;
         this.gravity = 0.03F;
+        this.fadeIn = this.fadeOut = 10;
 
         /* Impact properties */
         this.impactMorph = null;
@@ -209,8 +212,6 @@ public class GunProps
         this.bounce = false;
         this.hits = 1;
         this.damage = 0F;
-
-        /* Impact properties */
 
         /* Transforms */
         this.gunTransform = new ModelTransform();
@@ -244,12 +245,14 @@ public class GunProps
         if (tag.hasKey("Speed")) this.speed = tag.getFloat("Speed");
         if (tag.hasKey("Friction")) this.friction = tag.getFloat("Friction");
         if (tag.hasKey("Gravity")) this.gravity = tag.getFloat("Gravity");
-        if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
+        if (tag.hasKey("FadeIn")) this.fadeIn = tag.getInteger("FadeIn");
+        if (tag.hasKey("FadeOut")) this.fadeOut = tag.getInteger("FadeOut");
 
         /* Impact properties */
         this.impactMorph = this.create(tag, "Impact");
         if (tag.hasKey("ImpactCommand")) this.impactCommand = tag.getString("ImpactCommand");
         if (tag.hasKey("ImpactDelay")) this.impactDelay = tag.getInteger("ImpactDelay");
+        if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
@@ -301,6 +304,8 @@ public class GunProps
         if (this.speed != 1.0F) tag.setFloat("Speed", this.speed);
         if (this.friction != 0.99F) tag.setFloat("Friction", this.friction);
         if (this.gravity != 0.03F) tag.setFloat("Gravity", this.gravity);
+        if (this.fadeIn != 10) tag.setInteger("FadeIn", this.fadeIn);
+        if (this.fadeOut != 10) tag.setInteger("FadeOut", this.fadeOut);
 
         /* Impact properties */
         if (this.impactMorph != null) tag.setTag("Impact", this.to(this.impactMorph));
