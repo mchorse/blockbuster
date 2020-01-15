@@ -1,7 +1,6 @@
 package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.capabilities.gun.GunProvider;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -10,7 +9,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.recording.RecordPlayer;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,7 +82,7 @@ public class CapabilityHandler
 
             if (actor.isPlaying())
             {
-                Utils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
+                RecordUtils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
             }
         }
 
@@ -94,7 +93,7 @@ public class CapabilityHandler
 
             if (playback != null)
             {
-                Utils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
+                RecordUtils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
             }
         }
     }

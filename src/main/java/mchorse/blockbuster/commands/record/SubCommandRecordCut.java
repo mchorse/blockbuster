@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
@@ -63,7 +63,7 @@ public class SubCommandRecordCut extends SubCommandRecordBase
         record.actions = actions;
 
         record.dirty = true;
-        Utils.unloadRecord(record);
+        RecordUtils.unloadRecord(record);
 
         L10n.success(sender, "record.cut", args[0], args[1], args[2]);
     }

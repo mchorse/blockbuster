@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
+import mchorse.blockbuster.network.common.director.PacketDirectorRecord;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
@@ -552,5 +554,24 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
+    }
+
+    public void plause()
+    {
+        if (this.pos != null)
+        {
+            Dispatcher.sendToServer(new PacketDirectorPlayback(this.pos));
+        }
+    }
+
+    public void record()
+    {
+        BlockPos director = this.pos;
+        Replay replay = this.replay;
+
+        if (director != null && replay != null && !replay.id.isEmpty())
+        {
+            Dispatcher.sendToServer(new PacketDirectorRecord(director, replay.id));
+        }
     }
 }

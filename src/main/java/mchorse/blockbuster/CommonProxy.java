@@ -32,6 +32,7 @@ import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.DamageControl;
 import mchorse.blockbuster.recording.capturing.DamageControlManager;
+import mchorse.blockbuster.recording.director.SceneManager;
 import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
@@ -69,6 +70,11 @@ public class CommonProxy
      * Damage control manager
      */
     public static DamageControlManager damage = new DamageControlManager();
+
+    /**
+     * Remote scene manager
+     */
+    public static SceneManager scenes = new SceneManager();
 
     /**
      * Incremented ID for entities

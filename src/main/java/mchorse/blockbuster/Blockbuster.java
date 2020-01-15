@@ -152,5 +152,6 @@ public class Blockbuster
     {
         CommonProxy.manager.reset();
         CommonProxy.damage.reset();
+        CommonProxy.scenes.reset();
     }
 }

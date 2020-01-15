@@ -54,7 +54,7 @@ public class SubCommandActionRecord extends CommandBase
         }
         else
         {
-            CommonProxy.manager.startRecording(args[0], player, Mode.ACTIONS, true, null);
+            CommonProxy.manager.record(args[0], player, Mode.ACTIONS, true, null);
         }
     }
 }

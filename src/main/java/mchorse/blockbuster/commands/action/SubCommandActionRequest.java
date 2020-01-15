@@ -1,6 +1,6 @@
 package mchorse.blockbuster.commands.action;
 
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -34,6 +34,6 @@ public class SubCommandActionRequest extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
-        Utils.sendRecord(args[0], getCommandSenderAsPlayer(sender));
+        RecordUtils.sendRecord(args[0], getCommandSenderAsPlayer(sender));
     }
 }

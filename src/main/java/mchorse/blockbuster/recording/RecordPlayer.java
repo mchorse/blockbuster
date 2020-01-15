@@ -259,7 +259,7 @@ public class RecordPlayer
      */
     public void stopPlaying()
     {
-        CommonProxy.manager.stopPlayback(this);
+        CommonProxy.manager.stop(this);
 
         this.actor.noClip = false;
     }

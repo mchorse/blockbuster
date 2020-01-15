@@ -1,9 +1,7 @@
 package mchorse.blockbuster.recording.capturing;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
@@ -13,14 +11,10 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer.TEModel;
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketCaption;
-import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.RecordManager;
-import mchorse.blockbuster.recording.RecordManager.ScheduledRecording;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordRecorder;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
@@ -35,7 +29,6 @@ import mchorse.blockbuster.recording.actions.MorphActionAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
-import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.metamorph.api.events.MorphActionEvent;
 import mchorse.metamorph.api.events.MorphEvent;
@@ -43,7 +36,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -53,7 +45,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -75,7 +66,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -386,7 +376,7 @@ public class ActionHandler
 
         if (!player.worldObj.isRemote)
         {
-            CommonProxy.manager.abortRecording(player);
+            CommonProxy.manager.abort(player);
         }
     }
 
@@ -439,6 +429,7 @@ public class ActionHandler
     public void onWorldTick(ServerTickEvent event)
     {
         CommonProxy.manager.tick();
+        CommonProxy.scenes.tick();
     }
 
     /**
@@ -461,8 +452,8 @@ public class ActionHandler
 
             if (player.isDead)
             {
-                CommonProxy.manager.stopRecording(player, true, true);
-                Utils.broadcastInfo("recording.dead", recorder.record.filename);
+                CommonProxy.manager.record(player, true, true);
+                RecordUtils.broadcastInfo("recording.dead", recorder.record.filename);
             }
             else
             {

@@ -11,7 +11,6 @@ import mchorse.blockbuster.recording.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.director.PacketDirectorCast;
-import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,11 +43,6 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
      */
     public Director director;
 
-    /**
-     * This tick used for checking if actors still playing
-     */
-    private int tick = 0;
-
     public TileEntityDirector()
     {
         this.director = new Director(this);
@@ -67,11 +61,6 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     @Override
     public void update()
     {
-        if (Blockbuster.proxy.config.debug_playback_ticks)
-        {
-            this.director.logTicks();
-        }
-
         if (this.director.hide)
         {
             IBlockState state = this.getWorld().getBlockState(this.pos);
@@ -104,19 +93,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
             return;
         }
 
-        for (RecordPlayer player : this.director.actors.values())
-        {
-            if (player.actor instanceof EntityPlayer)
-            {
-                ((EntityPlayerMP) player.actor).onUpdateEntity();
-            }
-        }
-
-        if (this.tick-- == 0)
-        {
-            this.director.checkActors();
-            this.tick = 4;
-        }
+        this.director.tick();
     }
 
     /* Read/write this TE to disk */
@@ -214,7 +191,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
 
         if (replay != null)
         {
-            CommonProxy.manager.startRecording(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, new Runnable()
             {
                 @Override
                 public void run()

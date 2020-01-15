@@ -103,12 +103,7 @@ public class KeyboardHandler
 
             if (dash != null && dash.directorPanel != null)
             {
-                BlockPos director = dash.directorPanel.getPos();
-
-                if (director != null)
-                {
-                    Dispatcher.sendToServer(new PacketDirectorPlayback(director));
-                }
+                dash.directorPanel.plause();
             }
         }
 
@@ -118,13 +113,7 @@ public class KeyboardHandler
 
             if (dash != null && dash.directorPanel != null)
             {
-                BlockPos director = dash.directorPanel.getPos();
-                Replay replay = dash.directorPanel.getReplay();
-
-                if (director != null && replay != null && !replay.id.isEmpty())
-                {
-                    Dispatcher.sendToServer(new PacketDirectorRecord(director, replay.id));
-                }
+                dash.directorPanel.record();
             }
         }
 

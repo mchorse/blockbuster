@@ -6,15 +6,15 @@ import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.director.fake.FakeContext;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -103,9 +103,19 @@ public class Scene
 	/**
 	 * Director command sender
 	 */
-	private DirectorSender sender;
+	private ICommandSender sender;
 
+	/**
+	 * This tick used for checking if actors still playing
+	 */
+	private int tick = 0;
+
+	/**
+	 * World instance
+	 */
 	private World world;
+
+	/* Info accessors */
 
 	public void setWorld(World world)
 	{
@@ -117,12 +127,10 @@ public class Scene
 		return this.world;
 	}
 
-	/* Info accessors */
-
 	/**
 	 * Set director command sender
 	 */
-	public void setSender(DirectorSender sender)
+	public void setSender(ICommandSender sender)
 	{
 		this.sender = sender;
 	}
@@ -156,7 +164,7 @@ public class Scene
 
 			try
 			{
-				record = CommonProxy.manager.getRecord(replay.id);
+				record = CommonProxy.manager.get(replay.id);
 			}
 			catch (Exception e)
 			{}
@@ -168,6 +176,28 @@ public class Scene
 		}
 
 		return max;
+	}
+
+	public void tick()
+	{
+		if (Blockbuster.proxy.config.debug_playback_ticks)
+		{
+			this.logTicks();
+		}
+
+		for (RecordPlayer player : this.actors.values())
+		{
+			if (player.actor instanceof EntityPlayer)
+			{
+				((EntityPlayerMP) player.actor).onUpdateEntity();
+			}
+		}
+
+		if (this.tick-- == 0)
+		{
+			this.checkActors();
+			this.tick = 4;
+		}
 	}
 
 	/**
@@ -216,7 +246,7 @@ public class Scene
 	}
 
 	/**
-	 * The same thing as startPlayback, but don't play the actor that is passed
+	 * The same thing as play, but don't play the actor that is passed
 	 * in the arguments (because he might be recorded by the player)
 	 */
 	public void startPlayback(int tick)
@@ -230,7 +260,7 @@ public class Scene
 		{
 			if (replay.id.isEmpty())
 			{
-				Utils.broadcastError("director.empty_filename");
+				RecordUtils.broadcastError("director.empty_filename");
 
 				return;
 			}
@@ -260,7 +290,7 @@ public class Scene
 	}
 
 	/**
-	 * The same thing as startPlayback, but don't play the replay that is passed
+	 * The same thing as play, but don't play the replay that is passed
 	 * in the arguments (because he might be recorded by the player)
 	 *
 	 * Used by recording code.
@@ -306,7 +336,7 @@ public class Scene
 		{
 			if (replay.id.isEmpty())
 			{
-				Utils.broadcastError("director.empty_filename");
+				RecordUtils.broadcastError("director.empty_filename");
 
 				return false;
 			}
@@ -470,7 +500,7 @@ public class Scene
 				actor = act;
 			}
 
-			RecordPlayer player = CommonProxy.manager.startPlayback(replay.id, actor, Mode.BOTH, 0, true, true);
+			RecordPlayer player = CommonProxy.manager.play(replay.id, actor, Mode.BOTH, 0, true);
 
 			if (player != null)
 			{

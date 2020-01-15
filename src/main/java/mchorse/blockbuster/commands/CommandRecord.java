@@ -75,7 +75,7 @@ public class CommandRecord extends SubCommandBase
     {
         try
         {
-            return CommonProxy.manager.getRecord(filename);
+            return CommonProxy.manager.get(filename);
         }
         catch (FileNotFoundException e)
         {

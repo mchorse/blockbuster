@@ -42,7 +42,7 @@ public class SubCommandActionPlay extends CommandBase
         World world = sender.getEntityWorld();
         EntityActor actor = CommandAction.actorFromArgs(args, world);
 
-        CommonProxy.manager.startPlayback(args[0], actor, Mode.BOTH, true, true);
+        CommonProxy.manager.play(args[0], actor, Mode.BOTH, true);
         world.spawnEntityInWorld(actor);
     }
 }

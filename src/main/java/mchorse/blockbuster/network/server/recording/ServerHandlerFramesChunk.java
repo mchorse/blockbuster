@@ -5,7 +5,7 @@ import java.io.IOException;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.network.ServerMessageHandler;
@@ -40,7 +40,7 @@ public class ServerHandlerFramesChunk extends ServerMessageHandler<PacketFramesC
                 Recording.get(player).addRecording(message.filename, System.currentTimeMillis());
 
                 serverRecord.frames = chunk.compile();
-                serverRecord.save(Utils.replayFile(message.filename));
+                serverRecord.save(RecordUtils.replayFile(message.filename));
 
                 CommonProxy.manager.chunks.remove(message.filename);
             }
