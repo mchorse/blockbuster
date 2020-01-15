@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -707,5 +708,11 @@ public class Record
         }
 
         return action;
+    }
+
+    public void reverse()
+    {
+        Collections.reverse(this.frames);
+        Collections.reverse(this.actions);
     }
 }

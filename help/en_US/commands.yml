@@ -65,6 +65,12 @@ blockbuster:
                     {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
 
                     {r}Restores previous version {7}<iteration>{r} of a player recording by name {7}<filename>{r}. For example {7}/record restore test 1{r} will swap {7}test.dat{r} and {7}test.dat~1{r} player recording files places.
+
+            restore:
+                    |
+                        {l}{6}/{r}record {8}reverse{r} {7}<filename>{r}
+
+                        {r}Reverses the order of frames and actions in the player recording by name {7}<filename>{r}.
             
             search:
                 |
