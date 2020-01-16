@@ -1,7 +1,7 @@
-package mchorse.blockbuster.network.common.director.sync;
+package mchorse.blockbuster.network.common.scene.sync;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.network.common.director.PacketDirector;
+import mchorse.blockbuster.network.common.scene.PacketScene;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
  * This packet stores information about whether to play, stop or pause the
  * director.
  */
-public class PacketDirectorPlay extends PacketDirector
+public class PacketScenePlay extends PacketScene
 {
     public static final byte STOP = 0;
     public static final byte PLAY = 1;
@@ -21,12 +21,20 @@ public class PacketDirectorPlay extends PacketDirector
     public byte state;
     public int tick;
 
-    public PacketDirectorPlay()
+    public PacketScenePlay()
     {}
 
-    public PacketDirectorPlay(BlockPos pos, byte state, int tick)
+    public PacketScenePlay(BlockPos pos, byte state, int tick)
     {
         super(pos);
+
+        this.state = state;
+        this.tick = tick;
+    }
+
+    public PacketScenePlay(String filename, byte state, int tick)
+    {
+        super(filename);
 
         this.state = state;
         this.tick = tick;

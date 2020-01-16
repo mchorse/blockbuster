@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,18 +12,17 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Model block list 
  */
-public class GuiDirectorBlockList extends GuiBlockList<TileEntityDirector>
+public class GuiDirectorBlockList extends GuiListElement<TileEntityDirector>
 {
-    public GuiDirectorBlockList(Minecraft mc, String title, Consumer<TileEntityDirector> callback)
+    public GuiDirectorBlockList(Minecraft mc, Consumer<TileEntityDirector> callback)
     {
-        super(mc, title, callback);
+        super(mc, callback);
     }
 
     @Override
     public void sort()
     {}
 
-    @Override
     public boolean addBlock(BlockPos pos)
     {
         TileEntity tile = this.mc.theWorld.getTileEntity(pos);

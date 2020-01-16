@@ -1,7 +1,7 @@
-package mchorse.blockbuster.network.common.director.sync;
+package mchorse.blockbuster.network.common.scene.sync;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.network.common.director.PacketDirector;
+import mchorse.blockbuster.network.common.scene.PacketScene;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -10,17 +10,24 @@ import net.minecraft.util.math.BlockPos;
  * This packet stores information about where user wants a director block to go
  * to (in terms of playback ticks).
  */
-public class PacketDirectorGoto extends PacketDirector
+public class PacketSceneGoto extends PacketScene
 {
     public int tick;
     public boolean actions;
 
-    public PacketDirectorGoto()
+    public PacketSceneGoto()
     {}
 
-    public PacketDirectorGoto(BlockPos pos, int tick, boolean actions)
+    public PacketSceneGoto(BlockPos pos, int tick, boolean actions)
     {
         super(pos);
+
+        this.tick = tick;
+        this.actions = actions;
+    }
+
+    public PacketSceneGoto(String filename, int tick, boolean actions) {
+        super(filename);
 
         this.tick = tick;
         this.actions = actions;

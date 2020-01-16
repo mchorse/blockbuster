@@ -9,8 +9,8 @@ import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.recording.director.DirectorSender;
 import mchorse.blockbuster.recording.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -191,22 +191,18 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
 
         if (replay != null)
         {
-            CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, new Runnable()
+            CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, () ->
             {
-                @Override
-                public void run()
+                if (!CommonProxy.manager.recorders.containsKey(player))
                 {
-                    if (!CommonProxy.manager.recorders.containsKey(player))
-                    {
-                        TileEntityDirector.this.director.startPlayback(filename);
-                    }
-                    else
-                    {
-                        TileEntityDirector.this.director.stopPlayback();
-                    }
-
-                    replay.apply(player);
+                    TileEntityDirector.this.director.startPlayback(filename);
                 }
+                else
+                {
+                    TileEntityDirector.this.director.stopPlayback();
+                }
+
+                replay.apply(player);
             });
         }
     }
@@ -262,7 +258,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     {
         if (player instanceof EntityPlayerMP)
         {
-            Dispatcher.sendTo(new PacketDirectorCast(pos, this.director), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketSceneCast(pos, this.director), (EntityPlayerMP) player);
         }
     }
 

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
-import mchorse.blockbuster.network.common.director.PacketDirectorRecord;
+import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
+import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
+import mchorse.blockbuster.recording.director.Scene;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
@@ -16,8 +17,8 @@ import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.recording.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
-import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
+import mchorse.blockbuster.network.common.scene.PacketSceneCast;
+import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
 import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
@@ -78,9 +79,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiTrackpadElement health;
 
     public GuiDelegateElement<IGuiElement> popup;
-    public GuiDirectorBlockList list;
+    public GuiSceneManager scenes;
 
-    private Director director;
+    private Scene scene;
     private Replay replay;
     private BlockPos pos;
 
@@ -119,12 +120,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.subChildren.add(this.mainView);
 
         /* Config options */
-        this.title = new GuiTextElement(mc, 80, (str) -> this.director.title = str);
-        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.director.startCommand = str);
-        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.director.stopCommand = str);
-        this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.director.loops = b.button.isChecked());
-        this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.director.disableStates = b.button.isChecked());
-        this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.director.hide = b.button.isChecked());
+        this.title = new GuiTextElement(mc, 80, (str) -> this.scene.title = str);
+        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.scene.startCommand = str);
+        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.scene.stopCommand = str);
+        this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.scene.loops = b.button.isChecked());
+        this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.getDirector().disableStates = b.button.isChecked());
+        this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.getDirector().hide = b.button.isChecked());
 
         this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
         this.startCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
@@ -162,7 +163,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
         }).tooltip(I18n.format("blockbuster.gui.director.config"), TooltipDirection.LEFT);
-        element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -48);
+        element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -42);
 
         this.subChildren.add(element);
 
@@ -192,37 +193,42 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData()).tooltip(I18n.format("blockbuster.gui.director.update_data_tooltip"), TooltipDirection.LEFT);
         element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData()).tooltip(I18n.format("blockbuster.gui.director.update_data_tooltip"), TooltipDirection.LEFT);
-        element.resizer().set(10, 105, 80, 20).parent(this.area).x(1, -90);
-
-        this.replayEditor.add(element);
-
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix()).tooltip(I18n.format("blockbuster.gui.director.rename_prefix_tooltip"), TooltipDirection.LEFT);
-        element.resizer().set(10, 130, 80, 20).parent(this.area).x(1, -90);
+        element.resizer().set(10, 105, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
         this.popup.resizer().parent(element.area).set(-125, -100, 120, 120);
         this.replayEditor.add(this.popup);
 
-        /* Model blocks */
-        this.children.add(this.list = new GuiDirectorBlockList(mc, I18n.format("blockbuster.gui.director.title"), (director) -> this.pickDirector(director.getPos())));
-        this.list.resizer().set(0, 0, 120, 0).parent(this.area).h(1, 0).x(1, -120);
+        /* Scene manager */
+        this.children.add(element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 96, 32, 96, 48, (b) -> this.scenes.toggleVisible()));
+        element.resizer().set(0, 6, 16, 16).parent(this.area).x(1, -24);
 
-        this.children.add(element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (b) -> this.list.toggleVisible()));
-        element.resizer().set(0, 2, 24, 24).parent(this.area).x(1, -28);
+        this.children.add(this.scenes = new GuiSceneManager(mc, this));
+        this.scenes.resizer().set(0, 24, 160, 0).parent(this.area).x(1, -166).h(1, -100);
 
         this.children.add(this.dashboard.morphDelegate);
+    }
+
+    public boolean isDirector()
+    {
+        return this.scene instanceof Director;
+    }
+
+    public Director getDirector()
+    {
+        return this.isDirector() ? (Director) this.scene : null;
     }
 
     public BlockPos getPos()
@@ -237,52 +243,54 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public List<Replay> getReplays()
     {
-        if (this.director == null)
+        if (this.scene == null)
         {
             return null;
         }
 
-        return this.director.replays;
+        return this.scene.replays;
     }
 
-    private void pickDirector(BlockPos pos)
+    public void pickDirector(BlockPos pos)
     {
         this.close();
 
-        Dispatcher.sendToServer(new PacketDirectorRequestCast(pos));
+        Dispatcher.sendToServer(new PacketSceneRequestCast(pos));
     }
 
-    public GuiDirectorPanel openDirector(Director director, BlockPos pos)
+    public GuiDirectorPanel openScene(Scene scene, BlockPos pos)
     {
-        tryAddingBlock(pos);
-        this.list.setVisible(false);
+        if (pos != null) tryAddingBlock(pos);
+        this.scenes.setVisible(false);
 
-        return this.setDirector(director, pos);
+        return this.setScene(scene, pos);
     }
 
-    public GuiDirectorPanel setDirector(Director director, BlockPos pos)
+    public GuiDirectorPanel setScene(Scene scene, BlockPos pos)
     {
-        this.director = director;
+        this.scene = scene;
         this.pos = pos;
 
         this.updateList();
-        this.subChildren.setVisible(director != null);
-        this.replayEditor.setVisible(director != null);
+        this.subChildren.setVisible(scene != null);
+        this.replayEditor.setVisible(scene != null);
+        this.hide.setVisible(this.isDirector());
+        this.disableStates.setVisible(this.isDirector());
 
-        if (director == null)
+        if (scene == null)
         {
             this.setReplay(null);
 
             return this;
         }
 
-        this.selector.setDirector(director);
+        this.selector.setScene(scene);
 
-        if (!this.director.replays.isEmpty())
+        if (!this.scene.replays.isEmpty())
         {
-            int current = this.director.replays.indexOf(this.replay);
+            int current = this.scene.replays.indexOf(this.replay);
 
-            this.setReplay(this.director.replays.get(current == -1 ? 0 : current));
+            this.setReplay(this.scene.replays.get(current == -1 ? 0 : current));
         }
         else
         {
@@ -294,9 +302,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this;
     }
 
-    public GuiDirectorPanel set(Director director, BlockPos pos)
+    public GuiDirectorPanel set(Scene scene, BlockPos pos)
     {
-        this.director = director;
+        this.scene = scene;
         this.pos = pos;
 
         return this;
@@ -309,9 +317,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
         this.dashboard.morphDelegate.resize(this.dashboard.width, this.dashboard.height);
 
-        if (this.director != null)
+        if (this.scene != null)
         {
-            this.setDirector(this.director, this.pos);
+            this.setScene(this.scene, this.pos);
         }
     }
 
@@ -320,30 +328,38 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.updateList();
 
-        /* Resetting the current director block, if it was removed from the 
+        /* Resetting the current scene block, if it was removed from the
          * world */
         if (this.pos != null && this.mc.theWorld.getTileEntity(this.pos) == null)
         {
-            this.setDirector(null, null);
+            this.setScene(null, null);
         }
     }
 
     @Override
     public void close()
     {
-        if (this.director != null && this.pos != null)
+        if (this.scene != null && this.pos != null)
         {
             if (this.replay != null)
             {
                 this.dashboard.morphs.finish();
             }
 
-            Dispatcher.sendToServer(new PacketDirectorCast(this.pos, this.director));
-            TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
-
-            if (te instanceof TileEntityDirector)
+            if (this.isDirector())
             {
-                ((TileEntityDirector) te).director.copy(this.director);
+                TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
+
+                if (te instanceof TileEntityDirector)
+                {
+                    ((TileEntityDirector) te).director.copy(this.getDirector());
+                }
+
+                Dispatcher.sendToServer(new PacketSceneCast(this.pos, this.getDirector()));
+            }
+            else
+            {
+                Dispatcher.sendToServer(new PacketSceneCast(this.scene.id, this.scene));
             }
         }
     }
@@ -359,12 +375,16 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void fillData()
     {
-        this.title.setText(this.director.title);
-        this.startCommand.setText(this.director.startCommand);
-        this.stopCommand.setText(this.director.stopCommand);
-        this.loops.button.setIsChecked(this.director.loops);
-        this.disableStates.button.setIsChecked(this.director.disableStates);
-        this.hide.button.setIsChecked(this.director.hide);
+        this.title.setText(this.scene.title);
+        this.startCommand.setText(this.scene.startCommand);
+        this.stopCommand.setText(this.scene.stopCommand);
+        this.loops.button.setIsChecked(this.scene.loops);
+
+        if (this.isDirector())
+        {
+            this.disableStates.button.setIsChecked(this.getDirector().disableStates);
+            this.hide.button.setIsChecked(this.getDirector().hide);
+        }
     }
 
     private void fillReplayData()
@@ -393,7 +413,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         Replay replay = new Replay("");
 
-        this.director.replays.add(replay);
+        this.scene.replays.add(replay);
         this.setReplay(replay);
         this.selector.update();
     }
@@ -403,11 +423,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
      */
     private void dupeReplay()
     {
-        if (this.director.dupe(this.director.replays.indexOf(this.replay), true))
+        if (this.scene.dupe(this.scene.replays.indexOf(this.replay), true))
         {
             this.selector.update();
 
-            this.setReplay(this.director.replays.get(this.director.replays.size() - 1));
+            this.setReplay(this.scene.replays.get(this.scene.replays.size() - 1));
             this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
         }
     }
@@ -417,10 +437,10 @@ public class GuiDirectorPanel extends GuiDashboardPanel
      */
     private void removeReplay()
     {
-        this.director.replays.remove(this.replay);
-        int size = this.director.replays.size();
+        this.scene.replays.remove(this.replay);
+        int size = this.scene.replays.size();
 
-        this.setReplay(size == 0 ? null : this.director.replays.get(size - 1));
+        this.setReplay(size == 0 ? null : this.scene.replays.get(size - 1));
         this.selector.update();
     }
 
@@ -434,47 +454,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void updateList()
     {
-        this.list.clear();
-
-        for (BlockPos pos : lastBlocks)
-        {
-            this.list.addBlock(pos);
-        }
-    }
-
-    /**
-     * Send record message to the player
-     */
-    private void sendRecordMessage()
-    {
-        EntityPlayer player = this.mc.thePlayer;
-
-        if (this.replay.id.isEmpty())
-        {
-            L10n.error(player, "recording.fill_filename");
-
-            return;
-        }
-
-        String command = "/action record " + this.replay.id + " " + this.pos.getX() + " " + this.pos.getY() + " " + this.pos.getZ();
-
-        ITextComponent component = new TextComponentString(I18n.format("blockbuster.info.recording.clickhere"));
-        component.getStyle().setClickEvent(new ClickEvent(Action.RUN_COMMAND, command));
-        component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
-        component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
-
-        L10n.info(player, "recording.message", this.replay.id, component);
-
-        /* Add the command to the history */
-        List<String> messages = this.mc.ingameGUI.getChatGUI().getSentMessages();
-
-        boolean empty = messages.isEmpty();
-        boolean lastMessageIsntCommand = !empty && !messages.get(messages.size() - 1).equals(command);
-
-        if (lastMessageIsntCommand || empty)
-        {
-            messages.add(command);
-        }
+        this.scenes.setScene(this.isDirector());
+        this.scenes.updateList(lastBlocks);
     }
 
     private void openRecordEditor()
@@ -499,13 +480,21 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void renamePrefix(String newPrefix)
     {
-        this.director.renamePrefix(newPrefix);
+        this.scene.renamePrefix(newPrefix);
         this.fillReplayData();
     }
 
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
+        if (this.scenes.isVisible())
+        {
+            int x = this.scenes.area.getX(1) - 20;
+            int y = this.scenes.area.y - 20;
+
+            Gui.drawRect(x, y, x + 20, y + 20, 0x88000000);
+        }
+
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
         {
@@ -546,7 +535,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);
         }
 
-        if (this.director == null)
+        if (this.scene == null)
         {
             String no = I18n.format("blockbuster.gui.director.not_selected");
 
@@ -560,18 +549,28 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         if (this.pos != null)
         {
-            Dispatcher.sendToServer(new PacketDirectorPlayback(this.pos));
+            Dispatcher.sendToServer(new PacketScenePlayback(this.pos));
+        }
+        else
+        {
+            Dispatcher.sendToServer(new PacketScenePlayback(this.scene.id));
         }
     }
 
     public void record()
     {
-        BlockPos director = this.pos;
         Replay replay = this.replay;
 
-        if (director != null && replay != null && !replay.id.isEmpty())
+        if (replay != null && !replay.id.isEmpty())
         {
-            Dispatcher.sendToServer(new PacketDirectorRecord(director, replay.id));
+            if (this.pos != null && this.isDirector())
+            {
+                Dispatcher.sendToServer(new PacketSceneRecord(this.pos, replay.id));
+            }
+            else
+            {
+                Dispatcher.sendToServer(new PacketSceneRecord(this.scene.id, replay.id));
+            }
         }
     }
 }

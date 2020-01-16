@@ -1,9 +1,9 @@
 package mchorse.blockbuster.aperture.network.common;
 
-import mchorse.blockbuster.network.common.director.PacketDirector;
+import mchorse.blockbuster.network.common.scene.PacketScene;
 import net.minecraft.util.math.BlockPos;
 
-public class PacketRequestLength extends PacketDirector
+public class PacketRequestLength extends PacketScene
 {
     public PacketRequestLength()
     {}

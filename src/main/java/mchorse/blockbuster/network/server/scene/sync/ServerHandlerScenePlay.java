@@ -1,16 +1,16 @@
-package mchorse.blockbuster.network.server.director.sync;
+package mchorse.blockbuster.network.server.scene.sync;
 
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.director.Director;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 
-public class ServerHandlerDirectorPlay extends ServerMessageHandler<PacketDirectorPlay>
+public class ServerHandlerScenePlay extends ServerMessageHandler<PacketScenePlay>
 {
     @Override
-    public void run(EntityPlayerMP player, PacketDirectorPlay message)
+    public void run(EntityPlayerMP player, PacketScenePlay message)
     {
         TileEntity te = this.getTE(player, message.pos);
 

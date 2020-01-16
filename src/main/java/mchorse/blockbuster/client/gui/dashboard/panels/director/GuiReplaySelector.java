@@ -2,10 +2,10 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.recording.director.Scene;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.recording.director.Replay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -24,7 +24,7 @@ import net.minecraft.client.resources.I18n;
  */
 public class GuiReplaySelector extends GuiElement
 {
-    private Director director;
+    private Scene scene;
     private Consumer<Replay> callback;
     public ScrollArea scroll;
     public int current = -1;
@@ -38,24 +38,24 @@ public class GuiReplaySelector extends GuiElement
         this.scroll.direction = ScrollDirection.HORIZONTAL;
     }
 
-    public void setDirector(Director director)
+    public void setScene(Scene scene)
     {
-        this.director = director;
+        this.scene = scene;
         this.current = -1;
         this.update();
     }
 
     public void setReplay(Replay replay)
     {
-        if (this.director != null)
+        if (this.scene != null)
         {
-            this.current = this.director.replays.indexOf(replay);
+            this.current = this.scene.replays.indexOf(replay);
         }
     }
 
     public void update()
     {
-        this.scroll.setSize(this.director.replays.size());
+        this.scroll.setSize(this.scene.replays.size());
         this.scroll.clamp();
     }
 
@@ -80,12 +80,12 @@ public class GuiReplaySelector extends GuiElement
         if (this.scroll.isInside(mouseX, mouseY))
         {
             int index = this.scroll.getIndex(mouseX, mouseY);
-            int size = this.director.replays.size();
+            int size = this.scene.replays.size();
 
             if (this.callback != null && index >= 0 && index < size && size != 0)
             {
                 this.current = index;
-                this.callback.accept(this.director.replays.get(index));
+                this.callback.accept(this.scene.replays.get(index));
             }
 
             return true;
@@ -124,7 +124,7 @@ public class GuiReplaySelector extends GuiElement
 
         this.scroll.drag(mouseX, mouseY);
 
-        if (this.director != null && !this.director.replays.isEmpty())
+        if (this.scene != null && !this.scene.replays.isEmpty())
         {
             int i = 0;
             int h = this.scroll.scrollItemSize;
@@ -134,7 +134,7 @@ public class GuiReplaySelector extends GuiElement
             GuiScreen screen = this.mc.currentScreen;
             GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
 
-            for (Replay replay : this.director.replays)
+            for (Replay replay : this.scene.replays)
             {
                 int x = this.area.x + i * h - this.scroll.scroll + h / 2;
                 boolean hover = this.scroll.isInside(mouseX, mouseY) && mouseX >= x - h / 2 && mouseX < x + h / 2;

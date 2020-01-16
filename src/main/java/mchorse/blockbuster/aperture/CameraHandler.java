@@ -14,9 +14,9 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
+import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -142,7 +142,7 @@ public class CameraHandler
 
         if (pos != null)
         {
-            Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
+            Dispatcher.sendToServer(new PacketSceneGoto(pos, event.position, CameraHandler.actions));
         }
 
         GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.dashboard;
@@ -165,7 +165,7 @@ public class CameraHandler
 
         if (pos != null)
         {
-            Dispatcher.sendToServer(new PacketDirectorPlay(pos, event.play ? PacketDirectorPlay.PLAY : PacketDirectorPlay.PAUSE, event.position));
+            Dispatcher.sendToServer(new PacketScenePlay(pos, event.play ? PacketScenePlay.PLAY : PacketScenePlay.PAUSE, event.position));
         }
     }
 
@@ -306,11 +306,11 @@ public class CameraHandler
 
                     if (CameraHandler.reload)
                     {
-                        Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
+                        Dispatcher.sendToServer(new PacketScenePlay(pos, PacketScenePlay.START, tick));
                     }
 
                     Dispatcher.sendToServer(new PacketRequestLength(pos));
-                    Dispatcher.sendToServer(new PacketDirectorRequestCast(pos));
+                    Dispatcher.sendToServer(new PacketSceneRequestCast(pos));
                 }
             }
 

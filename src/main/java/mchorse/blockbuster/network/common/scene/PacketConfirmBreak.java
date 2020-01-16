@@ -1,9 +1,9 @@
-package mchorse.blockbuster.network.common.director;
+package mchorse.blockbuster.network.common.scene;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 
-public class PacketConfirmBreak extends PacketDirector
+public class PacketConfirmBreak extends PacketScene
 {
     public int count;
 

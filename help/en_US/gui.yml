@@ -76,6 +76,8 @@ blockbuster.gui:
         rename_prefix: Rename prefix
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
         rename_prefix_popup: "Enter a new prefix:"
+
+        scenes: Scenes
     
     # Actor configuration GUI strings
     actor:

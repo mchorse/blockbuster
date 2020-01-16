@@ -5,7 +5,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -46,7 +46,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
         {
             BlockPos pos = CameraHandler.getDirectorPos();
 
-            Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.RESTART, ClientProxy.getCameraEditor().scrub.value));
+            Dispatcher.sendToServer(new PacketScenePlay(pos, PacketScenePlay.RESTART, ClientProxy.getCameraEditor().scrub.value));
         });
 
         this.reloadScene.button.width = 100;

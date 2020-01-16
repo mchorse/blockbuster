@@ -1,7 +1,7 @@
-package mchorse.blockbuster.network.client.director;
+package mchorse.blockbuster.network.client.scene;
 
 import mchorse.blockbuster.client.gui.GuiConfirm;
-import mchorse.blockbuster.network.common.director.PacketConfirmBreak;
+import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;

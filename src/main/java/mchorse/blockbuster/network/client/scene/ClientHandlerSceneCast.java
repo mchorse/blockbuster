@@ -1,8 +1,8 @@
-package mchorse.blockbuster.network.client.director;
+package mchorse.blockbuster.network.client.scene;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.network.common.director.PacketDirectorCast;
+import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -14,13 +14,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Client handler director cast
  *
  * This client handler is responsible for transferring requested director block
- * cast to current {@link GuiDirector}.
+ * cast to current director panel.
  */
-public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirectorCast>
+public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast>
 {
     @Override
     @SideOnly(Side.CLIENT)
-    public void run(EntityPlayerSP player, PacketDirectorCast message)
+    public void run(EntityPlayerSP player, PacketSceneCast message)
     {
         boolean opened = false;
 
@@ -39,17 +39,17 @@ public class ClientHandlerDirectorCast extends ClientMessageHandler<PacketDirect
             if (opened)
             {
                 dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.openDirector(message.director, message.pos);
+                dashboard.directorPanel.openScene(message.scene, message.pos);
             }
             else
             {
                 dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.setDirector(message.director, message.pos);
+                dashboard.directorPanel.setScene(message.scene, message.pos);
             }
         }
         else if (ClientProxy.dashboard != null)
         {
-            ClientProxy.dashboard.directorPanel.set(message.director, message.pos);
+            ClientProxy.dashboard.directorPanel.set(message.scene, message.pos);
         }
     }
 }

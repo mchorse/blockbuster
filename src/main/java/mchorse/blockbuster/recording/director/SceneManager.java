@@ -1,6 +1,10 @@
 package mchorse.blockbuster.recording.director;
 
+import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.data.Mode;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -62,13 +66,82 @@ public class SceneManager
 		{
 			scene = this.load(filename);
 		}
-		catch (Exception e) {}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		if (scene != null)
 		{
 			scene.setWorld(world);
+			scene.startPlayback(0);
+
 			this.scenes.put(filename, scene);
 		}
+	}
+
+	public void record(String filename, String record, EntityPlayerMP player)
+	{
+		final Scene scene = this.get(filename);
+
+		if (scene != null)
+		{
+			scene.setWorld(player.worldObj);
+
+			final Replay replay = scene.getByFile(record);
+
+			if (replay != null)
+			{
+				CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, () ->
+				{
+					if (!CommonProxy.manager.recorders.containsKey(player))
+					{
+						scene.startPlayback(record);
+					}
+					else
+					{
+						scene.stopPlayback();
+					}
+
+					replay.apply(player);
+				});
+			}
+		}
+	}
+
+	public void toggle(String filename, World worldObj)
+	{
+		Scene scene = this.scenes.get(filename);
+
+		if (scene != null)
+		{
+			scene.stopPlayback();
+		}
+		else
+		{
+			this.play(filename, worldObj);
+		}
+	}
+
+	public Scene get(String filename)
+	{
+		Scene scene = this.scenes.get(filename);
+
+		if (scene != null)
+		{
+			return scene;
+		}
+
+		try
+		{
+			scene = this.load(filename);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return scene;
 	}
 
 	/**
@@ -86,6 +159,7 @@ public class SceneManager
 		NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		Scene scene = new Scene();
 
+		scene.id = filename;
 		scene.fromNBT(compound);
 
 		return scene;

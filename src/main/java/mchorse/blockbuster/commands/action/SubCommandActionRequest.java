@@ -1,5 +1,6 @@
 package mchorse.blockbuster.commands.action;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.recording.RecordUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -34,6 +35,7 @@ public class SubCommandActionRequest extends CommandBase
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
 
+        CommonProxy.scenes.play(args[0], sender.getEntityWorld());
         RecordUtils.sendRecord(args[0], getCommandSenderAsPlayer(sender));
     }
 }

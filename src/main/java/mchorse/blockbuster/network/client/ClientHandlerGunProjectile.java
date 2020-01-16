@@ -5,10 +5,13 @@ import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerGunProjectile extends ClientMessageHandler<PacketGunProjectile>
 {
     @Override
+    @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketGunProjectile message)
     {
         Entity entity = player.worldObj.getEntityByID(message.id);

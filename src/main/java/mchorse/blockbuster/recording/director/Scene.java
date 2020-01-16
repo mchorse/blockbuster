@@ -56,6 +56,11 @@ public class Scene
 	public static final Pattern PREFIX = Pattern.compile("^(.+)_([^_]+)$");
 
 	/**
+	 * Scene's id/filename
+	 */
+	public String id = "";
+
+	/**
 	 * List of replays
 	 */
 	public List<Replay> replays = new ArrayList<Replay>();
@@ -698,6 +703,7 @@ public class Scene
 
 	public void fromBuf(ByteBuf buffer)
 	{
+		this.id = ByteBufUtils.readUTF8String(buffer);
 		this.replays.clear();
 
 		for (int i = 0, c = buffer.readInt(); i < c; i++)
@@ -716,6 +722,7 @@ public class Scene
 
 	public void toBuf(ByteBuf buffer)
 	{
+		ByteBufUtils.writeUTF8String(buffer, this.id);
 		buffer.writeInt(this.replays.size());
 
 		for (Replay replay : this.replays)
