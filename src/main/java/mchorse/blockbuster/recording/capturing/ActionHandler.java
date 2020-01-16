@@ -145,7 +145,7 @@ public class ActionHandler
 
         if (!player.worldObj.isRemote && events != null)
         {
-            events.add(new BreakBlockAction(event.getPos(), false));
+            events.add(new BreakBlockAction(event.getPos(), !player.isCreative()));
         }
     }
 
