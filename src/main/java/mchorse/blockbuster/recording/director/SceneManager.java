@@ -82,7 +82,7 @@ public class SceneManager
 
 	public void record(String filename, String record, EntityPlayerMP player)
 	{
-		final Scene scene = this.get(filename);
+		final Scene scene = this.get(filename, player.worldObj);
 
 		if (scene != null)
 		{
@@ -123,7 +123,7 @@ public class SceneManager
 		}
 	}
 
-	public Scene get(String filename)
+	public Scene get(String filename, World world)
 	{
 		Scene scene = this.scenes.get(filename);
 
@@ -135,6 +135,11 @@ public class SceneManager
 		try
 		{
 			scene = this.load(filename);
+
+			if (scene != null)
+			{
+				scene.setWorld(world);
+			}
 		}
 		catch (Exception e)
 		{
@@ -176,6 +181,31 @@ public class SceneManager
 		scene.toNBT(compound);
 
 		CompressedStreamTools.writeCompressed(compound, new FileOutputStream(file));
+	}
+
+	public boolean rename(String from, String to)
+	{
+		File fromFile = sceneFile(from);
+		File toFile = sceneFile(to);
+
+		if (fromFile.isFile() && !toFile.exists())
+		{
+			return fromFile.renameTo(toFile);
+		}
+
+		return false;
+	}
+
+	public boolean remove(String filename)
+	{
+		File file = sceneFile(filename);
+
+		if (file.exists())
+		{
+			return file.delete();
+		}
+
+		return false;
 	}
 
 	/**

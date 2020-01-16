@@ -26,7 +26,7 @@ public class ServerHandlerSceneRequestCast extends ServerMessageHandler<PacketSc
         {
             try
             {
-                Dispatcher.sendTo(new PacketSceneCast(message.filename, CommonProxy.scenes.load(message.filename)), player);
+                Dispatcher.sendTo(new PacketSceneCast(CommonProxy.scenes.load(message.filename)), player);
             }
             catch (Exception e)
             {

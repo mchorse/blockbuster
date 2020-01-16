@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
+import net.minecraftforge.common.util.Constants;
 
 /**
  * Recording capability storage
@@ -23,6 +24,8 @@ public class RecordingStorage implements IStorage<IRecording>
     {
         NBTTagCompound tag = new NBTTagCompound();
 
+        tag.setString("Scene", instance.getLastScene());
+
         return tag;
     }
 
@@ -32,6 +35,11 @@ public class RecordingStorage implements IStorage<IRecording>
         if (nbt instanceof NBTTagCompound)
         {
             NBTTagCompound tag = (NBTTagCompound) nbt;
+
+            if (tag.hasKey("Scene", Constants.NBT.TAG_STRING))
+            {
+                instance.setLastScene(tag.getString("Scene"));
+            }
         }
     }
 }

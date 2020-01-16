@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 public class PacketSceneCast extends PacketScene
 {
     public Scene scene;
+    public boolean open = true;
 
     public PacketSceneCast()
     {}
@@ -18,10 +19,17 @@ public class PacketSceneCast extends PacketScene
         this.scene = director;
     }
 
-    public PacketSceneCast(String filename, Scene scene)
+    public PacketSceneCast(Scene scene)
     {
-        super(filename);
+        super(scene.id);
         this.scene = scene;
+    }
+
+    public PacketSceneCast open(boolean open)
+    {
+        this.open = open;
+
+        return this;
     }
 
     @Override
@@ -31,6 +39,7 @@ public class PacketSceneCast extends PacketScene
 
         this.scene = this.isDirector() ? new Director(null) : new Scene();
         this.scene.fromBuf(buf);
+        this.open = buf.readBoolean();
     }
 
     @Override
@@ -39,5 +48,6 @@ public class PacketSceneCast extends PacketScene
         super.toBytes(buf);
 
         this.scene.toBuf(buf);
+        buf.writeBoolean(this.open);
     }
 }

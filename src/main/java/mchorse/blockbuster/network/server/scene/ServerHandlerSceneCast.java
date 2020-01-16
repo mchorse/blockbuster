@@ -1,8 +1,10 @@
 package mchorse.blockbuster.network.server.scene;
 
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
+import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.recording.director.Director;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,14 +24,20 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
                 ((TileEntityDirector) tile).director.copy((Director) message.scene);
                 tile.markDirty();
             }
+
+            Recording.get(player).setLastScene("");
         }
         else
         {
             try
             {
                 CommonProxy.scenes.save(message.filename, message.scene);
+                Recording.get(player).setLastScene(message.filename);
             }
-            catch (Exception e) {}
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

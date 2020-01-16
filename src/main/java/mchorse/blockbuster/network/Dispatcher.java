@@ -27,6 +27,7 @@ import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerUnloadRecordings;
 import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActionList;
 import mchorse.blockbuster.network.client.recording.actions.ClientHandlerActions;
+import mchorse.blockbuster.network.client.scene.ClientHandlerSceneManage;
 import mchorse.blockbuster.network.client.scene.ClientHandlerScenes;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
@@ -39,6 +40,7 @@ import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketScene;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
+import mchorse.blockbuster.network.common.scene.PacketSceneManage;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
@@ -80,6 +82,7 @@ import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.scene.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.scene.ServerHandlerRequestScenes;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneCast;
+import mchorse.blockbuster.network.server.scene.ServerHandlerSceneManage;
 import mchorse.blockbuster.network.server.scene.ServerHandlerScenePlayback;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRecord;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRequestCast;
@@ -143,8 +146,11 @@ public class Dispatcher
             register(PacketSceneCast.class, ClientHandlerSceneCast.class, Side.CLIENT);
             register(PacketSceneCast.class, ServerHandlerSceneCast.class, Side.SERVER);
             register(PacketSceneRequestCast.class, ServerHandlerSceneRequestCast.class, Side.SERVER);
+
             register(PacketScenes.class, ClientHandlerScenes.class, Side.CLIENT);
             register(PacketRequestScenes.class, ServerHandlerRequestScenes.class, Side.SERVER);
+            register(PacketSceneManage.class, ClientHandlerSceneManage.class, Side.SERVER);
+            register(PacketSceneManage.class, ServerHandlerSceneManage.class, Side.SERVER);
 
             register(PacketConfirmBreak.class, ClientHandlerConfirmBreak.class, Side.CLIENT);
             register(PacketConfirmBreak.class, ServerHandlerConfirmBreak.class, Side.SERVER);

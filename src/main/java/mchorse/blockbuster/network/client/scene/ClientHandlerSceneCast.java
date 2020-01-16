@@ -1,5 +1,6 @@
 package mchorse.blockbuster.network.client.scene;
 
+import com.sun.security.ntlm.Client;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
@@ -24,7 +25,7 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
     {
         boolean opened = false;
 
-        if (Minecraft.getMinecraft().currentScreen == null)
+        if (message.open && Minecraft.getMinecraft().currentScreen == null)
         {
             ClientProxy.getDashboard(false).open();
             opened = true;
@@ -49,7 +50,19 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
         }
         else if (ClientProxy.dashboard != null)
         {
-            ClientProxy.dashboard.directorPanel.set(message.scene, message.pos);
+            GuiDashboard dashboard = ClientProxy.dashboard;
+
+            if (!message.open)
+            {
+                dashboard.createWorldPanels(Minecraft.getMinecraft(), false);
+                dashboard.onOpen();
+                dashboard.openPanel(dashboard.directorPanel);
+                dashboard.directorPanel.setScene(message.scene, message.pos);
+            }
+            else
+            {
+                dashboard.directorPanel.set(message.scene, message.pos);
+            }
         }
     }
 }

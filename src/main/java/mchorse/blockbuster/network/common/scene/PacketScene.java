@@ -3,7 +3,12 @@ package mchorse.blockbuster.network.common.scene;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.recording.director.Scene;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -28,6 +33,25 @@ public abstract class PacketScene implements IMessage
 	public boolean isDirector()
 	{
 		return this.pos != null;
+	}
+
+	public Scene get(World world)
+	{
+		if (this.isDirector())
+		{
+			TileEntity te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
+
+			if (te instanceof TileEntityDirector)
+			{
+				return ((TileEntityDirector) te).director;
+			}
+		}
+		else
+		{
+			return CommonProxy.scenes.get(this.filename, world);
+		}
+
+		return null;
 	}
 
     @Override

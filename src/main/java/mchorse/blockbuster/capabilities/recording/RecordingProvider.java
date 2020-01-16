@@ -1,10 +1,13 @@
 package mchorse.blockbuster.capabilities.recording;
 
 import mchorse.metamorph.capabilities.morphing.MorphingProvider;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Recording provider
@@ -12,7 +15,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
  * Basic version of a capability provider. Most of the code is taken from
  * {@link MorphingProvider}.
  */
-public class RecordingProvider implements ICapabilityProvider
+public class RecordingProvider implements ICapabilitySerializable<NBTBase>
 {
     @CapabilityInject(IRecording.class)
     public static final Capability<IRecording> RECORDING = null;
@@ -29,5 +32,17 @@ public class RecordingProvider implements ICapabilityProvider
     public <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
         return capability == RECORDING ? RECORDING.<T>cast(this.instance) : null;
+    }
+
+    @Override
+    public NBTBase serializeNBT()
+    {
+        return RECORDING.getStorage().writeNBT(RECORDING, this.instance, null);
+    }
+
+    @Override
+    public void deserializeNBT(NBTBase nbt)
+    {
+        RECORDING.getStorage().readNBT(RECORDING, this.instance, null, nbt);
     }
 }

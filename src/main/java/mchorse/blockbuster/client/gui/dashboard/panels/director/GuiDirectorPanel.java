@@ -223,12 +223,22 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public boolean isDirector()
     {
-        return this.scene instanceof Director;
+        return this.scene instanceof Director && this.pos != null;
+    }
+
+    public boolean isScene()
+    {
+        return !this.isDirector();
     }
 
     public Director getDirector()
     {
         return this.isDirector() ? (Director) this.scene : null;
+    }
+
+    public Scene getScene()
+    {
+        return this.scene;
     }
 
     public BlockPos getPos()
@@ -326,7 +336,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     @Override
     public void open()
     {
-        this.updateList();
+        this.scenes.updateSceneList();
 
         /* Resetting the current scene block, if it was removed from the
          * world */
@@ -339,7 +349,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     @Override
     public void close()
     {
-        if (this.scene != null && this.pos != null)
+        if (this.scene != null)
         {
             if (this.replay != null)
             {
@@ -359,7 +369,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             }
             else
             {
-                Dispatcher.sendToServer(new PacketSceneCast(this.scene.id, this.scene));
+                Dispatcher.sendToServer(new PacketSceneCast(this.scene));
             }
         }
     }
@@ -454,7 +464,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void updateList()
     {
-        this.scenes.setScene(this.isDirector());
+        this.scenes.setScene(this.scene);
         this.scenes.updateList(lastBlocks);
     }
 

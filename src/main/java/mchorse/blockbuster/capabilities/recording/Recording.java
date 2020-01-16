@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class Recording implements IRecording
 {
+    public String lastScene = "";
     public Map<String, ItemInfo> recordings = new HashMap<String, ItemInfo>();
     public BlockPos teleportPos;
     public RecordPlayer player;
@@ -19,6 +20,23 @@ public class Recording implements IRecording
     public static IRecording get(EntityPlayer player)
     {
         return player.getCapability(RecordingProvider.RECORDING, null);
+    }
+
+    @Override
+    public String getLastScene()
+    {
+        return this.lastScene;
+    }
+
+    @Override
+    public void setLastScene(String scene)
+    {
+        if (scene == null)
+        {
+            return;
+        }
+
+        this.lastScene = scene;
     }
 
     @Override

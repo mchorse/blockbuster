@@ -1,8 +1,10 @@
 package mchorse.blockbuster.network.server.scene.sync;
 
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.director.Scene;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -12,39 +14,33 @@ public class ServerHandlerScenePlay extends ServerMessageHandler<PacketScenePlay
     @Override
     public void run(EntityPlayerMP player, PacketScenePlay message)
     {
-        TileEntity te = this.getTE(player, message.pos);
+        Scene scene = message.get(player.worldObj);
 
-        if (te instanceof TileEntityDirector)
+        if (message.isPlay())
         {
-            TileEntityDirector tile = (TileEntityDirector) te;
-            Director director = tile.director;
+            if (!scene.playing)
+            {
+                scene.spawn(message.tick);
+            }
 
-            if (message.isPlay())
-            {
-                if (!tile.isPlaying())
-                {
-                    director.spawn(message.tick);
-                }
-
-                director.resume(message.tick);
-            }
-            else if (message.isStop())
-            {
-                director.stopPlayback();
-            }
-            else if (message.isPause())
-            {
-                director.pause();
-            }
-            else if (message.isStart())
-            {
-                director.spawn(message.tick);
-            }
-            else if (message.isRestart())
-            {
-                director.stopPlayback();
-                director.spawn(message.tick);
-            }
+            scene.resume(message.tick);
+        }
+        else if (message.isStop())
+        {
+            scene.stopPlayback();
+        }
+        else if (message.isPause())
+        {
+            scene.pause();
+        }
+        else if (message.isStart())
+        {
+            scene.spawn(message.tick);
+        }
+        else if (message.isRestart())
+        {
+            scene.stopPlayback();
+            scene.spawn(message.tick);
         }
     }
 }

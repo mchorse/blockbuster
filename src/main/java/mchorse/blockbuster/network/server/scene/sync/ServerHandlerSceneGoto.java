@@ -1,21 +1,20 @@
 package mchorse.blockbuster.network.server.scene.sync;
 
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
+import mchorse.blockbuster.recording.director.Scene;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 
 public class ServerHandlerSceneGoto extends ServerMessageHandler<PacketSceneGoto>
 {
     @Override
     public void run(EntityPlayerMP player, PacketSceneGoto message)
     {
-        TileEntity tile = this.getTE(player, message.pos);
+        Scene scene = message.get(player.worldObj);
 
-        if (tile instanceof TileEntityDirector)
+        if (scene != null)
         {
-            ((TileEntityDirector) tile).director.goTo(message.tick, message.actions);
+            scene.goTo(message.tick, message.actions);
         }
     }
 }
