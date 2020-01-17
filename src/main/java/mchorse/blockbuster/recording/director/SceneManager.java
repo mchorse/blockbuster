@@ -96,7 +96,7 @@ public class SceneManager
 	}
 
 	/**
-	 *
+	 * Record the player
 	 */
 	public void record(String filename, String record, EntityPlayerMP player)
 	{
@@ -110,10 +110,11 @@ public class SceneManager
 
 			if (replay != null)
 			{
-				CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, () ->
+				CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, replay.teleportBack, true, () ->
 				{
 					if (!CommonProxy.manager.recorders.containsKey(player))
 					{
+						this.scenes.put(filename, scene);
 						scene.startPlayback(record);
 					}
 					else

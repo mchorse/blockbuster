@@ -29,6 +29,6 @@ public class SubCommandActionStop extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        CommonProxy.manager.record(getCommandSenderAsPlayer(sender), false, true);
+        CommonProxy.manager.halt(getCommandSenderAsPlayer(sender), false, true);
     }
 }

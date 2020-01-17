@@ -26,6 +26,7 @@ public class Replay
     public String id = "";
     public String name = "";
     public boolean invincible = false;
+    public boolean teleportBack = true;
 
     /* Visual data */
     public AbstractMorph morph;
@@ -97,6 +98,7 @@ public class Replay
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("Enabled", this.enabled);
         tag.setBoolean("Fake", this.fake);
+        if (!this.teleportBack) tag.setBoolean("TP", this.teleportBack);
         if (this.health != 20) tag.setFloat("Health", this.health);
     }
 
@@ -109,13 +111,10 @@ public class Replay
 
         this.invincible = tag.getBoolean("Invincible");
         this.invisible = tag.getBoolean("Invisible");
-
-        if (tag.hasKey("Enabled"))
-        {
-            this.enabled = tag.getBoolean("Enabled");
-        }
-
         this.fake = tag.getBoolean("Fake");
+
+        if (tag.hasKey("Enabled")) this.enabled = tag.getBoolean("Enabled");
+        if (tag.hasKey("TP")) this.teleportBack = tag.getBoolean("TP");
         if (tag.hasKey("Health")) this.health = tag.getFloat("Health");
     }
 
@@ -139,6 +138,7 @@ public class Replay
         buf.writeBoolean(this.invisible);
         buf.writeBoolean(this.enabled);
         buf.writeBoolean(this.fake);
+        buf.writeBoolean(this.teleportBack);
         buf.writeFloat(this.health);
     }
 
@@ -156,6 +156,7 @@ public class Replay
         this.invisible = buf.readBoolean();
         this.enabled = buf.readBoolean();
         this.fake = buf.readBoolean();
+        this.teleportBack = buf.readBoolean();
         this.health = buf.readFloat();
     }
 
@@ -188,6 +189,7 @@ public class Replay
         replay.invisible = this.invisible;
         replay.enabled = this.enabled;
         replay.fake = this.fake;
+        replay.teleportBack = this.teleportBack;
         replay.health = this.health;
 
         return replay;

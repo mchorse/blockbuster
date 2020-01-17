@@ -191,7 +191,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
 
         if (replay != null)
         {
-            CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, true, () ->
+            CommonProxy.manager.record(replay.id, player, Mode.ACTIONS, replay.teleportBack, true, () ->
             {
                 if (!CommonProxy.manager.recorders.containsKey(player))
                 {

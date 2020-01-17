@@ -69,6 +69,8 @@ blockbuster.gui:
         invisible: Invisible
         enabled: Enabled
         fake_player: Fake player
+        tp_back: Teleport back
+        tp_back_tooltip: Teleport yourself back to starting position
         health: Health
         edit_record: Edit record
         update_data: Update data

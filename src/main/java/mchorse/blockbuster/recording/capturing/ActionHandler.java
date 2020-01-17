@@ -452,7 +452,7 @@ public class ActionHandler
 
             if (player.isDead)
             {
-                CommonProxy.manager.record(player, true, true);
+                CommonProxy.manager.halt(player, true, true);
                 RecordUtils.broadcastInfo("recording.dead", recorder.record.filename);
             }
             else

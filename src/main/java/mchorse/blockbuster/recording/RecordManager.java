@@ -16,6 +16,7 @@ import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.DamageAction;
+import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -76,7 +77,7 @@ public class RecordManager
     /**
      * Start recording given player to record with given filename
      */
-    public boolean record(String filename, EntityPlayer player, Mode mode, boolean notify, Runnable runnable)
+    public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, Runnable runnable)
     {
         int countdown = Blockbuster.proxy.config.recording_countdown;
 
@@ -85,7 +86,7 @@ public class RecordManager
             runnable.run();
         }
 
-        if (filename.isEmpty() || this.record(player, false, notify))
+        if (filename.isEmpty() || this.halt(player, false, notify))
         {
             if (filename.isEmpty())
             {
@@ -105,7 +106,7 @@ public class RecordManager
             }
         }
 
-        RecordRecorder recorder = new RecordRecorder(new Record(filename), mode);
+        RecordRecorder recorder = new RecordRecorder(new Record(filename), mode, player, teleportBack);
         NBTTagCompound tag = new NBTTagCompound();
 
         player.writeEntityToNBT(tag);
@@ -146,7 +147,7 @@ public class RecordManager
     /**
      * Stop recording given player
      */
-    public boolean record(EntityPlayer player, boolean hasDied, boolean notify)
+    public boolean halt(EntityPlayer player, boolean hasDied, boolean notify)
     {
         /* Stop countdown */
         ScheduledRecording scheduled = this.scheduled.get(player);
@@ -170,6 +171,10 @@ public class RecordManager
             if (hasDied && !record.actions.isEmpty())
             {
                 record.addAction(record.actions.size() - 1, new DamageAction(200.0F));
+            }
+            else
+            {
+                recorder.stop(player);
             }
 
             this.records.put(filename, record);

@@ -76,6 +76,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiButtonElement<GuiCheckBox> invisible;
     public GuiButtonElement<GuiCheckBox> enabled;
     public GuiButtonElement<GuiCheckBox> fake;
+    public GuiButtonElement<GuiCheckBox> teleportBack;
     public GuiTrackpadElement health;
 
     public GuiDelegateElement<IGuiElement> popup;
@@ -144,6 +145,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.invisible = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.button.isChecked());
         this.enabled = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.enabled"), false, (b) -> this.replay.enabled = b.button.isChecked());
         this.fake = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.fake_player"), false, (b) -> this.replay.fake = b.button.isChecked());
+        this.teleportBack = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.tp_back"), false, (b) -> this.replay.teleportBack = b.button.isChecked()).tooltip(I18n.format("blockbuster.gui.director.tp_back_tooltip"), TooltipDirection.RIGHT);
         this.health = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.director.health"), (value) -> this.replay.health = value);
         this.health.trackpad.min = 0;
 
@@ -153,9 +155,10 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.invisible.resizer().set(0, 16, 80, 11).relative(this.invincible.resizer());
         this.enabled.resizer().set(0, 16, 80, 11).relative(this.invisible.resizer());
         this.fake.resizer().set(0, 16, 80, 11).relative(this.enabled.resizer());
+        this.teleportBack.resizer().set(0, 16, this.teleportBack.button.width, 11).relative(this.fake.resizer());
         this.health.resizer().set(0, 30, 80, 20).parent(this.area).x(1, -90);
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.health);
+        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.health);
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
@@ -228,7 +231,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public boolean isScene()
     {
-        return !this.isDirector();
+        return this.scene instanceof Scene && this.pos == null;
     }
 
     public Director getDirector()
@@ -410,6 +413,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.invisible.button.setIsChecked(this.replay.invisible);
         this.enabled.button.setIsChecked(this.replay.enabled);
         this.fake.button.setIsChecked(this.replay.fake);
+        this.teleportBack.button.setIsChecked(this.replay.teleportBack);
         this.health.setValue(this.replay.health);
 
         this.dashboard.morphs.setSelected(this.replay.morph);
