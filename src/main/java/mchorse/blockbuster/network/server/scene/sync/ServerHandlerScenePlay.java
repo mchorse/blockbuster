@@ -1,13 +1,9 @@
 package mchorse.blockbuster.network.server.scene.sync;
 
-import mchorse.blockbuster.CommonProxy;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.director.Scene;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 
 public class ServerHandlerScenePlay extends ServerMessageHandler<PacketScenePlay>
 {

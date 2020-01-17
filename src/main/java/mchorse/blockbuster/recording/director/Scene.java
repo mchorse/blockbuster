@@ -375,6 +375,7 @@ public class Scene
 
 			actor.playing = false;
 			actor.startPlaying(replay.id, tick, notAttached);
+			actor.sync = true;
 			actor.pause();
 
 			for (int i = 0; i <= tick; i++)
