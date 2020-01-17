@@ -58,7 +58,7 @@ public class Scene
 	/**
 	 * Scene's id/filename
 	 */
-	public String id = "";
+	private String id = "";
 
 	/**
 	 * List of replays
@@ -121,6 +121,16 @@ public class Scene
 	private World world;
 
 	/* Info accessors */
+
+	public String getId()
+	{
+		return this.id;
+	}
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
 
 	public void setWorld(World world)
 	{
@@ -567,15 +577,24 @@ public class Scene
 		}
 
 		Replay replay = this.replays.get(index).clone(isRemote);
-		Matcher matcher = NUMBERED_SUFFIX.matcher(replay.id);
 
-		String prefix = replay.id;
+		replay.id = this.getNextSuffix(replay.id);
+		this.replays.add(replay);
+
+		return true;
+	}
+
+	public String getNextSuffix(String filename)
+	{
+		Matcher matcher = NUMBERED_SUFFIX.matcher(filename);
+
+		String prefix = filename;
 		boolean found = matcher.find();
 		int max = 0;
 
 		if (found)
 		{
-			prefix = replay.id.substring(0, matcher.start());
+			prefix = filename.substring(0, matcher.start());
 		}
 
 		for (Replay other : this.replays)
@@ -591,10 +610,7 @@ public class Scene
 			}
 		}
 
-		replay.id = prefix + "_" + (max + 1);
-		this.replays.add(replay);
-
-		return true;
+		return prefix + "_" + (max + 1);
 	}
 
 	public void renamePrefix(String newPrefix)

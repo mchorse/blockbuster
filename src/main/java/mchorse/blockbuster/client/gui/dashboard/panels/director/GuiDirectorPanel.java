@@ -423,6 +423,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         Replay replay = new Replay("");
 
+        if (this.isScene())
+        {
+            replay.id = this.scene.getNextSuffix(this.scene.getId());
+        }
+
         this.scene.replays.add(replay);
         this.setReplay(replay);
         this.selector.update();
@@ -563,7 +568,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         }
         else
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(this.scene.id));
+            Dispatcher.sendToServer(new PacketScenePlayback(this.scene.getId()));
         }
     }
 
@@ -579,7 +584,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             }
             else
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(this.scene.id, replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(this.scene.getId(), replay.id));
             }
         }
     }

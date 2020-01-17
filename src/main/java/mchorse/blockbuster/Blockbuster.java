@@ -149,27 +149,6 @@ public class Blockbuster
         event.registerServerCommand(new CommandRecord());
         event.registerServerCommand(new CommandSpectate());
         event.registerServerCommand(new CommandOnHead());
-
-        try
-        {
-            Scene scene = new Scene();
-            Replay replay = new Replay();
-
-            replay.id = "poika_papoika";
-            replay.morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson("{Name:\"blockbuster.fred\"}"));
-            scene.replays.add(replay);
-
-            replay = new Replay();
-            replay.id = "boika_boika";
-            replay.morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson("{Name:\"blockbuster.alex\"}"));
-            scene.replays.add(replay);
-
-            CommonProxy.scenes.save("test", scene);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @EventHandler

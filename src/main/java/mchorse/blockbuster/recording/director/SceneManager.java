@@ -1,7 +1,6 @@
 package mchorse.blockbuster.recording.director;
 
 import mchorse.blockbuster.CommonProxy;
-import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,14 +16,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+/**
+ * Scene manager
+ *
+ * This bro allows to manage scenes (those are something like remote director blocks).
+ */
 public class SceneManager
 {
+	public static final Pattern FILENAME = Pattern.compile("^[^<>:;,?\"*|/]+$");
+
 	/**
 	 * Currently loaded scenes
 	 */
 	public Map<String, Scene> scenes = new HashMap<String, Scene>();
 
+	public static boolean isValidFilename(String filename)
+	{
+		return !filename.isEmpty() && FILENAME.matcher(filename).matches();
+	}
+
+	/**
+	 * Reset scene manager
+	 */
 	public void reset()
 	{
 		this.scenes.clear();
@@ -80,6 +95,9 @@ public class SceneManager
 		}
 	}
 
+	/**
+	 *
+	 */
 	public void record(String filename, String record, EntityPlayerMP player)
 	{
 		final Scene scene = this.get(filename, player.worldObj);
@@ -109,7 +127,10 @@ public class SceneManager
 		}
 	}
 
-	public void toggle(String filename, World worldObj)
+	/**
+	 * Toggle playback of a scene by given filename
+	 */
+	public void toggle(String filename, World world)
 	{
 		Scene scene = this.scenes.get(filename);
 
@@ -119,10 +140,13 @@ public class SceneManager
 		}
 		else
 		{
-			this.play(filename, worldObj);
+			this.play(filename, world);
 		}
 	}
 
+	/**
+	 * Get currently running or load a scene
+	 */
 	public Scene get(String filename, World world)
 	{
 		Scene scene = this.scenes.get(filename);
@@ -164,7 +188,7 @@ public class SceneManager
 		NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		Scene scene = new Scene();
 
-		scene.id = filename;
+		scene.setId(filename);
 		scene.fromNBT(compound);
 
 		return scene;
@@ -183,6 +207,9 @@ public class SceneManager
 		CompressedStreamTools.writeCompressed(compound, new FileOutputStream(file));
 	}
 
+	/**
+	 * Rename a scene on the disk
+	 */
 	public boolean rename(String from, String to)
 	{
 		File fromFile = sceneFile(from);
@@ -196,6 +223,9 @@ public class SceneManager
 		return false;
 	}
 
+	/**
+	 * Remove a scene from the disk
+	 */
 	public boolean remove(String filename)
 	{
 		File file = sceneFile(filename);

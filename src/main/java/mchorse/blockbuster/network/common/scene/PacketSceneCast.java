@@ -21,7 +21,7 @@ public class PacketSceneCast extends PacketScene
 
     public PacketSceneCast(Scene scene)
     {
-        super(scene.id);
+        super(scene.getId());
         this.scene = scene;
     }
 

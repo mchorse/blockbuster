@@ -7,6 +7,7 @@ import mchorse.blockbuster.network.common.scene.PacketSceneManage;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.recording.director.Director;
 import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.director.SceneManager;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -26,7 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 /**
- * Scene manager  
+ * Scene manager GUI
  */
 public class GuiSceneManager extends GuiElement
 {
@@ -36,6 +37,7 @@ public class GuiSceneManager extends GuiElement
 	public GuiDirectorBlockList directors;
 	public GuiStringListElement sceneList;
 
+	/* Buttons */
 	public GuiButtonElement<GuiTextureButton> add;
 	public GuiButtonElement<GuiTextureButton> dupe;
 	public GuiButtonElement<GuiTextureButton> rename;
@@ -54,95 +56,10 @@ public class GuiSceneManager extends GuiElement
 
 		this.sceneList = new GuiStringListElement(mc, (scene) -> Dispatcher.sendToServer(new PacketSceneRequestCast(scene)));
 		this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
-		this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) ->
-		{
-			this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for a new scene:", (name) ->
-			{
-				if (!this.sceneList.getList().contains(name))
-				{
-					/* TODO: Check for illegal characters */
-					Scene scene = new Scene();
-
-					scene.id = name;
-					this.sceneList.add(name);
-					this.sceneList.sort();
-					this.sceneList.setCurrent(name);
-
-					this.parent.setScene(scene, null);
-				}
-			}));
-		});
-		this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) ->
-		{
-			if (this.sceneList.getCurrent() == null)
-			{
-				return;
-			}
-
-			this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for duplicated scene:", (name) ->
-			{
-				if (!this.sceneList.getList().contains(name))
-				{
-					/* TODO: Check for illegal characters */
-					Scene scene = new Scene();
-
-					scene.copy(this.parent.getScene());
-					scene.id = name;
-					this.sceneList.add(name);
-					this.sceneList.sort();
-					this.sceneList.setCurrent(name);
-
-					this.parent.setScene(scene, null);
-					this.parent.close();
-				}
-			}));
-		});
-		this.rename = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 96, 64, 112, (b) ->
-		{
-			if (this.sceneList.getCurrent() == null)
-			{
-				return;
-			}
-
-			this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a new name for current scene:", (name) ->
-			{
-				if (!this.sceneList.getList().contains(name))
-				{
-					/* TODO: Check for illegal characters */
-					String old = this.parent.getScene().id;
-
-					this.sceneList.remove(old);
-					this.parent.getScene().id = name;
-					this.sceneList.add(name);
-					this.sceneList.sort();
-					this.sceneList.setCurrent(name);
-
-					Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.REMOVE));
-				}
-			}));
-		});
-		this.remove = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) ->
-		{
-			if (this.sceneList.getCurrent() == null)
-			{
-				return;
-			}
-
-			this.modal.setDelegate(new GuiConfirmModal(mc, this.modal, "Are you sure you want to remove this scene?", (value) ->
-			{
-				if (value)
-				{
-					String name = this.parent.getScene().id;
-
-					this.sceneList.remove(name);
-					this.sceneList.update();
-					this.sceneList.setCurrent(null);
-					this.parent.setScene(null, null);
-
-					Dispatcher.sendToServer(new PacketSceneManage(name, "", PacketSceneManage.REMOVE));
-				}
-			}));
-		});
+		this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addScene());
+		this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeScene());
+		this.rename = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 96, 64, 112, (b) -> this.renameScene());
+		this.remove = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removeScene());
 
 		this.sceneList.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
 		this.modal.resizer().parent(this.area).w(1, 0).h(1, 0);
@@ -155,12 +72,93 @@ public class GuiSceneManager extends GuiElement
 		this.blocks.add(this.directors);
 		this.scenes.add(this.sceneList, this.add, this.dupe, this.rename, this.remove, this.modal);
 
-		this.blocks.setVisible(false);
-		this.scenes.setVisible(false);
-
 		this.createChildren();
 		this.children.add(this.blocks, this.scenes);
+
+		this.blocks.setVisible(false);
+		this.scenes.setVisible(false);
 	}
+
+	/* Popup callbacks */
+
+	private void addScene()
+	{
+		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for a new scene:", (name) ->
+		{
+			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
+
+			Scene scene = new Scene();
+
+			scene.setId(name);
+			this.sceneList.add(name);
+			this.sceneList.sort();
+			this.sceneList.setCurrent(name);
+
+			this.parent.setScene(scene, null);
+		}));
+	}
+
+	private void dupeScene()
+	{
+		if (!this.parent.isScene()) return;
+
+		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for duplicated scene:", (name) ->
+		{
+			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
+
+			Scene scene = new Scene();
+
+			scene.copy(this.parent.getScene());
+			scene.setId(name);
+			this.sceneList.add(name);
+			this.sceneList.sort();
+			this.sceneList.setCurrent(name);
+
+			this.parent.setScene(scene, null);
+			this.parent.close();
+		}));
+	}
+
+	private void renameScene()
+	{
+		if (!this.parent.isScene()) return;
+
+		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a new name for current scene:", (name) ->
+		{
+			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
+
+			String old = this.parent.getScene().getId();
+
+			this.sceneList.remove(old);
+			this.parent.getScene().setId(name);
+			this.sceneList.add(name);
+			this.sceneList.sort();
+			this.sceneList.setCurrent(name);
+
+			Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.REMOVE));
+		}));
+	}
+
+	private void removeScene()
+	{
+		if (!this.parent.isScene()) return;
+
+		this.modal.setDelegate(new GuiConfirmModal(mc, this.modal, "Are you sure you want to remove this scene?", (value) ->
+		{
+			if (!value) return;
+
+			String name = this.parent.getScene().getId();
+
+			this.sceneList.remove(name);
+			this.sceneList.update();
+			this.sceneList.setCurrent(null);
+			this.parent.setScene(null, null);
+
+			Dispatcher.sendToServer(new PacketSceneManage(name, "", PacketSceneManage.REMOVE));
+		}));
+	}
+
+	/* Scene manager methods */
 
 	public void setScene(Scene scene)
 	{
@@ -191,7 +189,7 @@ public class GuiSceneManager extends GuiElement
 
 		if (this.parent.isScene())
 		{
-			current = this.parent.getScene().id;
+			current = this.parent.getScene().getId();
 		}
 
 		this.sceneList.clear();
