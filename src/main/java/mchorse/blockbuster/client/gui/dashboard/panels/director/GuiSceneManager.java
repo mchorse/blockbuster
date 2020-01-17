@@ -37,13 +37,16 @@ public class GuiSceneManager extends GuiElement
 	public GuiDirectorBlockList directors;
 	public GuiStringListElement sceneList;
 
-	/* Buttons */
+	/* Elements for scene manager */
 	public GuiButtonElement<GuiTextureButton> add;
 	public GuiButtonElement<GuiTextureButton> dupe;
 	public GuiButtonElement<GuiTextureButton> rename;
 	public GuiButtonElement<GuiTextureButton> remove;
-	public GuiDelegateElement<IGuiElement> modal;
+	public GuiDelegateElement<IGuiElement> sceneModal;
 
+	/* Elements for director block manager */
+	public GuiButtonElement<GuiTextureButton> convert;
+	public GuiDelegateElement<IGuiElement> directorModal;
 	public Area toggle = new Area();
 
 	public GuiSceneManager(Minecraft mc, GuiDirectorPanel parent)
@@ -51,39 +54,66 @@ public class GuiSceneManager extends GuiElement
 		super(mc);
 
 		this.parent = parent;
-		this.directors = new GuiDirectorBlockList(mc, (director) -> this.parent.pickDirector(director.getPos()));
-		this.directors.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
 
+		/* Director block manager list */
+		this.directors = new GuiDirectorBlockList(mc, (director) -> this.parent.pickDirector(director.getPos()));
+		this.directorModal = new GuiDelegateElement<IGuiElement>(mc, null);
+		this.convert = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) -> this.convertScene()).tooltip(I18n.format("blockbuster.gui.director.convert"), GuiTooltip.TooltipDirection.BOTTOM);
+
+		this.directors.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
+		this.directorModal.resizer().parent(this.area).w(1, 0).h(1, 0);
+		this.convert.resizer().parent(this.area).set(0, 2, 16, 16).x(1, -18);
+
+		this.blocks.add(this.directors, this.convert, this.directorModal);
+
+		/* Scene manager elements */
 		this.sceneList = new GuiStringListElement(mc, (scene) -> Dispatcher.sendToServer(new PacketSceneRequestCast(scene)));
-		this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
+		this.sceneModal = new GuiDelegateElement<IGuiElement>(mc, null);
 		this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addScene());
 		this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeScene());
 		this.rename = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 96, 64, 112, (b) -> this.renameScene());
 		this.remove = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removeScene());
 
 		this.sceneList.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
-		this.modal.resizer().parent(this.area).w(1, 0).h(1, 0);
+		this.sceneModal.resizer().parent(this.area).w(1, 0).h(1, 0);
 		this.add.resizer().parent(this.area).set(0, 2, 16, 16).x(1, -78);
 		this.dupe.resizer().relative(this.add.resizer()).set(20, 0, 16, 16);
 		this.rename.resizer().relative(this.dupe.resizer()).set(20, 0, 16, 16);
 		this.remove.resizer().relative(this.rename.resizer()).set(20, 0, 16, 16);
 
 		/* Add children */
-		this.blocks.add(this.directors);
-		this.scenes.add(this.sceneList, this.add, this.dupe, this.rename, this.remove, this.modal);
+		this.scenes.add(this.sceneList, this.add, this.dupe, this.rename, this.remove, this.sceneModal);
 
 		this.createChildren();
 		this.children.add(this.blocks, this.scenes);
-
-		this.blocks.setVisible(false);
-		this.scenes.setVisible(false);
 	}
 
 	/* Popup callbacks */
 
+	private void convertScene()
+	{
+		if (!this.parent.isDirector()) return;
+
+		this.directorModal.setDelegate(new GuiPromptModal(mc, this.directorModal, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
+		{
+			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
+
+			Scene scene = new Scene();
+
+			scene.setId(name);
+			scene.copy(this.parent.getDirector());
+			scene.setupIds();
+			this.sceneList.add(name);
+			this.sceneList.sort();
+			this.sceneList.setCurrent(name);
+
+			this.parent.setScene(scene, null);
+		}));
+	}
+
 	private void addScene()
 	{
-		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for a new scene:", (name) ->
+		this.sceneModal.setDelegate(new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -102,7 +132,7 @@ public class GuiSceneManager extends GuiElement
 	{
 		if (!this.parent.isScene()) return;
 
-		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a name for duplicated scene:", (name) ->
+		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.dupe_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -110,20 +140,24 @@ public class GuiSceneManager extends GuiElement
 
 			scene.copy(this.parent.getScene());
 			scene.setId(name);
+			scene.setupIds();
 			this.sceneList.add(name);
 			this.sceneList.sort();
 			this.sceneList.setCurrent(name);
 
 			this.parent.setScene(scene, null);
 			this.parent.close();
-		}));
+		});
+
+		modal.setValue(this.parent.getScene().getId());
+		this.sceneModal.setDelegate(modal);
 	}
 
 	private void renameScene()
 	{
 		if (!this.parent.isScene()) return;
 
-		this.modal.setDelegate(new GuiPromptModal(mc, this.modal, "Enter a new name for current scene:", (name) ->
+		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.rename_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -136,14 +170,17 @@ public class GuiSceneManager extends GuiElement
 			this.sceneList.setCurrent(name);
 
 			Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.REMOVE));
-		}));
+		});
+
+		modal.setValue(this.parent.getScene().getId());
+		this.sceneModal.setDelegate(modal);
 	}
 
 	private void removeScene()
 	{
 		if (!this.parent.isScene()) return;
 
-		this.modal.setDelegate(new GuiConfirmModal(mc, this.modal, "Are you sure you want to remove this scene?", (value) ->
+		this.sceneModal.setDelegate(new GuiConfirmModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.remove_modal"), (value) ->
 		{
 			if (!value) return;
 
@@ -162,10 +199,10 @@ public class GuiSceneManager extends GuiElement
 
 	public void setScene(Scene scene)
 	{
-		boolean isScene = !(scene instanceof Director);
+		boolean isDirector = scene instanceof Director;
 
-		this.blocks.setVisible(!isScene);
-		this.scenes.setVisible(isScene);
+		this.blocks.setVisible(isDirector);
+		this.scenes.setVisible(!isDirector);
 	}
 
 	public void updateList(List<BlockPos> blocks)
@@ -239,7 +276,7 @@ public class GuiSceneManager extends GuiElement
 		}
 		else
 		{
-			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.scenes"), this.area.x + 6, this.area.y + 7, color);
+			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, color);
 		}
 
 		super.draw(tooltip, mouseX, mouseY, partialTicks);

@@ -53,6 +53,8 @@ blockbuster.gui:
     director:
         title: Director blocks
         config: Director block options
+        convert: Convert director block to a scene
+        convert_modal: "Type a name for a scene:"
         not_selected: Select a director block...
         no_replays: Create a replay...
     
@@ -79,7 +81,13 @@ blockbuster.gui:
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
         rename_prefix_popup: "Enter a new prefix:"
 
-        scenes: Scenes
+    scenes:
+        title: Scenes
+
+        add_modal: "Enter a name for a new scene:"
+        dupe_modal: "Enter a name for duplicated scene:"
+        rename_modal: "Enter a new name for current scene:"
+        remove_modal: "Are you sure you want to remove this scene?"
     
     # Actor configuration GUI strings
     actor:

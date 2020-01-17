@@ -614,6 +614,17 @@ public class Scene
 		return prefix + "_" + (max + 1);
 	}
 
+	public void setupIds()
+	{
+		for (Replay replay : this.replays)
+		{
+			if (replay.id.isEmpty())
+			{
+				replay.id = this.getNextSuffix(this.getId());
+			}
+		}
+	}
+
 	public void renamePrefix(String newPrefix)
 	{
 		for (Replay replay : this.replays)

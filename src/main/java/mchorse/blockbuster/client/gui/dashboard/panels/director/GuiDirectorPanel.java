@@ -319,6 +319,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.scene = scene;
         this.pos = pos;
+        this.updateList();
 
         return this;
     }
@@ -340,6 +341,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public void open()
     {
         this.scenes.updateSceneList();
+        this.scenes.setScene(this.scene);
 
         /* Resetting the current scene block, if it was removed from the
          * world */
