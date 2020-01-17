@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketSceneManage;
@@ -212,6 +213,21 @@ public class GuiSceneManager extends GuiElement
 		for (BlockPos pos : blocks)
 		{
 			this.directors.addBlock(pos);
+		}
+
+		if (this.parent.isDirector())
+		{
+			for (TileEntityDirector tile : this.directors.getList())
+			{
+				BlockPos pos = tile.getPos();
+
+				if (pos.equals(this.parent.getPos()))
+				{
+					this.directors.setCurrent(tile);
+
+					break;
+				}
+			}
 		}
 	}
 

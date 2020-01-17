@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.recording.director.Scene;
+import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
@@ -68,6 +70,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiButtonElement<GuiCheckBox> loops;
     public GuiButtonElement<GuiCheckBox> disableStates;
     public GuiButtonElement<GuiCheckBox> hide;
+    public GuiButtonElement<GuiButton> attach;
 
     /* Replay fields */
     public GuiTextElement id;
@@ -127,6 +130,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.scene.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.getDirector().disableStates = b.button.isChecked());
         this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.getDirector().hide = b.button.isChecked());
+        this.attach = GuiButtonElement.button(mc, "Attach", (b) -> this.attach()).tooltip("Attach this director/scene to playback button", TooltipDirection.BOTTOM);
 
         this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
         this.startCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
@@ -134,8 +138,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
+        this.attach.resizer().parent(this.area).set(0, 4, 60, 20).x(1, -104);
 
-        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
+        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand, this.attach);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
@@ -394,6 +399,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.startCommand.setText(this.scene.startCommand);
         this.stopCommand.setText(this.scene.stopCommand);
         this.loops.button.setIsChecked(this.scene.loops);
+        this.attach.setVisible(false);
+
+        if (this.mc != null && this.mc.thePlayer != null)
+        {
+            this.attach.setVisible(this.scene != null && this.mc.thePlayer.getHeldItemMainhand().getItem() == Blockbuster.playbackItem);
+        }
 
         if (this.isDirector())
         {
@@ -477,6 +488,23 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.scenes.setScene(this.scene);
         this.scenes.updateList(lastBlocks);
+    }
+
+    private void attach()
+    {
+        GuiPlayback playback = new GuiPlayback();
+
+        if (this.isDirector())
+        {
+            playback.setDirector(this.pos);
+        }
+        else if (this.isScene())
+        {
+            playback.setScene(this.scene.getId());
+        }
+
+        this.dashboard.close();
+        this.mc.displayGuiScreen(playback);
     }
 
     private void openRecordEditor()

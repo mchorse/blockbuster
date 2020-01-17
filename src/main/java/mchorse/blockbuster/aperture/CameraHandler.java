@@ -7,8 +7,13 @@ import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
+import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
+import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
+import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
@@ -98,6 +103,10 @@ public class CameraHandler
     {
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
+
+        Dispatcher.DISPATCHER.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,31 +1,25 @@
 package mchorse.blockbuster.aperture.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import mchorse.aperture.ClientProxy;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.aperture.camera.CameraAPI;
+import mchorse.aperture.camera.CameraProfile;
 import mchorse.aperture.camera.destination.AbstractDestination;
 import mchorse.aperture.camera.destination.ClientDestination;
-import mchorse.aperture.client.gui.GuiCameraEditor;
-import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.aperture.client.gui.GuiProfilesManager;
 import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.mclib.client.gui.utils.GuiUtils;
-import mchorse.mclib.client.gui.utils.ScrollArea;
+import mchorse.mclib.client.gui.framework.GuiBase;
+import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * GUI playback
@@ -33,139 +27,56 @@ import net.minecraft.nbt.NBTTagCompound;
  * This GUI is responsible for attaching some properties to playback button's
  * ItemStack.
  */
-public class GuiPlayback extends GuiScreen
+@SideOnly(Side.CLIENT)
+public class GuiPlayback extends GuiBase
 {
     private String stringTitle = I18n.format("blockbuster.gui.playback.title");
     private String stringCameraMode = I18n.format("blockbuster.gui.playback.camera_mode");
     private String stringProfile = I18n.format("blockbuster.gui.playback.profile");
 
-    private GuiCirculate cameraMode;
-    private GuiButton done;
+    private GuiButtonElement<GuiCirculate> cameraMode;
+    private GuiButtonElement<GuiButton> done;
 
-    public List<AbstractDestination> profiles = new ArrayList<AbstractDestination>();
-    public ScrollArea area = new ScrollArea(20);
-    public int index = -1;
-    public String profile;
+    public GuiProfilesManager.GuiCameraProfilesList profiles;
+    public Area frame = new Area();
+
+    private String profile;
+    private CameraProfile dummy = new CameraProfile(null);
+    private String scene;
+    private BlockPos director;
 
     public GuiPlayback()
     {
+        Minecraft mc = Minecraft.getMinecraft();
+        GuiCirculate circulate = new GuiCirculate(0, 0, 0, 0, 0);
+
+        circulate.addLabel(I18n.format("blockbuster.gui.playback.nothing"));
+        circulate.addLabel(I18n.format("blockbuster.gui.playback.play"));
+        circulate.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
+
+        this.profiles = new GuiProfilesManager.GuiCameraProfilesList(mc, (profile) -> {});
+        this.profiles.setBackground();
+        this.cameraMode = new GuiButtonElement<GuiCirculate>(mc, circulate, (b) -> this.setValue(b.button.getValue()));
+        this.done = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.done"), (b) -> this.saveAndQuit());
+
+        this.profiles.resizer().set(0, 35, 0, 0).parent(this.frame).w(1, 0).h(1, -100);
+        this.cameraMode.resizer().parent(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
+        this.done.resizer().parent(this.frame).set(0, 0, 0, 20).y(1, -20).w(1, 0);
+
+        this.elements.add(this.profiles, this.cameraMode, this.done);
+
+        /* Fill data */
         for (String filename : CameraAPI.getClientProfiles())
         {
-            this.profiles.add(new ClientDestination(filename));
+            this.addDestination(new ClientDestination(filename));
         }
+
+        this.profiles.sort();
 
         if (ClientProxy.server)
         {
             Dispatcher.sendToServer(new PacketRequestProfiles());
         }
-    }
-
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return false;
-    }
-
-    /* Input */
-
-    @Override
-    public void handleMouseInput() throws IOException
-    {
-        super.handleMouseInput();
-
-        int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
-        int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-
-        if (this.area.isInside(x, y))
-        {
-            int scroll = -Mouse.getEventDWheel();
-
-            if (scroll != 0)
-            {
-                this.area.mouseScroll(x, y, scroll);
-            }
-        }
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if (this.area.mouseClicked(mouseX, mouseY))
-        {
-            return;
-        }
-
-        if (this.area.isInside(mouseX, mouseY))
-        {
-            int index = this.area.getIndex(mouseX, mouseY);
-
-            this.index = index;
-        }
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state)
-    {
-        super.mouseReleased(mouseX, mouseY, state);
-
-        this.area.mouseReleased(mouseX, mouseY);
-    }
-
-    /* Actions */
-
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
-        int id = button.id;
-
-        if (id == 1)
-        {
-            this.setValue(this.cameraMode.getValue());
-        }
-        else if (id == 2)
-        {
-            this.saveAndQuit();
-        }
-    }
-
-    private void saveAndQuit()
-    {
-        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.getValue(), this.getSelected()));
-
-        this.mc.displayGuiScreen(null);
-    }
-
-    private String getSelected()
-    {
-        if (this.index >= 0 && this.index < this.profiles.size())
-        {
-            return this.profiles.get(this.index).toResourceLocation().toString();
-        }
-
-        return "";
-    }
-
-    /* GUI and drawing */
-
-    @Override
-    public void initGui()
-    {
-        int x = this.width / 2 - 75;
-        int w = 150;
-
-        this.cameraMode = new GuiCirculate(1, x, this.height - 55, w, 20);
-        this.done = new GuiButton(2, x, this.height - 30, w, 20, I18n.format("blockbuster.gui.done"));
-
-        this.buttonList.add(this.cameraMode);
-        this.buttonList.add(this.done);
-
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.nothing"));
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.play"));
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
-
-        this.area.set(this.width / 2 - 75, 45, 150, this.height - 125);
 
         NBTTagCompound compound = Minecraft.getMinecraft().thePlayer.getHeldItemMainhand().getTagCompound();
 
@@ -183,103 +94,103 @@ public class GuiPlayback extends GuiScreen
         }
     }
 
-    private void setValue(int value)
+    public GuiPlayback setScene(String scene)
     {
-        this.setValue(value, "");
-        this.selectProfile();
+        this.scene = scene;
+
+        return this;
     }
 
-    private void setValue(int value, String profile)
+    public GuiPlayback setDirector(BlockPos pos)
     {
-        this.cameraMode.setValue(value);
+        this.director = pos;
+
+        return this;
+    }
+
+    public void addDestination(AbstractDestination destination)
+    {
+        this.profiles.add(new GuiProfilesManager.CameraProfileEntry(destination, this.dummy));
+    }
+
+    public void setValue(int value)
+    {
+        this.cameraMode.button.setValue(value);
+        this.profiles.setVisible(value == 2);
+    }
+
+    public void setValue(int value, String profile)
+    {
         this.profile = profile;
+        this.setValue(value);
+        this.selectCurrent(profile);
     }
 
-    public void selectProfile()
+    public void selectCurrent()
     {
-        this.index = -1;
+        this.selectCurrent(this.profile);
+    }
 
-        int i = 0;
-
-        for (AbstractDestination dest : this.profiles)
+    public void selectCurrent(String profile)
+    {
+        for (int i = 0; i < this.profiles.getList().size(); i ++)
         {
-            if (dest.toResourceLocation().toString().equals(this.profile))
+            if (this.profiles.getList().get(i).destination.toResourceLocation().toString().equals(profile))
             {
-                this.index = i;
+                this.profiles.current = i;
 
                 break;
             }
-
-            i++;
         }
+    }
+
+    @Override
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
+    private void saveAndQuit()
+    {
+        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.button.getValue(), this.getSelected(), this.scene, this.director));
+
+        this.mc.displayGuiScreen(null);
+    }
+
+    private String getSelected()
+    {
+        GuiProfilesManager.CameraProfileEntry current = this.profiles.getCurrent();
+
+        if (current != null)
+        {
+            return current.destination.toResourceLocation().toString();
+        }
+
+        return "";
+    }
+
+    @Override
+    public void initGui()
+    {
+        this.frame.set(this.width / 2 - 75, 10, 150, this.height - 20);
+
+        super.initGui();
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        boolean isCameraProfile = this.cameraMode.getValue() == 2;
-
-        int x = this.width / 2 - 75;
+        boolean isCameraProfile = this.cameraMode.button.getValue() == 2;
 
         this.drawDefaultBackground();
-        this.drawString(this.fontRendererObj, this.stringTitle, x, 10, 0xffffffff);
-        this.drawString(this.fontRendererObj, this.stringCameraMode, x, this.height - 69, 0xffcccccc);
+        this.drawString(this.fontRendererObj, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);
+        this.drawString(this.fontRendererObj, this.stringCameraMode, this.frame.x, this.cameraMode.area.y - 12, 0xffcccccc);
 
         if (isCameraProfile)
         {
-            this.drawString(this.fontRendererObj, this.stringProfile, x, 35 - 4, 0xffcccccc);
+            this.drawString(this.fontRendererObj, this.stringProfile, this.frame.x, this.profiles.area.y - 12, 0xffcccccc);
         }
-
-        this.drawProfiles(mouseX, mouseY);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
-
-    /**
-     * Draw camera profiles
-     */
-    private void drawProfiles(int mouseX, int mouseY)
-    {
-        boolean isCameraProfile = this.cameraMode.getValue() == 2;
-
-        if (isCameraProfile)
-        {
-            this.area.drag(mouseX, mouseY);
-
-            int x = this.area.x;
-            int y = this.area.y;
-            int w = this.area.w;
-
-            Gui.drawRect(x, y, x + w, y + this.area.h, 0x88000000);
-            GuiUtils.scissor(x, y, w, this.area.h, this.width, this.height);
-
-            y -= this.area.scroll;
-
-            int i = 0;
-
-            for (AbstractDestination dest : this.profiles)
-            {
-                boolean hovered = this.area.isInside(mouseX, mouseY) && mouseY >= y && mouseY < y + this.area.scrollItemSize;
-                boolean current = this.index == i;
-
-                if (hovered || current)
-                {
-                    Gui.drawRect(x, y, x + w, y + this.area.scrollItemSize, current ? 0x880088ff : 0x88000000);
-                }
-
-                this.mc.fontRendererObj.drawStringWithShadow(dest.getFilename(), x + 22, y + 7, 0xffffff);
-                this.mc.renderEngine.bindTexture(GuiCameraEditor.EDITOR_TEXTURE);
-
-                GlStateManager.color(1, 1, 1, 1);
-                Gui.drawModalRectWithCustomSizedTexture(x + 2, y + 2, 0 + (dest instanceof ClientDestination ? 16 : 0), 32, 16, 16, 256, 256);
-
-                y += this.area.scrollItemSize;
-                i++;
-            }
-
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-            this.area.drawScrollbar();
-        }
     }
 }

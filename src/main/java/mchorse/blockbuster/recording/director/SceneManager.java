@@ -68,13 +68,13 @@ public class SceneManager
 	/**
 	 * Play a scene
 	 */
-	public void play(String filename, World world)
+	public boolean play(String filename, World world)
 	{
 		Scene scene = this.scenes.get(filename);
 
 		if (scene != null)
 		{
-			return;
+			return false;
 		}
 
 		try
@@ -93,6 +93,8 @@ public class SceneManager
 
 			this.scenes.put(filename, scene);
 		}
+
+		return scene != null;
 	}
 
 	/**
@@ -131,18 +133,18 @@ public class SceneManager
 	/**
 	 * Toggle playback of a scene by given filename
 	 */
-	public void toggle(String filename, World world)
+	public boolean toggle(String filename, World world)
 	{
 		Scene scene = this.scenes.get(filename);
 
 		if (scene != null)
 		{
 			scene.stopPlayback();
+
+			return false;
 		}
-		else
-		{
-			this.play(filename, world);
-		}
+
+		return this.play(filename, world);
 	}
 
 	/**
