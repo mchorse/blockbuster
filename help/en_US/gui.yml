@@ -81,6 +81,9 @@ blockbuster.gui:
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
         rename_prefix_popup: "Enter a new prefix:"
 
+        attach: Attach
+        attach_tooltip: Attach this director/scene to playback button
+
     scenes:
         title: Scenes
 
