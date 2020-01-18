@@ -1,22 +1,18 @@
 package mchorse.blockbuster.client;
 
+import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.GuiGun;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.tileentity.director.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketTickMarker;
-import mchorse.blockbuster.network.common.director.PacketDirectorPlayback;
-import mchorse.blockbuster.network.common.director.PacketDirectorRecord;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -80,7 +76,9 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            ClientProxy.getDashboard(false).open().openPanel(null);
+            GuiDashboard dashboard = ClientProxy.getDashboard(false);
+
+            dashboard.open().openPanel(GuiScreen.isCtrlKeyDown() ? dashboard.mainPanel : null);
         }
 
         if (this.cameraMarker.isPressed())
@@ -101,12 +99,7 @@ public class KeyboardHandler
 
             if (dash != null && dash.directorPanel != null)
             {
-                BlockPos director = dash.directorPanel.getPos();
-
-                if (director != null)
-                {
-                    Dispatcher.sendToServer(new PacketDirectorPlayback(director));
-                }
+                dash.directorPanel.plause();
             }
         }
 
@@ -116,13 +109,7 @@ public class KeyboardHandler
 
             if (dash != null && dash.directorPanel != null)
             {
-                BlockPos director = dash.directorPanel.getPos();
-                Replay replay = dash.directorPanel.getReplay();
-
-                if (director != null && replay != null && !replay.id.isEmpty())
-                {
-                    Dispatcher.sendToServer(new PacketDirectorRecord(director, replay.id));
-                }
+                dash.directorPanel.record();
             }
         }
 

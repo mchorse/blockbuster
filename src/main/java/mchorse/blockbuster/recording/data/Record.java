@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +13,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.director.Replay;
-import mchorse.blockbuster.recording.ActionRegistry;
+import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
@@ -708,5 +709,11 @@ public class Record
         }
 
         return action;
+    }
+
+    public void reverse()
+    {
+        Collections.reverse(this.frames);
+        Collections.reverse(this.actions);
     }
 }

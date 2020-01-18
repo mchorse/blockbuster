@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
@@ -51,7 +51,7 @@ public class SubCommandRecordProlong extends SubCommandRecordBase
         }
 
         record.dirty = true;
-        Utils.unloadRecord(record);
+        RecordUtils.unloadRecord(record);
 
         L10n.success(sender, "record.prolonged", args[0], record.preDelay, record.postDelay);
     }

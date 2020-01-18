@@ -1,6 +1,7 @@
 package mchorse.blockbuster.aperture.network.client;
 
 import mchorse.aperture.camera.destination.ServerDestination;
+import mchorse.aperture.client.gui.GuiProfilesManager;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.mclib.network.ClientMessageHandler;
@@ -24,11 +25,11 @@ public class ClientHandlerCameraProfileList extends ClientMessageHandler<PacketC
 
             for (String filename : message.cameras)
             {
-                gui.profiles.add(new ServerDestination(filename));
+                gui.addDestination(new ServerDestination(filename));
             }
 
-            gui.area.setSize(gui.profiles.size());
-            gui.selectProfile();
+            gui.profiles.sort();
+            gui.selectCurrent();
         }
     }
 }

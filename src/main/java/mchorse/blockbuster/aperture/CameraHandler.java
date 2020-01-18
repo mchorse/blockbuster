@@ -7,16 +7,22 @@ import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
+import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
+import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
+import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.PacketDirectorRequestCast;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorGoto;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
+import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -98,6 +104,10 @@ public class CameraHandler
     {
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
+
+        Dispatcher.DISPATCHER.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
+        Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
     @SideOnly(Side.CLIENT)
@@ -138,11 +148,11 @@ public class CameraHandler
     @SubscribeEvent
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
-        BlockPos pos = getDirectorPos();
+        SceneLocation location = get();
 
-        if (pos != null)
+        if (location != null)
         {
-            Dispatcher.sendToServer(new PacketDirectorGoto(pos, event.position, CameraHandler.actions));
+            Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions));
         }
 
         GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.dashboard;
@@ -161,11 +171,11 @@ public class CameraHandler
     @SubscribeEvent
     public void onCameraPlause(CameraEditorEvent.Playback event)
     {
-        BlockPos pos = getDirectorPos();
+        SceneLocation location = get();
 
-        if (pos != null)
+        if (location != null)
         {
-            Dispatcher.sendToServer(new PacketDirectorPlay(pos, event.play ? PacketDirectorPlay.PLAY : PacketDirectorPlay.PAUSE, event.position));
+            Dispatcher.sendToServer(new PacketScenePlay(location, event.play ? PacketScenePlay.PLAY : PacketScenePlay.PAUSE, event.position));
         }
     }
 
@@ -256,19 +266,32 @@ public class CameraHandler
     }
 
     /**
-     * Get director block position from player's playback button
+     * Get scene location from playback button
      */
-    public static BlockPos getDirectorPos()
+    public static SceneLocation get()
     {
-        BlockPos pos = null;
-        ItemStack left = Minecraft.getMinecraft().player.getHeldItemMainhand();
+        ItemStack right = Minecraft.getMinecraft().player.getHeldItemMainhand();
 
-        if (left != null && left.getItem() instanceof ItemPlayback)
+        if (right != null && right.getItem() instanceof ItemPlayback)
         {
-            pos = ItemPlayback.getBlockPos("Dir", left);
+            BlockPos pos = ItemPlayback.getBlockPos("Dir", right);
+
+            if (pos != null)
+            {
+                return new SceneLocation(pos);
+            }
+            else if (right.getTagCompound().hasKey("Scene"))
+            {
+                return new SceneLocation(right.getTagCompound().getString("Scene"));
+            }
         }
 
-        return pos;
+        return null;
+    }
+
+    public static boolean canSync()
+    {
+        return get() != null;
     }
 
     /**
@@ -292,10 +315,10 @@ public class CameraHandler
 
             GuiScreen current = Minecraft.getMinecraft().currentScreen;
             GuiScreen toOpen = event.getGui();
-            BlockPos pos = getDirectorPos();
+            SceneLocation location = get();
             boolean toOpenCamera = toOpen instanceof GuiCameraEditor;
 
-            if (pos != null)
+            if (location != null)
             {
                 int tick = ClientProxy.getCameraEditor().scrub.value;
 
@@ -306,11 +329,11 @@ public class CameraHandler
 
                     if (CameraHandler.reload)
                     {
-                        Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.START, tick));
+                        Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.START, tick));
                     }
 
-                    Dispatcher.sendToServer(new PacketRequestLength(pos));
-                    Dispatcher.sendToServer(new PacketDirectorRequestCast(pos));
+                    Dispatcher.sendToServer(new PacketRequestLength(location));
+                    Dispatcher.sendToServer(new PacketSceneRequestCast(location));
                 }
             }
 

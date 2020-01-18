@@ -15,6 +15,16 @@ import net.minecraft.util.math.BlockPos;
 public interface IRecording
 {
     /**
+     * Get last edited scene
+     */
+    public String getLastScene();
+
+    /**
+     * Set last edited scene
+     */
+    public void setLastScene(String scene);
+
+    /**
      * Does player has loaded recording?
      */
     public boolean hasRecording(String filename);

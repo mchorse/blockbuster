@@ -29,7 +29,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
-import mchorse.blockbuster.recording.ActionRegistry;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;

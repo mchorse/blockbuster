@@ -32,12 +32,12 @@ public class ClientHandlerPlayerRecording extends ClientMessageHandler<PacketPla
 
         if (message.recording)
         {
-            ClientProxy.manager.startRecording(message.filename, player, Mode.FRAMES, false, null);
+            ClientProxy.manager.record(message.filename, player, Mode.FRAMES, false, false, null);
         }
         else
         {
             this.sendFrames(ClientProxy.manager.recorders.get(player).record);
-            ClientProxy.manager.stopRecording(player, false, false);
+            ClientProxy.manager.halt(player, false, false);
         }
     }
 

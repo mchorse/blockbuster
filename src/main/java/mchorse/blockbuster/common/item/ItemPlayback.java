@@ -3,6 +3,7 @@ package mchorse.blockbuster.common.item;
 import java.util.List;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
@@ -103,6 +104,11 @@ public class ItemPlayback extends Item
         {
             tooltip.add(I18n.format("blockbuster.info.playback_director", pos.getX(), pos.getY(), pos.getZ()));
         }
+
+        if (tag.hasKey("Scene"))
+        {
+            tooltip.add(I18n.format("blockbuster.info.playback_scene", tag.getString("Scene")));
+        }
     }
 
     /**
@@ -119,12 +125,7 @@ public class ItemPlayback extends Item
             BlockPos pos = getBlockPos("Dir", stack);
             NBTTagCompound tag = stack.getTagCompound();
 
-            if (pos == null || tag == null)
-            {
-                return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
-            }
-
-            if (player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
+            if (pos != null && player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
             {
                 IRecording recording = Recording.get(player);
 
@@ -154,15 +155,25 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
             }
 
-            TileEntity te = worldIn.getTileEntity(pos);
-
-            if (te instanceof TileEntityDirector)
+            if (stack.getTagCompound().hasKey("Scene"))
             {
-                TileEntityDirector tile = (TileEntityDirector) te;
-
-                if (tile.director.togglePlayback() && CameraHandler.isApertureLoaded())
+                if (CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world))
                 {
                     CameraHandler.handlePlaybackItem(player, tag);
+                }
+            }
+            else if (pos != null)
+            {
+                TileEntity te = worldIn.getTileEntity(pos);
+
+                if (te instanceof TileEntityDirector)
+                {
+                    TileEntityDirector tile = (TileEntityDirector) te;
+
+                    if (tile.director.togglePlayback() && CameraHandler.isApertureLoaded())
+                    {
+                        CameraHandler.handlePlaybackItem(player, tag);
+                    }
                 }
             }
             else if (player instanceof EntityPlayerMP)

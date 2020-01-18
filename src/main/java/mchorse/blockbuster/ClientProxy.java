@@ -26,7 +26,7 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.recording.FrameHandler;
+import mchorse.blockbuster.recording.capturing.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;

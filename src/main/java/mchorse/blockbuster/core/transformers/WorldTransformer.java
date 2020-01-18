@@ -49,7 +49,7 @@ public class WorldTransformer extends ClassMethodTransformer
                 newList.add(new VarInsnNode(Opcodes.ALOAD, 1));
                 newList.add(new VarInsnNode(Opcodes.ALOAD, 2));
                 newList.add(new VarInsnNode(Opcodes.ILOAD, 3));
-                newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/recording/WorldEventListener", "setBlockState", desc, false));
+                newList.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/blockbuster/recording/capturing/WorldEventListener", "setBlockState", desc, false));
                 list.insert(node, newList);
 
                 System.out.println("BBCoreMod: successfully patched setBlockState!");

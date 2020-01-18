@@ -44,7 +44,7 @@ blockbuster.gui:
         resources: Resources
         wiki: Wiki
         discord: Discord
-        tutorial: Video tutorial
+        tutorial: Video Tutorial
         models: Open Models...
         
         options: Options
@@ -53,6 +53,8 @@ blockbuster.gui:
     director:
         title: Director blocks
         config: Director block options
+        convert: Convert director block to a scene
+        convert_modal: "Type a name for a scene:"
         not_selected: Select a director block...
         no_replays: Create a replay...
     
@@ -69,6 +71,8 @@ blockbuster.gui:
         invisible: Invisible
         enabled: Enabled
         fake_player: Fake player
+        tp_back: Teleport back
+        tp_back_tooltip: Teleport yourself back to starting position
         health: Health
         edit_record: Edit record
         update_data: Update data
@@ -76,6 +80,14 @@ blockbuster.gui:
         rename_prefix: Rename prefix
         rename_prefix_tooltip: Renames replay recording ID with a new prefix  
         rename_prefix_popup: "Enter a new prefix:"
+
+    scenes:
+        title: Scenes
+
+        add_modal: "Enter a name for a new scene:"
+        dupe_modal: "Enter a name for duplicated scene:"
+        rename_modal: "Enter a new name for current scene:"
+        remove_modal: "Are you sure you want to remove this scene?"
     
     # Actor configuration GUI strings
     actor:
@@ -265,6 +277,9 @@ blockbuster.gui:
         maximum: Maximum
         cap: Capacity
 
+    record_morph:
+        random_skip: Random Skip
+
     texture:
         title: Texture manager
         subtitle: This GUI allows you to view and manage textures loaded by Minecraft during runtime
@@ -303,7 +318,9 @@ blockbuster.gui:
         speed: Speed
         friction: Friction
         gravity: Gravity
-        
+        fade_in: Fade in
+        fade_out: Fade out
+
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact

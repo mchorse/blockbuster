@@ -2,7 +2,7 @@ package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
@@ -39,11 +39,11 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
         String iteration = args[1];
         Record record = CommandRecord.getRecord(name);
 
-        if (Utils.getReplayIterations(record.filename).contains(iteration))
+        if (RecordUtils.getReplayIterations(record.filename).contains(iteration))
         {
-            File current = Utils.replayFile(name);
-            File toRestore = new File(Utils.replayFile(name).getAbsolutePath() + "~" + iteration);
-            File temporary = Utils.replayFile("mchorse is the coolest");
+            File current = RecordUtils.replayFile(name);
+            File toRestore = new File(RecordUtils.replayFile(name).getAbsolutePath() + "~" + iteration);
+            File temporary = RecordUtils.replayFile("mchorse is the coolest");
 
             if (temporary.exists())
             {
@@ -56,7 +56,7 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
                 temporary.renameTo(toRestore);
 
                 CommonProxy.manager.records.remove(record.filename);
-                Utils.unloadRecord(record);
+                RecordUtils.unloadRecord(record);
 
                 L10n.success(sender, "record.restored", name, iteration);
             }
@@ -71,7 +71,7 @@ public class SubCommandRecordRestore extends SubCommandRecordBase
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length == 2)
         {
-            List<String> iterations = Utils.getReplayIterations(args[0]);
+            List<String> iterations = RecordUtils.getReplayIterations(args[0]);
 
             if (!iterations.isEmpty())
             {

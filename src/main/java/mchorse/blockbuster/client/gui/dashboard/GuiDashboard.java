@@ -174,6 +174,11 @@ public class GuiDashboard extends GuiBase
         return false;
     }
 
+    public void close()
+    {
+        this.closeScreen();
+    }
+
     @Override
     protected void closeScreen()
     {

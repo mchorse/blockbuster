@@ -3,7 +3,7 @@ package mchorse.blockbuster.commands.record;
 import java.util.List;
 
 import mchorse.blockbuster.commands.McCommandBase;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +15,7 @@ public abstract class SubCommandRecordBase extends McCommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, Utils.getReplays());
+            return getListOfStringsMatchingLastWord(args, RecordUtils.getReplays());
         }
 
         return super.getTabCompletions(server, sender, args, pos);
