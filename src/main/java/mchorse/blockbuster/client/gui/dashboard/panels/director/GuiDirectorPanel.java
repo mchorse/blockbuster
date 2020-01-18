@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
+import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.recording.scene.Scene;
@@ -397,7 +398,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             ItemStack stack = this.mc.thePlayer.getHeldItemMainhand();
 
-            this.attach.setVisible(this.scene != null && stack != null && stack.getItem() == Blockbuster.playbackItem);
+            this.attach.setVisible(this.scene != null && stack != null && stack.getItem() instanceof ItemPlayback);
         }
 
         if (this.isDirector())

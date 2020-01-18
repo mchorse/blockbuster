@@ -280,7 +280,7 @@ public class CameraHandler
             {
                 return new SceneLocation(pos);
             }
-            else if (right.getTagCompound().hasKey("Scene"))
+            else if (right.getTagCompound() != null && right.getTagCompound().hasKey("Scene"))
             {
                 return new SceneLocation(right.getTagCompound().getString("Scene"));
             }
