@@ -122,7 +122,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.scene.loops = b.button.isChecked());
         this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.getDirector().disableStates = b.button.isChecked());
         this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.getDirector().hide = b.button.isChecked());
-        this.attach = GuiButtonElement.button(mc, "Attach", (b) -> this.attach()).tooltip("Attach this director/scene to playback button", TooltipDirection.BOTTOM);
+        this.attach = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.attach"), (b) -> this.attach()).tooltip(I18n.format("blockbuster.gui.director.attach_tooltip"), TooltipDirection.BOTTOM);
 
         this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
         this.startCommand.resizer().set(10, 90, 0, 20).parent(this.area).w(1, -20);
