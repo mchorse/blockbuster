@@ -2,7 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -36,7 +36,7 @@ public class ChatAction extends Action
             message = prefix.replace("%NAME%", actor.getName()) + message;
         }
 
-        Utils.broadcastMessage(message);
+        RecordUtils.broadcastMessage(message);
     }
 
     @Override

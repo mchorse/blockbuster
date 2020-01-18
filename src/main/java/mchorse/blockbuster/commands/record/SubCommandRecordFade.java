@@ -1,7 +1,7 @@
 package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
@@ -71,7 +71,7 @@ public class SubCommandRecordFade extends SubCommandRecordBase
         }
 
         record.dirty = true;
-        Utils.unloadRecord(record);
+        RecordUtils.unloadRecord(record);
 
         L10n.success(sender, "record.faded", args[0], args[1]);
     }

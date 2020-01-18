@@ -5,7 +5,8 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.director.sync.PacketDirectorPlay;
+import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -13,9 +14,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 {
     private String title = I18n.format("blockbuster.gui.aperture.config.title");
@@ -44,9 +47,12 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 
         this.reloadScene = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.aperture.config.reload_scene"), (b) ->
         {
-            BlockPos pos = CameraHandler.getDirectorPos();
+            SceneLocation location = CameraHandler.get();
 
-            Dispatcher.sendToServer(new PacketDirectorPlay(pos, PacketDirectorPlay.RESTART, ClientProxy.getCameraEditor().scrub.value));
+            if (location != null)
+            {
+                Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.RESTART, ClientProxy.getCameraEditor().scrub.value));
+            }
         });
 
         this.reloadScene.button.width = 100;
@@ -90,7 +96,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
     @Override
     public boolean isActive()
     {
-        return CameraHandler.getDirectorPos() != null;
+        return CameraHandler.canSync();
     }
 
     @Override

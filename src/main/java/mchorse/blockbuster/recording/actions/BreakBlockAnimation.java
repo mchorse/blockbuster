@@ -1,7 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.recording.WorldEventListener;
+import mchorse.blockbuster.recording.capturing.WorldEventListener;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -28,14 +28,7 @@ public class BreakBlockAnimation extends InteractBlockAction
     @Override
     public void apply(EntityLivingBase actor)
     {
-        if (this.progress >= 10)
-        {
-            actor.world.destroyBlock(this.pos, true);
-        }
-        else
-        {
-            actor.world.sendBlockBreakProgress(actor.getEntityId(), this.pos, this.progress);
-        }
+        actor.world.sendBlockBreakProgress(actor.getEntityId(), this.pos, this.progress);
     }
 
     @Override

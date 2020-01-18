@@ -1,16 +1,21 @@
 package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.gun.GunProvider;
+import mchorse.blockbuster.capabilities.recording.IRecording;
+import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.recording.RecordPlayer;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,8 +68,19 @@ public class CapabilityHandler
     public void playerLogsIn(PlayerLoggedInEvent event)
     {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
+        IRecording recording = Recording.get(player);
 
         Dispatcher.sendTo(new PacketStructureList(ServerHandlerStructureRequest.getAllStructures()), player);
+
+        if (recording.getLastScene() != null)
+        {
+            Scene scene = CommonProxy.scenes.get(recording.getLastScene(), player.world);
+
+            if (scene != null)
+            {
+                Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(scene.getId()), scene).open(false), player);
+            }
+        }
     }
 
     /**
@@ -83,7 +99,7 @@ public class CapabilityHandler
 
             if (actor.isPlaying())
             {
-                Utils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
+                RecordUtils.sendRequestedRecord(actor.getEntityId(), actor.playback.record.filename, player);
             }
         }
 
@@ -94,7 +110,7 @@ public class CapabilityHandler
 
             if (playback != null)
             {
-                Utils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
+                RecordUtils.sendRequestedRecord(other.getEntityId(), playback.record.filename, player);
             }
         }
     }

@@ -15,7 +15,7 @@ public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
 
         try
         {
-            record = CommonProxy.manager.getRecord(message.filename);
+            record = CommonProxy.manager.get(message.filename);
         }
         catch (Exception e)
         {}

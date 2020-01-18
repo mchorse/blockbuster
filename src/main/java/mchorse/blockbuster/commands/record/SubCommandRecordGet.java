@@ -3,7 +3,7 @@ package mchorse.blockbuster.commands.record;
 import java.util.List;
 
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.ActionRegistry;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;

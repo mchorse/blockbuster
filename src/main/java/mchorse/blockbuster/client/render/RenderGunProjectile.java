@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ICamera;
@@ -47,17 +48,9 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
 
         if (entity.props != null && morph != null)
         {
-            float scale = (entity.timer + partialTicks) / 10F;
-
-            if (entity.timer >= entity.props.lifeSpan - 10)
-            {
-                scale = 1 - (entity.timer + partialTicks - entity.props.lifeSpan + 10) / 10F;
-                scale = scale < 0 ? 0 : scale;
-            }
-            else if (scale >= 1)
-            {
-                scale = 1;
-            }
+            int length = entity.props.lifeSpan;
+            float timer = entity.timer + partialTicks;
+            float scale = Interpolations.envelope(timer > length ? length : timer, 0, entity.props.fadeIn, length - entity.props.fadeOut, length);
 
             /* A small scale factor to avoid Z fighting */
             scale += (entity.getEntityId() % 100) / 10000F;

@@ -2,7 +2,7 @@ package mchorse.blockbuster.commands.record;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.commands.CommandRecord;
-import mchorse.blockbuster.recording.Utils;
+import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandException;
@@ -38,7 +38,7 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
     @Override
     public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        if (Utils.isReplayExists(args[1]))
+        if (RecordUtils.isReplayExists(args[1]))
         {
             throw new CommandException("record.already_exists", args[1]);
         }
@@ -48,7 +48,7 @@ public class SubCommandRecordDupe extends SubCommandRecordBase
             Record record = CommandRecord.getRecord(args[0]).clone();
 
             record.filename = args[1];
-            record.save(Utils.replayFile(record.filename));
+            record.save(RecordUtils.replayFile(record.filename));
 
             CommonProxy.manager.records.put(args[1], record);
             L10n.success(sender, "record.duped", args[0], args[1]);

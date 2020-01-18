@@ -2,7 +2,7 @@ package mchorse.blockbuster.recording;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.tileentity.director.Replay;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -64,6 +64,11 @@ public class RecordPlayer
      */
     public boolean playing = true;
 
+    /**
+     * Sync mode - pauses the playback once hit the end
+     */
+    public boolean sync = false;
+
     public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
         this.record = record;
@@ -76,7 +81,16 @@ public class RecordPlayer
      */
     public boolean isFinished()
     {
-        return this.record != null && this.tick - this.record.preDelay - this.record.postDelay >= this.record.getLength();
+        boolean isFinished = this.record != null && this.tick - this.record.preDelay - this.record.postDelay >= this.record.getLength();
+
+        if (isFinished && this.sync && this.playing)
+        {
+            this.pause();
+
+            return false;
+        }
+
+        return isFinished;
     }
 
     /**
@@ -179,6 +193,11 @@ public class RecordPlayer
         int preDelay = this.record.preDelay;
         int original = tick;
 
+        if (tick > this.record.frames.size() + this.record.preDelay)
+        {
+            tick = this.record.frames.size() + this.record.preDelay - 1;
+        }
+
         tick -= preDelay;
 
         int min = Math.min(this.tick - this.record.preDelay, tick);
@@ -228,6 +247,7 @@ public class RecordPlayer
     {
         this.tick = tick;
         this.kill = kill;
+        this.sync = false;
 
         this.applyFrame(tick, this.actor, true);
         EntityUtils.setRecordPlayer(this.actor, this);
@@ -259,7 +279,7 @@ public class RecordPlayer
      */
     public void stopPlaying()
     {
-        CommonProxy.manager.stopPlayback(this);
+        CommonProxy.manager.stop(this);
 
         this.actor.noClip = false;
     }

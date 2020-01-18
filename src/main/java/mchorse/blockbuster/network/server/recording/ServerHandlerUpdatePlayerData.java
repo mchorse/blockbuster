@@ -18,7 +18,7 @@ public class ServerHandlerUpdatePlayerData extends ServerMessageHandler<PacketUp
 
         try
         {
-            record = CommonProxy.manager.getRecord(message.record);
+            record = CommonProxy.manager.get(message.record);
         }
         catch (Exception e)
         {}

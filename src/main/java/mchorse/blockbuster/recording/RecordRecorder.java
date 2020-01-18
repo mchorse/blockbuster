@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.capturing.PlayerTracker;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * Record recorder class
@@ -51,15 +53,28 @@ public class RecordRecorder
     public int delay = 1;
 
     /**
+     * Whether recorded player should be teleported back
+     */
+    public boolean teleportBack;
+
+    /**
+     * First frame (to restore the position)
+     */
+    private Frame first;
+
+    /**
      * Player tracker, this dude is responsible for tracking inventory slots,
      * swing progress and elytra flying updates
      */
     public PlayerTracker tracker;
 
-    public RecordRecorder(Record record, Mode mode)
+    public RecordRecorder(Record record, Mode mode, EntityPlayer player, boolean teleportBack)
     {
         this.record = record;
         this.mode = mode;
+        this.teleportBack = teleportBack;
+        this.first = new Frame();
+        this.first.fromPlayer(player);
 
         if (mode == Mode.ACTIONS || mode == Mode.BOTH)
         {
@@ -107,4 +122,12 @@ public class RecordRecorder
         this.tick++;
         this.delay = this.record.delay;
     }
+
+	public void stop(EntityPlayer player)
+    {
+        if (this.teleportBack && player instanceof EntityPlayer)
+        {
+            ((EntityPlayerMP) player).connection.setPlayerLocation(this.first.x, this.first.y, this.first.z, this.first.yaw, this.first.pitch);
+        }
+	}
 }

@@ -5,6 +5,7 @@ blockbuster:
         playback_director: Attached to ({r}%d{7}, {r}%d{7}, {r}%d{7})
         playback_profile: Plays profile "{f}{o}%s{r}{7}"
         playback_play: Plays camera
+        playback_scene: Attached to scene {f}%s{r}
 
         actor_config: Use on actor
         register: Ties actors to director block

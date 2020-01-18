@@ -35,12 +35,14 @@ public class VoxBuilder
 
         Mesh mesh = new Mesh(this.vertices.size() / 4 * 2);
 
-        for (int i = 0, c = this.vertices.size() / 4; i < c; i++)
+        for (int i = 0, c = this.vertices.size() / 6; i < c; i++)
         {
-            Vertex v1 = this.vertices.get(i * 4);
-            Vertex v2 = this.vertices.get(i * 4 + 1);
-            Vertex v3 = this.vertices.get(i * 4 + 2);
-            Vertex v4 = this.vertices.get(i * 4 + 3);
+            Vertex v1 = this.vertices.get(i * 6);
+            Vertex v2 = this.vertices.get(i * 6 + 1);
+            Vertex v3 = this.vertices.get(i * 6 + 2);
+            Vertex v4 = this.vertices.get(i * 6 + 3);
+            Vertex v5 = this.vertices.get(i * 6 + 4);
+            Vertex v6 = this.vertices.get(i * 6 + 5);
             Vector3f normal = null;
 
             if (v1.normal == 0) normal = new Vector3f(-1, 0, 0);
@@ -65,17 +67,17 @@ public class VoxBuilder
             mesh.posData[i * 18 + 7] = v3.y;
             mesh.posData[i * 18 + 8] = v3.z;
 
-            mesh.posData[i * 18 + 9] = v1.x;
-            mesh.posData[i * 18 + 10] = v1.y;
-            mesh.posData[i * 18 + 11] = v1.z;
+            mesh.posData[i * 18 + 9] = v4.x;
+            mesh.posData[i * 18 + 10] = v4.y;
+            mesh.posData[i * 18 + 11] = v4.z;
 
-            mesh.posData[i * 18 + 12] = v3.x;
-            mesh.posData[i * 18 + 13] = v3.y;
-            mesh.posData[i * 18 + 14] = v3.z;
+            mesh.posData[i * 18 + 12] = v5.x;
+            mesh.posData[i * 18 + 13] = v5.y;
+            mesh.posData[i * 18 + 14] = v5.z;
 
-            mesh.posData[i * 18 + 15] = v4.x;
-            mesh.posData[i * 18 + 16] = v4.y;
-            mesh.posData[i * 18 + 17] = v4.z;
+            mesh.posData[i * 18 + 15] = v6.x;
+            mesh.posData[i * 18 + 16] = v6.y;
+            mesh.posData[i * 18 + 17] = v6.z;
 
             for (int j = 0; j < 6; j ++)
             {
@@ -102,50 +104,62 @@ public class VoxBuilder
 
         if (!top)
         {
-            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 5));
-            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 5));
-            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 5));
             this.vertices.add(new Vertex(x, y + 1, z, voxel, 5));
+            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 5));
+            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 5));
+            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 5));
+            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 5));
+            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 5));
         }
 
         if (!bottom)
         {
-            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 4));
-            this.vertices.add(new Vertex(x, y, z + 1, voxel, 4));
             this.vertices.add(new Vertex(x, y, z, voxel, 4));
+            this.vertices.add(new Vertex(x, y, z + 1, voxel, 4));
+            this.vertices.add(new Vertex(x + 1, y, z, voxel, 4));
+            this.vertices.add(new Vertex(x, y, z + 1, voxel, 4));
+            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 4));
             this.vertices.add(new Vertex(x + 1, y, z, voxel, 4));
         }
 
         if (!left)
         {
-            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 1));
-            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 1));
-            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 1));
             this.vertices.add(new Vertex(x + 1, y, z, voxel, 1));
+            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 1));
+            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 1));
+            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 1));
+            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 1));
+            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 1));
         }
 
         if (!right)
         {
-            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 0));
-            this.vertices.add(new Vertex(x, y + 1, z, voxel, 0));
             this.vertices.add(new Vertex(x, y, z, voxel, 0));
+            this.vertices.add(new Vertex(x, y + 1, z, voxel, 0));
+            this.vertices.add(new Vertex(x, y, z + 1, voxel, 0));
+            this.vertices.add(new Vertex(x, y + 1, z, voxel, 0));
+            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 0));
             this.vertices.add(new Vertex(x, y, z + 1, voxel, 0));
         }
 
         if (!front)
         {
-            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 2));
-            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 2));
             this.vertices.add(new Vertex(x, y, z + 1, voxel, 2));
+            this.vertices.add(new Vertex(x, y  + 1, z + 1, voxel, 2));
+            this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 2));
+            this.vertices.add(new Vertex(x, y + 1, z + 1, voxel, 2));
+            this.vertices.add(new Vertex(x + 1, y + 1, z + 1, voxel, 2));
             this.vertices.add(new Vertex(x + 1, y, z + 1, voxel, 2));
         }
 
         if (!back)
         {
-            this.vertices.add(new Vertex(x, y + 1, z, voxel, 3));
-            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 3));
-            this.vertices.add(new Vertex(x + 1, y, z, voxel, 3));
             this.vertices.add(new Vertex(x, y, z, voxel, 3));
+            this.vertices.add(new Vertex(x + 1, y, z, voxel, 3));
+            this.vertices.add(new Vertex(x, y + 1, z, voxel, 3));
+            this.vertices.add(new Vertex(x, y + 1, z, voxel, 3));
+            this.vertices.add(new Vertex(x + 1, y, z, voxel, 3));
+            this.vertices.add(new Vertex(x + 1, y + 1, z, voxel, 3));
         }
     }
 

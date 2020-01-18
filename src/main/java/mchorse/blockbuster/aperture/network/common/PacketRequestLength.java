@@ -1,15 +1,15 @@
 package mchorse.blockbuster.aperture.network.common;
 
-import mchorse.blockbuster.network.common.director.PacketDirector;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.network.common.scene.PacketScene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 
-public class PacketRequestLength extends PacketDirector
+public class PacketRequestLength extends PacketScene
 {
     public PacketRequestLength()
     {}
 
-    public PacketRequestLength(BlockPos pos)
+    public PacketRequestLength(SceneLocation location)
     {
-        super(pos);
+        super(location);
     }
 }
