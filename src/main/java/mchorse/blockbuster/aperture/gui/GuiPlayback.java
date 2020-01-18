@@ -80,13 +80,20 @@ public class GuiPlayback extends GuiBase
 
         NBTTagCompound compound = Minecraft.getMinecraft().player.getHeldItemMainhand().getTagCompound();
 
-        if (compound.hasKey("CameraPlay"))
+        if (compound != null)
         {
-            this.setValue(1);
-        }
-        else if (compound.hasKey("CameraProfile"))
-        {
-            this.setValue(2, compound.getString("CameraProfile"));
+            if (compound.hasKey("CameraPlay"))
+            {
+                this.setValue(1);
+            }
+            else if (compound.hasKey("CameraProfile"))
+            {
+                this.setValue(2, compound.getString("CameraProfile"));
+            }
+            else
+            {
+                this.setValue(0);
+            }
         }
         else
         {

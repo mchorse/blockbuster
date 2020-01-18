@@ -121,6 +121,11 @@ public class ItemPlayback extends Item
             BlockPos pos = getBlockPos("Dir", stack);
             NBTTagCompound tag = stack.getTagCompound();
 
+            if (tag == null)
+            {
+                return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
+            }
+
             if (pos != null && player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
             {
                 IRecording recording = Recording.get(player);

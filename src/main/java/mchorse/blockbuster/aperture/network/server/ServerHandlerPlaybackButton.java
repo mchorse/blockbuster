@@ -17,7 +17,13 @@ public class ServerHandlerPlaybackButton extends ServerMessageHandler<PacketPlay
         ItemStack stack = player.getHeldItemMainhand();
         NBTTagCompound compound = stack.getTagCompound();
 
-        if (stack == null || !(stack.getItem() instanceof ItemPlayback) || compound == null)
+        if (compound == null)
+        {
+            compound = new NBTTagCompound();
+            stack.setTagCompound(compound);
+        }
+
+        if (stack == null || !(stack.getItem() instanceof ItemPlayback))
         {
             return;
         }
