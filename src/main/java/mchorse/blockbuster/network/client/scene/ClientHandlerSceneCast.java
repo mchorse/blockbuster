@@ -1,6 +1,5 @@
 package mchorse.blockbuster.network.client.scene;
 
-import com.sun.security.ntlm.Client;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
