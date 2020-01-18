@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director;
+package mchorse.blockbuster.recording.scene;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;

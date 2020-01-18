@@ -1,9 +1,8 @@
 package mchorse.blockbuster.network.common.scene;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class PacketSceneRecord extends PacketScene
 {
@@ -12,16 +11,9 @@ public class PacketSceneRecord extends PacketScene
     public PacketSceneRecord()
     {}
 
-    public PacketSceneRecord(BlockPos pos, String record)
+    public PacketSceneRecord(SceneLocation location, String record)
     {
-        super(pos);
-
-        this.record = record;
-    }
-
-    public PacketSceneRecord(String filename, String record)
-    {
-        super(filename);
+        super(location);
 
         this.record = record;
     }

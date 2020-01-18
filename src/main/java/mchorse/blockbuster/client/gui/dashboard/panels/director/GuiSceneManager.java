@@ -6,9 +6,10 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketSceneManage;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
-import mchorse.blockbuster.recording.director.Director;
-import mchorse.blockbuster.recording.director.Scene;
-import mchorse.blockbuster.recording.director.SceneManager;
+import mchorse.blockbuster.recording.scene.Director;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -68,7 +69,7 @@ public class GuiSceneManager extends GuiElement
 		this.blocks.add(this.directors, this.convert, this.directorModal);
 
 		/* Scene manager elements */
-		this.sceneList = new GuiStringListElement(mc, (scene) -> Dispatcher.sendToServer(new PacketSceneRequestCast(scene)));
+		this.sceneList = new GuiStringListElement(mc, (scene) -> Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(scene))));
 		this.sceneModal = new GuiDelegateElement<IGuiElement>(mc, null);
 		this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addScene());
 		this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeScene());

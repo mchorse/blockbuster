@@ -40,12 +40,12 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
             if (opened)
             {
                 dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.openScene(message.scene, message.pos);
+                dashboard.directorPanel.openScene(message.scene, message.location.getDirector());
             }
             else
             {
                 dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.setScene(message.scene, message.pos);
+                dashboard.directorPanel.setScene(message.scene, message.location.getDirector());
             }
         }
         else if (ClientProxy.dashboard != null)
@@ -57,11 +57,11 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
                 dashboard.createWorldPanels(Minecraft.getMinecraft(), false);
                 dashboard.onOpen();
                 dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.setScene(message.scene, message.pos);
+                dashboard.directorPanel.setScene(message.scene, message.location.getDirector());
             }
             else
             {
-                dashboard.directorPanel.set(message.scene, message.pos);
+                dashboard.directorPanel.set(message.scene, message.location.getDirector());
             }
         }
     }

@@ -2,9 +2,11 @@ package mchorse.blockbuster.network.common.scene;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class PacketConfirmBreak extends PacketScene
+public class PacketConfirmBreak implements IMessage
 {
+    public BlockPos pos;
     public int count;
 
     public PacketConfirmBreak()
@@ -19,14 +21,16 @@ public class PacketConfirmBreak extends PacketScene
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        super.fromBytes(buf);
+        this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
         this.count = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        super.toBytes(buf);
+        buf.writeInt(this.pos.getX());
+        buf.writeInt(this.pos.getY());
+        buf.writeInt(this.pos.getZ());
         buf.writeInt(this.count);
     }
 }

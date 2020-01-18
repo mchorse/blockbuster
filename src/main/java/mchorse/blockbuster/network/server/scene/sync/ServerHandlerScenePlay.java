@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.server.scene.sync;
 
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
-import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 

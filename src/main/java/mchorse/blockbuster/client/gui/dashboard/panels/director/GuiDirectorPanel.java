@@ -7,22 +7,21 @@ import java.util.regex.Pattern;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
-import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.recording.director.Director;
-import mchorse.blockbuster.recording.director.Replay;
+import mchorse.blockbuster.recording.scene.Director;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
-import mchorse.blockbuster.utils.L10n;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -39,16 +38,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.ClickEvent.Action;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class GuiDirectorPanel extends GuiDashboardPanel
@@ -273,7 +265,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.close();
 
-        Dispatcher.sendToServer(new PacketSceneRequestCast(pos));
+        Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(pos)));
     }
 
     public GuiDirectorPanel openScene(Scene scene, BlockPos pos)
@@ -375,11 +367,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
                     ((TileEntityDirector) te).director.copy(this.getDirector());
                 }
 
-                Dispatcher.sendToServer(new PacketSceneCast(this.pos, this.getDirector()));
+                Dispatcher.sendToServer(new PacketSceneCast(new SceneLocation(this.pos), this.getScene()));
             }
             else
             {
-                Dispatcher.sendToServer(new PacketSceneCast(this.scene));
+                Dispatcher.sendToServer(new PacketSceneCast(new SceneLocation(this.scene.getId()), this.getScene()));
             }
         }
     }
@@ -403,7 +395,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         if (this.mc != null && this.mc.thePlayer != null)
         {
-            this.attach.setVisible(this.scene != null && this.mc.thePlayer.getHeldItemMainhand().getItem() == Blockbuster.playbackItem);
+            ItemStack stack = this.mc.thePlayer.getHeldItemMainhand();
+
+            this.attach.setVisible(this.scene != null && stack != null && stack.getItem() == Blockbuster.playbackItem);
         }
 
         if (this.isDirector())
@@ -598,11 +592,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         if (this.pos != null)
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(this.pos));
+            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.pos)));
         }
         else
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(this.scene.getId()));
+            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.scene.getId())));
         }
     }
 
@@ -614,11 +608,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             if (this.pos != null && this.isDirector())
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(this.pos, replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.pos), replay.id));
             }
             else
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(this.scene.getId(), replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.scene.getId()), replay.id));
             }
         }
     }

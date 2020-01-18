@@ -22,6 +22,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -147,11 +148,11 @@ public class CameraHandler
     @SubscribeEvent
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
-        BlockPos pos = getDirectorPos();
+        SceneLocation location = get();
 
-        if (pos != null)
+        if (location != null)
         {
-            Dispatcher.sendToServer(new PacketSceneGoto(pos, event.position, CameraHandler.actions));
+            Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions));
         }
 
         GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.dashboard;
@@ -170,11 +171,11 @@ public class CameraHandler
     @SubscribeEvent
     public void onCameraPlause(CameraEditorEvent.Playback event)
     {
-        BlockPos pos = getDirectorPos();
+        SceneLocation location = get();
 
-        if (pos != null)
+        if (location != null)
         {
-            Dispatcher.sendToServer(new PacketScenePlay(pos, event.play ? PacketScenePlay.PLAY : PacketScenePlay.PAUSE, event.position));
+            Dispatcher.sendToServer(new PacketScenePlay(location, event.play ? PacketScenePlay.PLAY : PacketScenePlay.PAUSE, event.position));
         }
     }
 
@@ -265,19 +266,32 @@ public class CameraHandler
     }
 
     /**
-     * Get director block position from player's playback button
+     * Get scene location from playback button
      */
-    public static BlockPos getDirectorPos()
+    public static SceneLocation get()
     {
-        BlockPos pos = null;
-        ItemStack left = Minecraft.getMinecraft().thePlayer.getHeldItemMainhand();
+        ItemStack right = Minecraft.getMinecraft().thePlayer.getHeldItemMainhand();
 
-        if (left != null && left.getItem() instanceof ItemPlayback)
+        if (right != null && right.getItem() instanceof ItemPlayback)
         {
-            pos = ItemPlayback.getBlockPos("Dir", left);
+            BlockPos pos = ItemPlayback.getBlockPos("Dir", right);
+
+            if (pos != null)
+            {
+                return new SceneLocation(pos);
+            }
+            else if (right.getTagCompound().hasKey("Scene"))
+            {
+                return new SceneLocation(right.getTagCompound().getString("Scene"));
+            }
         }
 
-        return pos;
+        return null;
+    }
+
+    public static boolean canSync()
+    {
+        return get() != null;
     }
 
     /**
@@ -301,10 +315,10 @@ public class CameraHandler
 
             GuiScreen current = Minecraft.getMinecraft().currentScreen;
             GuiScreen toOpen = event.getGui();
-            BlockPos pos = getDirectorPos();
+            SceneLocation location = get();
             boolean toOpenCamera = toOpen instanceof GuiCameraEditor;
 
-            if (pos != null)
+            if (location != null)
             {
                 int tick = ClientProxy.getCameraEditor().scrub.value;
 
@@ -315,11 +329,11 @@ public class CameraHandler
 
                     if (CameraHandler.reload)
                     {
-                        Dispatcher.sendToServer(new PacketScenePlay(pos, PacketScenePlay.START, tick));
+                        Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.START, tick));
                     }
 
-                    Dispatcher.sendToServer(new PacketRequestLength(pos));
-                    Dispatcher.sendToServer(new PacketSceneRequestCast(pos));
+                    Dispatcher.sendToServer(new PacketRequestLength(location));
+                    Dispatcher.sendToServer(new PacketSceneRequestCast(location));
                 }
             }
 

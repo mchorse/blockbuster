@@ -12,18 +12,18 @@ public class ServerHandlerSceneRecord extends ServerMessageHandler<PacketSceneRe
     @Override
     public void run(EntityPlayerMP player, PacketSceneRecord message)
     {
-        if (message.isDirector())
+        if (message.location.isDirector())
         {
-            TileEntity te = player.worldObj.getTileEntity(message.pos);
+            TileEntity te = player.worldObj.getTileEntity(message.location.getDirector());
 
             if (te instanceof TileEntityDirector)
             {
                 ((TileEntityDirector) te).startRecording(message.record, player);
             }
         }
-        else
+        else if (message.location.isScene())
         {
-            CommonProxy.scenes.record(message.filename, message.record, player);
+            CommonProxy.scenes.record(message.location.getScene(), message.record, player);
         }
     }
 }

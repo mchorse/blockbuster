@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director.fake;
+package mchorse.blockbuster.recording.scene.fake;
 
 import java.net.SocketAddress;
 

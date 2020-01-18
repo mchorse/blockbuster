@@ -2,7 +2,7 @@ package mchorse.blockbuster.network.common.scene.sync;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.network.common.scene.PacketScene;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 
 /**
  * Packet director play
@@ -24,17 +24,9 @@ public class PacketScenePlay extends PacketScene
     public PacketScenePlay()
     {}
 
-    public PacketScenePlay(BlockPos pos, byte state, int tick)
+    public PacketScenePlay(SceneLocation location, byte state, int tick)
     {
-        super(pos);
-
-        this.state = state;
-        this.tick = tick;
-    }
-
-    public PacketScenePlay(String filename, byte state, int tick)
-    {
-        super(filename);
+        super(location);
 
         this.state = state;
         this.tick = tick;

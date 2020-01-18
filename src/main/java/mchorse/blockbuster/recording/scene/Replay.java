@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director;
+package mchorse.blockbuster.recording.scene;
 
 import com.google.common.base.Objects;
 

@@ -1,9 +1,9 @@
 package mchorse.blockbuster.network.common.scene;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.recording.director.Director;
-import mchorse.blockbuster.recording.director.Scene;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.recording.scene.Director;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 
 public class PacketSceneCast extends PacketScene
 {
@@ -13,15 +13,9 @@ public class PacketSceneCast extends PacketScene
     public PacketSceneCast()
     {}
 
-    public PacketSceneCast(BlockPos pos, Director director)
+    public PacketSceneCast(SceneLocation location, Scene scene)
     {
-        super(pos);
-        this.scene = director;
-    }
-
-    public PacketSceneCast(Scene scene)
-    {
-        super(scene.getId());
+        super(location);
         this.scene = scene;
     }
 
@@ -37,7 +31,7 @@ public class PacketSceneCast extends PacketScene
     {
         super.fromBytes(buf);
 
-        this.scene = this.isDirector() ? new Director(null) : new Scene();
+        this.scene = this.location.isDirector() ? new Director(null) : new Scene();
         this.scene.fromBuf(buf);
         this.open = buf.readBoolean();
     }

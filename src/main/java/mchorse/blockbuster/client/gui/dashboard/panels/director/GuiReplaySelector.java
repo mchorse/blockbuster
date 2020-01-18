@@ -2,11 +2,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.scene.Scene;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.recording.director.Replay;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.GuiUtils;

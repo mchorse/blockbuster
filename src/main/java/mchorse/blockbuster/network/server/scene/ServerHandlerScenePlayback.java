@@ -12,18 +12,18 @@ public class ServerHandlerScenePlayback extends ServerMessageHandler<PacketScene
     @Override
     public void run(EntityPlayerMP player, PacketScenePlayback message)
     {
-        if (message.isDirector())
+        if (message.location.isDirector())
         {
-            TileEntity te = player.worldObj.getTileEntity(message.pos);
+            TileEntity te = player.worldObj.getTileEntity(message.location.getDirector());
 
             if (te instanceof TileEntityDirector)
             {
                 ((TileEntityDirector) te).director.togglePlayback();
             }
         }
-        else
+        else if (message.location.isScene())
         {
-            CommonProxy.scenes.toggle(message.filename, player.worldObj);
+            CommonProxy.scenes.toggle(message.location.getScene(), player.worldObj);
         }
     }
 }

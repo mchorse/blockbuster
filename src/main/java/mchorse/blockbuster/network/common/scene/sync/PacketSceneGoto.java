@@ -2,7 +2,7 @@ package mchorse.blockbuster.network.common.scene.sync;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.network.common.scene.PacketScene;
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 
 /**
  * Packet director go to
@@ -18,16 +18,9 @@ public class PacketSceneGoto extends PacketScene
     public PacketSceneGoto()
     {}
 
-    public PacketSceneGoto(BlockPos pos, int tick, boolean actions)
+    public PacketSceneGoto(SceneLocation location, int tick, boolean actions)
     {
-        super(pos);
-
-        this.tick = tick;
-        this.actions = actions;
-    }
-
-    public PacketSceneGoto(String filename, int tick, boolean actions) {
-        super(filename);
+        super(location);
 
         this.tick = tick;
         this.actions = actions;

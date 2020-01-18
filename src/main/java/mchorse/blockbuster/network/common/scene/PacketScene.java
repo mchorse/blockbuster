@@ -1,44 +1,32 @@
 package mchorse.blockbuster.network.common.scene;
 
-import java.util.List;
-
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class PacketScene implements IMessage
 {
-    public BlockPos pos;
-    public String filename;
+    public SceneLocation location = new SceneLocation();
 
     public PacketScene()
     {}
 
-    public PacketScene(BlockPos pos)
+    public PacketScene(SceneLocation location)
     {
-        this.pos = pos;
+        this.location = location;
     }
-
-	public PacketScene(String filename)
-	{
-		this.filename = filename;
-	}
-
-	public boolean isDirector()
-	{
-		return this.pos != null;
-	}
 
 	public Scene get(World world)
 	{
-		if (this.isDirector())
+		if (this.location.isDirector())
 		{
+			BlockPos pos = this.location.getDirector();
 			TileEntity te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
 
 			if (te instanceof TileEntityDirector)
@@ -46,9 +34,9 @@ public abstract class PacketScene implements IMessage
 				return ((TileEntityDirector) te).director;
 			}
 		}
-		else
+		else if (this.location.isScene())
 		{
-			return CommonProxy.scenes.get(this.filename, world);
+			return CommonProxy.scenes.get(this.location.getScene(), world);
 		}
 
 		return null;
@@ -57,30 +45,12 @@ public abstract class PacketScene implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-    	if (buf.readBoolean())
-    	{
-		    this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-	    }
-    	else
-	    {
-	    	this.filename = ByteBufUtils.readUTF8String(buf);
-	    }
+		this.location.fromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-    	buf.writeBoolean(this.pos != null);
-
-    	if (this.pos != null)
-    	{
-		    buf.writeInt(this.pos.getX());
-		    buf.writeInt(this.pos.getY());
-		    buf.writeInt(this.pos.getZ());
-	    }
-    	else if (this.filename != null)
-	    {
-	    	ByteBufUtils.writeUTF8String(buf, this.filename);
-	    }
+		this.location.toByteBuf(buf);
     }
 }

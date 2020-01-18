@@ -1,19 +1,14 @@
 package mchorse.blockbuster.network.common.scene;
 
-import net.minecraft.util.math.BlockPos;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 
 public class PacketScenePlayback extends PacketScene
 {
     public PacketScenePlayback()
     {}
 
-    public PacketScenePlayback(BlockPos pos)
+    public PacketScenePlayback(SceneLocation location)
     {
-        super(pos);
-    }
-
-    public PacketScenePlayback(String filename)
-    {
-        super(filename);
+        super(location);
     }
 }

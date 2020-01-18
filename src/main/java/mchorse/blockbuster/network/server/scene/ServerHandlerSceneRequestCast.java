@@ -16,17 +16,17 @@ public class ServerHandlerSceneRequestCast extends ServerMessageHandler<PacketSc
     @Override
     public void run(EntityPlayerMP player, PacketSceneRequestCast message)
     {
-        if (message.isDirector())
+        if (message.location.isDirector())
         {
-            TileEntityDirector tile = ((TileEntityDirector) this.getTE(player, message.pos));
+            TileEntityDirector tile = ((TileEntityDirector) this.getTE(player, message.location.getDirector()));
 
-            tile.open(player, message.pos);
+            tile.open(player, message.location.getDirector());
         }
-        else
+        else if (message.location.isScene())
         {
             try
             {
-                Dispatcher.sendTo(new PacketSceneCast(CommonProxy.scenes.load(message.filename)), player);
+                Dispatcher.sendTo(new PacketSceneCast(message.location, CommonProxy.scenes.load(message.location.getScene())), player);
             }
             catch (Exception e)
             {

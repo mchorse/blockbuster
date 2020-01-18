@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director;
+package mchorse.blockbuster.recording.scene;
 
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.recording.Utils;
@@ -166,6 +166,8 @@ public class SceneManager
 			if (scene != null)
 			{
 				scene.setWorld(world);
+				scene.setSender(new SceneSender(scene));
+				this.scenes.put(filename, scene);
 			}
 		}
 		catch (Exception e)

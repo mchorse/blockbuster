@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director;
+package mchorse.blockbuster.recording.scene;
 
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
@@ -12,7 +12,7 @@ import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.recording.director.fake.FakeContext;
+import mchorse.blockbuster.recording.scene.fake.FakeContext;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;

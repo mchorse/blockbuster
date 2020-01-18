@@ -6,7 +6,7 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.recording.director.Replay;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
@@ -41,7 +41,7 @@ public class GuiRecordList extends GuiElement
     public void add(List<String> records)
     {
         List<Replay> replays = ClientProxy.dashboard.directorPanel.getReplays();
-        boolean loadAll = replays == null || CameraHandler.getDirectorPos() == null || !(Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor);
+        boolean loadAll = replays == null || !CameraHandler.canSync() || !(Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor);
 
         if (loadAll)
         {

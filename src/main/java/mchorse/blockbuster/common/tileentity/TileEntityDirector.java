@@ -5,13 +5,14 @@ import java.util.List;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.common.block.BlockDirector;
-import mchorse.blockbuster.recording.director.Director;
-import mchorse.blockbuster.recording.director.DirectorSender;
-import mchorse.blockbuster.recording.director.Replay;
+import mchorse.blockbuster.recording.scene.Director;
+import mchorse.blockbuster.recording.scene.DirectorSender;
+import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -258,7 +259,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     {
         if (player instanceof EntityPlayerMP)
         {
-            Dispatcher.sendTo(new PacketSceneCast(pos, this.director), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(pos), this.director), (EntityPlayerMP) player);
         }
     }
 

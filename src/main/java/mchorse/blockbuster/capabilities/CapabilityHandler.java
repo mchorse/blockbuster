@@ -14,7 +14,8 @@ import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
-import mchorse.blockbuster.recording.director.Scene;
+import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -77,7 +78,7 @@ public class CapabilityHandler
 
             if (scene != null)
             {
-                Dispatcher.sendTo(new PacketSceneCast(scene).open(false), player);
+                Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(scene.getId()), scene).open(false), player);
             }
         }
     }

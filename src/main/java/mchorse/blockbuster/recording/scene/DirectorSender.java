@@ -1,4 +1,4 @@
-package mchorse.blockbuster.recording.director;
+package mchorse.blockbuster.recording.scene;
 
 import net.minecraft.command.CommandResultStats.Type;
 import net.minecraft.command.ICommandSender;

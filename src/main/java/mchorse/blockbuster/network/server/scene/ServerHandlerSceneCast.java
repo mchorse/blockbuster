@@ -4,8 +4,7 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
-import mchorse.blockbuster.recording.data.Record;
-import mchorse.blockbuster.recording.director.Director;
+import mchorse.blockbuster.recording.scene.Director;
 import mchorse.mclib.network.ServerMessageHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -15,9 +14,9 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
     @Override
     public void run(EntityPlayerMP player, PacketSceneCast message)
     {
-        if (message.isDirector())
+        if (message.location.isDirector())
         {
-            TileEntity tile = this.getTE(player, message.pos);
+            TileEntity tile = this.getTE(player, message.location.getDirector());
 
             if (tile instanceof TileEntityDirector)
             {
@@ -27,12 +26,12 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
 
             Recording.get(player).setLastScene("");
         }
-        else
+        else if (message.location.isScene())
         {
             try
             {
-                CommonProxy.scenes.save(message.filename, message.scene);
-                Recording.get(player).setLastScene(message.filename);
+                CommonProxy.scenes.save(message.location.getScene(), message.scene);
+                Recording.get(player).setLastScene(message.location.getScene());
             }
             catch (Exception e)
             {
