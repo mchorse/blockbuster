@@ -57,6 +57,7 @@ blockbuster.error:
         empty_record: "{f}Given player recording %s{f} is empty!"
         not_exist_iteration: "{f}Given player recording by name %s{f}'s iteration %s{f} doesn't exist!"
         cant_restore: "{f}Can't restore an iteration because temporary file exists while it shouldn't be..."
+        wrong_axis: "{f}Given \"%s{f}\" is not a valid axis. It should be either {7}x{r} or {7}z{r}!"
 
     # Recording errors
     recording:

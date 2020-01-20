@@ -37,8 +37,8 @@ public class GuiItemUseBlockActionPanel extends GuiItemUseActionPanel<ItemUseBlo
             this.action.hitZ = values[2];
         });
 
-        this.hit.resizer().set(0, -25, 100, 20).relative(this.hand.resizer());
-        this.block.resizer().set(0, -25, 100, 20).relative(this.hit.resizer());
+        this.hit.resizer().set(0, -25, 200, 20).relative(this.hand.resizer());
+        this.block.resizer().set(0, -25, 200, 20).relative(this.hit.resizer());
         this.facing.resizer().set(0, -25, 70, 20).relative(this.block.resizer());
 
         this.children.add(this.facing, this.block, this.hit);

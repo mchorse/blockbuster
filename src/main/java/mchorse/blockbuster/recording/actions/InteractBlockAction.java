@@ -67,8 +67,8 @@ public class InteractBlockAction extends Action
     {
         /* I don't like wasting variables */
         firstX = this.pos.getX() - firstX;
-        firstX = this.pos.getY() - firstY;
-        firstX = this.pos.getZ() - firstZ;
+        firstY = this.pos.getY() - firstY;
+        firstZ = this.pos.getZ() - firstZ;
 
         if (rotation != 0)
         {
@@ -87,6 +87,25 @@ public class InteractBlockAction extends Action
         newZ += firstZ;
 
         this.pos = new BlockPos(newX, newY, newZ);
+    }
+
+    @Override
+    public void flip(String axis, double coordinate)
+    {
+        coordinate = Math.floor(coordinate);
+
+        if (axis.equals("x"))
+        {
+            double diff = coordinate - this.pos.getX();
+
+            this.pos = new BlockPos(coordinate + diff, this.pos.getY(), this.pos.getZ());
+        }
+        else
+        {
+            double diff = coordinate - this.pos.getZ();
+
+            this.pos = new BlockPos(this.pos.getX(), this.pos.getY(), coordinate + diff);
+        }
     }
 
     @Override

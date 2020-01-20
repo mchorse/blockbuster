@@ -42,6 +42,12 @@ blockbuster:
 
                     {r}This command fades out {7}<filename>{r} player recording to the first frame using linear interpolation that fades {7}<fade_out>{r} ticks.
 
+            flip:
+                |
+                {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate>{r}
+
+                {r}This command flips frames and actions of {7}<filename>{r} player recording across given {7}<axis>{r} at given {7}<coordinate{r}.
+
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}

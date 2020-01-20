@@ -95,6 +95,27 @@ public class ItemUseBlockAction extends ItemUseAction
     }
 
     @Override
+    public void flip(String axis, double coordinate)
+    {
+        coordinate = Math.floor(coordinate);
+
+        if (axis.equals("x"))
+        {
+            double diff = coordinate - this.pos.getX();
+
+            this.hitX = 1 - this.hitX;
+            this.pos = new BlockPos(coordinate + diff, this.pos.getY(), this.pos.getZ());
+        }
+        else
+        {
+            double diff = coordinate - this.pos.getZ();
+
+            this.hitZ = 1 - this.hitZ;
+            this.pos = new BlockPos(this.pos.getX(), this.pos.getY(), coordinate + diff);
+        }
+    }
+
+    @Override
     public void fromBuf(ByteBuf buf)
     {
         super.fromBuf(buf);

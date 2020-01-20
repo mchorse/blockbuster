@@ -263,7 +263,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @Override
     public boolean canMerge(AbstractMorph morph, boolean isRemote)
     {
-        /* TODO: rewrite to  */
         if (morph instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) morph;
