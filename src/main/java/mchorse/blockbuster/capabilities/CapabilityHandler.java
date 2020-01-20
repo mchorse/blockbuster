@@ -78,7 +78,7 @@ public class CapabilityHandler
 
             if (scene != null)
             {
-                Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(scene.getId()), scene).open(false), player);
+                Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(scene)).open(false), player);
             }
         }
     }

@@ -13,7 +13,6 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -78,9 +77,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiDelegateElement<IGuiElement> popup;
     public GuiSceneManager scenes;
 
-    private Scene scene;
+    private SceneLocation location = new SceneLocation();
     private Replay replay;
-    private BlockPos pos;
 
     /**
      * Try adding a block position, if it doesn't exist in list already 
@@ -117,12 +115,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.subChildren.add(this.mainView);
 
         /* Config options */
-        this.title = new GuiTextElement(mc, 80, (str) -> this.scene.title = str);
-        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.scene.startCommand = str);
-        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.scene.stopCommand = str);
-        this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.scene.loops = b.button.isChecked());
-        this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.getDirector().disableStates = b.button.isChecked());
-        this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.getDirector().hide = b.button.isChecked());
+        this.title = new GuiTextElement(mc, 80, (str) -> this.location.getScene().title = str);
+        this.startCommand = new GuiTextElement(mc, 10000, (str) -> this.location.getScene().startCommand = str);
+        this.stopCommand = new GuiTextElement(mc, 10000, (str) -> this.location.getScene().stopCommand = str);
+        this.loops = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), false, (b) -> this.location.getScene().loops = b.button.isChecked());
+        this.disableStates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.disable_states"), false, (b) -> this.location.getDirector().disableStates = b.button.isChecked());
+        this.hide = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.button.isChecked());
         this.attach = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.attach"), (b) -> this.attach()).tooltip(I18n.format("blockbuster.gui.director.attach_tooltip"), TooltipDirection.BOTTOM);
 
         this.title.resizer().set(10, 50, 0, 20).parent(this.area).w(1, -20);
@@ -131,9 +129,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
-        this.attach.resizer().parent(this.area).set(0, 4, 60, 20).x(1, -104);
+        this.attach.resizer().set(10, 130, 80, 20).parent(this.area).x(1, -90);
 
-        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand, this.attach);
+        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
@@ -156,7 +154,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.teleportBack.resizer().set(0, 16, this.teleportBack.button.width, 11).relative(this.fake.resizer());
         this.health.resizer().set(0, 30, 80, 20).parent(this.area).x(1, -90);
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.health);
+        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.health, this.attach);
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
@@ -222,29 +220,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.children.add(this.dashboard.morphDelegate);
     }
 
-    public boolean isDirector()
+    public SceneLocation getLocation()
     {
-        return this.scene instanceof Director && this.pos != null;
-    }
-
-    public boolean isScene()
-    {
-        return this.scene instanceof Scene && this.pos == null;
-    }
-
-    public Director getDirector()
-    {
-        return this.isDirector() ? (Director) this.scene : null;
-    }
-
-    public Scene getScene()
-    {
-        return this.scene;
-    }
-
-    public BlockPos getPos()
-    {
-        return this.pos;
+        return this.location;
     }
 
     public Replay getReplay()
@@ -254,12 +232,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public List<Replay> getReplays()
     {
-        if (this.scene == null)
+        if (this.location.isEmpty())
         {
             return null;
         }
 
-        return this.scene.replays;
+        return this.getLocation().getScene().replays;
     }
 
     public void pickDirector(BlockPos pos)
@@ -269,39 +247,38 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(pos)));
     }
 
-    public GuiDirectorPanel openScene(Scene scene, BlockPos pos)
+    public GuiDirectorPanel openScene(SceneLocation location)
     {
-        if (pos != null) tryAddingBlock(pos);
+        if (location.isDirector()) tryAddingBlock(location.getPosition());
         this.scenes.setVisible(false);
 
-        return this.setScene(scene, pos);
+        return this.setScene(location);
     }
 
-    public GuiDirectorPanel setScene(Scene scene, BlockPos pos)
+    public GuiDirectorPanel setScene(SceneLocation location)
     {
-        this.scene = scene;
-        this.pos = pos;
+        this.location = location == null ? new SceneLocation() : location;
 
         this.updateList();
-        this.subChildren.setVisible(scene != null);
-        this.replayEditor.setVisible(scene != null);
-        this.hide.setVisible(this.isDirector());
-        this.disableStates.setVisible(this.isDirector());
+        this.subChildren.setVisible(!location.isEmpty());
+        this.replayEditor.setVisible(!location.isEmpty());
+        this.hide.setVisible(this.location.isDirector());
+        this.disableStates.setVisible(this.location.isDirector());
 
-        if (scene == null)
+        if (location.isEmpty())
         {
             this.setReplay(null);
 
             return this;
         }
 
-        this.selector.setScene(scene);
+        this.selector.setScene(location.getScene());
 
-        if (!this.scene.replays.isEmpty())
+        if (!this.location.getScene().replays.isEmpty())
         {
-            int current = this.scene.replays.indexOf(this.replay);
+            int current = this.location.getScene().replays.indexOf(this.replay);
 
-            this.setReplay(this.scene.replays.get(current == -1 ? 0 : current));
+            this.setReplay(this.location.getScene().replays.get(current == -1 ? 0 : current));
         }
         else
         {
@@ -313,10 +290,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         return this;
     }
 
-    public GuiDirectorPanel set(Scene scene, BlockPos pos)
+    public GuiDirectorPanel set(SceneLocation location)
     {
-        this.scene = scene;
-        this.pos = pos;
+        this.location = location;
         this.updateList();
 
         return this;
@@ -329,50 +305,50 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
         this.dashboard.morphDelegate.resize(this.dashboard.width, this.dashboard.height);
 
-        if (this.scene != null)
+        if (!this.location.isEmpty())
         {
-            this.setScene(this.scene, this.pos);
+            this.setScene(this.location);
         }
     }
 
     @Override
     public void open()
     {
+        this.scenes.setScene(this.location.getScene());
         this.scenes.updateSceneList();
-        this.scenes.setScene(this.scene);
 
         /* Resetting the current scene block, if it was removed from the
          * world */
-        if (this.pos != null && this.mc.theWorld.getTileEntity(this.pos) == null)
+        if (this.location.isDirector() && this.mc.theWorld.getTileEntity(this.location.getPosition()) == null)
         {
-            this.setScene(null, null);
+            this.setScene(new SceneLocation());
         }
     }
 
     @Override
     public void close()
     {
-        if (this.scene != null)
+        if (!this.location.isEmpty())
         {
             if (this.replay != null)
             {
                 this.dashboard.morphs.finish();
             }
 
-            if (this.isDirector())
+            if (this.location.isDirector())
             {
-                TileEntity te = this.mc.theWorld.getTileEntity(this.pos);
+                TileEntity te = this.mc.theWorld.getTileEntity(this.location.getPosition());
 
                 if (te instanceof TileEntityDirector)
                 {
-                    ((TileEntityDirector) te).director.copy(this.getDirector());
+                    ((TileEntityDirector) te).director.copy(this.location.getDirector());
                 }
 
-                Dispatcher.sendToServer(new PacketSceneCast(new SceneLocation(this.pos), this.getScene()));
+                Dispatcher.sendToServer(new PacketSceneCast(this.location));
             }
-            else
+            else if (this.location.isScene())
             {
-                Dispatcher.sendToServer(new PacketSceneCast(new SceneLocation(this.scene.getId()), this.getScene()));
+                Dispatcher.sendToServer(new PacketSceneCast(this.location));
             }
         }
     }
@@ -388,23 +364,23 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void fillData()
     {
-        this.title.setText(this.scene.title);
-        this.startCommand.setText(this.scene.startCommand);
-        this.stopCommand.setText(this.scene.stopCommand);
-        this.loops.button.setIsChecked(this.scene.loops);
-        this.attach.setVisible(false);
+        this.title.setText(this.location.getScene().title);
+        this.startCommand.setText(this.location.getScene().startCommand);
+        this.stopCommand.setText(this.location.getScene().stopCommand);
+        this.loops.button.setIsChecked(this.location.getScene().loops);
+        this.attach.setEnabled(false);
 
         if (this.mc != null && this.mc.thePlayer != null)
         {
             ItemStack stack = this.mc.thePlayer.getHeldItemMainhand();
 
-            this.attach.setVisible(this.scene != null && stack != null && stack.getItem() instanceof ItemPlayback);
+            this.attach.setEnabled(!this.location.isEmpty() && stack != null && stack.getItem() instanceof ItemPlayback);
         }
 
-        if (this.isDirector())
+        if (this.location.isDirector())
         {
-            this.disableStates.button.setIsChecked(this.getDirector().disableStates);
-            this.hide.button.setIsChecked(this.getDirector().hide);
+            this.disableStates.button.setIsChecked(this.location.getDirector().disableStates);
+            this.hide.button.setIsChecked(this.location.getDirector().hide);
         }
     }
 
@@ -435,12 +411,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         Replay replay = new Replay("");
 
-        if (this.isScene())
+        if (this.location.isScene())
         {
-            replay.id = this.scene.getNextSuffix(this.scene.getId());
+            replay.id = this.location.getScene().getNextSuffix(this.location.getScene().getId());
         }
 
-        this.scene.replays.add(replay);
+        this.location.getScene().replays.add(replay);
         this.setReplay(replay);
         this.selector.update();
     }
@@ -450,11 +426,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
      */
     private void dupeReplay()
     {
-        if (this.scene.dupe(this.scene.replays.indexOf(this.replay), true))
+        Scene scene = this.location.getScene();
+
+        if (scene.dupe(scene.replays.indexOf(this.replay), true))
         {
             this.selector.update();
 
-            this.setReplay(this.scene.replays.get(this.scene.replays.size() - 1));
+            this.setReplay(scene.replays.get(scene.replays.size() - 1));
             this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
         }
     }
@@ -464,10 +442,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
      */
     private void removeReplay()
     {
-        this.scene.replays.remove(this.replay);
-        int size = this.scene.replays.size();
+        Scene scene = this.location.getScene();
 
-        this.setReplay(size == 0 ? null : this.scene.replays.get(size - 1));
+        scene.replays.remove(this.replay);
+        int size = scene.replays.size();
+
+        this.setReplay(size == 0 ? null : scene.replays.get(size - 1));
         this.selector.update();
     }
 
@@ -481,7 +461,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void updateList()
     {
-        this.scenes.setScene(this.scene);
+        this.scenes.setScene(this.location.getScene());
         this.scenes.updateList(lastBlocks);
     }
 
@@ -489,13 +469,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         GuiPlayback playback = new GuiPlayback();
 
-        if (this.isDirector())
+        if (this.location.isDirector())
         {
-            playback.setDirector(this.pos);
+            playback.setDirector(this.location.getPosition());
         }
-        else if (this.isScene())
+        else if (this.location.isScene())
         {
-            playback.setScene(this.scene.getId());
+            playback.setScene(this.location.getFilename());
         }
 
         this.dashboard.close();
@@ -524,7 +504,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     private void renamePrefix(String newPrefix)
     {
-        this.scene.renamePrefix(newPrefix);
+        this.location.getScene().renamePrefix(newPrefix);
         this.fillReplayData();
     }
 
@@ -579,7 +559,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);
         }
 
-        if (this.scene == null)
+        if (this.location.isEmpty())
         {
             String no = I18n.format("blockbuster.gui.director.not_selected");
 
@@ -591,13 +571,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public void plause()
     {
-        if (this.pos != null)
+        if (this.location.isDirector())
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.pos)));
+            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.location.getPosition())));
         }
-        else
+        else if (this.location.isScene())
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.scene.getId())));
+            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.location.getFilename())));
         }
     }
 
@@ -607,13 +587,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         if (replay != null && !replay.id.isEmpty())
         {
-            if (this.pos != null && this.isDirector())
+            if (this.location.isDirector())
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.pos), replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.location.getPosition()), replay.id));
             }
-            else
+            else if (this.location.isScene())
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.scene.getId()), replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.location.getFilename()), replay.id));
             }
         }
     }

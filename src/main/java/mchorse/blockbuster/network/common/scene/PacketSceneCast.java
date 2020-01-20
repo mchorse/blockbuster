@@ -1,22 +1,18 @@
 package mchorse.blockbuster.network.common.scene;
 
 import io.netty.buffer.ByteBuf;
-import mchorse.blockbuster.recording.scene.Director;
-import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 
 public class PacketSceneCast extends PacketScene
 {
-    public Scene scene;
     public boolean open = true;
 
     public PacketSceneCast()
     {}
 
-    public PacketSceneCast(SceneLocation location, Scene scene)
+    public PacketSceneCast(SceneLocation location)
     {
         super(location);
-        this.scene = scene;
     }
 
     public PacketSceneCast open(boolean open)
@@ -31,8 +27,6 @@ public class PacketSceneCast extends PacketScene
     {
         super.fromBytes(buf);
 
-        this.scene = this.location.isDirector() ? new Director(null) : new Scene();
-        this.scene.fromBuf(buf);
         this.open = buf.readBoolean();
     }
 
@@ -41,7 +35,6 @@ public class PacketSceneCast extends PacketScene
     {
         super.toBytes(buf);
 
-        this.scene.toBuf(buf);
         buf.writeBoolean(this.open);
     }
 }
