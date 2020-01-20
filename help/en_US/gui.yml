@@ -228,7 +228,7 @@ blockbuster.gui:
         nothing: Do nothing
         play: Play only
         load_profile: Load and play
-    
+
     builder:
         pose_editor: Pose editor
         body_part: Body part
@@ -250,7 +250,15 @@ blockbuster.gui:
         ignored: Ignored
         animation_duration: Duration
         pick_interpolation: Pick interpolation
-        
+
+    image:
+        crop: Crop
+        left: Left
+        right: Right
+        top: Top
+        bottom: Bottom
+        dimensions: "Size (%spx, %spx)"
+
     sequencer:
         duration: Duration
         random: Random
