@@ -19,6 +19,11 @@ public class BlockbusterConfig
     /* General */
 
     /**
+     * Whether first time modal should be shown in the dashboard
+     */
+    public boolean show_first_time_modal;
+
+    /**
      * Is teleport feature disabled when you sneak and using the playback button?
      */
     public boolean disable_teleport_playback_button;
@@ -179,6 +184,7 @@ public class BlockbusterConfig
         String model = "model_block";
 
         /* General */
+        this.show_first_time_modal = this.getBoolean("show_first_time_modal", general, true, "Whether first time modal should be shown in the dashboard");
         this.disable_teleport_playback_button = this.getBoolean("disable_teleport_playback_button", general, false, "Is teleport feature disabled when you sneak and using the playback button?");
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");

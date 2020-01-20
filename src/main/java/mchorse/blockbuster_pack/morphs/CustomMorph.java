@@ -18,6 +18,7 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -123,6 +124,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         this.settings = this.settings.clone();
         this.settings.hands = true;
+    }
+
+    public void changeModel(String model)
+    {
+        if (Blockbuster.proxy.models.models.get(model) == null)
+        {
+            return;
+        }
+
+        this.name = "blockbuster." + model;
+        this.key = null;
+        this.model = Blockbuster.proxy.models.models.get(model).model;
     }
 
     @Override
@@ -409,6 +422,15 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @Override
     public boolean canMerge(AbstractMorph morph, boolean isRemote)
     {
+        if (morph instanceof SequencerMorph)
+        {
+            SequencerMorph sequencer = (SequencerMorph) morph;
+
+            sequencer.currentMorph.setDirect(this);
+
+            return false;
+        }
+
         if (morph instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) morph;

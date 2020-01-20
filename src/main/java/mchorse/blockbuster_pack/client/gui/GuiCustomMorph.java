@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -132,6 +133,8 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     public static class GuiCustomMorphPanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph>
     {
         /* General options */
+        public GuiStringListElement models;
+        public GuiButtonElement<GuiButton> model;
         public GuiTexturePicker textures;
         public GuiButtonElement<GuiButton> skin;
         public GuiButtonElement<GuiButton> reset;
@@ -150,6 +153,15 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             super(mc, editor);
 
             /* General options */
+            this.models = new GuiStringListElement(mc, (string) ->
+            {
+                this.morph.changeModel(string);
+                this.editor.updateModelRenderer();
+            });
+            this.models.setBackground();
+
+            this.model = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
+
             this.textures = new GuiTexturePicker(mc, (rl) ->
             {
                 this.morph.skin = rl;
@@ -218,11 +230,13 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.morph.animation.interp = interp;
             });
 
-            this.skin.resizer().parent(this.area).set(10, 10, 105, 20);
+            this.model.resizer().parent(this.area).parent(this.area).set(10, 10, 105, 20);
+            this.skin.resizer().relative(this.model.resizer()).set(0, 25, 105, 20);
             this.reset.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
             this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -21);
-            this.poses.resizer().parent(this.area).set(10, 75, 105, 0).h(1, -100);
+            this.poses.resizer().parent(this.area).set(10, 100, 105, 0).h(1, -125);
             this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+            this.models.resizer().relative(this.model.resizer()).set(0, 20, 0, 120).w(1, 0);
             this.scale.resizer().parent(this.area).set(10, 10, 105, 20).x(1, -115).y(1, -50);
             this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
@@ -232,15 +246,21 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.pickInterpolation.resizer().relative(this.animationDuration.resizer()).set(0, 0, 100, 20).y(1, 5);
             this.interpolations.resizer().relative(this.pickInterpolation.resizer()).set(0, 20, 100, 96);
 
-            this.children.add(this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui);
+            this.children.add(this.model, this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui);
             this.children.add(this.animates, this.ignored, this.animationDuration, this.pickInterpolation, this.interpolations);
-            this.children.add(this.textures);
+            this.children.add(this.models, this.textures);
         }
 
         @Override
         public void fillData(CustomMorph morph)
         {
             super.fillData(morph);
+
+            this.models.setVisible(false);
+            this.models.clear();
+            this.models.add(Blockbuster.proxy.models.models.keySet());
+            this.models.sort();
+            this.models.setCurrentScroll(morph.getKey());
 
             this.textures.setVisible(false);
             this.poseOnSneak.button.setIsChecked(morph.currentPoseOnSneak);
@@ -431,7 +451,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         {
             super.renderModel(dummy, headYaw, headPitch, timer, yaw, pitch, partialTicks, factor);
 
-            LayerBodyPart.renderBodyParts(dummy, this.morph, this.model, partialTicks, factor);
+            LayerBodyPart.renderBodyParts(dummy, this.morph, this.model, 0, 0, partialTicks, dummy.ticksExisted + partialTicks, headYaw, headPitch, factor);
         }
 
         @Override

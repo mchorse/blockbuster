@@ -64,6 +64,12 @@ public class Blockbuster
     public static final String VERSION = "%VERSION%";
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
+    public static final String WIKI_URL = "https://github.com/mchorse/blockbuster/wiki/";
+    public static final String DISCORD_URL = "https://discord.gg/qfxrqUF";
+    public static final String CHANNEL_URL = "https://www.youtube.com/c/McHorsesMods";
+    public static final String TWITTER_URL = "https://twitter.com/McHorsy";
+    public static final String TUTORIAL_URL = "https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2&t=0s";
+
     /* Proxies */
     public static final String CLIENT_PROXY = "mchorse.blockbuster.ClientProxy";
     public static final String SERVER_PROXY = "mchorse.blockbuster.CommonProxy";

@@ -259,7 +259,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     {
         if (player instanceof EntityPlayerMP)
         {
-            Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(pos), this.director), (EntityPlayerMP) player);
+            Dispatcher.sendTo(new PacketSceneCast(new SceneLocation(this.director, this.pos)), (EntityPlayerMP) player);
         }
     }
 

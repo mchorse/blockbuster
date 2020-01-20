@@ -24,6 +24,9 @@ public abstract class Action
     public void changeOrigin(double rotation, double newX, double newY, double newZ, double firstX, double firstY, double firstZ)
     {}
 
+    public void flip(String axis, double coordinate)
+    {}
+
     /**
      * Persist action from byte buffer. Used for sending the action 
      * over the network.

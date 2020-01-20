@@ -7,6 +7,7 @@ import java.util.Objects;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
@@ -28,7 +29,7 @@ import org.lwjgl.opengl.GL11;
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph
+public class SequencerMorph extends AbstractMorph implements IMorphProvider
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -70,6 +71,12 @@ public class SequencerMorph extends AbstractMorph
         super();
 
         this.name = "sequencer";
+    }
+
+    @Override
+    public AbstractMorph getMorph()
+    {
+        return this.currentMorph.get();
     }
 
     @Override
@@ -251,6 +258,39 @@ public class SequencerMorph extends AbstractMorph
         }
 
         return result;
+    }
+
+    @Override
+    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    {
+        if (morph instanceof CustomMorph)
+        {
+            CustomMorph custom = (CustomMorph) morph;
+
+            custom.canMerge(this.currentMorph.get(), isRemote);
+
+            return false;
+        }
+
+        if (morph instanceof SequencerMorph)
+        {
+            SequencerMorph sequencer = (SequencerMorph) morph;
+
+            this.current = 0;
+            this.morphs.clear();
+
+            for (SequenceEntry entry : sequencer.morphs)
+            {
+                this.morphs.add(entry.clone());
+            }
+
+            this.reverse = sequencer.reverse;
+            this.random = sequencer.random;
+
+            return true;
+        }
+
+        return super.canMerge(morph, isRemote);
     }
 
     @Override

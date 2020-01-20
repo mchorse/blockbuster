@@ -94,7 +94,7 @@ public class GuiSceneManager extends GuiElement
 
 	private void convertScene()
 	{
-		if (!this.parent.isDirector()) return;
+		if (!this.parent.getLocation().isDirector()) return;
 
 		this.directorModal.setDelegate(new GuiPromptModal(mc, this.directorModal, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
 		{
@@ -103,13 +103,13 @@ public class GuiSceneManager extends GuiElement
 			Scene scene = new Scene();
 
 			scene.setId(name);
-			scene.copy(this.parent.getDirector());
+			scene.copy(this.parent.getLocation().getDirector());
 			scene.setupIds();
 			this.sceneList.add(name);
 			this.sceneList.sort();
 			this.sceneList.setCurrent(name);
 
-			this.parent.setScene(scene, null);
+			this.parent.setScene(new SceneLocation(scene));
 		}));
 	}
 
@@ -126,13 +126,13 @@ public class GuiSceneManager extends GuiElement
 			this.sceneList.sort();
 			this.sceneList.setCurrent(name);
 
-			this.parent.setScene(scene, null);
+			this.parent.setScene(new SceneLocation(scene));
 		}));
 	}
 
 	private void dupeScene()
 	{
-		if (!this.parent.isScene()) return;
+		if (!this.parent.getLocation().isScene()) return;
 
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.dupe_modal"), (name) ->
 		{
@@ -140,58 +140,59 @@ public class GuiSceneManager extends GuiElement
 
 			Scene scene = new Scene();
 
-			scene.copy(this.parent.getScene());
+			scene.copy(this.parent.getLocation().getScene());
 			scene.setId(name);
 			scene.setupIds();
 			this.sceneList.add(name);
 			this.sceneList.sort();
 			this.sceneList.setCurrent(name);
 
-			this.parent.setScene(scene, null);
+			this.parent.setScene(new SceneLocation(scene));
 			this.parent.close();
 		});
 
-		modal.setValue(this.parent.getScene().getId());
+		modal.setValue(this.parent.getLocation().getFilename());
 		this.sceneModal.setDelegate(modal);
 	}
 
 	private void renameScene()
 	{
-		if (!this.parent.isScene()) return;
+		if (!this.parent.getLocation().isScene()) return;
 
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.rename_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
-			String old = this.parent.getScene().getId();
+			String old = this.parent.getLocation().getFilename();
 
 			this.sceneList.remove(old);
-			this.parent.getScene().setId(name);
+			this.parent.getLocation().getScene().setId(name);
 			this.sceneList.add(name);
 			this.sceneList.sort();
 			this.sceneList.setCurrent(name);
+			this.parent.setScene(new SceneLocation(this.parent.getLocation().getScene()));
 
 			Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.REMOVE));
 		});
 
-		modal.setValue(this.parent.getScene().getId());
+		modal.setValue(this.parent.getLocation().getFilename());
 		this.sceneModal.setDelegate(modal);
 	}
 
 	private void removeScene()
 	{
-		if (!this.parent.isScene()) return;
+		if (!this.parent.getLocation().isScene()) return;
 
 		this.sceneModal.setDelegate(new GuiConfirmModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.remove_modal"), (value) ->
 		{
 			if (!value) return;
 
-			String name = this.parent.getScene().getId();
+			String name = this.parent.getLocation().getFilename();
 
 			this.sceneList.remove(name);
 			this.sceneList.update();
 			this.sceneList.setCurrent(null);
-			this.parent.setScene(null, null);
+			this.parent.setScene(new SceneLocation());
 
 			Dispatcher.sendToServer(new PacketSceneManage(name, "", PacketSceneManage.REMOVE));
 		}));
@@ -205,6 +206,15 @@ public class GuiSceneManager extends GuiElement
 
 		this.blocks.setVisible(isDirector);
 		this.scenes.setVisible(!isDirector);
+
+		if (scene instanceof Director)
+		{
+			this.sceneList.setCurrent("");
+		}
+		else if (scene instanceof Scene)
+		{
+			this.sceneList.setCurrent(scene.getId());
+		}
 	}
 
 	public void updateList(List<BlockPos> blocks)
@@ -216,13 +226,13 @@ public class GuiSceneManager extends GuiElement
 			this.directors.addBlock(pos);
 		}
 
-		if (this.parent.isDirector())
+		if (this.parent.getLocation().isDirector())
 		{
 			for (TileEntityDirector tile : this.directors.getList())
 			{
 				BlockPos pos = tile.getPos();
 
-				if (pos.equals(this.parent.getPos()))
+				if (pos.equals(this.parent.getLocation().getPosition()))
 				{
 					this.directors.setCurrent(tile);
 
@@ -240,11 +250,6 @@ public class GuiSceneManager extends GuiElement
 	public void add(List<String> scenes)
 	{
 		String current = this.sceneList.getCurrent();
-
-		if (this.parent.isScene())
-		{
-			current = this.parent.getScene().getId();
-		}
 
 		this.sceneList.clear();
 		this.sceneList.add(scenes);

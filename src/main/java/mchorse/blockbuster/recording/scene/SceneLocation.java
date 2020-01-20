@@ -11,74 +11,133 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class SceneLocation
 {
-	private BlockPos director;
-	private String scene;
+	private Scene scene;
+	private BlockPos position;
+	private String filename;
 
 	public SceneLocation()
 	{}
 
-	public SceneLocation(BlockPos director)
-	{
-		this.director = director;
-	}
-
-	public SceneLocation(String scene)
+	public SceneLocation(Director scene, BlockPos position)
 	{
 		this.scene = scene;
+		this.position = position;
 	}
 
-	public BlockPos getDirector()
+	public SceneLocation(Scene scene)
 	{
-		return this.director;
+		this.scene = scene;
+		this.filename = scene.getId();
 	}
 
-	public String getScene()
+	public SceneLocation(BlockPos position)
+	{
+		this.position = position;
+	}
+
+	public SceneLocation(String filename)
+	{
+		this.filename = filename;
+	}
+
+	public Scene getScene()
 	{
 		return this.scene;
 	}
 
+	public Director getDirector()
+	{
+		return this.isDirector() ? (Director) this.scene : null;
+	}
+
+	public BlockPos getPosition()
+	{
+		return this.position;
+	}
+
+	public String getFilename()
+	{
+		return this.filename;
+	}
+
+	public boolean isEmpty()
+	{
+		return this.scene == null;
+	}
+
 	public boolean isScene()
 	{
-		return this.scene != null && !this.scene.isEmpty();
+		return this.filename != null && !this.filename.isEmpty();
 	}
 
 	public boolean isDirector()
 	{
-		return this.director != null;
+		return this.position != null;
+	}
+
+	public SceneLocation empty()
+	{
+		if (this.isDirector())
+		{
+			return new SceneLocation(this.getPosition());
+		}
+		else if (this.isScene())
+		{
+			return new SceneLocation(this.getFilename());
+		}
+
+		return new SceneLocation();
 	}
 
 	public void fromByteBuf(ByteBuf buf)
 	{
-		this.director = null;
-		this.scene = null;
+		this.position = null;
+		this.filename = null;
 
 		if (buf.readBoolean())
 		{
-			this.director = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+			this.position = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		}
 
 		if (buf.readBoolean())
 		{
-			this.scene = ByteBufUtils.readUTF8String(buf);
+			this.filename = ByteBufUtils.readUTF8String(buf);
+		}
+
+		if (buf.readBoolean())
+		{
+			this.scene = this.isDirector() ? new Director(null) : (this.isScene() ? new Scene() : null);
+
+			if (this.scene != null)
+			{
+				this.scene.fromBuf(buf);
+			}
 		}
 	}
 
 	public void toByteBuf(ByteBuf buf)
 	{
-		buf.writeBoolean(this.director != null);
+		buf.writeBoolean(this.position != null);
 
-		if (this.director != null)
+		if (this.position != null)
 		{
-			buf.writeInt(this.director.getX());
-			buf.writeInt(this.director.getY());
-			buf.writeInt(this.director.getZ());
+			buf.writeInt(this.position.getX());
+			buf.writeInt(this.position.getY());
+			buf.writeInt(this.position.getZ());
+		}
+
+		buf.writeBoolean(this.filename != null);
+
+		if (this.filename != null)
+		{
+			ByteBufUtils.writeUTF8String(buf, this.filename);
 		}
 
 		buf.writeBoolean(this.scene != null);
 
 		if (this.scene != null)
 		{
-			ByteBufUtils.writeUTF8String(buf, this.scene);
+			this.scene.toBuf(buf);
 		}
 	}
 }
