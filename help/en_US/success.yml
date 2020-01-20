@@ -29,5 +29,6 @@ blockbuster.success:
         clean: "{f}Player recording %s{f} properties %s{f} were successfully cleaned from %s{f} to %s{f}!"
         prolonged: "{f}Player recording %s{f} was prolonged. Its pre and post delays are: %s{f} and %s{f} (respectively)."
         faded: "{f}Player recording %s{f}'s last %s{f} frames were faded."
+        flipped: "{f}Player recording %s{f} was successfully flipped across %s{f} axis at %s{f} coordinate!"
         cut: "{f}Player recording %s{f} was cut between %s{f} and %s{f} frames."
         restored: "{f}Player recording %s{f}'s %s{f} iteration was restored!"

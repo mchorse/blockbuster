@@ -14,13 +14,18 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
     @Override
     public void run(EntityPlayerMP player, PacketSceneCast message)
     {
+        if (message.location.isEmpty())
+        {
+            return;
+        }
+
         if (message.location.isDirector())
         {
-            TileEntity tile = this.getTE(player, message.location.getDirector());
+            TileEntity tile = this.getTE(player, message.location.getPosition());
 
             if (tile instanceof TileEntityDirector)
             {
-                ((TileEntityDirector) tile).director.copy((Director) message.scene);
+                ((TileEntityDirector) tile).director.copy(message.location.getDirector());
                 tile.markDirty();
             }
 
@@ -30,8 +35,8 @@ public class ServerHandlerSceneCast extends ServerMessageHandler<PacketSceneCast
         {
             try
             {
-                CommonProxy.scenes.save(message.location.getScene(), message.scene);
-                Recording.get(player).setLastScene(message.location.getScene());
+                CommonProxy.scenes.save(message.location.getFilename(), message.location.getScene());
+                Recording.get(player).setLastScene(message.location.getFilename());
             }
             catch (Exception e)
             {

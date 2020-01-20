@@ -14,7 +14,7 @@ public class ServerHandlerScenePlayback extends ServerMessageHandler<PacketScene
     {
         if (message.location.isDirector())
         {
-            TileEntity te = player.world.getTileEntity(message.location.getDirector());
+            TileEntity te = player.world.getTileEntity(message.location.getPosition());
 
             if (te instanceof TileEntityDirector)
             {
@@ -23,7 +23,7 @@ public class ServerHandlerScenePlayback extends ServerMessageHandler<PacketScene
         }
         else if (message.location.isScene())
         {
-            CommonProxy.scenes.toggle(message.location.getScene(), player.world);
+            CommonProxy.scenes.toggle(message.location.getFilename(), player.world);
         }
     }
 }

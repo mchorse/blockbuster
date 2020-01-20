@@ -26,7 +26,7 @@ public abstract class PacketScene implements IMessage
 	{
 		if (this.location.isDirector())
 		{
-			BlockPos pos = this.location.getDirector();
+			BlockPos pos = this.location.getPosition();
 			TileEntity te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
 
 			if (te instanceof TileEntityDirector)
@@ -36,7 +36,7 @@ public abstract class PacketScene implements IMessage
 		}
 		else if (this.location.isScene())
 		{
-			return CommonProxy.scenes.get(this.location.getScene(), world);
+			return CommonProxy.scenes.get(this.location.getFilename(), world);
 		}
 
 		return null;

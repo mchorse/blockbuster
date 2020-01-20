@@ -161,9 +161,9 @@ public class GuiGun extends GuiBase
         this.tickCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
         this.ticking.resizer().parent(area).set(0, 10, 100, 20).x(1, -110);
         this.lifeSpan.resizer().relative(this.ticking.resizer()).set(0, 25, 100, 20);
-        this.yaw.resizer().parent(area).relative(this.lifeSpan.resizer()).set(0, 25, 100, 11);
-        this.pitch.resizer().relative(this.yaw.resizer()).set(0, 16, 100, 11);
-        this.sequencer.resizer().relative(this.pitch.resizer()).set(0, 16, 100, 11);
+        this.yaw.resizer().parent(area).relative(this.lifeSpan.resizer()).set(0, 25, 50, 11);
+        this.pitch.resizer().relative(this.lifeSpan.resizer()).set(50, 25, 50, 11);
+        this.sequencer.resizer().relative(this.yaw.resizer()).set(0, 16, 100, 11);
         this.random.resizer().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
         this.hitboxX.resizer().relative(this.gravity.resizer()).set(0, 25, 100, 20);
         this.hitboxY.resizer().relative(this.hitboxX.resizer()).set(0, 25, 100, 20);

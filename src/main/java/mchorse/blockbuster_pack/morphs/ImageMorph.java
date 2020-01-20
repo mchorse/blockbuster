@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import java.util.Objects;
 
+import mchorse.mclib.client.gui.utils.Area;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.textures.GifTexture;
@@ -52,6 +53,11 @@ public class ImageMorph extends AbstractMorph
      * Whether an image morph should be always look at the player
      */
     public boolean billboard = false;
+
+    /**
+     * Area to crop (x = left, w = right, y = top, h = bottom)
+     */
+    public Area cropping = new Area();
 
     public ImageMorph()
     {
@@ -152,38 +158,42 @@ public class ImageMorph extends AbstractMorph
     {
         GifTexture.bindTexture(this.texture);
 
-        int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
-        int h = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+        int w = this.getWidth();
+        int h = this.getHeight();
 
         double x1 = 0;
         double x2 = 0;
         double y1 = 0;
         double y2 = 0;
 
+        double u1 = 1.0F - (flipX ? this.cropping.x : this.cropping.w) / (double) w;
+        double u2 = (flipX ? this.cropping.w : this.cropping.x) / (double) w;
+        double v1 = 1.0F - this.cropping.h / (double) h;
+        double v2 = this.cropping.y / (double) h;
+
         if (w > h)
         {
-            x1 = -0.5;
-            x2 = 0.5;
-            y1 = -(float) h / w * 0.5;
-            y2 = -y1;
+            double ratio = h / (double) w;
+
+            x1 = (u2 - 0.5);
+            x2 = (u1 - 0.5);
+            y1 = (v2 - 0.5) * ratio;
+            y2 = (v1 - 0.5) * ratio;
         }
         else
         {
-            x1 = -(float) w / h * 0.5;
-            x2 = -x1;
-            y1 = -0.5;
-            y2 = 0.5;
-        }
+            double ratio = w / (double) h;
 
-        double u1 = 1.0F;
-        double u2 = 0.0F;
-        double v1 = 1.0F;
-        double v2 = 0.0F;
+            x1 = (u2 - 0.5) * ratio;
+            x2 = (u1 - 0.5) * ratio;
+            y1 = (v2 - 0.5);
+            y2 = (v1 - 0.5);
+        }
 
         if (flipX)
         {
-            u1 = 0.0F;
-            u2 = 1.0F;
+            u1 = 1 - u1;
+            u2 = 1 - u2;
         }
 
         x1 *= scale;
@@ -214,6 +224,16 @@ public class ImageMorph extends AbstractMorph
         GlStateManager.enableCull();
     }
 
+    public int getWidth()
+    {
+        return GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+    }
+
+    public int getHeight()
+    {
+        return GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+    }
+
     @Override
     public AbstractMorph clone(boolean isRemote)
     {
@@ -226,6 +246,7 @@ public class ImageMorph extends AbstractMorph
         morph.shaded = this.shaded;
         morph.lighting = this.lighting;
         morph.billboard = this.billboard;
+        morph.cropping.copy(this.cropping);
 
         return morph;
     }
@@ -244,6 +265,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.shaded == this.shaded;
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
+            result = result && image.cropping.equals(this.cropping);
         }
 
         return result;
@@ -271,6 +293,10 @@ public class ImageMorph extends AbstractMorph
         if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
         if (this.billboard == true) tag.setBoolean("Billboard", this.billboard);
+        if (this.cropping.x != 0) tag.setInteger("Left", this.cropping.x);
+        if (this.cropping.w != 0) tag.setInteger("Right", this.cropping.w);
+        if (this.cropping.y != 0) tag.setInteger("Top", this.cropping.y);
+        if (this.cropping.h != 0) tag.setInteger("Bottom", this.cropping.h);
     }
 
     @Override
@@ -283,5 +309,9 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
         if (tag.hasKey("Billboard")) this.billboard = tag.getBoolean("Billboard");
+        if (tag.hasKey("Left")) this.cropping.x = tag.getInteger("Left");
+        if (tag.hasKey("Right")) this.cropping.w = tag.getInteger("Right");
+        if (tag.hasKey("Top")) this.cropping.y = tag.getInteger("Top");
+        if (tag.hasKey("Bottom")) this.cropping.h = tag.getInteger("Bottom");
     }
 }
