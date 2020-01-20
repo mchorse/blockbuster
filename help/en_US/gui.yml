@@ -234,7 +234,8 @@ blockbuster.gui:
         body_part: Body part
         materials: Materials
         nbt: NBT
-        
+
+        pick_model: Pick model
         pick_skin: Pick skin
         pose_sneak: Sneaking pose
         pose: Pose

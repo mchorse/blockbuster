@@ -126,6 +126,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         this.settings.hands = true;
     }
 
+    public void changeModel(String model)
+    {
+        if (Blockbuster.proxy.models.models.get(model) == null)
+        {
+            return;
+        }
+
+        this.name = "blockbuster." + model;
+        this.key = null;
+        this.model = Blockbuster.proxy.models.models.get(model).model;
+    }
+
     @Override
     public BodyPartManager getBodyPart()
     {
