@@ -18,6 +18,7 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -409,6 +410,15 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @Override
     public boolean canMerge(AbstractMorph morph, boolean isRemote)
     {
+        if (morph instanceof SequencerMorph)
+        {
+            SequencerMorph sequencer = (SequencerMorph) morph;
+
+            sequencer.currentMorph.setDirect(this);
+
+            return false;
+        }
+
         if (morph instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) morph;
