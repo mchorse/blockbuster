@@ -3,6 +3,7 @@ blockbuster.config:
     general:
         title: Общие
         
+        show_first_time_modal: Показывать заставку первого запуска
         disable_teleport_playback_button: Отключить телепорт к блоку режиссёра кнопкой воспроизведения
         extra_wubs: Экстра тыцы
         auto_refresh_models: Автоматическое обновление скинов и моделей
@@ -17,13 +18,13 @@ blockbuster.config:
         model_block_disable_item_rendering: Выключить отображение предметов
     
     recording:
-        title: Записи
+        title: Процесс Записи
 
-        recording_countdown: Отсчет до начала записи
+        recording_countdown: Отсчёт до начала записи
         recording_delay: Пропуск кадров записей
-        record_unload_time: Автоматическое время выгрузки записей
+        record_unload_time: Автоматическая регулировка времени выгрузки записей
         record_unload: Автоматическая выгрузка записей
-        record_sync_rate: Показатель синхронизации тиков
+        record_sync_rate: Индикатор синхронизации тиков
         record_attack_on_swipe: Атака взмахом
         record_commands: Запись команд
         record_chat_prefix: Префикс действия в чате
@@ -34,7 +35,7 @@ blockbuster.config:
         actor_fall_damage: Урон от падения для актёров
         actor_tracking_range: Диапазон отслеживания актёров
         actor_rendering_range: Диапазон отображения актеров
-        actor_always_render: Всегда отображать имена актёров
+        actor_always_render: Всегда отображать актёров
         actor_always_render_names: Всегда отображать имена актеров
         actor_swish_swipe: Вжух взмаха
         actor_y: Исправить движение по оси Y
@@ -43,4 +44,4 @@ blockbuster.config:
         title: Контроль урона
         
         damage_control: Контроль урона
-        damage_control_distance: Дистанция контроля урона
+        damage_control_distance: Дистанция урона
