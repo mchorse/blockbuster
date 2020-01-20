@@ -103,7 +103,7 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
 		else if (args.length == 3 && ALLOWED_AXES.contains(args[1]))
 		{
 			Vec3d vec3d = sender.getPositionVector();
-			double coordinate = Math.floor(args[1].equals("x") ? vec3d.xCoord : vec3d.zCoord) + 0.5;
+			double coordinate = Math.floor(args[1].equals("x") ? vec3d.x : vec3d.z) + 0.5;
 
 			return getListOfStringsMatchingLastWord(args, Arrays.asList(coordinate));
 		}
