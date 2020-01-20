@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
@@ -10,6 +11,8 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEdit
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.utils.Resizer;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
@@ -20,6 +23,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Iterator;
 
 /**
  * Blockbuster's dashboard GUI entry
@@ -124,6 +129,14 @@ public class GuiDashboard extends GuiBase
         this.modelEditorPanel.open();
         this.texturePanel.open();
 
+        if (Blockbuster.proxy.config.show_first_time_modal)
+        {
+            GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(this.mc, this);
+
+            overlay.resizer().parent(this.area).w(1, 0).h(1, 0);
+            this.elements.add(overlay);
+        }
+
         return this;
     }
 
@@ -193,6 +206,17 @@ public class GuiDashboard extends GuiBase
         }
 
         this.texturePanel.close();
+
+        /* Remove a first time thing */
+        Iterator<IGuiElement> it = this.elements.elements.iterator();
+
+        while (it.hasNext())
+        {
+            if (it.next() instanceof GuiFirstTime.Overlay)
+            {
+                it.remove();
+            }
+        }
 
         this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
     }

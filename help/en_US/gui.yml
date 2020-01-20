@@ -19,7 +19,13 @@ blockbuster.gui:
     select: Select
     ok: Ok
     billboard: Look at player
-    
+
+    # First time module
+    first_time:
+        title: "First time?"
+        welcome: "Welcome to Blockbuster mod!\n\nIf you're using this mod for the first time, you might want to take a look at the {a}Blockbuster academy video tutorial{r} series on {c}YouTube{r}."
+        social: "If you'll encounter any issues, feel free to join my {6}Discord{r} server for help. Also, feel free to follow me on {b}Twitter{r}, I post mod updates there."
+
     # Morphs popup strings
     morphs:
         acquire: "Acquire morph"
