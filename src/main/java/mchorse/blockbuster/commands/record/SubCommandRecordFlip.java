@@ -43,7 +43,8 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
 	{
 		Record record = CommandRecord.getRecord(args[0]);
 		String axis = args[1].toLowerCase();
-		double coordinate = CommandBase.parseDouble(args[2]);
+		boolean center = args.length < 4 ? true : CommandBase.parseBoolean(args[3]);
+		double coordinate = CommandBase.parseInt(args[2]) + (center ? 0.5 : 0);
 
 		if (!ALLOWED_AXES.contains(axis))
 		{
@@ -83,7 +84,7 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
 
 			for (Action action : actions)
 			{
-				action.flip(axis, coordinate);
+				action.flip(axis, center ? Math.floor(coordinate) : coordinate - 0.5);
 			}
 		}
 
@@ -103,9 +104,13 @@ public class SubCommandRecordFlip extends SubCommandRecordBase
 		else if (args.length == 3 && ALLOWED_AXES.contains(args[1]))
 		{
 			Vec3d vec3d = sender.getPositionVector();
-			double coordinate = Math.floor(args[1].equals("x") ? vec3d.xCoord : vec3d.zCoord) + 0.5;
+			int coordinate = (int) Math.floor(args[1].equals("x") ? vec3d.xCoord : vec3d.zCoord);
 
 			return getListOfStringsMatchingLastWord(args, Arrays.asList(coordinate));
+		}
+		else if (args.length == 4)
+		{
+			return getListOfStringsMatchingLastWord(args, new String[] {"true", "false"});
 		}
 
 		return super.getTabCompletionOptions(server, sender, args, pos);

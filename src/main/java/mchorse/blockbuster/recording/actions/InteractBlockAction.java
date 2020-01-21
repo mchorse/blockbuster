@@ -92,8 +92,6 @@ public class InteractBlockAction extends Action
     @Override
     public void flip(String axis, double coordinate)
     {
-        coordinate = Math.floor(coordinate);
-
         if (axis.equals("x"))
         {
             double diff = coordinate - this.pos.getX();

@@ -44,9 +44,9 @@ blockbuster:
 
             flip:
                 |
-                {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate>{r}
+                    {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}
 
-                {r}This command flips frames and actions of {7}<filename>{r} player recording across given {7}<axis>{r} at given {7}<coordinate{r}.
+                    {r}This command flips frames and actions of {7}<filename>{r} player recording across given {7}<axis>{r} at given {7}<coordinate{r}. Set {7}[center]{r} to {7}false{r} (by default it's {7}true{r}) if you're mirroring across even number of blocks thick wall.
 
             get:
                 |
