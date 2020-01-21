@@ -45,6 +45,6 @@ public class SubCommandRecordReverse extends SubCommandRecordBase
 		record.dirty = true;
 
 		RecordUtils.unloadRecord(record);
-		L10n.success(sender, "record.reverse", args[0]);
+		L10n.success(sender, "record.reversed", args[0]);
 	}
 }
