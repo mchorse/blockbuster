@@ -30,6 +30,7 @@ public class GuiMainPanel extends GuiDashboardPanel
 {
     public List<GuiConfigOption> options = new ArrayList<GuiConfigOption>();
     public GuiButtonElement<GuiButton> first;
+    public GuiButtonElement<GuiCheckBox> last;
 
     /**
      * Open web link in browser 
@@ -89,6 +90,8 @@ public class GuiMainPanel extends GuiDashboardPanel
             this.children.add(option.button);
         }
 
+        this.last = previous;
+
         GuiElement element = this.first = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink(Blockbuster.WIKI_URL));
         Resizer resizer = new Resizer().set(0, 40, 100, 20).parent(this.area).relative(previous.resizer());
         this.children.add(element.setResizer(resizer));
@@ -130,6 +133,21 @@ public class GuiMainPanel extends GuiDashboardPanel
         {
             option.button.button.setIsChecked(this.getProp(option).getBoolean());
         }
+    }
+
+    @Override
+    public void resize(int width, int height)
+    {
+        if (height > 260)
+        {
+            this.first.resizer().set(0, 40, 100, 20).relative(this.last.resizer());
+        }
+        else
+        {
+            this.first.resizer().set(0, 25, 100, 20).parent(this.area).x(1, -110);
+        }
+
+        super.resize(width, height);
     }
 
     @Override
