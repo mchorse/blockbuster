@@ -34,7 +34,7 @@ blockbuster.gui:
         reset: Reset pose
     
     confirm:
-        title: Confirm Breaking Director Block
+        title: Confirm Brekaing Director Block
         description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
     
     dashboard: 
@@ -88,7 +88,7 @@ blockbuster.gui:
         rename_prefix_popup: "Enter a new prefix:"
 
         attach: Attach
-        attach_tooltip: Attach this director/scene to playback button
+        attach_tooltip: Attach this director block/scene to playback button
 
     scenes:
         title: Scenes
