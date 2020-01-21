@@ -88,7 +88,7 @@ blockbuster.gui:
         rename_prefix_popup: "Enter a new prefix:"
 
         attach: Attach
-        attach_tooltip: Attach this director/scene to playback button
+        attach_tooltip: Attach this director block/scene to playback button
 
     scenes:
         title: Scenes
