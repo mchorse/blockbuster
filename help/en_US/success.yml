@@ -32,3 +32,4 @@ blockbuster.success:
         flipped: "{f}Player recording %s{f} was successfully flipped across %s{f} axis at %s{f} coordinate!"
         cut: "{f}Player recording %s{f} was cut between %s{f} and %s{f} frames."
         restored: "{f}Player recording %s{f}'s %s{f} iteration was restored!"
+        reversed: "{f}Player recording %s{f} was successfully reversed!"
