@@ -42,6 +42,12 @@ blockbuster:
 
                     {r}這個命令會在名為 {7}<filename>{r} 玩家錄製使用掉末尾的 {7}<fade_out>{r} 的 tick 時長，用線性插值動畫將生物拖到最初的位置。
             
+            flip:
+                |
+                    {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}
+
+                    {r}這個命令會把 {7}<filename>{r} 玩家錄製中的幀和動作，以給定的 {7}<axis>{r}（軸）和 {7}<coordinate>{r}（坐標）翻轉。如果你在鏡像的物體，方塊長度是偶數，請設置 {7}[center]{r} 為 {7}false{r}（默認為 {7}true{r}）
+            
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
@@ -65,7 +71,13 @@ blockbuster:
                     {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
 
                     {r}為名為 {7}<filename>{r} 的玩家錄製檔案恢復到最近的第 {7}<iteration>{r} 個版本。例如，{7}/record restore test 1{r} 會交換 {7}test.dat{r} 与 {7}test.dat~1{r} 之間的內容。
-    
+
+            reverse:
+                |
+                    {l}{6}/{r}record {8}reverse{r} {7}<filename>{r}
+
+                    {r}倒轉名為 {7}<filename>{r} 玩家錄製中的幀和動作。
+            
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}

@@ -57,6 +57,7 @@ blockbuster.error:
         empty_record: "{f}給予的玩家錄製 %s{f} 是空的！"
         not_exist_iteration: "{f}給予的玩家錄製 %s{f} 的第 %s{f} 版本不存在！"
         cant_restore: "{f}無法回到一個版本，因為此時臨時檔案應該不存在……"
+        wrong_axis: "{f}給定的 \"%s{f}\" 不是合法的軸。它應該是 {7}x{r} 或者 {7}z{r}！"
         
     # Recording errors
     recording:
