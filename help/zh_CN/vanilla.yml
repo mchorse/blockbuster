@@ -5,6 +5,7 @@ blockbuster:
         playback_director: 链接到 ({r}%d{7}, {r}%d{7}, {r}%d{7})
         playback_profile: 回放配置文件 "{f}{o}%s{r}{7}"
         playback_play: 回放摄像机
+        playback_scene: 已绑定在场景 {f}%s{r}
 
         actor_config: 在演员上使用
         register: 关联演员到导演方块

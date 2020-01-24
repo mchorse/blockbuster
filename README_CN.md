@@ -1,6 +1,7 @@
 ![Blockbuster](http://i.imgur.com/nqDKg1R.png)
 
-[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) – [中文百科](https://github.com/ycwei982/blockbuster/wiki) – [EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉 mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap) – [中文用户QQ群](https://jq.qq.com/?_wv=1027&k=584nNVF)
+[Planet Minecraft 页面](http://www.planetminecraft.com/mod/blockbuster-machinima-mod/) – [CurseForge 页面](https://minecraft.curseforge.com/projects/blockbuster) – [源代码](https://github.com/mchorse/blockbuster) – [AdFly 支持链接](http://adf.ly/15268913/blockbuster-curseforge) – [百科](https://github.com/mchorse/blockbuster/wiki) – [中文百科](https://github.com/ycwei982/blockbuster/wiki) – 
+[EchebKeso](https://twitter.com/EchebKeso) – [Mocap 动作捕捉 mod](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1445402-minecraft-motion-capture-mod-mocap-16-000) – [Mocap 的源代码](https://github.com/EchebKeso/Mocap) – [中文用户QQ群](https://jq.qq.com/?_wv=1027&k=584nNVF)
 
 Blockbuster 是一个可以帮助你在 Minecraft 中使用 NPC 演员和摄像机来制作短片/角色扮演的 mod。除了基本的录制和回放，它还提供很多各式的功能可以为你的视频添加一些原创性，超越纯演员演戏的可能性（查看 **特性** 部分）。
 
@@ -8,7 +9,13 @@ Blockbuster 是一个可以帮助你在 Minecraft 中使用 NPC 演员和摄像�
 
 Blockbuster mod 依赖于 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 和 [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib)。每次更新日志会写上支持的 Metamorph 版本。Blockbuster 也可以 **自愿地** 选择与 [Aperture](https://minecraft.curseforge.com/projects/aperture) mod 搭配使用。
 
-录制动作基于 [EchebKeso](https://twitter.com/EchebKeso) 的 Mocap 录制代码并加以修改。
+录制动作基于 [EchebKeso](https://twitter.com/EchebKeso) 的 Mocap 录制代码，并且重构了代码。
+
+![MachinimaHub](https://i.imgur.com/jrK0WA2.png)
+
+如果你对 Minecraft 的短片、角色扮演或是动画（创作、观赏、配音等等），[欢迎加入](https://discord.gg/4YFUmJp) MachinimaHub. **MachinimaHub** 是一个在 Discord 服务器上关于短片的社区（以及其它类型的故事讲述视频，例如第一人称角色扮演和动画）。
+
+除了这些，MachinimaHub 内还有很多 Blockbuster 的用户，所以如果你需要帮助，请尽管在里面提出来！
 
 ## 疑问解答
 
@@ -28,9 +35,11 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 * **OBJ 模型** – 除了可以在游戏内模型编辑器创建的自定义模型，现在 Blockbuster 还支持比 JSON 模型更高一等的 OBJ 模型！
 * **动物支持** – 感谢 [Metamorph](https://minecraft.curseforge.com/projects/metamorph) 的公开 API，Blockbuster 支持 Metamorph 所提供的任何活体模型作为 Blockbuster 的演员，也包括 Blockbuster 和 [Emoticons](https://minecraft.curseforge.com/projects/emoticons) 所提供的模型。
 * **高级伪装** – 除了在伪装系统中激活自定义模型，Blockbuster 也添加了了特殊的模型，用于高级短片创作：
+    * **图像伪装** – 用于显示图像的伪装（在平面上）。
     * **序列伪装** – 用于在给予的一堆伪装中自动轮换，依赖于在伪装之间设定的延时。
     * **录制伪装** – 用于在伪装中播放玩家录制（在模型方块和身体部分系统很实用）。
     * **结构伪装** – 用于伪装成使用结构方块后的建筑。
+    * **粒子伪装** – 用于释放原版和伪装模型粒子的伪装。
 * **绿幕功能** – Blockbuster 添加了发光的绿色方块，没有任何阴影；还有绿色的天空，使得搭建绿幕拍摄场景和后期处理你的短片更容易。
 * **动态 GIF 支持** – 现在你可以在 Blockbuster 中加入 GIF 格式的梗和表情包了。一切要感谢 [MrCrayfish 的家具 Mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) 和 [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java)。
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) 兼容性** – 感谢基于帧和录制的 mod，你可以通过一个按钮，让游戏内短片导出成视频文件。
@@ -48,11 +57,13 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 
 这个播放列表是更新日志。几乎每次更新（除了纯 bug 修复和很少功能增加）都会附有一个更新视频，用来展示新功能，并且稍微展示如何使用。
 
-<a href="https://youtu.be/wpfiLTrzTLs?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/wpfiLTrzTLs/0.jpg"></a>
+<a href="https://youtu.be/aToxS732NfE?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/aToxS732NfE/0.jpg"></a> 
 
 还有个教程是直接关联到 Blockbuster/Minecraft 的短片制作的。确保看看它，因为它包含着基本的 Blockbuster mod 教程，如何导入 OBJ 模型，等等。
 
-<a href="https://youtu.be/PFS2yjXnIGI?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/PFS2yjXnIGI/0.jpg"></a>
+<a href="https://youtu.be/vo8fquY-TUM?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/vo8fquY-TUM/0.jpg"></a> 
+
+也可前往 [McHorse's Mods 哔哩哔哩中文频道](https://space.bilibili.com/472615413) 观看。
 
 ### Blockbuster 短片
 
