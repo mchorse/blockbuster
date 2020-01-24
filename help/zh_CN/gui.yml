@@ -20,6 +20,9 @@ blockbuster.gui:
     ok: 好
     billboard: 看向玩家
 
+    links:
+        channel: "link to bilibili”
+
     # Morphs popup strings
     morphs:
         acquire: "获取伪装"
