@@ -92,26 +92,26 @@ public class GuiMainPanel extends GuiDashboardPanel
 
         this.last = previous;
 
-        GuiElement element = this.first = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink(Blockbuster.WIKI_URL));
+        GuiElement element = this.first = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink(Blockbuster.WIKI_URL()));
         Resizer resizer = new Resizer().set(0, 40, 100, 20).parent(this.area).relative(previous.resizer());
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink(Blockbuster.DISCORD_URL));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink(Blockbuster.DISCORD_URL()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
         resizer = element.resizer();
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink(Blockbuster.TUTORIAL_URL));
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink(Blockbuster.TUTORIAL_URL()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
         resizer = element.resizer();
 
         element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink(Blockbuster.CHANNEL_URL));
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink(Blockbuster.CHANNEL_URL()));
         resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink(Blockbuster.TWITTER_URL));
+        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink(Blockbuster.TWITTER_URL()));
         resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
         this.children.add(element.setResizer(resizer));
     }
