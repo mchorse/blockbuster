@@ -53,7 +53,7 @@ public class ModelHandler
             keys.remove(model);
 
             /* Whether the model should be reloaded */
-            if (!force && cell != null && timestamp <= cell.timestamp)
+            if (!force && cell != null && !cell.hasChanged(timestamp, loader.getFilenameHash()))
             {
                 continue;
             }
@@ -65,21 +65,6 @@ public class ModelHandler
             catch (Exception e)
             {
                 e.printStackTrace();
-            }
-        }
-
-        /* Make sure default models don't get reloaded every time,
-         * unless substituted */
-        Iterator<String> it = keys.iterator();
-
-        while (it.hasNext())
-        {
-            String key = it.next();
-            ModelCell cell = this.models.get(key);
-
-            if (cell.timestamp == 0 && ModelPack.IGNORED_MODELS.contains(key))
-            {
-                it.remove();
             }
         }
 
@@ -95,7 +80,7 @@ public class ModelHandler
      */
     public void addModel(String name, IModelLazyLoader loader, long timestamp) throws Exception
     {
-        this.models.put(name, new ModelCell(loader.loadModel(name), timestamp));
+        this.models.put(name, new ModelCell(loader.loadModel(name), timestamp, loader.getFilenameHash()));
     }
 
     /**
@@ -128,12 +113,19 @@ public class ModelHandler
     public static class ModelCell
     {
         public Model model;
-        public long timestamp;
+        private long timestamp;
+        private int hash;
 
-        public ModelCell(Model model, long timestamp)
+        public ModelCell(Model model, long timestamp, int hash)
         {
             this.model = model;
             this.timestamp = timestamp;
+            this.hash = hash;
+        }
+
+        public boolean hasChanged(long timestamp, int hash)
+        {
+            return timestamp > this.timestamp || this.hash != hash;
         }
     }
 }

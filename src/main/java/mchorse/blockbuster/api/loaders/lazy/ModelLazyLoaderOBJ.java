@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 {
@@ -29,6 +30,12 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 
 		this.obj = obj;
 		this.mtl = mtl;
+	}
+
+	@Override
+	public int getFilenameHash()
+	{
+		return (this.model.getName() + "/" + this.obj.getName() + "/" + this.mtl.getName()).hashCode();
 	}
 
 	@Override
@@ -98,7 +105,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 		try
 		{
 			InputStream obj = this.obj.getStream();
-			InputStream mtl = model.providesMtl && this.mtl != null ? this.mtl.getStream() : null;
+			InputStream mtl = model.providesMtl ? this.mtl.getStream() : null;
 
 			this.parser = new OBJParser(obj, mtl);
 			this.parser.read();

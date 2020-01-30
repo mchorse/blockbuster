@@ -28,6 +28,12 @@ public class ModelLazyLoaderJSON implements IModelLazyLoader
 	}
 
 	@Override
+	public int getFilenameHash()
+	{
+		return this.model.getName().hashCode();
+	}
+
+	@Override
 	public Model loadModel(String key) throws Exception
 	{
 		if (!this.model.exists())
