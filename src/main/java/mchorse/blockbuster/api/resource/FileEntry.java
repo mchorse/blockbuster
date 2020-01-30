@@ -17,6 +17,12 @@ public class FileEntry implements IResourceEntry
     }
 
     @Override
+    public String getName()
+    {
+        return this.file == null ? "" : this.file.getName();
+    }
+
+    @Override
     public InputStream getStream() throws IOException
     {
         return this.file == null ? null : new FileInputStream(this.file);
