@@ -27,6 +27,12 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	}
 
 	@Override
+	public int getFilenameHash()
+	{
+		return (this.model.getName() + "/" + this.vox.getName()).hashCode();
+	}
+
+	@Override
 	public long lastModified()
 	{
 		return Math.max(this.model.lastModified(), this.vox.lastModified());
@@ -76,8 +82,6 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 
 		data.providesObj = true;
 		data.providesMtl = true;
-		data.scale[0] = data.scale[1] = data.scale[2] = data.scaleGui = 1 / 16F;
-		data.scale[0] *= -1;
 
 		blocky.setSize(1, 1, 1);
 		data.poses.put("flying", blocky.clone());
