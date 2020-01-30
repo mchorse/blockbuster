@@ -12,6 +12,8 @@ import java.io.InputStream;
  */
 public interface IResourceEntry
 {
+    public String getName();
+
     public static IResourceEntry createEntry(Object object)
     {
         if (object instanceof File)

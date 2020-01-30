@@ -15,6 +15,8 @@ public interface IModelLazyLoader
 {
 	public long lastModified();
 
+	public int getFilenameHash();
+
 	public Model loadModel(String key) throws Exception;
 
 	@SideOnly(Side.CLIENT)
