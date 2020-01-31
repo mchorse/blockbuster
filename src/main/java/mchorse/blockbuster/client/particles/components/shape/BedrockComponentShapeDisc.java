@@ -4,13 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
+
+import javax.vecmath.Vector3f;
 
 public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 {
 	public MolangExpression[] normal = {Molang.ZERO, Molang.ONE, Molang.ZERO};
-	public float radius = 1;
+	public MolangExpression radius = Molang.ONE;
 
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem)
@@ -31,8 +35,22 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 			}
 		}
 
-		if (element.has("radius")) this.radius = element.get("radius").getAsFloat();
+		if (element.has("radius")) this.radius = Molang.parse(element.get("radius"));
 
 		return super.fromJson(element);
+	}
+
+	@Override
+	public void apply(BedrockParticle particle, BedrockEmitter emitter)
+	{
+		float centerX = this.offset[0].evaluate();
+		float centerY = this.offset[1].evaluate();
+		float centerZ = this.offset[2].evaluate();
+
+		Vector3f normal = new Vector3f(this.normal[0].evaluate(), this.normal[1].evaluate(), this.normal[2].evaluate());
+
+		normal.normalize();
+
+		/* TODO: normal rotation */
 	}
 }

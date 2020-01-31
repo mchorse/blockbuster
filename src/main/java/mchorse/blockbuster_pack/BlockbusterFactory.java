@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelHandler.ModelCell;
@@ -274,6 +275,8 @@ public class BlockbusterFactory implements IMorphFactory
 
         /* Particle morph */
         morphs.addMorph("particle", "blockbuster_extra", new ParticleMorph());
+
+        Blockbuster.proxy.particles.reload();
     }
 
     @Override

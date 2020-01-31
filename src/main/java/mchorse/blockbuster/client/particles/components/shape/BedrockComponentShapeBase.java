@@ -4,10 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
 
-public abstract class BedrockComponentShapeBase extends BedrockComponentBase
+public abstract class BedrockComponentShapeBase extends BedrockComponentBase implements IComponentParticleInitialize
 {
 	public MolangExpression[] offset = {Molang.ZERO, Molang.ZERO, Molang.ZERO};
 	public ShapeDirection direction = ShapeDirection.OUTWARDS;

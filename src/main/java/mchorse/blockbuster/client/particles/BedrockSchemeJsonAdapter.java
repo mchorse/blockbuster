@@ -38,11 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParticle>
+public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 {
 	public Map<String, Function<JsonElement, BedrockComponentBase>> components = new HashMap<String, Function<JsonElement, BedrockComponentBase>>();
 
-	public BedrockParticleJsonAdapter()
+	public BedrockSchemeJsonAdapter()
 	{
 		/* Meta components */
 		this.components.put("minecraft:emitter_local_space", (element) -> new BedrockComponentLocalSpace().fromJson(element));
@@ -86,9 +86,9 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 	}
 
 	@Override
-	public BedrockParticle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+	public BedrockScheme deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{
-		BedrockParticle particle = new BedrockParticle();
+		BedrockScheme particle = new BedrockScheme();
 
 		if (!json.isJsonObject())
 		{
@@ -103,7 +103,7 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 		return particle;
 	}
 
-	private void parseEffect(BedrockParticle particle, JsonObject effect) throws JsonParseException
+	private void parseEffect(BedrockScheme particle, JsonObject effect) throws JsonParseException
 	{
 		this.parseDescription(particle, this.getObject(effect, "description", "No particle_effect.description was found..."));
 
@@ -123,7 +123,7 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 	/**
 	 * Parse description object (which contains ID of the particle, material type and texture)
 	 */
-	private void parseDescription(BedrockParticle particle, JsonObject description) throws JsonParseException
+	private void parseDescription(BedrockScheme particle, JsonObject description) throws JsonParseException
 	{
 		if (description.has("identifier"))
 		{
@@ -151,7 +151,7 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 	/**
 	 * Parse curves object
 	 */
-	private void parseCurves(BedrockParticle particle, JsonObject curves)
+	private void parseCurves(BedrockScheme particle, JsonObject curves)
 	{
 		for (Map.Entry<String, JsonElement> entry : curves.entrySet())
 		{
@@ -195,7 +195,7 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 		}
 	}
 
-	private void parseComponents(BedrockParticle particle, JsonObject components)
+	private void parseComponents(BedrockScheme particle, JsonObject components)
 	{
 		for (Map.Entry<String, JsonElement> entry : components.entrySet())
 		{

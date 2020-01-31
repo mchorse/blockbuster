@@ -8,4 +8,10 @@ public class MolangConstant extends MolangExpression
 	{
 		this.value = value;
 	}
+
+	@Override
+	public float evaluate()
+	{
+		return this.value;
+	}
 }

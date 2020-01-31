@@ -1,9 +1,13 @@
 package mchorse.blockbuster.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.Blockbuster;
@@ -43,6 +47,11 @@ public class RenderingHandler
      * GIFs which should be updated 
      */
     public static Map<ResourceLocation, GifTexture> gifs = new HashMap<ResourceLocation, GifTexture>();
+
+    /**
+     * Bedrock particle emitters
+     */
+    public static final List<BedrockEmitter> emitters = new ArrayList<>();
 
     private GuiRecordingOverlay overlay;
 
@@ -172,5 +181,22 @@ public class RenderingHandler
         {
             texture.tick();
         }
+
+        /* Render custom particle emitters */
+        if (!emitters.isEmpty())
+        {
+            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+            double ticks = event.getPartialTicks();
+            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * ticks;
+            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * ticks;
+            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * ticks;
+
+            for (BedrockEmitter emitter : emitters)
+            {
+                emitter.render(-playerX, camera.getEyeHeight() - playerY, -playerZ);
+            }
+        }
+
+        emitters.clear();
     }
 }
