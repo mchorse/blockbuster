@@ -13,8 +13,12 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase
 	public ShapeDirection direction = ShapeDirection.OUTWARDS;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement elem)
 	{
+		if (!elem.isJsonObject()) return super.fromJson(elem);
+
+		JsonObject element = elem.getAsJsonObject();
+
 		if (element.has("offset"))
 		{
 			JsonArray array = element.getAsJsonArray("offset");

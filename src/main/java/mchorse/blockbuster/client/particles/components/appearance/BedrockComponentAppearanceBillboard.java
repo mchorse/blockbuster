@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.particles.components.appearance;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.molang.Molang;
@@ -27,8 +28,12 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase
 	public boolean loop = false;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement elem)
 	{
+		if (!elem.isJsonObject()) return super.fromJson(elem);
+
+		JsonObject element = elem.getAsJsonObject();
+
 		if (element.has("size") && element.get("size").isJsonArray())
 		{
 			JsonArray size = element.getAsJsonArray("size");

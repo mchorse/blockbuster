@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.particles.components.shape;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.molang.Molang;
@@ -12,8 +13,12 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 	public float radius = 1;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement elem)
 	{
+		if (!elem.isJsonObject()) return super.fromJson(elem);
+
+		JsonObject element = elem.getAsJsonObject();
+
 		if (element.has("plane_normal"))
 		{
 			JsonArray array = element.getAsJsonArray("plane_normal");

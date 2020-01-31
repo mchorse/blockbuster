@@ -46,8 +46,12 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase
 	}
 
 	@Override
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement elem)
 	{
+		if (!elem.isJsonObject()) return super.fromJson(elem);
+
+		JsonObject element = elem.getAsJsonObject();
+
 		if (element.has("color"))
 		{
 			JsonElement color = element.get("color");

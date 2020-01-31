@@ -1,10 +1,10 @@
 package mchorse.blockbuster.client.particles.components;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 public abstract class BedrockComponentBase
 {
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement element)
 	{
 		return this;
 	}

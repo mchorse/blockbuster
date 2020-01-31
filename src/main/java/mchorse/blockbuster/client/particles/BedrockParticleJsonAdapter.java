@@ -6,7 +6,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import mchorse.blockbuster.client.particles.components.BedrockComponentLifetime;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentLifetime;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
@@ -16,6 +18,10 @@ import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponent
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentLocalSpace;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpeed;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpin;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionDynamic;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateInstant;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBox;
@@ -34,7 +40,7 @@ import java.util.function.Function;
 
 public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParticle>
 {
-	public Map<String, Function<JsonObject, BedrockComponentBase>> components = new HashMap<String, Function<JsonObject, BedrockComponentBase>>();
+	public Map<String, Function<JsonElement, BedrockComponentBase>> components = new HashMap<String, Function<JsonElement, BedrockComponentBase>>();
 
 	public BedrockParticleJsonAdapter()
 	{
@@ -58,22 +64,24 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 		this.components.put("minecraft:emitter_shape_point", (element) -> new BedrockComponentShapePoint().fromJson(element));
 		this.components.put("minecraft:emitter_shape_sphere", (element) -> new BedrockComponentShapeSphere().fromJson(element));
 
-		/* Lifetime */
+		/* Lifetime particle */
 		this.components.put("minecraft:particle_lifetime_expression", (element) -> new BedrockComponentLifetime().fromJson(element));
+		this.components.put("minecraft:particle_expire_if_in_blocks", (element) -> new BedrockComponentExpireInBlocks().fromJson(element));
+		this.components.put("minecraft:particle_expire_if_not_in_blocks", (element) -> new BedrockComponentExpireNotInBlocks().fromJson(element));
 
 		/* Appearance */
 		this.components.put("minecraft:particle_appearance_billboard", (element) -> new BedrockComponentAppearanceBillboard().fromJson(element));
 		this.components.put("minecraft:particle_appearance_lighting", (element) -> new BedrockComponentAppearanceLighting());
 		this.components.put("minecraft:particle_appearance_tinting", (element) -> new BedrockComponentAppearanceTinting().fromJson(element));
 
+		/* Motion & Rotation */
+		this.components.put("minecraft:particle_initial_speed", (element) -> new BedrockComponentInitialSpeed().fromJson(element));
+		this.components.put("minecraft:particle_initial_spin", (element) -> new BedrockComponentInitialSpin().fromJson(element));
+		this.components.put("minecraft:particle_motion_collision", (element) -> new BedrockComponentMotionCollision().fromJson(element));
+		this.components.put("minecraft:particle_motion_dynamic", (element) -> new BedrockComponentMotionDynamic().fromJson(element));
+
 		/* TODO:
-		 * 1. minecraft:emitter_initialization
-		 * 2. minecraft:particle_initial_speed
-		 * 3. minecraft:particle_initial_spin
-		 * 4. minecraft:particle_expire_if_in_blocks
-		 * 5. minecraft:particle_expire_if_not_in_blocks
-		 * 6. minecraft:particle_motion_collision
-		 * 7. minecraft:particle_motion_dynamic
+		 * 8. minecraft:particle_motion_parametric
 		 */
 	}
 
@@ -195,7 +203,7 @@ public class BedrockParticleJsonAdapter implements JsonDeserializer<BedrockParti
 
 			if (this.components.containsKey(key))
 			{
-				particle.components.add(this.components.get(key).apply(entry.getValue().getAsJsonObject()));
+				particle.components.add(this.components.get(key).apply(entry.getValue()));
 			}
 		}
 	}

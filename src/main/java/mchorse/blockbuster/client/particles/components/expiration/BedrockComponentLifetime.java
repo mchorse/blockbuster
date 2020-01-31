@@ -1,8 +1,9 @@
-package mchorse.blockbuster.client.particles.components;
+package mchorse.blockbuster.client.particles.components.expiration;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
 
@@ -12,8 +13,11 @@ public class BedrockComponentLifetime extends BedrockComponentBase
 	public boolean max;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonObject element)
+	public BedrockComponentBase fromJson(JsonElement elem)
 	{
+		if (!elem.isJsonObject()) return super.fromJson(elem);
+
+		JsonObject element = elem.getAsJsonObject();
 		JsonElement expression = null;
 
 		if (element.has("expiration_expression"))

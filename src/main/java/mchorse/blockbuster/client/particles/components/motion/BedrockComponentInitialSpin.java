@@ -1,4 +1,4 @@
-package mchorse.blockbuster.client.particles.components.lifetime;
+package mchorse.blockbuster.client.particles.components.motion;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -6,19 +6,20 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
 
-public class BedrockComponentLifetimeLooping extends BedrockComponentBase
+public class BedrockComponentInitialSpin extends BedrockComponentBase
 {
-	public MolangExpression activeTime;
-	public MolangExpression sleepTime;
+	public MolangExpression rotation = Molang.ZERO;
+	public MolangExpression rate = Molang.ZERO;
 
+	@Override
 	public BedrockComponentBase fromJson(JsonElement elem)
 	{
 		if (!elem.isJsonObject()) return super.fromJson(elem);
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("active_time")) this.activeTime = Molang.parse(element.get("active_time"));
-		if (element.has("sleep_time")) this.sleepTime = Molang.parse(element.get("sleep_time"));
+		if (element.has("rotation")) this.rotation = Molang.parse(element.get("rotation"));
+		if (element.has("rotation_rate")) this.rate = Molang.parse(element.get("rotation_rate"));
 
 		return super.fromJson(element);
 	}
