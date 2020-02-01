@@ -81,7 +81,9 @@ public class ModelExtrudedLayer
 
         if (id != -1)
         {
+            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             GL11.glCallList(id);
+            // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         }
 
         /* Clean up cache */

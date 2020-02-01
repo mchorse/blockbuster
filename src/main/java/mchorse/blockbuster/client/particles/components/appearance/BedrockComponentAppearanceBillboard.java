@@ -4,10 +4,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
+import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.mclib.utils.Interpolations;
+import net.minecraft.client.renderer.VertexBuffer;
 
-public class BedrockComponentAppearanceBillboard extends BedrockComponentBase
+public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleUpdate, IComponentParticleRender
 {
 	public MolangExpression sizeW = Molang.ZERO;
 	public MolangExpression sizeH = Molang.ZERO;
@@ -60,8 +66,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase
 
 	private void parseUv(JsonObject object)
 	{
-		if (object.has("texturewidth")) this.textureWidth = object.get("texturewidth").getAsInt();
-		if (object.has("textureheight")) this.textureHeight = object.get("textureheight").getAsInt();
+		if (object.has("texture_width")) this.textureWidth = object.get("texture_width").getAsInt();
+		if (object.has("texture_height")) this.textureHeight = object.get("texture_height").getAsInt();
 
 		if (object.has("uv") && object.get("uv").isJsonArray())
 		{
@@ -132,6 +138,65 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase
 		if (flipbook.has("stretch_to_lifetime")) this.stretchFPS = flipbook.get("stretch_to_lifetime").getAsBoolean();
 		if (flipbook.has("loop")) this.loop = flipbook.get("loop").getAsBoolean();
 	}
+
+	@Override
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
+	{
+		particle.w = this.sizeW.evaluate();
+		particle.h = this.sizeH.evaluate();
+
+		if (this.flipbook)
+		{
+
+		}
+		else
+		{
+			float u = this.uvX.evaluate();
+			float v = this.uvY.evaluate();
+			float w = this.uvW.evaluate();
+			float h = this.uvH.evaluate();
+
+			particle.u1 = u / (float) this.textureWidth;
+			particle.v1 = v / (float) this.textureHeight;
+			particle.u2 = (u + w) / (float) this.textureWidth;
+			particle.v2 = (v + h) / (float) this.textureHeight;
+		}
+	}
+
+	@Override
+	public void preRender(BedrockEmitter emitter)
+	{}
+
+	@Override
+	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks)
+	{
+		float px = Interpolations.lerp(particle.prevX, particle.x, partialTicks);
+		float py = Interpolations.lerp(particle.prevY, particle.y, partialTicks);
+		float pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
+
+		if (particle.relative)
+		{
+			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
+			py += Interpolations.lerp(emitter.target.prevPosY, emitter.target.posY, partialTicks);
+			pz += Interpolations.lerp(emitter.target.prevPosZ, emitter.target.posZ, partialTicks);
+		}
+
+		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
+		int lightX = light >> 16 & 65535;
+		int lightY = light & 65535;
+
+		float w = particle.w * 3;
+		float h = particle.h * 3;
+
+		builder.pos(px - w / 2, py + h / 2, pz).tex(particle.u1, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(px + w / 2, py + h / 2, pz).tex(particle.u2, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(px + w / 2, py - h / 2, pz).tex(particle.u2, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(px - w / 2, py - h / 2, pz).tex(particle.u1, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+	}
+
+	@Override
+	public void postRender(BedrockEmitter emitter)
+	{}
 
 	public static enum CameraFacing
 	{

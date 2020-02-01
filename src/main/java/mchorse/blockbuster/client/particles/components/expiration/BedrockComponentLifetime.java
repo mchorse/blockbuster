@@ -4,10 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.Molang;
 import mchorse.blockbuster.client.particles.molang.MolangExpression;
 
-public class BedrockComponentLifetime extends BedrockComponentBase
+public class BedrockComponentLifetime extends BedrockComponentBase implements IComponentParticleInitialize
 {
 	public MolangExpression expression;
 	public boolean max;
@@ -38,5 +41,14 @@ public class BedrockComponentLifetime extends BedrockComponentBase
 		this.expression = Molang.parse(expression);
 
 		return super.fromJson(element);
+	}
+
+	@Override
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
+	{
+		if (this.max)
+		{
+			particle.lifetime = (int) this.expression.evaluate() * 20;
+		}
 	}
 }

@@ -16,6 +16,13 @@ public class Molang
 
 			if (primitive.isString())
 			{
+				try
+				{
+					return new MolangConstant(Float.parseFloat(primitive.getAsString()));
+				}
+				catch (Exception e)
+				{}
+
 				/* TODO: Parse expression */
 			}
 			else

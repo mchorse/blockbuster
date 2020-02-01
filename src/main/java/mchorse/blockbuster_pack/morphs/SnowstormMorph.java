@@ -1,11 +1,13 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,15 +15,19 @@ public class SnowstormMorph extends AbstractMorph
 {
 	public String scheme = "";
 
-	public boolean renderInside;
-
 	@SideOnly(Side.CLIENT)
-	private BedrockEmitter emitter = new BedrockEmitter();
+	public BedrockEmitter emitter = new BedrockEmitter();
 
 	public SnowstormMorph()
 	{
 		super();
 		this.name = "snowstorm";
+	}
+
+	public void setScheme(String key)
+	{
+		this.scheme = key;
+		this.emitter.setScheme(Blockbuster.proxy.particles.presets.get(key));
 	}
 
 	@Override
@@ -33,14 +39,8 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double v, double v1, double v2, float v3, float v4)
 	{
-		if (this.renderInside)
-		{
-			/* TODO: render emitter */
-		}
-		else
-		{
-			RenderingHandler.emitters.add(null);
-		}
+		this.emitter.setTarget(entityLivingBase);
+		RenderingHandler.emitters.add(this.emitter);
 	}
 
 	@Override
@@ -48,7 +48,17 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		super.update(target, cap);
 
-		/* TODO: update emitter */
+		if (target.worldObj.isRemote)
+		{
+			this.updateEmitter(target);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateEmitter(EntityLivingBase target)
+	{
+		this.emitter.setTarget(target);
+		this.emitter.update();
 	}
 
 	@Override
@@ -56,7 +66,9 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		SnowstormMorph morph = new SnowstormMorph();
 
-
+		morph.name = this.name;
+		morph.settings = this.settings;
+		morph.scheme = this.scheme;
 
 		return morph;
 	}
@@ -71,5 +83,32 @@ public class SnowstormMorph extends AbstractMorph
 	public float getHeight(EntityLivingBase entityLivingBase)
 	{
 		return 1.8F;
+	}
+
+	@Override
+	public void reset()
+	{
+		super.reset();
+
+		this.scheme = "";
+	}
+
+	@Override
+	public void fromNBT(NBTTagCompound tag)
+	{
+		super.fromNBT(tag);
+
+		if (tag.hasKey("Scheme"))
+		{
+			this.setScheme(tag.getString("Scheme"));
+		}
+	}
+
+	@Override
+	public void toNBT(NBTTagCompound tag)
+	{
+		super.toNBT(tag);
+
+		tag.setString("Scheme", this.scheme);
 	}
 }

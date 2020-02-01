@@ -27,7 +27,7 @@ public class BedrockComponentShapeSphere extends BedrockComponentShapeSurfaced
 	}
 
 	@Override
-	public void apply(BedrockParticle particle, BedrockEmitter emitter)
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		float centerX = this.offset[0].evaluate();
 		float centerY = this.offset[1].evaluate();

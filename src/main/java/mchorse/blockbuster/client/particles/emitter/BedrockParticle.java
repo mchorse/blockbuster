@@ -10,6 +10,7 @@ public class BedrockParticle
 	public int age;
 	public int lifetime;
 	public boolean dead;
+	public boolean relative;
 
 	public float rotation;
 	public float rotationVelocity;
@@ -29,10 +30,13 @@ public class BedrockParticle
 	public float g = 1;
 	public float b = 1;
 	public float a = 1;
-	public float prevR = 1;
-	public float prevG = 1;
-	public float prevB = 1;
-	public float prevA = 1;
+
+	public float u1;
+	public float v1;
+	public float u2;
+	public float v2;
+	public float w;
+	public float h;
 
 	public void update()
 	{
@@ -40,10 +44,6 @@ public class BedrockParticle
 		this.prevX = this.x;
 		this.prevY = this.y;
 		this.prevZ = this.z;
-		this.prevR = this.r;
-		this.prevG = this.g;
-		this.prevB = this.b;
-		this.prevA = this.a;
 
 		this.rotation += this.rotationVelocity;
 		this.x += this.motionX;

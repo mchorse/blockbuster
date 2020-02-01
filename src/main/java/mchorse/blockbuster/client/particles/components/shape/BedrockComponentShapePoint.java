@@ -6,7 +6,7 @@ import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 public class BedrockComponentShapePoint extends BedrockComponentShapeBase
 {
 	@Override
-	public void apply(BedrockParticle particle, BedrockEmitter emitter)
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.x = particle.prevX = this.offset[0].evaluate();
 		particle.y = particle.prevY = this.offset[1].evaluate();

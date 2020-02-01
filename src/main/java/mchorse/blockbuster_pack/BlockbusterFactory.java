@@ -21,6 +21,7 @@ import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
+import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
@@ -99,6 +100,12 @@ public class BlockbusterFactory implements IMorphFactory
         {
             return I18n.format("blockbuster.morph.particle");
         }
+        else if (morph instanceof SnowstormMorph)
+        {
+            SnowstormMorph particle = (SnowstormMorph) morph;
+
+            return particle.emitter.scheme != null ? particle.emitter.scheme.identifier : particle.name;
+        }
 
         String[] splits = morph.name.split("\\.");
 
@@ -139,6 +146,10 @@ public class BlockbusterFactory implements IMorphFactory
         else if (name.equals("particle"))
         {
             morph = new ParticleMorph();
+        }
+        else if (name.equals("snowstorm"))
+        {
+            morph = new SnowstormMorph();
         }
         else
         {
@@ -273,15 +284,23 @@ public class BlockbusterFactory implements IMorphFactory
             morphs.addMorphVariant("structure", "blockbuster_extra", key, morph);
         }
 
-        /* Particle morph */
+        /* Particle morphs */
         morphs.addMorph("particle", "blockbuster_extra", new ParticleMorph());
 
         Blockbuster.proxy.particles.reload();
+
+        for (String key : Blockbuster.proxy.particles.presets.keySet())
+        {
+            SnowstormMorph morph = new SnowstormMorph();
+
+            morph.setScheme(key);
+            morphs.addMorphVariant("snowstorm", "blockbuster_extra", key, morph);
+        }
     }
 
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("record") || morph.equals("structure") || morph.equals("particle");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("record") || morph.equals("structure") || morph.equals("particle")  || morph.equals("snowstorm");
     }
 }

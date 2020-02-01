@@ -1,18 +1,9 @@
 package mchorse.blockbuster.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
@@ -22,7 +13,10 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -30,6 +24,12 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Rendering handler
@@ -112,6 +112,46 @@ public class RenderingHandler
         return false;
     }
 
+    /**
+     * Render particle emitters
+     */
+    public static void renderParticles(float partialTicks)
+    {
+        if (!emitters.isEmpty())
+        {
+            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * (double) partialTicks;
+            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
+            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
+
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            GlStateManager.alphaFunc(516, 0.003921569F);
+
+            VertexBuffer builder = Tessellator.getInstance().getBuffer();
+
+            GlStateManager.disableTexture2D();
+
+            builder.setTranslation(-playerX, -playerY, -playerZ);
+
+            GlStateManager.disableCull();
+            GlStateManager.enableTexture2D();
+
+            for (BedrockEmitter emitter : emitters)
+            {
+                emitter.render(partialTicks);
+            }
+
+            builder.setTranslation(0, 0, 0);
+
+            GlStateManager.disableBlend();
+            GlStateManager.alphaFunc(516, 0.1F);
+        }
+
+        emitters.clear();
+    }
+
     public RenderingHandler(GuiRecordingOverlay overlay)
     {
         this.overlay = overlay;
@@ -177,26 +217,11 @@ public class RenderingHandler
     @SubscribeEvent
     public void onRenderLast(RenderWorldLastEvent event)
     {
+        renderParticles(event.getPartialTicks());
+
         for (GifTexture texture : gifs.values())
         {
             texture.tick();
         }
-
-        /* Render custom particle emitters */
-        if (!emitters.isEmpty())
-        {
-            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-            double ticks = event.getPartialTicks();
-            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * ticks;
-            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * ticks;
-            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * ticks;
-
-            for (BedrockEmitter emitter : emitters)
-            {
-                emitter.render(-playerX, camera.getEyeHeight() - playerY, -playerZ);
-            }
-        }
-
-        emitters.clear();
     }
 }

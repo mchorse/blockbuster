@@ -35,17 +35,17 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 	}
 
 	@Override
-	public void apply(BedrockParticle particle, BedrockEmitter emitter)
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		if (this.direction != null)
 		{
-			particle.motionX = this.direction[0].evaluate();
-			particle.motionY = this.direction[1].evaluate();
-			particle.motionZ = this.direction[2].evaluate();
+			particle.motionX = this.direction[0].evaluate() / 20F;
+			particle.motionY = this.direction[1].evaluate() / 20F;
+			particle.motionZ = this.direction[2].evaluate() / 20F;
 		}
 		else
 		{
-			float speed = this.speed.evaluate();
+			float speed = this.speed.evaluate() / 20F;
 
 			particle.motionX *= speed;
 			particle.motionY *= speed;

@@ -46,7 +46,7 @@ public class BedrockScheme
 
 		for (BedrockComponentBase component : this.components)
 		{
-			if (component.getClass().isAssignableFrom(clazz))
+			if (clazz.isAssignableFrom(component.getClass()))
 			{
 				list.add((T) component);
 			}

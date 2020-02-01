@@ -28,7 +28,7 @@ public class BedrockComponentInitialSpin extends BedrockComponentBase implements
 	}
 
 	@Override
-	public void apply(BedrockParticle particle, BedrockEmitter emitter)
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.rotation = this.rotation.evaluate();
 		particle.rotationVelocity = this.rate.evaluate();
