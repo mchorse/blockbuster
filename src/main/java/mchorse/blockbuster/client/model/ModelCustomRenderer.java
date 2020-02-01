@@ -110,14 +110,8 @@ public class ModelCustomRenderer extends ModelRenderer
 
         if (this.limb.opacity != 1.0F)
         {
-            GlStateManager.enableNormalize();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        }
-        else
-        {
-            GlStateManager.disableNormalize();
-            GlStateManager.disableBlend();
         }
 
         if (!this.limb.lighting)
