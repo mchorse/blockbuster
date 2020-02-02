@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterInitiali
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.mclib.math.Variable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -27,6 +28,12 @@ public class BedrockEmitter
 	public World world;
 
 	private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+
+	/* Cached variable references to avoid hash look ups */
+	private Variable random1;
+	private Variable random2;
+	private Variable random3;
+	private Variable random4;
 
 	public void setTarget(EntityLivingBase target)
 	{
@@ -52,6 +59,19 @@ public class BedrockEmitter
 		{
 			component.apply(this);
 		}
+
+		this.random1 = scheme.parser.variables.get("variable.particle_random_1");
+		this.random2 = scheme.parser.variables.get("variable.particle_random_2");
+		this.random3 = scheme.parser.variables.get("variable.particle_random_3");
+		this.random4 = scheme.parser.variables.get("variable.particle_random_4");
+	}
+
+	private void setVariables(BedrockParticle particle)
+	{
+		if (this.random1 != null) this.random1.set(particle.random1);
+		if (this.random2 != null) this.random2.set(particle.random2);
+		if (this.random3 != null) this.random3.set(particle.random3);
+		if (this.random4 != null) this.random4.set(particle.random4);
 	}
 
 	public void update()
@@ -66,10 +86,11 @@ public class BedrockEmitter
 			BedrockParticle particle = it.next();
 
 			particle.update();
+			this.setVariables(particle);
 
 			for (IComponentParticleUpdate component : components)
 			{
-				component.apply(this, particle);
+				component.update(this, particle);
 			}
 
 			if (particle.dead)
@@ -82,6 +103,8 @@ public class BedrockEmitter
 	private void spawnParticle()
 	{
 		BedrockParticle particle = new BedrockParticle();
+
+		this.setVariables(particle);
 
 		for (IComponentParticleInitialize component : this.scheme.getComponents(IComponentParticleInitialize.class))
 		{

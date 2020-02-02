@@ -4,8 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,9 +47,9 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase
 	}
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
@@ -65,7 +66,7 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase
 				JsonObject colorObject = color.getAsJsonObject();
 				JsonElement gradient = colorObject.get("gradient");
 
-				MolangExpression expression = Molang.parse(colorObject.get("interpolant"));
+				MolangExpression expression = parser.parseJson(colorObject.get("interpolant"));
 				List<Color.Gradient.ColorStop> colorStops = new ArrayList<Color.Gradient.ColorStop>();
 
 				if (gradient.isJsonObject())
@@ -95,6 +96,6 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase
 			}
 		}
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 }

@@ -1,6 +1,6 @@
 package mchorse.blockbuster.client.particles.components.appearance;
 
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import java.util.List;
 

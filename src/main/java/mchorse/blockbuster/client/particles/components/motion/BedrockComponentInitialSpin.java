@@ -6,31 +6,32 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentInitialSpin extends BedrockComponentBase implements IComponentParticleInitialize
 {
-	public MolangExpression rotation = Molang.ZERO;
-	public MolangExpression rate = Molang.ZERO;
+	public MolangExpression rotation = MolangParser.ZERO;
+	public MolangExpression rate = MolangParser.ZERO;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("rotation")) this.rotation = Molang.parse(element.get("rotation"));
-		if (element.has("rotation_rate")) this.rate = Molang.parse(element.get("rotation_rate"));
+		if (element.has("rotation")) this.rotation = parser.parseJson(element.get("rotation"));
+		if (element.has("rotation_rate")) this.rate = parser.parseJson(element.get("rotation_rate"));
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.rotation = this.rotation.evaluate();
-		particle.rotationVelocity = this.rate.evaluate();
+		particle.rotation = (float) this.rotation.get();
+		particle.rotationVelocity = (float) this.rate.get();
 	}
 }

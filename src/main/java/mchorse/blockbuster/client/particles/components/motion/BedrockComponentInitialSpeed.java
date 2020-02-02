@@ -6,16 +6,17 @@ import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentInitialSpeed extends BedrockComponentBase implements IComponentParticleInitialize
 {
-	public MolangExpression speed = Molang.ZERO;
+	public MolangExpression speed = MolangParser.ZERO;
 	public MolangExpression[] direction;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement element)
+	public BedrockComponentBase fromJson(JsonElement element, MolangParser parser) throws MolangException
 	{
 		if (element.isJsonArray())
 		{
@@ -23,15 +24,15 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 
 			if (array.size() >= 3)
 			{
-				this.direction = new MolangExpression[] {Molang.parse(array.get(0)), Molang.parse(array.get(1)), Molang.parse(array.get(2))};
+				this.direction = new MolangExpression[] {parser.parseJson(array.get(0)), parser.parseJson(array.get(1)), parser.parseJson(array.get(2))};
 			}
 		}
 		else if (element.isJsonPrimitive())
 		{
-			this.speed = Molang.parse(element);
+			this.speed = parser.parseJson(element);
 		}
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
 	@Override
@@ -39,13 +40,13 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 	{
 		if (this.direction != null)
 		{
-			particle.motionX = this.direction[0].evaluate() / 20F;
-			particle.motionY = this.direction[1].evaluate() / 20F;
-			particle.motionZ = this.direction[2].evaluate() / 20F;
+			particle.motionX = (float) this.direction[0].get() / 20F;
+			particle.motionY = (float) this.direction[1].get() / 20F;
+			particle.motionZ = (float) this.direction[2].get() / 20F;
 		}
 		else
 		{
-			float speed = this.speed.evaluate() / 20F;
+			float speed = (float) this.speed.get() / 20F;
 
 			particle.motionX *= speed;
 			particle.motionY *= speed;

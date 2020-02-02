@@ -5,18 +5,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public abstract class BedrockComponentShapeBase extends BedrockComponentBase implements IComponentParticleInitialize
 {
-	public MolangExpression[] offset = {Molang.ZERO, Molang.ZERO, Molang.ZERO};
+	public MolangExpression[] offset = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public ShapeDirection direction = ShapeDirection.OUTWARDS;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
@@ -26,9 +27,9 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 
 			if (array.size() >= 3)
 			{
-				this.offset[0] = Molang.parse(array.get(0));
-				this.offset[1] = Molang.parse(array.get(1));
-				this.offset[2] = Molang.parse(array.get(2));
+				this.offset[0] = parser.parseJson(array.get(0));
+				this.offset[1] = parser.parseJson(array.get(1));
+				this.offset[2] = parser.parseJson(array.get(2));
 			}
 		}
 
@@ -50,14 +51,14 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 				if (array.size() >= 3)
 				{
 					this.direction = new ShapeDirection.Vector(
-						Molang.parse(array.get(0)),
-						Molang.parse(array.get(1)),
-						Molang.parse(array.get(2))
+						parser.parseJson(array.get(0)),
+						parser.parseJson(array.get(1)),
+						parser.parseJson(array.get(2))
 					);
 				}
 			}
 		}
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 }

@@ -6,20 +6,21 @@ import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import javax.vecmath.Vector3f;
 
 public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 {
-	public MolangExpression[] normal = {Molang.ZERO, Molang.ONE, Molang.ZERO};
-	public MolangExpression radius = Molang.ONE;
+	public MolangExpression[] normal = {MolangParser.ZERO, MolangParser.ONE, MolangParser.ZERO};
+	public MolangExpression radius = MolangParser.ONE;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
@@ -29,25 +30,25 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 
 			if (array.size() >= 3)
 			{
-				this.normal[0] = Molang.parse(array.get(0));
-				this.normal[1] = Molang.parse(array.get(1));
-				this.normal[2] = Molang.parse(array.get(2));
+				this.normal[0] = parser.parseJson(array.get(0));
+				this.normal[1] = parser.parseJson(array.get(1));
+				this.normal[2] = parser.parseJson(array.get(2));
 			}
 		}
 
-		if (element.has("radius")) this.radius = Molang.parse(element.get("radius"));
+		if (element.has("radius")) this.radius = parser.parseJson(element.get("radius"));
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		float centerX = this.offset[0].evaluate();
-		float centerY = this.offset[1].evaluate();
-		float centerZ = this.offset[2].evaluate();
+		float centerX = (float) this.offset[0].get();
+		float centerY = (float) this.offset[1].get();
+		float centerZ = (float) this.offset[2].get();
 
-		Vector3f normal = new Vector3f(this.normal[0].evaluate(), this.normal[1].evaluate(), this.normal[2].evaluate());
+		Vector3f normal = new Vector3f((float) this.normal[0].get(), (float) this.normal[1].get(), (float) this.normal[2].get());
 
 		normal.normalize();
 

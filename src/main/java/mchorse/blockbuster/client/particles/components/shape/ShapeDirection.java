@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.particles.components.shape;
 
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import javax.vecmath.Vector3f;
 
@@ -51,9 +51,9 @@ public abstract class ShapeDirection
 		@Override
 		public void applyDirection(BedrockParticle particle, float x, float y, float z)
 		{
-			particle.motionX = this.x.evaluate();
-			particle.motionY = this.y.evaluate();
-			particle.motionZ = this.z.evaluate();
+			particle.motionX = (float) this.x.get();
+			particle.motionY = (float) this.y.get();
+			particle.motionZ = (float) this.z.get();
 		}
 	}
 }

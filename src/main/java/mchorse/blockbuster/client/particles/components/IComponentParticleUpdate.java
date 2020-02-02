@@ -5,5 +5,5 @@ import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 
 public interface IComponentParticleUpdate
 {
-	public void apply(BedrockEmitter emitter, BedrockParticle particle);
+	public void update(BedrockEmitter emitter, BedrockParticle particle);
 }

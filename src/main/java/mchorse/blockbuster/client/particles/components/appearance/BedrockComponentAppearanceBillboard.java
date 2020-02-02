@@ -8,22 +8,23 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.renderer.VertexBuffer;
 
 public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleUpdate, IComponentParticleRender
 {
-	public MolangExpression sizeW = Molang.ZERO;
-	public MolangExpression sizeH = Molang.ZERO;
+	public MolangExpression sizeW = MolangParser.ZERO;
+	public MolangExpression sizeH = MolangParser.ZERO;
 	public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
 	public int textureWidth;
 	public int textureHeight;
-	public MolangExpression uvX = Molang.ZERO;
-	public MolangExpression uvY = Molang.ZERO;
-	public MolangExpression uvW = Molang.ZERO;
-	public MolangExpression uvH = Molang.ZERO;
+	public MolangExpression uvX = MolangParser.ZERO;
+	public MolangExpression uvY = MolangParser.ZERO;
+	public MolangExpression uvW = MolangParser.ZERO;
+	public MolangExpression uvH = MolangParser.ZERO;
 
 	public boolean flipbook = false;
 	public float stepX;
@@ -34,9 +35,9 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public boolean loop = false;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
@@ -46,8 +47,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (size.size() >= 2)
 			{
-				this.sizeW = Molang.parse(size.get(0));
-				this.sizeH = Molang.parse(size.get(1));
+				this.sizeW = parser.parseJson(size.get(0));
+				this.sizeH = parser.parseJson(size.get(1));
 			}
 		}
 
@@ -58,13 +59,13 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 		if (element.has("uv") && element.get("uv").isJsonObject())
 		{
-			this.parseUv(element.get("uv").getAsJsonObject());
+			this.parseUv(element.get("uv").getAsJsonObject(), parser);
 		}
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
-	private void parseUv(JsonObject object)
+	private void parseUv(JsonObject object, MolangParser parser) throws MolangException
 	{
 		if (object.has("texture_width")) this.textureWidth = object.get("texture_width").getAsInt();
 		if (object.has("texture_height")) this.textureHeight = object.get("texture_height").getAsInt();
@@ -75,8 +76,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (uv.size() >= 2)
 			{
-				this.uvX = Molang.parse(uv.get(0));
-				this.uvY = Molang.parse(uv.get(1));
+				this.uvX = parser.parseJson(uv.get(0));
+				this.uvY = parser.parseJson(uv.get(1));
 			}
 		}
 
@@ -86,19 +87,19 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (uv.size() >= 2)
 			{
-				this.uvW = Molang.parse(uv.get(0));
-				this.uvH = Molang.parse(uv.get(1));
+				this.uvW = parser.parseJson(uv.get(0));
+				this.uvH = parser.parseJson(uv.get(1));
 			}
 		}
 
 		if (object.has("flipbook") && object.get("flipbook").isJsonObject())
 		{
 			this.flipbook = true;
-			this.parseFlipbook(object.get("flipbook").getAsJsonObject());
+			this.parseFlipbook(object.get("flipbook").getAsJsonObject(), parser);
 		}
 	}
 
-	private void parseFlipbook(JsonObject flipbook)
+	private void parseFlipbook(JsonObject flipbook, MolangParser parser) throws MolangException
 	{
 		if (flipbook.has("base_UV") && flipbook.get("base_UV").isJsonArray())
 		{
@@ -106,8 +107,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (uv.size() >= 2)
 			{
-				this.uvX = Molang.parse(uv.get(0));
-				this.uvX = Molang.parse(uv.get(1));
+				this.uvX = parser.parseJson(uv.get(0));
+				this.uvX = parser.parseJson(uv.get(1));
 			}
 		}
 
@@ -117,8 +118,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (uv.size() >= 2)
 			{
-				this.uvW = Molang.parse(uv.get(0));
-				this.uvH = Molang.parse(uv.get(1));
+				this.uvW = parser.parseJson(uv.get(0));
+				this.uvH = parser.parseJson(uv.get(1));
 			}
 		}
 
@@ -134,16 +135,16 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		}
 
 		if (flipbook.has("frames_per_second")) this.fps = flipbook.get("frames_per_second").getAsFloat();
-		if (flipbook.has("max_frame")) this.maxFrame = Molang.parse(flipbook.get("max_frame"));
+		if (flipbook.has("max_frame")) this.maxFrame = parser.parseJson(flipbook.get("max_frame"));
 		if (flipbook.has("stretch_to_lifetime")) this.stretchFPS = flipbook.get("stretch_to_lifetime").getAsBoolean();
 		if (flipbook.has("loop")) this.loop = flipbook.get("loop").getAsBoolean();
 	}
 
 	@Override
-	public void apply(BedrockEmitter emitter, BedrockParticle particle)
+	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.w = this.sizeW.evaluate();
-		particle.h = this.sizeH.evaluate();
+		particle.w = (float) this.sizeW.get();
+		particle.h = (float) this.sizeH.get();
 
 		if (this.flipbook)
 		{
@@ -151,10 +152,10 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		}
 		else
 		{
-			float u = this.uvX.evaluate();
-			float v = this.uvY.evaluate();
-			float w = this.uvW.evaluate();
-			float h = this.uvH.evaluate();
+			float u = (float) this.uvX.get();
+			float v = (float) this.uvY.get();
+			float w = (float) this.uvW.get();
+			float h = (float) this.uvH.get();
 
 			particle.u1 = u / (float) this.textureWidth;
 			particle.v1 = v / (float) this.textureHeight;
@@ -185,8 +186,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;
 
-		float w = particle.w * 3;
-		float h = particle.h * 3;
+		float w = particle.w;
+		float h = particle.h;
 
 		builder.pos(px - w / 2, py + h / 2, pz).tex(particle.u1, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 		builder.pos(px + w / 2, py + h / 2, pz).tex(particle.u2, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();

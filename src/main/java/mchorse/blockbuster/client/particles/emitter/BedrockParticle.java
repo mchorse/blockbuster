@@ -50,7 +50,7 @@ public class BedrockParticle
 		this.y += this.motionY;
 		this.z += this.motionZ;
 
-		if (this.age >= this.lifetime)
+		if (this.lifetime > 0 && this.age >= this.lifetime)
 		{
 			this.dead = true;
 		}

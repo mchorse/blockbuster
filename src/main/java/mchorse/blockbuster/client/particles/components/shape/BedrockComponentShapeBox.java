@@ -6,16 +6,17 @@ import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentShapeBox extends BedrockComponentShapeSurfaced
 {
-	public MolangExpression[] halfDimensions = {Molang.ZERO, Molang.ZERO, Molang.ZERO};
+	public MolangExpression[] halfDimensions = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
@@ -25,25 +26,25 @@ public class BedrockComponentShapeBox extends BedrockComponentShapeSurfaced
 
 			if (array.size() >= 3)
 			{
-				this.halfDimensions[0] = Molang.parse(array.get(0));
-				this.halfDimensions[1] = Molang.parse(array.get(1));
-				this.halfDimensions[2] = Molang.parse(array.get(2));
+				this.halfDimensions[0] = parser.parseJson(array.get(0));
+				this.halfDimensions[1] = parser.parseJson(array.get(1));
+				this.halfDimensions[2] = parser.parseJson(array.get(2));
 			}
 		}
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		float centerX = this.offset[0].evaluate();
-		float centerY = this.offset[1].evaluate();
-		float centerZ = this.offset[2].evaluate();
+		float centerX = (float) this.offset[0].get();
+		float centerY = (float) this.offset[1].get();
+		float centerZ = (float) this.offset[2].get();
 
-		float w = this.halfDimensions[0].evaluate();
-		float h = this.halfDimensions[1].evaluate();
-		float d = this.halfDimensions[2].evaluate();
+		float w = (float) this.halfDimensions[0].get();
+		float h = (float) this.halfDimensions[1].get();
+		float d = (float) this.halfDimensions[2].get();
 
 		particle.x = particle.prevX = centerX + ((float) Math.random() - 0.5F) * w;
 		particle.y = particle.prevY = centerY + ((float) Math.random() - 0.5F) * h;

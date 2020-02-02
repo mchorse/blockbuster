@@ -5,34 +5,35 @@ import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
-import mchorse.blockbuster.client.particles.molang.Molang;
-import mchorse.blockbuster.client.particles.molang.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.MolangException;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import javax.vecmath.Vector3f;
 
 public class BedrockComponentShapeSphere extends BedrockComponentShapeSurfaced
 {
-	public MolangExpression radius = Molang.ONE;
+	public MolangExpression radius = MolangParser.ONE;
 
 	@Override
-	public BedrockComponentBase fromJson(JsonElement elem)
+	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem);
+		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("radius")) this.radius = Molang.parse(element.get("radius"));
+		if (element.has("radius")) this.radius = parser.parseJson(element.get("radius"));
 
-		return super.fromJson(element);
+		return super.fromJson(element, parser);
 	}
 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		float centerX = this.offset[0].evaluate();
-		float centerY = this.offset[1].evaluate();
-		float centerZ = this.offset[2].evaluate();
-		float radius = this.radius.evaluate();
+		float centerX = (float) this.offset[0].get();
+		float centerY = (float) this.offset[1].get();
+		float centerZ = (float) this.offset[2].get();
+		float radius = (float) this.radius.get();
 
 		Vector3f direction = new Vector3f((float) Math.random() * 2 - 1, (float) Math.random() * 2 - 1, (float) Math.random() * 2 - 1);
 		direction.normalize();

@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.particles;
 import com.google.gson.GsonBuilder;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class BedrockScheme
 
 	/* Particle's components */
 	public List<BedrockComponentBase> components = new ArrayList<BedrockComponentBase>();
+
+	/* MoLang integration */
+	public MolangParser parser = new MolangParser();
 
 	public static BedrockScheme parse(String json)
 	{
