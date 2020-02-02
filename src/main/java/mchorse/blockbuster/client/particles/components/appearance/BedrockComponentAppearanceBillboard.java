@@ -12,7 +12,10 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -56,9 +59,9 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			}
 		}
 
-		if (element.has("face_camera_mode"))
+		if (element.has("facing_camera_mode"))
 		{
-			this.facing = CameraFacing.fromString(element.get("face_camera_mode").getAsString());
+			this.facing = CameraFacing.fromString(element.get("facing_camera_mode").getAsString());
 		}
 
 		if (element.has("uv") && element.get("uv").isJsonObject())
@@ -180,6 +183,32 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		float pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
+		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+
+		float entityYaw = 180 - camera.prevRotationYaw + (camera.rotationYaw - camera.prevRotationYaw) * partialTicks;
+		float entityPitch = 180 - camera.prevRotationPitch + (camera.rotationPitch - camera.prevRotationPitch) * partialTicks;
+
+		if (this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y)
+		{
+			double cx = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
+			double cy = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
+			double cz = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
+
+			double dX = cx - px;
+			double dY = cy - py;
+			double dZ = cz - pz;
+
+			double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
+
+			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
+			entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
+		}
+
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 2)
+		{
+			entityPitch += 180;
+		}
+
 		if (particle.relative)
 		{
 			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
@@ -205,9 +234,22 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		matrix4f.setIdentity();
 
 		Matrix4f rotate = new Matrix4f();
-		rotate.rotZ(angle / 180 * (float) Math.PI);
 
+		if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
+		{
+			rotate.rotY(entityYaw / 180 * (float) Math.PI);
+			matrix4f.mul(rotate);
+			rotate.rotX(entityPitch / 180 * (float) Math.PI);
+			matrix4f.mul(rotate);
+		}
+		else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
+			rotate.rotY(entityYaw / 180 * (float) Math.PI);
+			matrix4f.mul(rotate);
+		}
+
+		rotate.rotZ(angle / 180 * (float) Math.PI);
 		matrix4f.mul(rotate);
+
 		matrix4f.setTranslation(new Vector3f(px, py, pz));
 
 		for (Vector4f vertex : vertices)
