@@ -28,13 +28,31 @@ public class BedrockEmitter
 	public EntityLivingBase target;
 	public World world;
 
+	/* Runtime properties */
+	private int age;
+	private int lifetime;
+
+	public float random1 = (float) Math.random();
+	public float random2 = (float) Math.random();
+	public float random3 = (float) Math.random();
+	public float random4 = (float) Math.random();
+
 	private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
 
 	/* Cached variable references to avoid hash look ups */
-	private Variable random1;
-	private Variable random2;
-	private Variable random3;
-	private Variable random4;
+	private Variable varAge;
+	private Variable varLifetime;
+	private Variable varRandom1;
+	private Variable varRandom2;
+	private Variable varRandom3;
+	private Variable varRandom4;
+
+	private Variable varEmitterAge;
+	private Variable varEmitterLifetime;
+	private Variable varEmitterRandom1;
+	private Variable varEmitterRandom2;
+	private Variable varEmitterRandom3;
+	private Variable varEmitterRandom4;
 
 	public void setTarget(EntityLivingBase target)
 	{
@@ -56,43 +74,83 @@ public class BedrockEmitter
 			return;
 		}
 
+		this.setupVariables();
+		this.setEmitterVariables();
+
 		for (IComponentEmitterInitialize component : this.scheme.getComponents(IComponentEmitterInitialize.class))
 		{
 			component.apply(this);
 		}
-
-		this.random1 = scheme.parser.variables.get("variable.particle_random_1");
-		this.random2 = scheme.parser.variables.get("variable.particle_random_2");
-		this.random3 = scheme.parser.variables.get("variable.particle_random_3");
-		this.random4 = scheme.parser.variables.get("variable.particle_random_4");
 	}
 
-	private void setVariables(BedrockParticle particle)
+	private void setupVariables()
 	{
-		if (this.random1 != null) this.random1.set(particle.random1);
-		if (this.random2 != null) this.random2.set(particle.random2);
-		if (this.random3 != null) this.random3.set(particle.random3);
-		if (this.random4 != null) this.random4.set(particle.random4);
+		this.varAge = scheme.parser.variables.get("variable.particle_age");
+		this.varLifetime = scheme.parser.variables.get("variable.particle_lifetime");
+		this.varRandom1 = scheme.parser.variables.get("variable.particle_random_1");
+		this.varRandom2 = scheme.parser.variables.get("variable.particle_random_2");
+		this.varRandom3 = scheme.parser.variables.get("variable.particle_random_3");
+		this.varRandom4 = scheme.parser.variables.get("variable.particle_random_4");
+
+		this.varEmitterAge = scheme.parser.variables.get("variable.emitter_age");
+		this.varEmitterLifetime = scheme.parser.variables.get("variable.emitter_lifetime");
+		this.varEmitterRandom1 = scheme.parser.variables.get("variable.emitter_random_1");
+		this.varEmitterRandom2 = scheme.parser.variables.get("variable.emitter_random_2");
+		this.varEmitterRandom3 = scheme.parser.variables.get("variable.emitter_random_3");
+		this.varEmitterRandom4 = scheme.parser.variables.get("variable.emitter_random_4");
+	}
+
+	private void setParticleVariables(BedrockParticle particle)
+	{
+		if (this.varAge != null) this.varAge.set(particle.age / 20F);
+		if (this.varLifetime != null) this.varLifetime.set(particle.lifetime / 20F);
+		if (this.varRandom1 != null) this.varRandom1.set(particle.random1);
+		if (this.varRandom2 != null) this.varRandom2.set(particle.random2);
+		if (this.varRandom3 != null) this.varRandom3.set(particle.random3);
+		if (this.varRandom4 != null) this.varRandom4.set(particle.random4);
+	}
+
+	private void setEmitterVariables()
+	{
+		if (this.varEmitterAge != null) this.varEmitterAge.set(this.age / 20F);
+		if (this.varEmitterLifetime != null) this.varEmitterLifetime.set(this.lifetime / 20F);
+		if (this.varEmitterRandom1 != null) this.varEmitterRandom1.set(this.random1);
+		if (this.varEmitterRandom2 != null) this.varEmitterRandom2.set(this.random2);
+		if (this.varEmitterRandom3 != null) this.varEmitterRandom3.set(this.random3);
+		if (this.varEmitterRandom4 != null) this.varEmitterRandom4.set(this.random4);
 	}
 
 	public void update()
 	{
-		this.spawnParticle();
+		if (this.scheme == null)
+		{
+			return;
+		}
 
-		Iterator<BedrockParticle> it = this.particles.iterator();
-		List<IComponentParticleUpdate> components = this.scheme.getComponents(IComponentParticleUpdate.class);
+		this.spawnParticle();
+		this.setEmitterVariables();
 
 		for (IComponentEmitterUpdate component : this.scheme.getComponents(IComponentEmitterUpdate.class))
 		{
 			component.update(this);
 		}
 
+		this.updateParticles();
+
+		this.age ++;
+	}
+
+	private void updateParticles()
+	{
+		List<IComponentParticleUpdate> components = this.scheme.getComponents(IComponentParticleUpdate.class);
+		Iterator<BedrockParticle> it = this.particles.iterator();
+
 		while (it.hasNext())
 		{
 			BedrockParticle particle = it.next();
 
 			particle.update();
-			this.setVariables(particle);
+			this.setParticleVariables(particle);
 
 			for (IComponentParticleUpdate component : components)
 			{
@@ -110,7 +168,7 @@ public class BedrockEmitter
 	{
 		BedrockParticle particle = new BedrockParticle();
 
-		this.setVariables(particle);
+		this.setParticleVariables(particle);
 
 		for (IComponentParticleInitialize component : this.scheme.getComponents(IComponentParticleInitialize.class))
 		{
@@ -129,7 +187,7 @@ public class BedrockEmitter
 
 	public void render(float partialTicks)
 	{
-		if (this.particles.isEmpty())
+		if (this.scheme == null || this.particles.isEmpty())
 		{
 			return;
 		}

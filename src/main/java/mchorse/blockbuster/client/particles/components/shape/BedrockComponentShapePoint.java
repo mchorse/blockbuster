@@ -12,6 +12,9 @@ public class BedrockComponentShapePoint extends BedrockComponentShapeBase
 		particle.y = particle.prevY = (float) this.offset[1].get();
 		particle.z = particle.prevZ = (float) this.offset[2].get();
 
-		this.direction.applyDirection(particle, particle.x, particle.y, particle.z);
+		if (this.direction instanceof ShapeDirection.Vector)
+		{
+			this.direction.applyDirection(particle, particle.x, particle.y, particle.z);
+		}
 	}
 }
