@@ -14,6 +14,10 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.renderer.VertexBuffer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
 public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleUpdate, IComponentParticleRender
 {
 	public MolangExpression sizeW = MolangParser.ZERO;
@@ -148,7 +152,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 		if (this.flipbook)
 		{
-
+			/* TODO: implement */
 		}
 		else
 		{
@@ -174,6 +178,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		float px = Interpolations.lerp(particle.prevX, particle.x, partialTicks);
 		float py = Interpolations.lerp(particle.prevY, particle.y, partialTicks);
 		float pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
+		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
 		if (particle.relative)
 		{
@@ -189,10 +194,31 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		float w = particle.w;
 		float h = particle.h;
 
-		builder.pos(px - w / 2, py + h / 2, pz).tex(particle.u1, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(px + w / 2, py + h / 2, pz).tex(particle.u2, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(px + w / 2, py - h / 2, pz).tex(particle.u2, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(px - w / 2, py - h / 2, pz).tex(particle.u1, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		Vector4f[] vertices = {
+			new Vector4f(-w / 2, h / 2, 0, 1),
+			new Vector4f(w / 2, h / 2, 0, 1),
+			new Vector4f(w / 2, -h / 2, 0, 1),
+			new Vector4f(- w / 2, -h / 2, 0, 1)
+		};
+
+		Matrix4f matrix4f = new Matrix4f();
+		matrix4f.setIdentity();
+
+		Matrix4f rotate = new Matrix4f();
+		rotate.rotZ(angle / 180 * (float) Math.PI);
+
+		matrix4f.mul(rotate);
+		matrix4f.setTranslation(new Vector3f(px, py, pz));
+
+		for (Vector4f vertex : vertices)
+		{
+			matrix4f.transform(vertex);
+		}
+
+		builder.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(particle.u1, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[1].x, vertices[1].y, vertices[1].z).tex(particle.u2, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[2].x, vertices[2].y, vertices[2].z).tex(particle.u2, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[3].x, vertices[3].y, vertices[3].z).tex(particle.u1, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 	}
 
 	@Override

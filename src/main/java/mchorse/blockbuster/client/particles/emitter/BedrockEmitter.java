@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.particles.emitter;
 
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
+import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
@@ -80,6 +81,11 @@ public class BedrockEmitter
 
 		Iterator<BedrockParticle> it = this.particles.iterator();
 		List<IComponentParticleUpdate> components = this.scheme.getComponents(IComponentParticleUpdate.class);
+
+		for (IComponentEmitterUpdate component : this.scheme.getComponents(IComponentEmitterUpdate.class))
+		{
+			component.update(this);
+		}
 
 		while (it.hasNext())
 		{
