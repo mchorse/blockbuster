@@ -204,7 +204,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
-		if (particle.relative)
+		if (particle.relative && !emitter.local)
 		{
 			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
 			py += Interpolations.lerp(emitter.target.prevPosY, emitter.target.posY, partialTicks);

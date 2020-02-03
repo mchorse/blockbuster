@@ -20,6 +20,8 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public BedrockEmitter emitter = new BedrockEmitter();
 
+	public boolean local;
+
 	public SnowstormMorph()
 	{
 		super();
@@ -41,8 +43,16 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double v, double v1, double v2, float v3, float v4)
 	{
-		this.emitter.setTarget(entityLivingBase);
-		RenderingHandler.addEmitter(this.emitter);
+		this.setupEmitter(entityLivingBase);
+
+		if (this.local)
+		{
+			this.emitter.render(v4);
+		}
+		else
+		{
+			RenderingHandler.addEmitter(this.emitter);
+		}
 	}
 
 	@Override
@@ -59,8 +69,20 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	private void updateEmitter(EntityLivingBase target)
 	{
-		this.emitter.setTarget(target);
+		this.setupEmitter(target);
 		this.emitter.update();
+	}
+
+	private void setupEmitter(EntityLivingBase target)
+	{
+		if (this.local)
+		{
+			this.emitter.setWorld(target.worldObj);
+		}
+		else
+		{
+			this.emitter.setTarget(target);
+		}
 	}
 
 	@Override
@@ -71,6 +93,7 @@ public class SnowstormMorph extends AbstractMorph
 		morph.name = this.name;
 		morph.settings = this.settings;
 		morph.scheme = this.scheme;
+		morph.local = this.local;
 
 		return morph;
 	}
@@ -85,6 +108,7 @@ public class SnowstormMorph extends AbstractMorph
 			SnowstormMorph morph = (SnowstormMorph) obj;
 
 			result = result && Objects.equals(this.scheme, morph.scheme);
+			result = result && this.local == morph.local;
 		}
 
 		return result;
@@ -119,6 +143,11 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			this.setScheme(tag.getString("Scheme"));
 		}
+
+		if (tag.hasKey("Local"))
+		{
+			this.local = tag.getBoolean("Local");
+		}
 	}
 
 	@Override
@@ -127,5 +156,6 @@ public class SnowstormMorph extends AbstractMorph
 		super.toNBT(tag);
 
 		tag.setString("Scheme", this.scheme);
+		tag.setBoolean("Local", this.local);
 	}
 }

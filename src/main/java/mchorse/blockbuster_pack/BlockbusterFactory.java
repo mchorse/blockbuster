@@ -15,6 +15,7 @@ import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.client.gui.GuiParticleMorph;
 import mchorse.blockbuster_pack.client.gui.GuiRecordMorph;
 import mchorse.blockbuster_pack.client.gui.GuiSequencerMorph;
+import mchorse.blockbuster_pack.client.gui.GuiSnowstormMorph;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
@@ -70,6 +71,7 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiSequencerMorph(mc));
         editors.add(new GuiRecordMorph(mc));
         editors.add(new GuiParticleMorph(mc));
+        editors.add(new GuiSnowstormMorph(mc));
     }
 
     @Override
