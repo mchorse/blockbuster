@@ -102,6 +102,8 @@ public class BedrockEmitter
 		}
 	}
 
+	/* Variable related code */
+
 	private void setupVariables()
 	{
 		this.varAge = scheme.parser.variables.get("variable.particle_age");
@@ -127,6 +129,8 @@ public class BedrockEmitter
 		if (this.varRandom2 != null) this.varRandom2.set(particle.random2);
 		if (this.varRandom3 != null) this.varRandom3.set(particle.random3);
 		if (this.varRandom4 != null) this.varRandom4.set(particle.random4);
+
+		this.scheme.updateCurves();
 	}
 
 	public void setEmitterVariables(float partialTicks)
@@ -137,6 +141,8 @@ public class BedrockEmitter
 		if (this.varEmitterRandom2 != null) this.varEmitterRandom2.set(this.random2);
 		if (this.varEmitterRandom3 != null) this.varEmitterRandom3.set(this.random3);
 		if (this.varEmitterRandom4 != null) this.varEmitterRandom4.set(this.random4);
+
+		this.scheme.updateCurves();
 	}
 
 	public void start()
@@ -164,6 +170,9 @@ public class BedrockEmitter
 		this.wasStopped = true;
 	}
 
+	/**
+	 * Update this current emitter
+	 */
 	public void update()
 	{
 		if (this.scheme == null)
@@ -189,6 +198,9 @@ public class BedrockEmitter
 		this.wasStopped = false;
 	}
 
+	/**
+	 * Update all particles
+	 */
 	private void updateParticles()
 	{
 		Iterator<BedrockParticle> it = this.particles.iterator();
@@ -213,6 +225,9 @@ public class BedrockEmitter
 		}
 	}
 
+	/**
+	 * Spawn a particle
+	 */
 	public void spawnParticle()
 	{
 		BedrockParticle particle = new BedrockParticle();
@@ -235,6 +250,9 @@ public class BedrockEmitter
 		this.particles.add(particle);
 	}
 
+	/**
+	 * Render all the particles in this particle emitter
+	 */
 	public void render(float partialTicks)
 	{
 		if (this.scheme == null)
@@ -275,6 +293,9 @@ public class BedrockEmitter
 		}
 	}
 
+	/**
+	 * Get brightness for the block
+	 */
 	public int getBrightnessForRender(float partialTicks, double x, double y, double z)
 	{
 		if (this.lit)

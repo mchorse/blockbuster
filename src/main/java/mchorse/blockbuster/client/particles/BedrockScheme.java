@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleInitial
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.mclib.math.Variable;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -57,9 +58,15 @@ public class BedrockScheme
 		this.particleInitializes = this.getComponents(IComponentParticleInitialize.class);
 		this.particleUpdates = this.getComponents(IComponentParticleUpdate.class);
 		this.particleRender = this.getComponents(IComponentParticleRender.class);
+
+		/* Link variables with curves */
+		for (Map.Entry<String, BedrockCurve> entry : this.curves.entrySet())
+		{
+			entry.getValue().variable = this.parser.variables.get(entry.getKey());
+		}
 	}
 
-	private  <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
+	private <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
 	{
 		List<T> list = new ArrayList<T>();
 
@@ -77,5 +84,19 @@ public class BedrockScheme
 		}
 
 		return list;
+	}
+
+	/**
+	 * Update curve values
+	 */
+	public void updateCurves()
+	{
+		for (BedrockCurve curve : this.curves.values())
+		{
+			if (curve.variable != null)
+			{
+				curve.variable.set(curve.compute());
+			}
+		}
 	}
 }
