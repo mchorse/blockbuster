@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,7 @@ public class BedrockEmitter
 
 	public EntityLivingBase target;
 	public World world;
+	public boolean lit;
 
 	/* Runtime properties */
 	private int age;
@@ -86,6 +88,7 @@ public class BedrockEmitter
 			return;
 		}
 
+		this.lit = true;
 		this.stop();
 		this.start();
 
@@ -216,10 +219,11 @@ public class BedrockEmitter
 
 		if (!particle.relative)
 		{
-			particle.x = particle.prevX = particle.x + (float) this.target.posX;
-			particle.y = particle.prevY = particle.y + (float) this.target.posY;
-			particle.z = particle.prevZ = particle.z + (float) this.target.posZ;
+			particle.position.add(new Vector3d(this.target.posX, this.target.posY, this.target.posZ));
 		}
+
+		particle.prevPosition.set(particle.position);
+		particle.prevRotation = particle.rotation;
 
 		this.particles.add(particle);
 	}
@@ -266,6 +270,11 @@ public class BedrockEmitter
 
 	public int getBrightnessForRender(float partialTicks, double x, double y, double z)
 	{
+		if (this.lit)
+		{
+			return 15728880;
+		}
+
 		this.blockPos.setPos(x, y, z);
 
 		return this.world.isBlockLoaded(this.blockPos) ? this.world.getCombinedLight(this.blockPos, 0) : 0;

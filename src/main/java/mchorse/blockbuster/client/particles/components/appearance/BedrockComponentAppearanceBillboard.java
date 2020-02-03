@@ -161,8 +161,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks)
 	{
 		/* Update particle's UVs and size */
-		particle.w = (float) this.sizeW.get();
-		particle.h = (float) this.sizeH.get();
+		float pw = (float) this.sizeW.get() * 2.25F;
+		float ph = (float) this.sizeH.get() * 2.25F;
 
 		float u = (float) this.uvX.get();
 		float v = (float) this.uvY.get();
@@ -193,15 +193,15 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			v += this.stepY * index;
 		}
 
-		particle.u1 = u / (float) this.textureWidth;
-		particle.v1 = v / (float) this.textureHeight;
-		particle.u2 = (u + w) / (float) this.textureWidth;
-		particle.v2 = (v + h) / (float) this.textureHeight;
+		float u1 = u / (float) this.textureWidth;
+		float v1 = v / (float) this.textureHeight;
+		float u2 = (u + w) / (float) this.textureWidth;
+		float v2 = (v + h) / (float) this.textureHeight;
 
 		/* Render the particle */
-		double px = Interpolations.lerp(particle.prevX, particle.x, partialTicks);
-		double py = Interpolations.lerp(particle.prevY, particle.y, partialTicks);
-		double pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
+		double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
+		double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
+		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
 		/* Calculate yaw and pitch based on the facing mode */
@@ -243,14 +243,11 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;
 
-		float wi = particle.w * 2.25F;
-		float he = particle.h * 2.25F;
-
 		Vector4f[] vertices = {
-			new Vector4f(-wi / 2, -he / 2, 0, 1),
-			new Vector4f(wi / 2, -he / 2, 0, 1),
-			new Vector4f(wi / 2, he / 2, 0, 1),
-			new Vector4f(- wi / 2, he / 2, 0, 1)
+			new Vector4f(-pw / 2, -ph / 2, 0, 1),
+			new Vector4f(pw / 2, -ph / 2, 0, 1),
+			new Vector4f(pw / 2, ph / 2, 0, 1),
+			new Vector4f(- pw / 2, ph / 2, 0, 1)
 		};
 
 		Matrix4f matrix4f = new Matrix4f();
@@ -280,10 +277,10 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			matrix4f.transform(vertex);
 		}
 
-		builder.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(particle.u1, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[1].x, vertices[1].y, vertices[1].z).tex(particle.u2, particle.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[2].x, vertices[2].y, vertices[2].z).tex(particle.u2, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[3].x, vertices[3].y, vertices[3].z).tex(particle.u1, particle.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[1].x, vertices[1].y, vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[2].x, vertices[2].y, vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(vertices[3].x, vertices[3].y, vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 	}
 
 	@Override

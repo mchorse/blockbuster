@@ -51,7 +51,7 @@ public class RenderingHandler
     /**
      * Bedrock particle emitters
      */
-    public static final List<BedrockEmitter> emitters = new ArrayList<>();
+    private static final List<BedrockEmitter> emitters = new ArrayList<>();
 
     private GuiRecordingOverlay overlay;
 
@@ -113,7 +113,14 @@ public class RenderingHandler
     }
 
     /**
-     * Render particle emitters
+     * Render lit particles (call by ASM, but not used for anything yet...
+     * I might use it for morph based Snowstorm system)...
+     */
+    public static void renderLitParticles(float partialTicks)
+    {}
+
+    /**
+     * Render particle emitters (called by ASM)
      */
     public static void renderParticles(float partialTicks)
     {
@@ -150,6 +157,11 @@ public class RenderingHandler
         }
 
         emitters.clear();
+    }
+
+    public static void addEmitter(BedrockEmitter emitter)
+    {
+        emitters.add(emitter);
     }
 
     public RenderingHandler(GuiRecordingOverlay overlay)
@@ -217,8 +229,6 @@ public class RenderingHandler
     @SubscribeEvent
     public void onRenderLast(RenderWorldLastEvent event)
     {
-        renderParticles(event.getPartialTicks());
-
         for (GifTexture texture : gifs.values())
         {
             texture.tick();

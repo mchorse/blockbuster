@@ -45,9 +45,9 @@ public class BedrockComponentShapeSphere extends BedrockComponentShapeSurfaced
 
 		direction.scale(radius);
 
-		particle.x = particle.prevX = centerX + direction.x;
-		particle.y = particle.prevY = centerY + direction.y;
-		particle.z = particle.prevZ = centerZ + direction.z;
+		particle.position.x = centerX + direction.x;
+		particle.position.y = centerY + direction.y;
+		particle.position.z = centerZ + direction.z;
 
 		this.direction.applyDirection(particle, centerX, centerY, centerZ);
 	}

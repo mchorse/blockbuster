@@ -42,7 +42,7 @@ public class SnowstormMorph extends AbstractMorph
 	public void render(EntityLivingBase entityLivingBase, double v, double v1, double v2, float v3, float v4)
 	{
 		this.emitter.setTarget(entityLivingBase);
-		RenderingHandler.emitters.add(this.emitter);
+		RenderingHandler.addEmitter(this.emitter);
 	}
 
 	@Override

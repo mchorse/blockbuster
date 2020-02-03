@@ -46,20 +46,20 @@ public class BedrockComponentShapeBox extends BedrockComponentShapeSurfaced
 		float h = (float) this.halfDimensions[1].get();
 		float d = (float) this.halfDimensions[2].get();
 
-		particle.x = particle.prevX = centerX + ((float) Math.random() - 0.5F) * w;
-		particle.y = particle.prevY = centerY + ((float) Math.random() - 0.5F) * h;
-		particle.z = particle.prevZ = centerZ + ((float) Math.random() - 0.5F) * d;
+		particle.position.x = centerX + ((float) Math.random() - 0.5F) * w;
+		particle.position.y = centerY + ((float) Math.random() - 0.5F) * h;
+		particle.position.z = centerZ + ((float) Math.random() - 0.5F) * d;
 
 		if (this.surface)
 		{
 			int roll = (int) (Math.random() * 6 * 100) % 6;
 
-			if (roll == 0) particle.x += w / 2F;
-			else if (roll == 1) particle.x -= w / 2F;
-			else if (roll == 2) particle.y += h / 2F;
-			else if (roll == 3) particle.y -= h / 2F;
-			else if (roll == 4) particle.z += d / 2F;
-			else if (roll == 5) particle.z -= d / 2F;
+			if (roll == 0) particle.position.x += w / 2F;
+			else if (roll == 1) particle.position.x -= w / 2F;
+			else if (roll == 2) particle.position.y += h / 2F;
+			else if (roll == 3) particle.position.y -= h / 2F;
+			else if (roll == 4) particle.position.z += d / 2F;
+			else if (roll == 5) particle.position.z -= d / 2F;
 		}
 
 		this.direction.applyDirection(particle, centerX, centerY, centerZ);

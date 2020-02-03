@@ -24,7 +24,7 @@ public abstract class ShapeDirection
 		@Override
 		public void applyDirection(BedrockParticle particle, double x, double y, double z)
 		{
-			Vector3d vector = new Vector3d(particle.x, particle.y, particle.z);
+			Vector3d vector = new Vector3d(particle.position);
 
 			vector.sub(new Vector3d(x, y, z));
 			vector.normalize();

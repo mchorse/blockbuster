@@ -58,10 +58,9 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 		Vector3d position = new Vector3d(Math.random() - 0.5, 0, Math.random() - 0.5);
 		position.normalize();
 		position.scale(this.radius.get() * (this.surface ? 1 : Math.random()));
+		position.add(new Vector3d(centerX, centerY, centerZ));
 
-		particle.prevX = particle.x = position.x + centerX;
-		particle.prevY = particle.y = position.y + centerY;
-		particle.prevZ = particle.z = position.z + centerZ;
+		particle.position.add(position);
 
 		this.direction.applyDirection(particle, centerX, centerY, centerZ);
 	}
