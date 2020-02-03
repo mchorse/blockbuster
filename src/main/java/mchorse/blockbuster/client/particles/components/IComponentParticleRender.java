@@ -6,9 +6,9 @@ import net.minecraft.client.renderer.VertexBuffer;
 
 public interface IComponentParticleRender
 {
-	public void preRender(BedrockEmitter emitter);
+	public void preRender(BedrockEmitter emitter, float partialTicks);
 
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks);
 
-	public void postRender(BedrockEmitter emitter);
+	public void postRender(BedrockEmitter emitter, float partialTicks);
 }

@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
@@ -52,6 +53,16 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 
 		normal.normalize();
 
-		/* TODO: normal rotation */
+		/* TODO: implement normal */
+
+		Vector3d position = new Vector3d(Math.random() - 0.5, 0, Math.random() - 0.5);
+		position.normalize();
+		position.scale(this.radius.get() * (this.surface ? 1 : Math.random()));
+
+		particle.prevX = particle.x = position.x + centerX;
+		particle.prevY = particle.y = position.y + centerY;
+		particle.prevZ = particle.z = position.z + centerZ;
+
+		this.direction.applyDirection(particle, centerX, centerY, centerZ);
 	}
 }

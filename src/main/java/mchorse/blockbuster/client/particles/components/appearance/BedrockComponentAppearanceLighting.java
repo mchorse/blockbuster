@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 public class BedrockComponentAppearanceLighting extends BedrockComponentBase implements IComponentParticleRender
 {
 	@Override
-	public void preRender(BedrockEmitter emitter)
+	public void preRender(BedrockEmitter emitter, float partialTicks)
 	{
 		GlStateManager.enableLighting();
 	}
@@ -20,7 +20,7 @@ public class BedrockComponentAppearanceLighting extends BedrockComponentBase imp
 	{}
 
 	@Override
-	public void postRender(BedrockEmitter emitter)
+	public void postRender(BedrockEmitter emitter, float partialTicks)
 	{
 		GlStateManager.disableLighting();
 	}

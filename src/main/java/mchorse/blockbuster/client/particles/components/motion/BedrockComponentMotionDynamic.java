@@ -4,11 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentMotionDynamic extends BedrockComponentBase
+public class BedrockComponentMotionDynamic extends BedrockComponentBase implements IComponentParticleUpdate
 {
 	public MolangExpression[] motionAcceleration = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public MolangExpression motionDrag = MolangParser.ZERO;
@@ -39,5 +42,14 @@ public class BedrockComponentMotionDynamic extends BedrockComponentBase
 		if (element.has("rotation_drag_coefficient")) this.rotationDrag = parser.parseJson(element.get("rotation_drag_coefficient"));
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public void update(BedrockEmitter emitter, BedrockParticle particle)
+	{
+		particle.acceleration.x += (float) this.motionAcceleration[0].get();
+		particle.acceleration.y += (float) this.motionAcceleration[1].get();
+		particle.acceleration.z += (float) this.motionAcceleration[2].get();
+		particle.drag = (float) this.motionDrag.get();
 	}
 }

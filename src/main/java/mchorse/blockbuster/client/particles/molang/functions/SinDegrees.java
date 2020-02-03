@@ -19,6 +19,6 @@ public class SinDegrees extends Function
     @Override
     public double get()
     {
-        return Math.sin(this.getArg(0) / Math.PI * 180);
+        return Math.sin(this.getArg(0) / 180 * Math.PI);
     }
 }

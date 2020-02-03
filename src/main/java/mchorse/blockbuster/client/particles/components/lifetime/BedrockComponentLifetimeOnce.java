@@ -3,11 +3,13 @@ package mchorse.blockbuster.client.particles.components.lifetime;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentLifetimeOnce extends BedrockComponentBase
+public class BedrockComponentLifetimeOnce extends BedrockComponentBase implements IComponentEmitterUpdate
 {
 	public MolangExpression activeTime;
 
@@ -20,5 +22,14 @@ public class BedrockComponentLifetimeOnce extends BedrockComponentBase
 		if (element.has("active_time")) this.activeTime = parser.parseJson(element.get("active_time"));
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public void update(BedrockEmitter emitter)
+	{
+		if (emitter.getAge() >= this.activeTime.get())
+		{
+			emitter.stop();
+		}
 	}
 }

@@ -19,6 +19,6 @@ public class CosDegrees extends Function
     @Override
     public double get()
     {
-        return Math.cos(this.getArg(0) / Math.PI * 180);
+        return Math.cos(this.getArg(0) / 180 * Math.PI);
     }
 }

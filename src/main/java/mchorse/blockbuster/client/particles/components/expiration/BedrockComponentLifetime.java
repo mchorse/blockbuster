@@ -48,22 +48,22 @@ public class BedrockComponentLifetime extends BedrockComponentBase implements IC
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		if (this.max)
+		if (!this.max && this.expression.get() != 0)
 		{
-			particle.lifetime = (int) this.expression.get() * 20;
-		}
-		else
-		{
-			particle.lifetime = -1;
+			particle.dead = true;
 		}
 	}
 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		if (!this.max && this.expression.get() != 0)
+		if (this.max)
 		{
-			particle.dead = true;
+			particle.lifetime = (int) (this.expression.get() * 20);
+		}
+		else
+		{
+			particle.lifetime = -1;
 		}
 	}
 }

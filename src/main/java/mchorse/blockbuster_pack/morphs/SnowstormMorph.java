@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Objects;
+
 public class SnowstormMorph extends AbstractMorph
 {
 	public String scheme = "";
@@ -71,6 +73,21 @@ public class SnowstormMorph extends AbstractMorph
 		morph.scheme = this.scheme;
 
 		return morph;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		boolean result = super.equals(obj);
+
+		if (obj instanceof SnowstormMorph)
+		{
+			SnowstormMorph morph = (SnowstormMorph) obj;
+
+			result = result && Objects.equals(this.scheme, morph.scheme);
+		}
+
+		return result;
 	}
 
 	@Override

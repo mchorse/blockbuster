@@ -40,17 +40,15 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 	{
 		if (this.direction != null)
 		{
-			particle.motionX = (float) this.direction[0].get() / 20F;
-			particle.motionY = (float) this.direction[1].get() / 20F;
-			particle.motionZ = (float) this.direction[2].get() / 20F;
+			particle.speed.set(
+				(float) this.direction[0].get(),
+				(float) this.direction[1].get(),
+				(float) this.direction[1].get()
+			);
 		}
 		else
 		{
-			float speed = (float) this.speed.get() / 20F;
-
-			particle.motionX *= speed;
-			particle.motionY *= speed;
-			particle.motionZ *= speed;
+			particle.speed.scale((float) this.speed.get());
 		}
 	}
 }

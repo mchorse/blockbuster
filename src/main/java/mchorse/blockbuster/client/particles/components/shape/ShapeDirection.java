@@ -3,14 +3,14 @@ package mchorse.blockbuster.client.particles.components.shape;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 public abstract class ShapeDirection
 {
 	public static final ShapeDirection INWARDS = new Inwards(1);
 	public static final ShapeDirection OUTWARDS = new Inwards(-1);
 
-	public abstract void applyDirection(BedrockParticle particle, float x, float y, float z);
+	public abstract void applyDirection(BedrockParticle particle, double x, double y, double z);
 
 	private static class Inwards extends ShapeDirection
 	{
@@ -22,16 +22,14 @@ public abstract class ShapeDirection
 		}
 
 		@Override
-		public void applyDirection(BedrockParticle particle, float x, float y, float z)
+		public void applyDirection(BedrockParticle particle, double x, double y, double z)
 		{
-			Vector3f vector = new Vector3f(x, y, z);
+			Vector3d vector = new Vector3d(particle.x, particle.y, particle.z);
 
-			vector.sub(new Vector3f(particle.x, particle.y, particle.z));
+			vector.sub(new Vector3d(x, y, z));
 			vector.normalize();
 
-			particle.motionX = vector.x * this.factor;
-			particle.motionY = vector.y * this.factor;
-			particle.motionZ = vector.z * this.factor;
+			particle.speed.set(vector);
 		}
 	}
 
@@ -49,11 +47,10 @@ public abstract class ShapeDirection
 		}
 
 		@Override
-		public void applyDirection(BedrockParticle particle, float x, float y, float z)
+		public void applyDirection(BedrockParticle particle, double x, double y, double z)
 		{
-			particle.motionX = (float) this.x.get();
-			particle.motionY = (float) this.y.get();
-			particle.motionZ = (float) this.z.get();
+			particle.speed.set((float) this.x.get(), (float) this.y.get(), (float) this.z.get());
+			particle.speed.normalize();
 		}
 	}
 }

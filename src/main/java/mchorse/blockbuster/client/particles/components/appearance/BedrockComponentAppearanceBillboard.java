@@ -115,7 +115,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			if (uv.size() >= 2)
 			{
 				this.uvX = parser.parseJson(uv.get(0));
-				this.uvX = parser.parseJson(uv.get(1));
+				this.uvY = parser.parseJson(uv.get(1));
 			}
 		}
 
@@ -150,39 +150,61 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.w = (float) this.sizeW.get();
-		particle.h = (float) this.sizeH.get();
 
-		if (this.flipbook)
-		{
-			/* TODO: implement */
-		}
-		else
-		{
-			float u = (float) this.uvX.get();
-			float v = (float) this.uvY.get();
-			float w = (float) this.uvW.get();
-			float h = (float) this.uvH.get();
-
-			particle.u1 = u / (float) this.textureWidth;
-			particle.v1 = v / (float) this.textureHeight;
-			particle.u2 = (u + w) / (float) this.textureWidth;
-			particle.v2 = (v + h) / (float) this.textureHeight;
-		}
 	}
 
 	@Override
-	public void preRender(BedrockEmitter emitter)
+	public void preRender(BedrockEmitter emitter, float partialTicks)
 	{}
 
 	@Override
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks)
 	{
-		float px = Interpolations.lerp(particle.prevX, particle.x, partialTicks);
-		float py = Interpolations.lerp(particle.prevY, particle.y, partialTicks);
-		float pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
+		/* Update particle's UVs and size */
+		particle.w = (float) this.sizeW.get();
+		particle.h = (float) this.sizeH.get();
+
+		float u = (float) this.uvX.get();
+		float v = (float) this.uvY.get();
+		float w = (float) this.uvW.get();
+		float h = (float) this.uvH.get();
+
+		if (this.flipbook)
+		{
+			int index = (int) (particle.getAge(partialTicks) * this.fps);
+			int max = (int) this.maxFrame.get();
+
+			if (this.stretchFPS)
+			{
+				index = (int) ((particle.age + partialTicks) / particle.lifetime * max);
+			}
+
+			if (this.loop)
+			{
+				index = index % max;
+			}
+
+			if (index > max)
+			{
+				index = max;
+			}
+
+			u += this.stepX * index;
+			v += this.stepY * index;
+		}
+
+		particle.u1 = u / (float) this.textureWidth;
+		particle.v1 = v / (float) this.textureHeight;
+		particle.u2 = (u + w) / (float) this.textureWidth;
+		particle.v2 = (v + h) / (float) this.textureHeight;
+
+		/* Render the particle */
+		double px = Interpolations.lerp(particle.prevX, particle.x, partialTicks);
+		double py = Interpolations.lerp(particle.prevY, particle.y, partialTicks);
+		double pz = Interpolations.lerp(particle.prevZ, particle.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
+		/* Calculate yaw and pitch based on the facing mode */
 		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
 
 		float entityYaw = 180 - camera.prevRotationYaw + (camera.rotationYaw - camera.prevRotationYaw) * partialTicks;
@@ -209,6 +231,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			entityPitch += 180;
 		}
 
+		/* Calculate the geometry for billboards */
 		if (particle.relative)
 		{
 			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
@@ -220,14 +243,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;
 
-		float w = particle.w;
-		float h = particle.h;
+		float wi = particle.w * 2.25F;
+		float he = particle.h * 2.25F;
 
 		Vector4f[] vertices = {
-			new Vector4f(-w / 2, h / 2, 0, 1),
-			new Vector4f(w / 2, h / 2, 0, 1),
-			new Vector4f(w / 2, -h / 2, 0, 1),
-			new Vector4f(- w / 2, -h / 2, 0, 1)
+			new Vector4f(-wi / 2, -he / 2, 0, 1),
+			new Vector4f(wi / 2, -he / 2, 0, 1),
+			new Vector4f(wi / 2, he / 2, 0, 1),
+			new Vector4f(- wi / 2, he / 2, 0, 1)
 		};
 
 		Matrix4f matrix4f = new Matrix4f();
@@ -250,7 +273,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		rotate.rotZ(angle / 180 * (float) Math.PI);
 		matrix4f.mul(rotate);
 
-		matrix4f.setTranslation(new Vector3f(px, py, pz));
+		matrix4f.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
 
 		for (Vector4f vertex : vertices)
 		{
@@ -264,7 +287,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	}
 
 	@Override
-	public void postRender(BedrockEmitter emitter)
+	public void postRender(BedrockEmitter emitter, float partialTicks)
 	{}
 
 	public static enum CameraFacing
