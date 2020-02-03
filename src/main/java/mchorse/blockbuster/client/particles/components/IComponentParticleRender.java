@@ -4,7 +4,7 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import net.minecraft.client.renderer.VertexBuffer;
 
-public interface IComponentParticleRender
+public interface IComponentParticleRender extends IComponentBase
 {
 	public void preRender(BedrockEmitter emitter, float partialTicks);
 

@@ -35,12 +35,12 @@ public class BedrockComponentLifetimeLooping extends BedrockComponentBase implem
 		double sleep = this.sleepTime.get();
 		double age = emitter.getAge();
 
-		if (age > active)
+		if (age >= active)
 		{
 			emitter.stop();
 		}
 
-		if (age > active + sleep)
+		if (age >= active + sleep)
 		{
 			emitter.start();
 		}

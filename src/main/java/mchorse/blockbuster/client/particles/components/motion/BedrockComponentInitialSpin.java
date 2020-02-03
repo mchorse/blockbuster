@@ -31,7 +31,7 @@ public class BedrockComponentInitialSpin extends BedrockComponentBase implements
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.rotation = (float) this.rotation.get();
+		particle.initialRotation = (float) this.rotation.get();
 		particle.rotationVelocity = (float) this.rate.get();
 	}
 }

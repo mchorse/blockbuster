@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
@@ -11,7 +12,7 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentMotionParametric extends BedrockComponentBase implements IComponentParticleUpdate
+public class BedrockComponentMotionParametric extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
 {
 	public MolangExpression[] position = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public MolangExpression rotation = MolangParser.ZERO;
@@ -41,12 +42,28 @@ public class BedrockComponentMotionParametric extends BedrockComponentBase imple
 	}
 
 	@Override
-	public void update(BedrockEmitter emitter, BedrockParticle particle)
+	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.manual = true;
-		particle.position.x += this.position[0].get();
-		particle.position.y += this.position[1].get();
-		particle.position.z += this.position[2].get();
+		particle.initialPosition.set(particle.position);
+		particle.position.x = this.position[0].get();
+		particle.position.y = this.position[1].get();
+		particle.position.z = this.position[2].get();
 		particle.rotation = (float) this.rotation.get();
+	}
+
+	@Override
+	public void update(BedrockEmitter emitter, BedrockParticle particle)
+	{
+		particle.position.x = particle.initialPosition.x + this.position[0].get();
+		particle.position.y = particle.initialPosition.y + this.position[1].get();
+		particle.position.z = particle.initialPosition.z + this.position[2].get();
+		particle.rotation = (float) this.rotation.get();
+	}
+
+	@Override
+	public int getSortingIndex()
+	{
+		return 10;
 	}
 }

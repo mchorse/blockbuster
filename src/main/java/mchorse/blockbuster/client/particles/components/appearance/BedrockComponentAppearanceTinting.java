@@ -24,6 +24,12 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase impl
 	public Color color;
 
 	@Override
+	public int getSortingIndex()
+	{
+		return -10;
+	}
+
+	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
 		if (!elem.isJsonObject()) return super.fromJson(elem, parser);

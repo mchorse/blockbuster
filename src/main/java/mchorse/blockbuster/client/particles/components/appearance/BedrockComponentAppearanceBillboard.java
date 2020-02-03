@@ -204,6 +204,13 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
+		if (particle.relative)
+		{
+			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
+			py += Interpolations.lerp(emitter.target.prevPosY, emitter.target.posY, partialTicks);
+			pz += Interpolations.lerp(emitter.target.prevPosZ, emitter.target.posZ, partialTicks);
+		}
+
 		/* Calculate yaw and pitch based on the facing mode */
 		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
 
@@ -232,13 +239,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		}
 
 		/* Calculate the geometry for billboards */
-		if (particle.relative)
-		{
-			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
-			py += Interpolations.lerp(emitter.target.prevPosY, emitter.target.posY, partialTicks);
-			pz += Interpolations.lerp(emitter.target.prevPosZ, emitter.target.posZ, partialTicks);
-		}
-
 		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;

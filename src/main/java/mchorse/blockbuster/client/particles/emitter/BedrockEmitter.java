@@ -33,6 +33,7 @@ public class BedrockEmitter
 	/* Runtime properties */
 	private int age;
 	private int lifetime;
+	private boolean wasStopped;
 	public boolean playing = true;
 
 	public float random1 = (float) Math.random();
@@ -95,7 +96,7 @@ public class BedrockEmitter
 		this.setupVariables();
 		this.setEmitterVariables(0);
 
-		for (IComponentEmitterInitialize component : this.scheme.getComponents(IComponentEmitterInitialize.class))
+		for (IComponentEmitterInitialize component : this.scheme.emitterInitializes)
 		{
 			component.apply(this);
 		}
@@ -160,6 +161,7 @@ public class BedrockEmitter
 		this.age = 0;
 		this.spawnedParticles = 0;
 		this.playing = false;
+		this.wasStopped = true;
 	}
 
 	public void update()
@@ -171,19 +173,24 @@ public class BedrockEmitter
 
 		this.setEmitterVariables(0);
 
-		for (IComponentEmitterUpdate component : this.scheme.getComponents(IComponentEmitterUpdate.class))
+		for (IComponentEmitterUpdate component : this.scheme.emitterUpdates)
 		{
 			component.update(this);
 		}
 
 		this.setEmitterVariables(0);
 		this.updateParticles();
-		this.age++;
+
+		if (!this.wasStopped)
+		{
+			this.age++;
+		}
+
+		this.wasStopped = false;
 	}
 
 	private void updateParticles()
 	{
-		List<IComponentParticleUpdate> components = this.scheme.getComponents(IComponentParticleUpdate.class);
 		Iterator<BedrockParticle> it = this.particles.iterator();
 
 		while (it.hasNext())
@@ -194,7 +201,7 @@ public class BedrockEmitter
 
 			this.setParticleVariables(particle, 0);
 
-			for (IComponentParticleUpdate component : components)
+			for (IComponentParticleUpdate component : this.scheme.particleUpdates)
 			{
 				component.update(this, particle);
 			}
@@ -212,7 +219,7 @@ public class BedrockEmitter
 
 		this.setParticleVariables(particle, 0);
 
-		for (IComponentParticleInitialize component : this.scheme.getComponents(IComponentParticleInitialize.class))
+		for (IComponentParticleInitialize component : this.scheme.particleInitializes)
 		{
 			component.apply(this, particle);
 		}
@@ -235,8 +242,8 @@ public class BedrockEmitter
 			return;
 		}
 
-		List<IComponentParticleRender> renders = this.scheme.getComponents(IComponentParticleRender.class);
 		VertexBuffer builder = Tessellator.getInstance().getBuffer();
+		List<IComponentParticleRender> renders = this.scheme.particleRender;
 
 		for (IComponentParticleRender component : renders)
 		{

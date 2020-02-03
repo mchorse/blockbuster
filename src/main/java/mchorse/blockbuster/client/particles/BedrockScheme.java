@@ -3,10 +3,18 @@ package mchorse.blockbuster.client.particles;
 import com.google.gson.GsonBuilder;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentBase;
+import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
+import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
+import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
+import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
+import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +33,11 @@ public class BedrockScheme
 
 	/* Particle's components */
 	public List<BedrockComponentBase> components = new ArrayList<BedrockComponentBase>();
+	public List<IComponentEmitterInitialize> emitterInitializes;
+	public List<IComponentEmitterUpdate> emitterUpdates;
+	public List<IComponentParticleInitialize> particleInitializes;
+	public List<IComponentParticleUpdate> particleUpdates;
+	public List<IComponentParticleRender> particleRender;
 
 	/* MoLang integration */
 	public MolangParser parser = new MolangParser();
@@ -37,14 +50,16 @@ public class BedrockScheme
 			.fromJson(json, BedrockScheme.class);
 	}
 
-	public <T> T getComponent(Class<T> clazz)
+	public void setup()
 	{
-		List<T> components = this.getComponents(clazz);
-
-		return components.isEmpty() ? null : components.get(0);
+		this.emitterInitializes = this.getComponents(IComponentEmitterInitialize.class);
+		this.emitterUpdates = this.getComponents(IComponentEmitterUpdate.class);
+		this.particleInitializes = this.getComponents(IComponentParticleInitialize.class);
+		this.particleUpdates = this.getComponents(IComponentParticleUpdate.class);
+		this.particleRender = this.getComponents(IComponentParticleRender.class);
 	}
 
-	public <T> List<T> getComponents(Class<T> clazz)
+	private  <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
 	{
 		List<T> list = new ArrayList<T>();
 
@@ -54,6 +69,11 @@ public class BedrockScheme
 			{
 				list.add((T) component);
 			}
+		}
+
+		if (!list.isEmpty())
+		{
+			Collections.sort(list, Comparator.comparingInt(IComponentBase::getSortingIndex));
 		}
 
 		return list;

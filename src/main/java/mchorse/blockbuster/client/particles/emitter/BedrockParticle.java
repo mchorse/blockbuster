@@ -17,11 +17,12 @@ public class BedrockParticle
 	public boolean manual;
 
 	public float rotation;
-	public float initalRotation;
+	public float initialRotation;
 	public float rotationVelocity;
 	public float prevRotation;
 
 	public Vector3d position = new Vector3d();
+	public Vector3d initialPosition = new Vector3d();
 	public Vector3d prevPosition = new Vector3d();
 
 	public Vector3f speed = new Vector3f();

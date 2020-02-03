@@ -22,6 +22,7 @@ import mchorse.blockbuster.client.particles.components.motion.BedrockComponentIn
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpin;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionDynamic;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionParametric;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateInstant;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBox;
@@ -79,16 +80,13 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		this.components.put("minecraft:particle_initial_spin", (element, parser) -> new BedrockComponentInitialSpin().fromJson(element, parser));
 		this.components.put("minecraft:particle_motion_collision", (element, parser) -> new BedrockComponentMotionCollision().fromJson(element, parser));
 		this.components.put("minecraft:particle_motion_dynamic", (element, parser) -> new BedrockComponentMotionDynamic().fromJson(element, parser));
-
-		/* TODO:
-		 * 8. minecraft:particle_motion_parametric
-		 */
+		this.components.put("minecraft:particle_motion_parametric", (element, parser) -> new BedrockComponentMotionParametric().fromJson(element, parser));
 	}
 
 	@Override
 	public BedrockScheme deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{
-		BedrockScheme particle = new BedrockScheme();
+		BedrockScheme scheme = new BedrockScheme();
 
 		if (!json.isJsonObject())
 		{
@@ -100,14 +98,16 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 
 		try
 		{
-			this.parseEffect(particle, this.getObject(root, "particle_effect", "No particle_effect was found..."));
+			this.parseEffect(scheme, this.getObject(root, "particle_effect", "No particle_effect was found..."));
 		}
 		catch (MolangException e)
 		{
 			throw new JsonParseException("Couldn't parse some MoLang expression!", e);
 		}
 
-		return particle;
+		scheme.setup();
+
+		return scheme;
 	}
 
 	private void parseEffect(BedrockScheme scheme, JsonObject effect) throws JsonParseException, MolangException
