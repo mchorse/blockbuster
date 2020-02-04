@@ -3,6 +3,9 @@ package mchorse.blockbuster_pack.morphs;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.utils.MatrixUtils;
+import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +14,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector4f;
 import java.util.Objects;
 
 public class SnowstormMorph extends AbstractMorph
 {
+	public static final Matrix4f matrix = new Matrix4f();
+
 	public String scheme = "";
 
 	@SideOnly(Side.CLIENT)
@@ -43,16 +50,37 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double v, double v1, double v2, float v3, float v4)
 	{
-		this.setupEmitter(entityLivingBase);
-
-		if (this.local)
+		if (RenderCustomModel.matrix != null)
 		{
-			this.emitter.render(v4);
+			Matrix4f parent = new Matrix4f(RenderCustomModel.matrix);
+			Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
+			Vector4f zero = new Vector4f(0, 0, 0, 1);
+
+			parent.invert();
+			parent.mul(matrix4f);
+			parent.transform(zero);
+
+			zero.add(new Vector4f(
+				(float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4),
+				(float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4),
+				(float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4),
+				(float) 0
+			));
+
+			this.emitter.lastGlobalX = zero.x;
+			this.emitter.lastGlobalY = zero.y;
+			this.emitter.lastGlobalZ = zero.z;
 		}
 		else
 		{
-			RenderingHandler.addEmitter(this.emitter);
+			this.emitter.lastGlobalX = (float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4);
+			this.emitter.lastGlobalY = (float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4);
+			this.emitter.lastGlobalZ = (float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4);
+
 		}
+
+		this.setupEmitter(entityLivingBase);
+		RenderingHandler.addEmitter(this.emitter);
 	}
 
 	@Override
@@ -75,14 +103,7 @@ public class SnowstormMorph extends AbstractMorph
 
 	private void setupEmitter(EntityLivingBase target)
 	{
-		if (this.local)
-		{
-			this.emitter.setWorld(target.worldObj);
-		}
-		else
-		{
-			this.emitter.setTarget(target);
-		}
+		this.emitter.setTarget(target);
 	}
 
 	@Override
@@ -94,6 +115,7 @@ public class SnowstormMorph extends AbstractMorph
 		morph.settings = this.settings;
 		morph.scheme = this.scheme;
 		morph.local = this.local;
+		morph.setScheme(morph.scheme);
 
 		return morph;
 	}

@@ -149,9 +149,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
-	{
-
-	}
+	{}
 
 	@Override
 	public void preRender(BedrockEmitter emitter, float partialTicks)
@@ -204,11 +202,11 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
-		if (particle.relative && !emitter.local)
+		if (particle.relative)
 		{
-			px += Interpolations.lerp(emitter.target.prevPosX, emitter.target.posX, partialTicks);
-			py += Interpolations.lerp(emitter.target.prevPosY, emitter.target.posY, partialTicks);
-			pz += Interpolations.lerp(emitter.target.prevPosZ, emitter.target.posZ, partialTicks);
+			px += emitter.lastGlobalX;
+			py += emitter.lastGlobalY;
+			pz += emitter.lastGlobalZ;
 		}
 
 		/* Calculate yaw and pitch based on the facing mode */

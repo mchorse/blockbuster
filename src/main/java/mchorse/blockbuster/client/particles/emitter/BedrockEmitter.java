@@ -29,7 +29,11 @@ public class BedrockEmitter
 	public EntityLivingBase target;
 	public World world;
 	public boolean lit;
-	public boolean local;
+
+	/* Intermediate values */
+	public float lastGlobalX;
+	public float lastGlobalY;
+	public float lastGlobalZ;
 
 	/* Runtime properties */
 	private int age;
@@ -74,13 +78,11 @@ public class BedrockEmitter
 	{
 		this.target = target;
 		this.world = target == null ? null : target.worldObj;
-		this.local = false;
 	}
 
 	public void setWorld(World world)
 	{
 		this.world = world;
-		this.local = true;
 	}
 
 	public void setScheme(BedrockScheme scheme)
@@ -242,9 +244,9 @@ public class BedrockEmitter
 			component.apply(this, particle);
 		}
 
-		if (!particle.relative && !this.local)
+		if (!particle.relative)
 		{
-			particle.position.add(new Vector3d(this.target.posX, this.target.posY, this.target.posZ));
+			particle.position.add(new Vector3d(this.lastGlobalX, this.lastGlobalY, this.lastGlobalZ));
 		}
 
 		particle.prevPosition.set(particle.position);
