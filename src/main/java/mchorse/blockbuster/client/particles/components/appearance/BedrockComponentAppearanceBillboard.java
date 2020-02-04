@@ -40,6 +40,16 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public boolean stretchFPS = false;
 	public boolean loop = false;
 
+	/* Runtime properties */
+	private Matrix4f transform = new Matrix4f();
+	private Matrix4f rotation = new Matrix4f();
+	private Vector4f[] vertices = new Vector4f[] {
+		new Vector4f(0, 0, 0, 1),
+		new Vector4f(0, 0, 0, 1),
+		new Vector4f(0, 0, 0, 1),
+		new Vector4f(0, 0, 0, 1)
+	};
+
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -199,9 +209,9 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 		if (particle.relative)
 		{
-			px += emitter.lastGlobalX;
-			py += emitter.lastGlobalY;
-			pz += emitter.lastGlobalZ;
+			px += emitter.lastGlobal.x;
+			py += emitter.lastGlobal.y;
+			pz += emitter.lastGlobal.z;
 		}
 
 		/* Calculate yaw and pitch based on the facing mode */
@@ -231,49 +241,42 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			entityPitch += 180;
 		}
 
-		/* Calculate the geometry for billboards */
+		/* Calculate the geometry for billboards using cool matrix math */
 		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
 		int lightX = light >> 16 & 65535;
 		int lightY = light & 65535;
 
-		Vector4f[] vertices = {
-			new Vector4f(-pw / 2, -ph / 2, 0, 1),
-			new Vector4f(pw / 2, -ph / 2, 0, 1),
-			new Vector4f(pw / 2, ph / 2, 0, 1),
-			new Vector4f(- pw / 2, ph / 2, 0, 1)
-		};
-
-		Matrix4f matrix4f = new Matrix4f();
-		matrix4f.setIdentity();
-
-		Matrix4f rotate = new Matrix4f();
+		this.vertices[0].set(-pw / 2, -ph / 2, 0, 1);
+		this.vertices[1].set(pw / 2, -ph / 2, 0, 1);
+		this.vertices[2].set(pw / 2, ph / 2, 0, 1);
+		this.vertices[3].set(-pw / 2, ph / 2, 0, 1);
+		this.transform.setIdentity();
 
 		if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
 		{
-			rotate.rotY(entityYaw / 180 * (float) Math.PI);
-			matrix4f.mul(rotate);
-			rotate.rotX(entityPitch / 180 * (float) Math.PI);
-			matrix4f.mul(rotate);
+			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
+			this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
 		}
 		else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
-			rotate.rotY(entityYaw / 180 * (float) Math.PI);
-			matrix4f.mul(rotate);
+			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
 		}
 
-		rotate.rotZ(angle / 180 * (float) Math.PI);
-		matrix4f.mul(rotate);
+		this.rotation.rotZ(angle / 180 * (float) Math.PI);
+		this.transform.mul(this.rotation);
+		this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
 
-		matrix4f.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
-
-		for (Vector4f vertex : vertices)
+		for (Vector4f vertex : this.vertices)
 		{
-			matrix4f.transform(vertex);
+			this.transform.transform(vertex);
 		}
 
-		builder.pos(vertices[0].x, vertices[0].y, vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[1].x, vertices[1].y, vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[2].x, vertices[2].y, vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(vertices[3].x, vertices[3].y, vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 	}
 
 	@Override

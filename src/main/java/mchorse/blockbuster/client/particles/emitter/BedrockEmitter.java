@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,9 +32,7 @@ public class BedrockEmitter
 	public boolean lit;
 
 	/* Intermediate values */
-	public float lastGlobalX;
-	public float lastGlobalY;
-	public float lastGlobalZ;
+	public Vector3d lastGlobal = new Vector3d();
 
 	/* Runtime properties */
 	private int age;
@@ -246,7 +245,7 @@ public class BedrockEmitter
 
 		if (!particle.relative)
 		{
-			particle.position.add(new Vector3d(this.lastGlobalX, this.lastGlobalY, this.lastGlobalZ));
+			particle.position.add(this.lastGlobal);
 		}
 
 		particle.prevPosition.set(particle.position);

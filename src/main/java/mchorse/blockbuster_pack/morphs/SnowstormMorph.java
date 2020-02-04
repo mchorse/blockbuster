@@ -67,16 +67,15 @@ public class SnowstormMorph extends AbstractMorph
 				(float) 0
 			));
 
-			this.emitter.lastGlobalX = zero.x;
-			this.emitter.lastGlobalY = zero.y;
-			this.emitter.lastGlobalZ = zero.z;
+			this.emitter.lastGlobal.x = zero.x;
+			this.emitter.lastGlobal.y = zero.y;
+			this.emitter.lastGlobal.z = zero.z;
 		}
 		else
 		{
-			this.emitter.lastGlobalX = (float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4);
-			this.emitter.lastGlobalY = (float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4);
-			this.emitter.lastGlobalZ = (float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4);
-
+			this.emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4);
+			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4);
+			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4);
 		}
 
 		this.setupEmitter(entityLivingBase);

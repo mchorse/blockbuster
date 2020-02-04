@@ -34,6 +34,8 @@ public class BedrockParticle
 	public float b = 1;
 	public float a = 1;
 
+	private Vector3d global = new Vector3d();
+
 	public BedrockParticle()
 	{
 		this.speed.set((float) Math.random() - 0.5F, (float) Math.random() - 0.5F, (float) Math.random() - 0.5F);
@@ -43,6 +45,18 @@ public class BedrockParticle
 	public double getAge(float partialTick)
 	{
 		return (this.age + partialTick) / 20.0;
+	}
+
+	public Vector3d getGlobalPosition(BedrockEmitter emitter)
+	{
+		this.global.set(this.position);
+
+		if (this.relative)
+		{
+			this.global.add(emitter.lastGlobal);
+		}
+
+		return this.global;
 	}
 
 	public void update()
