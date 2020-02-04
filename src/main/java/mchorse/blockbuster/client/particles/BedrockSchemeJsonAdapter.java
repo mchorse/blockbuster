@@ -12,6 +12,7 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentLifetime;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeExpression;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeLooping;
@@ -69,6 +70,7 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		this.components.put("minecraft:particle_lifetime_expression", (element, parser) -> new BedrockComponentLifetime().fromJson(element, parser));
 		this.components.put("minecraft:particle_expire_if_in_blocks", (element, parser) -> new BedrockComponentExpireInBlocks().fromJson(element, parser));
 		this.components.put("minecraft:particle_expire_if_not_in_blocks", (element, parser) -> new BedrockComponentExpireNotInBlocks().fromJson(element, parser));
+		this.components.put("minecraft:particle_kill_plane", (element, parser) -> new BedrockComponentKillPlane().fromJson(element, parser));
 
 		/* Appearance */
 		this.components.put("minecraft:particle_appearance_billboard", (element, parser) -> new BedrockComponentAppearanceBillboard().fromJson(element, parser));

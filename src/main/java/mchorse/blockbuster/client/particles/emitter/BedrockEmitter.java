@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
