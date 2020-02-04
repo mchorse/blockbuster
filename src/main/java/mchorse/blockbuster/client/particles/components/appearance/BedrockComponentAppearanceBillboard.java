@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
-import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
@@ -21,7 +20,7 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleUpdate, IComponentParticleRender
+public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleRender
 {
 	public MolangExpression sizeW = MolangParser.ZERO;
 	public MolangExpression sizeH = MolangParser.ZERO;
@@ -146,10 +145,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		if (flipbook.has("stretch_to_lifetime")) this.stretchFPS = flipbook.get("stretch_to_lifetime").getAsBoolean();
 		if (flipbook.has("loop")) this.loop = flipbook.get("loop").getAsBoolean();
 	}
-
-	@Override
-	public void update(BedrockEmitter emitter, BedrockParticle particle)
-	{}
 
 	@Override
 	public void preRender(BedrockEmitter emitter, float partialTicks)
@@ -284,28 +279,4 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	@Override
 	public void postRender(BedrockEmitter emitter, float partialTicks)
 	{}
-
-	public static enum CameraFacing
-	{
-		ROTATE_XYZ("rotate_xyz"), ROTATE_Y("rotate_y"),
-		LOOKAT_XYZ("lookat_xyz"), LOOKAT_Y("lookat_y"),
-		DIRECTION_X("direction_x"), DIRECTION_Y("direction_y"), DIRECTION_Z("direction_z");
-
-		public final String name;
-
-		public static CameraFacing fromString(String string)
-		{
-			for (CameraFacing facing : values())
-			{
-				if (facing.name.equals(string)) return facing;
-			}
-
-			return null;
-		}
-
-		private CameraFacing(String name)
-		{
-			this.name = name;
-		}
-	}
 }

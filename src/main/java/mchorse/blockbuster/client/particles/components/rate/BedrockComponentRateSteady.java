@@ -16,12 +16,6 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 	public MolangExpression spawnRate;
 	public MolangExpression maxParticles;
 
-	@Override
-	public int getSortingIndex()
-	{
-		return 10;
-	}
-
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
 		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
@@ -66,5 +60,11 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 				emitter.spawnedParticles += spawn;
 			}
 		}
+	}
+
+	@Override
+	public int getSortingIndex()
+	{
+		return 10;
 	}
 }
