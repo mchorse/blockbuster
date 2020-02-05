@@ -27,7 +27,9 @@ public class BedrockParticle
 
 	public Vector3f speed = new Vector3f();
 	public Vector3f acceleration = new Vector3f();
+	public Vector3f accelerationFactor = new Vector3f(1, 1, 1);
 	public float drag = 0;
+	public float dragFactor = 1;
 
 	public float r = 1;
 	public float g = 1;
@@ -49,7 +51,12 @@ public class BedrockParticle
 
 	public Vector3d getGlobalPosition(BedrockEmitter emitter)
 	{
-		this.global.set(this.position);
+		return this.getGlobalPosition(emitter, this.position);
+	}
+
+	public Vector3d getGlobalPosition(BedrockEmitter emitter, Vector3d vector)
+	{
+		this.global.set(vector);
 
 		if (this.relative)
 		{
@@ -69,15 +76,20 @@ public class BedrockParticle
 			this.rotation += this.rotationVelocity / 20F;
 
 			Vector3f vec = new Vector3f(this.speed);
-			vec.scale(-this.drag);
+			vec.scale(-(this.drag + this.dragFactor));
 
 			this.acceleration.add(vec);
 			this.acceleration.scale(1 / 20F);
 			this.speed.add(this.acceleration);
 
-			this.position.x += this.speed.x / 20F;
-			this.position.y += this.speed.y / 20F;
-			this.position.z += this.speed.z / 20F;
+			vec.set(this.speed);
+			vec.x *= this.accelerationFactor.x;
+			vec.y *= this.accelerationFactor.y;
+			vec.z *= this.accelerationFactor.z;
+
+			this.position.x += vec.x / 20F;
+			this.position.y += vec.y / 20F;
+			this.position.z += vec.z / 20F;
 		}
 
 		if (this.lifetime >= 0 && this.age >= this.lifetime)

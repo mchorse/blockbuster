@@ -26,7 +26,7 @@ import java.util.List;
 public class MolangParser extends MathBuilder
 {
 	public static final MolangExpression ZERO = new MolangValue(null, new Constant(0));
-	public static final MolangExpression ONE = new MolangValue(null, new Constant(0));
+	public static final MolangExpression ONE = new MolangValue(null, new Constant(1));
 	public static final String RETURN = "return ";
 
 	public MolangParser()
