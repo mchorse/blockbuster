@@ -39,13 +39,13 @@ public class BedrockEmitter
 	private int age;
 	private int lifetime;
 	private boolean wasStopped;
+	public double spawnedParticles;
 	public boolean playing = true;
 
 	public float random1 = (float) Math.random();
 	public float random2 = (float) Math.random();
 	public float random3 = (float) Math.random();
 	public float random4 = (float) Math.random();
-	public double spawnedParticles;
 
 	private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
 
@@ -263,6 +263,7 @@ public class BedrockEmitter
 		if (!particle.relative && !forceRelative)
 		{
 			particle.position.add(this.lastGlobal);
+			particle.initialPosition.add(this.lastGlobal);
 		}
 
 		particle.prevPosition.set(particle.position);

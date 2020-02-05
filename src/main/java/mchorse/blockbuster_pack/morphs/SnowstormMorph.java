@@ -29,6 +29,8 @@ public class SnowstormMorph extends AbstractMorph
 
 	public boolean local;
 
+	private boolean initialized;
+
 	public SnowstormMorph()
 	{
 		super();
@@ -39,6 +41,7 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		this.scheme = key;
 		this.emitter.setScheme(Blockbuster.proxy.particles.presets.get(key));
+		this.initialized = false;
 	}
 
 	@Override
@@ -52,9 +55,9 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
 	{
-		if (RenderCustomModel.matrix != null)
+		if (MatrixUtils.matrix != null)
 		{
-			Matrix4f parent = new Matrix4f(RenderCustomModel.matrix);
+			Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
 			Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
 			Vector4f zero = new Vector4f(0, 0, 0, 1);
 
@@ -72,16 +75,21 @@ public class SnowstormMorph extends AbstractMorph
 			this.emitter.lastGlobal.x = zero.x;
 			this.emitter.lastGlobal.y = zero.y;
 			this.emitter.lastGlobal.z = zero.z;
+			this.initialized = true;
 		}
 		else
 		{
 			this.emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
 			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
 			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
+			this.initialized = true;
 		}
 
-		this.setupEmitter(entityLivingBase);
-		RenderingHandler.addEmitter(this.emitter);
+		if (this.initialized)
+		{
+			this.setupEmitter(entityLivingBase);
+			RenderingHandler.addEmitter(this.emitter);
+		}
 	}
 
 	@Override
@@ -89,7 +97,7 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		super.update(target, cap);
 
-		if (target.worldObj.isRemote)
+		if (target.worldObj.isRemote && this.initialized)
 		{
 			this.updateEmitter(target);
 		}
@@ -155,6 +163,7 @@ public class SnowstormMorph extends AbstractMorph
 		super.reset();
 
 		this.scheme = "";
+		this.initialized = false;
 	}
 
 	@Override

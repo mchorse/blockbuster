@@ -52,7 +52,7 @@ public class BedrockComponentMotionDynamic extends BedrockComponentBase implemen
 		particle.acceleration.z += (float) this.motionAcceleration[2].get();
 		particle.drag = (float) this.motionDrag.get();
 
-		particle.rotationAcceleration = (float) this.rotationAcceleration.get() / 20F;
+		particle.rotationAcceleration = (float) this.rotationAcceleration.get();
 		particle.rotationDrag = (float) this.rotationDrag.get();
 	}
 }

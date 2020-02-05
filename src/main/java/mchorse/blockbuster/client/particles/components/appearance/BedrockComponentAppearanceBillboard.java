@@ -212,11 +212,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
 		}
 
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
-		{
-			// entityPitch += 180;
-		}
-
 		/* Calculate the geometry for billboards using cool matrix math */
 		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
 		int lightX = light >> 16 & 65535;

@@ -36,7 +36,7 @@ public class BedrockParticle
 	public Vector3f acceleration = new Vector3f();
 	public Vector3f accelerationFactor = new Vector3f(1, 1, 1);
 	public float drag = 0;
-	public float dragFactor = 1;
+	public float dragFactor = 0;
 
 	/* Color */
 	public float r = 1;
@@ -81,7 +81,7 @@ public class BedrockParticle
 
 		if (!this.manual)
 		{
-			float rotationAcceleration = this.rotationAcceleration -this.rotationDrag * this.rotationVelocity;
+			float rotationAcceleration = this.rotationAcceleration / 20F -this.rotationDrag * this.rotationVelocity;
 			this.rotationVelocity += rotationAcceleration / 20F;
 			this.rotation = this.initialRotation + this.rotationVelocity * this.age;
 

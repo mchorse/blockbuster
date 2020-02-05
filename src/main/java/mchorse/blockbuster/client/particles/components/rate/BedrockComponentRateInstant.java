@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.mclib.math.Operation;
 
 public class BedrockComponentRateInstant extends BedrockComponentBase implements IComponentEmitterUpdate
 {
@@ -26,7 +27,7 @@ public class BedrockComponentRateInstant extends BedrockComponentBase implements
 	@Override
 	public void update(BedrockEmitter emitter)
 	{
-		if (emitter.getAge() == 0)
+		if (Operation.equals(emitter.getAge(), 0))
 		{
 			emitter.setEmitterVariables(0);
 

@@ -24,10 +24,8 @@ import javax.vecmath.Matrix4f;
 public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 {
     /**
-     * Model view matrix captured here
+     * Last bind texture
      */
-    public static Matrix4f matrix;
-
     public static ResourceLocation lastTexture;
 
     /**
@@ -103,14 +101,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        /* Only the layer can invoke this */
-        boolean wasSet = false;
-
-        if (matrix == null)
-        {
-            matrix = MatrixUtils.readModelView(new Matrix4f());
-            wasSet = true;
-        }
+        boolean wasSet = MatrixUtils.captureMatrix();
 
         this.setupModel(entity, partialTicks);
 
@@ -119,10 +110,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
 
-        if (wasSet)
-        {
-            matrix = null;
-        }
+        if (wasSet) MatrixUtils.releaseMatrix();
     }
 
     /**

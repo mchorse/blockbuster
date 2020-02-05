@@ -19,6 +19,11 @@ public class MatrixUtils
 	public static final float[] floats = new float[16];
 
 	/**
+	 * Model view matrix captured here
+	 */
+	public static Matrix4f matrix;
+
+	/**
 	 * Read OpenGL's model view matrix
 	 */
 	public static Matrix4f readModelView(Matrix4f matrix4f)
@@ -67,5 +72,22 @@ public class MatrixUtils
 		floats[13] = matrix4f.m31;
 		floats[14] = matrix4f.m32;
 		floats[15] = matrix4f.m33;
+	}
+
+	public static boolean captureMatrix()
+	{
+		if (matrix == null)
+		{
+			matrix = MatrixUtils.readModelView(new Matrix4f());
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public static void releaseMatrix()
+	{
+		matrix = null;
 	}
 }
