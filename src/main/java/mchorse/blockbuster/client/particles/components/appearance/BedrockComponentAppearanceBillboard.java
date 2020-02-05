@@ -12,9 +12,12 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -41,6 +44,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public boolean loop = false;
 
 	/* Runtime properties */
+	private float w;
+	private float h;
+
+	private float u1;
+	private float v1;
+	private float u2;
+	private float v2;
+
 	private Matrix4f transform = new Matrix4f();
 	private Matrix4f rotation = new Matrix4f();
 	private Vector4f[] vertices = new Vector4f[] {
@@ -163,9 +174,128 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	@Override
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks)
 	{
+		this.calculateUVs(particle, partialTicks);
+
+		/* Render the particle */
+		double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
+		double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
+		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
+		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
+
+		if (particle.relative)
+		{
+			px += emitter.lastGlobal.x;
+			py += emitter.lastGlobal.y;
+			pz += emitter.lastGlobal.z;
+		}
+
+		/* Calculate yaw and pitch based on the facing mode */
+		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+
+		float entityYaw = 180 - camera.prevRotationYaw + (camera.rotationYaw - camera.prevRotationYaw) * partialTicks;
+		float entityPitch = 180 - camera.prevRotationPitch + (camera.rotationPitch - camera.prevRotationPitch) * partialTicks;
+		boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
+
+		if (lookAt)
+		{
+			double cx = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
+			double cy = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
+			double cz = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
+
+			double dX = cx - px;
+			double dY = cy - py;
+			double dZ = cz - pz;
+
+			double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
+
+			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
+			entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;
+		}
+
+		if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+		{
+			// entityPitch += 180;
+		}
+
+		/* Calculate the geometry for billboards using cool matrix math */
+		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
+		int lightX = light >> 16 & 65535;
+		int lightY = light & 65535;
+
+		this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
+		this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
+		this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
+		this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
+		this.transform.setIdentity();
+
+		if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
+		{
+			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
+			this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
+		}
+		else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
+			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
+			this.transform.mul(this.rotation);
+		}
+
+		this.rotation.rotZ(angle / 180 * (float) Math.PI);
+		this.transform.mul(this.rotation);
+		this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
+
+		for (Vector4f vertex : this.vertices)
+		{
+			this.transform.transform(vertex);
+		}
+
+		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(this.u1, this.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(this.u2, this.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(this.u2, this.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(this.u1, this.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+	}
+
+	@Override
+	public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
+	{
+		this.calculateUVs(particle, partialTicks);
+
+		this.w = this.h = 0.5F;
+		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
+
+		/* Calculate the geometry for billboards using cool matrix math */
+		this.vertices[0].set(-this.w / 2, -this.h / 2, 0, 1);
+		this.vertices[1].set(this.w / 2, -this.h / 2, 0, 1);
+		this.vertices[2].set(this.w / 2, this.h / 2, 0, 1);
+		this.vertices[3].set(-this.w / 2, this.h / 2, 0, 1);
+		this.transform.setIdentity();
+		this.transform.setScale(scale * 2.75F);
+		this.transform.setTranslation(new Vector3f(x, y - scale / 2, 0));
+
+		this.rotation.rotZ(angle / 180 * (float) Math.PI);
+		this.transform.mul(this.rotation);
+
+		for (Vector4f vertex : this.vertices)
+		{
+			this.transform.transform(vertex);
+		}
+
+		VertexBuffer builder = Tessellator.getInstance().getBuffer();
+
+		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(this.u1, this.v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(this.u2, this.v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(this.u2, this.v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(this.u1, this.v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+
+		Tessellator.getInstance().draw();
+	}
+
+	private void calculateUVs(BedrockParticle particle, float partialTicks)
+	{
 		/* Update particle's UVs and size */
-		float pw = (float) this.sizeW.get() * 2.25F;
-		float ph = (float) this.sizeH.get() * 2.25F;
+		this.w = (float) this.sizeW.get() * 2.25F;
+		this.h = (float) this.sizeH.get() * 2.25F;
 
 		float u = (float) this.uvX.get();
 		float v = (float) this.uvY.get();
@@ -196,87 +326,10 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			v += this.stepY * index;
 		}
 
-		float u1 = u / (float) this.textureWidth;
-		float v1 = v / (float) this.textureHeight;
-		float u2 = (u + w) / (float) this.textureWidth;
-		float v2 = (v + h) / (float) this.textureHeight;
-
-		/* Render the particle */
-		double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
-		double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
-		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
-		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
-
-		if (particle.relative)
-		{
-			px += emitter.lastGlobal.x;
-			py += emitter.lastGlobal.y;
-			pz += emitter.lastGlobal.z;
-		}
-
-		/* Calculate yaw and pitch based on the facing mode */
-		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-
-		float entityYaw = 180 - camera.prevRotationYaw + (camera.rotationYaw - camera.prevRotationYaw) * partialTicks;
-		float entityPitch = 180 - camera.prevRotationPitch + (camera.rotationPitch - camera.prevRotationPitch) * partialTicks;
-
-		if (this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y)
-		{
-			double cx = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
-			double cy = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
-			double cz = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
-
-			double dX = cx - px;
-			double dY = cy - py;
-			double dZ = cz - pz;
-
-			double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
-
-			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
-			entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI)));
-		}
-
-		if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 2)
-		{
-			entityPitch += 180;
-		}
-
-		/* Calculate the geometry for billboards using cool matrix math */
-		int light = emitter.getBrightnessForRender(partialTicks, px, py, pz);
-		int lightX = light >> 16 & 65535;
-		int lightY = light & 65535;
-
-		this.vertices[0].set(-pw / 2, -ph / 2, 0, 1);
-		this.vertices[1].set(pw / 2, -ph / 2, 0, 1);
-		this.vertices[2].set(pw / 2, ph / 2, 0, 1);
-		this.vertices[3].set(-pw / 2, ph / 2, 0, 1);
-		this.transform.setIdentity();
-
-		if (this.facing == CameraFacing.ROTATE_XYZ || this.facing == CameraFacing.LOOKAT_XYZ)
-		{
-			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-			this.transform.mul(this.rotation);
-			this.rotation.rotX(entityPitch / 180 * (float) Math.PI);
-			this.transform.mul(this.rotation);
-		}
-		else if (this.facing == CameraFacing.ROTATE_Y || this.facing == CameraFacing.LOOKAT_Y) {
-			this.rotation.rotY(entityYaw / 180 * (float) Math.PI);
-			this.transform.mul(this.rotation);
-		}
-
-		this.rotation.rotZ(angle / 180 * (float) Math.PI);
-		this.transform.mul(this.rotation);
-		this.transform.setTranslation(new Vector3f((float) px, (float) py, (float) pz));
-
-		for (Vector4f vertex : this.vertices)
-		{
-			this.transform.transform(vertex);
-		}
-
-		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		this.u1 = u / (float) this.textureWidth;
+		this.v1 = v / (float) this.textureHeight;
+		this.u2 = (u + w) / (float) this.textureWidth;
+		this.v2 = (v + h) / (float) this.textureHeight;
 	}
 
 	@Override

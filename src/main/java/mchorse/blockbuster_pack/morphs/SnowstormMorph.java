@@ -43,12 +43,14 @@ public class SnowstormMorph extends AbstractMorph
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderOnScreen(EntityPlayer entityPlayer, int i, int i1, float v, float v1)
-	{}
+	public void renderOnScreen(EntityPlayer entityPlayer, int x, int y, float scale, float alpha)
+	{
+		this.emitter.renderOnScreen(x, y, scale);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void render(EntityLivingBase entityLivingBase, double v, double v1, double v2, float v3, float v4)
+	public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
 	{
 		if (RenderCustomModel.matrix != null)
 		{
@@ -61,9 +63,9 @@ public class SnowstormMorph extends AbstractMorph
 			parent.transform(zero);
 
 			zero.add(new Vector4f(
-				(float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4),
-				(float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4),
-				(float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4),
+				(float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks),
+				(float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks),
+				(float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks),
 				(float) 0
 			));
 
@@ -73,9 +75,9 @@ public class SnowstormMorph extends AbstractMorph
 		}
 		else
 		{
-			this.emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, v4);
-			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, v4);
-			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, v4);
+			this.emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
+			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
+			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
 		}
 
 		this.setupEmitter(entityLivingBase);

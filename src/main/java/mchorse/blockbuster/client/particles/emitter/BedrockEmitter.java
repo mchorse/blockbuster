@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.mclib.math.Variable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -29,6 +30,7 @@ public class BedrockEmitter
 	public EntityLivingBase target;
 	public World world;
 	public boolean lit;
+	private BedrockParticle particle;
 
 	/* Intermediate values */
 	public Vector3d lastGlobal = new Vector3d();
@@ -212,14 +214,7 @@ public class BedrockEmitter
 		{
 			BedrockParticle particle = it.next();
 
-			particle.update();
-
-			this.setParticleVariables(particle, 0);
-
-			for (IComponentParticleUpdate component : this.scheme.particleUpdates)
-			{
-				component.update(this, particle);
-			}
+			this.updateParticle(particle);
 
 			if (particle.dead)
 			{
@@ -229,9 +224,32 @@ public class BedrockEmitter
 	}
 
 	/**
+	 * Update a single particle
+	 */
+	private void updateParticle(BedrockParticle particle)
+	{
+		particle.update();
+
+		this.setParticleVariables(particle, 0);
+
+		for (IComponentParticleUpdate component : this.scheme.particleUpdates)
+		{
+			component.update(this, particle);
+		}
+	}
+
+	/**
 	 * Spawn a particle
 	 */
 	public void spawnParticle()
+	{
+		this.particles.add(this.createParticle(false));
+	}
+
+	/**
+	 * Create a new particle
+	 */
+	private BedrockParticle createParticle(boolean forceRelative)
 	{
 		BedrockParticle particle = new BedrockParticle();
 
@@ -242,7 +260,7 @@ public class BedrockEmitter
 			component.apply(this, particle);
 		}
 
-		if (!particle.relative)
+		if (!particle.relative && !forceRelative)
 		{
 			particle.position.add(this.lastGlobal);
 		}
@@ -250,7 +268,46 @@ public class BedrockEmitter
 		particle.prevPosition.set(particle.position);
 		particle.prevRotation = particle.rotation;
 
-		this.particles.add(particle);
+		return particle;
+	}
+
+	/**
+	 * Render the particle on screen
+	 */
+	public void renderOnScreen(int x, int y, float scale)
+	{
+		if (this.scheme == null)
+		{
+			return;
+		}
+
+		float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+		List<IComponentParticleRender> list = this.scheme.getComponents(IComponentParticleRender.class);
+
+		if (!list.isEmpty())
+		{
+			Minecraft.getMinecraft().getTextureManager().bindTexture(this.scheme.texture);
+
+			GlStateManager.enableBlend();
+			GlStateManager.disableCull();
+
+			if (this.particle == null || this.particle.dead)
+			{
+				this.particle = this.createParticle(true);
+			}
+
+			this.particle.update();
+			this.setEmitterVariables(partialTicks);
+			this.setParticleVariables(this.particle, partialTicks);
+
+			for (IComponentParticleRender render : list)
+			{
+				render.renderOnScreen(this.particle, x, y, scale, partialTicks);
+			}
+
+			GlStateManager.disableBlend();
+			GlStateManager.enableCull();
+		}
 	}
 
 	/**

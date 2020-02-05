@@ -145,6 +145,12 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase impl
 	@Override
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks)
 	{
+		this.renderOnScreen(particle, 0, 0, 1, partialTicks);
+	}
+
+	@Override
+	public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
+	{
 		if (this.color != null)
 		{
 			this.color.compute(particle);

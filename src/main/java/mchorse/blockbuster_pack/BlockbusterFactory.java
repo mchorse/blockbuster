@@ -71,7 +71,9 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiSequencerMorph(mc));
         editors.add(new GuiRecordMorph(mc));
         editors.add(new GuiParticleMorph(mc));
-        editors.add(new GuiSnowstormMorph(mc));
+        /* TODO: maybe in the future...
+           editors.add(new GuiSnowstormMorph(mc));
+         */
     }
 
     @Override
@@ -296,7 +298,7 @@ public class BlockbusterFactory implements IMorphFactory
             SnowstormMorph morph = new SnowstormMorph();
 
             morph.setScheme(key);
-            morphs.addMorphVariant("snowstorm", "blockbuster_extra", key, morph);
+            morphs.addMorphVariant("snowstorm", "blockbuster_extra", "", morph);
         }
     }
 

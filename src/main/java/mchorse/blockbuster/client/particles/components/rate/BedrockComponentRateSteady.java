@@ -37,6 +37,10 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 	{}
 
 	@Override
+	public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks)
+	{}
+
+	@Override
 	public void postRender(BedrockEmitter emitter, float partialTicks)
 	{
 		if (emitter.playing)

@@ -10,5 +10,7 @@ public interface IComponentParticleRender extends IComponentBase
 
 	public void render(BedrockEmitter emitter, BedrockParticle particle, VertexBuffer builder, float partialTicks);
 
+	public void renderOnScreen(BedrockParticle particle, int x, int y, float scale, float partialTicks);
+
 	public void postRender(BedrockEmitter emitter, float partialTicks);
 }

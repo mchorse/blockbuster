@@ -66,7 +66,7 @@ public class BedrockScheme
 		}
 	}
 
-	private <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
+	public  <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
 	{
 		List<T> list = new ArrayList<T>();
 
@@ -78,7 +78,7 @@ public class BedrockScheme
 			}
 		}
 
-		if (!list.isEmpty())
+		if (list.size() > 1)
 		{
 			Collections.sort(list, Comparator.comparingInt(IComponentBase::getSortingIndex));
 		}
