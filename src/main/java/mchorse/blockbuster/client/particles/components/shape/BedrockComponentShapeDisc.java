@@ -10,8 +10,11 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
 
 public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 {
@@ -53,14 +56,20 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 
 		normal.normalize();
 
-		/* TODO: implement normal */
+		Quat4f quaternion = new Quat4f(normal.x, normal.y, normal.z, 1);
+		Matrix4f rotation = new Matrix4f();
+		rotation.set(quaternion);
 
-		Vector3d position = new Vector3d(Math.random() - 0.5, 0, Math.random() - 0.5);
+		Vector4f position = new Vector4f((float) Math.random() - 0.5F, 0, (float) Math.random() - 0.5F, 0);
 		position.normalize();
-		position.scale(this.radius.get() * (this.surface ? 1 : Math.random()));
-		position.add(new Vector3d(centerX, centerY, centerZ));
+		rotation.transform(position);
 
-		particle.position.add(position);
+		position.scale((float) (this.radius.get() * (this.surface ? 1 : Math.random())));
+		position.add(new Vector4f(centerX, centerY, centerZ, 0));
+
+		particle.position.x += position.x;
+		particle.position.y += position.y;
+		particle.position.z += position.z;
 
 		this.direction.applyDirection(particle, centerX, centerY, centerZ);
 	}
