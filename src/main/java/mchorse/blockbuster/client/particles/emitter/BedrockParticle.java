@@ -5,22 +5,29 @@ import javax.vecmath.Vector3f;
 
 public class BedrockParticle
 {
+	/* Randoms */
 	public float random1 = (float) Math.random();
 	public float random2 = (float) Math.random();
 	public float random3 = (float) Math.random();
 	public float random4 = (float) Math.random();
 
+	/* States */
 	public int age;
 	public int lifetime;
 	public boolean dead;
 	public boolean relative;
 	public boolean manual;
 
+	/* Rotation */
 	public float rotation;
 	public float initialRotation;
-	public float rotationVelocity;
 	public float prevRotation;
 
+	public float rotationVelocity;
+	public float rotationAcceleration;
+	public float rotationDrag;
+
+	/* Position */
 	public Vector3d position = new Vector3d();
 	public Vector3d initialPosition = new Vector3d();
 	public Vector3d prevPosition = new Vector3d();
@@ -31,6 +38,7 @@ public class BedrockParticle
 	public float drag = 0;
 	public float dragFactor = 1;
 
+	/* Color */
 	public float r = 1;
 	public float g = 1;
 	public float b = 1;
@@ -73,8 +81,11 @@ public class BedrockParticle
 
 		if (!this.manual)
 		{
-			this.rotation += this.rotationVelocity / 20F;
+			float rotationAcceleration = this.rotationAcceleration -this.rotationDrag * this.rotationVelocity;
+			this.rotationVelocity += rotationAcceleration / 20F;
+			this.rotation = this.initialRotation + this.rotationVelocity * this.age;
 
+			/* Position */
 			Vector3f vec = new Vector3f(this.speed);
 			vec.scale(-(this.drag + this.dragFactor));
 
