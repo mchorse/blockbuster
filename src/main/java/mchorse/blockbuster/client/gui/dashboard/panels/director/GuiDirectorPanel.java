@@ -490,7 +490,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             return;
         }
 
-        EntityPlayer player = this.mc.thePlayer;
+        EntityPlayer player = this.mc.player;
 
         if (this.replay.id.isEmpty())
         {
