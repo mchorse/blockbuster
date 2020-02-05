@@ -19,6 +19,12 @@ blockbuster.gui:
     select: 選取
     ok: 好
     billboard: 看向玩家
+    
+    # First time module
+    first_time:
+        title: "第一次使用？"
+        welcome: "歡迎使用 Blockbuster mod！\n\n如果你是第一次使用這個 mod，可以去看看 {c}YouTube{r} 上的 {a}Blockbuster 學院影片教程{r}。"
+        social: "如果你遇到了任何問題，可前往 {6}Discord{r} 伺服器取得幫助。還有，你可以跟隨我的 {b}Twitter{r}，我會在那發佈更新。"
 
     # Morphs popup strings
     morphs:
@@ -44,6 +50,8 @@ blockbuster.gui:
         resources: 資源
         wiki: 百科
         discord: Discord
+        tutorial: 影片教程
+        models: 打開模型……
 
         options: 選項
 
@@ -51,6 +59,8 @@ blockbuster.gui:
     director:
         title: 導演方塊
         config: 導演方塊選項
+        convert: 轉換導演方塊為場景
+        convert_modal: "命名場景："
         not_selected: 選取一個導演方塊…
         no_replays: 創建一個回放…
 
@@ -67,6 +77,8 @@ blockbuster.gui:
         invisible: 隱身
         enabled: 啟用
         fake_player: 假玩家
+        tp_back: 傳送回來
+        tp_back_tooltip: 將你傳送回開始的位置
         health: 健康值
         edit_record: 編輯錄制
         update_data: 更新資料
@@ -74,6 +86,17 @@ blockbuster.gui:
         rename_prefix: 重新命名前置代號
         rename_prefix_tooltip: 使用新的前置代號來重命名錄製 ID
         rename_prefix_popup: "鍵入一個新的前置代號："
+        
+        attach: 鏈接
+        attach_tooltip: 鏈接這個導演方塊/場景到播放按鈕
+
+    scenes:
+        title: 場景
+
+        add_modal: "命名新場景："
+        dupe_modal: "命名拷貝場景："
+        rename_modal: "重新命名當前場景："
+        remove_modal: "你真的要移除這個場景嗎？"
 
     # Actor configuration GUI strings
     actor:
@@ -212,12 +235,13 @@ blockbuster.gui:
         materials: 材料
         nbt: NBT
 
-        pick_skin: 選定皮膚
+        pick_model: 選取模型
+        pick_skin: 選取皮膚
         pose_sneak: 潛行的姿勢
         pose: 姿勢
 
         obj_materials: OBJ 材料
-        pick_texture: 選定材質
+        pick_texture: 選取材質
 
         limbs: 肢體
         body_parts: 身體部分
@@ -226,7 +250,15 @@ blockbuster.gui:
         animates: 動畫
         ignored: 略過
         animation_duration: 持續長度
-        pick_interpolation: 選擇插值
+        pick_interpolation: 選取插值
+        
+    image:
+        crop: 裁剪
+        left: 左
+        right: 右
+        top: 上
+        bottom: 下
+        dimensions: "大小 (%spx, %spx)"
         
     sequencer:
         duration: 持續長度
@@ -262,6 +294,9 @@ blockbuster.gui:
         fade: 淡出
         maximum: 最大
         cap: 容量
+        
+    record_morph:
+        random_skip: 隨機跳過
 
     texture:
         title: 材質管理器
@@ -301,6 +336,9 @@ blockbuster.gui:
         speed: 速度
         friction: 摩擦力
         gravity: 引力
+        
+        fade_in: 緩入
+        fade_out: 緩出
         
         impact_morph: 撞擊后的偽裝
         impact_delay: 撞擊的延遲

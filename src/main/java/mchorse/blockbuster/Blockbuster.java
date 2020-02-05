@@ -10,6 +10,7 @@ import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.DimensionManager;
@@ -64,11 +65,37 @@ public class Blockbuster
     public static final String VERSION = "%VERSION%";
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
-    public static final String WIKI_URL = "https://github.com/mchorse/blockbuster/wiki/";
-    public static final String DISCORD_URL = "https://discord.gg/qfxrqUF";
-    public static final String CHANNEL_URL = "https://www.youtube.com/c/McHorsesMods";
-    public static final String TWITTER_URL = "https://twitter.com/McHorsy";
-    public static final String TUTORIAL_URL = "https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2&t=0s";
+    public static String WIKI_URL()
+    {
+        return langOrDefault("blockbuster.gui.links.wiki", "https://github.com/mchorse/blockbuster/wiki/");
+    }
+
+    public static String DISCORD_URL()
+    {
+        return langOrDefault("blockbuster.gui.links.discord", "https://discord.gg/qfxrqUF");
+    }
+
+    public static String CHANNEL_URL()
+    {
+        return langOrDefault("blockbuster.gui.links.channel", "https://www.youtube.com/c/McHorsesMods");
+    }
+
+    public static String TWITTER_URL()
+    {
+        return langOrDefault("blockbuster.gui.links.twitter", "https://twitter.com/McHorsy");
+    }
+
+    public static String TUTORIAL_URL()
+    {
+        return langOrDefault("blockbuster.gui.links.tutorial", "https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2");
+    }
+
+    private static String langOrDefault(String lang, String url)
+    {
+        String result = I18n.format(lang);
+
+        return result.equals(lang) ? url : result;
+    }
 
     /* Proxies */
     public static final String CLIENT_PROXY = "mchorse.blockbuster.ClientProxy";

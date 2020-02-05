@@ -20,6 +20,17 @@ blockbuster.gui:
     ok: 好
     billboard: 看向玩家
 
+    links:
+        channel: "http://space.bilibili.com/472615413"
+        tutorial: "https://space.bilibili.com/472615413/favlist?fid=724274813"
+        wiki: "https://github.com/ycwei982/blockbuster/wiki"
+
+    # First time module
+    first_time:
+        title: "第一次使用？"
+        welcome: "欢迎使用 Blockbuster mod！\n\n如果你是第一次使用这个 mod，可以去看看 {c}哔哩哔哩{r} 上的 {a}Blockbuster 学院视频教程{r}。"
+        social: "如果你遇到了任何问题，可前往 {6}Discord{r} 服务器获得帮助。还有，你可以关注我的 {b}Twitter{r}，我会在那儿发布更新。"
+
     # Morphs popup strings
     morphs:
         acquire: "获取伪装"
@@ -44,6 +55,8 @@ blockbuster.gui:
         resources: 资源
         wiki: 百科
         discord: Discord
+        tutorial: 视频教程
+        models: 打开模型……
 
         options: 选项
 
@@ -51,6 +64,8 @@ blockbuster.gui:
     director:
         title: 导演方块
         config: 导演方块选项
+        convert: 转换导演方块为场景
+        convert_modal: "命名场景："
         not_selected: 选择一个导演方块…
         no_replays: 创建一个回放…
 
@@ -67,6 +82,8 @@ blockbuster.gui:
         invisible: 隐身
         enabled: 启用
         fake_player: 假玩家
+        tp_back: 传送回来
+        tp_back_tooltip: 将你传送回开始位置
         health: 健康值
         edit_record: 编辑录制
         update_data: 更新数据
@@ -74,6 +91,17 @@ blockbuster.gui:
         rename_prefix: 重命名前缀
         rename_prefix_tooltip: 使用新前缀来重命名回放的录制 ID
         rename_prefix_popup: "输入一个新的前缀："
+
+        attach: 链接
+        attach_tooltip: 链接这个导演方块/场景到播放按钮
+
+    scenes:
+        title: 场景
+
+        add_modal: "命名新场景："
+        dupe_modal: "命名复制场景："
+        rename_modal: "重命名当前场景："
+        remove_modal: "你真的要移除这个场景吗？"
 
     # Actor configuration GUI strings
     actor:
@@ -212,6 +240,7 @@ blockbuster.gui:
         materials: 材料
         nbt: NBT
 
+        pick_model: 选择模型
         pick_skin: 选择皮肤
         pose_sneak: 潜行的姿势
         pose: 姿势
@@ -227,6 +256,14 @@ blockbuster.gui:
         ignored: 跳过
         animation_duration: 持续长度
         pick_interpolation: 选择插值
+
+    image:
+        crop: 裁剪
+        left: 左
+        right: 右
+        top: 上
+        bottom: 下
+        dimensions: "大小 (%spx, %spx)"
         
     sequencer:
         duration: 持续长度
@@ -262,6 +299,9 @@ blockbuster.gui:
         fade: 淡出
         maximum: 最大
         cap: 容量
+
+    record_morph:
+        random_skip: 随机跳过
 
     texture:
         title: 材质管理器
@@ -301,6 +341,9 @@ blockbuster.gui:
         speed: 速度
         friction: 摩擦力
         gravity: 引力
+
+        fade_in: 缓入
+        fade_out: 缓出
         
         impact_morph: 撞击后的伪装
         impact_delay: 撞击的延迟
