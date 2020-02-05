@@ -29,5 +29,7 @@ blockbuster.success:
         clean: "{f}玩家錄制 %s{f} 的屬性 %s{f} 已經成功從 %s{f} 到 %s{f} 清除！"
         prolonged: "{f}已在玩家錄製 %s{f} 設定延遲。其回放的前、后延遲分別是：%s{f} 和 %s{f}。"
         faded: "{f}玩家錄製 %s{f} 的最後 %s{f} 幀會用於拖到起點。"
+        flipped: "{f}已在玩家錄製 %s{f} 以 %s{f} 軸，在 %s{f} 坐標翻轉！"
         cut: "{f}玩家錄製 %s{f} 已裁剪。留下了 %s{f} 幀和 %s{f} 幀之間的內容。"
         restored: "{f}已恢復到玩家錄製 %s{f} 的第 %s{f} 版本！"
+        reversed: "{f}已倒轉玩家錄製 %s{f}！"

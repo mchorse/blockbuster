@@ -57,7 +57,8 @@ blockbuster.error:
         empty_record: "{f}给予的玩家录制 %s{f} 是空的！"
         not_exist_iteration: "{f}给予的玩家录制 %s{f} 的第 %s{f} 版本不存在！"
         cant_restore: "{f}无法回退一个版本，因为临时文件现在不应该存在……"
-    
+        wrong_axis: "{f}给定的 \"%s{f}\" 不是合法的轴。它应该是 {7}x{r} 或者 {7}z{r}！"
+
     # Recording errors
     recording:
         read: "{f}命名为 %s{f} 的录制文件不适合播放 ({7}老版本{f}, {7}已损坏{f}, 或不是{7}录制文件{f})。"

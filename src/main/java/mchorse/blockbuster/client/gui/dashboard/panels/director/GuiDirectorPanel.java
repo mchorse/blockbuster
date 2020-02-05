@@ -10,7 +10,14 @@ import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -62,7 +69,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiButtonElement<GuiCheckBox> loops;
     public GuiButtonElement<GuiCheckBox> disableStates;
     public GuiButtonElement<GuiCheckBox> hide;
-    public GuiButtonElement<GuiButton> attach;
 
     /* Replay fields */
     public GuiTextElement id;
@@ -73,6 +79,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiButtonElement<GuiCheckBox> fake;
     public GuiButtonElement<GuiCheckBox> teleportBack;
     public GuiTrackpadElement health;
+
+    public GuiButtonElement<GuiButton> attach;
+    public GuiButtonElement<GuiButton> record;
 
     public GuiDelegateElement<IGuiElement> popup;
     public GuiSceneManager scenes;
@@ -129,7 +138,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops.resizer().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.resizer().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.resizer().set(0, 16, 60, 11).relative(this.disableStates.resizer());
-        this.attach.resizer().set(10, 130, 80, 20).parent(this.area).x(1, -90);
+        this.attach.resizer().set(10, 155, 80, 20).parent(this.area).x(1, -90);
 
         this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
 
@@ -192,18 +201,23 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
+        element = this.record = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
         element.resizer().set(10, 55, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData()).tooltip(I18n.format("blockbuster.gui.director.update_data_tooltip"), TooltipDirection.LEFT);
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         element.resizer().set(10, 80, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix()).tooltip(I18n.format("blockbuster.gui.director.rename_prefix_tooltip"), TooltipDirection.LEFT);
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData()).tooltip(I18n.format("blockbuster.gui.director.update_data_tooltip"), TooltipDirection.LEFT);
         element.resizer().set(10, 105, 80, 20).parent(this.area).x(1, -90);
+
+        this.replayEditor.add(element);
+
+        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix()).tooltip(I18n.format("blockbuster.gui.director.rename_prefix_tooltip"), TooltipDirection.LEFT);
+        element.resizer().set(10, 130, 80, 20).parent(this.area).x(1, -90);
 
         this.replayEditor.add(element);
 
@@ -369,6 +383,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.stopCommand.setText(this.location.getScene().stopCommand);
         this.loops.button.setIsChecked(this.location.getScene().loops);
         this.attach.setEnabled(false);
+        this.record.setEnabled(this.location.isDirector());
 
         if (this.mc != null && this.mc.player != null)
         {
@@ -463,6 +478,47 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.scenes.setScene(this.location.getScene());
         this.scenes.updateList(lastBlocks);
+    }
+
+    /**
+     * Send record message to the player
+     */
+    private void sendRecordMessage()
+    {
+        if (!this.location.isDirector())
+        {
+            return;
+        }
+
+        EntityPlayer player = this.mc.thePlayer;
+
+        if (this.replay.id.isEmpty())
+        {
+            L10n.error(player, "recording.fill_filename");
+
+            return;
+        }
+
+        BlockPos pos = this.location.getPosition();
+        String command = "/action record " + this.replay.id + " " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
+
+        ITextComponent component = new TextComponentString(I18n.format("blockbuster.info.recording.clickhere"));
+        component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(command)));
+        component.getStyle().setColor(TextFormatting.GRAY).setUnderlined(true);
+
+        L10n.info(player, "recording.message", this.replay.id, component);
+
+        /* Add the command to the history */
+        List<String> messages = this.mc.ingameGUI.getChatGUI().getSentMessages();
+
+        boolean empty = messages.isEmpty();
+        boolean lastMessageIsntCommand = !empty && !messages.get(messages.size() - 1).equals(command);
+
+        if (lastMessageIsntCommand || empty)
+        {
+            messages.add(command);
+        }
     }
 
     private void attach()

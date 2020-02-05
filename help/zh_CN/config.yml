@@ -3,6 +3,7 @@ blockbuster.config:
     general:
         title: 通用
 
+        show_first_time_modal: 展示第一次使用提示
         disable_teleport_playback_button: 关闭播放后瞬移功能
         extra_wubs: 附加的杂物
         auto_refresh_models: 刷新模型和皮肤

@@ -1,5 +1,6 @@
 blockbuster.config.comments:
     general:
+        show_first_time_modal: 是否顯示第一次使用的提示
         disable_teleport_playback_button: 當你潛行使用播放按鈕的時候，传送功能是否開啟？
         extra_wubs: 這個選項可能沒有作用，或者有點用？
         auto_refresh_models: 當進入 Metamorph 或 Blockbuster 的 GUI 時，自動刷新模型和皮膚？
