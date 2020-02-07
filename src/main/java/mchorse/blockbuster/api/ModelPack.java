@@ -121,10 +121,13 @@ public class ModelPack
      */
     private void addDefaultModel(String id) throws Exception
     {
-        String path = "assets/blockbuster/models/entity/";
-        ClassLoader loader = this.getClass().getClassLoader();
+        if (!this.models.containsKey(id))
+        {
+            String path = "assets/blockbuster/models/entity/";
+            ClassLoader loader = this.getClass().getClassLoader();
 
-        this.models.put(id, new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader)));
+            this.models.put(id, new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader)));
+        }
     }
 
     /**
