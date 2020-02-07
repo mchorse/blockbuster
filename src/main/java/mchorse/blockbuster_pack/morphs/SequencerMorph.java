@@ -154,8 +154,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      */
     protected void updateCycle(boolean isRemote)
     {
-        this.timer++;
         this.updateMorph(this.timer, isRemote);
+        this.timer++;
     }
 
     /**
@@ -195,9 +195,20 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             if (this.current >= 0 && this.current < size)
             {
                 SequenceEntry entry = this.morphs.get(this.current);
+                AbstractMorph morph = entry.morph == null ? null : entry.morph.clone(isRemote);
 
-                this.currentMorph.set(entry.morph == null ? null : entry.morph.clone(isRemote), isRemote);
+                this.currentMorph.set(morph, isRemote);
                 this.duration += entry.getDuration();
+            }
+
+            if (!this.morphs.isEmpty())
+            {
+                boolean durationZero = this.morphs.get(this.current).duration == 0;
+
+                if (this.timer >= this.duration && !durationZero)
+                {
+                    this.updateMorph(this.timer, isRemote);
+                }
             }
         }
     }
@@ -276,13 +287,17 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         {
             SequencerMorph sequencer = (SequencerMorph) morph;
 
-            this.current = 0;
             this.morphs.clear();
 
             for (SequenceEntry entry : sequencer.morphs)
             {
                 this.morphs.add(entry.clone());
             }
+
+            this.current = 0;
+            this.timer = 0;
+            this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
+            this.currentMorph.copy(sequencer.currentMorph, isRemote);
 
             this.reverse = sequencer.reverse;
             this.random = sequencer.random;

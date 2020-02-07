@@ -57,44 +57,33 @@ After that, Blockbuster mod should be installed and will appear in Minecraft's m
 
 This is change logs playlist. Almost every update (for exception of patches with bug fixes and minor features) comes with a change log video which showcases new features, and briefly shows how to use them.
 
-<a href="https://youtu.be/aToxS732NfE?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/aToxS732NfE/0.jpg"></a> 
+<a href="https://youtu.be/4n5p83KAG4k?list=PL6UPd2Tj65nEwg2bfY-NduLihPy6fgnvK"><img src="https://img.youtube.com/vi/4n5p83KAG4k/0.jpg"></a>
 
 Here is also a playlist of tutorials directly or indirectly related to Blockbuster/Minecraft machinima creation. Make sure to check it out, as it consists out of tutorials such as basics of Blockbuster mod, how to import OBJ models, etc.
 
-<a href="https://youtu.be/vo8fquY-TUM?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/vo8fquY-TUM/0.jpg"></a> 
+<a href="https://youtu.be/vo8fquY-TUM?list=PL6UPd2Tj65nE0Pmf6GD2Fk3aRGWTGKlZk"><img src="https://img.youtube.com/vi/vo8fquY-TUM/0.jpg"></a>
 
 ### Blockbuster machinimas
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Feel free to check out my crazy videos.
 
-<a href="https://youtu.be/0h0KeuHaXM4?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/0h0KeuHaXM4/0.jpg"></a> 
+<a href="https://youtu.be/0h0KeuHaXM4?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/0h0KeuHaXM4/0.jpg"></a>
 
 Here is also a playlist of 400+ community made videos with Blockbuster mod:
 
-<a href="https://youtu.be/8qSCBRFw9jM?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/8qSCBRFw9jM/0.jpg"></a> 
-
-## For mod reviewers and reposters
-
-When reposting my mod on your own website or reviewing it, please consider following (if you want to support me and my mod):
-
-* Don't distort the mod name. It's the *Blockbuster* mod.
-* Make sure that information and description of my mod is legit. Misleading information, like Minecraft version support or non-existent features, is your responsibility.
-* By uploading a custom build of this mod, the build becomes your responsibility.
-* Provide the source link, please. [CurseForge](https://minecraft.curseforge.com/projects/blockbuster) page is preferable.
-* Provide a link to my [YouTube channel](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw), please. This will be really appreciated! 
-* You can use Blockbuster [banner](http://i.imgur.com/nqDKg1R.png) or [cover](http://i.imgur.com/XgU8Tvx.png) for your repost page. Don't apply the watermark, though, that's just rude.
+<a href="https://youtu.be/8qSCBRFw9jM?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/8qSCBRFw9jM/0.jpg"></a>
 
 If you're interested in this project, you might as well follow me on any of social media accounts listed below:
 
-[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse) 
+[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse)
 
 Also, I would really appreciate if you will support me on Patreon!
 
-[![Become my Patron](https://i.imgur.com/4pQZ2xW.png)](https://www.patreon.com/McHorse) 
+[![Become my Patron](https://i.imgur.com/4pQZ2xW.png)](https://www.patreon.com/McHorse)
 
 ## Bug reports
 
-If you found a bug, or this mod crashed your game. I'll appreciate if you could report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/blockbuster/issues/), on PM or on [Twitter](https://twitter.com/McHorsy). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks! 
+If you found a bug, or this mod crashed your game. I'll appreciate if you could report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/blockbuster/issues/), on PM or on [Twitter](https://twitter.com/McHorsy). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks!
 
 ## License
 
@@ -102,8 +91,8 @@ Blockbuster mod's code is licensed under MIT license. See [LICENSE.md](./LICENSE
 
 ## For Devs
 
-Language files are compiled from YML (which are located in `help/` folder) to INI format. 
+Language files are compiled from YML (which are located in `help/` folder) to INI format.
 
 If you're going to work with localization strings, modify the appropriate YML file, first. Then use the `./gradlew buildLangFiles` command to convert YML to INI format `.lang` files directly to `src/main/resources/assets/blockbuster/lang` folder. Don't forget to refresh your IDE after building the langauge files.
 
-Also, you need [Aperture](https://github.com/mchorse/aperture)'s, [McLib](https://github.com/mchorse/mclib) and [Metamorph](https://github.com/mchorse/blockbuster)'s dev builds. Build them and then grab `-sources.jar` and `-dev.jar` to `run/libs/` folder, and refresh the IDE.
+Also, you need [Aperture](https://github.com/mchorse/aperture)'s, [McLib](https://github.com/mchorse/mclib) and [Metamorph](https://github.com/mchorse/metamorph)'s dev builds. Build them and then grab `-sources.jar` and `-dev.jar` to `run/libs/` folder, and refresh the IDE.
