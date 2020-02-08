@@ -28,6 +28,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 
 * **Actors and player recording** – the most important feature, as you won't be able to create a machinimas without it. With Blockbuster mod you can record yourself doing things and then playback it using an actor. *Recording code has some limitations on which actions it can record*. See [Blockbuster Wiki](https://github.com/mchorse/blockbuster/wiki) for more information about limitations.
 * **Director blocks** – special blocks which manage playback of multiple actors. With a director block, you can record an actor at a time, meanwhile reacting to previously recorded actors, making it possible to create complex scenes solo.
+* **Scenes** – scenes are just like director blocks, but cooler. They are stored in separate files (in world's `blockbuster/scenes/` folder), as opposed in the world. With scenes, you can create templates, transfer to another worlds, and most importantly you will never lose them in the world.
 * **Model block** – besides actors, Blockbuster also adds a *model block*, allowing you placing down custom models or mobs as static props, which allows creating magnificient and immersive scenes. Besides placing them down, you can also hold those models or mobs in your hand.
 * **BB gun item** – a special item which shoots projectiles on right click. This feature provides many different configuration options which can be used to create not only firearm combat scenes, but also special effects like avalanches, fake physics, crowd explosion and much more!
 * **[Aperture](https://minecraft.curseforge.com/projects/aperture) support** – Blockbuster mod has built-in Aperture integration. When Aperture is loaded, Blockbuster mod provides you with some features such as: ability to attach camera profiles to playback button, previewing director block playback while editing cameras and editing the player recording actions within the camera editor.
@@ -40,7 +41,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
     * **Record morph** – a morph that allows to playback a player recording within the morph itself (useful with model block or body part system).
     * **Structure morph** – a morph that allows to morph into a structure saved with structure block.
     * **Particle morph** – a morph which allows to emote vanilla and morph particles.
-* **Green screen features** – Blockbuster adds glowing green blocks without any shading and an option to turn the sky fully green which makes it easier creating green screens for post processing of your machinimas. 
+* **Green screen features** – Blockbuster adds glowing green blocks without any shading and an option to turn the sky fully green which makes it easier creating green screens for post processing of your machinimas.
 * **Animated GIF support** – now you can put reaction and meme GIFs onto Blockbuster models and just as images. Credit goes to [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java).
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
 * **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) and [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww), respectively.
@@ -49,7 +50,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 
 Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib), and [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
 
-After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong. 
+After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong.
 
 ## Videos
 
