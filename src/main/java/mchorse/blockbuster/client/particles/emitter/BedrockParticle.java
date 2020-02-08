@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -31,6 +32,7 @@ public class BedrockParticle
 	public Vector3d position = new Vector3d();
 	public Vector3d initialPosition = new Vector3d();
 	public Vector3d prevPosition = new Vector3d();
+	public Matrix3f matrix = new Matrix3f();
 
 	public Vector3f speed = new Vector3f();
 	public Vector3f acceleration = new Vector3f();
@@ -74,10 +76,15 @@ public class BedrockParticle
 		return this.global;
 	}
 
-	public void update()
+	public void update(BedrockEmitter emitter)
 	{
 		this.prevRotation = this.rotation;
 		this.prevPosition.set(this.position);
+
+		if (this.relative)
+		{
+			this.matrix.set(emitter.rotation);
+		}
 
 		if (!this.manual)
 		{
@@ -98,6 +105,7 @@ public class BedrockParticle
 			vec.y *= this.accelerationFactor.y;
 			vec.z *= this.accelerationFactor.z;
 
+			this.matrix.transform(vec);
 			this.position.x += vec.x / 20F;
 			this.position.y += vec.y / 20F;
 			this.position.z += vec.z / 20F;

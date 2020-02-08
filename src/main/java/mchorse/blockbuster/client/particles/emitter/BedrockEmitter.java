@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +35,7 @@ public class BedrockEmitter
 
 	/* Intermediate values */
 	public Vector3d lastGlobal = new Vector3d();
+	public Matrix3f rotation = new Matrix3f();
 
 	/* Runtime properties */
 	private int age;
@@ -228,7 +230,7 @@ public class BedrockEmitter
 	 */
 	private void updateParticle(BedrockParticle particle)
 	{
-		particle.update();
+		particle.update(this);
 
 		this.setParticleVariables(particle, 0);
 
@@ -268,6 +270,7 @@ public class BedrockEmitter
 
 		particle.prevPosition.set(particle.position);
 		particle.prevRotation = particle.rotation;
+		particle.matrix.set(this.rotation);
 
 		return particle;
 	}
@@ -297,7 +300,8 @@ public class BedrockEmitter
 				this.particle = this.createParticle(true);
 			}
 
-			this.particle.update();
+			this.rotation.setIdentity();
+			this.particle.update(this);
 			this.setEmitterVariables(partialTicks);
 			this.setParticleVariables(this.particle, partialTicks);
 

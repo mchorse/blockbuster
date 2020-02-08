@@ -12,6 +12,8 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
+import javax.vecmath.Vector3f;
+
 public class BedrockComponentMotionParametric extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
 {
 	public MolangExpression[] position = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
@@ -55,9 +57,12 @@ public class BedrockComponentMotionParametric extends BedrockComponentBase imple
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.position.x = particle.initialPosition.x + this.position[0].get();
-		particle.position.y = particle.initialPosition.y + this.position[1].get();
-		particle.position.z = particle.initialPosition.z + this.position[2].get();
+		Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
+
+		particle.matrix.transform(position);
+		particle.position.x = particle.initialPosition.x + position.x;
+		particle.position.y = particle.initialPosition.y + position.y;
+		particle.position.z = particle.initialPosition.z + position.z;
 		particle.rotation = (float) this.rotation.get();
 	}
 

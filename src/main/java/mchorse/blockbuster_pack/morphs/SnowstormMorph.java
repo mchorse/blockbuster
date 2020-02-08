@@ -14,7 +14,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.Objects;
 
@@ -30,6 +32,7 @@ public class SnowstormMorph extends AbstractMorph
 	public boolean local;
 
 	private boolean initialized;
+	private Vector4f vector = new Vector4f();
 
 	public SnowstormMorph()
 	{
@@ -59,22 +62,29 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
 			Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
-			Vector4f zero = new Vector4f(0, 0, 0, 1);
 
 			parent.invert();
 			parent.mul(matrix4f);
-			parent.transform(zero);
 
-			zero.add(new Vector4f(
-				(float) Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks),
-				(float) Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks),
-				(float) Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks),
-				(float) 0
-			));
+			Vector4f zero = this.calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
 
 			this.emitter.lastGlobal.x = zero.x;
 			this.emitter.lastGlobal.y = zero.y;
 			this.emitter.lastGlobal.z = zero.z;
+			this.emitter.rotation.setIdentity();
+
+			Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
+			Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
+			Vector3f az = new Vector3f(parent.m20, parent.m21, parent.m22);
+
+			ax.normalize();
+			ay.normalize();
+			az.normalize();
+
+			this.emitter.rotation.setRow(0, ax);
+			this.emitter.rotation.setRow(1, ay);
+			this.emitter.rotation.setRow(2, az);
+
 			this.initialized = true;
 		}
 		else
@@ -82,6 +92,7 @@ public class SnowstormMorph extends AbstractMorph
 			this.emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
 			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
 			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
+			this.emitter.rotation.setIdentity();
 			this.initialized = true;
 		}
 
@@ -90,6 +101,22 @@ public class SnowstormMorph extends AbstractMorph
 			this.setupEmitter(entityLivingBase);
 			RenderingHandler.addEmitter(this.emitter);
 		}
+	}
+
+	private Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
+	{
+		this.vector.set(x, y, z, 1);
+
+		matrix.transform(this.vector);
+
+		this.vector.add(new Vector4f(
+			(float) Interpolations.lerp(entity.prevPosX, entity.posX, partial),
+			(float) Interpolations.lerp(entity.prevPosY, entity.posY, partial),
+			(float) Interpolations.lerp(entity.prevPosZ, entity.posZ, partial),
+			(float) 0
+		));
+
+		return this.vector;
 	}
 
 	@Override
