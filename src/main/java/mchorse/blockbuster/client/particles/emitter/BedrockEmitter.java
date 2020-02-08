@@ -79,7 +79,7 @@ public class BedrockEmitter
 	public void setTarget(EntityLivingBase target)
 	{
 		this.target = target;
-		this.world = target == null ? null : target.worldObj;
+		this.world = target == null ? null : target.world;
 	}
 
 	public void setWorld(World world)

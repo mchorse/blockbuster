@@ -46,7 +46,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
 
             return this.isr.transform(name, basicClass);
         }
-        else if (checkName(name, "bnz", "net.minecraft.client.renderer.EntityRenderer"))
+        else if (checkName(name, "bqe", "net.minecraft.client.renderer.EntityRenderer"))
         {
             System.out.println("BBCoreMod: Transforming EntityRenderer class (" + name + ")");
 

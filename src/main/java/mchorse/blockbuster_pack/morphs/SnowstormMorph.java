@@ -124,7 +124,7 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		super.update(target, cap);
 
-		if (target.worldObj.isRemote && this.initialized)
+		if (target.world.isRemote && this.initialized)
 		{
 			this.updateEmitter(target);
 		}

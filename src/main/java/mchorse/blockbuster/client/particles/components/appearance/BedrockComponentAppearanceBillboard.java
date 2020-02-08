@@ -206,7 +206,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			double dY = cy - py;
 			double dZ = cz - pz;
 
-			double horizontalDistance = MathHelper.sqrt_double(dX * dX + dZ * dZ);
+			double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
 			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
 			entityPitch = (float) (-(MathHelper.atan2(dY, horizontalDistance) * (180D / Math.PI))) + 180;

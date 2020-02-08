@@ -29,10 +29,10 @@ public class EntityRendererTransformer extends ClassMethodTransformer
 		AbstractInsnNode renderLitNode = null;
 		AbstractInsnNode renderNode = null;
 
-		String owner = CoreClassTransformer.obfuscated ? "bms" : "net/minecraft/client/particle/ParticleManager";
+		String owner = CoreClassTransformer.obfuscated ? "bov" : "net/minecraft/client/particle/ParticleManager";
 		String renderLit = CoreClassTransformer.obfuscated ? "b" : "renderLitParticles";
 		String render = CoreClassTransformer.obfuscated ? "a" : "renderParticles";
-		String desc = CoreClassTransformer.obfuscated ? "(Lrw;F)V" : "(Lnet/minecraft/entity/Entity;F)V";
+		String desc = CoreClassTransformer.obfuscated ? "(Lsn;F)V" : "(Lnet/minecraft/entity/Entity;F)V";
 
 		/* Find these alive */
 		Iterator<AbstractInsnNode> it = methodNode.instructions.iterator();
