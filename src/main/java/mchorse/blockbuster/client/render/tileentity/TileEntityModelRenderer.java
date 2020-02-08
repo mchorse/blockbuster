@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
+import mchorse.blockbuster.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -78,6 +79,8 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             GlStateManager.pushMatrix();
             GlStateManager.translate(xx, yy, zz);
 
+            boolean wasSet = MatrixUtils.captureMatrix();
+
             if (te.order == RotationOrder.ZYX)
             {
                 GlStateManager.rotate(te.rx, 1, 0, 0);
@@ -108,6 +111,8 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);
                 this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
             }
+
+            if (wasSet) MatrixUtils.releaseMatrix();
         }
 
         /* Debug render (so people could find the block, lmao) */

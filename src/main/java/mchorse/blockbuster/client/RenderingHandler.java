@@ -1,29 +1,33 @@
 package mchorse.blockbuster.client;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.recording.RecordRecorder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Rendering handler
@@ -41,6 +45,11 @@ public class RenderingHandler
      * GIFs which should be updated 
      */
     public static Map<ResourceLocation, GifTexture> gifs = new HashMap<ResourceLocation, GifTexture>();
+
+    /**
+     * Bedrock particle emitters
+     */
+    private static final List<BedrockEmitter> emitters = new ArrayList<>();
 
     private GuiRecordingOverlay overlay;
 
@@ -77,6 +86,58 @@ public class RenderingHandler
     public static boolean isGreenSky()
     {
         return Blockbuster.proxy.config.green_screen_sky;
+    }
+
+    /**
+     * Render lit particles (call by ASM, but not used for anything yet...
+     * I might use it for morph based Snowstorm system)...
+     */
+    public static void renderLitParticles(float partialTicks)
+    {}
+
+    /**
+     * Render particle emitters (called by ASM)
+     */
+    public static void renderParticles(float partialTicks)
+    {
+        if (!emitters.isEmpty())
+        {
+            Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+            double playerX = camera.prevPosX + (camera.posX - camera.prevPosX) * (double) partialTicks;
+            double playerY = camera.prevPosY + (camera.posY - camera.prevPosY) * (double) partialTicks;
+            double playerZ = camera.prevPosZ + (camera.posZ - camera.prevPosZ) * (double) partialTicks;
+
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            GlStateManager.alphaFunc(516, 0.003921569F);
+
+            BufferBuilder builder = Tessellator.getInstance().getBuffer();
+
+            GlStateManager.disableTexture2D();
+
+            builder.setTranslation(-playerX, -playerY, -playerZ);
+
+            GlStateManager.disableCull();
+            GlStateManager.enableTexture2D();
+
+            for (BedrockEmitter emitter : emitters)
+            {
+                emitter.render(partialTicks);
+            }
+
+            builder.setTranslation(0, 0, 0);
+
+            GlStateManager.disableBlend();
+            GlStateManager.alphaFunc(516, 0.1F);
+        }
+
+        emitters.clear();
+    }
+
+    public static void addEmitter(BedrockEmitter emitter)
+    {
+        emitters.add(emitter);
     }
 
     public RenderingHandler(GuiRecordingOverlay overlay)
