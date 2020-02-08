@@ -7,6 +7,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,8 +19,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import javax.vecmath.Matrix4f;
+
 public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 {
+    /**
+     * Last bind texture
+     */
     public static ResourceLocation lastTexture;
 
     /**
@@ -95,12 +101,16 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        boolean wasSet = MatrixUtils.captureMatrix();
+
         this.setupModel(entity, partialTicks);
 
         if (this.mainModel != null)
         {
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
+
+        if (wasSet) MatrixUtils.releaseMatrix();
     }
 
     /**

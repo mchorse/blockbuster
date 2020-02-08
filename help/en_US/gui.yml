@@ -295,6 +295,10 @@ blockbuster.gui:
         maximum: Maximum
         cap: Capacity
 
+    snowstorm:
+        tooltip: Snowstorm morph panel
+        local: Local space rendering
+
     record_morph:
         random_skip: Random Skip
 
