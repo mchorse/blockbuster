@@ -2,6 +2,20 @@
 
 Blockbuster's change log.
 
+## Version 1.6.4
+
+This is a quick hot patch update which fixes a couple of major issues I found after releasing 1.6.3, my bad guys...
+
+**Compatible** with McLib `1.0.4`, Metamorph `1.1.10` and Aperture `1.3.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added a config option for green sky color
+* Added negative pre- and post-delays (suggested by Agirres)
+* Fixed vanilla particle morphs to work with body parts
+* Fixed limb pose and body part list after switching a model
+* Fixed scenes not saving when switching between scenes
+* Fixed scenes getting removed when being edited (stupid copy paste)
+* Fixed animated pose feature not resetting correctly
+
 ## Version 1.6.3
 
 This update introduces native support for MagicaVoxel (`*.vox`) models, Scenes (remote director blocks which are stored in files and managed in GUI), many new options, a couple of nice tweaks and workflow enhancements and, as always, bug and crash fixes.
