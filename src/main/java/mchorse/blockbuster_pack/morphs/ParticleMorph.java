@@ -1,5 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketEmitParticles;
+import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -18,6 +21,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4f;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +32,25 @@ import java.util.Random;
 
 public class ParticleMorph extends AbstractMorph
 {
+    public static final Matrix4f matrix = new Matrix4f();
+    public static final Vector4f vector = new Vector4f();
+
+    public static Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
+    {
+        vector.set(x, y, z, 1);
+
+        matrix.transform(vector);
+
+        vector.add(new Vector4f(
+                (float) Interpolations.lerp(entity.prevPosX, entity.posX, partial),
+                (float) Interpolations.lerp(entity.prevPosY, entity.posY, partial),
+                (float) Interpolations.lerp(entity.prevPosZ, entity.posZ, partial),
+                (float) 0
+        ));
+
+        return vector;
+    }
+
     private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
     private static final int[] EMPTY_ARGS = new int[]{};
 
@@ -60,6 +85,7 @@ public class ParticleMorph extends AbstractMorph
     public int maximum = 25;
 
     /* Runtime fields */
+    private Vector3d lastGlobal = new Vector3d();
     private int tick;
     private List<MorphParticle> morphParticles = new ArrayList<>();
     private int morphIndex;
@@ -111,6 +137,27 @@ public class ParticleMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
     {
+        if (MatrixUtils.matrix != null)
+        {
+            Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
+            Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
+
+            parent.invert();
+            parent.mul(matrix4f);
+
+            Vector4f zero = calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
+
+            this.lastGlobal.x = zero.x;
+            this.lastGlobal.y = zero.y;
+            this.lastGlobal.z = zero.z;
+        }
+        else
+        {
+            this.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
+            this.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
+            this.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
+        }
+
         if (!this.morphParticles.isEmpty())
         {
             GL11.glPushMatrix();
@@ -140,17 +187,17 @@ public class ParticleMorph extends AbstractMorph
             boolean vanillaCap = this.mode == ParticleMode.VANILLA && particlesPerSecond <= max;
             boolean morphCap = this.mode == ParticleMode.MORPH && this.maximum <= max;
 
-            if (vanillaCap || morphCap)
+            if ((vanillaCap || morphCap) && target.worldObj.isRemote)
             {
-                if (!target.worldObj.isRemote && this.mode == ParticleMode.VANILLA && this.vanillaType != null)
+                if (this.mode == ParticleMode.VANILLA && this.vanillaType != null)
                 {
-                    double x = target.posX + this.vanillaX;
-                    double y = target.posY + this.vanillaY;
-                    double z = target.posZ + this.vanillaZ;
+                    double x = this.lastGlobal.x + this.vanillaX;
+                    double y = this.lastGlobal.y + this.vanillaY;
+                    double z = this.lastGlobal.z + this.vanillaZ;
 
-                    ((WorldServer) target.worldObj).spawnParticle(this.vanillaType, true, x, y, z, this.count, this.vanillaDX, this.vanillaDY, this.vanillaDZ, this.speed, this.arguments);
+                    Dispatcher.sendToServer(new PacketEmitParticles(this.vanillaType, x, y, z, this.count, this.vanillaDX, this.vanillaDY, this.vanillaDZ, this.speed, this.arguments));
                 }
-                else if (target.worldObj.isRemote && this.mode == ParticleMode.MORPH && this.morph != null && this.morphParticles.size() < this.maximum)
+                else if (this.mode == ParticleMode.MORPH && this.morph != null && this.morphParticles.size() < this.maximum)
                 {
                     for (int i = 0; i < this.count && this.morphParticles.size() < this.maximum; i ++)
                     {
