@@ -53,6 +53,10 @@ public class RenderingHandler
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<>();
 
+    public static float skyR = 0;
+    public static float skyG = 1;
+    public static float skyB = 0;
+
     private GuiRecordingOverlay overlay;
 
     /**
@@ -76,7 +80,7 @@ public class RenderingHandler
      */
     public static void renderGreenSky()
     {
-        GlStateManager.clearColor(0, 1, 0, 1);
+        GlStateManager.clearColor(skyR, skyG, skyB, 1);
         GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glDisable(GL11.GL_FOG);
     }

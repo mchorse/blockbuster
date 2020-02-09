@@ -23,6 +23,7 @@ import java.util.Objects;
 public class SnowstormMorph extends AbstractMorph
 {
 	public static final Matrix4f matrix = new Matrix4f();
+	public static final Vector4f vector = new Vector4f();
 
 	public String scheme = "";
 
@@ -32,7 +33,22 @@ public class SnowstormMorph extends AbstractMorph
 	public boolean local;
 
 	private boolean initialized;
-	private Vector4f vector = new Vector4f();
+
+	public static Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
+	{
+		vector.set(x, y, z, 1);
+
+		matrix.transform(vector);
+
+		vector.add(new Vector4f(
+			(float) Interpolations.lerp(entity.prevPosX, entity.posX, partial),
+			(float) Interpolations.lerp(entity.prevPosY, entity.posY, partial),
+			(float) Interpolations.lerp(entity.prevPosZ, entity.posZ, partial),
+			(float) 0
+		));
+
+		return vector;
+	}
 
 	public SnowstormMorph()
 	{
@@ -66,7 +82,7 @@ public class SnowstormMorph extends AbstractMorph
 			parent.invert();
 			parent.mul(matrix4f);
 
-			Vector4f zero = this.calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
+			Vector4f zero = calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
 
 			this.emitter.lastGlobal.x = zero.x;
 			this.emitter.lastGlobal.y = zero.y;
@@ -101,22 +117,6 @@ public class SnowstormMorph extends AbstractMorph
 			this.setupEmitter(entityLivingBase);
 			RenderingHandler.addEmitter(this.emitter);
 		}
-	}
-
-	private Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
-	{
-		this.vector.set(x, y, z, 1);
-
-		matrix.transform(this.vector);
-
-		this.vector.add(new Vector4f(
-			(float) Interpolations.lerp(entity.prevPosX, entity.posX, partial),
-			(float) Interpolations.lerp(entity.prevPosY, entity.posY, partial),
-			(float) Interpolations.lerp(entity.prevPosZ, entity.posZ, partial),
-			(float) 0
-		));
-
-		return this.vector;
 	}
 
 	@Override
