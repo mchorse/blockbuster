@@ -27,6 +27,7 @@ import mchorse.blockbuster.network.client.scene.ClientHandlerScenes;
 import mchorse.blockbuster.network.common.PacketActorPause;
 import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
+import mchorse.blockbuster.network.common.PacketEmitParticles;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
@@ -65,6 +66,7 @@ import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster.network.common.structure.PacketStructureRequest;
 import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
+import mchorse.blockbuster.network.server.ServerHandlerEmitParticles;
 import mchorse.blockbuster.network.server.ServerHandlerGunInfo;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
@@ -172,6 +174,7 @@ public class Dispatcher
 
             /* Miscellaneous */
             register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
+            register(PacketEmitParticles.class, ServerHandlerEmitParticles.class, Side.SERVER);
 
             if (CameraHandler.isApertureLoaded())
             {

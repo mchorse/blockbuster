@@ -435,7 +435,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 /* If the last pose is null, it might case a first cycle freeze.
                  * this should fix it. */
-                ModelPose pose = this.model.getPose(this.currentPose);
+                ModelPose pose = this.customPose != null ? this.customPose : this.model.getPose(this.currentPose);
 
                 if (this.animation.isInProgress())
                 {
