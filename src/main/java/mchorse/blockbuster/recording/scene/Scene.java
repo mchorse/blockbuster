@@ -620,7 +620,7 @@ public class Scene
 		{
 			if (replay.id.isEmpty())
 			{
-				replay.id = this.getNextSuffix(this.getId());
+				replay.id = this.getNextSuffix(this.getId() + "_0");
 			}
 		}
 	}

@@ -8,7 +8,8 @@ blockbuster.config:
         extra_wubs: Extra Wubs
         auto_refresh_models: Refresh models and skins
         debug_playback_ticks: Debug ticks
-        green_screen_sky: Green sky
+        green_screen_sky: Chroma sky
+        green_screen_sky_color: Chroma sky color
         url_skins_sync_download: Synchronous URL downloads
     
     model_block:

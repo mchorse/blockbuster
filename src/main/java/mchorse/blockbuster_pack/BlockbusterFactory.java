@@ -305,6 +305,6 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public boolean hasMorph(String morph)
     {
-        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("record") || morph.equals("structure") || morph.equals("particle")  || morph.equals("snowstorm");
+        return morph.startsWith("blockbuster.") || morph.equals("sequencer") || morph.equals("structure") || morph.equals("particle")  || morph.equals("snowstorm");
     }
 }
