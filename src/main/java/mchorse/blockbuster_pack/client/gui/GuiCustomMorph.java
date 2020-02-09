@@ -157,6 +157,8 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             {
                 this.morph.changeModel(string);
                 this.editor.updateModelRenderer();
+                this.editor.poseEditor.fillData(this.morph);
+                this.editor.bodyPart.setLimbs(this.morph.model.limbs.keySet());
             });
             this.models.setBackground();
 
