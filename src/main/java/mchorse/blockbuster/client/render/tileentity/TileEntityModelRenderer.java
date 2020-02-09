@@ -77,9 +77,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             /* Apply transformations */
             GlStateManager.pushMatrix();
-            GlStateManager.translate(xx, yy, zz);
+            GlStateManager.translate(x + 0.5, y, z + 0.5);
 
             boolean wasSet = MatrixUtils.captureMatrix();
+
+            GlStateManager.translate(te.x, te.y, te.z);
 
             if (te.order == RotationOrder.ZYX)
             {
