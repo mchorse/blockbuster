@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.GlStateManager;
@@ -58,6 +59,8 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
 
+            boolean captured = MatrixUtils.captureMatrix();
+
             GlStateManager.scale(scale, scale, scale);
 
             if (entity.props.yaw) GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
@@ -65,7 +68,9 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
 
             entity.props.projectileTransform.transform();
             entity.props.createEntity();
-            morph.render(entity.props.entity, 0, 0, 0, 0, partialTicks);
+            morph.render(entity.props.getEntity(entity), 0, 0, 0, 0, partialTicks);
+
+            if (captured) MatrixUtils.releaseMatrix();
 
             GlStateManager.popMatrix();
         }
