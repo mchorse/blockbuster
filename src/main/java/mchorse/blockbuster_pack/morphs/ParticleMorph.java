@@ -1,7 +1,5 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.network.common.PacketEmitParticles;
 import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.metamorph.api.MorphManager;
@@ -16,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -195,7 +192,22 @@ public class ParticleMorph extends AbstractMorph
                     double y = this.lastGlobal.y + this.vanillaY;
                     double z = this.lastGlobal.z + this.vanillaZ;
 
-                    Dispatcher.sendToServer(new PacketEmitParticles(this.vanillaType, x, y, z, this.count, this.vanillaDX, this.vanillaDY, this.vanillaDZ, this.speed, this.arguments));
+                    for (int i = 0; i < this.count; i ++)
+                    {
+                        double dx = this.rand.nextGaussian() * this.vanillaDX;
+                        double dy = this.rand.nextGaussian() * this.vanillaDY;
+                        double dz = this.rand.nextGaussian() * this.vanillaDZ;
+                        double sx = this.rand.nextGaussian() * this.speed;
+                        double sy = this.rand.nextGaussian() * this.speed;
+                        double sz = this.rand.nextGaussian() * this.speed;
+
+                        try
+                        {
+                            target.worldObj.spawnParticle(this.vanillaType, true, x + dx, y + dy, z + dz, sx, sy, sz, this.arguments);
+                        }
+                        catch (Throwable e)
+                        {}
+                    }
                 }
                 else if (this.mode == ParticleMode.MORPH && this.morph != null && this.morphParticles.size() < this.maximum)
                 {
