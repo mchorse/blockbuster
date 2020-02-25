@@ -182,6 +182,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         return this.model == null ? null : this.model.getPose(poseName);
     }
 
+    public ModelPose getCurrentPose()
+    {
+        return this.customPose != null ? this.customPose : (this.model == null ? null : this.model.getPose(this.currentPose));
+    }
+
     public String getKey()
     {
         if (this.key == null)
@@ -435,9 +440,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 /* If the last pose is null, it might case a first cycle freeze.
                  * this should fix it. */
-                ModelPose pose = this.customPose != null ? this.customPose : this.model.getPose(this.currentPose);
+                ModelPose pose = this.getCurrentPose();
 
-                if (this.animation.isInProgress())
+                if (this.animation.isInProgress() && pose != null)
                 {
                     this.animation.last = this.animation.calculatePose(pose, 1).clone();
                 }
@@ -480,6 +485,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         this.key = null;
         this.parts.reset();
+        this.animation.reset();
         this.scale = this.scaleGui = 1F;
     }
 
@@ -632,7 +638,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         public ModelPose last;
         public ModelPose pose = new ModelPose();
 
-        private int progress = 0;
+        public int progress = 0;
+
+        public void reset()
+        {
+            this.progress = this.duration;
+        }
 
         public void merge(CustomAnimation animation)
         {
