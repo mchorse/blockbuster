@@ -137,7 +137,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            GuiBBModelRenderer.drawCube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 0.5F, 1, 0.35F);
+            GuiBBModelRenderer.drawCube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, (te.enabled ? 0 : 1), (te.enabled ? 0.5F : 0.85F), (te.enabled ? 1 : 0), 0.35F);
             GuiBBModelRenderer.drawCube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
 
             double distance = MathHelper.sqrt_double(Vec3d.ZERO.squareDistanceTo(te.x, te.y, te.z));
