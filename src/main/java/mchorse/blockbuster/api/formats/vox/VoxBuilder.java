@@ -2,6 +2,7 @@ package mchorse.blockbuster.api.formats.vox;
 
 import mchorse.blockbuster.api.formats.Mesh;
 import mchorse.blockbuster.api.formats.obj.Vector3f;
+import mchorse.blockbuster.api.formats.vox.data.Vox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
