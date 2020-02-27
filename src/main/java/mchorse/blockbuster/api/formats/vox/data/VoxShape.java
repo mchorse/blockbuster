@@ -4,23 +4,21 @@ import mchorse.blockbuster.api.formats.vox.VoxReader;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class VoxShape
+public class VoxShape extends VoxBaseNode
 {
-	private final int id;
-	private final Map<String, String> attrs;
-	private final int frames;
-	private final ArrayList<Attribute> modelAttrs;
+	public List<Attribute> modelAttrs;
 
 	public VoxShape(InputStream stream, VoxReader reader) throws Exception
 	{
 		this.id = reader.readInt(stream);
 		this.attrs = reader.readDictionary(stream);
-		this.frames = reader.readInt(stream);
+		this.num = reader.readInt(stream);
 		this.modelAttrs = new ArrayList<Attribute>();
 
-		for (int i = 0; i < this.frames; i ++)
+		for (int i = 0; i < this.num; i ++)
 		{
 			this.modelAttrs.add(new Attribute(reader.readInt(stream), reader.readDictionary(stream)));
 		}

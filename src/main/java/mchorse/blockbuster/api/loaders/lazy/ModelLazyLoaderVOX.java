@@ -3,6 +3,7 @@ package mchorse.blockbuster.api.loaders.lazy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.api.formats.vox.VoxDocument;
@@ -68,9 +69,9 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		Map<String, IMeshes> meshes = new HashMap<String, IMeshes>();
 		VoxDocument document = this.getVox();
 
-		for (Vox vox : document.chunks)
+		for (VoxDocument.LimbNode node : document.generate())
 		{
-			meshes.put("vox_" + (++ i), new MeshesVOX(document, vox));
+			meshes.put("vox_" + (i ++), new MeshesVOX(document, node));
 		}
 
 		return meshes;
@@ -96,6 +97,27 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		Model data = new Model();
 		ModelPose blocky = new ModelPose();
 
+		/* Generate limbs */
+		int i = 0;
+		VoxDocument document = this.getVox();
+
+		for (VoxDocument.LimbNode node : document.generate())
+		{
+			ModelLimb limb = data.addLimb("vox_" + (i ++));
+			ModelTransform transform = new ModelTransform();
+
+			limb.origin[0] = 0;
+			limb.origin[1] = 0;
+			limb.origin[2] = 0;
+
+			transform.translate[0] = -node.translation.x;
+			transform.translate[1] = node.translation.z;
+			transform.translate[2] = -node.translation.y;
+
+			blocky.limbs.put(limb.name, transform);
+		}
+
+		/* General model properties */
 		data.providesObj = true;
 		data.providesMtl = true;
 
@@ -106,19 +128,6 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		data.poses.put("sleeping", blocky.clone());
 		data.poses.put("riding", blocky.clone());
 		data.name = model;
-
-		/* Generate limbs */
-		int i = 0;
-		VoxDocument doc = this.getVox();
-
-		/* TODO: implement groups and transformations */
-		for (Vox vox : doc.chunks)
-		{
-			ModelLimb limb = data.addLimb("vox_" + (++ i));
-
-			limb.origin[0] = vox.x / 2F;
-			limb.origin[2] = vox.z / 2F;
-		}
 
 		return data;
 	}

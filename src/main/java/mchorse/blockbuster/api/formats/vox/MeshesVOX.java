@@ -16,12 +16,12 @@ public class MeshesVOX implements IMeshes
 	public VoxDocument document;
 	public Vox vox;
 
-	public MeshesVOX(VoxDocument document, Vox vox)
+	public MeshesVOX(VoxDocument document, VoxDocument.LimbNode node)
 	{
 		this.document = document;
-		this.vox = vox;
+		this.vox = node.chunk;
 
-		this.mesh = new VoxBuilder().build(vox);
+		this.mesh = new VoxBuilder(node.rotation).build(vox);
 	}
 
 	@Override
