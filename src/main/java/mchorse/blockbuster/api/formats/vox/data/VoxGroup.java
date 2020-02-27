@@ -3,23 +3,19 @@ package mchorse.blockbuster.api.formats.vox.data;
 import mchorse.blockbuster.api.formats.vox.VoxReader;
 
 import java.io.InputStream;
-import java.util.Map;
 
-public class VoxGroup
+public class VoxGroup extends VoxBaseNode
 {
-	public final int id;
-	public final Map<String, String> attrs;
-	public final int frames;
-	public final int[] ids;
+	public int[] ids;
 
 	public VoxGroup(InputStream stream, VoxReader reader) throws Exception 
 	{
 		this.id = reader.readInt(stream);
 		this.attrs = reader.readDictionary(stream);
-		this.frames = reader.readInt(stream);
-		this.ids = new int[this.frames];
+		this.num = reader.readInt(stream);
+		this.ids = new int[this.num];
 
-		for (int i = 0; i < frames; i ++)
+		for (int i = 0; i < num; i ++)
 		{
 			this.ids[i] = reader.readInt(stream);
 		}

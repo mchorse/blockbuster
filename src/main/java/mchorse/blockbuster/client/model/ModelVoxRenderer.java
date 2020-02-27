@@ -63,15 +63,15 @@ public class ModelVoxRenderer extends ModelCustomRenderer
 
                 for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
                 {
-                    float x = -(mesh.posData[i * 3] - this.limb.origin[0]) / 16F;
-                    float y = (-mesh.posData[i * 3 + 1] + this.limb.origin[1]) / 16F;
+                    float x = (mesh.posData[i * 3] - this.limb.origin[0]) / 16F;
+                    float y = -(mesh.posData[i * 3 + 1] - this.limb.origin[1]) / 16F;
                     float z = (mesh.posData[i * 3 + 2] - this.limb.origin[2]) / 16F;
 
                     float u = mesh.texData[i * 2];
                     float v = mesh.texData[i * 2 + 1];
 
                     float nx = mesh.normData[i * 3];
-                    float ny = -mesh.normData[i * 3 + 1];
+                    float ny = mesh.normData[i * 3 + 1];
                     float nz = mesh.normData[i * 3 + 2];
 
                     renderer.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();

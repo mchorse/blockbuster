@@ -7,6 +7,8 @@ import mchorse.blockbuster.api.formats.vox.data.VoxShape;
 import mchorse.blockbuster.api.formats.vox.data.VoxTransform;
 
 import javax.vecmath.Matrix3f;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,8 +52,6 @@ public class VoxReader
         VoxDocument document = new VoxDocument();
         Vox vox = null;
 
-        System.out.println("--- Cool! ---");
-
         while (true)
         {
             VoxChunk chunk;
@@ -65,7 +65,7 @@ public class VoxReader
                 break;
             }
 
-            System.out.println(chunk.toString() + " " + chunk.size + " " + chunk.chunks);
+            /* System.out.println(chunk.toString() + " " + chunk.size + " " + chunk.chunks); */
 
             if (chunk.id == this.fourChars("SIZE"))
             {
@@ -83,7 +83,7 @@ public class VoxReader
                 while (voxels > 0)
                 {
                     stream.read(this.buf);
-                    int index = vox.toIndex(this.buf[0], this.buf[2], vox.z - this.buf[1] - 1);
+                    int index = vox.toIndex(this.buf[0], this.buf[2], this.buf[1]);
 
                     vox.voxels[index] = this.buf[3] & 0xff;
                     voxels--;
@@ -93,15 +93,15 @@ public class VoxReader
             }
             else if (chunk.id == this.fourChars("nTRN"))
             {
-                document.transforms.add(new VoxTransform(stream, this));
+                document.nodes.add(new VoxTransform(stream, this));
             }
             else if (chunk.id == this.fourChars("nGRP"))
             {
-                document.groups.add(new VoxGroup(stream, this));
+                document.nodes.add(new VoxGroup(stream, this));
             }
             else if (chunk.id == this.fourChars("nSHP"))
             {
-                document.shapes.add(new VoxShape(stream, this));
+                document.nodes.add(new VoxShape(stream, this));
             }
             else if (chunk.id == this.fourChars("RGBA"))
             {
@@ -119,6 +119,7 @@ public class VoxReader
                     document.palette[i + 1] = newColor;
                 }
             }
+            /* TODO: maybe handle PACK and LAYR chunks */
             else
             {
                 stream.skip(chunk.size);
@@ -182,25 +183,6 @@ public class VoxReader
         throw new IOException("Not enough bytes for the string!");
     }
 
-    public Matrix3f readRotation(InputStream stream) throws Exception
-    {
-        Matrix3f matrix = new Matrix3f();
-        int rotation = stream.read();
-
-        int firstIndex  = (rotation & 0b11);
-        int secondIndex = (rotation & 0b0011) << 2;
-
-        boolean negativeFirst  = (rotation & 0b0000100) == 1;
-        boolean negativeSecond = (rotation & 0b0000010) == 1;
-        boolean negativeThird  = (rotation & 0b0000001) == 1;
-
-        matrix.setElement(0, firstIndex, negativeFirst ? -1 : 1);
-        matrix.setElement(1, secondIndex, negativeSecond ? -1 : 1);
-        matrix.setElement(2, 0, negativeThird ? -1 : 1);
-
-        return matrix;
-    }
-
     public Map<String, String> readDictionary(InputStream stream) throws Exception
     {
         Map<String, String> dict = new HashMap<String, String>();
@@ -213,5 +195,40 @@ public class VoxReader
         }
 
         return dict;
+    }
+
+    public Matrix3f readRotation(int rotation)
+    {
+        Matrix3f matrix = new Matrix3f();
+
+        int firstIndex  = (rotation & 0b0011);
+        int secondIndex = (rotation & 0b1100) >> 2;
+        int[] array = {-1, -1, -1};
+        int index = 0;
+
+        array[firstIndex] = 0;
+        array[secondIndex] = 0;
+
+        for (int i = 0; i < array.length; i ++)
+        {
+            if (array[i] == -1)
+            {
+                index = i;
+
+                break;
+            }
+        }
+
+        int thirdIndex = index;
+
+        boolean negativeFirst  = ((rotation & 0b0010000) >> 4) == 1;
+        boolean negativeSecond = ((rotation & 0b0100000) >> 5) == 1;
+        boolean negativeThird  = ((rotation & 0b1000000) >> 6) == 1;
+
+        matrix.setElement(0, firstIndex, negativeFirst ? -1 : 1);
+        matrix.setElement(1, secondIndex, negativeSecond ? -1 : 1);
+        matrix.setElement(2, thirdIndex, negativeThird ? -1 : 1);
+
+        return matrix;
     }
 }
