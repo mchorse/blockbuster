@@ -292,8 +292,11 @@ public class ModelExtrudedLayer
      */
     private static void generateGeometry(Chunk chunk, ModelCustomRenderer renderer)
     {
+        final float f = 1F / 16F;
+
         VertexBuffer buffer = Tessellator.getInstance().getBuffer();
 
+        float sizeOffset = renderer.limb.sizeOffset;
         int w = renderer.limb.size[0];
         int h = renderer.limb.size[1];
         int d = renderer.limb.size[2];
@@ -322,15 +325,22 @@ public class ModelExtrudedLayer
                         continue;
                     }
 
-                    float f = 1F / 16F;
+                    float so = renderer.limb.sizeOffset;
+                    float sw = w + so * 2;
+                    float sh = h + so * 2;
+                    float sd = d + so * 2;
 
-                    float aX = -renderer.limb.anchor[0] * w + w;
-                    float aY = -renderer.limb.anchor[1] * h + h;
-                    float aZ = -renderer.limb.anchor[2] * d + d;
+                    float aX = -renderer.limb.anchor[0] * sw + sw;
+                    float aY = -renderer.limb.anchor[1] * sh + sh;
+                    float aZ = -renderer.limb.anchor[2] * sd + sd;
 
                     /* Minimum and maximum */
-                    float mnx = (x - aX + (mirror ? 1 : 0)) * f;
-                    float mmx = (x - aX + (mirror ? 0 : 1)) * f;
+                    float mnx = ((x + (mirror ? 1 : 0)) * (sw / (float) w) - aX) * f;
+                    float mmx = ((x + (mirror ? 0 : 1)) * (sw / (float) w) - aX) * f;
+                    float mny = -(y * (sh / (float) h) - aY) * f;
+                    float mmy = -((y + 1) * (sh / (float) h) - aY) * f;
+                    float mnz = -(z * (sd / (float) d) - aZ) * f;
+                    float mmz = -((z + 1) * (sd / (float) d) - aZ) * f;
 
                     /* Top & Bottom */
                     if (!chunk.hasBlock(blockX, y + 1, z))
@@ -340,10 +350,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, -1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, -1, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mnx, mmy, mnz).tex(off.x, off.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, mmy, mnz).tex(offmax.x, off.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, offmax.y).normal(0, -1, 0).endVertex();
+                        buffer.pos(mnx, mmy, mmz).tex(off.x, offmax.y).normal(0, -1, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y - 1, z))
@@ -353,10 +363,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, 1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, 1, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, 1, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mnx, mny, mnz).tex(off.x, off.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mmx, mny, mnz).tex(offmax.x, off.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mmx, mny, mmz).tex(offmax.x, offmax.y).normal(0, 1, 0).endVertex();
+                        buffer.pos(mnx, mny, mmz).tex(off.x, offmax.y).normal(0, 1, 0).endVertex();
                     }
 
                     /* Front & back */
@@ -367,10 +377,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, off.y).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, off.y).normal(0, 0, -1).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(0, 0, -1).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mnx, mmy, mmz).tex(off.x, off.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, mmy, mmz).tex(offmax.x, off.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mmx, mny, mmz).tex(offmax.x, offmax.y).normal(0, 0, -1).endVertex();
+                        buffer.pos(mnx, mny, mmz).tex(off.x, offmax.y).normal(0, 0, -1).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX, y, z - 1))
@@ -380,10 +390,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(0, 0, 1).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(0, 0, 1).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, offmax.y).normal(0, 0, 1).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, offmax.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mnx, mmy, mnz).tex(offmax.x, off.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mmx, mmy, mnz).tex(off.x, off.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mmx, mny, mnz).tex(off.x, offmax.y).normal(0, 0, 1).endVertex();
+                        buffer.pos(mnx, mny, mnz).tex(offmax.x, offmax.y).normal(0, 0, 1).endVertex();
                     }
 
                     /* Left & Right */
@@ -394,10 +404,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ) * f).tex(offmax.x, off.y).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(off.x, off.y).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ + 1) * f).tex(off.x, offmax.y).normal(1, 0, 0).endVertex();
-                        buffer.pos(mmx, -(y - aY) * f, -(z - aZ) * f).tex(offmax.x, offmax.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, mmy, mnz).tex(offmax.x, off.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, mmy, mmz).tex(off.x, off.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, mny, mmz).tex(off.x, offmax.y).normal(1, 0, 0).endVertex();
+                        buffer.pos(mmx, mny, mnz).tex(offmax.x, offmax.y).normal(1, 0, 0).endVertex();
                     }
 
                     if (!chunk.hasBlock(blockX - 1, y, z))
@@ -407,10 +417,10 @@ public class ModelExtrudedLayer
                             calculateOffset(off, offmax, block, offsetX, offsetY, w, h, d, blockX, y, z, tw, th);
                         }
 
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ) * f).tex(off.x, off.y).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY + 1) * f, -(z - aZ + 1) * f).tex(offmax.x, off.y).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ + 1) * f).tex(offmax.x, offmax.y).normal(-1, 0, 0).endVertex();
-                        buffer.pos(mnx, -(y - aY) * f, -(z - aZ) * f).tex(off.x, offmax.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mmy, mnz).tex(off.x, off.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mmy, mmz).tex(offmax.x, off.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mny, mmz).tex(offmax.x, offmax.y).normal(-1, 0, 0).endVertex();
+                        buffer.pos(mnx, mny, mnz).tex(off.x, offmax.y).normal(-1, 0, 0).endVertex();
                     }
                 }
             }
