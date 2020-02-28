@@ -667,7 +667,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 CustomAnimation animation = (CustomAnimation) obj;
 
-                return this.animates == animation.animates && this.ignored == animation.ignored && this.progress == animation.progress && this.interp == animation.interp;
+                return this.animates == animation.animates &&
+                       this.duration == animation.duration &&
+                       this.ignored == animation.ignored &&
+                       this.interp == animation.interp;
             }
 
             return super.equals(obj);

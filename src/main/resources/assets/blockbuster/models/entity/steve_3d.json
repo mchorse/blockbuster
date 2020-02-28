@@ -1,7 +1,8 @@
 {
     "scheme": "1.3",
-    "name": "Steve",
+    "name": "Steve 3D",
     "texture": [ 64, 32 ],
+    "skins": "steve",
     "default": "blockbuster:textures/entity/actor.png",
     "scale": [ 0.9375, 0.9375, 0.9375 ],
     "limbs": {
@@ -72,7 +73,8 @@
             "anchor": [ 0.5, 0.5, 0.5 ],
             "origin": [ 0.0, 0.0, 0.0 ],
             "sizeOffset": 0.25,
-            "parent": "head"
+            "parent": "head",
+            "is3D": true
         },
         "body": {
             "size": [ 8, 12, 4 ],
