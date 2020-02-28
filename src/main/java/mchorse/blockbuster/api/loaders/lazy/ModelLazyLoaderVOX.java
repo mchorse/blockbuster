@@ -65,13 +65,12 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	@SideOnly(Side.CLIENT)
 	protected Map<String, IMeshes> getMeshes(String key, Model model) throws Exception
 	{
-		int i = 0;
 		Map<String, IMeshes> meshes = new HashMap<String, IMeshes>();
 		VoxDocument document = this.getVox();
 
 		for (VoxDocument.LimbNode node : document.generate())
 		{
-			meshes.put("vox_" + (i ++), new MeshesVOX(document, node));
+			meshes.put(node.name, new MeshesVOX(document, node));
 		}
 
 		return meshes;
@@ -98,12 +97,11 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		ModelPose blocky = new ModelPose();
 
 		/* Generate limbs */
-		int i = 0;
 		VoxDocument document = this.getVox();
 
 		for (VoxDocument.LimbNode node : document.generate())
 		{
-			ModelLimb limb = data.addLimb("vox_" + (i ++));
+			ModelLimb limb = data.addLimb(node.name);
 			ModelTransform transform = new ModelTransform();
 
 			limb.origin[0] = 0;
