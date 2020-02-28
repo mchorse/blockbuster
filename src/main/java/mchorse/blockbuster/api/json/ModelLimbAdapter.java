@@ -25,11 +25,18 @@ public class ModelLimbAdapter implements JsonSerializer<ModelLimb>, JsonDeserial
         JsonElement serial = ModelAdapter.plainGSON.toJsonTree(src, typeOfSrc);
         JsonObject map = serial.getAsJsonObject();
 
+        map.remove("sizeOffset");
         map.remove("holding");
+        map.remove("slot");
         map.remove("parent");
         map.remove("name");
         map.remove("opacity");
         map.remove("color");
+
+        if (src.sizeOffset != 0)
+        {
+            map.addProperty("sizeOffset", src.sizeOffset);
+        }
 
         if (src.holding != Holding.NONE)
         {

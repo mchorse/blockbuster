@@ -52,6 +52,7 @@ blockbuster.gui:
         discord: Discord
         tutorial: 影片教程
         models: 打開模型……
+        video_platform: BiliBili
 
         options: 選項
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import mchorse.aperture.camera.modifiers.AbstractModifier;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
@@ -276,11 +278,26 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     {
         if (morph instanceof CustomMorph)
         {
-            CustomMorph custom = (CustomMorph) morph;
+            AbstractMorph current = this.currentMorph.get();
 
-            custom.canMerge(this.currentMorph.get(), isRemote);
+            if (current instanceof CustomMorph)
+            {
+                CustomMorph customMorph = (CustomMorph) current;
+                CustomMorph custom = (CustomMorph) morph;
 
-            return false;
+                ModelPose pose = customMorph.getCurrentPose();
+
+                if (customMorph.animation.isInProgress() && pose != null)
+                {
+                    custom.animation.last = customMorph.animation.calculatePose(pose, 1).clone();
+                }
+                else
+                {
+                    custom.animation.last = pose;
+                }
+
+                return false;
+            }
         }
 
         if (morph instanceof SequencerMorph)

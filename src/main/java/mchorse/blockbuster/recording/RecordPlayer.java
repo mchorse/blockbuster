@@ -292,6 +292,10 @@ public class RecordPlayer
         {
             tick = 0;
         }
+        else if (tick >= this.record.frames.size())
+        {
+            tick = this.record.frames.size() - 1;
+        }
 
         this.record.applyFrame(tick, target, force);
     }
