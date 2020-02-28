@@ -44,7 +44,7 @@ public class GuiFirstTime extends GuiElement
 		this.close = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.done"), (button) -> this.close());
 		this.tutorial = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiMainPanel.openWebLink(Blockbuster.TUTORIAL_URL()));
 		this.discord = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiMainPanel.openWebLink(Blockbuster.DISCORD_URL()));
-		this.youtube = GuiButtonElement.button(mc, "YouTube", (button) -> GuiMainPanel.openWebLink(Blockbuster.CHANNEL_URL()));
+		this.youtube = GuiButtonElement.button(mc, Blockbuster.langOrDefault("blockbuster.gui.main.video_platform", "YouTube"), (button) -> GuiMainPanel.openWebLink(Blockbuster.CHANNEL_URL()));
 		this.twitter = GuiButtonElement.button(mc, "Twitter", (button) -> GuiMainPanel.openWebLink(Blockbuster.TWITTER_URL()));
 
 		this.tutorial.resizer().set(10, 0, 0, 20).parent(this.area).w(0.5F, -12);
