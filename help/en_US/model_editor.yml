@@ -9,6 +9,7 @@ blockbuster.gui.me:
         title: Limbs
         
         size: Limb size
+        size_offset: Size offset
         texture: Texture offset
         anchor: Anchor point
         origin: OBJ origin
