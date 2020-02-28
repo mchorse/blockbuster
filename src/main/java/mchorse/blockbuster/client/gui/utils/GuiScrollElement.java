@@ -30,11 +30,21 @@ public abstract class GuiScrollElement extends GuiElement
 
 	public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
 	{
+		if (!this.area.isInside(mouseX, mouseY))
+		{
+			return false;
+		}
+
 		return super.mouseClicked(mouseX, mouseY + this.scroll.scroll, mouseButton) || this.scroll.mouseClicked(mouseX, mouseY);
 	}
 
 	public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
 	{
+		if (!this.area.isInside(mouseX, mouseY))
+		{
+			return false;
+		}
+
 		return super.mouseScrolled(mouseX, mouseY + this.scroll.scroll, scroll) || this.scroll.mouseScroll(mouseX, mouseY, scroll);
 	}
 

@@ -70,12 +70,14 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
 
         map.remove("model");
         map.remove("defaultTexture");
+        map.remove("skins");
         map.remove("scale");
         map.remove("scaleGui");
         map.remove("limbs");
         map.remove("poses");
         map.remove("providesObj");
         map.remove("providesMtl");
+        map.remove("materials");
 
         if (!src.model.isEmpty())
         {
@@ -85,6 +87,11 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         if (src.defaultTexture != null)
         {
             map.add("default", RLUtils.writeJson(src.defaultTexture));
+        }
+
+        if (!src.skins.isEmpty())
+        {
+            map.addProperty("skins", src.skins);
         }
 
         if (src.scale[0] != 1 || src.scale[1] != 1 || src.scale[2] != 1)
