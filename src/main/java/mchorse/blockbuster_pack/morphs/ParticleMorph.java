@@ -184,7 +184,7 @@ public class ParticleMorph extends AbstractMorph
 
                         try
                         {
-                            target.worldObj.spawnParticle(this.vanillaType, true, x + dx, y + dy, z + dz, sx, sy, sz, this.arguments);
+                            target.world.spawnParticle(this.vanillaType, true, x + dx, y + dy, z + dz, sx, sy, sz, this.arguments);
                         }
                         catch (Throwable e)
                         {}
