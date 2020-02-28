@@ -8,10 +8,11 @@ public class Mesh
     public float[] posData;
     public float[] texData;
     public float[] normData;
+    public int triangles;
 
-    public Mesh(int faces)
+    public Mesh(int triangles)
     {
-        this(new float[faces * 9], new float[faces * 6], new float[faces * 9]);
+        this(new float[triangles * 9], new float[triangles * 6], new float[triangles * 9]);
     }
 
     public Mesh(float[] posData, float[] texData, float[] normData)
@@ -19,5 +20,7 @@ public class Mesh
         this.posData = posData;
         this.texData = texData;
         this.normData = normData;
+
+        this.triangles = posData.length / 3;
     }
 }

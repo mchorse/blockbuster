@@ -585,8 +585,27 @@ public class Scene
 		return true;
 	}
 
+	/**
+	 * Return next base suffix, this fixes issue with getNextSuffix() when the
+	 * scene's name is "tia_6", and it returns "tia_1" instead of "tia_6_1"
+	 */
+	public String getNextBaseSuffix(String filename)
+	{
+		if (filename.isEmpty())
+		{
+			return filename;
+		}
+
+		return this.getNextSuffix(filename + "_0");
+	}
+
 	public String getNextSuffix(String filename)
 	{
+		if (filename.isEmpty())
+		{
+			return filename;
+		}
+
 		Matcher matcher = NUMBERED_SUFFIX.matcher(filename);
 
 		String prefix = filename;
@@ -620,7 +639,7 @@ public class Scene
 		{
 			if (replay.id.isEmpty())
 			{
-				replay.id = this.getNextSuffix(this.getId() + "_0");
+				replay.id = this.getNextBaseSuffix(this.getId());
 			}
 		}
 	}

@@ -9,10 +9,11 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEdit
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.blockbuster.client.gui.utils.GuiScrollElement;
+import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElements;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
@@ -22,7 +23,6 @@ import mchorse.mclib.client.gui.utils.Resizer.Measure;
 import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -37,14 +37,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
     private GuiDelegateElement<IGuiElement> modal;
 
     private GuiStringListElement limbList;
-
-    private GuiElements<IGuiElement> first;
-    private GuiElements<IGuiElement> second;
-
-    private GuiButtonElement<GuiButton> toggle;
+    private GuiScrollElement scroll;
 
     /* First category */
     private GuiThreeElement size;
+    private GuiTrackpadElement sizeOffset;
     private GuiTwoElement texture;
     private GuiThreeElement anchor;
     private GuiThreeElement origin;
@@ -73,14 +70,31 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         super(mc, panel);
 
+        final GuiModelLimbs limbs = this;
+
         this.title = I18n.format("blockbuster.gui.me.limbs.title");
+
+        this.scroll = new GuiScrollElement(mc)
+        {
+            @Override
+            protected void preDraw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+            {
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size"), limbs.size.area.x, limbs.size.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size_offset"), limbs.sizeOffset.area.x, limbs.sizeOffset.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.texture"), limbs.texture.area.x, limbs.texture.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.anchor"), limbs.anchor.area.x, limbs.anchor.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.origin"), limbs.origin.area.x, limbs.origin.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.color"), limbs.color.area.x, limbs.color.area.y - 10, 0xeeeeee);
+            }
+        };
+        this.scroll.scroll.scrollSpeed = 15;
+        this.scroll.resizer().parent(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -50);
 
         this.limbList = new GuiStringListElement(mc, (str) -> this.setLimb(str));
         this.limbList.resizer().set(0, 20, 100, 0).parent(this.area).h(1, -20).x(1, -100);
         this.children.add(this.limbList);
 
         /* First category */
-        this.first = new GuiElements<>();
         this.size = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.size[0] = values[0].intValue();
@@ -89,6 +103,11 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.rebuildModel();
         });
         this.size.setLimit(1, 8192, true);
+        this.sizeOffset = new GuiTrackpadElement(mc, "", (value) ->
+        {
+            this.panel.limb.sizeOffset = value;
+            this.panel.rebuildModel();
+        });
         this.texture = new GuiTwoElement(mc, (values) ->
         {
             this.panel.limb.texture[0] = values[0].intValue();
@@ -119,17 +138,15 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.slot.button.addLabel(I18n.format("blockbuster.gui.me.limbs.slots." + slot.name));
         }
 
-        this.size.resizer().parent(this.area).set(10, 40, 120, 20);
-        this.texture.resizer().relative(this.size.resizer()).set(0, 35, 120, 20);
+        this.size.resizer().parent(this.scroll.area).set(10, 20, 120, 20);
+        this.sizeOffset.resizer().relative(this.size.resizer()).set(0, 35, 120, 20);
+        this.texture.resizer().relative(this.sizeOffset.resizer()).set(0, 35, 120, 20);
         this.anchor.resizer().relative(this.texture.resizer()).set(0, 35, 120, 20);
         this.origin.resizer().relative(this.anchor.resizer()).set(0, 35, 120, 20);
         this.slot.resizer().relative(this.origin.resizer()).set(0, 22, 120, 20);
         this.hold.resizer().relative(this.slot.resizer()).set(0, 25, 60, 11);
 
-        this.first.add(this.size, this.texture, this.anchor, this.origin, this.slot, this.hold);
-
         /* Second category */
-        this.second = new GuiElements<>();
         this.color = new GuiThreeElement(mc, (values) ->
         {
             this.panel.limb.color[0] = values[0];
@@ -167,7 +184,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wheel = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.wheel"), false, (b) -> this.panel.limb.wheel = b.button.isChecked());
         this.wing = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.me.limbs.wing"), false, (b) -> this.panel.limb.wing = b.button.isChecked());
 
-        this.color.resizer().parent(this.area).set(10, 40, 120, 20);
+        this.color.resizer().relative(this.hold.resizer()).set(0, 40, 120, 20);
         this.opacity.resizer().relative(this.color.resizer()).set(0, 25, 120, 20);
 
         this.mirror.resizer().relative(this.opacity.resizer()).set(0, 25, 60, 11);
@@ -187,9 +204,9 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.wheel.resizer().relative(this.swinging.resizer()).set(0, 16, 60, 11);
         this.wing.resizer().relative(this.wheel.resizer()).set(60, 0, 60, 11);
 
-        this.second.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.smooth, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert, this.wheel, this.wing);
-        this.second.setVisible(false);
-        this.children.add(this.first, this.second);
+        this.children.add(this.scroll);
+        this.scroll.children.add(this.size, this.sizeOffset, this.texture, this.anchor, this.origin, this.slot, this.hold);
+        this.scroll.children.add(this.color, this.opacity, this.mirror, this.lighting, this.shading, this.smooth, this.is3D, this.holding, this.swiping, this.looking, this.swinging, this.idle, this.invert, this.wheel, this.wing);
 
         /* Buttons */
         this.addLimb = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addLimb());
@@ -198,25 +215,20 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.renameLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
         this.parentLimb = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
 
-        this.toggle = GuiButtonElement.button(mc, "<", (b) ->
-        {
-            this.first.setVisible(!this.first.isVisible());
-            this.second.setVisible(!this.first.isVisible());
-        }).tooltip(I18n.format("blockbuster.gui.me.limbs.page"), TooltipDirection.LEFT);
-
         this.addLimb.resizer().set(0, 2, 16, 16).parent(this.area).x(1, -58);
         this.dupeLimb.resizer().set(20, 0, 16, 16).relative(this.addLimb.resizer());
         this.removeLimb.resizer().set(20, 0, 16, 16).relative(this.dupeLimb.resizer());
 
-        this.toggle.resizer().set(10, 0, 20, 20).parent(this.area).y(1, -30);
-        this.renameLimb.resizer().set(23, 0, 44, 20).relative(this.toggle.resizer());
-        this.parentLimb.resizer().set(47, 0, 50, 20).relative(this.renameLimb.resizer());
+        this.renameLimb.resizer().set(10, 0, 0, 20).parent(this.area).w(0.5F, -13).y(1, -30);
+        this.parentLimb.resizer().set(0, 0, 0, 20).parent(this.area).x(0.5F, 3).w(0.5F, -13).y(1, -30);
 
-        this.children.add(this.addLimb, this.dupeLimb, this.removeLimb, this.renameLimb, this.parentLimb, this.toggle);
+        this.children.add(this.addLimb, this.dupeLimb, this.removeLimb, this.renameLimb, this.parentLimb);
 
         this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
         this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
         this.children.add(this.modal);
+
+        this.resize(0, 0);
     }
 
     private void addLimb()
@@ -323,6 +335,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     public void fillLimbData(ModelLimb limb)
     {
         this.size.setValues(limb.size[0], limb.size[1], limb.size[2]);
+        this.sizeOffset.setValue(limb.sizeOffset);
         this.texture.setValues(limb.texture[0], limb.texture[1]);
         this.anchor.setValues(limb.anchor[0], limb.anchor[1], limb.anchor[2]);
         this.origin.setValues(limb.origin[0], limb.origin[1], limb.origin[2]);
@@ -352,13 +365,20 @@ public class GuiModelLimbs extends GuiModelEditorTab
         if (this.resizer().h.unit == Measure.RELATIVE)
         {
             this.limbList.resizer().x(0).y(240).w(1, 0).h(1, -240);
-            this.toggle.resizer().y(210);
+            this.renameLimb.resizer().y(210);
+            this.scroll.resizer().h(240 - 50);
+            this.parentLimb.resizer().y(210);
         }
         else
         {
             this.limbList.resizer().x(1, -100).y(20).w(100).h(1, -20);
-            this.toggle.resizer().y(1, -30);
+            this.renameLimb.resizer().y(1, -30);
+            this.parentLimb.resizer().y(1, -30);
+            this.scroll.resizer().h(1, -50);
+            this.scroll.resizer().h(1, -50);
         }
+
+        this.scroll.scroll.scrollSize = this.wing.area.getY(1) - this.scroll.area.y + 10;
 
         super.resize(width, height);
     }
@@ -370,22 +390,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         if (this.resizer().h.unit == Measure.RELATIVE)
         {
-            int x = this.limbList.area.x;
-            int y = this.limbList.area.y;
-
-            Gui.drawRect(x, y, x + this.limbList.area.w, y + this.limbList.area.h, 0x88000000);
-        }
-
-        if (this.first.isVisible())
-        {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size"), this.size.area.x, this.size.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.texture"), this.texture.area.x, this.texture.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.anchor"), this.anchor.area.x, this.anchor.area.y - 10, 0xeeeeee);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.origin"), this.origin.area.x, this.origin.area.y - 10, 0xeeeeee);
-        }
-        else if (this.second.isVisible())
-        {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.color"), this.color.area.x, this.color.area.y - 10, 0xeeeeee);
+            this.limbList.area.draw(0x88000000);
         }
     }
 }

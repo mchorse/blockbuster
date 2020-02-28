@@ -20,6 +20,7 @@ public class ModelLimb
 
     /* Visuals */
     public int[] size = new int[] {4, 4, 4};
+    public float sizeOffset = 0;
     public int[] texture = new int[] {0, 0};
     public float[] anchor = new float[] {0.5F, 0.5F, 0.5F};
     public float[] color = new float[] {1.0F, 1.0F, 1.0F};
@@ -65,6 +66,7 @@ public class ModelLimb
         b.parent = this.parent;
 
         b.size = new int[] {this.size[0], this.size[1], this.size[2]};
+        b.sizeOffset = this.sizeOffset;
         b.texture = new int[] {this.texture[0], this.texture[1]};
         b.anchor = new float[] {this.anchor[0], this.anchor[1], this.anchor[2]};
         b.color = new float[] {this.color[0], this.color[1], this.color[2]};

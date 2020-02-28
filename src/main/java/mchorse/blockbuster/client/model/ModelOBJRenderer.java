@@ -125,7 +125,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
                 float texF = (j + 0.5F) / count;
 
-                for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
+                for (int i = 0, c = mesh.triangles; i < c; i++)
                 {
                     float x = mesh.posData[i * 3] - this.limb.origin[0];
                     float y = -mesh.posData[i * 3 + 1] + this.limb.origin[1];
