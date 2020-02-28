@@ -1,5 +1,7 @@
 package mchorse.blockbuster;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
 import mchorse.blockbuster.commands.CommandAction;
@@ -65,36 +67,42 @@ public class Blockbuster
     public static final String VERSION = "%VERSION%";
     public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
+    @SideOnly(Side.CLIENT)
     public static String WIKI_URL()
     {
         return langOrDefault("blockbuster.gui.links.wiki", "https://github.com/mchorse/blockbuster/wiki/");
     }
 
+    @SideOnly(Side.CLIENT)
     public static String DISCORD_URL()
     {
         return langOrDefault("blockbuster.gui.links.discord", "https://discord.gg/qfxrqUF");
     }
 
+    @SideOnly(Side.CLIENT)
     public static String CHANNEL_URL()
     {
         return langOrDefault("blockbuster.gui.links.channel", "https://www.youtube.com/c/McHorsesMods");
     }
 
+    @SideOnly(Side.CLIENT)
     public static String TWITTER_URL()
     {
         return langOrDefault("blockbuster.gui.links.twitter", "https://twitter.com/McHorsy");
     }
 
+    @SideOnly(Side.CLIENT)
     public static String TUTORIAL_URL()
     {
         return langOrDefault("blockbuster.gui.links.tutorial", "https://www.youtube.com/watch?v=vo8fquY-TUM&list=PLLnllO8nnzE-LIHZiaq0-ZAZiDO82K1I9&index=2");
     }
 
-    private static String langOrDefault(String lang, String url)
+    @SideOnly(Side.CLIENT)
+    public static String langOrDefault(String lang, String orDefault)
     {
         String result = I18n.format(lang);
 
-        return result.equals(lang) ? url : result;
+        return result.equals(lang) ? orDefault : result;
     }
 
     /* Proxies */
