@@ -21,8 +21,8 @@ import java.util.Map;
  *
  * This class reads the file and returns vox model
  *
- * @link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt
  * @link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
+ * @link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt
  */
 public class VoxReader
 {
@@ -83,9 +83,8 @@ public class VoxReader
                 while (voxels > 0)
                 {
                     stream.read(this.buf);
-                    int index = vox.toIndex(this.buf[0], this.buf[2], this.buf[1]);
 
-                    vox.voxels[index] = this.buf[3] & 0xff;
+                    vox.set(this.buf[0], this.buf[2], this.buf[1], this.buf[3]);
                     voxels--;
                 }
 
@@ -119,7 +118,6 @@ public class VoxReader
                     document.palette[i + 1] = newColor;
                 }
             }
-            /* TODO: maybe handle PACK and LAYR chunks */
             else
             {
                 stream.skip(chunk.size);

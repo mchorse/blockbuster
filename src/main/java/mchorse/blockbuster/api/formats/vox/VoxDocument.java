@@ -30,6 +30,8 @@ public class VoxDocument
 	 */
 	public List<VoxBaseNode> nodes = new ArrayList<VoxBaseNode>();
 
+	private int index;
+
 	/**
 	 * Generate a list of nodes for easier limb generation
 	 */
@@ -39,6 +41,7 @@ public class VoxDocument
 		Stack<Matrix3f> matStack = new Stack<Matrix3f>();
 		Stack<Vector3f> vecStack = new Stack<Vector3f>();
 
+		this.index = 0;
 		this.generateNodes((VoxTransform) this.nodes.get(0), nodes, matStack, vecStack);
 
 		return nodes;
@@ -47,6 +50,12 @@ public class VoxDocument
 	private void generateNodes(VoxTransform transform, List<LimbNode> nodes, Stack<Matrix3f> matStack, Stack<Vector3f> vecStack)
 	{
 		VoxBaseNode child = this.nodes.get(transform.childId);
+		String name = "vox_" + this.index;
+
+		if (transform.attrs.containsKey("_name"))
+		{
+			name = transform.attrs.get("_name") + "_" + this.index;
+		}
 
 		Matrix3f parentMat;
 		Vector3f parentVec;
@@ -55,8 +64,6 @@ public class VoxDocument
 		if (matStack.isEmpty())
 		{
 			parentMat = new Matrix3f();
-			parentVec = new Vector3f(trans.m03, trans.m13, trans.m23);
-
 			parentMat.m00 = trans.m00;
 			parentMat.m01 = trans.m01;
 			parentMat.m02 = trans.m02;
@@ -66,6 +73,8 @@ public class VoxDocument
 			parentMat.m20 = trans.m20;
 			parentMat.m21 = trans.m21;
 			parentMat.m22 = trans.m22;
+
+			parentVec = new Vector3f(trans.m03, trans.m13, trans.m23);
 		}
 		else
 		{
@@ -93,24 +102,19 @@ public class VoxDocument
 
 		if (child instanceof VoxGroup)
 		{
-			matStack.push(new Matrix3f(matStack.peek()));
-			vecStack.push(new Vector3f(vecStack.peek()));
-
 			VoxGroup group = (VoxGroup) child;
 
 			for (int id : group.ids)
 			{
+				this.index += 1;
 				this.generateNodes((VoxTransform) this.nodes.get(id), nodes, matStack, vecStack);
 			}
-
-			vecStack.pop();
-			matStack.pop();
 		}
 		else if (child instanceof VoxShape)
 		{
 			Vox chunk = this.chunks.get(((VoxShape) child).modelAttrs.get(0).id);
 
-			nodes.add(new LimbNode(chunk, matStack.pop(), vecStack.pop()));
+			nodes.add(new LimbNode(chunk, matStack.pop(), vecStack.pop(), name));
 		}
 	}
 
@@ -119,12 +123,14 @@ public class VoxDocument
 		public Vox chunk;
 		public Matrix3f rotation;
 		public Vector3f translation;
+		public String name;
 
-		public LimbNode(Vox chunk, Matrix3f rotation, Vector3f translation)
+		public LimbNode(Vox chunk, Matrix3f rotation, Vector3f translation, String name)
 		{
 			this.chunk = chunk;
 			this.rotation = rotation;
 			this.translation = translation;
+			this.name = name;
 		}
 	}
 }

@@ -17,8 +17,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.ByteBuffer;
-
 /**
  * Like {@link ModelCustomRenderer}, this model renders 
  */
@@ -61,7 +59,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                 GlStateManager.glNewList(id, GL11.GL_COMPILE);
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
 
-                for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
+                for (int i = 0, c = mesh.triangles; i < c; i++)
                 {
                     float x = (mesh.posData[i * 3] - this.limb.origin[0]) / 16F;
                     float y = -(mesh.posData[i * 3 + 1] - this.limb.origin[1]) / 16F;
@@ -84,8 +82,6 @@ public class ModelVoxRenderer extends ModelCustomRenderer
             }
 
             this.texture = new VoxTexture(this.mesh.document.palette);
-
-            /* I hope this will get garbage collected xD */
             this.compiled = true;
             this.mesh = null;
         }
