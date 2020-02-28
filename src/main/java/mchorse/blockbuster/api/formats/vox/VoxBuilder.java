@@ -7,8 +7,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
-import java.util.ArrayList;
-import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class VoxBuilder
