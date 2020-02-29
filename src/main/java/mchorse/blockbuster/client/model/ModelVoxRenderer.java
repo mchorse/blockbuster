@@ -69,7 +69,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                     float v = mesh.texData[i * 2 + 1];
 
                     float nx = mesh.normData[i * 3];
-                    float ny = mesh.normData[i * 3 + 1];
+                    float ny = -mesh.normData[i * 3 + 1];
                     float nz = mesh.normData[i * 3 + 2];
 
                     renderer.pos(x, y, z).tex(u, v).normal(nx, ny, nz).endVertex();

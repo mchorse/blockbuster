@@ -14,23 +14,23 @@ public class VoxBuilder
     public Matrix3f transform;
     public Vector3f vector = new Vector3f();
 
-    private Vector3f n1;
-    private Vector3f n2;
-    private Vector3f n3;
-    private Vector3f n4;
-    private Vector3f n5;
-    private Vector3f n6;
+    private Vector3f right;
+    private Vector3f left;
+    private Vector3f front;
+    private Vector3f back;
+    private Vector3f bottom;
+    private Vector3f top;
 
     public VoxBuilder(Matrix3f transform)
     {
         this.transform = transform;
 
-        this.n1 = this.processNormal(new Vector3f(1, 0, 0));
-        this.n2 = this.processNormal(new Vector3f(-1, 0, 0));
-        this.n3 = this.processNormal(new Vector3f(0, 0, -1));
-        this.n4 = this.processNormal(new Vector3f(0, 0, 1));
-        this.n5 = this.processNormal(new Vector3f(0, 1, 0));
-        this.n6 = this.processNormal(new Vector3f(0, -1, 0));
+        this.right = this.processNormal(new Vector3f(-1, 0, 0));
+        this.left = this.processNormal(new Vector3f(1, 0, 0));
+        this.front = this.processNormal(new Vector3f(0, 0, 1));
+        this.back = this.processNormal(new Vector3f(0, 0, -1));
+        this.bottom = this.processNormal(new Vector3f(0, -1, 0));
+        this.top = this.processNormal(new Vector3f(0, 1, 0));
     }
 
     private Vector3f processNormal(Vector3f normal)
@@ -81,7 +81,7 @@ public class VoxBuilder
 
         if (!top)
         {
-            Vector3f normal = this.n6;
+            Vector3f normal = this.top;
 
             this.add(mesh, vox, x, y + 1, z, voxel, normal);
             this.add(mesh, vox, x + 1, y + 1, z, voxel, normal);
@@ -93,7 +93,7 @@ public class VoxBuilder
 
         if (!bottom)
         {
-            Vector3f normal = this.n5;
+            Vector3f normal = this.bottom;
 
             this.add(mesh, vox, x, y, z, voxel, normal);
             this.add(mesh, vox, x, y, z + 1, voxel, normal);
@@ -105,7 +105,7 @@ public class VoxBuilder
 
         if (!left)
         {
-            Vector3f normal = this.n2;
+            Vector3f normal = this.left;
 
             this.add(mesh, vox, x + 1, y, z, voxel, normal);
             this.add(mesh, vox, x + 1, y, z + 1, voxel, normal);
@@ -117,7 +117,7 @@ public class VoxBuilder
 
         if (!right)
         {
-            Vector3f normal = this.n1;
+            Vector3f normal = this.right;
 
             this.add(mesh, vox, x, y, z, voxel, normal);
             this.add(mesh, vox, x, y + 1, z, voxel, normal);
@@ -129,7 +129,7 @@ public class VoxBuilder
 
         if (!front)
         {
-            Vector3f normal = this.n3;
+            Vector3f normal = this.front;
 
             this.add(mesh, vox, x, y, z + 1, voxel, normal);
             this.add(mesh, vox, x, y  + 1, z + 1, voxel, normal);
@@ -141,7 +141,7 @@ public class VoxBuilder
 
         if (!back)
         {
-            Vector3f normal = this.n4;
+            Vector3f normal = this.back;
 
             this.add(mesh, vox, x, y, z, voxel, normal);
             this.add(mesh, vox, x + 1, y, z, voxel, normal);
