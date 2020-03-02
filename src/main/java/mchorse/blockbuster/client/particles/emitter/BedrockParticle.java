@@ -16,7 +16,8 @@ public class BedrockParticle
 	public int age;
 	public int lifetime;
 	public boolean dead;
-	public boolean relative;
+	public boolean relativePosition;
+	public boolean relativeRotation;
 	public boolean manual;
 
 	/* Rotation */
@@ -68,7 +69,7 @@ public class BedrockParticle
 	{
 		this.global.set(vector);
 
-		if (this.relative)
+		if (this.relativePosition)
 		{
 			this.global.add(emitter.lastGlobal);
 		}
@@ -81,7 +82,7 @@ public class BedrockParticle
 		this.prevRotation = this.rotation;
 		this.prevPosition.set(this.position);
 
-		if (this.relative)
+		if (this.relativePosition)
 		{
 			this.matrix.set(emitter.rotation);
 		}
@@ -105,7 +106,11 @@ public class BedrockParticle
 			vec.y *= this.accelerationFactor.y;
 			vec.z *= this.accelerationFactor.z;
 
-			this.matrix.transform(vec);
+			if (!this.relativeRotation)
+			{
+				this.matrix.transform(vec);
+			}
+
 			this.position.x += vec.x / 20F;
 			this.position.y += vec.y / 20F;
 			this.position.z += vec.z / 20F;

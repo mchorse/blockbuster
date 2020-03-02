@@ -262,7 +262,7 @@ public class BedrockEmitter
 			component.apply(this, particle);
 		}
 
-		if (!particle.relative && !forceRelative)
+		if (!particle.relativePosition && !forceRelative)
 		{
 			particle.position.add(this.lastGlobal);
 			particle.initialPosition.add(this.lastGlobal);

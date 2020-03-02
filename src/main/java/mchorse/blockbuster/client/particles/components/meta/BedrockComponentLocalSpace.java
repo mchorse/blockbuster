@@ -29,6 +29,7 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		particle.relative = this.position;
+		particle.relativePosition = this.position;
+		particle.relativeRotation = this.rotation;
 	}
 }
