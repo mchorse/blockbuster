@@ -50,7 +50,7 @@ public class BedrockComponentKillPlane extends BedrockComponentBase implements I
 		Vector3d prevLocal = new Vector3d(particle.prevPosition);
 		Vector3d local = new Vector3d(particle.position);
 
-		if (!particle.relative)
+		if (!particle.relativePosition)
 		{
 			local.sub(emitter.lastGlobal);
 			prevLocal.sub(emitter.lastGlobal);
