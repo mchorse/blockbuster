@@ -10,12 +10,10 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 import java.util.List;
 
 public class BedrockComponentMotionCollision extends BedrockComponentBase implements IComponentParticleUpdate
@@ -110,9 +108,9 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 					return;
 				}
 
-				if (particle.relative)
+				if (particle.relativePosition)
 				{
-					particle.relative = false;
+					particle.relativePosition = false;
 					particle.prevPosition.set(prev);
 				}
 

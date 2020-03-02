@@ -60,6 +60,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		new Vector4f(0, 0, 0, 1),
 		new Vector4f(0, 0, 0, 1)
 	};
+	private Vector3f vector = new Vector3f();
 
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -182,8 +183,19 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
-		if (particle.relative)
+		if (particle.relativePosition)
 		{
+			if (particle.relativeRotation)
+			{
+				this.vector.set((float) px, (float) py, (float) pz);
+
+				emitter.rotation.transform(this.vector);
+
+				px = this.vector.x;
+				py = this.vector.y;
+				pz = this.vector.z;
+			}
+
 			px += emitter.lastGlobal.x;
 			py += emitter.lastGlobal.y;
 			pz += emitter.lastGlobal.z;
