@@ -33,6 +33,8 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public CustomMorph current;
 
+    private boolean captured;
+
     public static void bindLastTexture(ResourceLocation location)
     {
         lastTexture = location;
@@ -101,8 +103,6 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        boolean wasSet = MatrixUtils.captureMatrix();
-
         this.setupModel(entity, partialTicks);
 
         if (this.mainModel != null)
@@ -110,7 +110,19 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
             super.doRender(entity, x, y, z, entityYaw, partialTicks);
         }
 
-        if (wasSet) MatrixUtils.releaseMatrix();
+        if (this.captured)
+        {
+            this.captured = false;
+            MatrixUtils.releaseMatrix();
+        }
+    }
+
+    @Override
+    protected void renderLivingAt(EntityLivingBase entityLivingBaseIn, double x, double y, double z)
+    {
+        super.renderLivingAt(entityLivingBaseIn, x, y, z);
+
+        this.captured = MatrixUtils.captureMatrix();
     }
 
     /**
