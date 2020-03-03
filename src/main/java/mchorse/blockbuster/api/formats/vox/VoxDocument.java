@@ -3,6 +3,7 @@ package mchorse.blockbuster.api.formats.vox;
 import mchorse.blockbuster.api.formats.vox.data.Vox;
 import mchorse.blockbuster.api.formats.vox.data.VoxBaseNode;
 import mchorse.blockbuster.api.formats.vox.data.VoxGroup;
+import mchorse.blockbuster.api.formats.vox.data.VoxLayer;
 import mchorse.blockbuster.api.formats.vox.data.VoxShape;
 import mchorse.blockbuster.api.formats.vox.data.VoxTransform;
 
@@ -30,6 +31,11 @@ public class VoxDocument
 	 */
 	public List<VoxBaseNode> nodes = new ArrayList<VoxBaseNode>();
 
+	/**
+	 * Nodes
+	 */
+	public List<VoxLayer> layers = new ArrayList<VoxLayer>();
+
 	private int index;
 
 	/**
@@ -51,6 +57,13 @@ public class VoxDocument
 	{
 		VoxBaseNode child = this.nodes.get(transform.childId);
 		String name = "vox_" + this.index;
+
+		boolean hidden = transform.attrs.containsKey("_hidden") && transform.attrs.get("_hidden").equals("1");
+
+		if (!hidden && transform.layerId < this.layers.size() && transform.layerId >= 0)
+		{
+			hidden = this.layers.get(transform.layerId).isHidden();
+		}
 
 		if (transform.attrs.containsKey("_name"))
 		{
@@ -112,9 +125,15 @@ public class VoxDocument
 		}
 		else if (child instanceof VoxShape)
 		{
-			Vox chunk = this.chunks.get(((VoxShape) child).modelAttrs.get(0).id);
+			Matrix3f mat = matStack.pop();
+			Vector3f vec = vecStack.pop();
 
-			nodes.add(new LimbNode(chunk, matStack.pop(), vecStack.pop(), name));
+			if (!hidden)
+			{
+				Vox chunk = this.chunks.get(((VoxShape) child).modelAttrs.get(0).id);
+
+				nodes.add(new LimbNode(chunk, mat, vec, name));
+			}
 		}
 	}
 
