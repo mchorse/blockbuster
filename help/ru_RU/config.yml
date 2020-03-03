@@ -8,7 +8,8 @@ blockbuster.config:
         extra_wubs: Экстра тыцы
         auto_refresh_models: Автоматическое обновление скинов и моделей
         debug_playback_ticks: Тики отладки
-        green_screen_sky: Зелёное небо
+        green_screen_sky: Хроманебо
+        green_screen_sky_color: Цвет хроманеба
         url_skins_sync_download: Синхронная загрузка ссылок
     
     model_block:
