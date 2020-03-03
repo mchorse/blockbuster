@@ -5,7 +5,8 @@ blockbuster.config.comments:
         extra_wubs: 這個選項可能沒有作用，或者有點用？
         auto_refresh_models: 當進入 Metamorph 或 Blockbuster 的 GUI 時，自動刷新模型和皮膚？
         debug_playback_ticks: 當導演方塊錄制時，將 tick 時間寫入日誌檔案
-        green_screen_sky: 將天空完全變綠，用來鍵控摳像
+        green_screen_sky: 將天空完全變色，用來鍵控摳像
+        green_screen_sky_color: 指定天空顏色，用於色鍵天空功能
         url_skins_sync_download: 同步的下載來自 URL 的皮膚。它可能會在下載 3D 外部表層的時期讓遊戲沒有反應。
 
     model_block:
