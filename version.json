@@ -1,6 +1,8 @@
 {
     "homepage": "https://curseforge.com/minecraft/mc-mods/blockbuster/",
     "1.10.2": {
+        "1.6.4": "This is a quick hot patch update which fixes a couple of major issues I found after releasing 1.6.3, my bad guys...",
+        "1.6.3": "This update introduces native support for MagicaVoxel (`*.vox`) models, Scenes (remote director blocks which are stored in files and managed in GUI), many new options, a couple of nice tweaks and workflow enhancements and, as always, bug and crash fixes.",
         "1.6.2": "This update introduces particle morph, a couple of QoL GUI features, minor visual tweaks and lots of bug fixes.",
         "1.6.1": "This is a small update which introduces animated poses, a couple of neat config options here and thered, some quality of life tweaks, and plenty of crash/bug fixes.",
         "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
@@ -11,6 +13,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "1.11.2": {
+        "1.6.4": "This is a quick hot patch update which fixes a couple of major issues I found after releasing 1.6.3, my bad guys...",
+        "1.6.3": "This update introduces native support for MagicaVoxel (`*.vox`) models, Scenes (remote director blocks which are stored in files and managed in GUI), many new options, a couple of nice tweaks and workflow enhancements and, as always, bug and crash fixes.",
         "1.6.2": "This update introduces particle morph, a couple of QoL GUI features, minor visual tweaks and lots of bug fixes.",
         "1.6.1": "This is a small update which introduces animated poses, a couple of neat config options here and thered, some quality of life tweaks, and plenty of crash/bug fixes.",
         "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
@@ -21,6 +25,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "1.12.2": {
+        "1.6.4": "This is a quick hot patch update which fixes a couple of major issues I found after releasing 1.6.3, my bad guys...",
+        "1.6.3": "This update introduces native support for MagicaVoxel (`*.vox`) models, Scenes (remote director blocks which are stored in files and managed in GUI), many new options, a couple of nice tweaks and workflow enhancements and, as always, bug and crash fixes.",
         "1.6.2": "This update introduces particle morph, a couple of QoL GUI features, minor visual tweaks and lots of bug fixes.",
         "1.6.1": "This is a small update which introduces animated poses, a couple of neat config options here and thered, some quality of life tweaks, and plenty of crash/bug fixes.",
         "1.6": "This big massive update probably isn't as big as 1.5, however, it saturated with so many awesome features that expand new horizons of machinima creation! Beside that, this update also makes Blockbuster much more stable than 1.5.3.",
@@ -31,11 +37,11 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.10.2-latest": "1.6.2",
-        "1.10.2-recommended": "1.6.2",
-        "1.11.2-latest": "1.6.2",
-        "1.11.2-recommended": "1.6.2",
-        "1.12.2-latest": "1.6.2",
-        "1.12.2-recommended": "1.6.2"
+        "1.10.2-latest": "1.6.4",
+        "1.10.2-recommended": "1.6.4",
+        "1.11.2-latest": "1.6.4",
+        "1.11.2-recommended": "1.6.4",
+        "1.12.2-latest": "1.6.4",
+        "1.12.2-recommended": "1.6.4"
     }
 }

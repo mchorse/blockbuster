@@ -69,7 +69,7 @@ public class GuiSceneManager extends GuiElement
 		this.blocks.add(this.directors, this.convert, this.directorModal);
 
 		/* Scene manager elements */
-		this.sceneList = new GuiStringListElement(mc, (scene) -> Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(scene))));
+		this.sceneList = new GuiStringListElement(mc, (scene) -> this.switchScene(scene));
 		this.sceneModal = new GuiDelegateElement<IGuiElement>(mc, null);
 		this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addScene());
 		this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeScene());
@@ -96,6 +96,7 @@ public class GuiSceneManager extends GuiElement
 	{
 		if (!this.parent.getLocation().isDirector()) return;
 
+		this.parent.unfocus();
 		this.directorModal.setDelegate(new GuiPromptModal(mc, this.directorModal, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -113,8 +114,15 @@ public class GuiSceneManager extends GuiElement
 		}));
 	}
 
+	private void switchScene(String scene)
+	{
+		this.parent.close();
+		Dispatcher.sendToServer(new PacketSceneRequestCast(new SceneLocation(scene)));
+	}
+
 	private void addScene()
 	{
+		this.parent.unfocus();
 		this.sceneModal.setDelegate(new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -133,6 +141,8 @@ public class GuiSceneManager extends GuiElement
 	private void dupeScene()
 	{
 		if (!this.parent.getLocation().isScene()) return;
+
+		this.parent.unfocus();
 
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.dupe_modal"), (name) ->
 		{
@@ -159,6 +169,8 @@ public class GuiSceneManager extends GuiElement
 	{
 		if (!this.parent.getLocation().isScene()) return;
 
+		this.parent.unfocus();
+
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.rename_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -172,7 +184,7 @@ public class GuiSceneManager extends GuiElement
 			this.sceneList.setCurrent(name);
 			this.parent.setScene(new SceneLocation(this.parent.getLocation().getScene()));
 
-			Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.REMOVE));
+			Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.RENAME));
 		});
 
 		modal.setValue(this.parent.getLocation().getFilename());
@@ -182,6 +194,8 @@ public class GuiSceneManager extends GuiElement
 	private void removeScene()
 	{
 		if (!this.parent.getLocation().isScene()) return;
+
+		this.parent.unfocus();
 
 		this.sceneModal.setDelegate(new GuiConfirmModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.remove_modal"), (value) ->
 		{

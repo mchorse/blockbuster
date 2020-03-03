@@ -44,10 +44,14 @@ public class BlockbusterConfig
     public boolean debug_playback_ticks;
 
     /**
-     * Makes the sky fully green for chroma keying purposes (suggested 
-     * by Andruxioid)
+     * Makes the sky solid color for chroma keying purposes (suggested by Andruxioid)
      */
     public boolean green_screen_sky;
+
+    /**
+     * Specifies the sky color for green screen sky feature
+     */
+    public String green_screen_sky_color = "#00ff00";
 
     /**
      * Whether URL skins should be downloaded synchronously
@@ -189,7 +193,8 @@ public class BlockbusterConfig
         this.extra_wubs = this.getBoolean("extra_wubs", general, false, "This option does literally nothing. Or maybe it does...?");
         this.auto_refresh_models = this.getBoolean("auto_refresh_models", general, true, "Refresh models and skins when entering in Metamorph or Blockbuster GUIs?");
         this.debug_playback_ticks = this.getBoolean("debug_playback_ticks", general, false, "Write ticks in the log during director block recording");
-        this.green_screen_sky = this.getBoolean("green_screen_sky", general, false, "Makes the sky fully green for chroma keying purposes");
+        this.green_screen_sky = this.getBoolean("green_screen_sky", general, false, "Makes the sky solid color for chroma keying purposes");
+        this.green_screen_sky_color = this.getString("green_screen_sky_color", general, "#00ff00", "Specifies the sky color for green screen sky feature");
         this.url_skins_sync_download = this.getBoolean("url_skins_sync_download", general, true, "Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin");
 
         /* Model block */

@@ -11,6 +11,7 @@ import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
+import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.common.BlockbusterTab;
 import mchorse.blockbuster.common.EventHandler;
 import mchorse.blockbuster.common.GuiHandler;
@@ -87,6 +88,11 @@ public class CommonProxy
     public ModelHandler models;
 
     /**
+     * Bedrock particle library
+     */
+    public BedrockLibrary particles;
+
+    /**
      * Config
      */
     public BlockbusterConfig config;
@@ -118,6 +124,8 @@ public class CommonProxy
         configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
         this.forge = new Configuration(config);
         this.config = new BlockbusterConfig(this.forge);
+        this.particles = new BedrockLibrary(new File(configFile, "particles"));
+        this.particles.reload();
 
         MinecraftForge.EVENT_BUS.register(this.config);
         MinecraftForge.EVENT_BUS.register(new EventHandler());

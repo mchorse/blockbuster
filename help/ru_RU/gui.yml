@@ -19,6 +19,12 @@ blockbuster.gui:
     select: Выбрать
     ok: Oк
     billboard: Смотреть на игрока
+
+    # First time module
+    first_time:
+        title: "Первый раз?"
+        welcome: "Добро пожаловать в Блокбастер!\n\nЕсли вы используете этот мод в первый раз, то скорее всего вам стоит взглянуть на {a}Цикл видеоуроков академии Блокбастера{r} на {c}YouTube{r}."
+        social: "Если у вас возникнут какие-либо проблемы или вопросы, то смело заходите на мой сервер в {6}Discord{r} за помощью. Кроме всего прочего, можете также подписаться на меня в {b}Twitter{r}, там я сообщаю об обновлениях своих модов."
     
     # Morphs popup strings
     morphs:
@@ -44,6 +50,8 @@ blockbuster.gui:
         resources: Ресурсы
         wiki: Вики
         discord: Дискорд
+        tutorial: Видеоуроки
+        models: Открыть Модели...
         
         options: Настройки
     
@@ -51,6 +59,8 @@ blockbuster.gui:
     director:
         title: Блоки режиссёра
         config: Настройка блока режиссёра
+        convert: Конвертировать блок режиссёра в сцену
+        convert_modal: "Впишите имя для сцены:"
         not_selected: Выбрать блок режиссёра...
         no_replays: Создать запись...
     
@@ -67,6 +77,8 @@ blockbuster.gui:
         invisible: Невидимый
         enabled: Включено
         fake_player: Поддельный игрок
+        tp_back: Телепортироваться обратно
+        tp_back_tooltip: Телепортировать себя обратно на точку начала
         health: Здоровье
         edit_record: Редактировать запись
         update_data: Обновить данные
@@ -74,17 +86,28 @@ blockbuster.gui:
         rename_prefix: Переименовать префикс
         rename_prefix_tooltip: Переименовывает ID воспрозведения записи с новым префиксом
         rename_prefix_popup: "Введите новый префикс:"
+        
+        attach: Прикрепить
+        attach_tooltip: Прикрепить этот блок режиссёра/сцену к кнопке воспроизведения
+
+    scenes:
+        title: Сцены
+
+        add_modal: "Впишите имя для новой сцены:"
+        dupe_modal: "Впишите имя для дублированной сцены:"
+        rename_modal: "Впишите новое имя для текущей сцены:"
+        remove_modal: "Вы уверенны, что хотите удалить эту сцену?"
     
     # Actor configuration GUI strings
     actor:
-        title: Конфигурация актёра
+        title: Конфигурация Актёра
         
         default: По умолчанию
         name: Имя
         filename: ID Записи
         invincible: Может быть убит?
         invisible: Виден?
-        attached: Прикреплен к актёру
+        attached: Прикреплён к актёру
         yaw: Рыскание
         pitch: Тангаж
     
@@ -212,6 +235,7 @@ blockbuster.gui:
         materials: Материалы
         nbt: NBT
         
+        pick_model: Выбрать модель
         pick_skin: Выбрать скин
         pose_sneak: Крадущаяся поза
         pose: Поза
@@ -227,6 +251,14 @@ blockbuster.gui:
         ignored: Игнорируется
         animation_duration: Продолжительность
         pick_interpolation: Выбрать интерполяцию
+     
+    image:
+        crop: Обрезать
+        left: Лево
+        right: Право
+        top: Верх
+        bottom: Низ
+        dimensions: "Размер (%spx, %spx)"
 
     sequencer:
         duration: Длительность
@@ -257,11 +289,14 @@ blockbuster.gui:
         dz: Смещение Z
         speed: Скорость
         count: Количество
-        args: Доп. параметры
+        args: Доп. аргументы
 
         fade: Исчезновение
         maximum: Максимум
         cap: Ёмкость
+    
+    record_morph:
+        random_skip: Случайный Пропуск
 
     texture:
         title: Менеджер текстур
@@ -286,6 +321,7 @@ blockbuster.gui:
         delay: Задержка
         projectiles: Снаряды
         scatter: Разброс
+        launch: Запустить игрока
         
         projectile_morph: Морф снаряда
         tick_command: Команда при тике
@@ -300,6 +336,8 @@ blockbuster.gui:
         speed: Скорость
         friction: Трение
         gravity: Гравитация
+        fade_in: Переход (Старт)
+        fade_out: Переход (Конец)
         
         impact_morph: Морф воздействия
         impact_delay: Задержка воздействия

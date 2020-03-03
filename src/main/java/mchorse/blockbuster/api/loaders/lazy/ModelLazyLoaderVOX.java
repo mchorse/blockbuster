@@ -3,12 +3,14 @@ package mchorse.blockbuster.api.loaders.lazy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
-import mchorse.blockbuster.api.formats.vox.Vox;
-import mchorse.blockbuster.api.formats.vox.VoxBuilder;
+import mchorse.blockbuster.api.formats.vox.VoxDocument;
 import mchorse.blockbuster.api.formats.vox.VoxReader;
+import mchorse.blockbuster.api.formats.vox.data.Vox;
 import mchorse.blockbuster.api.resource.IResourceEntry;
+import mchorse.blockbuster.client.model.ModelCustom;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,11 +21,19 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 {
 	public IResourceEntry vox;
 
+	private VoxDocument cachedDocument;
+
 	public ModelLazyLoaderVOX(IResourceEntry model, IResourceEntry vox)
 	{
 		super(model);
 
 		this.vox = vox;
+	}
+
+	@Override
+	public int getFilenameHash()
+	{
+		return (this.model.getName() + "/" + this.vox.getName()).hashCode();
 	}
 
 	@Override
@@ -56,13 +66,25 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	protected Map<String, IMeshes> getMeshes(String key, Model model) throws Exception
 	{
 		Map<String, IMeshes> meshes = new HashMap<String, IMeshes>();
-		MeshesVOX meshesVox = new MeshesVOX();
+		VoxDocument document = this.getVox();
 
-		meshesVox.vox = new VoxReader().read(this.vox.getStream());
-		meshesVox.mesh = new VoxBuilder().build(meshesVox.vox);
-		meshes.put("vox", meshesVox);
+		for (VoxDocument.LimbNode node : document.generate())
+		{
+			meshes.put(node.name, new MeshesVOX(document, node));
+		}
 
 		return meshes;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ModelCustom loadClientModel(String key, Model model) throws Exception
+	{
+		ModelCustom custom = super.loadClientModel(key, model);
+
+		this.cachedDocument = null;
+
+		return custom;
 	}
 
 	/**
@@ -74,10 +96,28 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		Model data = new Model();
 		ModelPose blocky = new ModelPose();
 
+		/* Generate limbs */
+		VoxDocument document = this.getVox();
+
+		for (VoxDocument.LimbNode node : document.generate())
+		{
+			ModelLimb limb = data.addLimb(node.name);
+			ModelTransform transform = new ModelTransform();
+
+			limb.origin[0] = 0;
+			limb.origin[1] = 0;
+			limb.origin[2] = 0;
+
+			transform.translate[0] = -node.translation.x;
+			transform.translate[1] = node.translation.z;
+			transform.translate[2] = -node.translation.y;
+
+			blocky.limbs.put(limb.name, transform);
+		}
+
+		/* General model properties */
 		data.providesObj = true;
 		data.providesMtl = true;
-		data.scale[0] = data.scale[1] = data.scale[2] = data.scaleGui = 1 / 16F;
-		data.scale[0] *= -1;
 
 		blocky.setSize(1, 1, 1);
 		data.poses.put("flying", blocky.clone());
@@ -87,13 +127,16 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		data.poses.put("riding", blocky.clone());
 		data.name = model;
 
-		/* Generate limbs */
-		ModelLimb limb = data.addLimb("vox");
-		Vox vox = new VoxReader().read(this.vox.getStream());
-
-		limb.origin[0] = vox.x / 2F;
-		limb.origin[2] = vox.z / 2F;
-
 		return data;
+	}
+
+	private VoxDocument getVox() throws Exception
+	{
+		if (this.cachedDocument != null)
+		{
+			return this.cachedDocument;
+		}
+
+		return this.cachedDocument = new VoxReader().read(this.vox.getStream());
 	}
 }

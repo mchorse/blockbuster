@@ -1,11 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.util.Objects;
-
-import mchorse.mclib.client.gui.utils.Area;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.utils.MatrixUtils;
+import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
@@ -21,6 +18,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+import java.nio.FloatBuffer;
+import java.util.Objects;
 
 /**
  * Image morph 
@@ -29,6 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ImageMorph extends AbstractMorph
 {
+    public static final Matrix4f matrix = new Matrix4f();
+
     /**
      * Image morph's texture 
      */
@@ -113,18 +120,19 @@ public class ImageMorph extends AbstractMorph
 
         if (this.billboard)
         {
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            /* Get matrix */
+            Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
+            Vector4f zero = new Vector4f(0, 0, 0, 1);
 
-            entityYaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks;
-            float entityPitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
+            matrix4f.transform(zero);
+            matrix4f.setIdentity();
+            matrix4f.setTranslation(new Vector3f(zero.x, zero.y, zero.z));
+            matrix4f.transpose();
 
-            GL11.glRotatef(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
+            MatrixUtils.loadModelView(matrix4f);
 
-            if (Minecraft.getMinecraft().gameSettings.thirdPersonView != 2)
-            {
-                GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            }
+            GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
         }
         else
         {

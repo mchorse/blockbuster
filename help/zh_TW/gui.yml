@@ -19,12 +19,18 @@ blockbuster.gui:
     select: 選取
     ok: 好
     billboard: 看向玩家
-    
+
+    links:
+        channel: "http://space.bilibili.com/472615413"
+        tutorial: "https://space.bilibili.com/472615413/favlist?fid=724274813"
+        wiki: "https://github.com/ycwei982/blockbuster/wiki"
+
     # First time module
     first_time:
         title: "第一次使用？"
         welcome: "歡迎使用 Blockbuster mod！\n\n如果你是第一次使用這個 mod，可以去看看 {c}YouTube{r} 上的 {a}Blockbuster 學院影片教程{r}。"
         social: "如果你遇到了任何問題，可前往 {6}Discord{r} 伺服器取得幫助。還有，你可以跟隨我的 {b}Twitter{r}，我會在那發佈更新。"
+        channel: 嗶哩嗶哩
 
     # Morphs popup strings
     morphs:
@@ -52,6 +58,7 @@ blockbuster.gui:
         discord: Discord
         tutorial: 影片教程
         models: 打開模型……
+        video_platform: BiliBili
 
         options: 選項
 

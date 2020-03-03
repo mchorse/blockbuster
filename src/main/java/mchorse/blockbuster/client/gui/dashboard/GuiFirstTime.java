@@ -22,6 +22,7 @@ public class GuiFirstTime extends GuiElement
 	public GuiButtonElement<GuiButton> close;
 	public GuiButtonElement<GuiButton> tutorial;
 	public GuiButtonElement<GuiButton> youtube;
+	public GuiButtonElement<GuiButton> channel;
 	public GuiButtonElement<GuiButton> discord;
 	public GuiButtonElement<GuiButton> twitter;
 
@@ -31,6 +32,11 @@ public class GuiFirstTime extends GuiElement
 
 	private final GuiDashboard dashboard;
 	private final Overlay overlay;
+
+	public static boolean shouldOpen()
+	{
+		return Blockbuster.proxy.config.show_first_time_modal;
+	}
 
 	public GuiFirstTime(Minecraft mc, GuiDashboard dashboard, Overlay overlay)
 	{
@@ -44,7 +50,8 @@ public class GuiFirstTime extends GuiElement
 		this.close = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.done"), (button) -> this.close());
 		this.tutorial = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiMainPanel.openWebLink(Blockbuster.TUTORIAL_URL()));
 		this.discord = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiMainPanel.openWebLink(Blockbuster.DISCORD_URL()));
-		this.youtube = GuiButtonElement.button(mc, "YouTube", (button) -> GuiMainPanel.openWebLink(Blockbuster.CHANNEL_URL()));
+		this.youtube = GuiButtonElement.button(mc, "YouTube", (button) -> GuiMainPanel.openWebLink("https://www.youtube.com/c/McHorsesMods"));
+		this.channel = GuiButtonElement.button(mc, Blockbuster.langOrDefault("blockbuster.gui.first_time.channel", ""), (button) -> GuiMainPanel.openWebLink(Blockbuster.CHANNEL_URL()));
 		this.twitter = GuiButtonElement.button(mc, "Twitter", (button) -> GuiMainPanel.openWebLink(Blockbuster.TWITTER_URL()));
 
 		this.tutorial.resizer().set(10, 0, 0, 20).parent(this.area).w(0.5F, -12);
@@ -54,6 +61,15 @@ public class GuiFirstTime extends GuiElement
 		this.close.resizer().set(10, 0, 0, 20).parent(this.area).w(1, -20).y(1, -30);
 
 		this.children.add(this.tutorial, this.discord, this.youtube, this.twitter, this.close);
+
+		if (!this.channel.button.displayString.isEmpty())
+		{
+			this.tutorial.resizer().set(10, 0, 0, 20).parent(this.area).w(0.33F, -10);
+			this.channel.resizer().set(0, 0, 0, 20).parent(this.area).x(0.5F, -30).w(60);
+			this.youtube.resizer().set(0, 0, 0, 20).parent(this.area).x(0.67F, 0).w(0.33F, -10);
+
+			this.children.add(this.channel);
+		}
 
 		this.title = I18n.format("blockbuster.gui.first_time.title");
 		this.welcome = this.font.listFormattedStringToWidth(I18n.format("blockbuster.gui.first_time.welcome"), 180);
@@ -107,6 +123,8 @@ public class GuiFirstTime extends GuiElement
 		/* Readjust buttons */
 		this.tutorial.resizer().y(y - this.area.y);
 		this.tutorial.resize(this.dashboard.width, this.dashboard.height);
+		this.channel.resizer().y(y - this.area.y);
+		this.channel.resize(this.dashboard.width, this.dashboard.height);
 		this.youtube.resizer().y(y - this.area.y);
 		this.youtube.resize(this.dashboard.width, this.dashboard.height);
 

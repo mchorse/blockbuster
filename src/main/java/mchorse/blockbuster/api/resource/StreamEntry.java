@@ -2,6 +2,7 @@ package mchorse.blockbuster.api.resource;
 
 import mchorse.blockbuster.Blockbuster;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,12 @@ public class StreamEntry implements IResourceEntry
     {
         this.path = path;
         this.time = time;
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.path == null ? "" : FilenameUtils.getName(this.path);
     }
 
     public StreamEntry(String path, long time, ClassLoader loader)

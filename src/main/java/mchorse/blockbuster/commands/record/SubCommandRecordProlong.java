@@ -42,12 +42,12 @@ public class SubCommandRecordProlong extends SubCommandRecordBase
 
         if (args.length >= 2)
         {
-            record.postDelay = CommandBase.parseInt(args[1], 0);
+            record.postDelay = CommandBase.parseInt(args[1]);
         }
 
         if (args.length >= 3)
         {
-            record.preDelay = CommandBase.parseInt(args[2], 0);
+            record.preDelay = CommandBase.parseInt(args[2]);
         }
 
         record.dirty = true;

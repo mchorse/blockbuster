@@ -2,6 +2,7 @@ package mchorse.blockbuster.core;
 
 import java.util.Iterator;
 
+import mchorse.blockbuster.core.transformers.EntityRendererTransformer;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -22,6 +23,7 @@ public class BBCoreClassTransformer extends CoreClassTransformer
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private TileEntityItemStackRendererTransformer isr = new TileEntityItemStackRendererTransformer();
+    private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
@@ -43,6 +45,12 @@ public class BBCoreClassTransformer extends CoreClassTransformer
             System.out.println("BBCoreMod: Transforming TEISR class (" + name + ")");
 
             return this.isr.transform(name, basicClass);
+        }
+        else if (checkName(name, "bnz", "net.minecraft.client.renderer.EntityRenderer"))
+        {
+            System.out.println("BBCoreMod: Transforming EntityRenderer class (" + name + ")");
+
+            return this.entityRenderer.transform(name, basicClass);
         }
 
         return basicClass;

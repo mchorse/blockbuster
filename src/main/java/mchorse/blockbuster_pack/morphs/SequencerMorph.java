@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import mchorse.aperture.camera.modifiers.AbstractModifier;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
@@ -154,8 +156,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      */
     protected void updateCycle(boolean isRemote)
     {
-        this.timer++;
         this.updateMorph(this.timer, isRemote);
+        this.timer++;
     }
 
     /**
@@ -195,9 +197,20 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             if (this.current >= 0 && this.current < size)
             {
                 SequenceEntry entry = this.morphs.get(this.current);
+                AbstractMorph morph = entry.morph == null ? null : entry.morph.clone(isRemote);
 
-                this.currentMorph.set(entry.morph == null ? null : entry.morph.clone(isRemote), isRemote);
+                this.currentMorph.set(morph, isRemote);
                 this.duration += entry.getDuration();
+            }
+
+            if (!this.morphs.isEmpty())
+            {
+                boolean durationZero = this.morphs.get(this.current).duration == 0;
+
+                if (this.timer >= this.duration && !durationZero)
+                {
+                    this.updateMorph(this.timer, isRemote);
+                }
             }
         }
     }
@@ -265,24 +278,43 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     {
         if (morph instanceof CustomMorph)
         {
-            CustomMorph custom = (CustomMorph) morph;
+            AbstractMorph current = this.currentMorph.get();
 
-            custom.canMerge(this.currentMorph.get(), isRemote);
+            if (current instanceof CustomMorph)
+            {
+                CustomMorph customMorph = (CustomMorph) current;
+                CustomMorph custom = (CustomMorph) morph;
 
-            return false;
+                ModelPose pose = customMorph.getCurrentPose();
+
+                if (customMorph.animation.isInProgress() && pose != null)
+                {
+                    custom.animation.last = customMorph.animation.calculatePose(pose, 1).clone();
+                }
+                else
+                {
+                    custom.animation.last = pose;
+                }
+
+                return false;
+            }
         }
 
         if (morph instanceof SequencerMorph)
         {
             SequencerMorph sequencer = (SequencerMorph) morph;
 
-            this.current = 0;
             this.morphs.clear();
 
             for (SequenceEntry entry : sequencer.morphs)
             {
                 this.morphs.add(entry.clone());
             }
+
+            this.current = 0;
+            this.timer = 0;
+            this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
+            this.currentMorph.copy(sequencer.currentMorph, isRemote);
 
             this.reverse = sequencer.reverse;
             this.random = sequencer.random;

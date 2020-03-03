@@ -106,11 +106,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     public BodyPartManager parts = new BodyPartManager();
 
     /**
-     * Last pose that was used by this morph
-     */
-    private ModelPose lastPose;
-
-    /**
      * Cached key value 
      */
     private String key;
@@ -157,14 +152,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     public ModelPose getPose(EntityLivingBase target, boolean ignoreCustom, float partialTicks)
     {
-        this.lastPose = this.getCurrentPose(target, ignoreCustom);
+        ModelPose pose = this.getCurrentPose(target, ignoreCustom);
 
         if (this.animation.isInProgress())
         {
-            return this.animation.calculatePose(this.lastPose, partialTicks);
+            return this.animation.calculatePose(pose, partialTicks);
         }
 
-        return this.lastPose;
+        return pose;
     }
 
     private ModelPose getCurrentPose(EntityLivingBase target, boolean ignoreCustom)
@@ -185,6 +180,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         }
 
         return this.model == null ? null : this.model.getPose(poseName);
+    }
+
+    public ModelPose getCurrentPose()
+    {
+        return this.customPose != null ? this.customPose : (this.model == null ? null : this.model.getPose(this.currentPose));
     }
 
     public String getKey()
@@ -440,30 +440,19 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 /* If the last pose is null, it might case a first cycle freeze.
                  * this should fix it. */
-                if (this.lastPose == null)
-                {
-                    if (this.customPose != null)
-                    {
-                        this.lastPose = this.customPose;
-                    }
-                    else if (this.model != null)
-                    {
-                        this.lastPose = this.model.getPose("standing");
-                    }
-                }
+                ModelPose pose = this.getCurrentPose();
 
-                if (this.animation.isInProgress())
+                if (this.animation.isInProgress() && pose != null)
                 {
-                    this.animation.last = this.animation.calculatePose(this.lastPose, 1).clone();
+                    this.animation.last = this.animation.calculatePose(pose, 1).clone();
                 }
                 else
                 {
-                    this.animation.last = this.lastPose;
+                    this.animation.last = pose;
                 }
 
                 this.currentPose = custom.currentPose;
                 this.customPose = custom.customPose == null ? null : custom.customPose.clone();
-
                 this.animation.merge(custom.animation);
             }
 
@@ -474,10 +463,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.scale = custom.scale;
             this.scaleGui = custom.scaleGui;
             this.materials.clear();
+
             for (Map.Entry<String, ResourceLocation> entry : custom.materials.entrySet())
             {
                 this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
             }
+
             this.parts.merge(custom.parts, isRemote);
             this.model = custom.model;
 
@@ -494,6 +485,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         this.key = null;
         this.parts.reset();
+        this.animation.reset();
         this.scale = this.scaleGui = 1F;
     }
 
@@ -646,7 +638,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         public ModelPose last;
         public ModelPose pose = new ModelPose();
 
-        private int progress = 0;
+        public int progress = 0;
+
+        public void reset()
+        {
+            this.progress = this.duration;
+        }
 
         public void merge(CustomAnimation animation)
         {
@@ -670,7 +667,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             {
                 CustomAnimation animation = (CustomAnimation) obj;
 
-                return this.animates == animation.animates && this.ignored == animation.ignored && this.progress == animation.progress && this.interp == animation.interp;
+                return this.animates == animation.animates &&
+                       this.duration == animation.duration &&
+                       this.ignored == animation.ignored &&
+                       this.interp == animation.interp;
             }
 
             return super.equals(obj);

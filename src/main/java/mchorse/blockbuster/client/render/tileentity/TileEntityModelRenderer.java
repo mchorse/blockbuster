@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
+import mchorse.blockbuster.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -76,7 +77,11 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             /* Apply transformations */
             GlStateManager.pushMatrix();
-            GlStateManager.translate(xx, yy, zz);
+            GlStateManager.translate(x + 0.5, y, z + 0.5);
+
+            boolean wasSet = MatrixUtils.captureMatrix();
+
+            GlStateManager.translate(te.x, te.y, te.z);
 
             if (te.order == RotationOrder.ZYX)
             {
@@ -108,6 +113,8 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 this.renderer.setShadowSize(te.morph.getWidth(entity) * 0.8F);
                 this.renderer.doRenderShadowAndFire(te.entity, xx, yy, zz, 0, partialTicks);
             }
+
+            if (wasSet) MatrixUtils.releaseMatrix();
         }
 
         /* Debug render (so people could find the block, lmao) */
@@ -130,7 +137,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            GuiBBModelRenderer.drawCube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 0.5F, 1, 0.35F);
+            GuiBBModelRenderer.drawCube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, (te.enabled ? 0 : 1), (te.enabled ? 0.5F : 0.85F), (te.enabled ? 1 : 0), 0.35F);
             GuiBBModelRenderer.drawCube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
 
             double distance = MathHelper.sqrt_double(Vec3d.ZERO.squareDistanceTo(te.x, te.y, te.z));
