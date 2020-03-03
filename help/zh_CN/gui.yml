@@ -30,6 +30,7 @@ blockbuster.gui:
         title: "第一次使用？"
         welcome: "欢迎使用 Blockbuster mod！\n\n如果你是第一次使用这个 mod，可以去看看 {c}哔哩哔哩{r} 上的 {a}Blockbuster 学院视频教程{r}。"
         social: "如果你遇到了任何问题，可前往 {6}Discord{r} 服务器获得帮助。还有，你可以关注我的 {b}Twitter{r}，我会在那儿发布更新。"
+        channel: 哔哩哔哩
 
     # Morphs popup strings
     morphs:
