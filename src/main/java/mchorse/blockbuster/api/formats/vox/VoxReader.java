@@ -3,6 +3,7 @@ package mchorse.blockbuster.api.formats.vox;
 import mchorse.blockbuster.api.formats.vox.data.Vox;
 import mchorse.blockbuster.api.formats.vox.data.VoxChunk;
 import mchorse.blockbuster.api.formats.vox.data.VoxGroup;
+import mchorse.blockbuster.api.formats.vox.data.VoxLayer;
 import mchorse.blockbuster.api.formats.vox.data.VoxShape;
 import mchorse.blockbuster.api.formats.vox.data.VoxTransform;
 
@@ -101,6 +102,10 @@ public class VoxReader
             else if (chunk.id == this.fourChars("nSHP"))
             {
                 document.nodes.add(new VoxShape(stream, this));
+            }
+            else if (chunk.id == this.fourChars("LAYR"))
+            {
+                document.layers.add(new VoxLayer(stream, this));
             }
             else if (chunk.id == this.fourChars("RGBA"))
             {

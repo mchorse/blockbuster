@@ -18,6 +18,9 @@ import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class SnowstormMorph extends AbstractMorph
@@ -29,6 +32,9 @@ public class SnowstormMorph extends AbstractMorph
 
 	@SideOnly(Side.CLIENT)
 	public BedrockEmitter emitter = new BedrockEmitter();
+
+	@SideOnly(Side.CLIENT)
+	public List<BedrockEmitter> lastEmitters = new ArrayList<BedrockEmitter>();
 
 	public boolean local;
 
@@ -101,6 +107,12 @@ public class SnowstormMorph extends AbstractMorph
 			this.emitter.rotation.setRow(1, ay);
 			this.emitter.rotation.setRow(2, az);
 
+			for (BedrockEmitter last : this.lastEmitters)
+			{
+				last.lastGlobal.set(this.emitter.lastGlobal);
+				last.rotation.set(this.emitter.rotation);
+			}
+
 			this.initialized = true;
 		}
 		else
@@ -109,13 +121,26 @@ public class SnowstormMorph extends AbstractMorph
 			this.emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
 			this.emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
 			this.emitter.rotation.setIdentity();
+
+			for (BedrockEmitter last : this.lastEmitters)
+			{
+				last.lastGlobal.set(this.emitter.lastGlobal);
+				last.rotation.set(this.emitter.rotation);
+			}
+
 			this.initialized = true;
 		}
 
 		if (this.initialized)
 		{
-			this.setupEmitter(entityLivingBase);
+			this.setupEmitter(this.emitter, entityLivingBase);
 			RenderingHandler.addEmitter(this.emitter);
+
+			for (BedrockEmitter last : this.lastEmitters)
+			{
+				this.setupEmitter(last, entityLivingBase);
+				RenderingHandler.addEmitter(last);
+			}
 		}
 	}
 
@@ -133,13 +158,28 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	private void updateEmitter(EntityLivingBase target)
 	{
-		this.setupEmitter(target);
+		this.setupEmitter(this.emitter, target);
 		this.emitter.update();
+
+		Iterator<BedrockEmitter> it = this.lastEmitters.iterator();
+
+		while (it.hasNext())
+		{
+			BedrockEmitter last = it.next();
+
+			this.setupEmitter(last, target);
+			last.update();
+
+			if (last.isFinished())
+			{
+				it.remove();
+			}
+		}
 	}
 
-	private void setupEmitter(EntityLivingBase target)
+	private void setupEmitter(BedrockEmitter emitter, EntityLivingBase target)
 	{
-		this.emitter.setTarget(target);
+		emitter.setTarget(target);
 	}
 
 	@Override
@@ -154,6 +194,18 @@ public class SnowstormMorph extends AbstractMorph
 		morph.setScheme(morph.scheme);
 
 		return morph;
+	}
+
+	@Override
+	public float getWidth(EntityLivingBase entityLivingBase)
+	{
+		return 0.6F;
+	}
+
+	@Override
+	public float getHeight(EntityLivingBase entityLivingBase)
+	{
+		return 1.8F;
 	}
 
 	@Override
@@ -173,15 +225,22 @@ public class SnowstormMorph extends AbstractMorph
 	}
 
 	@Override
-	public float getWidth(EntityLivingBase entityLivingBase)
+	public boolean canMerge(AbstractMorph morph, boolean isRemote)
 	{
-		return 0.6F;
-	}
+		if (morph instanceof SnowstormMorph)
+		{
+			SnowstormMorph snow = (SnowstormMorph) morph;
 
-	@Override
-	public float getHeight(EntityLivingBase entityLivingBase)
-	{
-		return 1.8F;
+			this.emitter.running = false;
+			this.lastEmitters.add(this.emitter);
+
+			this.emitter = new BedrockEmitter();
+			this.setScheme(snow.scheme);
+
+			return true;
+		}
+
+		return super.canMerge(morph, isRemote);
 	}
 
 	@Override

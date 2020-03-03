@@ -31,6 +31,7 @@ public class BedrockEmitter
 	public EntityLivingBase target;
 	public World world;
 	public boolean lit;
+	public boolean running = true;
 	private BedrockParticle particle;
 
 	/* Intermediate values */
@@ -65,6 +66,11 @@ public class BedrockEmitter
 	private Variable varEmitterRandom2;
 	private Variable varEmitterRandom3;
 	private Variable varEmitterRandom4;
+
+	public boolean isFinished()
+	{
+		return !this.running && this.particles.isEmpty();
+	}
 
 	public double getAge()
 	{
@@ -245,6 +251,11 @@ public class BedrockEmitter
 	 */
 	public void spawnParticle()
 	{
+		if (!this.running)
+		{
+			return;
+		}
+
 		this.particles.add(this.createParticle(false));
 	}
 

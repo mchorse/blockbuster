@@ -9,6 +9,7 @@ blockbuster.gui.me:
         title: 肢体
         
         size: 肢体尺寸
+        size_offset: 尺寸偏移
         texture: 材质偏移
         anchor: 锚点
         origin: OBJ 源

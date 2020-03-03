@@ -129,12 +129,27 @@ public class GuiDashboard extends GuiBase
         this.modelEditorPanel.open();
         this.texturePanel.open();
 
-        if (Blockbuster.proxy.config.show_first_time_modal)
+        if (GuiFirstTime.shouldOpen())
         {
-            GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(this.mc, this);
+            boolean alreadyHas = false;
 
-            overlay.resizer().parent(this.area).w(1, 0).h(1, 0);
-            this.elements.add(overlay);
+            for (IGuiElement element : this.elements.elements)
+            {
+                if (element instanceof GuiFirstTime.Overlay)
+                {
+                    alreadyHas = true;
+
+                    break;
+                }
+            }
+
+            if (!alreadyHas)
+            {
+                GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(this.mc, this);
+
+                overlay.resizer().parent(this.area).w(1, 0).h(1, 0);
+                this.elements.add(overlay);
+            }
         }
 
         return this;
