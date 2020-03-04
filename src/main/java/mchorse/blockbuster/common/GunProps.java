@@ -1,5 +1,7 @@
 package mchorse.blockbuster.common;
 
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
+import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelTransform;
@@ -109,6 +111,22 @@ public class GunProps
         this.entity.rotationYaw = this.entity.prevRotationYaw = 0;
         this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0;
         this.entity.rotationPitch = this.entity.prevRotationPitch = 0;
+    }
+
+    public EntityLivingBase getEntity(EntityGunProjectile entity)
+    {
+        if (this.entity != null)
+        {
+            this.entity.prevPosX = entity.prevPosX;
+            this.entity.prevPosY = entity.prevPosY;
+            this.entity.prevPosZ = entity.prevPosZ;
+
+            this.entity.posX = entity.posX;
+            this.entity.posY = entity.posY;
+            this.entity.posZ = entity.posZ;
+        }
+
+        return this.entity;
     }
 
     @SideOnly(Side.CLIENT)

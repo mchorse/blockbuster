@@ -105,8 +105,11 @@ public class ModelPack
         {
             /* Load default provided models */
             this.addDefaultModel("alex");
+            this.addDefaultModel("alex_3d");
             this.addDefaultModel("steve");
+            this.addDefaultModel("steve_3d");
             this.addDefaultModel("fred");
+            this.addDefaultModel("fred_3d");
             this.addDefaultModel("yike");
             this.addDefaultModel("empty");
         }

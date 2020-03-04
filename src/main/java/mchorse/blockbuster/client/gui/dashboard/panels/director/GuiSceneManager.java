@@ -96,6 +96,7 @@ public class GuiSceneManager extends GuiElement
 	{
 		if (!this.parent.getLocation().isDirector()) return;
 
+		this.parent.unfocus();
 		this.directorModal.setDelegate(new GuiPromptModal(mc, this.directorModal, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -121,6 +122,7 @@ public class GuiSceneManager extends GuiElement
 
 	private void addScene()
 	{
+		this.parent.unfocus();
 		this.sceneModal.setDelegate(new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -139,6 +141,8 @@ public class GuiSceneManager extends GuiElement
 	private void dupeScene()
 	{
 		if (!this.parent.getLocation().isScene()) return;
+
+		this.parent.unfocus();
 
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.dupe_modal"), (name) ->
 		{
@@ -165,6 +169,8 @@ public class GuiSceneManager extends GuiElement
 	{
 		if (!this.parent.getLocation().isScene()) return;
 
+		this.parent.unfocus();
+
 		GuiPromptModal modal = new GuiPromptModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.rename_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
@@ -188,6 +194,8 @@ public class GuiSceneManager extends GuiElement
 	private void removeScene()
 	{
 		if (!this.parent.getLocation().isScene()) return;
+
+		this.parent.unfocus();
 
 		this.sceneModal.setDelegate(new GuiConfirmModal(mc, this.sceneModal, I18n.format("blockbuster.gui.scenes.remove_modal"), (value) ->
 		{

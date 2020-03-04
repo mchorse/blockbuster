@@ -5,6 +5,7 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.Mesh;
 import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
+import mchorse.blockbuster.api.formats.vox.data.VoxTexture;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GLAllocation;
@@ -15,8 +16,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
-import java.nio.ByteBuffer;
 
 /**
  * Like {@link ModelCustomRenderer}, this model renders 
@@ -30,9 +29,9 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     public MeshesVOX mesh;
 
     /**
-     * Palette texture ID
+     * Vox palette texture
      */
-    protected int paletteTexture = -1;
+    public VoxTexture texture;
 
     public ModelVoxRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, MeshesVOX mesh)
     {
@@ -52,38 +51,6 @@ public class ModelVoxRenderer extends ModelCustomRenderer
         {
             VertexBuffer renderer = Tessellator.getInstance().getBuffer();
 
-            int texture = 0;
-            int count = this.mesh.vox.palette.length;
-
-            if (count > 0)
-            {
-                ByteBuffer buffer = GLAllocation.createDirectByteBuffer(count * 4);
-                texture = GL11.glGenTextures();
-
-                for (int color : this.mesh.vox.palette)
-                {
-                    int r = color >> 16 & 255;
-                    int g = color >> 8 & 255;
-                    int b = color & 255;
-                    int a = color >> 24 & 255;
-
-                    buffer.put((byte) r);
-                    buffer.put((byte) g);
-                    buffer.put((byte) b);
-                    buffer.put((byte) a);
-                }
-
-                buffer.flip();
-
-                /* For some reason, if there is no glTexParameter calls
-                 * the texture becomes pure white */
-                GlStateManager.bindTexture(texture);
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-                GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, count, 1, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-            }
-
             /* Generate display list */
             Mesh mesh = this.mesh.mesh;
             {
@@ -92,10 +59,10 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                 GlStateManager.glNewList(id, GL11.GL_COMPILE);
                 renderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
 
-                for (int i = 0, c = mesh.posData.length / 3; i < c; i++)
+                for (int i = 0, c = mesh.triangles; i < c; i++)
                 {
-                    float x = -(mesh.posData[i * 3] - this.limb.origin[0]) / 16F;
-                    float y = (-mesh.posData[i * 3 + 1] + this.limb.origin[1]) / 16F;
+                    float x = (mesh.posData[i * 3] - this.limb.origin[0]) / 16F;
+                    float y = -(mesh.posData[i * 3 + 1] - this.limb.origin[1]) / 16F;
                     float z = (mesh.posData[i * 3 + 2] - this.limb.origin[2]) / 16F;
 
                     float u = mesh.texData[i * 2];
@@ -114,10 +81,9 @@ public class ModelVoxRenderer extends ModelCustomRenderer
                 this.displayList = id;
             }
 
-            /* I hope this will get garbage collected xD */
+            this.texture = new VoxTexture(this.mesh.document.palette);
             this.compiled = true;
             this.mesh = null;
-            this.paletteTexture = texture;
         }
         else
         {
@@ -132,9 +98,12 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     @Override
     protected void renderDisplayList()
     {
-        GlStateManager.bindTexture(this.paletteTexture);
-        GL11.glCallList(this.displayList);
-        RenderCustomModel.bindLastTexture();
+        if (this.texture != null)
+        {
+            GlStateManager.bindTexture(this.texture.getTexture());
+            GL11.glCallList(this.displayList);
+            RenderCustomModel.bindLastTexture();
+        }
     }
 
     @Override
@@ -142,9 +111,10 @@ public class ModelVoxRenderer extends ModelCustomRenderer
     {
         super.delete();
 
-        if (this.paletteTexture != -1)
+        if (this.texture != null)
         {
-            GL11.glDeleteTextures(this.paletteTexture);
+            this.texture.deleteTexture();
+            this.texture = null;
         }
     }
 }

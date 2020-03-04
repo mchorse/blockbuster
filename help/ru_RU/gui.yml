@@ -60,11 +60,11 @@ blockbuster.gui:
         title: Блоки режиссёра
         config: Настройка блока режиссёра
         convert: Конвертировать блок режиссёра в сцену
-        convert_modal: "Впишите имя для сцены:"
+        convert_modal: "Впишите название сцены:"
         not_selected: Выбрать блок режиссёра...
         no_replays: Создать запись...
     
-        display_title: Имя
+        display_title: Название
         start_command: Команда на старте
         stop_command: Команда в конце
         loops: Закольцевать
@@ -93,9 +93,9 @@ blockbuster.gui:
     scenes:
         title: Сцены
 
-        add_modal: "Впишите имя для новой сцены:"
-        dupe_modal: "Впишите имя для дублированной сцены:"
-        rename_modal: "Впишите новое имя для текущей сцены:"
+        add_modal: "Впишите название для новой сцены:"
+        dupe_modal: "Впишите название для дублированной сцены:"
+        rename_modal: "Впишите новое название для текущей сцены:"
         remove_modal: "Вы уверенны, что хотите удалить эту сцену?"
     
     # Actor configuration GUI strings
@@ -223,7 +223,7 @@ blockbuster.gui:
     playback:
         title: Конфигурация воспроизведения
         camera_mode: Режим камеры
-        profile: Имя профиля
+        profile: Название профиля
 
         nothing: Не делать ничего
         play: Только воспроизвести
@@ -294,6 +294,10 @@ blockbuster.gui:
         fade: Исчезновение
         maximum: Максимум
         cap: Ёмкость
+        
+    snowstorm:
+        tooltip: Панель морфов Snowstorm
+        local: Рендер в локальном пространстве
     
     record_morph:
         random_skip: Случайный Пропуск

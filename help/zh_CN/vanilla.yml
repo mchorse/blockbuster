@@ -16,7 +16,7 @@ blockbuster:
     morph:
         image: 图像
         sequencer: 序列发生器
-        record: 录制
+        record: 回放
         structure: 结构
         particle: 粒子
 
