@@ -4,6 +4,7 @@ import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -46,8 +47,8 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
             model.headPitch = headPitch;
             model.scale = scale;
 
-            this.renderHeldItem(entity, itemstack1, model, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
-            this.renderHeldItem(entity, itemstack, model, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
+            renderHeldItem(entity, itemstack1, model, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
+            renderHeldItem(entity, itemstack, model, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
 
             model.model.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
         }
@@ -58,7 +59,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
      *
      * Items could be rendered to several limbs.
      */
-    private void renderHeldItem(EntityLivingBase entity, ItemStack item, HeldModel model, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
+    public static void renderHeldItem(EntityLivingBase entity, ItemStack item, HeldModel model, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
         if (item != null)
         {
@@ -68,7 +69,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
 
                 model.setup(entity);
                 GlStateManager.pushMatrix();
-                this.applyTransform(arm);
+                applyTransform(arm);
 
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
                 GlStateManager.popMatrix();
@@ -76,11 +77,33 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
         }
     }
 
-    private void applyTransform(ModelCustomRenderer arm)
+    /**
+     * Render item in every arm.
+     *
+     * Items could be rendered to several limbs.
+     */
+    public static void renderHeldItem(EntityLivingBase entity, ItemStack item, ModelCustom model, ItemCameraTransforms.TransformType transform, EnumHandSide handSide)
     {
-        float x = 0.0F;
+        if (item != null)
+        {
+            for (ModelCustomRenderer arm : model.getRenderForArm(handSide))
+            {
+                boolean flag = handSide == EnumHandSide.LEFT;
+
+                GlStateManager.pushMatrix();
+                applyTransform(arm);
+
+                Minecraft.getMinecraft().getItemRenderer().renderItemSide(entity, item, transform, flag);
+                GlStateManager.popMatrix();
+            }
+        }
+    }
+
+    private static void applyTransform(ModelCustomRenderer arm)
+    {
+        float x = (arm.limb.size[0] * (0.5F - arm.limb.anchor[0])) * 0.0625F;
         float y = arm.limb.size[1] * (arm.limb.size[1] * (1 - arm.limb.anchor[1]) / arm.limb.size[1]) * -0.0625F;
-        float z = arm.limb.size[2] / 2 * 0.0625F;
+        float z = (arm.limb.size[2] * (arm.limb.anchor[2] - 0.5F)) * 0.0625F;
 
         if (arm.limb.size[0] > arm.limb.size[1])
         {
