@@ -8,7 +8,8 @@ blockbuster.config:
         extra_wubs: 附加的雜物
         auto_refresh_models: 刷新模型和皮膚
         debug_playback_ticks: Debug ticks
-        green_screen_sky: 綠色的天空
+        green_screen_sky: 色鍵天空
+        green_screen_sky_color: 色鍵天空顏色
         url_skins_sync_download: 同步的 URL 下載
         
     model_block:

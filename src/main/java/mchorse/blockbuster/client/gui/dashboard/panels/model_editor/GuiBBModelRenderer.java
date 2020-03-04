@@ -291,6 +291,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         float w = limb.size[0] * f;
         float h = limb.size[1] * f;
         float d = limb.size[2] * f;
+        float o = limb.sizeOffset * f;
 
         float minX = 0;
         float minY = 0;
@@ -313,7 +314,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
 
-        drawCube(minX, minY, minZ, maxX, maxY, maxZ, 0F, 0.5F, 1F, alpha);
+        drawCube(minX + o, minY - o, minZ -o, maxX - o, maxY + o, maxZ + o, 0F, 0.5F, 1F, alpha);
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();

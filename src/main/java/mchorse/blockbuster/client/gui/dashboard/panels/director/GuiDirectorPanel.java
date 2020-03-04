@@ -428,7 +428,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         if (this.location.isScene())
         {
-            replay.id = this.location.getScene().getNextSuffix(this.location.getScene().getId());
+            replay.id = this.location.getScene().getNextBaseSuffix(this.location.getScene().getId());
         }
 
         this.location.getScene().replays.add(replay);
@@ -446,9 +446,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         if (scene.dupe(scene.replays.indexOf(this.replay), true))
         {
             this.selector.update();
-
-            this.setReplay(scene.replays.get(scene.replays.size() - 1));
             this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
+            this.setReplay(scene.replays.get(scene.replays.size() - 1));
         }
     }
 

@@ -11,7 +11,7 @@ blockbuster.gui:
     edit: 编辑
     remove: 移除
     record: 录制
-    pick: 选择生物
+    pick: 选择模型
     duplicate: 拷贝
     search: 搜索
     cancel: 取消
@@ -30,6 +30,7 @@ blockbuster.gui:
         title: "第一次使用？"
         welcome: "欢迎使用 Blockbuster mod！\n\n如果你是第一次使用这个 mod，可以去看看 {c}哔哩哔哩{r} 上的 {a}Blockbuster 学院视频教程{r}。"
         social: "如果你遇到了任何问题，可前往 {6}Discord{r} 服务器获得帮助。还有，你可以关注我的 {b}Twitter{r}，我会在那儿发布更新。"
+        channel: 哔哩哔哩
 
     # Morphs popup strings
     morphs:
@@ -57,6 +58,7 @@ blockbuster.gui:
         discord: Discord
         tutorial: 视频教程
         models: 打开模型……
+        video_platform: 哔哩哔哩
 
         options: 选项
 
@@ -299,6 +301,10 @@ blockbuster.gui:
         fade: 淡出
         maximum: 最大
         cap: 容量
+
+    snowstorm:
+        tooltip: 暴风雪粒子伪装
+        local: 本地空间渲染
 
     record_morph:
         random_skip: 随机跳过

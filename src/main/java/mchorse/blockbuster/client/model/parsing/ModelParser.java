@@ -195,7 +195,7 @@ public class ModelParser
         {
             renderer = new ModelCustomRenderer(model, limb, transform);
             renderer.mirror = limb.mirror;
-            renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d);
+            renderer.addBox(-ax * w, -ay * h, -az * d, (int) w, (int) h, (int) d, limb.sizeOffset);
         }
 
         renderer.applyTransform(transform);

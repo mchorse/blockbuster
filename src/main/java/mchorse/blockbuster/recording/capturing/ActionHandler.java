@@ -428,6 +428,11 @@ public class ActionHandler
     @SubscribeEvent
     public void onWorldTick(ServerTickEvent event)
     {
+        if (event.phase == Phase.START)
+        {
+            return;
+        }
+
         CommonProxy.manager.tick();
         CommonProxy.scenes.tick();
     }
