@@ -231,11 +231,14 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			SnowstormMorph snow = (SnowstormMorph) morph;
 
-			this.emitter.running = false;
-			this.lastEmitters.add(this.emitter);
+			if (!this.scheme.equals(snow.scheme))
+			{
+				this.emitter.running = false;
+				this.lastEmitters.add(this.emitter);
 
-			this.emitter = new BedrockEmitter();
-			this.setScheme(snow.scheme);
+				this.emitter = new BedrockEmitter();
+				this.setScheme(snow.scheme);
+			}
 
 			return true;
 		}
