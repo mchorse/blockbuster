@@ -2,6 +2,28 @@
 
 Blockbuster's change log.
 
+## Version 1.6.5
+
+This is a little update features two neat features, and mostly bug fixes. A couple of things to note about this update:
+
+1. MagicaVoxel code was rewritten, and now the new code shows models differently, so if you MagicaVoxel models before in `1.6.3` or `1.6.4`, it will break poses and general position and orientation of these models. You'll have to reconfigure your morphs, **so don't update until you finish current project**.
+2. MorePlayerModels-like models (`alex_3d`, `fred_3d` and `steve_3d`) were added. Please **remove your 3D (`alex_3d`, `fred_3d` and `steve_3d`) models** if you have installed it before.
+3. I fixed some bug, which caused countdown and some other features to run twice as fast, so apparently the countdown wasn't 3 seconds all that time, but rather 1.5 seconds... My life have been a lie...
+
+**Compatible** with McLib `1.0.4`, Metamorph `1.1.10` and Aperture `1.3.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added multiple object parsing to vox reader to be able to use multiple limbs
+* Added `offset` scale option to custom model code
+* Added 3D model variants to Blockbuster
+* Changed the color of model blocks in F3 state when they're not enabled (to something like yellow, because green and red are already occupied by director blocks)
+* Changed particle morph spawning particles on the client side rather than on the server side
+* Fixed `this.model` being `null` (reported by \_Paddi)
+* Fixed sequencer and custom morph can merge interactions are wrong...
+* Fixed post and pre delays are not applying first/last frames on the actor during delay periods
+* Fixed prefix generation when the scene name has *prefix*, i.e. scene name is `tia_6`, but the first replay becomes `tia_1` instead of `tia_6_1`
+* Fixed vanilla morph not working with BB gun properly (reported by Centryfuga)
+* Fixed fake player being twice as fast with scenes (reported by SillySheep)
+
 ## Version 1.6.4
 
 This is a quick hot patch update which fixes a couple of major issues I found after releasing 1.6.3, my bad guys...
