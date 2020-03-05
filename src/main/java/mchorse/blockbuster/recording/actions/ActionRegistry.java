@@ -83,6 +83,11 @@ public class ActionRegistry
      */
     public static byte getType(Action action)
     {
+        if (action == null)
+        {
+            return -1;
+        }
+
         Byte type = CLASS_TO_ID.get(action.getClass());
 
         return type == null ? -1 : type;
@@ -93,10 +98,14 @@ public class ActionRegistry
      */
     public static void toByteBuf(Action action, ByteBuf buffer)
     {
-        byte type = CLASS_TO_ID.get(action.getClass());
+        byte type = getType(action);
 
         buffer.writeByte(type);
-        action.toBuf(buffer);
+
+        if (action != null)
+        {
+            action.toBuf(buffer);
+        }
     }
 
     /**
@@ -105,6 +114,11 @@ public class ActionRegistry
     public static Action fromByteBuf(ByteBuf buffer)
     {
         byte type = buffer.readByte();
+
+        if (type == -1)
+        {
+            return null;
+        }
 
         try
         {
