@@ -23,7 +23,7 @@ public class ItemRenderer
         ItemStack itemstack1 = entity.getHeldItemMainhand();
         ItemStack itemstack = entity.getHeldItemOffhand();
 
-        if (!itemstack.isEmpty() || !itemstack1.isEmpty)
+        if (!itemstack.isEmpty() || !itemstack1.isEmpty())
         {
             GlStateManager.pushMatrix();
             LayerHeldItem.renderHeldItem(entity, itemstack, model, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
