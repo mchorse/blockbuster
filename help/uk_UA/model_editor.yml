@@ -9,6 +9,7 @@ blockbuster.gui.me:
         title: Кінцівки
         
         size: Розмір кінцівок
+        size_offset: Незалежний розмір
         texture: Зміщення текстури
         anchor: Точка прив'язки
         origin: Точка OBJ
