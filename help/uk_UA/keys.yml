@@ -1,0 +1,12 @@
+# Keys localization
+key:
+    blockbuster:
+        # Categories
+        category: Блокбастер
+        
+        dashboard: Головна Панель
+        model_editor: Редактор Моделей
+        marker: Макер тиків
+        plause_director: Програти/зупинити блок режисера
+        record_director: Записати відтворення до блоку режисера
+        open_gun: Налаштувати зброю

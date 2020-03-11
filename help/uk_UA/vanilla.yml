@@ -1,0 +1,51 @@
+# Item tooltips
+blockbuster:
+    info:
+        playback_button: Активує блок режисера
+        playback_director: Прив'язана до ({r}%d{7}, {r}%d{7}, {r}%d{7})
+        playback_profile: Програє профіль "{f}{o}%s{r}{7}"
+        playback_play: Програє камеру
+        playback_scene: Прив'язана до сцени {f}%s{r}
+
+        actor_config: Використовуйте на акторі
+        register: Прив'язує актора до блока режисера
+        director_block: Керує акторами та відтвореннями
+        model_block: Дозволяє розмістити морф у якості статичної моделі
+        green_block: "%s хромаблок. Може бути використаний для хромакеїнга."
+
+    morph:
+        image: Зображення 
+        sequencer: Секвенсер
+        record: Запис
+        structure: Структура
+        particle: Частинки
+
+# Creative tabs
+itemGroup.blockbuster: Блокбастер
+
+# Block name
+tile.blockbuster:
+    director.name: Блок режисера
+    model.name: Блок-модель
+    green.name: Хромаблок
+
+# Item names
+item:
+    blockbuster:
+        playback.name: Кнопка відтворення
+        register.name: Реєструючий прилад
+        actor_config.name: Прилад для налаштування актора
+        gun.name: ББ зброя
+
+# Entity names
+entity.blockbuster.Actor.name: Актор
+
+blockbuster.chroma_blocks:
+    0: Зелений
+    1: Синій
+    2: Червоний
+    3: Жовтий
+    4: Бірюзовий
+    5: Фіолетовий
+    6: Білий
+    7: Чорний

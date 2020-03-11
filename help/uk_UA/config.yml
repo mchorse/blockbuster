@@ -1,0 +1,48 @@
+# Config strings
+blockbuster.config:
+    general:
+        title: Загальні
+
+        show_first_time_modal: Показувати заставку першого запуску
+        disable_teleport_playback_button: Вимкнути телепортацію кнопкою відтворення
+        extra_wubs: Додаткові Тици
+        auto_refresh_models: Перезавантаження моделей та скінів
+        debug_playback_ticks: Тики налагодження
+        green_screen_sky: Хроманебо
+        green_screen_sky_color: Колір хроманеба
+        url_skins_sync_download: Синхронні завантаження з покликань
+    
+    model_block:
+        title: Блок-модель
+        
+        model_block_disable_rendering: Вимкнути відображення блоків-моделей
+        model_block_disable_item_rendering: Вимкнути відображення речей
+    
+    recording:
+        title: Записування
+
+        recording_countdown: Зворотній відлік записування
+        recording_delay: Пропуск кадрів записування
+        record_unload_time: Час автоматичного вивантаження записів
+        record_unload: Автоматичне вивантаження записів
+        record_sync_rate: Інтервал синхронізації тиків записування
+        record_attack_on_swipe: Атака на помах
+        record_commands: Команди записування
+        record_chat_prefix: Префікс дії у чаті
+    
+    actor:
+        title: Актор
+        
+        actor_fall_damage: Пошкодження акторів при приземленні
+        actor_tracking_range: Дальність відстеження акторів
+        actor_rendering_range: Дальність відображення акторів
+        actor_always_render: Завжди відображати акторів
+        actor_always_render_names: Завжди відображати імена акторів
+        actor_swish_swipe: Помах при шелесті
+        actor_y: Зафіксувати рух за віссю Y
+
+    damage_control:
+        title: Котроль пошкоджень
+        
+        damage_control: Котроль пошкоджень
+        damage_control_distance: Відстань пошкоджень

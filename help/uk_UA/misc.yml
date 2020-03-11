@@ -1,0 +1,22 @@
+# Recording
+blockbuster:
+    # Parsing
+    parsing:
+        lacks_pose: Проаналізована модель з назвою "%s" не має пози "%s"!
+        lacks_limbs: Проаналізована модель з назвою "%s" не має кінцівок!
+    
+    marker: "{6}{l}|{r} Запис {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}різниця становить {7}%s{6}t{8}){r}."
+    recording: Запис до {7}%s{r}
+    "yes": "Так"
+    "no": "Ні"
+    eggs:
+        yike: "{l}Так, все{r}, {o}гаразд{r}, то був {7}МакХорсів{r} жарт! Повертаємося назад до {6}ЯйкФілмз{r}."
+    morph_error: Моделі не знайдено
+    start_recording: "Початок запису {7}%s{r} у {7}%s{r}"
+
+# Metamorph category
+morph.category:
+    blockbuster: Моделі Блокбастера
+    blockbuster_extra: Додаткові моделі
+
+metamorph.builder.blockbuster: Користувацький конструктор моделей

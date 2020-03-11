@@ -1,0 +1,182 @@
+# Commands
+blockbuster:
+    commands:
+        # General commands (no SubCommandBase commands)
+        director: 
+            |
+                {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
+                
+                {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There are also {7}loop{r} and {7}disable_state{r} which allow to change looping and ability to change redstone sides with {7}[flag]{r} argument ({7}true{r} or {7}false{r}).
+
+        # Record's commands
+        record:
+            help: "{r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions."
+            
+            add: 
+                |
+                    {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
+                    
+                    {r}Adds an action to player recording by {7}<filename>{r} at {7}<tick>{r} of type {7}<action_type>{r} with additional data specified in {7}[data_tag]{r}.
+            
+            clean:
+                |
+                    {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
+                    
+                    {r}This command cleans given {7}<property>{r} in {7}<filename>{r} player recording from {7}[from]{r} tick to {7}[to]{r} (not including {7}[to]{r}) tick to the value specified either in {7}[value]{r} argument (it accepts relative values) or the value at frame {7}[from]{r} or the first frame.
+
+            cut:
+                |
+                    {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
+
+                    {r}This command removes all actions in player recording {7}<filename>{r} before {7}<before>{r} and after {7}<after>{r} (pre and post delays shouldn't be taken into account giving {7}<from>{r} and {7}<to>{r} arguments).
+            
+            dupe:
+                |
+                    {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
+                    
+                    {r}This command duplicates given {7}<filename>{r} player recording to a new player recording file with given {7}<new_filename>{r}.
+
+            fade:
+                |
+                    {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
+
+                    {r}This command fades out {7}<filename>{r} player recording to the first frame using linear interpolation that fades {7}<fade_out>{r} ticks.
+
+            flip:
+                |
+                    {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}
+
+                    {r}This command flips frames and actions of {7}<filename>{r} player recording across given {7}<axis>{r} at given {7}<coordinate{r}. Set {7}[center]{r} to {7}false{r} (by default it's {7}true{r}) if you're mirroring across even number of blocks thick wall.
+
+            get:
+                |
+                    {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
+                    
+                    {r}Outputs data tag of action found at {7}<tick>{r} in player recording by filename {7}<filename>{r}.
+            
+            info:
+                |
+                    {l}{6}/{r}record {8}info{r} {7}<filename>{r}
+                    
+                    {r}Outputs information about player recording by filename {7}<filename>{r}, such as saved version of record format, length of the record, etc.
+            
+            remove:
+                |
+                    {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
+                    
+                    {r}Removes all actions on {7}<tick>{r} in player recording by {7}<filename>{r}. If you'll specify {7}[index]{r}, command will remove only one action in {7}<tick>{r} at {7}[index]{r}.
+
+            restore:
+                |
+                    {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
+
+                    {r}Restores previous version {7}<iteration>{r} of a player recording by name {7}<filename>{r}. For example {7}/record restore test 1{r} will swap {7}test.dat{r} and {7}test.dat~1{r} player recording files places.
+
+            reverse:
+                |
+                    {l}{6}/{r}record {8}reverse{r} {7}<filename>{r}
+
+                    {r}Reverses the order of frames and actions in the player recording by name {7}<filename>{r}.
+        
+            search:
+                |
+                    {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
+                    
+                    {r}Searches for actions, optionally limited by {7}[limit]{r}, of given {7}<action_type>{r} and outputs the tick and, optionally output data tag, found in player recording by filename {7}<filename>{r}.
+                    
+            origin:
+                |
+                    {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
+                    
+                    {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame.   
+                    
+            prolong:
+                |
+                    {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
+                    
+                    {r}This command allows to specify a pre and post delay for given {7}<filename>{r} player recording.
+                                
+            tp:
+                |
+                    {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
+                    
+                    {r}This command teleports player to first frame or frame at {7}[tick]{r} frame, if specified, {7}<filename>{r} player recording.
+
+        # Model's commands
+        model:
+            help: "{r}{o}Model command{r}. This command provides sub-commands for managing custom models."
+            
+            export:
+                |
+                    {l}{6}/{r}model {8}export{r} {7}<entity_name> [entity_tag]{r}
+                    
+                    {r}Exports model from {7}<entity_name>{r} mob renderer in JSON format that actor use for custom models. This model will be exported into export folder of Blockbuster's config folder. Optionally you can provide {7}[entity_tag]{r} to generate a model from entity with specific data.
+                    
+                    {r}{l}Attention{r}: those models are automatically generated and aren't perfect. You'll need to adjust those models in McME to get best result.
+            
+            export_obj:
+                |
+                    {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
+                    
+                    {r}Converts Blockbuster JSON model named {7}<model_name>{r} to OBJ (along side with default texture, if present, and MTL file). Exported OBJ model can be found in Blockbuster's config {l}export{r} folder. 
+
+            clear:
+                |
+                    {l}{6}/{r}model {8}clear{r} {7}[path]{r}
+                    
+                    {r}Clears the texture cache from loaded Blockbuster's skin textures. If {7}[path]{r} specified, the command will only clear the textures which begins with {7}[path]{r}.
+            
+            convert:
+                |
+                    {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
+                    
+                    {r}Converts a skin {7}<skin>{r} (name filename without extension in {7}<steve|fred>{r} model) 64x64 ({7}fred{r}) to 64x32 or 64x32 ({7}steve{r}) to 64x64 skin.
+            
+            reload:
+                |
+                    {l}{6}/{r}model {8}reload{r} {7}[force]{r}
+                    
+                    {r}Forces the client and server to reload models (server-side only for OP users) with optional {7}[force]{r} argument which if is {7}true{r} will reload all models surpassing cached non-modified files timestamp.
+                    
+            replace_texture:
+                |
+                    {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
+                    
+                    {r}Replaces a texture by ResourceLocation {7}<target>{r} to texture by ResourceLocation {7}[replace]{r}. If {7}[replace]{r} isn't specified, then original {7}<target>{r}'s original texture will be restored.
+
+        # Action's commands
+        action:
+            help: "{r}{o}Action command{r}. This command provides few sub-commands for managing player recording actions."
+            
+            clear:
+                |
+                    {l}{6}/{r}action {8}clear{r}
+                    
+                    {r}Removes all records on the client (used to force unload client-side records).
+            play: 
+                |
+                    {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
+                    
+                    {r}Playbacks an action from given {7}<filename>{r}. This sub-command also can receive optional arguments {7}[name]{r} of the actor, his {7}[model]{r} and {7}[skin]{r} and {7}[invincibility]{r} flag ({7}1{r}, {7}0{r}, {7}true{r} or {7}false{r} values).
+            record: 
+                |
+                    {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
+                    
+                    {r}Records an action from current player into given {7}<filename>{r}. You can also optionally specify {7}[x]{f}, {7}[y]{f} and {7}[z]{f} coordinates of director block for which you want to record this recording. Supplying director block coordinates, helps out with synchronizing the actors.
+            request: 
+                |
+                    {l}{6}/{r}action {8}request{r} {7}<filename>{r}
+                    
+                    {r}Requests an action, named {7}<filename>{r}, to be loaded from server to current client.
+            stop: 
+                |
+                    {l}{6}/{r}action {8}stop{r}
+                    
+                    {r}Stops the recording of action. If the player didn't record anything, nothing will happen.
+        
+        on_head.help: "{r}{o}On head command{r}. This command allows putting currently held item in the main slot directly in the head slot, without any hassle of coming up with NBT data tag."
+        spectate.help: 
+            |
+                {r}{o}Spectate command{r}. This command allows making given player to spectate given entity.
+                
+                {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}

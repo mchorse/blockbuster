@@ -1,0 +1,45 @@
+blockbuster.info:
+    actor:
+        playing: "{f}This actor already plays!"
+    
+    director:
+        already_registered: "{f}This actor is already registered by this director block!"
+        looped: "{f}Now given director block is looped!"
+        unlooped: "{f}Now given director block is unlooped!"
+        
+        enabled_state: "{f}Now given director block changes state of the block!"
+        disabled_state: "{f}Now given director block doesn't change the state of the block!"
+    
+    # General command infos
+    commands:
+        load_chunks: "{f}Loaded all generated chunks in render distance."
+        
+        replace_texture: "{f}Texture %s{f} was replaced with texture %s{f}."
+        restore_texture: "{f}Texture %s{f} was restored to its original state."
+        
+        not_loaded: "{f}Texture %s{f} isn't loaded."
+    
+    models.loaded: "{f}Received %s{f} custom models and %s{f} skins from server."
+    
+    record:
+        action: "{f}Action at %s{f} tick is %s{f} at index %s{f} with data: %s"
+        
+        info:
+            |
+                {f}Information about the player recording named %s{f}:
+                
+                {7}*{f} Recording version: %s
+                {7}*{f} Length of recording in ticks: %s
+                {7}*{f} Frame delay: %s
+                {7}*{f} Ticks before unload: %s
+        
+        search_type: "{f}Search for action with type %s{f}:"
+        search_action: "{f}Found action at %s{f} tick at index %s{f}."
+        search_action_data: "{f}Found action at %s{f} tick at index %s{f} with data: %s"
+    
+    # Recording strings
+    recording:
+        recording: "%s{f} is already being recorded to."
+        dead: "{f}Stopped recording %s{f}, because player's dead."
+        message: "{f}To start recording an actor %s{f}, %s{f}!"
+        clickhere: click here
