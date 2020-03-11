@@ -1,45 +1,45 @@
 blockbuster.info:
     actor:
-        playing: "{f}This actor already plays!"
+        playing: "{f}Цей актор вже програється!"
     
     director:
-        already_registered: "{f}This actor is already registered by this director block!"
-        looped: "{f}Now given director block is looped!"
-        unlooped: "{f}Now given director block is unlooped!"
+        already_registered: "{f}Цей актор вже зареєстрований до цього блоку режисера!"
+        looped: "{f}Тепер цей блок режисера зациклено!"
+        unlooped: "{f}Тепер цей блок режисера розциклено!"
         
-        enabled_state: "{f}Now given director block changes state of the block!"
-        disabled_state: "{f}Now given director block doesn't change the state of the block!"
+        enabled_state: "{f}Тепер заданий блок режисера змінює стан блоку!"
+        disabled_state: "{f}Тепер заданий блок режисера не змінює стану блоку!"
     
     # General command infos
     commands:
-        load_chunks: "{f}Loaded all generated chunks in render distance."
+        load_chunks: "{f}Завантажено усі чанки відповідно до відстані промальовки."
         
-        replace_texture: "{f}Texture %s{f} was replaced with texture %s{f}."
-        restore_texture: "{f}Texture %s{f} was restored to its original state."
+        replace_texture: "{f}Текстуру %s{f} було замінено текстурою %s{f}."
+        restore_texture: "{f}Текстуру %s{f} було повернуто до стану за замовченням."
         
-        not_loaded: "{f}Texture %s{f} isn't loaded."
+        not_loaded: "{f}Текстуру %s{f} не було завантажено."
     
-    models.loaded: "{f}Received %s{f} custom models and %s{f} skins from server."
+    models.loaded: "{f}Отримано %s{f} користувацьких моделей та %s{f} скінів з серверу."
     
     record:
-        action: "{f}Action at %s{f} tick is %s{f} at index %s{f} with data: %s"
+        action: "{f}Дія у %s{f} тіці %s{f} з індексом %s{f} та властивостями: %s"
         
         info:
             |
-                {f}Information about the player recording named %s{f}:
+                {f}Інформація про запис гравця з назвою %s{f}:
                 
-                {7}*{f} Recording version: %s
-                {7}*{f} Length of recording in ticks: %s
-                {7}*{f} Frame delay: %s
-                {7}*{f} Ticks before unload: %s
+                {7}*{f} Версія запису: %s
+                {7}*{f} Довжина запису у тіках: %s
+                {7}*{f} Затримка кадрів: %s
+                {7}*{f} Тіків перед вивантаженням: %s
         
-        search_type: "{f}Search for action with type %s{f}:"
-        search_action: "{f}Found action at %s{f} tick at index %s{f}."
+        search_type: "{f}Пошук дії типу %s{f}:"
+        search_action: "{f}Знайдено дію у тіці %s{f} з індексом %s{f}."
         search_action_data: "{f}Found action at %s{f} tick at index %s{f} with data: %s"
     
     # Recording strings
     recording:
-        recording: "%s{f} is already being recorded to."
-        dead: "{f}Stopped recording %s{f}, because player's dead."
-        message: "{f}To start recording an actor %s{f}, %s{f}!"
-        clickhere: click here
+        recording: "%s{f} вже записується."
+        dead: "{f}Зупинено записування %s{f}, адже гравець помер."
+        message: "{f}Щоб розпочати записування актора, %s{f}, %s{f}!"
+        clickhere: клікніть сюди
