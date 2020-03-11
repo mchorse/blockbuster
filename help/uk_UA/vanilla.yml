@@ -14,7 +14,7 @@ blockbuster:
         green_block: "%s хромаблок. Може бути використаний для хромакеїнга."
 
     morph:
-        image: Зображення 
+        image: Зображення
         sequencer: Секвенсер
         record: Запис
         structure: Структура
