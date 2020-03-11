@@ -1,0 +1,69 @@
+# Blockbuster error strings
+#
+# This file is responsible for storing error messages across whole mod (there 
+# are a lot of strings in the mod).
+
+blockbuster.error:
+    # Actor error strings
+    actor:
+        not_attached: "{f}This registering item isn't attached to a director block!"
+    
+    # General command errors
+    commands:
+        load_chunks: Couldn't load all generated chunks in render distance! See logs for detailed error.
+        
+        restore_texture: "{f}Texture %s{f} couldn't be restored, because it wasn't changed by this command."
+        replace_texture: "{f}Texture %s{f} and %s{f} aren't loaded!"
+        replace_texture_one: "{f}Texture %s{f} isn't loaded!"
+        
+        no_player: "{f}Player %s{f} couldn't be found!"
+        no_entity: "{f}Given entity with target selector %s{f}, couldn't be found!"
+        
+        convert_model: "{f}Given wrong model %s{f}! It must be either {7}steve{f} or {7}fred{f}."
+        convert_skin: "{f}An exception occurred during convert procedure of %s{f}/%s{f} skin: %s{f}"
+        convert_skin_size: "{f}The skin's size is %s{f}x%s{f}, while must be power of two with 1:1 or 2:1 aspect ratio!"
+    
+    # Director block error strings
+    director:
+        playing: "{f}Director block at (%s{f}, %s{f}, %s{f}) is playing!"
+        stopped: "{f}Director block at (%s{f}, %s{f}, %s{f}) is stopped!"
+        
+        missing: "{f}There is no director block at (%s{f}, %s{f}, %s{f})!"
+        no_director: "{f}No director block exists at (%s{f}, %s{f}, %s{f})."
+        empty_filename: "{f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}."
+    
+    # Errors for /model export
+    model:
+        export:
+            error_save: "{f}Can't save exported model!"
+            wrong_type: "{f}Can't export model for %s{f} type (because it has no renderer, or it's not a living entity renderer)."
+            no_model: "{f}Can't export model %s{f} into OBJ, because it wasn't found!"
+            obj: "{f}Couldn't export model %s{f}!"
+        
+        reload: You supposed to be an OP user in order to reload models!
+    
+    # Record command errors
+    record:
+        no_action: "{f}Player recording by filename %s{f} doesn't have an action at %s{f} tick!"
+        not_exist: "{f}Player recording by filename %s{f} doesn't exist!"
+        tick_out_range: "{f}Action on tick %s{f} doesn't exist! Should be between {7}0{r} and %s{r}."
+        index_out_range: "{f}Index %s{f} is out of range! Should be between {7}0{r} and %s{r}."
+        already_empty: "{f}There are no actions at index %s{r} in player recording %s{r}!"
+        wrong_action: "{f}Action of type %s{f} doesn't exist!"
+        add: "{f}Action of type %s{f} couldn't be added due to error: %s"
+        already_exists: "{f}Player recording by filename %s{f} already exists!"
+        couldnt_save: "{f}Couldn't save player recording by name %s{f}!"
+        wrong_clean_property: "{f}Given wrong clean property %s{f}!"
+        empty_record: "{f}Given player recording %s{f} is empty!"
+        not_exist_iteration: "{f}Given player recording by name %s{f}'s iteration %s{f} doesn't exist!"
+        cant_restore: "{f}Can't restore an iteration because temporary file exists while it shouldn't be..."
+        wrong_axis: "{f}Given \"%s{f}\" is not a valid axis. It should be either {7}x{r} or {7}z{r}!"
+
+    # Recording errors
+    recording:
+        read: "{f}A recording file by the name %s{f} isn't suitable for playback ({7}old version{f}, {7}corrupted{f}, or not a {7}recording file{f})."
+        logout: "{f}Stopped recording %s{f}, because the player is logged out!"
+        not_found: "{f}Can't find %s{f} recording file!"
+        fill_filename: "{f}Please fill the {7}Recording ID{f} field!"
+        empty_filename: "{f}Cannot record a player recording with empty {7}Recording ID{f}."
+        empty_record: "{f}Cannot playback record %s{f}, because it's empty!"
