@@ -26,7 +26,7 @@ blockbuster.config:
         record_unload_time: Час автоматичного вивантаження записів
         record_unload: Автоматичне вивантаження записів
         record_sync_rate: Інтервал синхронізації тиків записування
-        record_attack_on_swipe: Атака на помах
+        record_attack_on_swipe: Атака з помахом
         record_commands: Команди записування
         record_chat_prefix: Префікс дії у чаті
     
