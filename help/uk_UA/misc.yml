@@ -1,6 +1,6 @@
 # Recording
 blockbuster:
-    # Parsing
+    # Parsing хуярсінг
     parsing:
         lacks_pose: Проаналізована модель з назвою "%s" не має пози "%s"!
         lacks_limbs: Проаналізована модель з назвою "%s" не має кінцівок!
