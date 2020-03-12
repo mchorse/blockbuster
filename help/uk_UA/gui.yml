@@ -2,154 +2,154 @@
 
 blockbuster.gui:
     # General strings
-    done: Done
-    next: Next
-    previous: Previous
-    restore: Restore Default
-    reset: Reset
-    add: Add
-    edit: Edit
-    remove: Remove
-    record: Record
-    pick: Pick morph
-    duplicate: Duplicate
-    search: Search
-    cancel: Cancel
-    break: Break
-    select: Select
-    ok: Ok
-    billboard: Look at player
+    done: Готово
+    next: Наступна
+    previous: Попередня
+    restore: Відновити
+    reset: Скинути
+    add: Додати
+    edit: Редагувати
+    remove: Видалити
+    record: Записати
+    pick: Вибрати морф
+    duplicate: Клонувати
+    search: Шукати
+    cancel: Відмінити
+    break: Зламати
+    select: Вибрати
+    ok: Ок
+    billboard: Дивитися на гравця
 
     # First time module
     first_time:
-        title: "First time?"
-        welcome: "Welcome to Blockbuster mod!\n\nIf you're using this mod for the first time, you might want to take a look at the {a}Blockbuster academy video tutorial{r} series on {c}YouTube{r}."
-        social: "If you'll encounter any issues, feel free to join my {6}Discord{r} server for help. Also, feel free to follow me on {b}Twitter{r}, I post mod updates there."
+        title: "Перший раз?"
+        welcome: "Ласкаво просимо до Блокбастеру!\n\nЯкщо ви користуєтеся цим модом уперше, то можливо вам варто поглянути на цикл {a}відеоуроків академії Блокбастера{r} на {c}YouTube{r}."
+        social: "Якщо у вас виникнуть якісь проблеми, то не соромтеся приєднатися до мого серверу у {6}Discord{r} за допомогою. Крім цього, ви також можете підписатися на мене у {b}Twitter{r}, там я пощу новини про оновлення своїх модів."
 
     # Morphs popup strings
     morphs:
-        acquire: "Acquire morph"
-        pose: Pose
-        sneak: Apply on sneak
-        reset: Reset pose
+        acquire: "Придбати морф"
+        pose: Поза
+        sneak: Застосувати на підкрадання
+        reset: Скинути позу
     
     confirm:
-        title: Confirm Breaking Director Block
-        description: Director block at ({7}%s{f}, {7}%s{f}, {7}%s{f}) contains total of {7}%s{f} replays. Are you sure you want to destroy this director block? Those replays will be {c}removed{r} {l}permanently{r}.
+        title: Підтвердження Знесення Блоку Режисера
+        description: Блок режисеру у точці ({7}%s{f}, {7}%s{f}, {7}%s{f}) загалом містить у стобі {7}%s{f} відтворень. Ви впевнені у том, що хочете знести цей блок режисера? Відтворення у ньому буде {c}видалено{r} {l}назавжди{r}.
     
     dashboard: 
-        main: Dashboard
-        director: Director block
-        model: Model block
-        model_editor: Model editor
-        player_recording: Player recording editor
-        texture: Texture manager
+        main: Головна панель
+        director: Блок режисера
+        model: Блок-модель
+        model_editor: Редактор моделей
+        player_recording: Редактор записів гравця
+        texture: Менеджер текстур
     
     # Main page of dashboard
     main:
-        resources: Resources
-        wiki: Wiki
-        discord: Discord
-        tutorial: Video Tutorial
-        models: Open Models...
+        resources: Ресурси
+        wiki: Вікі
+        discord: Діскорд
+        tutorial: Відеоуроки
+        models: Відкрити моделі...
         
-        options: Options
+        options: Налаштування
     
     # Director block GUI strings
     director:
-        title: Director blocks
-        config: Director block options
-        convert: Convert director block to a scene
-        convert_modal: "Type a name for a scene:"
-        not_selected: Select a director block...
-        no_replays: Create a replay...
+        title: Блоки режисера
+        config: Налаштування блока режисера
+        convert: Перетворити блок режисера на сцену
+        convert_modal: "Впишіть назву для сцени:"
+        not_selected: Виберіть блок режисера...
+        no_replays: Створити відтворення...
     
-        display_title: Display title
-        start_command: On start command
-        stop_command: On stop command
-        loops: Loops
-        disable_states: Disable states
-        hide: Hide during playback
+        display_title: Відображати назву
+        start_command: Команда на початку
+        stop_command: Команда у кінці
+        loops: Зациклюється
+        disable_states: Вимкнути стани
+        hide: Ховати протягом відтворення
         
-        id: Recording ID
-        name: Name tag
-        invincible: Invincible
-        invisible: Invisible
-        enabled: Enabled
-        fake_player: Fake player
-        tp_back: Teleport back
-        tp_back_tooltip: Teleport yourself back to starting position
-        health: Health
-        edit_record: Edit record
-        update_data: Update data
-        update_data_tooltip: Updates player data in record file
-        rename_prefix: Rename prefix
-        rename_prefix_tooltip: Renames replay recording ID with a new prefix  
-        rename_prefix_popup: "Enter a new prefix:"
+        id: ID Запису
+        name: Іменний тег
+        invincible: Невразливий
+        invisible: Невидимий
+        enabled: Вмикнений
+        fake_player: Підробний гравець
+        tp_back: Телепортація назад
+        tp_back_tooltip: Телепортуватися назад до початкової позиції
+        health: Здоров'я
+        edit_record: Редагувати запис
+        update_data: Оновити дані
+        update_data_tooltip: Оновлює дані гравця у файлі запису
+        rename_prefix: Перейменувати префікс
+        rename_prefix_tooltip: Перейменовує ID запису, додаючи до нього новий префікс
+        rename_prefix_popup: "Впишіть новий префікс:"
 
-        attach: Attach
-        attach_tooltip: Attach this director block/scene to playback button
+        attach: Прикріпити
+        attach_tooltip: Прикріпити цей блок режисера/сцену до кнопки відтворення
 
     scenes:
-        title: Scenes
+        title: Сцени
 
-        add_modal: "Enter a name for a new scene:"
-        dupe_modal: "Enter a name for duplicated scene:"
-        rename_modal: "Enter a new name for current scene:"
-        remove_modal: "Are you sure you want to remove this scene?"
+        add_modal: "Впишіть назву для нової сцени:"
+        dupe_modal: "Впишіть назву для клонованої сцени:"
+        rename_modal: "Впишіть нову назву для чинної сцени:"
+        remove_modal: "Ви впевнені, що хочете видалити цю сцену?"
     
     # Actor configuration GUI strings
     actor:
-        title: Actor Configuration
+        title: Налаштування Актора
         
-        default: Default
-        name: Name
-        filename: Recording ID
-        invincible: Can be killed?
-        invisible: Is visible?
-        attached: Attached to actor
-        yaw: Yaw 
-        pitch: Pitch 
+        default: За замовченням
+        name: Ім'я
+        filename: ID Запису
+        invincible: Можна вбити?
+        invisible: Є видимим?
+        attached: Прив'язано до актора
+        yaw: Рискання 
+        pitch: Тангаж 
     
     # Model block GUI strings
     model_block:
-        title: Model blocks
-        not_selected: Select a model block...
+        title: Блоки-моделі
+        not_selected: Виберіть блок-модель...
         
         x: X
         "y": "Y"
         z: Z
-        yaw: Yaw
-        pitch: Pitch
-        body: Body yaw
-        one: One
-        one_tooltip: Uniform one slider scale
-        shadow: Shadow
-        global: Global
-        global_tooltip: Enables surpassing of chunk culling
-        enabled: Enabled
-        enabled_tooltip: Enables model block rendering
-        look: Rotate at you
+        yaw: Рискання
+        pitch: Тангаж
+        body: Рискання тіла
+        one: Єдиний
+        one_tooltip: Єдиний параметр розміру
+        shadow: Тінь
+        global: Глобальний
+        global_tooltip: Вмикає видимість незалежно від відстані промальовки
+        enabled: Вмикнений
+        enabled_tooltip: Вмикає відображення блока-моделі
+        look: Повернути до гравця
         
-        entity: Entity
-        translate: Translate
-        rotate: Rotate
-        scale: Scale
+        entity: Істота
+        translate: Переміщення
+        rotate: Обертання
+        scale: Розмір
     
     # Player recording editor GUI strings
     record_editor:
-        title: Recordings
-        directors: Director's records
-        not_selected: Select a player recording...
-        action: action
+        title: Записи
+        directors: Записи режисера
+        not_selected: Виберіть запис гравця...
+        action: дія
         
-        drop: Drop block
-        damage: Damage
-        progress: Progress
-        mounting: Mounting
-        meta: Meta value
-        arrow_charge: Arrow charge
-        no_fields: This action doesn't have any editable fields...
+        drop: Кинути блок
+        damage: Пошкодження
+        progress: Прогрес
+        mounting: Їхати верхи
+        meta: Метазначення
+        arrow_charge: Випустити стрілу
+        no_fields: У цієї дії відсутні поля, яким можна задати значення...
         
         actions:
             chat: 
@@ -346,13 +346,13 @@ blockbuster.gui:
         impact_morph: Impact morph
         impact_delay: Impact delay
         impact_command: Command on impact
-        vanish: Vanish # or Spanish
-        bounce: Bounce
-        hits: Hits
-        damage: Damage
+        vanish: Зникнення # хуїкнення блять заїбався нахуй
+        bounce: Підстрибування
+        hits: Стрибків
+        damage: Пошкодження
         
-        gun_transforms: Gun transformations
-        projectile_transforms: Projectile transformations
+        gun_transforms: Трансформації зброї
+        projectile_transforms: Трансформації снаряду
 
     interpolations:
         linear: Linear
@@ -371,5 +371,5 @@ blockbuster.gui:
             title: Режисер
             
             reload: Перезавантажити акторів
-            actions: Preview actions
-            reload_scene: Reload scene
+            actions: Попередньо переглянути дії
+            reload_scene: Перезавантажити сцену
