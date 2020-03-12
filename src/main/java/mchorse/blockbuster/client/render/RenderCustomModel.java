@@ -122,7 +122,9 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         super.renderLivingAt(entityLivingBaseIn, x, y, z);
 
-        this.captured = MatrixUtils.captureMatrix();
+        if (!this.captured) {
+            this.captured = MatrixUtils.captureMatrix();
+        }
     }
 
     /**
