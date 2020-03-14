@@ -267,6 +267,7 @@ public class BedrockEmitter
 		BedrockParticle particle = new BedrockParticle();
 
 		this.setParticleVariables(particle, 0);
+		particle.matrix.set(this.rotation);
 
 		for (IComponentParticleInitialize component : this.scheme.particleInitializes)
 		{
@@ -281,7 +282,6 @@ public class BedrockEmitter
 
 		particle.prevPosition.set(particle.position);
 		particle.prevRotation = particle.rotation;
-		particle.matrix.set(this.rotation);
 
 		return particle;
 	}
