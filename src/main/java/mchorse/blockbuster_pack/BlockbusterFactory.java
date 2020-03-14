@@ -108,7 +108,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             SnowstormMorph particle = (SnowstormMorph) morph;
 
-            return particle.emitter.scheme != null ? particle.emitter.scheme.identifier : particle.name;
+            return particle.getEmitter().scheme != null ? particle.getEmitter().scheme.identifier : particle.name;
         }
 
         String[] splits = morph.name.split("\\.");
@@ -297,7 +297,7 @@ public class BlockbusterFactory implements IMorphFactory
         {
             SnowstormMorph morph = new SnowstormMorph();
 
-            morph.setScheme(key);
+            morph.setScheme(key, true);
             morphs.addMorphVariant("snowstorm", "blockbuster_extra", key, morph);
         }
     }
