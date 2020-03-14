@@ -39,7 +39,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public float stepX;
 	public float stepY;
 	public float fps;
-	public MolangExpression maxFrame;
+	public MolangExpression maxFrame = MolangParser.ZERO;
 	public boolean stretchFPS = false;
 	public boolean loop = false;
 

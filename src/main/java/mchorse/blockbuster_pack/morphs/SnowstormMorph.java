@@ -231,19 +231,25 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			SnowstormMorph snow = (SnowstormMorph) morph;
 
-			if (!this.scheme.equals(snow.scheme))
+			if (!this.scheme.equals(snow.scheme) && isRemote)
 			{
-				this.emitter.running = false;
-				this.lastEmitters.add(this.emitter);
-
-				this.emitter = new BedrockEmitter();
-				this.setScheme(snow.scheme);
+				this.merge(snow);
 			}
 
 			return true;
 		}
 
 		return super.canMerge(morph, isRemote);
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void merge(SnowstormMorph snow)
+	{
+		this.emitter.running = false;
+		this.lastEmitters.add(this.emitter);
+
+		this.emitter = new BedrockEmitter();
+		this.setScheme(snow.scheme);
 	}
 
 	@Override
