@@ -46,11 +46,15 @@ public class BedrockComponentMotionParametric extends BedrockComponentBase imple
 	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
+		Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());
+
 		particle.manual = true;
 		particle.initialPosition.set(particle.position);
-		particle.position.x = this.position[0].get();
-		particle.position.y = this.position[1].get();
-		particle.position.z = this.position[2].get();
+
+		particle.matrix.transform(position);
+		particle.position.x = particle.initialPosition.x + position.x;
+		particle.position.y = particle.initialPosition.y + position.y;
+		particle.position.z = particle.initialPosition.z + position.z;
 		particle.rotation = (float) this.rotation.get();
 	}
 

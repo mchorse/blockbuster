@@ -298,7 +298,7 @@ public class BlockbusterFactory implements IMorphFactory
             SnowstormMorph morph = new SnowstormMorph();
 
             morph.setScheme(key);
-            morphs.addMorphVariant("snowstorm", "blockbuster_extra", "", morph);
+            morphs.addMorphVariant("snowstorm", "blockbuster_extra", key, morph);
         }
     }
 
