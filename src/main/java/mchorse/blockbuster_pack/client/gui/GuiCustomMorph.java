@@ -232,9 +232,9 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.morph.animation.interp = interp;
             });
 
-            this.model.resizer().parent(this.area).parent(this.area).set(10, 10, 105, 20);
-            this.skin.resizer().relative(this.model.resizer()).set(0, 25, 105, 20);
-            this.reset.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
+            this.skin.resizer().parent(this.area).parent(this.area).set(10, 10, 105, 20);
+            this.model.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
+            this.reset.resizer().relative(this.model.resizer()).set(0, 25, 105, 20);
             this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -21);
             this.poses.resizer().parent(this.area).set(10, 100, 105, 0).h(1, -125);
             this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
