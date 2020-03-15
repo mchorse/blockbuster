@@ -34,5 +34,5 @@ public interface IResourceEntry
 
     public long lastModified();
 
-    public void copyTo(File file) throws IOException;
+    public boolean copyTo(File file);
 }

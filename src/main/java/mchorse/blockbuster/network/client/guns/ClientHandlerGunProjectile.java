@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.client;
+package mchorse.blockbuster.network.client.guns;
 
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;

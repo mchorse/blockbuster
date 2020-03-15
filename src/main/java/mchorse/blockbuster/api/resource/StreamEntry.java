@@ -42,7 +42,7 @@ public class StreamEntry implements IResourceEntry
     @Override
     public boolean exists()
     {
-        return this.path == null ? false : this.loader.getResource(this.path) != null;
+        return this.path != null && this.loader.getResource(this.path) != null;
     }
 
     @Override
@@ -52,8 +52,17 @@ public class StreamEntry implements IResourceEntry
     }
 
     @Override
-    public void copyTo(File file) throws IOException
+    public boolean copyTo(File file)
     {
-        FileUtils.copyInputStreamToFile(this.getStream(), file);
+        try
+        {
+            FileUtils.copyInputStreamToFile(this.getStream(), file);
+
+            return true;
+        }
+        catch (IOException e)
+        {}
+
+        return false;
     }
 }

@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.math.Variable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -301,7 +302,7 @@ public class BedrockEmitter
 
 		if (!list.isEmpty())
 		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(this.scheme.texture);
+			GifTexture.bindTexture(this.scheme.texture);
 
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
@@ -346,7 +347,7 @@ public class BedrockEmitter
 
 		if (!this.particles.isEmpty())
 		{
-			Minecraft.getMinecraft().getTextureManager().bindTexture(this.scheme.texture);
+			GifTexture.bindTexture(this.scheme.texture);
 			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 
 			for (BedrockParticle particle : this.particles)

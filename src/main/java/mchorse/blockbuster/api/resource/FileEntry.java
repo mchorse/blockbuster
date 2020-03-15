@@ -41,8 +41,17 @@ public class FileEntry implements IResourceEntry
     }
 
     @Override
-    public void copyTo(File file) throws IOException
+    public boolean copyTo(File file)
     {
-        FileUtils.copyFile(this.file, file);
+        try
+        {
+            FileUtils.copyFile(this.file, file);
+
+            return true;
+        }
+        catch (IOException e)
+        {}
+
+        return false;
     }
 }

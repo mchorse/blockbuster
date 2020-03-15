@@ -304,22 +304,25 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         {
             SequencerMorph sequencer = (SequencerMorph) morph;
 
-            this.morphs.clear();
-
-            for (SequenceEntry entry : sequencer.morphs)
+            if (!sequencer.morphs.equals(this.morphs))
             {
-                this.morphs.add(entry.clone());
+                this.morphs.clear();
+
+                for (SequenceEntry entry : sequencer.morphs)
+                {
+                    this.morphs.add(entry.clone());
+                }
+
+                this.current = 0;
+                this.timer = 0;
+                this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
+                this.currentMorph.copy(sequencer.currentMorph, isRemote);
+
+                this.reverse = sequencer.reverse;
+                this.random = sequencer.random;
+
+                return true;
             }
-
-            this.current = 0;
-            this.timer = 0;
-            this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
-            this.currentMorph.copy(sequencer.currentMorph, isRemote);
-
-            this.reverse = sequencer.reverse;
-            this.random = sequencer.random;
-
-            return true;
         }
 
         return super.canMerge(morph, isRemote);
