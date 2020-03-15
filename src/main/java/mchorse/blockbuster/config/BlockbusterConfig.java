@@ -2,6 +2,7 @@ package mchorse.blockbuster.config;
 
 import mchorse.blockbuster.Blockbuster;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -75,7 +76,7 @@ public class BlockbusterConfig
     /**
      * Recording <s>final</s> countdown
      */
-    public int recording_countdown;
+    public float recording_countdown;
 
     /**
      * Recording frame skip
@@ -187,6 +188,17 @@ public class BlockbusterConfig
         String damage = "damage_control";
         String model = "model_block";
 
+        /* Clean up */
+        if (this.config.hasCategory(recording))
+        {
+            Property countdown = this.config.getCategory(recording).get("recording_countdown");
+
+            if (countdown != null && countdown.getType() == Property.Type.INTEGER)
+            {
+                this.config.getCategory(recording).remove("recording_countdown");
+            }
+        }
+
         /* General */
         this.show_first_time_modal = this.getBoolean("show_first_time_modal", general, true, "Whether first time modal should be shown in the dashboard");
         this.disable_teleport_playback_button = this.getBoolean("disable_teleport_playback_button", general, false, "Is teleport feature disabled when you sneak and using the playback button?");
@@ -202,7 +214,7 @@ public class BlockbusterConfig
         this.model_block_disable_item_rendering = this.getBoolean("model_block_disable_item_rendering", model, false, "Whether model block item rendering should be disabled");
 
         /* Recording */
-        this.recording_countdown = this.getInt("recording_countdown", recording, 3, 0, 10, "Recording countdown (in seconds)");
+        this.recording_countdown = this.getFloat("recording_countdown", recording, 1.5F, 0, 10, "Recording countdown (in seconds)");
         this.recording_delay = this.getInt("recording_delay", recording, 1, 1, 10, "Frame delay for recording");
         this.record_unload_time = this.getInt("record_unload_time", recording, 2400, 600, 72000, "How long does it take to unload a record (in ticks)");
         this.record_unload = this.getBoolean("record_unload", recording, true, "Enable automatic record unloading?");

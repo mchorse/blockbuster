@@ -79,9 +79,9 @@ public class RecordManager
      */
     public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, Runnable runnable)
     {
-        int countdown = Blockbuster.proxy.config.recording_countdown;
+        float countdown = Blockbuster.proxy.config.recording_countdown;
 
-        if (runnable != null && (countdown == 0 || this.recorders.containsKey(player)))
+        if (runnable != null && (countdown <= 0 || this.recorders.containsKey(player)))
         {
             runnable.run();
         }
@@ -127,7 +127,7 @@ public class RecordManager
             CommonProxy.damage.addDamageControl(recorder, player);
         }
 
-        if (countdown == 0 || player.worldObj.isRemote)
+        if (countdown <= 0 || player.worldObj.isRemote)
         {
             this.recorders.put(player, recorder);
 
@@ -138,7 +138,7 @@ public class RecordManager
         }
         else
         {
-            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, countdown * 20));
+            this.scheduled.put(player, new ScheduledRecording(recorder, player, runnable, (int) (countdown * 20)));
         }
 
         return true;
@@ -404,9 +404,9 @@ public class RecordManager
         {
             ScheduledRecording record = it.next();
 
-            if (record.countdown % 20 == 0)
+            if (record.countdown % 2 == 0)
             {
-                IMessage message = new PacketCaption(new TextComponentTranslation("blockbuster.start_recording", record.recorder.record.filename, record.countdown / 20));
+                IMessage message = new PacketCaption(new TextComponentTranslation("blockbuster.start_recording", record.recorder.record.filename, record.countdown / 20F));
                 Dispatcher.sendTo(message, (EntityPlayerMP) record.player);
             }
 
