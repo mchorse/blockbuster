@@ -1,7 +1,6 @@
 package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
-import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelTransform;
@@ -60,6 +59,7 @@ public class GunProps
     public int impactDelay;
     public boolean vanish;
     public boolean bounce;
+    public boolean sticks;
     public int hits;
     public float damage;
 
@@ -228,6 +228,7 @@ public class GunProps
         this.impactDelay = 0;
         this.vanish = true;
         this.bounce = false;
+        this.sticks = false;
         this.hits = 1;
         this.damage = 0F;
 
@@ -272,6 +273,7 @@ public class GunProps
         if (tag.hasKey("ImpactDelay")) this.impactDelay = tag.getInteger("ImpactDelay");
         if (tag.hasKey("Vanish")) this.vanish = tag.getBoolean("Vanish");
         if (tag.hasKey("Bounce")) this.bounce = tag.getBoolean("Bounce");
+        if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
 
@@ -331,6 +333,7 @@ public class GunProps
         if (this.impactDelay != 0) tag.setInteger("ImpactDelay", this.impactDelay);
         if (!this.vanish) tag.setBoolean("Vanish", this.vanish);
         if (this.bounce) tag.setBoolean("Bounce", this.bounce);
+        if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
 

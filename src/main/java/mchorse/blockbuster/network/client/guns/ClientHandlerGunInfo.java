@@ -1,4 +1,4 @@
-package mchorse.blockbuster.network.client;
+package mchorse.blockbuster.network.client.guns;
 
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.capabilities.gun.IGun;
