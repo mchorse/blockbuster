@@ -351,6 +351,7 @@ blockbuster.gui:
         sticks: Sticks
         hits: Hits
         damage: Damage
+        bounce_factor: Factor
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations

@@ -62,6 +62,7 @@ public class GunProps
     public boolean sticks;
     public int hits;
     public float damage;
+    public float bounceFactor;
 
     /* Transforms */
     public ModelTransform gunTransform = new ModelTransform();
@@ -231,6 +232,7 @@ public class GunProps
         this.sticks = false;
         this.hits = 1;
         this.damage = 0F;
+        this.bounceFactor = 1F;
 
         /* Transforms */
         this.gunTransform = new ModelTransform();
@@ -276,6 +278,7 @@ public class GunProps
         if (tag.hasKey("Stick")) this.sticks = tag.getBoolean("Stick");
         if (tag.hasKey("Hits")) this.hits = tag.getInteger("Hits");
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
+        if (tag.hasKey("BFactor")) this.bounceFactor = tag.getFloat("BFactor");
 
         /* Transforms */
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
@@ -336,6 +339,7 @@ public class GunProps
         if (this.sticks) tag.setBoolean("Stick", this.sticks);
         if (this.hits != 1) tag.setInteger("Hits", this.hits);
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
+        if (this.bounceFactor != 1F) tag.setFloat("BFactor", this.bounceFactor);
 
         /* Transforms */
         if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());
