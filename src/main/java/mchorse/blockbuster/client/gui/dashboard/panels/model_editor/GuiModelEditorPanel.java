@@ -204,14 +204,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             /* Copy OBJ files */
             if (loader != null)
             {
-                try
-                {
-                    /* TODO: reimplement */
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                loader.copyFiles(folder);
             }
 
             Blockbuster.proxy.models.pack.reload();

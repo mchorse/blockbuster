@@ -5,6 +5,9 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Lazy model loader
  *
@@ -21,4 +24,6 @@ public interface IModelLazyLoader
 
 	@SideOnly(Side.CLIENT)
 	public ModelCustom loadClientModel(String key, Model model) throws Exception;
+
+	public boolean copyFiles(File folder);
 }
