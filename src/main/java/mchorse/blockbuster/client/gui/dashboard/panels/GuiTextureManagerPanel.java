@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.textures.MipmapTexture;
-import mchorse.blockbuster.commands.model.SubCommandModelTexture;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -32,8 +31,8 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 /**
  * Texture manager panel
  * 
- * This is a GUI version of {@link SubCommandModelTexture} which allows 
- * viewing and managing textures loaded by {@link TextureManager} class.
+ * This is a GUI which allows viewing and managing textures loaded by
+ * {@link TextureManager} class.
  * 
  * Besides viewing, it also allows changing filter (linear/nearest), 
  * generating mipmaps and removing (clearing) textures from the manager.

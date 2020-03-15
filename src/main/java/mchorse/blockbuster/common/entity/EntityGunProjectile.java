@@ -7,6 +7,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
+import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
@@ -43,6 +44,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public int timer;
     public int hits;
     public int impact;
+    public boolean stuck;
 
     /* Syncing on the client side the position */
     public int updatePos;
@@ -90,113 +92,116 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         this.onEntityUpdate();
 
-        /* Ray trace for impact */
-        Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
-        Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-        RayTraceResult result = this.world.rayTraceBlocks(position, next);
-
-        if (result != null)
+        if (!this.stuck)
         {
-            next = new Vec3d(result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord);
-        }
+            /* Ray trace for impact */
+            Vec3d position = new Vec3d(this.posX, this.posY, this.posZ);
+            Vec3d next = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+            RayTraceResult result = this.world.rayTraceBlocks(position, next);
 
-        Entity entity = null;
-        List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D));
-        double dist = 0.0D;
-
-        for (int i = 0; i < list.size(); ++i)
-        {
-            Entity current = list.get(i);
-
-            if (current.canBeCollidedWith())
+            if (result != null)
             {
-                AxisAlignedBB box = current.getEntityBoundingBox().expandXyz(0.30000001192092896D);
-                RayTraceResult ray = box.calculateIntercept(position, next);
+                next = new Vec3d(result.hitVec.xCoord, result.hitVec.yCoord, result.hitVec.zCoord);
+            }
 
-                if (ray != null)
+            Entity entity = null;
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expandXyz(1.0D));
+            double dist = 0.0D;
+
+            for (int i = 0; i < list.size(); ++i)
+            {
+                Entity current = list.get(i);
+
+                if (current.canBeCollidedWith())
                 {
-                    double d1 = position.squareDistanceTo(ray.hitVec);
+                    AxisAlignedBB box = current.getEntityBoundingBox().expandXyz(0.30000001192092896D);
+                    RayTraceResult ray = box.calculateIntercept(position, next);
 
-                    if (d1 < dist || dist == 0.0D)
+                    if (ray != null)
                     {
-                        entity = current;
-                        dist = d1;
+                        double d1 = position.squareDistanceTo(ray.hitVec);
+
+                        if (d1 < dist || dist == 0.0D)
+                        {
+                            entity = current;
+                            dist = d1;
+                        }
                     }
                 }
             }
-        }
 
-        if (entity != null)
-        {
-            result = new RayTraceResult(entity);
-        }
-
-        /* Update position */
-        this.posX += this.motionX;
-        this.posY += this.motionY;
-        this.posZ += this.motionZ;
-
-        if (result != null)
-        {
-            if (result.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(result.getBlockPos()).getBlock() == Blocks.PORTAL)
+            if (entity != null)
             {
-                this.setPortal(result.getBlockPos());
+                result = new RayTraceResult(entity);
+            }
+
+            /* Update position */
+            this.posX += this.motionX;
+            this.posY += this.motionY;
+            this.posZ += this.motionZ;
+
+            if (result != null)
+            {
+                if (result.typeOfHit == RayTraceResult.Type.BLOCK && this.world.getBlockState(result.getBlockPos()).getBlock() == Blocks.PORTAL)
+                {
+                    this.setPortal(result.getBlockPos());
+                }
+                else
+                {
+                    if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                }
+            }
+
+            /* Update position, motion and rotation */
+            float distance = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
+            this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
+
+            for (this.rotationPitch = (float) (MathHelper.atan2(this.motionY, distance) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+            {}
+
+            while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
+                this.prevRotationPitch += 360.0F;
+            while (this.rotationYaw - this.prevRotationYaw < -180.0F)
+                this.prevRotationYaw -= 360.0F;
+            while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
+                this.prevRotationYaw += 360.0F;
+
+            this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
+            this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
+            float friction = this.props == null ? 1 : this.props.friction;
+
+            if (this.isInWater())
+            {
+                for (int j = 0; j < 4; ++j)
+                {
+                    this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
+                }
+
+                friction *= 0.8F;
+            }
+
+            if (this.onGround)
+            {
+                friction *= 0.9F;
+            }
+
+            this.motionX *= friction;
+            this.motionY *= friction;
+            this.motionZ *= friction;
+
+            if (!this.hasNoGravity())
+            {
+                this.motionY -= this.getGravityVelocity();
+            }
+
+            if (this.hits > this.props.hits)
+            {
+                this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
             }
             else
             {
-                if (!net.minecraftforge.common.ForgeHooks.onThrowableImpact(this, result)) this.onImpact(result);
+                this.setPosition(this.posX, this.posY, this.posZ);
             }
-        }
-
-        /* Update position, motion and rotation */
-        float distance = MathHelper.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-        this.rotationYaw = (float) (MathHelper.atan2(this.motionX, this.motionZ) * (180D / Math.PI));
-
-        for (this.rotationPitch = (float) (MathHelper.atan2(this.motionY, distance) * (180D / Math.PI)); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
-        {}
-
-        while (this.rotationPitch - this.prevRotationPitch >= 180.0F)
-            this.prevRotationPitch += 360.0F;
-        while (this.rotationYaw - this.prevRotationYaw < -180.0F)
-            this.prevRotationYaw -= 360.0F;
-        while (this.rotationYaw - this.prevRotationYaw >= 180.0F)
-            this.prevRotationYaw += 360.0F;
-
-        this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
-        this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-        float friction = this.props == null ? 1 : this.props.friction;
-
-        if (this.isInWater())
-        {
-            for (int j = 0; j < 4; ++j)
-            {
-                this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * 0.25D, this.posY - this.motionY * 0.25D, this.posZ - this.motionZ * 0.25D, this.motionX, this.motionY, this.motionZ, new int[0]);
-            }
-
-            friction *= 0.8F;
-        }
-
-        if (this.onGround)
-        {
-            friction *= 0.9F;
-        }
-
-        this.motionX *= friction;
-        this.motionY *= friction;
-        this.motionZ *= friction;
-
-        if (!this.hasNoGravity())
-        {
-            this.motionY -= this.getGravityVelocity();
-        }
-
-        if (this.hits > this.props.hits)
-        {
-            this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        }
-        else
-        {
-            this.setPosition(this.posX, this.posY, this.posZ);
         }
 
         this.updateProjectile();
@@ -269,6 +274,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     protected void onImpact(RayTraceResult result)
     {
+        if (this.stuck)
+        {
+            return;
+        }
+
         if (this.props != null && this.timer >= 2)
         {
             boolean shouldDie = this.props.vanish && this.hits >= this.props.hits;
@@ -276,15 +286,29 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             if (result.typeOfHit == Type.BLOCK)
             {
                 Axis axis = result.sideHit.getAxis();
-                float factor = this.props.bounce && this.hits <= this.props.hits ? -1 : 0;
+                float factor = (this.props.bounce && this.hits <= this.props.hits ? -1 : 0);
 
                 if (axis == Axis.X) this.motionX *= factor;
                 if (axis == Axis.Y) this.motionY *= factor;
                 if (axis == Axis.Z) this.motionZ *= factor;
 
+                this.motionX *= this.props.bounceFactor;
+                this.motionY *= this.props.bounceFactor;
+                this.motionZ *= this.props.bounceFactor;
+
                 this.posX = result.hitVec.xCoord + this.width / 2 * result.sideHit.getFrontOffsetX();
                 this.posY = result.hitVec.yCoord - this.height * (result.sideHit == EnumFacing.DOWN ? 1 : 0);
                 this.posZ = result.hitVec.zCoord + this.width / 2 * result.sideHit.getFrontOffsetZ();
+
+                if (this.props.sticks)
+                {
+                    this.stuck = true;
+
+                    if (!this.world.isRemote)
+                    {
+                        Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
+                    }
+                }
             }
 
             if (!this.world.isRemote)
@@ -400,6 +424,11 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
     {
+        if (this.stuck)
+        {
+            return;
+        }
+
         double dx = this.posX - x;
         double dy = this.posY - y;
         double dz = this.posZ - z;

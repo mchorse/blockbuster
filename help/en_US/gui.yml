@@ -348,8 +348,10 @@ blockbuster.gui:
         impact_command: Command on impact
         vanish: Vanish # or Spanish
         bounce: Bounce
+        sticks: Sticks
         hits: Hits
         damage: Damage
+        bounce_factor: Factor
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations

@@ -75,8 +75,10 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement impactDelay;
     public GuiButtonElement<GuiCheckBox> vanish;
     public GuiButtonElement<GuiCheckBox> bounce;
+    public GuiButtonElement<GuiCheckBox> sticks;
     public GuiTrackpadElement hits;
     public GuiTrackpadElement damage;
+    public GuiTrackpadElement bounceFactor;
 
     /* Transforms */
     public GuiElement transformOptions;
@@ -186,20 +188,24 @@ public class GuiGun extends GuiBase
         this.impactCommand = new GuiTextElement(mc, 10000, (value) -> this.props.impactCommand = value);
         this.vanish = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.vanish"), false, (b) -> this.props.vanish = b.button.isChecked());
         this.bounce = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.bounce"), false, (b) -> this.props.bounce = b.button.isChecked());
+        this.sticks = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.gun.sticks"), false, (b) -> this.props.sticks = b.button.isChecked());
         this.hits = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.hits"), (value) -> this.props.hits = value.intValue());
         this.hits.setLimit(0, Integer.MAX_VALUE, true);
         this.damage = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.damage"), (value) -> this.props.damage = value);
+        this.bounceFactor = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.gun.bounce_factor"), (value) -> this.props.bounceFactor = value);
 
         this.pickImpact.resizer().parent(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
         this.impactCommand.resizer().parent(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
         this.impactDelay.resizer().relative(this.hits.resizer()).set(0, 25, 100, 20);
         this.vanish.resizer().relative(this.impactDelay.resizer()).set(0, 25, 100, 11);
         this.bounce.resizer().relative(this.vanish.resizer()).set(0, 16, 100, 11);
+        this.sticks.resizer().relative(this.bounceFactor.resizer()).set(0, 25, 100, 11);
         this.hits.resizer().relative(this.damage.resizer()).set(0, 25, 100, 20);
         this.damage.resizer().parent(area).set(0, 10, 100, 20).x(1, -110);
+        this.bounceFactor.resizer().relative(this.bounce.resizer()).set(0, 16, 100, 20);
 
-        this.impactOptions.children.add(this.pickImpact, this.impactCommand, this.impactDelay, this.vanish, this.bounce);
-        this.impactOptions.children.add(this.damage, this.hits);
+        this.impactOptions.children.add(this.pickImpact, this.impactCommand, this.impactDelay, this.vanish, this.bounce, this.sticks);
+        this.impactOptions.children.add(this.damage, this.hits, this.bounceFactor);
 
         /* Gun transforms */
         area = this.transformOptions.area;
@@ -244,8 +250,10 @@ public class GuiGun extends GuiBase
         this.impactDelay.setValue(this.props.impactDelay);
         this.vanish.button.setIsChecked(this.props.vanish);
         this.bounce.button.setIsChecked(this.props.bounce);
+        this.sticks.button.setIsChecked(this.props.sticks);
         this.hits.setValue(this.props.hits);
         this.damage.setValue(this.props.damage);
+        this.bounceFactor.setValue(this.props.bounceFactor);
 
         /* Gun transforms */
         this.gun.set(this.props.gunTransform);
