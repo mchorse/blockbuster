@@ -4,13 +4,14 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
-import mchorse.blockbuster.network.client.ClientHandlerGunInfo;
-import mchorse.blockbuster.network.client.ClientHandlerGunProjectile;
-import mchorse.blockbuster.network.client.ClientHandlerGunShot;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.ClientHandlerStructureList;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
@@ -34,6 +35,7 @@ import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
+import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -163,6 +165,7 @@ public class Dispatcher
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
+            register(PacketGunStuck.class, ClientHandlerGunStuck.class, Side.CLIENT);
 
             /* Structure morph */
             register(PacketStructure.class, ClientHandlerStructure.class, Side.CLIENT);
