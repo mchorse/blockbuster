@@ -171,16 +171,34 @@ public class OBJParser
             String first = tokens[0];
 
             /* Blender uses "o" for objects, while C4D uses "g" */
-            if (first.equals("o") || first.equals("g"))
+            if ((first.equals("o") || first.equals("g")) && tokens.length >= 2)
             {
-                mesh = new OBJDataMesh();
-                mesh.name = tokens[1];
+                String name = tokens[1];
 
-                group = new OBJDataGroup();
-                mesh.groups.add(group);
+                mesh = null;
+
+                for (OBJDataMesh data : this.objects)
+                {
+                    if (data.name.equals(name))
+                    {
+                        mesh = data;
+
+                        break;
+                    }
+                }
+
+                if (mesh == null)
+                {
+                    mesh = new OBJDataMesh();
+                    mesh.name = name;
+
+                    group = new OBJDataGroup();
+                    mesh.groups.add(group);
+
+                    this.objects.add(mesh);
+                }
+
                 firstUse = true;
-
-                this.objects.add(mesh);
             }
 
             /* Vertices */
