@@ -135,7 +135,7 @@ public class ActorsPack implements IResourcePack
         {}
 
         /* Make it a black pixel in case it fails */
-        return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/entity/black.png");
+        return ActorsPack.class.getResourceAsStream("/assets/blockbuster/textures/blocks/black.png");
     }
 
     /**
