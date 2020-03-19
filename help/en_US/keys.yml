@@ -7,6 +7,7 @@ key:
         dashboard: Dashboard
         model_editor: Model Editor
         marker: Tick marker
-        plause_director: Play/pause director
+        plause_director: Play/stop director
         record_director: Record director replay
+        pause_director: Pause director replay
         open_gun: Configure gun
