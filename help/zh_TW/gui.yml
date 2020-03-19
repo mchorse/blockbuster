@@ -355,9 +355,11 @@ blockbuster.gui:
         impact_delay: 撞擊的延遲
         impact_command: 撞擊時刻執行以下命令
         vanish: 消失 # or Spanish
+        sticks: 粘黏
         bounce: 反彈
         hits: 反彈次數
         damage: 傷害
+        bounce_factor: 因素
         
         gun_transforms: 槍的變換
         projectile_transforms: 炮彈的變換
