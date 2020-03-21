@@ -350,6 +350,7 @@ blockbuster.gui:
         bounce: Підстрибування
         hits: Стрибків
         damage: Пошкодження
+        bounce_factor: Фактор
         
         gun_transforms: Трансформації зброї
         projectile_transforms: Трансформації снаряду
