@@ -1,37 +1,37 @@
 blockbuster.config.comments:
     general:
-        show_first_time_modal: Whether first time modal should be shown in the dashboard
-        disable_teleport_playback_button: Is teleport feature disabled when you sneak and using the playback button?
-        extra_wubs: This option does literally nothing. Or maybe it does...?
-        auto_refresh_models: Refresh models and skins when entering in Metamorph or Blockbuster GUIs?
-        debug_playback_ticks: Write ticks in the log during director block recording
-        green_screen_sky: Makes the sky solid color for chroma keying purposes
-        green_screen_sky_color: Specifies the sky color for chroma sky feature
-        url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
+        show_first_time_modal: Чи показувати заставку першого запуску на головній панелі
+        disable_teleport_playback_button: Чи вмикнена телепортація до блоку режисера при використанні підкрадання та кнопки відтворення?
+        extra_wubs: Цей параметр абсолютно нічого не робить. Хіба що...?
+        auto_refresh_models: Оновлювати моделі та скіни при вході до меню Блокбастера та Метаморфа?
+        debug_playback_ticks: Записувати тіки у логах під час записування блоку режисера
+        green_screen_sky: Робить небо єдиного кольору з метою подальшого хромакеїнга
+        green_screen_sky_color: Вказує колір неба для пункту з хроманебом
+        url_skins_sync_download: Синхронне завантаження скінів за посиланнями. Тоді скіни за покликанням будуть мати об'ємний 3D-шар, але гра буде підвисати, щоб завантажити скіни
 
     model_block:
-        model_block_disable_rendering: Whether model blocks should be rendered
-        model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
+        model_block_disable_rendering: Чи повинні блоки-моделі відображатися
+        model_block_disable_item_rendering: Чи повинні блоки-моделі не відображатися у слотах рук (хоча кому це в біса треба?)
 
     recording:
-        recording_countdown: Recording countdown (in seconds)
-        recording_delay: Frame delay for recording
-        record_unload_time: How long does it take to unload a record (in ticks)
-        record_unload: Enable automatic record unloading?
-        record_sync_rate: How often a recording is going to synchronize with the server?
-        record_attack_on_swipe: Does attack action get recorded with swipe action?
-        record_commands: Does command action get recorded during recording?
-        record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)
+        recording_countdown: Зворотній відлік записування (у секундах)
+        recording_delay: Затримка кадрів перед записуванням
+        record_unload_time: Скільки тіків необхідно, аби вивантажити запис
+        record_unload: Вмикнути автоматичне вивантаження записів?
+        record_sync_rate: Як часто запис буде синхронізуватися з сервером?
+        record_attack_on_swipe: Чи додається дія атаки до виконання дії змаху?
+        record_commands: Чи записуються дії команд під час процесу записування?
+        record_chat_prefix: Префікс, котрий буде ставитися до повідомлення, створенного внаслідок виконання дії чату (підтримується також картка %NAME% для назви поточного актору)
 
     actor:
-        actor_fall_damage: Do actors receive fall damage?
-        actor_tracking_range: How far actors are tracked? Requires restart of the game.
-        actor_rendering_range: How far actors are seen?
-        actor_always_render: Make actor always rendered, no matter where it is or its hitbox size
-        actor_always_render_names: Enable unconditional actor nametag rendering
-        actor_swish_swipe: Do actors emit swish sound when swiping?
-        actor_y: Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp)
+        actor_fall_damage: Чи отримують актори пошкодження від падіння?
+        actor_tracking_range: Наскільки далеко відстежуються актори? Змінення параметру набере чинності тільки після перезапуску гри.
+        actor_rendering_range: Наскільки далеко видно акторів?
+        actor_always_render: Змусити акторів відображатися завжди, незалежно від їхнього місцезнаходження або розмірів хітбоксу
+        actor_always_render_names: Вмикає безумовне відображення тегу назви актора
+        actor_swish_swipe: Чи випускають актори звук змаху при ударі?
+        actor_y: Змушує актора використовувати правильне значення вісі Y (лагодить проблеми з політом у воздусі та стрибками, але робить рух за віссю Y різким)
 
     damage_control:
-        damage_control: Whether damage control is enabled
-        damage_control_distance: Radius of effect for damage control
+        damage_control: Чи вмикнено контроль пошкоджень
+        damage_control_distance: Відстань ефекту контроля пошкоджень
