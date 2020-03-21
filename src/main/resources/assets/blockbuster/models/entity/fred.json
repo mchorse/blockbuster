@@ -138,8 +138,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -183,8 +182,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -231,8 +229,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -283,8 +280,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -331,8 +327,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -380,8 +375,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -424,11 +418,10 @@
                     "translate": [ 2.0, -12.0, 0.0 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0.0, -6.0, 0.0 ]
+                    "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -450,7 +443,7 @@
                     "translate": [ -2.0, -12.0, 0.0 ]
                 },
                 "right_legwear": {
-                    "translate": [ 0.0, -4.0, 0.0 ]
+                    "translate": [ 0.0, -6.0, 0.0 ]
                 },
                 "anchor": {
                     "translate": [ 0.0, 2.0, 0.0 ],
@@ -476,8 +469,7 @@
                     "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -521,11 +513,10 @@
                     "translate": [ 2.0, -12.0, 0.0 ]
                 },
                 "right_armwear": {
-                    "translate": [ 0.0, -6.0, 0.0 ]
+                    "translate": [ 0.0, -4.0, 0.0 ]
                 },
                 "outer": {
-                    "translate": [ 0.0, 4.0, 0.0 ],
-                    "scale": [ 1.1, 1.1, 1.1 ]
+                    "translate": [ 0.0, 4.0, 0.0 ]
                 },
                 "left_legwear": {
                     "translate": [ 0.0, -6.0, 0.0 ]
@@ -548,7 +539,7 @@
                     "translate": [ -2.0, -12.0, 0.0 ]
                 },
                 "right_legwear": {
-                    "translate": [ 0.0, -4.0, 0.0 ]
+                    "translate": [ 0.0, -6.0, 0.0 ]
                 },
                 "anchor": {
                     "translate": [ 0.0, 2.0, 0.0 ],
