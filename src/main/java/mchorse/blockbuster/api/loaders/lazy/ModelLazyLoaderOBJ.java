@@ -37,7 +37,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 	@Override
 	public int getFilenameHash()
 	{
-		return (this.model.getName() + "/" + this.obj.getName() + "/" + this.mtl.getName()).hashCode();
+		return (this.getName(this.model) + ":" + this.getName(this.obj) + ":" + this.getName(this.mtl)).hashCode();
 	}
 
 	@Override

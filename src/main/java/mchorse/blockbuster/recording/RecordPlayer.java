@@ -174,7 +174,11 @@ public class RecordPlayer
      */
     public void resume(int tick, Replay replay)
     {
-        this.tick = tick;
+        if (tick >= 0)
+        {
+            this.tick = tick;
+        }
+
         this.playing = true;
         this.actor.noClip = false;
 

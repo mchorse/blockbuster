@@ -34,7 +34,7 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	@Override
 	public int getFilenameHash()
 	{
-		return (this.model.getName() + "/" + this.vox.getName()).hashCode();
+		return (this.getName(this.model) + ":" + this.getName(this.vox)).hashCode();
 	}
 
 	@Override
