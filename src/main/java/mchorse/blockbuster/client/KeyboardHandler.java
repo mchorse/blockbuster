@@ -32,6 +32,7 @@ public class KeyboardHandler
     private KeyBinding cameraMarker;
     private KeyBinding plauseDirector;
     private KeyBinding recordDirector;
+    private KeyBinding pauseDirector;
     private KeyBinding openGun;
 
     /**
@@ -48,6 +49,7 @@ public class KeyboardHandler
         this.modelEditor = new KeyBinding("key.blockbuster.model_editor", Keyboard.KEY_NONE, category);
         this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
         this.recordDirector = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
+        this.pauseDirector = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
         this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_NONE, category);
 
         ClientRegistry.registerKeyBinding(this.dashboard);
@@ -55,6 +57,7 @@ public class KeyboardHandler
         ClientRegistry.registerKeyBinding(this.modelEditor);
         ClientRegistry.registerKeyBinding(this.plauseDirector);
         ClientRegistry.registerKeyBinding(this.recordDirector);
+        ClientRegistry.registerKeyBinding(this.pauseDirector);
         ClientRegistry.registerKeyBinding(this.openGun);
     }
 
@@ -110,6 +113,16 @@ public class KeyboardHandler
             if (dash != null && dash.directorPanel != null)
             {
                 dash.directorPanel.record();
+            }
+        }
+
+        if (this.pauseDirector.isPressed())
+        {
+            GuiDashboard dash = ClientProxy.dashboard;
+
+            if (dash != null && dash.directorPanel != null)
+            {
+                dash.directorPanel.pause();
             }
         }
 
