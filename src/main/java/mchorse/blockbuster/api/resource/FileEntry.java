@@ -31,7 +31,7 @@ public class FileEntry implements IResourceEntry
     @Override
     public boolean exists()
     {
-        return this.file == null ? false : this.file.exists();
+        return this.file != null && this.file.exists();
     }
 
     @Override

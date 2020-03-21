@@ -48,7 +48,25 @@ public class VoxDocument
 		Stack<Vector3f> vecStack = new Stack<Vector3f>();
 
 		this.index = 0;
-		this.generateNodes((VoxTransform) this.nodes.get(0), nodes, matStack, vecStack);
+
+		if (this.nodes.size() == 0)
+		{
+			/* Legacy mode */
+			Matrix3f identity = new Matrix3f();
+			identity.setIdentity();
+
+			for (Vox chunk : this.chunks)
+			{
+				Vector3f position = new Vector3f(0, 0, (chunk.z - 1) / 2);
+
+				nodes.add(new LimbNode(chunk, identity, position, this.index == 0 ? "vox" : "vox_" + this.index));
+				this.index ++;
+			}
+		}
+		else
+		{
+			this.generateNodes((VoxTransform) this.nodes.get(0), nodes, matStack, vecStack);
+		}
 
 		return nodes;
 	}
