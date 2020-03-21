@@ -348,6 +348,7 @@ blockbuster.gui:
         impact_command: Команда при зіткненні
         vanish: Зникнення # хуїкнення блять заїбався нахуй
         bounce: Підстрибування
+        sticks: Прилипання
         hits: Стрибків
         damage: Пошкодження
         bounce_factor: Фактор
