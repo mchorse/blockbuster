@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.common.item.ItemPlayback;
+import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.recording.scene.Scene;
@@ -626,13 +627,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
     public void plause()
     {
-        if (this.location.isDirector())
+        if (this.location.isDirector() || this.location.isScene())
         {
-            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.location.getPosition())));
-        }
-        else if (this.location.isScene())
-        {
-            Dispatcher.sendToServer(new PacketScenePlayback(new SceneLocation(this.location.getFilename())));
+            Dispatcher.sendToServer(new PacketScenePlayback(this.location));
         }
     }
 
@@ -644,12 +641,20 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             if (this.location.isDirector())
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.location.getPosition()), replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(this.location, replay.id));
             }
             else if (this.location.isScene())
             {
-                Dispatcher.sendToServer(new PacketSceneRecord(new SceneLocation(this.location.getFilename()), replay.id));
+                Dispatcher.sendToServer(new PacketSceneRecord(this.location, replay.id));
             }
         }
     }
+
+	public void pause()
+    {
+        if (this.location.isDirector() || this.location.isScene())
+        {
+            Dispatcher.sendToServer(new PacketScenePause(this.location));
+        }
+	}
 }
