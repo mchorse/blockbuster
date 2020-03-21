@@ -6,7 +6,7 @@ key:
         
         dashboard: Головна Панель
         model_editor: Редактор Моделей
-        marker: Маркер тиків
+        marker: Маркер тіків
         plause_director: Програти/зупинити блок режисера
         record_director: Записати відтворення до блоку режисера
         pause_director: Зупинити відтворення блоку режисера
