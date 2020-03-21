@@ -350,6 +350,7 @@ blockbuster.gui:
         bounce: Отскакивать
         hits: Отскоки
         damage: Урон
+        bounce_factor: Фактор
         
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда
