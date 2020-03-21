@@ -103,7 +103,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
     public int getMetaFromState(IBlockState state)
     {
         int meta = state.getValue(PLAYING) ? 0 : 1;
-        meta |= state.getValue(HIDDEN) ? 0b01 : 0;
+        meta |= state.getValue(HIDDEN) ? 0b10 : 0;
 
         return meta;
     }
@@ -111,7 +111,7 @@ public class BlockDirector extends Block implements ITileEntityProvider
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(PLAYING, (meta & 0b1) == 0b1).withProperty(HIDDEN, (meta & 0b01) == 0b01);
+        return this.getDefaultState().withProperty(PLAYING, (meta & 0b1) == 0b1).withProperty(HIDDEN, (meta & 0b10) == 0b10);
     }
 
     @Override
