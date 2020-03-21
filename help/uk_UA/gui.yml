@@ -1,0 +1,377 @@
+# GUI
+
+blockbuster.gui:
+    # General strings
+    done: Готово
+    next: Наступна
+    previous: Попередня
+    restore: Відновити
+    reset: Скинути
+    add: Додати
+    edit: Редагувати
+    remove: Видалити
+    record: Записати
+    pick: Вибрати морф
+    duplicate: Клонувати
+    search: Шукати
+    cancel: Відмінити
+    break: Зламати
+    select: Вибрати
+    ok: Ок
+    billboard: Дивитися на гравця
+
+    # First time module
+    first_time:
+        title: "Перший раз?"
+        welcome: "Ласкаво просимо до Блокбастеру!\n\nЯкщо ви користуєтеся цим модом уперше, то можливо вам варто поглянути на цикл {a}відеоуроків академії Блокбастера{r} на {c}YouTube{r}."
+        social: "Якщо у вас виникнуть якісь проблеми, то не соромтеся приєднатися до мого серверу у {6}Discord{r} за допомогою. Крім цього, ви також можете підписатися на мене у {b}Twitter{r}, там я пощу новини про оновлення своїх модів."
+
+    # Morphs popup strings
+    morphs:
+        acquire: "Придбати морф"
+        pose: Поза
+        sneak: Застосувати на підкрадання
+        reset: Скинути позу
+    
+    confirm:
+        title: Підтвердження Знесення Блоку Режисера
+        description: Блок режисеру у точці ({7}%s{f}, {7}%s{f}, {7}%s{f}) загалом містить у стобі {7}%s{f} відтворень. Ви впевнені у том, що хочете знести цей блок режисера? Відтворення у ньому буде {c}видалено{r} {l}назавжди{r}.
+    
+    dashboard: 
+        main: Головна панель
+        director: Блок режисера
+        model: Блок-модель
+        model_editor: Редактор моделей
+        player_recording: Редактор записів гравця
+        texture: Менеджер текстур
+    
+    # Main page of dashboard
+    main:
+        resources: Ресурси
+        wiki: Вікі
+        discord: Діскорд
+        tutorial: Відеоуроки
+        models: Відкрити моделі...
+        
+        options: Налаштування
+    
+    # Director block GUI strings
+    director:
+        title: Блоки режисера
+        config: Налаштування блока режисера
+        convert: Перетворити блок режисера на сцену
+        convert_modal: "Впишіть назву для сцени:"
+        not_selected: Виберіть блок режисера...
+        no_replays: Створити відтворення...
+    
+        display_title: Відображати назву
+        start_command: Команда на початку
+        stop_command: Команда у кінці
+        loops: Зациклюється
+        disable_states: Вимкнути стани
+        hide: Ховати протягом відтворення
+        
+        id: ID Запису
+        name: Іменний тег
+        invincible: Невразливий
+        invisible: Невидимий
+        enabled: Вмикнений
+        fake_player: Підробний гравець
+        tp_back: Телепортація назад
+        tp_back_tooltip: Телепортуватися назад до початкової позиції
+        health: Здоров'я
+        edit_record: Редагувати запис
+        update_data: Оновити дані
+        update_data_tooltip: Оновлює дані гравця у файлі запису
+        rename_prefix: Перейменувати префікс
+        rename_prefix_tooltip: Перейменовує ID запису, додаючи до нього новий префікс
+        rename_prefix_popup: "Впишіть новий префікс:"
+
+        attach: Прикріпити
+        attach_tooltip: Прикріпити цей блок режисера/сцену до кнопки відтворення
+
+    scenes:
+        title: Сцени
+
+        add_modal: "Впишіть назву для нової сцени:"
+        dupe_modal: "Впишіть назву для клонованої сцени:"
+        rename_modal: "Впишіть нову назву для чинної сцени:"
+        remove_modal: "Ви впевнені, що хочете видалити цю сцену?"
+    
+    # Actor configuration GUI strings
+    actor:
+        title: Налаштування Актора
+        
+        default: За замовченням
+        name: Ім'я
+        filename: ID Запису
+        invincible: Можна вбити?
+        invisible: Є видимим?
+        attached: Прив'язано до актора
+        yaw: Рискання 
+        pitch: Тангаж 
+    
+    # Model block GUI strings
+    model_block:
+        title: Блоки-моделі
+        not_selected: Виберіть блок-модель...
+        
+        x: X
+        "y": "Y"
+        z: Z
+        yaw: Рискання
+        pitch: Тангаж
+        body: Рискання тіла
+        one: Єдиний
+        one_tooltip: Єдиний параметр розміру
+        shadow: Тінь
+        global: Глобальний
+        global_tooltip: Вмикає видимість незалежно від відстані відображення
+        enabled: Вмикнений
+        enabled_tooltip: Вмикає відображення блока-моделі
+        look: Повернути до гравця
+        
+        entity: Істота
+        translate: Переміщення
+        rotate: Обертання
+        scale: Розмір
+    
+    # Player recording editor GUI strings
+    record_editor:
+        title: Записи
+        directors: Записи режисера
+        not_selected: Виберіть запис гравця...
+        action: дія
+        
+        drop: Кинути блок
+        damage: Пошкодження
+        progress: Прогрес
+        mounting: Їхати верхи
+        meta: Метазначення
+        arrow_charge: Випустити стрілу
+        no_fields: У цієї дії відсутні поля, яким можна задати значення...
+        
+        actions:
+            chat: 
+                title: Чат
+                desc: Ця діє відправляє до чату повідомлення
+            swipe: 
+                title: Помах
+                desc: Ця дія змушує актора виконати помах головною рукою
+            drop:
+                title: Кинути
+                desc: Ця дія змушує актора кинути предмет (як при натисненні клавіши Q)
+            equip:
+                title: Екіпірувати
+                desc: Екіпірує предмет до слоту рук або броні
+                
+                none: Відсутній
+                main_hand: Головна рука
+                feet: Стопи
+                legs: Рейтузи
+                chest: Груди
+                head: Голова
+                off_hand: Без рук
+            shoot_arrow:
+                title: Випустити стрілу
+                desc: Випускає звичайну стрілу з заданою силою
+            place_block:
+                title: Поставити блок
+                desc: Ставить указаний блок на задану позицію блока
+            mounting:
+                title: Верхи
+                desc: Забирається верхи на істоту навпроти або спішується
+            interact_block:
+                title: Взаємодіяти з блоком
+                desc: Змушує актора взаємодіяти з блоком
+            break_block:
+                title: Зламати блок
+                desc: Ламає блок у заданій точці
+            morph:
+                title: Морф
+                desc: Перетворює актора на вибраний морф
+            attack:
+                title: Атакувати
+                desc: Наносить пошкодження істоті навпроти актора (якщо ви хочете застосовувати цю дію до інших гравців, переконайтеся, що у вас стоїть складність інша за мирну) 
+            damage:
+                title: Пошкодження
+                desc: Наносить пошкодження власне актору
+            morph_action:
+                title: Дія морфа
+                desc: Використовує дію морфа, якщо актор знаходиться у морфі
+            command:
+                title: Команда
+                desc: Виконує команду за допомогою актора
+            break_animation:
+                title: Анімація ламання блока
+                desc: Виконує анімацію ламання блока (тріщини) у заданій точці
+            use_item:
+                title: Використання предмету
+                desc: Використовує предмет, який актор у даний момент тримає у руці
+            use_item_block:
+                title: Використання предмету на блоці
+                desc: Використовує предмет, який актор у даний момент тримає у заданій руці на заданій стороні блока та ветором удару
+                
+                down: Низ
+                up: Верх
+                north: Північ
+                south: Південь
+                west: Захід
+                east: Схід
+    
+    # Playback GUI
+    playback:
+        title: Налаштування відтворень
+        camera_mode: Режим камери
+        profile: Назва файлу профіля
+
+        nothing: Нічого не робити
+        play: Тільки програти
+        load_profile: Завантажити та програти
+
+    builder:
+        pose_editor: Редактор поз
+        body_part: Частини тіла
+        materials: Матеріали
+        nbt: NBT
+
+        pick_model: Вибрати модель
+        pick_skin: Вибрати скін
+        pose_sneak: Поза підкрадання
+        pose: Поза
+        
+        obj_materials: OBJ матеріали
+        pick_texture: Вибрати текстуру
+        
+        limbs: Кінцівки
+        body_parts: Частини тіла
+        use_target: Використовувати як ціль
+        
+        animates: Анімується
+        ignored: Ігнорується
+        animation_duration: Тривалість
+        pick_interpolation: Вибрати інтерполяцію
+
+    image:
+        crop: Обрізати
+        left: Зліва
+        right: Справа
+        top: Зверху
+        bottom: Знизу
+        dimensions: "Розмір (%spx, %spx)"
+
+    sequencer:
+        duration: Тривалість
+        random: Випадковий
+        reverse: Зворотній хід
+        no_morph: (морф выдсутній)
+        morphs: Морфи
+        random_order: Випадковий порядок
+
+    particle:
+        tooltip: Основні властивості
+        morph: Властивості морфа
+        vanilla: Властивості ваніли
+        common: Загальні properties
+
+        type: Тип частинок
+        types:
+            vanilla: Ванільні
+            morph: Морф
+
+        pick_type: Вибрати тип
+        pick_type_tooltip: Вибрати тип руху морфа
+
+        particle: Вибрати частинки
+        frequency: Частота
+        dx: Зміщення X
+        dy: Зміщення Y
+        dz: Зміщення Z
+        speed: Швидкість
+        count: Кількість
+        args: Додаткові аргументи
+
+        fade: Зникнення
+        maximum: Максимум
+        cap: Місткість
+
+    snowstorm:
+        tooltip: Панель морфів Snowstorm
+        local: Відображення у локальному просторі
+
+    record_morph:
+        random_skip: Випадковий пропуск
+
+    texture:
+        title: Менеджер текстур
+        subtitle: Цей GUI дозволяє вам переглядати та керувати текстурами, які Майнкрафт завантажив під час своєї роботи
+        linear: Лінейна
+        linear_tooltip: Коли вмикнено, текстури віглядають більш гладко
+        mipmap: Міпмапа
+        mipmap_tooltip: Коли вмикнено, все, що знаходиться далеко виглядає менш шумно
+        replace: Замінити
+        replace_modal: "Впишіть директорію {l}вже завантаженної{r} текстури, котру ви хочете замінити на:"
+
+    gun:
+        title: Налаштування зброї
+        fire_props: Властивості пострілу
+        projectile_props: Властивості снарядів
+        impact_props: Властивості зіткнення
+        transforms: Трансформації
+        
+        default_morph: Морф за замовченням
+        fire_morph: Морф при пострілі
+        fire_command: Команда при пострілі
+        delay: Затримка
+        projectiles: Снаряди
+        scatter: Розкид
+        launch: Запустити гравця
+        
+        projectile_morph: Морф снаряда
+        tick_command: Команда у тіці
+        ticking: Тікінг
+        life_span: Тривалість життя
+        yaw: Рискання
+        pitch: Тангаж
+        sequencer: Секвенсер
+        random: Випадково
+        hitbox_x: Хітбокс X
+        hitbox_y: Хітбокс Y
+        speed: Швидкість
+        friction: Тертя
+        gravity: Гравітація
+        fade_in: Появлення
+        fade_out: FЗникнення
+
+        impact_morph: Морф при зіткненні
+        impact_delay: Затримка зіткнення
+        impact_command: Команда при зіткненні
+        vanish: Зникнення # хуїкнення блять заїбався нахуй
+        bounce: Підстрибування
+        sticks: Прилипання
+        hits: Стрибків
+        damage: Пошкодження
+        bounce_factor: Фактор
+        
+        gun_transforms: Трансформації зброї
+        projectile_transforms: Трансформації снаряду
+
+    interpolations:
+        linear: Лінійна
+        quad_in: Квадратичне Прискорення
+        quad_out: Квадратичне Уповільнення
+        quad_inout: Квадратичне Гальмування
+        cubic_in: Кубічне Прискорення
+        cubic_out: Кубічне Уповільнення
+        cubic_inout: Кубічне Гальмування
+        exp_in: Експоненційне Прискорення
+        exp_out: Експоненційне Уповільнення
+        exp_inout: Експоненційне Гальмування
+
+    aperture:
+        config:
+            title: Режисер
+            
+            reload: Перезавантажити акторів
+            actions: Попередньо переглянути дії
+            reload_scene: Перезавантажити сцену

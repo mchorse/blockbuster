@@ -527,6 +527,19 @@ public class Scene
 		}
 	}
 
+	public boolean isPlaying()
+	{
+		for (RecordPlayer player : this.actors.values())
+		{
+			if (player.playing)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Pause the director block playback (basically, pause all actors)
 	 */
