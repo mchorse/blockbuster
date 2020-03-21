@@ -10,7 +10,7 @@ public class ServerHandlerScenePause extends ServerMessageHandler<PacketScenePau
 	@Override
 	public void run(EntityPlayerMP player, PacketScenePause packet)
 	{
-		Scene scene = packet.get(player.worldObj);
+		Scene scene = packet.get(player.world);
 
 		if (!scene.isPlaying())
 		{
