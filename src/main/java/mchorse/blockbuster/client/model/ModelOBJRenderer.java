@@ -5,6 +5,7 @@ import java.util.Map;
 
 import mchorse.blockbuster.api.formats.obj.MeshOBJ;
 import mchorse.blockbuster.api.formats.obj.MeshesOBJ;
+import mchorse.blockbuster.client.textures.GifTexture;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.api.ModelLimb;
@@ -234,7 +235,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     texture = this.materials.get(list.material.name);
                 }
 
-                Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+                GifTexture.bindTexture(texture);
             }
 
             GL11.glCallList(list.id);

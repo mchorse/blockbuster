@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -33,6 +34,8 @@ import java.util.Objects;
  */
 public class ImageMorph extends AbstractMorph
 {
+    public static final Matrix4f matrix = new Matrix4f();
+
     /**
      * Model view matrix buffer
      */
@@ -125,15 +128,7 @@ public class ImageMorph extends AbstractMorph
         if (this.billboard)
         {
             /* Get matrix */
-            buffer.clear();
-            GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
-            buffer.get(floats);
-
-            Matrix4f matrix4f = new Matrix4f();
-            matrix4f.setIdentity();
-            matrix4f.set(floats);
-            matrix4f.transpose();
-
+            Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
             Vector4f zero = new Vector4f(0, 0, 0, 1);
 
             matrix4f.transform(zero);
@@ -141,27 +136,7 @@ public class ImageMorph extends AbstractMorph
             matrix4f.setTranslation(new Vector3f(zero.x, zero.y, zero.z));
             matrix4f.transpose();
 
-            floats[0] = matrix4f.m00;
-            floats[1] = matrix4f.m01;
-            floats[2] = matrix4f.m02;
-            floats[3] = matrix4f.m03;
-            floats[4] = matrix4f.m10;
-            floats[5] = matrix4f.m11;
-            floats[6] = matrix4f.m12;
-            floats[7] = matrix4f.m13;
-            floats[8] = matrix4f.m20;
-            floats[9] = matrix4f.m21;
-            floats[10] = matrix4f.m22;
-            floats[11] = matrix4f.m23;
-            floats[12] = matrix4f.m30;
-            floats[13] = matrix4f.m31;
-            floats[14] = matrix4f.m32;
-            floats[15] = matrix4f.m33;
-
-            buffer.clear();
-            buffer.put(floats);
-            buffer.rewind();
-            GL11.glLoadMatrix(buffer);
+            MatrixUtils.loadModelView(matrix4f);
 
             GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);

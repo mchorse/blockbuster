@@ -469,7 +469,7 @@ public class ActionHandler
         IRecording recording = Recording.get(player);
         RecordPlayer record = recording.getRecordPlayer();
 
-        if (record != null && record.playing)
+        if (record != null)
         {
             record.next();
 
