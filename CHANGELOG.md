@@ -2,6 +2,31 @@
 
 Blockbuster's change log.
 
+## Version 1.6.6
+
+This is another patch update which fixes lots of bugs. Beside bug fixes, there are also new BB gun options which allows for a better projectile configuration.
+
+**Compatible** with McLib `1.0.4`, Metamorph `1.1.10` and Aperture `1.3.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added an ability to use decimals for countdown
+* Added BB gun sticking option
+* Added BB gun bounce factor option
+* Added default variant of image morph
+* Added pausing keybind to playing keybind (suggested by SillySheep)
+* Added pick skin button in the model editor
+* Changed recording countdown to `1.5` seconds by default
+* Changed places pick skin and pick model (suggested by Tossler)
+* Fixed a crash with unknown action type (reported by zoombie)
+* Fixed model files not being copied over (reported by Sbriser)
+* Fixed player recordings being unloaded during camera editor (reported by Koki)
+* Fixed materials not supporting GIF textures (reported by SillySheep)
+* Fixed OBJ meshes with the same name not getting merged into single mesh
+* Fixed sequencer morph merging when they're the same (doesn't work in some cases due to Metamorph's code)
+* Fixed lying pose has incorrect Y position for \*wears (reported by Tossler)
+* Fixed old `vox` models that don't have the scene graph to get loaded (reported by Mayd and Murply)
+* Fixed director block's block morph not appearing correctly
+* Removed old commands (`/model texture` and `/model replace_texture`)
+
 ## Version 1.6.5
 
 This is a little update features two neat features, and mostly bug fixes. A couple of things to note about this update:
