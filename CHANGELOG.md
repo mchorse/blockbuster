@@ -4,10 +4,11 @@ Blockbuster's change log.
 
 ## Version 1.6.6
 
-This is another patch update which fixes lots of bugs. Beside bug fixes, there are also new BB gun options which allows for a better projectile configuration.
+This is another patch update which fixes lots of bugs. Beside bug fixes, there are also new BB gun options which allows for a better projectile configuration. Andruxioid also introduces Ukranian translation in this update!
 
 **Compatible** with McLib `1.0.4`, Metamorph `1.1.10` and Aperture `1.3.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
 
+* Added `ua_UA` (Ukranian) language localization (translated by Andruxioid)
 * Added an ability to use decimals for countdown
 * Added BB gun sticking option
 * Added BB gun bounce factor option
