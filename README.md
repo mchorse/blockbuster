@@ -17,9 +17,15 @@ If you're interested in any aspect of Minecraft machinimas, roleplays or animati
 
 Beside that, MachinimaHub has lots of Blockbuster users, so if you need any help feel free to hop on the server!
 
+## Install
+
+Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib), and [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
+
+After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong.
+
 ## FAQ
 
-**Q: Model block is invisible when I hold it in the hand. How to fix it? (1.12.2)**  
+**Q: Model block is invisible when I hold it in the hand. How to fix it? (1.12.2)**
 A: Looks like you're using Optifine D1 or below. Update Optifine to D2 or higher.
 
 ## Features
@@ -45,12 +51,6 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 * **Animated GIF support** – now you can put reaction and meme GIFs onto Blockbuster models and just as images. Credit goes to [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java).
 * **[Minema](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2790594-minema-unofficial-the-smooth-movie-recorder) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
 * **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) and [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww), respectively.
-
-## Install
-
-Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://minecraft.curseforge.com/projects/mchorses-mclib), and [Metamorph](https://minecraft.curseforge.com/projects/metamorph). Put it in minecraft's `mods` folder, and launch the game.
-
-After that, Blockbuster mod should be installed and will appear in Minecraft's mods menu. If Blockbuster didn't appear in the mods menu, then something went wrong.
 
 ## Videos
 
