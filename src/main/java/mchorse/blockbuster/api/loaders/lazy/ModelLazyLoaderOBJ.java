@@ -12,6 +12,8 @@ import mchorse.blockbuster.api.formats.obj.OBJParser;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -35,7 +37,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 	@Override
 	public int getFilenameHash()
 	{
-		return (this.model.getName() + "/" + this.obj.getName() + "/" + this.mtl.getName()).hashCode();
+		return (this.getName(this.model) + ":" + this.getName(this.obj) + ":" + this.getName(this.mtl)).hashCode();
 	}
 
 	@Override
@@ -171,5 +173,15 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 		}
 
 		return data;
+	}
+
+	@Override
+	public boolean copyFiles(File folder)
+	{
+		boolean skins = super.copyFiles(folder);
+		boolean obj = this.obj.copyTo(new File(folder, this.obj.getName()));
+		boolean mtl = this.mtl.copyTo(new File(folder, this.mtl.getName()));
+
+		return skins || obj || mtl;
 	}
 }

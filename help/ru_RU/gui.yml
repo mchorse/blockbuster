@@ -348,8 +348,10 @@ blockbuster.gui:
         impact_command: Команда при воздействии
         vanish: Исчезать #бляебать
         bounce: Отскакивать
+        sticks: Прилипать
         hits: Отскоки
         damage: Урон
+        bounce_factor: Фактор
         
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда

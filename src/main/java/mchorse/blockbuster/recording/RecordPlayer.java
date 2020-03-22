@@ -120,7 +120,12 @@ public class RecordPlayer
      */
     public void next(EntityLivingBase actor)
     {
-        if (this.isFinished() || --this.delay > 0)
+        if (this.record != null)
+        {
+            this.record.resetUnload();
+        }
+
+        if (!this.playing || this.isFinished() || --this.delay > 0)
         {
             return;
         }
@@ -169,7 +174,11 @@ public class RecordPlayer
      */
     public void resume(int tick, Replay replay)
     {
-        this.tick = tick;
+        if (tick >= 0)
+        {
+            this.tick = tick;
+        }
+
         this.playing = true;
         this.actor.noClip = false;
 

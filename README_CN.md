@@ -88,7 +88,7 @@ Blockbuster mod 提供许多很酷的功能让你创作 Minecraft 短片/角色�
 
 当你发现了一个 Bug，或者 mod 导致游戏崩溃，我希望你可以报告 bug 或崩溃在 [issue tracker](https://github.com/mchorse/blockbuster/issues/)，或私信在 [Twitter](https://twitter.com/McHorsy)。也请麻烦在 [pastebin](http://pastebin.com) 贴一份日志文件，并描述下发生的事情，及重现 bug 或崩溃的方法。谢谢！
 
-如果你没有英文交流能力，你也可以选择在 [中文用户QQ群(328380393)](https://jq.qq.com/?_wv=1027&k=584nNVF) 反馈你的 Bug 或崩溃，Mod 的翻译者将会协助你。
+如果你没有英文交流能力，你也可以选择在 [中文用户QQ群(328380393)](https://jq.qq.com/?_wv=1027&k=584nNVF) 反馈你的 Bug 或崩溃，Mod 的用户们将会互相协助。
 
 ## 许可证
 

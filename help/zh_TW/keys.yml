@@ -7,6 +7,7 @@ key:
         dashboard: 儀錶盤
         model_editor: 模型編輯器
         marker: tick 時間標記
-        plause_director: 播放/暫停回放
+        plause_director: 播放/停止回放
         record_director: 錄制回放
+        pause_director: 暫停回放
         open_gun: 配置槍

@@ -4,13 +4,14 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
-import mchorse.blockbuster.network.client.ClientHandlerGunInfo;
-import mchorse.blockbuster.network.client.ClientHandlerGunProjectile;
-import mchorse.blockbuster.network.client.ClientHandlerGunShot;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.ClientHandlerStructureList;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayerRecording;
@@ -34,6 +35,7 @@ import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
+import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.blockbuster.network.common.recording.PacketFramesChunk;
 import mchorse.blockbuster.network.common.recording.PacketFramesLoad;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
@@ -54,6 +56,7 @@ import mchorse.blockbuster.network.common.scene.PacketConfirmBreak;
 import mchorse.blockbuster.network.common.scene.PacketRequestScenes;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketSceneManage;
+import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
@@ -84,6 +87,7 @@ import mchorse.blockbuster.network.server.scene.ServerHandlerConfirmBreak;
 import mchorse.blockbuster.network.server.scene.ServerHandlerRequestScenes;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneCast;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneManage;
+import mchorse.blockbuster.network.server.scene.ServerHandlerScenePause;
 import mchorse.blockbuster.network.server.scene.ServerHandlerScenePlayback;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRecord;
 import mchorse.blockbuster.network.server.scene.ServerHandlerSceneRequestCast;
@@ -154,6 +158,7 @@ public class Dispatcher
             register(PacketScenePlay.class, ServerHandlerScenePlay.class, Side.SERVER);
             register(PacketScenePlayback.class, ServerHandlerScenePlayback.class, Side.SERVER);
             register(PacketSceneRecord.class, ServerHandlerSceneRecord.class, Side.SERVER);
+            register(PacketScenePause.class, ServerHandlerScenePause.class, Side.SERVER);
 
             /* Multiplayer */
             register(PacketReloadModels.class, ServerHandlerReloadModels.class, Side.SERVER);
@@ -163,6 +168,7 @@ public class Dispatcher
             register(PacketGunInfo.class, ClientHandlerGunInfo.class, Side.CLIENT);
             register(PacketGunShot.class, ClientHandlerGunShot.class, Side.CLIENT);
             register(PacketGunProjectile.class, ClientHandlerGunProjectile.class, Side.CLIENT);
+            register(PacketGunStuck.class, ClientHandlerGunStuck.class, Side.CLIENT);
 
             /* Structure morph */
             register(PacketStructure.class, ClientHandlerStructure.class, Side.CLIENT);

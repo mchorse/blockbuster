@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRender
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster.recording.RecordRecorder;
+import mchorse.blockbuster.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -176,5 +177,7 @@ public class RenderingHandler
         {
             texture.tick();
         }
+
+        MatrixUtils.releaseMatrix();
     }
 }

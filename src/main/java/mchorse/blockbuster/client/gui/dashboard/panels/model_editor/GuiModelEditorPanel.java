@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.CommonProxy;
@@ -26,6 +27,7 @@ import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
@@ -33,6 +35,7 @@ import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -59,6 +62,8 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
     private GuiButtonElement<GuiTextureButton> items;
     private GuiButtonElement<GuiCheckBox> hitbox;
     private GuiButtonElement<GuiCheckBox> looking;
+    private GuiButtonElement<GuiButton> pickSkin;
+    private GuiTexturePicker skinner;
 
     /* Limb props */
 
@@ -93,6 +98,26 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelRenderer.pickingCallback = (limb) -> this.setLimb(limb);
         this.modelRenderer.resizer().parent(this.area).w(1, 0).h(1, 0);
         this.children.add(this.modelRenderer);
+
+        this.pickSkin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
+        {
+            if (!this.skinner.isVisible())
+            {
+                this.skinner.fill(this.renderTexture);
+            }
+
+            this.skinner.toggleVisible();
+        });
+        this.skinner = new GuiTexturePicker(mc, (rl) ->
+        {
+            this.renderTexture = rl;
+            this.modelRenderer.texture = this.renderTexture;
+        });
+        this.skinner.setVisible(false);
+
+        this.pickSkin.resizer().set(0, 0, 70, 20).parent(this.area).x(1, -76).y(1, -23);
+        this.skinner.resizer().parent(this.area).w(1, 0).h(1, 0);
+        this.children.add(this.pickSkin);
 
         this.models = new GuiModelModels(mc, this);
         this.models.resizer().set(20, 0, 140, 0).h(1, -20).parent(this.area);
@@ -143,7 +168,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.hitbox.resizer().set(6, 0, 40, 11).parent(this.area).y(1, -16);
         this.looking.resizer().set(50, 0, 40, 11).relative(this.hitbox.resizer());
 
-        this.children.add(this.swipe, this.running, this.items, this.hitbox, this.looking);
+        this.children.add(this.swipe, this.running, this.items, this.hitbox, this.looking, this.skinner);
 
         this.setModel("steve");
     }
@@ -159,6 +184,12 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         {
             this.setModel("steve");
         }
+    }
+
+    @Override
+    public void disappear()
+    {
+        this.skinner.setVisible(false);
     }
 
     private void toggle(GuiElement main, GuiElement secondary)
@@ -204,14 +235,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             /* Copy OBJ files */
             if (loader != null)
             {
-                try
-                {
-                    /* TODO: reimplement */
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                loader.copyFiles(folder);
             }
 
             Blockbuster.proxy.models.pack.reload();
@@ -311,15 +335,15 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
             }
         }
 
-        this.modelRenderer.model = this.renderModel;
-        this.modelRenderer.texture = this.renderTexture;
-        this.modelRenderer.limb = this.limb;
-        this.modelRenderer.pose = this.pose;
-
         if (this.renderTexture == null)
         {
             this.renderTexture = RLUtils.create("blockbuster", "textures/entity/actor.png");
         }
+
+        this.modelRenderer.model = this.renderModel;
+        this.modelRenderer.texture = this.renderTexture;
+        this.modelRenderer.limb = this.limb;
+        this.modelRenderer.pose = this.pose;
 
         this.limbs.fillData(this.model);
 

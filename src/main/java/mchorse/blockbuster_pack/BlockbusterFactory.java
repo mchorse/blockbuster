@@ -223,6 +223,11 @@ public class BlockbusterFactory implements IMorphFactory
         }
 
         /* Image morphs */
+        ImageMorph image = new ImageMorph();
+
+        image.texture = RLUtils.create("blockbuster", "textures/gui/icon.png");
+        morphs.addMorphVariant(image.name, "blockbuster_extra", "", image);
+
         FolderEntry folder = ClientProxy.tree.getByPath("image/skins", null);
 
         if (folder != null)
@@ -231,8 +236,7 @@ public class BlockbusterFactory implements IMorphFactory
             {
                 if (skinEntry instanceof FileEntry)
                 {
-                    ImageMorph image = new ImageMorph();
-
+                    image = new ImageMorph();
                     image.texture = ((FileEntry) skinEntry).resource;
                     morphs.addMorphVariant(image.name, "blockbuster_extra", image.texture.getResourcePath(), image);
                 }

@@ -14,6 +14,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	@Override
 	public int getFilenameHash()
 	{
-		return (this.model.getName() + "/" + this.vox.getName()).hashCode();
+		return (this.getName(this.model) + ":" + this.getName(this.vox)).hashCode();
 	}
 
 	@Override
@@ -138,5 +139,14 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 		}
 
 		return this.cachedDocument = new VoxReader().read(this.vox.getStream());
+	}
+
+	@Override
+	public boolean copyFiles(File folder)
+	{
+		boolean skins = super.copyFiles(folder);
+		boolean vox = this.vox.copyTo(new File(folder, this.vox.getName()));
+
+		return skins || vox;
 	}
 }

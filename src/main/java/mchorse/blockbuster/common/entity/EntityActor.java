@@ -233,6 +233,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (this.noClip && !this.world.isRemote)
         {
+            if (this.playback != null)
+            {
+                this.playback.next();
+            }
+
             return;
         }
 
@@ -246,7 +251,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                 this.playback.applyAction(this.playback.tick, this, true);
                 this.playback.tick++;
             }
-            else if (this.playback.playing)
+            else
             {
                 this.playback.next();
             }
