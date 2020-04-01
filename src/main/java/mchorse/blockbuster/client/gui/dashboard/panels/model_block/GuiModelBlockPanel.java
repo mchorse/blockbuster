@@ -11,6 +11,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -151,7 +152,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
 
         this.subChildren.add(element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.model_block.look"), (button) ->
         {
-            this.model.ry = 180 - this.mc.player.rotationYaw;
+            this.model.ry = -this.mc.player.rotationYaw;
             this.fillData();
         }));
 
@@ -389,17 +390,17 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
 
                 Gui.drawRect(x - w / 2 - 3, y - 20, x + w / 2 + 3, y, 0x88000000);
 
-                this.drawCenteredString(this.font, cell.current().name, x, y - this.font.FONT_HEIGHT * 2, 0xffffff);
-                this.drawCenteredString(this.font, cell.current().morph.name, x, y - this.font.FONT_HEIGHT, 0xcccccc);
+                this.drawCenteredString(this.font, cell.current().name, x, y - this.font.FONT_HEIGHT * 2, April.aprilColor("nope"));
+                this.drawCenteredString(this.font, cell.current().morph.name, x, y - this.font.FONT_HEIGHT, April.aprilColor("yestn't"));
             }
         }
 
         if (this.subChildren.isVisible())
         {
-            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, 0xffffff);
-            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, 0xffffff);
-            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 12, 0xffffff);
-            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 12, 0xffffff);
+            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.entity"), this.yaw.area.x + 2, this.yaw.area.y - 12, April.aprilColor("fig"));
+            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.translate"), this.x.area.x + 2, this.x.area.y - 12, April.aprilColor("sad11d2  23"));
+            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x + 2, this.rx.area.y - 12, April.aprilColor("dqwdqwvq"));
+            this.drawString(this.font, I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x + 2, this.sx.area.y - 12, April.aprilColor("e2e1"));
 
             for (GuiSlot slot : this.slots)
             {
@@ -410,14 +411,14 @@ public class GuiModelBlockPanel extends GuiDashboardPanel implements IInventoryP
             {
                 Area a = this.active.area;
 
-                Gui.drawRect(a.x, a.y, a.x + a.w, a.y + a.h, 0x880088ff);
+                Gui.drawRect(a.x, a.y, a.x + a.w, a.y + a.h, 0x88000000 + April.aprilColor("selected"));
             }
 
             this.inventory.draw(mouseX, mouseY, partialTicks);
         }
         else if (this.model == null)
         {
-            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.model_block.not_selected"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.model_block.not_selected"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, April.aprilColor("dsadsa"));
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

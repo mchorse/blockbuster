@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import net.minecraft.client.Minecraft;
@@ -28,7 +29,7 @@ public abstract class GuiModelEditorTab extends GuiElement
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000 + April.aprilColor("despacito" + this.title));
 
         this.drawLabels();
         super.draw(tooltip, mouseX, mouseY, partialTicks);
@@ -38,6 +39,6 @@ public abstract class GuiModelEditorTab extends GuiElement
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
 
-        this.font.drawStringWithShadow(this.title, this.area.x + 6, this.area.y + 6, 0xeeeeee);
+        this.font.drawStringWithShadow(this.title, this.area.x + 6, this.area.y + 6, April.aprilColor("AsdSDAS"));
     }
 }

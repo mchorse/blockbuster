@@ -65,7 +65,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        tag.setString("Name", "blockbuster.fred");
+        tag.setString("Name", "blockbuster.steve");
 
         this.morph = MorphManager.INSTANCE.morphFromNBT(tag);
     }

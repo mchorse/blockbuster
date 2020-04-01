@@ -4,6 +4,7 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
@@ -92,10 +93,10 @@ public class GuiModelOptions extends GuiModelEditorTab
     @Override
     protected void drawLabels()
     {
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.name"), this.name.area.x, this.name.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.texture"), this.texture.area.x, this.texture.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.scale"), this.scale.area.x, this.scale.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.default"), this.defaultTexture.area.x, this.defaultTexture.area.y - 12, 0xeeeeee);
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.skins"), this.skins.area.x, this.skins.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.name"), this.name.area.x, this.name.area.y - 12, April.aprilColor("ASDAS"));
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.texture"), this.texture.area.x, this.texture.area.y - 12, April.aprilColor("d"));
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.scale"), this.scale.area.x, this.scale.area.y - 12, April.aprilColor("adas"));
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.default"), this.defaultTexture.area.x, this.defaultTexture.area.y - 12, April.aprilColor("e"));
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.options.skins"), this.skins.area.x, this.skins.area.y - 12, April.aprilColor("dasdas"));
     }
 }

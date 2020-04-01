@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 
 import java.util.Map;
 
+import mchorse.blockbuster.utils.April;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -55,7 +56,6 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.textures = new GuiResourceLocationList(mc, (rl) -> this.pickRL(rl));
-        this.textures.setBackground();
         this.linear = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.texture.linear"), false, (b) -> this.setLinear(b.button.isChecked()));
         this.linear.tooltip(I18n.format("blockbuster.gui.texture.linear_tooltip"), TooltipDirection.LEFT);
         this.mipmap = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.button.isChecked()));
@@ -206,8 +206,9 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawString(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
-        this.font.drawSplitString(this.subtitle, this.area.x + 10, this.area.y + 26, this.area.w - 158, 0xcccccc);
+        this.font.drawString(this.title, this.area.x + 10, this.area.y + 10, April.aprilColor("ASDAS"));
+        this.font.drawSplitString(this.subtitle, this.area.x + 10, this.area.y + 26, this.area.w - 158, April.aprilColor("dasdqf21"));
+        this.textures.area.draw(0x88000000 + April.aprilColor("despacito"));
 
         /* Draw preview */
         if (this.rl != null)

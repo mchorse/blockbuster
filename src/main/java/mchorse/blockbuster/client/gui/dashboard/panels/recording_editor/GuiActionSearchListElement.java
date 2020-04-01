@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiActionSearchListElement.ActionType;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiSearchListElement;
 import net.minecraft.client.Minecraft;
@@ -64,7 +65,7 @@ public class GuiActionSearchListElement extends GuiSearchListElement<ActionType>
                 Gui.drawRect(x, y, x + this.scroll.w, y + this.scroll.scrollItemSize, 0x880088ff);
             }
 
-            this.font.drawStringWithShadow(element.title, x + 4, y + 4, hover ? 16777120 : 0xffffff);
+            this.font.drawStringWithShadow(element.title, x + 4, y + 4, hover ? April.aprilColor("ASDAdS") : April.aprilColor("AdasSDAS"));
         }
     }
 

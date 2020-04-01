@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -106,7 +107,7 @@ public class GuiFirstTime extends GuiElement
 		GlStateManager.translate(this.area.getX(0.5F) - this.font.getStringWidth(this.title), this.area.y + 10, 0);
 		GlStateManager.scale(2, 2, 2);
 
-		this.font.drawStringWithShadow(this.title, 0, 0, 0xffffff);
+		this.font.drawStringWithShadow(this.title, 0, 0, April.aprilColor("ASDAS"));
 		GlStateManager.popMatrix();
 
 		/* Draw welcome paragraph */
@@ -114,7 +115,7 @@ public class GuiFirstTime extends GuiElement
 
 		for (String label : this.welcome)
 		{
-			this.font.drawStringWithShadow(label, this.area.x + 10, y, 0xaaaaaa);
+			this.font.drawStringWithShadow(label, this.area.x + 10, y, April.aprilColor("ASDAS" + y));
 			y += lineHeight;
 		}
 
@@ -133,7 +134,7 @@ public class GuiFirstTime extends GuiElement
 
 		for (String label : this.social)
 		{
-			this.font.drawStringWithShadow(label, this.area.x + 10, y, 0xaaaaaa);
+			this.font.drawStringWithShadow(label, this.area.x + 10, y, April.aprilColor("ASDAS" + y));
 			y += lineHeight;
 		}
 

@@ -199,7 +199,11 @@ public class GunProps
     public void reset()
     {
         /* Gun properties */
-        this.defaultMorph = null;
+        NBTTagCompound tagCompound = new NBTTagCompound();
+
+        tagCompound.setString("Name", "blockbuster.alex");
+
+        this.defaultMorph = MorphManager.INSTANCE.morphFromNBT(tagCompound);
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
@@ -208,7 +212,14 @@ public class GunProps
         this.launch = false;
 
         /* Projectile properties */
-        this.projectileMorph = null;
+        tagCompound = new NBTTagCompound();
+
+        tagCompound.setString("Name", "blockbuster.image");
+        tagCompound.setString("Texture", "blockbuster:textures/entity/clown.png");
+        tagCompound.setBoolean("Billboard", true);
+        tagCompound.setBoolean("Shaded", false);
+
+        this.projectileMorph = MorphManager.INSTANCE.morphFromNBT(tagCompound);
         this.tickCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;
