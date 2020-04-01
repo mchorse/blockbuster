@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -253,7 +254,7 @@ public class GuiDashboard extends GuiBase
     {
         if (this.panel.delegate != null && this.panel.delegate.needsBackground())
         {
-            this.drawDefaultBackground();
+            April.drawAnimuBackground(0, 0, this.width, this.height, 0);
         }
         else
         {

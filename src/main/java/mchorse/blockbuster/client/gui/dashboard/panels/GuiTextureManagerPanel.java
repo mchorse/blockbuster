@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 
 import java.util.Map;
 
+import mchorse.blockbuster.utils.April;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -206,8 +207,8 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.font.drawString(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
-        this.font.drawSplitString(this.subtitle, this.area.x + 10, this.area.y + 26, this.area.w - 158, 0xcccccc);
+        this.font.drawString(this.title, this.area.x + 10, this.area.y + 10, April.aprilColor("ASDAS"));
+        this.font.drawSplitString(this.subtitle, this.area.x + 10, this.area.y + 26, this.area.w - 158, April.aprilColor("dasdqf21"));
 
         /* Draw preview */
         if (this.rl != null)

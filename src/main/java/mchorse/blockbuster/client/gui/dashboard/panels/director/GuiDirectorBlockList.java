@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -57,6 +58,6 @@ public class GuiDirectorBlockList extends GuiListElement<TileEntityDirector>
             Gui.drawRect(x, y, x + this.scroll.w, y + this.scroll.scrollItemSize, -2013230849);
         }
 
-        this.font.drawStringWithShadow(label, (float)(x + 4), (float)(y + 4), hovered ? 16777120 : 16777215);
+        this.font.drawStringWithShadow(label, (float)(x + 4), (float)(y + 4), hovered ? April.aprilColor("ASDAdsS") : April.aprilColor("ASd1231DAS"));
     }
 }

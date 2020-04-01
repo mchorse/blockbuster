@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEdit
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -248,6 +249,6 @@ public class GuiModelPoses extends GuiModelEditorTab
             Gui.drawRect(x, y, x + this.posesList.area.w, y + this.posesList.area.h, 0x88000000);
         }
 
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.poses.hitbox"), this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
+        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.poses.hitbox"), this.hitbox.area.x, this.hitbox.area.y - 12, April.aprilColor("dasdasdq21"));
     }
 }

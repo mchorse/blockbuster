@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 
 import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -70,8 +71,8 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
 
         if (!this.title.isEmpty())
         {
-            this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
-            this.font.drawSplitString(this.description, this.area.x + 10, this.area.y + 30, this.area.w / 3, 0xcccccc);
+            this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 10, April.aprilColor("ASDAS"));
+            this.font.drawSplitString(this.description, this.area.x + 10, this.area.y + 30, this.area.w / 3, April.aprilColor("ASDdsaAS"));
         }
     }
 }

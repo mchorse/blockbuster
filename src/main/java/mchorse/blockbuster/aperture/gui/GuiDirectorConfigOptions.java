@@ -7,6 +7,7 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
@@ -103,7 +104,7 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
-        this.font.drawString(this.title, this.area.x + 6, this.area.y + 7, 0xffffff, true);
+        this.font.drawString(this.title, this.area.x + 6, this.area.y + 7, April.aprilColor("ASDAS"), true);
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

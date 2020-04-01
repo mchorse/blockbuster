@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -67,7 +68,7 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
         BlockPos pos = item.getPos();
         String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
 
-        this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
+        this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? April.aprilColor("ASDAS") : April.aprilColor("ASDdAS"));
         Gui.drawRect(x, y + h - 1, x + this.area.w, y + h, 0x88181818);
     }
 }

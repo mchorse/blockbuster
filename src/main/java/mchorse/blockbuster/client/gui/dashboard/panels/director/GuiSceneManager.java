@@ -10,6 +10,7 @@ import mchorse.blockbuster.recording.scene.Director;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.recording.scene.SceneManager;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -308,11 +309,11 @@ public class GuiSceneManager extends GuiElement
 
 		if (this.blocks.isVisible())
 		{
-			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.title"), this.area.x + 6, this.area.y + 7, color);
+			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.title"), this.area.x + 6, this.area.y + 7, April.aprilColor("d"));
 		}
 		else
 		{
-			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, color);
+			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, April.aprilColor("dawdawdawdwa"));
 		}
 
 		super.draw(tooltip, mouseX, mouseY, partialTicks);

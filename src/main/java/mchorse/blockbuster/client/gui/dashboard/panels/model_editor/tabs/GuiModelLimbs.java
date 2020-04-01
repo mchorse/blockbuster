@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiLi
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.gui.utils.GuiScrollElement;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -79,12 +80,12 @@ public class GuiModelLimbs extends GuiModelEditorTab
             @Override
             protected void preDraw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
             {
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size"), limbs.size.area.x, limbs.size.area.y - 10, 0xeeeeee);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size_offset"), limbs.sizeOffset.area.x, limbs.sizeOffset.area.y - 10, 0xeeeeee);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.texture"), limbs.texture.area.x, limbs.texture.area.y - 10, 0xeeeeee);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.anchor"), limbs.anchor.area.x, limbs.anchor.area.y - 10, 0xeeeeee);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.origin"), limbs.origin.area.x, limbs.origin.area.y - 10, 0xeeeeee);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.color"), limbs.color.area.x, limbs.color.area.y - 10, 0xeeeeee);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size"), limbs.size.area.x, limbs.size.area.y - 10, April.aprilColor("ASDAS"));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.size_offset"), limbs.sizeOffset.area.x, limbs.sizeOffset.area.y - 10, April.aprilColor("AdasSDAS"));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.texture"), limbs.texture.area.x, limbs.texture.area.y - 10, April.aprilColor("ASdDA213S"));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.anchor"), limbs.anchor.area.x, limbs.anchor.area.y - 10, April.aprilColor("asASDAS"));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.origin"), limbs.origin.area.x, limbs.origin.area.y - 10, April.aprilColor("AS241DAS"));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.limbs.color"), limbs.color.area.x, limbs.color.area.y - 10, April.aprilColor("daAS"));
             }
         };
         this.scroll.scroll.scrollSpeed = 15;
