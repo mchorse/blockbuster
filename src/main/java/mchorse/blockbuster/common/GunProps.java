@@ -199,7 +199,11 @@ public class GunProps
     public void reset()
     {
         /* Gun properties */
-        this.defaultMorph = null;
+        NBTTagCompound tagCompound = new NBTTagCompound();
+
+        tagCompound.setString("Name", "blockbuster.alex");
+
+        this.defaultMorph = MorphManager.INSTANCE.morphFromNBT(tagCompound);
         this.firingMorph = null;
         this.fireCommand = "";
         this.delay = 0;
