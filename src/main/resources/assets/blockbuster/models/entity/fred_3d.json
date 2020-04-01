@@ -132,7 +132,7 @@
         }
     },
     "poses": {
-        "standing": {
+        "t_pose": {
             "size": [ 0.6, 1.8, 0.6 ],
             "limbs": {
                 "right_arm": {
@@ -367,7 +367,7 @@
                 }
             }
         },
-        "t_pose": {
+        "standing": {
             "size": [ 0.6, 1.8, 0.6 ],
             "limbs": {
                 "right_arm": {
