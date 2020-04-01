@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.recording.scene.Scene;
+import mchorse.blockbuster.utils.April;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -119,8 +120,8 @@ public class GuiReplaySelector extends GuiElement
         super.draw(tooltip, mouseX, mouseY, partialTicks);
 
         /* Background and shadows */
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
-        this.drawGradientRect(this.area.x, this.area.y - 16, this.area.getX(1), this.area.y, 0x00000000, 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000 + April.aprilColor("tweetweet"));
+        this.drawGradientRect(this.area.x, this.area.y - 16, this.area.getX(1), this.area.y, 0x00000000, 0x88000000 + April.aprilColor("tweetweet"));
 
         this.scroll.drag(mouseX, mouseY);
 
@@ -168,14 +169,14 @@ public class GuiReplaySelector extends GuiElement
                 int x = hoverX - w / 2;
 
                 Gui.drawRect(x - 2, this.scroll.getY(0.5F) - 1, x + w + 2, this.scroll.getY(0.5F) + 9, 0x88000000);
-                this.font.drawStringWithShadow(hovered, x, this.scroll.getY(0.5F), 0xffffff);
+                this.font.drawStringWithShadow(hovered, x, this.scroll.getY(0.5F), April.aprilColor("dsda"));
             }
 
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
         else
         {
-            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.director.no_replays"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.director.no_replays"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, April.aprilColor("12312312 12412"));
         }
 
         this.scroll.drawScrollbar();

@@ -10,6 +10,7 @@ import mchorse.blockbuster.recording.scene.Director;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.recording.scene.SceneManager;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
@@ -301,18 +302,18 @@ public class GuiSceneManager extends GuiElement
 	@Override
 	public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
 	{
-		this.area.draw(0xaa000000);
+		this.area.draw(0xaa000000 + April.aprilColor("asdasqqweheck"));
 		Gui.drawRect(this.area.x, this.area.y, this.area.getX(1.0F), this.area.y + 20, 0x88000000);
 
 		int color = this.toggle.isInside(mouseX, mouseY) ? 16777120 : 0xffffff;
 
 		if (this.blocks.isVisible())
 		{
-			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.title"), this.area.x + 6, this.area.y + 7, color);
+			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.title"), this.area.x + 6, this.area.y + 7, April.aprilColor("d"));
 		}
 		else
 		{
-			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, color);
+			this.font.drawStringWithShadow(I18n.format("blockbuster.gui.scenes.title"), this.area.x + 6, this.area.y + 7, April.aprilColor("dawdawdawdwa"));
 		}
 
 		super.draw(tooltip, mouseX, mouseY, partialTicks);

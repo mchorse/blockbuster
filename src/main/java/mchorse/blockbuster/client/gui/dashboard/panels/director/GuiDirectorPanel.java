@@ -11,6 +11,7 @@ import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
+import mchorse.blockbuster.utils.April;
 import mchorse.blockbuster.utils.L10n;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -599,27 +600,27 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
             if (this.replayEditor.isVisible())
             {
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.name"), this.name.area.x, this.name.area.y - 12, 0xcccccc);
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : April.aprilColor(I18n.format("blockbuster.gui.director.id")));
+                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.name"), this.name.area.x, this.name.area.y - 12, April.aprilColor(I18n.format("blockbuster.gui.director.name")));
             }
         }
         else
         {
-            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 24, 0x88000000);
-            this.drawGradientRect(this.area.x, this.area.y + 24, this.area.getX(1), this.area.y + 32, 0x88000000, 0x00000000);
+            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 24, 0x88000000 + April.aprilColor("frick_asda"));
+            this.drawGradientRect(this.area.x, this.area.y + 24, this.area.getX(1), this.area.y + 32, 0x88000000 + April.aprilColor("frick_asda"), 0x00000000);
 
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, 0xffffff);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, April.aprilColor(I18n.format("blockbuster.gui.director.config")));
 
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.start_command"), this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.stop_command"), this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.start_command"), this.startCommand.area.x, this.startCommand.area.y - 12, April.aprilColor(I18n.format("blockbuster.gui.director.start_command")));
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.stop_command"), this.stopCommand.area.x, this.stopCommand.area.y - 12, April.aprilColor(I18n.format("blockbuster.gui.director.stop_command")));
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, April.aprilColor(I18n.format("blockbuster.gui.director.display_title")));
         }
 
         if (this.location.isEmpty())
         {
             String no = I18n.format("blockbuster.gui.director.not_selected");
 
-            this.drawCenteredString(this.font, no, this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, no, this.area.getX(0.5F), this.area.getY(0.5F) - 6, April.aprilColor(no));
         }
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);

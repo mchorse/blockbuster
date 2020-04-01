@@ -21,7 +21,7 @@ blockbuster:
         particle: Частица
 
 # Creative tabs
-itemGroup.blockbuster: Блокбастер
+itemGroup.blockbuster: Брокбастер
 
 # Block name
 tile.blockbuster:
@@ -38,7 +38,7 @@ item:
         gun.name: Оружие ББ
 
 # Entity names
-entity.blockbuster.Actor.name: Актёр
+entity.blockbuster.Actor.name: Бро
 
 blockbuster.chroma_blocks:
     0: Зелёный

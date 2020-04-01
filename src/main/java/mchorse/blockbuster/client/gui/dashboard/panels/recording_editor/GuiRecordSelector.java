@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 import java.util.List;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.utils.April;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -228,7 +229,7 @@ public class GuiRecordSelector extends GuiElement
                         int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
-                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
+                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, April.aprilColor("ASDAwqS" + i));
 
                         if (i == this.tick && j == this.index)
                         {
@@ -255,7 +256,7 @@ public class GuiRecordSelector extends GuiElement
             int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
 
             Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
-            this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
+            this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, April.aprilColor("ASDASd"));
         }
 
         for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
@@ -268,7 +269,7 @@ public class GuiRecordSelector extends GuiElement
                 String str = String.valueOf(i);
 
                 this.drawGradientRect(x + 1, y - 6, x + h, y + 12, 0x00000000, 0x88000000);
-                this.font.drawStringWithShadow(str, x - this.font.getStringWidth(str) / 2 + 17, y, 0xffffff);
+                this.font.drawStringWithShadow(str, x - this.font.getStringWidth(str) / 2 + 17, y, April.aprilColor("ASdsadDAS" + i));
             }
         }
 

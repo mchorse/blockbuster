@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import mchorse.blockbuster.utils.April;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelRenderer;
 import org.lwjgl.opengl.GL11;
@@ -314,7 +315,9 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
 
-        drawCube(minX + o, minY - o, minZ -o, maxX - o, maxY + o, maxZ + o, 0F, 0.5F, 1F, alpha);
+        int color = April.aprilColor("dasdq211");
+
+        drawCube(minX + o, minY - o, minZ -o, maxX - o, maxY + o, maxZ + o, (color >> 16 & 0xff) / 255F, (color >> 8 & 0xff) / 255F, (color & 0xff) / 255F, alpha);
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();

@@ -15,7 +15,7 @@ blockbuster:
     morph.sequencer: Sequencer
 
 # Creative tabs
-itemGroup.blockbuster: Blockbuster
+itemGroup.blockbuster: Brockbuster
 
 # Block name
 tile.blockbuster:
@@ -31,7 +31,7 @@ item:
         actor_config.name: Actor configuration device
 
 # Entity names
-entity.blockbuster.Actor.name: Actor
+entity.blockbuster.Actor.name: Bro
 
 blockbuster.chroma_blocks:
     0: Green
