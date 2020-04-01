@@ -12,8 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class April
 {
-	public static ResourceLocation BEACH = new ResourceLocation("https://www.ecopetit.cat/wpic/mpic/112-1122097_anime-girl-background.jpg");
-	public static ResourceLocation SCIFI = new ResourceLocation("https://www.desktophut.com/wp-content/uploads/2018/12/bGS2v2XvhBShTvE518fo.jpg");
+	public static ResourceLocation BEACH = new ResourceLocation("blockbuster:textures/gui/animu_1.jpg");
+	public static ResourceLocation SCIFI = new ResourceLocation("blockbuster:textures/gui/animu_2.jpg");
 
 	public static int aprilColor(String string)
 	{
