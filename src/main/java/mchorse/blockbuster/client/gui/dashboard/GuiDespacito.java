@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.utils.April;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
 import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
@@ -63,9 +64,9 @@ public class GuiDespacito extends GuiElement
 
         this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
         GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 32, this.area.w, h, 32, 32, 0, 0);
-        mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000, 0x00000000, 0);
+        mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000 + April.aprilColor("tweetweet"), 0x00000000, 0);
         mchorse.blockbuster.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);
-        Gui.drawRect(x - 1, this.area.y, x, this.area.getY(1), 0x22000000);
+        Gui.drawRect(x - 1, this.area.y, x, this.area.getY(1), 0x22000000 +  + April.aprilColor("dashboard"));
 
         super.draw(tooltip, mouseX, mouseY, partialTicks);
     }

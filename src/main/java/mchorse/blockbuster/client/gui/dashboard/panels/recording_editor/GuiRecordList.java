@@ -71,8 +71,7 @@ public class GuiRecordList extends GuiElement
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
-        net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 64, this.area.w, this.area.h, 32, 32, 0, 0);
+        April.drawAnimuBackground(April.SCIFI, this.area.x, this.area.y, this.area.w, this.area.h, 1920, 1080,400, 0xff000000 + April.aprilColor("Test"));
         Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 30, 0x44000000);
 
         this.font.drawStringWithShadow(I18n.format(this.director ? "blockbuster.gui.record_editor.directors" : "blockbuster.gui.record_editor.title"), this.area.x + 10, this.area.y + 11, April.aprilColor("ASDAS"));

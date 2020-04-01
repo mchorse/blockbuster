@@ -212,7 +212,14 @@ public class GunProps
         this.launch = false;
 
         /* Projectile properties */
-        this.projectileMorph = null;
+        tagCompound = new NBTTagCompound();
+
+        tagCompound.setString("Name", "blockbuster.image");
+        tagCompound.setString("Texture", "blockbuster:textures/entity/clown.png");
+        tagCompound.setBoolean("Billboard", true);
+        tagCompound.setBoolean("Shaded", false);
+
+        this.projectileMorph = MorphManager.INSTANCE.morphFromNBT(tagCompound);
         this.tickCommand = "";
         this.ticking = 0;
         this.lifeSpan = 200;

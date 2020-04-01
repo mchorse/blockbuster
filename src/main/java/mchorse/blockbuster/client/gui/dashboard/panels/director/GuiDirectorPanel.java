@@ -606,8 +606,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         }
         else
         {
-            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 24, 0x88000000);
-            this.drawGradientRect(this.area.x, this.area.y + 24, this.area.getX(1), this.area.y + 32, 0x88000000, 0x00000000);
+            Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 24, 0x88000000 + April.aprilColor("frick_asda"));
+            this.drawGradientRect(this.area.x, this.area.y + 24, this.area.getX(1), this.area.y + 32, 0x88000000 + April.aprilColor("frick_asda"), 0x00000000);
 
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, April.aprilColor(I18n.format("blockbuster.gui.director.config")));
 

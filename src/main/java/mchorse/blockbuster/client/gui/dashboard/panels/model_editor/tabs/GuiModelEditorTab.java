@@ -29,7 +29,7 @@ public abstract class GuiModelEditorTab extends GuiElement
     @Override
     public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.getY(1), 0x88000000 + April.aprilColor("despacito" + this.title));
 
         this.drawLabels();
         super.draw(tooltip, mouseX, mouseY, partialTicks);

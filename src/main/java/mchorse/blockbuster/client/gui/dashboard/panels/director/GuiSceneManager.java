@@ -302,7 +302,7 @@ public class GuiSceneManager extends GuiElement
 	@Override
 	public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
 	{
-		this.area.draw(0xaa000000);
+		this.area.draw(0xaa000000 + April.aprilColor("asdasqqweheck"));
 		Gui.drawRect(this.area.x, this.area.y, this.area.getX(1.0F), this.area.y + 20, 0x88000000);
 
 		int color = this.toggle.isInside(mouseX, mouseY) ? 16777120 : 0xffffff;
