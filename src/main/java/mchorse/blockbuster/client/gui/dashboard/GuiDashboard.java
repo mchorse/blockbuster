@@ -254,7 +254,7 @@ public class GuiDashboard extends GuiBase
     {
         if (this.panel.delegate != null && this.panel.delegate.needsBackground())
         {
-            April.drawAnimuBackground(April.BEACH, 0, 0, this.width, this.height, 1920, 1080, 0, 0xaa333333);
+            April.drawAnimuBackground(April.BEACH, 0, 0, this.width, this.height, 1920, 1080, 0, 0xbb444444);
         }
         else
         {
