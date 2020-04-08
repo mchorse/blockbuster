@@ -1,11 +1,14 @@
 package mchorse.blockbuster.utils;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
 import java.nio.FloatBuffer;
 
+@SideOnly(Side.CLIENT)
 public class MatrixUtils
 {
 	/**
