@@ -109,7 +109,7 @@ public class PlayerTracker
         {
             this.recorder.actions.add(new SwipeAction());
 
-            if (Blockbuster.proxy.config.record_attack_on_swipe)
+            if (Blockbuster.recordAttackOnSwipe.get())
             {
                 this.recorder.actions.add(new AttackAction());
             }

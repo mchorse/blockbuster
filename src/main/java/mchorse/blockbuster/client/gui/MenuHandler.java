@@ -1,15 +1,10 @@
 package mchorse.blockbuster.client.gui;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
-import mchorse.metamorph.api.events.ReloadMorphs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,11 +22,6 @@ public class MenuHandler
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
-        if (!Blockbuster.proxy.config.auto_refresh_models)
-        {
-            return;
-        }
-
         GuiScreen gui = event.getGui();
 
         if (gui instanceof GuiMainMenu)

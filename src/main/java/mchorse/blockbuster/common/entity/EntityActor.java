@@ -7,8 +7,6 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.common.GuiHandler;
-import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
@@ -24,20 +22,17 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityBodyHelper;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -236,7 +231,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             {
                 this.playback.stopPlaying();
             }
-            else if (tick != 0 && tick % Blockbuster.proxy.config.record_sync_rate == 0)
+            else if (tick != 0 && tick % Blockbuster.recordSyncRate.get() == 0)
             {
                 Dispatcher.sendToTracked(this, new PacketSyncTick(this.getEntityId(), tick));
             }
@@ -292,7 +287,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos)
     {
-        if (!this.world.isRemote && Blockbuster.proxy.config.actor_fall_damage && this.playback != null)
+        if (!this.world.isRemote && Blockbuster.actorFallDamage.get() && this.playback != null)
         {
             int tick = this.playback.getTick();
 
@@ -561,7 +556,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             d0 = 1.0D;
         }
 
-        d0 = d0 * Blockbuster.proxy.config.actor_rendering_range;
+        d0 = d0 * Blockbuster.actorRenderingRange.get();
         return distance < d0 * d0;
     }
 

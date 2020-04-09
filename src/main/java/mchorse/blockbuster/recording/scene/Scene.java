@@ -195,7 +195,7 @@ public class Scene
 
 	public void tick()
 	{
-		if (Blockbuster.proxy.config.debug_playback_ticks)
+		if (Blockbuster.debugPlaybackTicks.get())
 		{
 			this.logTicks();
 		}

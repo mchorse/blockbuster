@@ -152,12 +152,10 @@ public class ModelPack
 
             for (IModelLoader loader : this.loaders)
             {
-                IModelLazyLoader localLoader = loader.load(file);
+                lazyLoader = loader.load(file);
 
-                if (localLoader != null)
+                if (lazyLoader != null)
                 {
-                    lazyLoader = localLoader;
-
                     break;
                 }
             }

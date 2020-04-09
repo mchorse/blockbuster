@@ -3,7 +3,6 @@ package mchorse.blockbuster.recording.capturing;
 import java.util.ArrayList;
 import java.util.List;
 
-import mchorse.blockbuster.config.BlockbusterConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -37,7 +36,7 @@ public class DamageControl
      *
      * This method is responsible for adding only these blocks which are
      * in the radius of allowed {@link #maxDistance} range. Max distance gets
-     * set from the config property {@link BlockbusterConfig#damage_control_distance}. 
+     * set from the config property {@link mchorse.blockbuster.Blockbuster#damageControlDistance}.
      */
     public void addBlock(BlockPos pos, IBlockState state, World world)
     {

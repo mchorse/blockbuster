@@ -35,8 +35,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
  */
 public class CapabilityHandler
 {
-    public static final ResourceLocation RECORDING_CAP = new ResourceLocation(Blockbuster.MODID, "recording_capability");
-    public static final ResourceLocation GUN_CAP = new ResourceLocation(Blockbuster.MODID, "gun");
+    public static final ResourceLocation RECORDING_CAP = new ResourceLocation(Blockbuster.MOD_ID, "recording_capability");
+    public static final ResourceLocation GUN_CAP = new ResourceLocation(Blockbuster.MOD_ID, "gun");
 
     /**
      * Attach capabilities (well, only one, right now)

@@ -130,7 +130,7 @@ public class ItemPlayback extends Item
                 return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
             }
 
-            if (pos != null && player.isSneaking() && !Blockbuster.proxy.config.disable_teleport_playback_button)
+            if (pos != null && player.isSneaking() && !Blockbuster.disableTPPlaybackButton.get())
             {
                 IRecording recording = Recording.get(player);
 

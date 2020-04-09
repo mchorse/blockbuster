@@ -33,9 +33,9 @@ public class DamageControlManager
 	 */
 	public void addDamageControl(Object object, EntityLivingBase player)
 	{
-		if (Blockbuster.proxy.config.damage_control)
+		if (Blockbuster.damageControl.get())
 		{
-			int dist = Blockbuster.proxy.config.damage_control_distance;
+			int dist = Blockbuster.damageControlDistance.get();
 
 			this.damage.put(object, new DamageControl(player, dist));
 		}

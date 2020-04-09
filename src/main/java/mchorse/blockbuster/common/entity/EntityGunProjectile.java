@@ -459,7 +459,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     public boolean isInRangeToRenderDist(double distance)
     {
-        double d0 = Blockbuster.proxy.config.actor_rendering_range;
+        double d0 = Blockbuster.actorRenderingRange.get();
         return distance < d0 * d0;
     }
 }

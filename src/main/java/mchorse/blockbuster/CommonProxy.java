@@ -1,7 +1,5 @@
 package mchorse.blockbuster;
 
-import java.io.File;
-
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
@@ -27,10 +25,9 @@ import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.item.ItemRegister;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.config.BlockbusterConfig;
 import mchorse.blockbuster.network.Dispatcher;
-import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.capturing.DamageControlManager;
 import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
@@ -45,7 +42,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -53,6 +49,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import java.io.File;
 
 /**
  * Common proxy
@@ -95,16 +93,6 @@ public class CommonProxy
     public BedrockLibrary particles;
 
     /**
-     * Config
-     */
-    public BlockbusterConfig config;
-
-    /**
-     * Forge config
-     */
-    public Configuration forge;
-
-    /**
      * Blockbuster's morphing factory
      */
     public BlockbusterFactory factory;
@@ -121,15 +109,9 @@ public class CommonProxy
         NetworkRegistry.INSTANCE.registerGuiHandler(Blockbuster.instance, new GuiHandler());
 
         /* Configuration */
-        File config = new File(event.getModConfigurationDirectory(), "blockbuster/config.cfg");
-
         configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
-        this.forge = new Configuration(config);
-        this.config = new BlockbusterConfig(this.forge);
         this.particles = new BedrockLibrary(new File(configFile, "particles"));
-        this.particles.reload();
 
-        MinecraftForge.EVENT_BUS.register(this.config);
         MinecraftForge.EVENT_BUS.register(new EventHandler());
 
         /* Creative tab */
@@ -157,10 +139,6 @@ public class CommonProxy
 
         Blockbuster.modelBlockItem = Item.getItemFromBlock(Blockbuster.modelBlock);
 
-        /* Entities */
-        this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
-        EntityRegistry.registerModEntity(new ResourceLocation("blockbuster:projectile"), EntityGunProjectile.class, "blockbuster.GunProjectile", this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 10, true);
-
         /* Tile Entities */
         GameRegistry.registerTileEntity(TileEntityDirector.class, "blockbuster_director_tile_entity");
         GameRegistry.registerTileEntity(TileEntityModel.class, "blockbuster_model_tile_entity");
@@ -184,8 +162,11 @@ public class CommonProxy
      */
     public void load(FMLInitializationEvent event)
     {
-        this.config.reload();
+        /* Entities */
+        this.registerEntityWithEgg(EntityActor.class, new ResourceLocation("blockbuster:actor"), "blockbuster.Actor", 0xffc1ab33, 0xffa08d2b);
+        EntityRegistry.registerModEntity(new ResourceLocation("blockbuster:projectile"), EntityGunProjectile.class, "blockbuster.GunProjectile", this.ID++, Blockbuster.instance, Blockbuster.actorTrackingRange.get(), 10, true);
 
+        /* Event handlers */
         MinecraftForge.EVENT_BUS.register(this.models);
         MinecraftForge.EVENT_BUS.register(new ActionHandler());
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
@@ -241,7 +222,7 @@ public class CommonProxy
      */
     protected void registerEntityWithEgg(Class<? extends Entity> entity, ResourceLocation id, String name, int primary, int secondary)
     {
-        EntityRegistry.registerModEntity(id, entity, name, this.ID++, Blockbuster.instance, this.config.actor_tracking_range, 3, false, primary, secondary);
+        EntityRegistry.registerModEntity(id, entity, name, this.ID++, Blockbuster.instance, Blockbuster.actorTrackingRange.get(), 3, false, primary, secondary);
     }
 
     /**
@@ -251,12 +232,6 @@ public class CommonProxy
     {
         return false;
     }
-
-    /**
-     * Triggered when config is changed
-     */
-    public void onConfigChange(Configuration config)
-    {}
 
     /**
      * Get model handler

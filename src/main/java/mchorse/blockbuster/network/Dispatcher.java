@@ -101,7 +101,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class Dispatcher
 {
-    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Blockbuster.MODID)
+    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(Blockbuster.MOD_ID)
     {
         @Override
         public void register()

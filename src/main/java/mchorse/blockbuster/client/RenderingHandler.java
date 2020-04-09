@@ -51,10 +51,6 @@ public class RenderingHandler
      */
     private static final List<BedrockEmitter> emitters = new ArrayList<>();
 
-    public static float skyR = 0;
-    public static float skyG = 1;
-    public static float skyB = 0;
-
     private GuiRecordingOverlay overlay;
 
     /**
@@ -78,6 +74,11 @@ public class RenderingHandler
      */
     public static void renderGreenSky()
     {
+        int color = Blockbuster.chromaSkyColor.get();
+        float skyR = (color >> 16 & 0xff) / 255F;
+        float skyG = (color >> 8 & 0xff) / 255F;
+        float skyB = (color & 0xff) / 255F;
+
         GlStateManager.clearColor(skyR, skyG, skyB, 1);
         GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glDisable(GL11.GL_FOG);
@@ -89,7 +90,7 @@ public class RenderingHandler
      */
     public static boolean isGreenSky()
     {
-        return Blockbuster.proxy.config.green_screen_sky;
+        return Blockbuster.chromaSky.get();
     }
 
     /**

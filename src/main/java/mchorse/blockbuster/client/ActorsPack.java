@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
@@ -115,7 +114,7 @@ public class ActorsPack implements IResourcePack
     {
         try
         {
-            if (Blockbuster.proxy.config.url_skins_sync_download)
+            if (Blockbuster.syncedURLTextureDownload.get())
             {
                 InputStream stream = URLDownloadThread.downloadImage(location);
 

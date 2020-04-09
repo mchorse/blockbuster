@@ -10,7 +10,6 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleInitial
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
-import mchorse.mclib.math.Variable;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class BedrockScheme
 
 	/* Particle description */
 	public BedrockMaterial material = BedrockMaterial.OPAQUE;
-	public ResourceLocation texture = new ResourceLocation(Blockbuster.MODID, "textures/default_particles.png");
+	public ResourceLocation texture = new ResourceLocation(Blockbuster.MOD_ID, "textures/default_particles.png");
 
 	/* Particle's curves */
 	public Map<String, BedrockCurve> curves = new HashMap<String, BedrockCurve>();

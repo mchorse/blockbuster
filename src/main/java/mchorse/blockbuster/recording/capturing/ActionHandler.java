@@ -1,8 +1,5 @@
 package mchorse.blockbuster.recording.capturing;
 
-import java.io.IOException;
-import java.util.List;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
@@ -68,6 +65,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Event handler for recording purposes.
@@ -215,7 +215,7 @@ public class ActionHandler
         EntityPlayer player = event.getEntityPlayer();
         List<Action> events = CommonProxy.manager.getActions(player);
 
-        if (!player.world.isRemote && events != null && !Blockbuster.proxy.config.record_attack_on_swipe)
+        if (!player.world.isRemote && events != null && !Blockbuster.recordAttackOnSwipe.get())
         {
             events.add(new AttackAction());
         }
@@ -338,7 +338,7 @@ public class ActionHandler
     @SubscribeEvent
     public void onPlayerCommand(CommandEvent event)
     {
-        if (!Blockbuster.proxy.config.record_commands)
+        if (!Blockbuster.recordCommands.get())
         {
             return;
         }

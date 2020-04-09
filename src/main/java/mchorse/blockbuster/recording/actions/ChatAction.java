@@ -29,7 +29,7 @@ public class ChatAction extends Action
     public void apply(EntityLivingBase actor)
     {
         String message = this.message.replace('[', '§');
-        String prefix = Blockbuster.proxy.config.record_chat_prefix;
+        String prefix = Blockbuster.recordChatPrefix.get();
 
         if (!prefix.isEmpty())
         {

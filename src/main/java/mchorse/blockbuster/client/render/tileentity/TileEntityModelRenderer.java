@@ -41,7 +41,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (te.morph != null && !Blockbuster.proxy.config.model_block_disable_rendering && te.enabled)
+        if (te.morph != null && !Blockbuster.modelBlockDisableRendering.get() && te.enabled)
         {
             if (this.renderer == null)
             {

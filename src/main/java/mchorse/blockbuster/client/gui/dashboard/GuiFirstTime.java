@@ -8,8 +8,6 @@ import mchorse.mclib.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class GuiFirstTime extends GuiElement
 
 	public static boolean shouldOpen()
 	{
-		return Blockbuster.proxy.config.show_first_time_modal;
+		return Blockbuster.generalFirstTime.get();
 	}
 
 	public GuiFirstTime(Minecraft mc, GuiDashboard dashboard, Overlay overlay)
@@ -78,11 +76,8 @@ public class GuiFirstTime extends GuiElement
 		this.dashboard.root.remove(this.overlay);
 
 		/* Don't show anymore this modal */
-		Property property = Blockbuster.proxy.config.config.getCategory(Configuration.CATEGORY_GENERAL).get("show_first_time_modal");
-
-		property.set(false);
-		Blockbuster.proxy.forge.save();
-		Blockbuster.proxy.config.reload();
+		Blockbuster.generalFirstTime.set(true);
+		Blockbuster.generalFirstTime.category.config.save();
 	}
 
 	@Override

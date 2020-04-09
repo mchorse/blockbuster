@@ -1,9 +1,5 @@
 package mchorse.blockbuster;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.logging.log4j.Logger;
-
 import mchorse.blockbuster.commands.CommandAction;
 import mchorse.blockbuster.commands.CommandDirector;
 import mchorse.blockbuster.commands.CommandOnHead;
@@ -11,6 +7,13 @@ import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
+import mchorse.mclib.McLib;
+import mchorse.mclib.config.ConfigBuilder;
+import mchorse.mclib.config.values.ValueBoolean;
+import mchorse.mclib.config.values.ValueFloat;
+import mchorse.mclib.config.values.ValueInt;
+import mchorse.mclib.config.values.ValueString;
+import mchorse.mclib.events.RegisterConfigEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -24,6 +27,10 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>Blockbuster's main entry</p>
@@ -53,19 +60,18 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
  *         Blockbuster mod</li>
  *     <li>daipenger for giving me consultation on how to make cameras and
  *         actors frame-based</li>
- *      <li>TheImaginationCrafter for suggesting the OBJ feature which made
+ *     <li>TheImaginationCrafter for suggesting the OBJ feature which made
  *          Blockbuster super popular and also more customizable (in terms 
  *          of custom models)</li>
  * </ul>
  */
-@Mod(modid = Blockbuster.MODID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, guiFactory = Blockbuster.GUI_FACTORY, dependencies = "required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json")
+@Mod(modid = Blockbuster.MOD_ID, name = Blockbuster.MODNAME, version = Blockbuster.VERSION, dependencies = "required-after:metamorph@[%METAMORPH%,);required-after:mclib@[%MCLIB%,);required-after:forge@[14.23.2.2638,)", updateJSON = "https://raw.githubusercontent.com/mchorse/blockbuster/master/version.json")
 public class Blockbuster
 {
     /* Mod info */
-    public static final String MODID = "blockbuster";
+    public static final String MOD_ID = "blockbuster";
     public static final String MODNAME = "Blockbuster";
     public static final String VERSION = "%VERSION%";
-    public static final String GUI_FACTORY = "mchorse.blockbuster.config.gui.GuiFactory";
 
     @SideOnly(Side.CLIENT)
     public static String WIKI_URL()
@@ -133,13 +139,44 @@ public class Blockbuster
 
     public static Logger LOGGER;
 
+    /* Configuration */
+    public static ValueBoolean generalFirstTime;
+    public static ValueBoolean disableTPPlaybackButton;
+    public static ValueBoolean debugPlaybackTicks;
+    public static ValueBoolean chromaSky;
+    public static ValueInt chromaSkyColor;
+    public static ValueBoolean syncedURLTextureDownload;
+
+    public static ValueBoolean modelBlockDisableRendering;
+    public static ValueBoolean modelBlockDisableItemRendering;
+
+    public static ValueFloat recordingCountdown;
+    public static ValueInt recordingDelay;
+    public static ValueInt recordUnloadTime;
+    public static ValueBoolean recordUnload;
+    public static ValueInt recordSyncRate;
+    public static ValueBoolean recordAttackOnSwipe;
+    public static ValueBoolean recordCommands;
+    public static ValueString recordChatPrefix;
+
+    public static ValueBoolean actorFallDamage;
+    public static ValueInt actorTrackingRange;
+    public static ValueInt actorRenderingRange;
+    public static ValueBoolean actorAlwaysRender;
+    public static ValueBoolean actorAlwaysRenderNames;
+    public static ValueBoolean actorSwishSwipe;
+    public static ValueBoolean actorFixY;
+
+    public static ValueBoolean damageControl;
+    public static ValueInt damageControlDistance;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
      */
     public static String path(String path)
     {
-        return MODID + ":" + path;
+        return MOD_ID + ":" + path;
     }
 
     /**
@@ -154,10 +191,54 @@ public class Blockbuster
         proxy.loadModels(proxy.models.pack, force);
     }
 
+    @SubscribeEvent
+    public void onConfigRegister(RegisterConfigEvent event)
+    {
+        ConfigBuilder builder = event.createBuilder(MOD_ID);
+
+        /* General */
+        generalFirstTime = builder.category("general").getBoolean("show_first_time_modal", true);
+        disableTPPlaybackButton = builder.getBoolean("disable_teleport_playback_button", false);
+        debugPlaybackTicks = builder.getBoolean("debug_playback_ticks", false);
+        chromaSky = builder.getBoolean("green_screen_sky", false);
+        chromaSkyColor = builder.getInt("green_screen_sky_color", 0x00ff00).color();
+        syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
+
+        /* Model block */
+        modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
+        modelBlockDisableItemRendering = builder.getBoolean("model_block_disable_item_rendering", false);
+
+        /* Recording */
+        recordingCountdown = builder.category("recording").getFloat("recording_countdown", 1.5F, 0, 10);
+        recordingDelay = builder.getInt("recording_delay", 1, 1, 10);
+        recordUnloadTime = builder.getInt("record_unload_time", 2400, 600, 72000);
+        recordUnload = builder.getBoolean("record_unload", true);
+        recordSyncRate = builder.getInt("record_sync_rate", 6, 1, 30);
+        recordAttackOnSwipe = builder.getBoolean("record_attack_on_swipe", false);
+        recordCommands = builder.getBoolean("record_commands", true);
+        recordChatPrefix = builder.getString("record_chat_prefix", "");
+
+        /* Actor */
+        actorFallDamage = builder.category("actor").getBoolean("actor_fall_damage", true);
+        actorTrackingRange = builder.getInt("actor_tracking_range", 256, 64, 1024);
+        actorRenderingRange = builder.getInt("actor_rendering_range", 256, 64, 1024);
+        actorAlwaysRender = builder.getBoolean("actor_always_render", false);
+        actorAlwaysRenderNames = builder.getBoolean("actor_always_render_names", false);
+        actorSwishSwipe = builder.getBoolean("actor_swish_swipe", false);
+        actorFixY = builder.getBoolean("actor_y", false);
+
+        /* Damage control */
+        damageControl = builder.category("damage_control").getBoolean("damage_control", true);
+        damageControlDistance = builder.getInt("damage_control_distance", 64, 1, 1024);
+
+        event.modules.add(builder.build());
+    }
+
     @EventHandler
     public void preLoad(FMLPreInitializationEvent event)
     {
         LOGGER = event.getModLog();
+        McLib.EVENT_BUS.register(this);
 
         proxy.preLoad(event);
     }

@@ -50,7 +50,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -123,7 +122,7 @@ public class ClientProxy extends CommonProxy
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack)
             {
-                return ClientProxy.this.config.model_block_disable_item_rendering ? modelStatic : model;
+                return Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model;
             }
         });
 
@@ -270,44 +269,6 @@ public class ClientProxy extends CommonProxy
     public boolean isClient()
     {
         return true;
-    }
-
-    /**
-     * Applies client side options
-     */
-    @Override
-    public void onConfigChange(Configuration config)
-    {
-        if (Blockbuster.proxy.config == null)
-        {
-            return;
-        }
-
-        try
-        {
-            String hex = Blockbuster.proxy.config.green_screen_sky_color;
-            int length = hex.length();
-
-            if (length == 6 || (length == 7 && hex.startsWith("#")))
-            {
-                if (length == 7)
-                {
-                    hex = hex.substring(1);
-                }
-
-                int color = Integer.parseInt(hex, 16);
-
-                RenderingHandler.skyR = ((color >> 16) & 0xff) / 255F;
-                RenderingHandler.skyG = ((color >> 8) & 0xff) / 255F;
-                RenderingHandler.skyB = (color & 0xff) / 255F;
-            }
-        }
-        catch (Exception e)
-        {
-            RenderingHandler.skyR = 0;
-            RenderingHandler.skyG = 1;
-            RenderingHandler.skyB = 0;
-        }
     }
 
     @Override

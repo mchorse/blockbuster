@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.render;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -30,7 +29,7 @@ public class RenderActor extends RenderLiving<EntityActor>
     /**
      * Default texture of the renderer
      */
-    private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MODID, "textures/entity/actor.png");
+    private static final ResourceLocation defaultTexture = new ResourceLocation(Blockbuster.MOD_ID, "textures/entity/actor.png");
 
     /**
      * Initiate render actor
@@ -53,7 +52,7 @@ public class RenderActor extends RenderLiving<EntityActor>
     @Override
     public boolean shouldRender(EntityActor livingEntity, ICamera camera, double camX, double camY, double camZ)
     {
-        if (Blockbuster.proxy.config.actor_always_render)
+        if (Blockbuster.actorAlwaysRender.get())
         {
             return true;
         }

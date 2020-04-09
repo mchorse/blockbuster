@@ -97,7 +97,7 @@ public class Record
     public Record(String filename)
     {
         this.filename = filename;
-        this.delay = Blockbuster.proxy.config.recording_delay;
+        this.delay = Blockbuster.recordingDelay.get();
         this.resetUnload();
     }
 
@@ -153,7 +153,7 @@ public class Record
      */
     public void resetUnload()
     {
-        this.unload = Blockbuster.proxy.config.record_unload_time;
+        this.unload = Blockbuster.recordUnloadTime.get();
     }
 
     /**
@@ -170,7 +170,7 @@ public class Record
 
         frame.apply(actor, force);
 
-        if (actor.world.isRemote && Blockbuster.proxy.config.actor_y)
+        if (actor.world.isRemote && Blockbuster.actorFixY.get())
         {
             actor.posY = frame.y;
         }

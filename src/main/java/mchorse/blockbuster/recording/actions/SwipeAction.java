@@ -2,7 +2,6 @@ package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.Blockbuster;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
 
@@ -21,9 +20,9 @@ public class SwipeAction extends Action
     {
         actor.swingArm(EnumHand.MAIN_HAND);
 
-        if (Blockbuster.proxy.config.actor_swish_swipe)
+        if (Blockbuster.actorSwishSwipe.get())
         {
-            actor.world.playSound((EntityPlayer) null, actor.posX, actor.posY, actor.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, actor.getSoundCategory(), 1.0F, 1.0F);
+            actor.world.playSound(null, actor.posX, actor.posY, actor.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK, actor.getSoundCategory(), 1.0F, 1.0F);
         }
     }
 

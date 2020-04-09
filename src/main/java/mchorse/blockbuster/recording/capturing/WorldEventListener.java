@@ -29,7 +29,7 @@ public class WorldEventListener implements IWorldEventListener
 
     public static void setBlockState(World world, BlockPos pos, IBlockState newState, int flags)
     {
-        if (Blockbuster.proxy.config.damage_control)
+        if (Blockbuster.damageControl.get())
         {
             ActionHandler.lastTE = world.getTileEntity(pos);
         }
@@ -46,7 +46,7 @@ public class WorldEventListener implements IWorldEventListener
     @Override
     public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags)
     {
-        if (Blockbuster.proxy.config.damage_control)
+        if (Blockbuster.damageControl.get())
         {
             if (oldState.getBlock() instanceof BlockDirector)
             {

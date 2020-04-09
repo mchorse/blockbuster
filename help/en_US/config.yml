@@ -1,7 +1,10 @@
 # Config strings
 blockbuster.config:
+    title: Blockbuster
+
     general:
         title: General
+        tooltip: General config options of Blockbuster mod
 
         show_first_time_modal: Show first time modal
         disable_teleport_playback_button: Disable playback button teleport
@@ -14,25 +17,28 @@ blockbuster.config:
     
     model_block:
         title: Model block
+        tooltip: Model block related config options
         
         model_block_disable_rendering: Disable model block rendering
         model_block_disable_item_rendering: Disable item rendering
     
     recording:
         title: Recording
+        tooltip: Here is everything related to player recording system
 
         recording_countdown: Recording countdown
         recording_delay: Recording frame skip
         record_unload_time: Automatic record unload time
         record_unload: Automatic record unloading
-        record_sync_rate: Record tick synchronization rate
+        record_sync_rate: Record tick sync rate
         record_attack_on_swipe: Attack on swipe
         record_commands: Record commands
         record_chat_prefix: Chat action prefix
     
     actor:
         title: Actor
-        
+        tooltip: Actor entity configuration option (not related to fake player)
+
         actor_fall_damage: Actor fall damage
         actor_tracking_range: Actor tracking range
         actor_rendering_range: Actor rendering range
@@ -43,6 +49,7 @@ blockbuster.config:
 
     damage_control:
         title: Damage control
+        tooltip: Damage control is a system which puts back blocks after an actor got recorded or scene finished playback
         
         damage_control: Damage control
         damage_control_distance: Damage distance

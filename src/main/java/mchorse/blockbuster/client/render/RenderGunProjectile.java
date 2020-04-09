@@ -28,7 +28,7 @@ public class RenderGunProjectile extends Render<EntityGunProjectile>
     @Override
     public boolean shouldRender(EntityGunProjectile livingEntity, ICamera camera, double camX, double camY, double camZ)
     {
-        if (Blockbuster.proxy.config.actor_always_render)
+        if (Blockbuster.actorAlwaysRender.get())
         {
             return true;
         }

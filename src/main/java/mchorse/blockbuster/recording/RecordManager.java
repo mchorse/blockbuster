@@ -16,7 +16,6 @@ import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.network.common.recording.PacketPlayerRecording;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.DamageAction;
-import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.FrameChunk;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
@@ -79,7 +78,7 @@ public class RecordManager
      */
     public boolean record(String filename, EntityPlayer player, Mode mode, boolean teleportBack, boolean notify, Runnable runnable)
     {
-        float countdown = Blockbuster.proxy.config.recording_countdown;
+        float countdown = Blockbuster.recordingCountdown.get();
 
         if (runnable != null && (countdown <= 0 || this.recorders.containsKey(player)))
         {
@@ -347,7 +346,7 @@ public class RecordManager
      */
     public void tick()
     {
-        if (Blockbuster.proxy.config.record_unload && !this.records.isEmpty())
+        if (Blockbuster.recordUnload.get() && !this.records.isEmpty())
         {
             this.checkAndUnloadRecords();
         }

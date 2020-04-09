@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRecordingOverlay extends Gui
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(Blockbuster.MODID, "textures/gui/recording.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Blockbuster.MOD_ID, "textures/gui/recording.png");
 
     protected Minecraft mc;
     protected String caption;

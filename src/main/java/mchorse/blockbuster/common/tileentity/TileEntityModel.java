@@ -3,10 +3,8 @@ package mchorse.blockbuster.common.tileentity;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -17,7 +15,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -145,7 +142,7 @@ public class TileEntityModel extends TileEntity implements ITickable
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared()
     {
-        float range = Blockbuster.proxy.config.actor_rendering_range;
+        float range = Blockbuster.actorRenderingRange.get();
 
         return range * range;
     }

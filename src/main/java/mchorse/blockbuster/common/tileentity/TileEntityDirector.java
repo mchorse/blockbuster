@@ -291,7 +291,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared()
     {
-        float range = Blockbuster.proxy.config.actor_rendering_range;
+        float range = Blockbuster.actorRenderingRange.get();
 
         return range * range;
     }
