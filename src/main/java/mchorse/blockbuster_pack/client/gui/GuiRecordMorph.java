@@ -1,24 +1,20 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
-import mchorse.metamorph.capabilities.morphing.Morphing;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphs;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,7 +27,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         super(mc);
 
         this.defaultPanel = this.general = new GuiRecordMorphPanel(mc, this);
-        this.registerPanel(this.general, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.morph.record"), 48, 0, 48, 16);
+        this.registerPanel(this.general, I18n.format("blockbuster.morph.record"), Icons.GEAR);
     }
 
     @Override
@@ -41,11 +37,11 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
     }
 
     @Override
-    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    protected void drawMorph(GuiContext context)
     {
         try
         {
-            this.morph.initial.renderOnScreen(this.mc.player, this.area.getX(0.5F), this.area.getY(0.66F), this.area.h / 3, 1);
+            this.morph.initial.renderOnScreen(this.mc.player, this.area.mx(), this.area.y(0.66F), this.area.h / 3, 1);
         }
         catch (Exception e)
         {}
@@ -55,8 +51,8 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
     public static class GuiRecordMorphPanel extends GuiMorphPanel<RecordMorph, GuiRecordMorph>
     {
         private GuiStringSearchListElement records;
-        private GuiButtonElement<GuiButton> pick;
-        private GuiButtonElement<GuiCheckBox> loop;
+        private GuiButtonElement pick;
+        private GuiToggleElement loop;
         private GuiTrackpadElement randomSkip;
         private GuiCreativeMorphs morphPicker;
 
@@ -64,41 +60,36 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         {
             super(mc, editor);
 
-            this.records = new GuiStringSearchListElement(mc, (str) -> this.morph.setRecord(str));
-            this.records.list.setBackground();
-            this.pick = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+            this.records = new GuiStringSearchListElement(mc, (str) -> this.morph.setRecord(str.get(0)));
+            this.records.list.background();
+            this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
             {
                 if (this.morphPicker == null)
                 {
-                    IMorphing morphing = Morphing.get(this.mc.player);
+                    this.morphPicker = new GuiCreativeMorphsMenu(mc, this::setMorph);
+                    this.morphPicker.flex().relative(this.area).wh(1F, 1F);
 
-                    this.morphPicker = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
-                    this.morphPicker.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-                    this.morphPicker.callback = (morph) -> this.setMorph(morph);
-
-                    GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-                    this.morphPicker.resize(screen.width, screen.height);
-                    this.children.add(this.morphPicker);
+                    this.morphPicker.resize();
+                    this.add(this.morphPicker);
                 }
 
-                this.children.unfocus();
                 this.morphPicker.setSelected(this.morph.initial);
                 this.morphPicker.setVisible(true);
             });
-            this.loop = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->
+            this.loop = new GuiToggleElement(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->
             {
-                this.morph.loop = b.button.isChecked();
+                this.morph.loop = this.loop.isToggled();
             });
-            this.randomSkip = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.record_morph.random_skip"), (value) -> this.morph.randomSkip = value.intValue());
-            this.randomSkip.setLimit(0, Integer.MAX_VALUE, true);
+            this.randomSkip = new GuiTrackpadElement(mc, (value) -> this.morph.randomSkip = value.intValue());
+            this.randomSkip.tooltip(I18n.format("blockbuster.gui.record_morph.random_skip"));
+            this.randomSkip.limit(0, Integer.MAX_VALUE, true);
 
-            this.records.resizer().parent(this.area).set(10, 25, 105, 20).h(1, -35 - 25 - 16 - 25);
-            this.pick.resizer().relative(this.records.resizer()).set(0, 0, 105, 20).y(1, 5);
-            this.loop.resizer().relative(this.pick.resizer()).set(0, 25, this.loop.button.width, 11);
-            this.randomSkip.resizer().relative(this.loop.resizer()).set(0, 16, 100, 20);
+            this.records.flex().relative(this.area).set(10, 25, 105, 20).h(1, -35 - 25 - 16 - 25);
+            this.pick.flex().relative(this.records.resizer()).set(0, 0, 105, 20).y(1, 5);
+            this.loop.flex().relative(this.pick.resizer()).set(0, 25, 105, 20);
+            this.randomSkip.flex().relative(this.loop.resizer()).set(0, 16, 100, 20);
 
-            this.children.add(this.pick, this.loop, this.randomSkip, this.records);
+            this.add(this.pick, this.loop, this.randomSkip, this.records);
         }
 
         private void setMorph(AbstractMorph morph)
@@ -120,7 +111,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             }
 
             this.records.list.setCurrent(morph.record);
-            this.loop.button.setIsChecked(morph.loop);
+            this.loop.toggled(morph.loop);
             this.randomSkip.setValue(morph.randomSkip);
 
             if (this.morphPicker != null)
@@ -130,10 +121,10 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         }
 
         @Override
-        public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+        public void draw(GuiContext context)
         {
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.records.area.x, this.records.area.y - 12, 0xcccccc);
-            super.draw(tooltip, mouseX, mouseY, partialTicks);
+            super.draw(context);
         }
     }
 }

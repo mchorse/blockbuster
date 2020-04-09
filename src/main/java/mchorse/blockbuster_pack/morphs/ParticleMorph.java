@@ -1,13 +1,13 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -97,6 +97,13 @@ public class ParticleMorph extends AbstractMorph
 
     @Override
     @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        return I18n.format("blockbuster.morph.particle");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         Minecraft.getMinecraft().getTextureManager().bindTexture(PARTICLE_TEXTURES);
@@ -151,9 +158,9 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
-    public void update(EntityLivingBase target, IMorphing cap)
+    public void update(EntityLivingBase target)
     {
-        super.update(target, cap);
+        super.update(target);
 
         boolean alive = this.duration < 0 || this.tick < this.duration;
 
@@ -296,43 +303,47 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        ParticleMorph morph = new ParticleMorph();
-
-        morph.copy(this, isRemote);
-
-        return morph;
+        return new ParticleMorph();
     }
 
-    public void copy(ParticleMorph morph, boolean isRemote)
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
     {
-        this.mode = morph.mode;
-        this.frequency = morph.frequency;
-        this.duration = morph.duration;
-        this.delay = morph.delay;
-        this.cap = morph.cap;
+        super.copy(from, isRemote);
 
-        this.vanillaType = morph.vanillaType;
-        this.vanillaX = morph.vanillaX;
-        this.vanillaY = morph.vanillaY;
-        this.vanillaZ = morph.vanillaZ;
-        this.vanillaDX = morph.vanillaDX;
-        this.vanillaDY = morph.vanillaDY;
-        this.vanillaDZ = morph.vanillaDZ;
-        this.speed = morph.speed;
-        this.count = morph.count;
-        this.arguments = morph.arguments;
+        if (from instanceof ParticleMorph)
+        {
+            ParticleMorph morph = (ParticleMorph) from;
 
-        this.morph = morph.morph == null ? null : morph.morph.clone(isRemote);
-        this.movementType = morph.movementType;
-        this.yaw = morph.yaw;
-        this.pitch = morph.pitch;
-        this.sequencer = morph.sequencer;
-        this.random = morph.random;
-        this.fade = morph.fade;
-        this.lifeSpan = morph.lifeSpan;
-        this.maximum = morph.maximum;
+            this.mode = morph.mode;
+            this.frequency = morph.frequency;
+            this.duration = morph.duration;
+            this.delay = morph.delay;
+            this.cap = morph.cap;
+
+            this.vanillaType = morph.vanillaType;
+            this.vanillaX = morph.vanillaX;
+            this.vanillaY = morph.vanillaY;
+            this.vanillaZ = morph.vanillaZ;
+            this.vanillaDX = morph.vanillaDX;
+            this.vanillaDY = morph.vanillaDY;
+            this.vanillaDZ = morph.vanillaDZ;
+            this.speed = morph.speed;
+            this.count = morph.count;
+            this.arguments = morph.arguments;
+
+            this.morph = morph.morph == null ? null : morph.morph.clone(isRemote);
+            this.movementType = morph.movementType;
+            this.yaw = morph.yaw;
+            this.pitch = morph.pitch;
+            this.sequencer = morph.sequencer;
+            this.random = morph.random;
+            this.fade = morph.fade;
+            this.lifeSpan = morph.lifeSpan;
+            this.maximum = morph.maximum;
+        }
     }
 
     @Override
@@ -479,7 +490,7 @@ public class ParticleMorph extends AbstractMorph
             this.movementType.calculate(this);
             this.calculateRotation();
 
-            this.morph.update(entity, null);
+            this.morph.update(entity);
         }
 
         private void calculateRotation()

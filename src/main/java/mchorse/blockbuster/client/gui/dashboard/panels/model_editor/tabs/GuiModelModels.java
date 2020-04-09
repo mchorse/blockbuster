@@ -1,25 +1,16 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map.Entry;
-
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
-import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
-import mchorse.mclib.client.gui.utils.Resizer.Measure;
-import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.client.gui.utils.Icons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -31,12 +22,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
+
 public class GuiModelModels extends GuiModelEditorTab
 {
     public GuiStringListElement modelList;
-    private GuiButtonElement<GuiTextureButton> save;
-    public GuiButtonElement<GuiTextureButton> export;
-    private GuiDelegateElement<IGuiElement> modal;
+    private GuiIconElement save;
+    public GuiIconElement export;
 
     public GuiModelModels(Minecraft mc, GuiModelEditorPanel panel)
     {
@@ -44,20 +39,18 @@ public class GuiModelModels extends GuiModelEditorTab
 
         this.title = I18n.format("blockbuster.gui.me.models.title");
 
-        this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str));
-        this.modelList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).w(1, 0);
-        this.children.add(this.modelList);
+        this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str.get(0)));
+        this.modelList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).w(1, 0);
+        this.add(this.modelList);
 
-        this.save = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 112, 32, 112, 48, (b) -> this.saveModel()).tooltip(I18n.format("blockbuster.gui.me.models.save"), TooltipDirection.BOTTOM);
-        this.export = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) -> this.exportModel()).tooltip(I18n.format("blockbuster.gui.me.models.export"), TooltipDirection.BOTTOM);
+        this.save = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
+        this.save.tooltip(I18n.format("blockbuster.gui.me.models.save"));
+        this.export = new GuiIconElement(mc, Icons.UPLOAD, (b) -> this.exportModel());
+        this.export.tooltip(I18n.format("blockbuster.gui.me.models.export"));
 
-        this.save.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -18);
-        this.export.resizer().set(-20, 0, 16, 16).relative(this.save.resizer());
-        this.children.add(this.save, this.export);
-
-        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
-        this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
-        this.children.add(this.modal);
+        this.save.flex().set(2, 2, 16, 16).relative(this.area).x(1, -18);
+        this.export.flex().set(-20, 0, 16, 16).relative(this.save.resizer());
+        this.add(this.save, this.export);
     }
 
     public void updateModelList()
@@ -69,7 +62,12 @@ public class GuiModelModels extends GuiModelEditorTab
 
     private void saveModel()
     {
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.models.name"), (name) -> this.saveModel(name)).setValue(this.panel.modelName));
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.models.name"), this::saveModel);
+
+            return modal.setValue(this.panel.modelName);
+        });
     }
 
     private void saveModel(String name)
@@ -109,7 +107,12 @@ public class GuiModelModels extends GuiModelEditorTab
 
         Collections.sort(mobs);
 
-        this.modal.setDelegate(new GuiListModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.models.pick"), (name) -> this.exportModel(name)).addValues(mobs));
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiListModal modal = new GuiListModal(this.mc, I18n.format("blockbuster.gui.me.models.pick"), this::exportModel);
+
+            return modal.addValues(mobs);
+        });
     }
 
     private void exportModel(String name)
@@ -132,7 +135,8 @@ public class GuiModelModels extends GuiModelEditorTab
         }
         catch (Exception e)
         {
-            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.models.error", e.getMessage())));
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, I18n.format("blockbuster.gui.me.models.error", e.getMessage())));
+
             e.printStackTrace();
         }
     }

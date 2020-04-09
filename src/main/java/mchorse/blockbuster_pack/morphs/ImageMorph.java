@@ -1,12 +1,17 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.client.textures.GifTexture;
-import mchorse.blockbuster.utils.MatrixUtils;
+import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.resources.RLUtils;
+import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,6 +69,13 @@ public class ImageMorph extends AbstractMorph
         super();
 
         this.name = "blockbuster.image";
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        return I18n.format("blockbuster.morph.image");
     }
 
     @Override
@@ -236,20 +248,27 @@ public class ImageMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        ImageMorph morph = new ImageMorph();
+        return new ImageMorph();
+    }
 
-        morph.name = this.name;
-        morph.settings = this.settings;
-        morph.texture = RLUtils.clone(this.texture);
-        morph.scale = this.scale;
-        morph.shaded = this.shaded;
-        morph.lighting = this.lighting;
-        morph.billboard = this.billboard;
-        morph.cropping.copy(this.cropping);
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
+    {
+        super.copy(from, isRemote);
 
-        return morph;
+        if (from instanceof ImageMorph)
+        {
+            ImageMorph morph = (ImageMorph) from;
+
+            this.texture = RLUtils.clone(morph.texture);
+            this.scale = morph.scale;
+            this.shaded = morph.shaded;
+            this.lighting = morph.lighting;
+            this.billboard = morph.billboard;
+            this.cropping.copy(morph.cropping);
+        }
     }
 
     @Override

@@ -1,26 +1,25 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.recording.actions.ItemUseAction;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumHand;
 
 public class GuiItemUseActionPanel<T extends ItemUseAction> extends GuiActionPanel<T>
 {
-    public GuiButtonElement<GuiCirculate> hand;
+    public GuiCirculateElement hand;
 
     public GuiItemUseActionPanel(Minecraft mc)
     {
         super(mc);
 
-        this.hand = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.action.hand = EnumHand.values()[b.button.getValue()]);
-        this.hand.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
-        this.hand.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
-        this.hand.resizer().set(10, 0, 80, 20).parent(this.area).y(1, -30);
+        this.hand = new GuiCirculateElement(mc, (b) -> this.action.hand = EnumHand.values()[this.hand.getValue()]);
+        this.hand.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
+        this.hand.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
+        this.hand.flex().set(10, 0, 80, 20).relative(this.area).y(1, -30);
 
-        this.children.add(this.hand);
+        this.add(this.hand);
     }
 
     @Override
@@ -28,6 +27,6 @@ public class GuiItemUseActionPanel<T extends ItemUseAction> extends GuiActionPan
     {
         super.fill(action);
 
-        this.hand.button.setValue(action.hand.ordinal());
+        this.hand.setValue(action.hand.ordinal());
     }
 }

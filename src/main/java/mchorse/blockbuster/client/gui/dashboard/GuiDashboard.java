@@ -1,6 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
-import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
@@ -13,14 +12,12 @@ import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
-import mchorse.mclib.client.gui.utils.Resizer;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
-import mchorse.metamorph.client.gui.elements.GuiCreativeMorphsMenu;
+import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,11 +29,6 @@ import java.util.Iterator;
 @SideOnly(Side.CLIENT)
 public class GuiDashboard extends GuiBase
 {
-    /**
-     * Icons texture used across all dashboard panels 
-     */
-    public static final ResourceLocation GUI_ICONS = new ResourceLocation("blockbuster", "textures/gui/dashboard/icons.png");
-
     public GuiDelegateElement<GuiDashboardPanel> panel;
     public GuiDespacito sidebar;
 
@@ -68,13 +60,12 @@ public class GuiDashboard extends GuiBase
         this.texturePanel = new GuiTextureManagerPanel(mc, this);
 
         this.panel = new GuiDelegateElement<GuiDashboardPanel>(mc, this.mainPanel);
-        this.panel.resizer().set(32, 0, 1, 1).parent(this.area).w(1F, -32).h(1F, 0);
+        this.panel.flex().set(32, 0, 1, 1).relative(this.viewport).w(1F, -32).h(1F, 0);
 
         this.sidebar = new GuiDespacito(mc, this);
-        this.sidebar.resizer = new Resizer().set(0.5F, 0, 32, 0.5F).parent(this.area).h(1F, 0);
+        this.sidebar.flex().set(0.5F, 0, 32, 0.5F).relative(this.viewport).h(1F, 0);
 
-        this.elements.add(this.panel);
-        this.elements.add(this.sidebar);
+        this.root.add(this.panel, this.sidebar);
     }
 
     public GuiDashboard setMainMenu(boolean main)
@@ -119,7 +110,7 @@ public class GuiDashboard extends GuiBase
             EntityPlayer player = mc.player;
             IMorphing morphing = player == null ? null : Morphing.get(player);
 
-            this.morphs = new GuiCreativeMorphsMenu(mc, 6, null, morphing);
+            this.morphs = new GuiCreativeMorphsMenu(mc, null);
             this.directorPanel.open();
             this.modelPanel.open();
             this.recordingEditorPanel.open();
@@ -133,7 +124,7 @@ public class GuiDashboard extends GuiBase
         {
             boolean alreadyHas = false;
 
-            for (IGuiElement element : this.elements.elements)
+            for (IGuiElement element : this.root.getChildren())
             {
                 if (element instanceof GuiFirstTime.Overlay)
                 {
@@ -147,8 +138,8 @@ public class GuiDashboard extends GuiBase
             {
                 GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(this.mc, this);
 
-                overlay.resizer().parent(this.area).w(1, 0).h(1, 0);
-                this.elements.add(overlay);
+                overlay.flex().relative(this.viewport).w(1, 0).h(1, 0);
+                this.root.add(overlay);
             }
         }
 
@@ -223,13 +214,18 @@ public class GuiDashboard extends GuiBase
         this.texturePanel.close();
 
         /* Remove a first time thing */
-        Iterator<IGuiElement> it = this.elements.elements.iterator();
+        Iterator<IGuiElement> it = this.root.getChildren().iterator();
+        GuiElement element = null;
 
         while (it.hasNext())
         {
-            if (it.next() instanceof GuiFirstTime.Overlay)
+            IGuiElement elem = it.next();
+
+            if (elem instanceof GuiFirstTime.Overlay)
             {
-                it.remove();
+                element = (GuiFirstTime.Overlay) elem;
+
+                break;
             }
         }
 
@@ -242,8 +238,8 @@ public class GuiDashboard extends GuiBase
         /* If this GUI was opened in main menu, then the sidebar should 
          * be hidden */
         this.sidebar.setVisible(!this.mainMenu);
-        this.panel.resizer().w.padding = this.mainMenu ? 0 : -32;
-        this.panel.resizer().x.value = this.mainMenu ? 0 : 32;
+        this.panel.flex().w.offset = this.mainMenu ? 0 : -32;
+        this.panel.flex().x.value = this.mainMenu ? 0 : 32;
 
         super.initGui();
     }

@@ -10,6 +10,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.resource.StreamEntry;
+import mchorse.blockbuster.recording.data.Mode;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -78,9 +79,13 @@ public class ModelHandler
     /**
      * Add model to the model handler 
      */
-    public void addModel(String name, IModelLazyLoader loader, long timestamp) throws Exception
+    public void addModel(String key, IModelLazyLoader loader, long timestamp) throws Exception
     {
-        this.models.put(name, new ModelCell(loader.loadModel(name), timestamp, loader.getFilenameHash()));
+        Model model = loader.loadModel(key);
+
+        this.models.put(key, new ModelCell(model, timestamp, loader.getFilenameHash()));
+
+        Blockbuster.proxy.factory.section.add(key, model);
     }
 
     /**
@@ -89,6 +94,8 @@ public class ModelHandler
     public void removeModel(String key)
     {
         this.models.remove(key);
+
+        Blockbuster.proxy.factory.section.remove(key);
     }
 
     /**

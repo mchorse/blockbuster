@@ -141,7 +141,7 @@ public class GunProps
 
             if (morph != null)
             {
-                morph.update(this.entity, null);
+                morph.update(this.entity);
             }
         }
 

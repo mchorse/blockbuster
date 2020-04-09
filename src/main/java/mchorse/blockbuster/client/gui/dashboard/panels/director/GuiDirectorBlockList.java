@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
@@ -15,15 +16,11 @@ import net.minecraft.util.math.BlockPos;
  */
 public class GuiDirectorBlockList extends GuiListElement<TileEntityDirector>
 {
-    public GuiDirectorBlockList(Minecraft mc, Consumer<TileEntityDirector> callback)
+    public GuiDirectorBlockList(Minecraft mc, Consumer<List<TileEntityDirector>> callback)
     {
         super(mc, callback);
         this.scroll.scrollItemSize = 16;
     }
-
-    @Override
-    public void sort()
-    {}
 
     public boolean addBlock(BlockPos pos)
     {
@@ -43,20 +40,16 @@ public class GuiDirectorBlockList extends GuiListElement<TileEntityDirector>
     }
 
     @Override
-    public void drawElement(TileEntityDirector item, int i, int x, int y, boolean hovered)
+    protected String elementToString(TileEntityDirector element, int i, int x, int y, boolean hover, boolean selected)
     {
-        BlockPos pos = item.getPos();
-        String label = item.director.title;
+        BlockPos pos = element.getPos();
+        String label = element.director.title;
 
         if (label.isEmpty())
         {
             label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
         }
 
-        if (this.current == i) {
-            Gui.drawRect(x, y, x + this.scroll.w, y + this.scroll.scrollItemSize, -2013230849);
-        }
-
-        this.font.drawStringWithShadow(label, (float)(x + 4), (float)(y + 4), hovered ? 16777120 : 16777215);
+        return label;
     }
 }

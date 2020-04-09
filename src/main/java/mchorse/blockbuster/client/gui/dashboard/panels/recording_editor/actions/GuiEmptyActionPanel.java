@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.recording.actions.Action;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -13,10 +13,10 @@ public class GuiEmptyActionPanel extends GuiActionPanel<Action>
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
 
-        this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.no_fields"), this.area.getX(0.5F), this.area.getY(0.5F), 0xffffff);
+        this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.no_fields"), this.area.mx(), this.area.my(), 0xffffff);
     }
 }

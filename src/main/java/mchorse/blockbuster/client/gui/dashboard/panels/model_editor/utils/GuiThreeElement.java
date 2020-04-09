@@ -1,10 +1,10 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
-import java.util.function.Consumer;
-
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.mclib.client.gui.utils.Resizer.Measure;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.resizers.Flex;
 import net.minecraft.client.Minecraft;
+
+import java.util.function.Consumer;
 
 public class GuiThreeElement extends GuiTwoElement
 {
@@ -15,40 +15,40 @@ public class GuiThreeElement extends GuiTwoElement
         super(mc, a);
 
         this.array = new Float[] {0F, 0F, 0F};
-        this.c = new GuiTrackpadElement(mc, "", (value) ->
+        this.c = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[2] = value;
             a.accept(this.array);
         });
-        this.children.add(this.c);
+        this.add(this.c);
 
-        this.c.resizer().parent(this.area).set(0.667F, 0, 0.333F, 1, Measure.RELATIVE);
+        this.c.flex().relative(this.area).set(0.667F, 0, 0.333F, 1, Flex.Measure.RELATIVE);
 
-        this.a.resizer().w.value = this.b.resizer().w.value = 0.333F;
-        this.b.resizer().x.set(0.333F, Measure.RELATIVE, 0);
+        this.a.flex().w.value = this.b.flex().w.value = 0.333F;
+        this.b.flex().x.set(0.333F, Flex.Measure.RELATIVE, 0);
     }
 
     @Override
     public void setLimit(int min, int max)
     {
         super.setLimit(min, max);
-        this.c.trackpad.min = min;
-        this.c.trackpad.max = max;
+        this.c.min = min;
+        this.c.max = max;
     }
 
     @Override
     public void setLimit(int min, int max, boolean integer)
     {
         super.setLimit(min, max, integer);
-        this.c.trackpad.min = min;
-        this.c.trackpad.max = max;
-        this.c.trackpad.integer = integer;
+        this.c.min = min;
+        this.c.max = max;
+        this.c.integer = integer;
     }
 
     public void setValues(float a, float b, float c)
     {
         this.setValues(a, b);
-        this.c.trackpad.setValue(c);
+        this.c.setValue(c);
 
         this.array[2] = c;
     }

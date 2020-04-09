@@ -6,6 +6,7 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -19,7 +20,8 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     public GuiActionPanel(Minecraft mc)
     {
         super(mc);
-        this.createChildren();
+
+        this.hideTooltip();
     }
 
     public void fill(T action)
@@ -50,23 +52,21 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(GuiContext context)
     {
-        return super.mouseClicked(mouseX, mouseY, mouseButton) || this.area.isInside(mouseX, mouseY);
+        return super.mouseClicked(context) || this.area.isInside(context);
     }
 
     @Override
-    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
+    public boolean mouseScrolled(GuiContext context)
     {
-        return super.mouseScrolled(mouseX, mouseY, scroll) || this.area.isInside(mouseX, mouseY);
+        return super.mouseScrolled(context) || this.area.isInside(context);
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
-        tooltip.set(null, null);
-
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
 
         if (!this.title.isEmpty())
         {

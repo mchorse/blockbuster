@@ -1,13 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.GuiSidebarButton;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
-import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiActionSearchListElement.ActionType;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockActionPanel;
@@ -29,8 +23,8 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.recording.actions.PacketAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestAction;
 import mchorse.blockbuster.network.common.recording.actions.PacketRequestActions;
-import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.AttackAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAction;
 import mchorse.blockbuster.recording.actions.BreakBlockAnimation;
@@ -47,17 +41,21 @@ import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiLabelSearchListElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.Label;
+import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GuiRecordingEditorPanel extends GuiDashboardPanel
 {
@@ -70,12 +68,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     public GuiRecordSelector selector;
     public GuiDelegateElement<GuiActionPanel<? extends Action>> editor;
 
-    public GuiButtonElement<GuiTextureButton> add;
-    public GuiButtonElement<GuiTextureButton> dupe;
-    public GuiButtonElement<GuiTextureButton> remove;
+    public GuiIconElement add;
+    public GuiIconElement dupe;
+    public GuiIconElement remove;
 
-    public GuiButtonElement<GuiSidebarButton> open;
-    public GuiActionSearchListElement list;
+    public GuiIconElement open;
+    public GuiLabelSearchListElement<String> list;
 
     public Record record;
 
@@ -105,21 +103,24 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.records = new GuiRecordList(mc, this);
-        this.records.resizer().set(0, 0, 120, 0).parent(this.area).x(1, -120).h(1, 0);
+        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).h(1, 0);
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
-        this.selector.resizer().parent(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
+        this.selector.flex().relative(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
 
         this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
-        this.editor.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
+        this.editor.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
-        this.add = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.list.toggleVisible()).tooltip(I18n.format("blockbuster.gui.add"), TooltipDirection.LEFT);
-        this.dupe = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 48, 32, 48, 48, (b) -> this.dupeAction()).tooltip(I18n.format("blockbuster.gui.duplicate"), TooltipDirection.LEFT);
-        this.remove = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removeAction()).tooltip(I18n.format("blockbuster.gui.remove"), TooltipDirection.LEFT);
+        this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.list.toggleVisible());
+        this.add.tooltip(I18n.format("blockbuster.gui.add"), Direction.LEFT);
+        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeAction());
+        this.dupe.tooltip(I18n.format("blockbuster.gui.duplicate"), Direction.LEFT);
+        this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeAction());
+        this.remove.tooltip(I18n.format("blockbuster.gui.remove"), Direction.LEFT);
 
-        this.list = new GuiActionSearchListElement(mc, (str) -> this.createAction(str.value));
+        this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.createAction(str.get(0).value));
         this.list.label = I18n.format("blockbuster.gui.search") + "...";
         this.list.background = true;
 
@@ -127,22 +128,22 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         {
             String title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
 
-            this.list.elements.add(new ActionType(title, key));
+            this.list.elements.add(new Label<String>(title, key));
         }
 
         this.list.filter("", false);
 
-        this.add.resizer().set(0, 2, 16, 16).parent(this.selector.area).x(1F, -18);
-        this.dupe.resizer().set(0, 20, 16, 16).relative(this.add.resizer());
-        this.remove.resizer().set(0, 20, 16, 16).relative(this.dupe.resizer());
-        this.list.resizer().set(0, 0, 80, 80).parent(this.selector.area).x(1, -100);
+        this.add.flex().set(0, 2, 16, 16).relative(this.selector.area).x(1F, -18);
+        this.dupe.flex().set(0, 20, 16, 16).relative(this.add.resizer());
+        this.remove.flex().set(0, 20, 16, 16).relative(this.dupe.resizer());
+        this.list.flex().set(0, 0, 80, 80).relative(this.selector.area).x(1, -100);
 
-        this.open = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (b) -> this.records.toggleVisible());
-        this.open.resizer().parent(this.area).set(0, 2, 24, 24).x(1, -28);
+        this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.records.toggleVisible());
+        this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28);
 
-        this.children.add(this.editor, this.selector, this.records, this.open);
-        this.selector.children.add(this.add, this.dupe, this.remove, this.list);
-        this.children.add(this.dashboard.morphDelegate);
+        this.add(this.editor, this.selector, this.records, this.open);
+        this.selector.add(this.add, this.dupe, this.remove, this.list);
+        this.add(this.dashboard.morphDelegate);
     }
 
     private void createAction(String str)
@@ -233,10 +234,10 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         this.records.clear();
         Dispatcher.sendToServer(new PacketRequestActions());
 
-        this.selector.resizer().parent(this.area);
-        this.editor.resizer().parent(this.area);
-        this.records.resizer().parent(this.area);
-        this.open.resizer().parent(this.area).set(0, 2, 24, 24).x(1, -28).y(2);
+        this.selector.flex().relative(this.area);
+        this.editor.flex().relative(this.area);
+        this.records.flex().relative(this.area);
+        this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28).y(2);
 
         if (this.panels.isEmpty())
         {
@@ -273,8 +274,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
                 this.editor.delegate.setMorph(morph);
             }
         };
-        this.dashboard.morphDelegate.resizer().parent(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-        this.dashboard.morphDelegate.resize(this.dashboard.width, this.dashboard.height);
+        this.dashboard.morphDelegate.flex().relative(this.area).xy(0, 0).wh(1F, 1F);
+        this.dashboard.morphDelegate.resize();
 
         if (this.editor.delegate != null)
         {
@@ -348,13 +349,13 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
         if (this.record == null)
         {
-            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.not_selected"), this.area.getX(0.5F), this.area.getY(0.5F) - 6, 0xffffff);
+            this.drawCenteredString(this.font, I18n.format("blockbuster.gui.record_editor.not_selected"), this.area.mx(), this.area.my() - 6, 0xffffff);
         }
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
     }
 }

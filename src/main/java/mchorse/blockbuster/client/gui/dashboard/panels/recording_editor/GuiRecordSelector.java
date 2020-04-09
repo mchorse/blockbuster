@@ -3,6 +3,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 import java.util.List;
 import java.util.function.Consumer;
 
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
@@ -41,7 +43,6 @@ public class GuiRecordSelector extends GuiElement
     {
         super(mc);
 
-        this.createChildren();
         this.scroll = new ScrollArea(34);
         this.scroll.direction = ScrollDirection.HORIZONTAL;
         this.scroll.scrollSpeed = 34;
@@ -51,9 +52,9 @@ public class GuiRecordSelector extends GuiElement
     }
 
     @Override
-    public void resize(int width, int height)
+    public void resize()
     {
-        super.resize(width, height);
+        super.resize();
 
         this.scroll.copy(this.area);
         this.scroll.w -= 20;
@@ -96,12 +97,12 @@ public class GuiRecordSelector extends GuiElement
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(GuiContext context)
     {
-        this.lastX = mouseX;
-        this.lastY = mouseY;
+        this.lastX = context.mouseX;
+        this.lastY = context.mouseY;
 
-        if (mouseButton == 2 && this.area.isInside(mouseX, mouseY))
+        if (context.mouseButton == 2 && this.area.isInside(context))
         {
             this.lastDragging = true;
             this.lastH = this.scroll.scroll;
@@ -110,20 +111,20 @@ public class GuiRecordSelector extends GuiElement
             return true;
         }
 
-        if (super.mouseClicked(mouseX, mouseY, mouseButton) || this.scroll.mouseClicked(mouseX, mouseY) || this.vertical.mouseClicked(mouseX, mouseY))
+        if (super.mouseClicked(context) || this.scroll.mouseClicked(context) || this.vertical.mouseClicked(context))
         {
             return true;
         }
 
-        if (this.scroll.isInside(mouseX, mouseY) && !this.moving)
+        if (this.scroll.isInside(context) && !this.moving)
         {
-            int index = this.scroll.getIndex(mouseX, mouseY);
-            int sub = this.vertical.getIndex(mouseX, mouseY);
+            int index = this.scroll.getIndex(context.mouseX, context.mouseY);
+            int sub = this.vertical.getIndex(context.mouseX, context.mouseY);
 
             if (index >= 0 && index < this.panel.record.actions.size())
             {
                 List<Action> actions = this.panel.record.actions.get(index);
-                boolean within = actions == null ? false : sub >= 0 && sub < actions.size();
+                boolean within = actions != null && (sub >= 0 && sub < actions.size());
 
                 if (this.callback != null)
                 {
@@ -149,35 +150,38 @@ public class GuiRecordSelector extends GuiElement
     }
 
     @Override
-    public boolean mouseScrolled(int mouseX, int mouseY, int scroll)
+    public boolean mouseScrolled(GuiContext context)
     {
-        return super.mouseScrolled(mouseX, mouseY, scroll) || this.scroll.mouseScroll(mouseX, mouseY, scroll);
+        return super.mouseScrolled(context) || this.scroll.mouseScroll(context);
     }
 
     @Override
-    public void mouseReleased(int mouseX, int mouseY, int state)
+    public void mouseReleased(GuiContext context)
     {
-        super.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(context);
 
         if (this.moving)
         {
-            this.panel.moveTo(this.scroll.getIndex(mouseX, mouseY));
+            this.panel.moveTo(this.scroll.getIndex(context.mouseX, context.mouseY));
         }
 
         this.lastDragging = false;
         this.dragging = false;
         this.moving = false;
-        this.scroll.mouseReleased(mouseX, mouseY);
-        this.vertical.mouseReleased(mouseX, mouseY);
+        this.scroll.mouseReleased(context);
+        this.vertical.mouseReleased(context);
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
         if (this.panel.record == null)
         {
             return;
         }
+
+        int mouseX = context.mouseX;
+        int mouseY = context.mouseY;
 
         if (this.lastDragging)
         {
@@ -197,8 +201,8 @@ public class GuiRecordSelector extends GuiElement
 
         GuiScreen screen = this.mc.currentScreen;
 
-        Gui.drawRect(this.scroll.x, this.scroll.y, this.scroll.getX(1), this.scroll.getY(1), 0x88000000);
-        GuiUtils.scissor(this.area.x, this.area.y, this.area.w, this.area.h, screen.width, screen.height);
+        this.scroll.draw(0x88000000);
+        GuiDraw.scissor(this.area.x, this.area.y, this.area.w, this.area.h, context);
 
         int h = this.scroll.scrollItemSize;
         int index = this.scroll.scroll / h;
@@ -207,11 +211,11 @@ public class GuiRecordSelector extends GuiElement
         {
             int x = this.scroll.x - this.scroll.scroll + i * h;
 
-            Gui.drawRect(x, this.scroll.y, x + 1, this.scroll.getY(1), 0x22ffffff);
+            Gui.drawRect(x, this.scroll.y, x + 1, this.scroll.ey(), 0x22ffffff);
 
             if (i == this.tick)
             {
-                Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.getY(1), 0x440088ff);
+                Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.ey(), 0x440088ff);
             }
 
             if (i >= 0 && i < this.panel.record.actions.size())
@@ -244,7 +248,7 @@ public class GuiRecordSelector extends GuiElement
             }
         }
 
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        GuiDraw.unscissor(context);
 
         if (this.moving)
         {
@@ -263,7 +267,7 @@ public class GuiRecordSelector extends GuiElement
             if (i % 5 == 0)
             {
                 int x = this.scroll.x - this.scroll.scroll + i * h;
-                int y = this.scroll.getY(1) - 12;
+                int y = this.scroll.ey() - 12;
 
                 String str = String.valueOf(i);
 
@@ -274,10 +278,10 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
-        this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
-        net.minecraftforge.fml.client.config.GuiUtils.drawContinuousTexturedBox(this.area.getX(1) - 20, this.area.y, 0, 64, 20, this.area.h, 32, 32, 0, 0);
-        GuiUtils.drawHorizontalGradientRect(this.area.getX(1) - 28, this.area.y, this.area.getX(1) - 20, this.area.getY(1), 0x00000000, 0x88000000, 0);
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        Gui.drawRect(this.area.ex() - 20, this.area.y, this.area.ex(), this.area.ey(), 0xff222222);
+        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 28, this.area.y, this.area.ex() - 20, this.area.ey(), 0x00000000, 0x88000000, 0);
+
+        super.draw(context);
     }
 }

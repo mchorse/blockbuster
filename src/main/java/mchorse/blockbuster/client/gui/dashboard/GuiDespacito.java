@@ -1,16 +1,16 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
-import mchorse.blockbuster.Blockbuster;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.utils.Resizer;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.resizers.layout.ColumnResizer;
+import mchorse.mclib.utils.Direction;
+import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 /**
@@ -26,47 +26,47 @@ public class GuiDespacito extends GuiElement
     {
         super(mc);
 
-        this.createChildren();
         this.dashboard = dashboard;
 
-        GuiButtonElement<GuiSidebarButton> element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.registerItem)), (button) -> dashboard.openPanel(dashboard.mainPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.main"), TooltipDirection.RIGHT);
-        Resizer resizer = new Resizer().set(4, 4, 24, 24).parent(this.area);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement main = new GuiIconElement(mc, Icons.MORE, (button) -> dashboard.openPanel(dashboard.mainPanel));
+        main.tooltip(I18n.format("blockbuster.gui.dashboard.main"), Direction.RIGHT);
+        main.flex().wh(24, 24);
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.directorBlock)), (button) -> dashboard.openPanel(dashboard.directorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.director"), TooltipDirection.RIGHT);
-        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement director = new GuiIconElement(mc, MMIcons.BLOCK, (button) -> dashboard.openPanel(dashboard.directorPanel));
+        director.tooltip(I18n.format("blockbuster.gui.dashboard.director"), Direction.RIGHT);
+        director.flex().wh(24, 24);
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.modelBlock)), (button) -> dashboard.openPanel(dashboard.modelPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.model"), TooltipDirection.RIGHT);
-        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement block = new GuiIconElement(mc, Icons.POSE, (button) -> dashboard.openPanel(dashboard.modelPanel));
+        block.tooltip(I18n.format("blockbuster.gui.dashboard.model"), Direction.RIGHT);
+        block.flex().wh(24, 24);
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Blockbuster.actorConfigItem)), (button) -> dashboard.openPanel(dashboard.modelEditorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.model_editor"), TooltipDirection.RIGHT);
-        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement model = new GuiIconElement(mc, MMIcons.BLOCK, (button) -> dashboard.openPanel(dashboard.modelEditorPanel));
+        model.tooltip(I18n.format("blockbuster.gui.dashboard.model_editor"), Direction.RIGHT);
+        model.flex().wh(24, 24);
 
-        /* Despacito 13 confirmed */
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.RECORD_13)), (button) -> dashboard.openPanel(dashboard.recordingEditorPanel)).tooltip(I18n.format("blockbuster.gui.dashboard.player_recording"), TooltipDirection.RIGHT);
-        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement editor = new GuiIconElement(mc, Icons.POSE, (button) -> dashboard.openPanel(dashboard.recordingEditorPanel));
+        editor.tooltip(I18n.format("blockbuster.gui.dashboard.player_recording"), Direction.RIGHT);
+        editor.flex().wh(24, 24);
 
-        element = new GuiButtonElement<GuiSidebarButton>(mc, new GuiSidebarButton(0, 0, 0, new ItemStack(Items.DYE, 1, 1)), (button) -> dashboard.openPanel(dashboard.texturePanel)).tooltip(I18n.format("blockbuster.gui.dashboard.texture"), TooltipDirection.RIGHT);
-        resizer = new Resizer().set(0, 24, 24, 24).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        GuiIconElement texture = new GuiIconElement(mc, Icons.MATERIAL, (button) -> dashboard.openPanel(dashboard.texturePanel));
+        texture.tooltip(I18n.format("blockbuster.gui.dashboard.texture"), Direction.RIGHT);
+        texture.flex().wh(24, 24);
+
+        this.add(main, director, block, model, editor, texture);
+        ColumnResizer.apply(this, 0).vertical().scroll().padding(4);
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
         int h = this.area.h;
         int x = this.area.x + this.area.w;
 
-        this.mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
-        GuiUtils.drawContinuousTexturedBox(this.area.x, this.area.y, 0, 32, this.area.w, h, 32, 32, 0, 0);
-        mchorse.mclib.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000, 0x00000000, 0);
-        mchorse.mclib.client.gui.utils.GuiUtils.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);
-        Gui.drawRect(x - 1, this.area.y, x, this.area.getY(1), 0x22000000);
+        Gui.drawRect(this.area.x, this.area.y, this.area.w, h, 0xff333333);
+        GuiDraw.drawHorizontalGradientRect(x, 0, x + 16, h, 0x22000000, 0x00000000, 0);
+        GuiDraw.drawHorizontalGradientRect(x - 8, 0, x, h, 0x00000000, 0x22000000, 0);
+        Gui.drawRect(x - 1, this.area.y, x, this.area.ey(), 0x22000000);
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
     }
 }

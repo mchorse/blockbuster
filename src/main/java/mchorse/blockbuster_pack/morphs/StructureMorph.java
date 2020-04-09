@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.resources.I18n;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.blockbuster.network.Dispatcher;
@@ -119,6 +120,13 @@ public class StructureMorph extends AbstractMorph
 
     @Override
     @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        return I18n.format("blockbuster.morph.structure");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         StructureRenderer renderer = STRUCTURES.get(this.structure);
@@ -220,16 +228,23 @@ public class StructureMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        StructureMorph morph = new StructureMorph();
+        return null;
+    }
 
-        morph.name = this.name;
-        morph.settings = this.settings;
-        morph.structure = this.structure;
-        morph.lighting = this.lighting;
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
+    {
+        super.copy(from, isRemote);
 
-        return morph;
+        if (from instanceof StructureMorph)
+        {
+            StructureMorph morph = (StructureMorph) from;
+
+            this.structure = morph.structure;
+            this.lighting = morph.lighting;
+        }
     }
 
     @Override

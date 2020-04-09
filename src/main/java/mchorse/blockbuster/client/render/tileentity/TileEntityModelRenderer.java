@@ -4,7 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
-import mchorse.blockbuster.utils.MatrixUtils;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

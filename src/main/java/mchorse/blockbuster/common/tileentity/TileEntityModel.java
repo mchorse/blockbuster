@@ -124,7 +124,7 @@ public class TileEntityModel extends TileEntity implements ITickable
 
             if (this.morph != null)
             {
-                this.morph.update(this.entity, null);
+                this.morph.update(this.entity);
             }
         }
     }

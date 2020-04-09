@@ -3,11 +3,9 @@ package mchorse.blockbuster_pack.morphs;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
-import mchorse.blockbuster.client.render.RenderCustomModel;
-import mchorse.blockbuster.utils.MatrixUtils;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,7 +13,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -36,8 +33,6 @@ public class SnowstormMorph extends AbstractMorph
 
 	@SideOnly(Side.CLIENT)
 	public List<BedrockEmitter> lastEmitters;
-
-	public boolean local;
 
 	private boolean initialized;
 
@@ -101,6 +96,13 @@ public class SnowstormMorph extends AbstractMorph
 	private void setClientScheme(String key)
 	{
 		this.getEmitter().setScheme(Blockbuster.proxy.particles.presets.get(key));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected String getSubclassDisplayName()
+	{
+		return this.getEmitter().scheme != null ? this.getEmitter().scheme.identifier : this.name;
 	}
 
 	@Override
@@ -181,9 +183,9 @@ public class SnowstormMorph extends AbstractMorph
 	}
 
 	@Override
-	public void update(EntityLivingBase target, IMorphing cap)
+	public void update(EntityLivingBase target)
 	{
-		super.update(target, cap);
+		super.update(target);
 
 		if (target.world.isRemote && this.initialized)
 		{
@@ -219,17 +221,22 @@ public class SnowstormMorph extends AbstractMorph
 	}
 
 	@Override
-	public AbstractMorph clone(boolean isRemote)
+	public AbstractMorph create(boolean isRemote)
 	{
-		SnowstormMorph morph = new SnowstormMorph();
+		return new SnowstormMorph();
+	}
 
-		morph.name = this.name;
-		morph.settings = this.settings;
-		morph.scheme = this.scheme;
-		morph.local = this.local;
-		morph.setScheme(morph.scheme, isRemote);
+	@Override
+	public void copy(AbstractMorph from, boolean isRemote)
+	{
+		super.copy(from, isRemote);
 
-		return morph;
+		if (from instanceof SnowstormMorph)
+		{
+			SnowstormMorph morph = (SnowstormMorph) from;
+
+			this.setScheme(morph.scheme, isRemote);
+		}
 	}
 
 	@Override
@@ -254,7 +261,6 @@ public class SnowstormMorph extends AbstractMorph
 			SnowstormMorph morph = (SnowstormMorph) obj;
 
 			result = result && Objects.equals(this.scheme, morph.scheme);
-			result = result && this.local == morph.local;
 		}
 
 		return result;
@@ -306,11 +312,6 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			this.setScheme(tag.getString("Scheme"), FMLCommonHandler.instance().getSide() == Side.CLIENT);
 		}
-
-		if (tag.hasKey("Local"))
-		{
-			this.local = tag.getBoolean("Local");
-		}
 	}
 
 	@Override
@@ -319,6 +320,5 @@ public class SnowstormMorph extends AbstractMorph
 		super.toNBT(tag);
 
 		tag.setString("Scheme", this.scheme);
-		tag.setBoolean("Local", this.local);
 	}
 }

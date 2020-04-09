@@ -11,7 +11,7 @@ public class GuiDashboardPanel extends GuiElement
     public GuiDashboardPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc);
-        this.createChildren();
+
         this.dashboard = dashboard;
     }
 

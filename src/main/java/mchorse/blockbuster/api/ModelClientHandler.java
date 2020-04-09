@@ -19,11 +19,11 @@ public class ModelClientHandler extends ModelHandler
 {
     @Override
     @SuppressWarnings("unchecked")
-    public void addModel(String name, IModelLazyLoader loader, long timestamp) throws Exception
+    public void addModel(String key, IModelLazyLoader loader, long timestamp) throws Exception
     {
-        super.addModel(name, loader, timestamp);
+        super.addModel(key, loader, timestamp);
 
-        ModelCustom.MODELS.put(name, loader.loadClientModel(name, this.models.get(name).model));
+        ModelCustom.MODELS.put(key, loader.loadClientModel(key, this.models.get(key).model));
     }
 
     @Override

@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -315,7 +316,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Update fall state.
      *
      * This override is responsible for applying fall damage on the actor.
-     * {@link #moveEntity(double, double, double)} seem to override onGround
+     * {@link #move(MoverType, double, double, double)} seem to override onGround
      * property wrongly on the server, so we have deal with this bullshit.
      */
     @Override
@@ -400,7 +401,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (morph != null)
         {
-            morph.update(this, null);
+            morph.update(this);
         }
 
         return f3;
@@ -420,11 +421,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         ItemStack item = player.getHeldItem(hand);
         boolean empty = item.isEmpty();
 
-        if (item != null && this.handleConfigurationItem(item, player))
-        {
-            return true;
-        }
-        else if (empty)
+        if (empty)
         {
             if (!this.world.isRemote)
             {
@@ -438,21 +435,6 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
         }
 
         return false;
-    }
-
-    /**
-     * Open actor configuration GUI by using skin managing item
-     */
-    private boolean handleConfigurationItem(ItemStack stack, EntityPlayer player)
-    {
-        boolean holdsSkinItem = stack.getItem() instanceof ItemActorConfig;
-
-        if (this.world.isRemote && holdsSkinItem)
-        {
-            GuiHandler.open(player, GuiHandler.ACTOR, this.getEntityId(), 0, 0);
-        }
-
-        return holdsSkinItem;
     }
 
     /* Public API */

@@ -23,16 +23,14 @@ import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
 import mchorse.blockbuster.network.common.scene.sync.PacketSceneGoto;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Area;
-import mchorse.mclib.client.gui.utils.GuiDrawable;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
-import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -77,7 +75,7 @@ public class CameraHandler
      * Camera editor integrations
      */
     @SideOnly(Side.CLIENT)
-    public static GuiElements<IGuiElement> cameraEditorElements;
+    public static GuiElement cameraEditorElements;
 
     /**
      * Reset camera editor elements
@@ -205,20 +203,20 @@ public class CameraHandler
             return;
         }
 
-        GuiElements<IGuiElement> elements = new GuiElements<>();
-        Consumer<GuiButtonElement<GuiTextureButton>> refresh = (b) ->
+        GuiElement elements = new GuiElement(dashboard.mc);
+        Consumer<GuiIconElement> refresh = (b) ->
         {
             boolean show = elements.isVisible();
 
-            editor.panel.resizer().h(1, show ? -150 : -70);
-            editor.scrub.resizer().y(1, show ? -100 : -20);
-            record.records.resizer().h(1, show ? -80 : 0);
-            b.button.setTexPos(show ? 80 : 64, 64).setActiveTexPos(show ? 80 : 64, 80);
+            editor.panel.flex().h(1, show ? -150 : -70);
+            editor.scrub.flex().y(1, show ? -100 : -20);
+            record.records.flex().h(1, show ? -80 : 0);
+            b.icon(show ? Icons.DOWNLOAD : Icons.UPLOAD);
 
-            editor.elements.resize(editor.width, editor.height);
+            editor.root.resize();
         };
 
-        GuiButtonElement<GuiTextureButton> toggle = GuiButtonElement.icon(dashboard.mc, GuiDashboard.GUI_ICONS, 64, 64, 64, 80, (b) ->
+        GuiIconElement toggle = new GuiIconElement(dashboard.mc, Icons.UPLOAD, (b) ->
         {
             if (!record.selector.isVisible())
             {
@@ -235,7 +233,7 @@ public class CameraHandler
             {
                 Area area = record.editor.delegate.area;
 
-                Gui.drawRect(area.x, area.y, area.getX(1), area.getY(1), 0x66000000);
+                area.draw(0x66000000);
             }
         });
 
@@ -243,12 +241,12 @@ public class CameraHandler
         {
             if (resetCameraEditorElements)
             {
-                editor.elements.elements.remove(cameraEditorElements);
+                editor.root.remove(cameraEditorElements);
             }
 
-            cameraEditorElements = new GuiElements<IGuiElement>();
+            cameraEditorElements = new GuiElement(dashboard.mc);
             editor.hidden.elements.remove(editor.scrub);
-            editor.elements.add(cameraEditorElements);
+            editor.root.add(cameraEditorElements);
 
             resetCameraEditorElements = false;
         }
@@ -256,11 +254,11 @@ public class CameraHandler
         elements.setVisible(false);
         elements.add(drawable, record.selector, record.editor);
 
-        toggle.resizer().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(1, 2).y(2);
+        toggle.flex().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(1, 2).y(2);
 
-        editor.scrub.resizer().x(30).w(1, -60);
+        editor.scrub.flex().x(30).w(1, -60);
 
-        cameraEditorElements.elements.clear();
+        cameraEditorElements.clear();
         cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements, dashboard.morphDelegate);
         refresh.accept(toggle);
     }
@@ -348,12 +346,12 @@ public class CameraHandler
                 GuiRecordingEditorPanel panel = dashboard.recordingEditorPanel;
 
                 dashboard.openPanel(panel);
-                panel.selector.resizer().parent(editor.area);
-                panel.editor.resizer().parent(editor.area);
-                panel.records.resizer().parent(editor.area);
+                panel.selector.flex().relative(editor.viewport);
+                panel.editor.flex().relative(editor.viewport);
+                panel.records.flex().relative(editor.viewport);
                 panel.records.setVisible(false);
-                panel.open.resizer().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
-                dashboard.morphDelegate.resizer().parent(editor.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
+                panel.open.flex().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
+                dashboard.morphDelegate.flex().relative(editor.viewport).xy(0, 0).wh(1F, 1F);
             }
             else if (current instanceof GuiCameraEditor)
             {

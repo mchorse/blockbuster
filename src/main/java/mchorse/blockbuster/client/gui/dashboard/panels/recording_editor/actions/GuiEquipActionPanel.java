@@ -1,49 +1,55 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.recording.actions.EquipAction;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.widgets.GuiInventory;
-import mchorse.mclib.client.gui.widgets.GuiInventory.IInventoryPicker;
-import mchorse.mclib.client.gui.widgets.GuiSlot;
-import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements IInventoryPicker
+public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
 {
-    public GuiButtonElement<GuiCirculate> armor;
-    public GuiInventory inventory;
-    public GuiSlot slot;
+    public GuiCirculateElement armor;
+    public GuiInventoryElement inventory;
+    public GuiSlotElement slot;
 
     public GuiEquipActionPanel(Minecraft mc)
     {
         super(mc);
 
-        this.inventory = new GuiInventory(this, mc.player);
-        this.slot = new GuiSlot(0);
-        this.armor = new GuiButtonElement<GuiCirculate>(mc, new GuiCirculate(0, 0, 0, 0, 0), (b) -> this.action.armorSlot = (byte) (b.button.getValue() - 1));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.none"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.feet"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.legs"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.chest"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.head"));
-        this.armor.button.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
-        this.armor.resizer().set(0, 0, 80, 20).parent(this.area).x(0.5F, -40).y(0.5F, -50);
+        this.armor = new GuiCirculateElement(mc, (b) -> this.action.armorSlot = (byte) (this.armor.getValue() - 1));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.none"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.feet"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.legs"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.chest"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.head"));
+        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
+        this.armor.flex().set(0, 0, 80, 20).relative(this.area).x(0.5F, -40).y(0.5F, -50);
 
-        this.children.add(this.armor);
+        this.inventory = new GuiInventoryElement(mc, this::pickItem);
+        this.slot = new GuiSlotElement(mc,0, this::setSlot);
+
+        this.slot.flex().relative(this.area).xy(0.5F, 0.5F).wh(20, 20).anchor(0.5F, 0.5F);
+        this.inventory.flex().under(this.slot.flex(), 10).wh(400, 100);
+        this.add(this.slot, this.inventory);
     }
 
-    @Override
-    public void pickItem(GuiInventory inventory, ItemStack stack)
+    private void setSlot(GuiSlotElement slot)
+    {
+        this.inventory.linked = slot;
+        this.inventory.setVisible(true);
+    }
+
+    public void pickItem(ItemStack stack)
     {
         this.action.itemData = stack.isEmpty() ? null : stack.writeToNBT(new NBTTagCompound());
         this.slot.stack = stack;
 
-        inventory.visible = false;
+        this.inventory.linked = null;
+        this.inventory.setVisible(false);
     }
 
     @Override
@@ -51,39 +57,8 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction> implements 
     {
         super.fill(action);
 
-        this.inventory.player = this.mc.player;
+        this.armor.setValue(action.armorSlot);
         this.slot.stack = action.itemData == null ? ItemStack.EMPTY : new ItemStack(action.itemData);
-        this.armor.button.setValue(action.armorSlot + 1);
-    }
-
-    @Override
-    public void resize(int width, int height)
-    {
-        super.resize(width, height);
-
-        this.slot.update(this.area.getX(0.5F) - 10, this.area.getY(0.5F) - 10);
-        this.inventory.update(this.area.getX(0.5F), this.area.getY(0.75F));
-    }
-
-    @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
-    {
-        this.inventory.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if (this.slot.area.isInside(mouseX, mouseY))
-        {
-            this.inventory.visible = true;
-        }
-
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-    {
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
-
-        this.slot.draw(mouseX, mouseY, partialTicks);
-        this.inventory.draw(mouseX, mouseY, partialTicks);
+        this.inventory.setVisible(false);
     }
 }

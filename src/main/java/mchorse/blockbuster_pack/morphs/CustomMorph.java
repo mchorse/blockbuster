@@ -121,6 +121,18 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         this.settings.hands = true;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        if (this.model != null)
+        {
+            return this.model.name;
+        }
+
+        return super.getSubclassDisplayName();
+    }
+
     public void changeModel(String model)
     {
         if (Blockbuster.proxy.models.models.get(model) == null)
@@ -347,23 +359,23 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      * method also responsible for updating AABB size. 
      */
     @Override
-    public void update(EntityLivingBase target, IMorphing cap)
+    public void update(EntityLivingBase target)
     {
         this.animation.update();
 
         if (this.model != null)
         {
-            this.updateSize(target, cap);
+            this.updateSize(target);
         }
 
-        this.parts.updateBodyLimbs(target, cap);
-        super.update(target, cap);
+        this.parts.updateBodyLimbs(target);
+        super.update(target);
     }
 
     /**
      * Update size of the player based on the given morph.
      */
-    public void updateSize(EntityLivingBase target, IMorphing cap)
+    public void updateSize(EntityLivingBase target)
     {
         this.pose = this.getPose(target, 0);
 
@@ -490,39 +502,46 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        CustomMorph morph = new CustomMorph();
+        return new CustomMorph();
+    }
 
-        morph.name = this.name;
-        morph.skin = RLUtils.clone(this.skin);
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
+    {
+        super.copy(from, isRemote);
 
-        morph.currentPose = this.currentPose;
-        morph.currentPoseOnSneak = this.currentPoseOnSneak;
-        morph.scale = this.scale;
-        morph.scaleGui = this.scaleGui;
-
-        if (this.customPose != null)
+        if (from instanceof CustomMorph)
         {
-            morph.customPose = this.customPose.clone();
-        }
+            CustomMorph morph = (CustomMorph) from;
 
-        if (!this.materials.isEmpty())
-        {
-            morph.materials.clear();
+            this.skin = RLUtils.clone(morph.skin);
 
-            for (Map.Entry<String, ResourceLocation> entry : this.materials.entrySet())
+            this.currentPose = morph.currentPose;
+            this.currentPoseOnSneak = morph.currentPoseOnSneak;
+            this.scale = morph.scale;
+            this.scaleGui = morph.scaleGui;
+
+            if (morph.customPose != null)
             {
-                morph.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
+                this.customPose = morph.customPose.clone();
             }
+
+            if (!morph.materials.isEmpty())
+            {
+                this.materials.clear();
+
+                for (Map.Entry<String, ResourceLocation> entry : morph.materials.entrySet())
+                {
+                    this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
+                }
+            }
+
+            this.model = morph.model;
+            this.parts.copy(morph.parts, isRemote);
+            this.animation.copy(morph.animation);
         }
-
-        morph.settings = this.settings;
-        morph.model = this.model;
-        morph.parts.copy(this.parts, isRemote);
-        morph.animation.copy(this.animation);
-
-        return morph;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
-import java.util.function.Consumer;
-
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
-import mchorse.mclib.client.gui.utils.Resizer.Measure;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.resizers.Flex;
 import net.minecraft.client.Minecraft;
+
+import java.util.function.Consumer;
 
 public class GuiTwoElement extends GuiElement
 {
@@ -18,44 +18,43 @@ public class GuiTwoElement extends GuiElement
         super(mc);
 
         this.array = new Float[] {0F, 0F};
-        this.a = new GuiTrackpadElement(mc, "", (value) ->
+        this.a = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[0] = value;
             a.accept(this.array);
         });
-        this.b = new GuiTrackpadElement(mc, "", (value) ->
+        this.b = new GuiTrackpadElement(mc, (value) ->
         {
             this.array[1] = value;
             a.accept(this.array);
         });
 
-        this.a.resizer().parent(this.area).set(0, 0, 0.5F, 1, Measure.RELATIVE);
-        this.a.resizer().w.padding = -2;
-        this.b.resizer().parent(this.area).set(0.5F, 0, 0.5F, 1, Measure.RELATIVE);
-        this.b.resizer().w.padding = -2;
-        this.b.resizer().x.padding = 2;
+        this.a.flex().relative(this.area).set(0, 0, 0.5F, 1, Flex.Measure.RELATIVE);
+        this.a.flex().w.offset = -2;
+        this.b.flex().relative(this.area).set(0.5F, 0, 0.5F, 1, Flex.Measure.RELATIVE);
+        this.b.flex().w.offset = -2;
+        this.b.flex().x.offset = 2;
 
-        this.createChildren();
-        this.children.add(this.a);
-        this.children.add(this.b);
+        this.add(this.a);
+        this.add(this.b);
     }
 
     public void setLimit(int min, int max)
     {
-        this.a.trackpad.min = this.b.trackpad.min = min;
-        this.a.trackpad.max = this.b.trackpad.max = max;
+        this.a.min = this.b.min = min;
+        this.a.max = this.b.max = max;
     }
 
     public void setLimit(int min, int max, boolean integer)
     {
         this.setLimit(min, max);
-        this.a.trackpad.integer = this.b.trackpad.integer = integer;
+        this.a.integer = this.b.integer = integer;
     }
 
     public void setValues(float a, float b)
     {
-        this.a.trackpad.setValue(a);
-        this.b.trackpad.setValue(b);
+        this.a.setValue(a);
+        this.b.setValue(b);
 
         this.array[0] = a;
         this.array[1] = b;

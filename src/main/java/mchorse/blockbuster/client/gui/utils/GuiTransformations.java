@@ -1,12 +1,11 @@
 package mchorse.blockbuster.client.gui.utils;
 
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 /**
  * Transformation editor GUI
@@ -24,54 +23,61 @@ public class GuiTransformations extends GuiElement
     private GuiTrackpadElement rx;
     private GuiTrackpadElement ry;
     private GuiTrackpadElement rz;
-    private GuiButtonElement<GuiCheckBox> one;
+    private GuiToggleElement one;
 
     public GuiTransformations(Minecraft mc)
     {
         super(mc);
 
-        this.createChildren();
-
-        this.tx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.setT(value, this.ty.trackpad.value, this.tz.trackpad.value));
-        this.ty = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.setT(this.tx.trackpad.value, value, this.tz.trackpad.value));
-        this.tz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.setT(this.tx.trackpad.value, this.ty.trackpad.value, value));
-        this.sx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) ->
+        this.tx = new GuiTrackpadElement(mc, (value) -> this.setT(value, this.ty.value, this.tz.value));
+        this.tx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.ty = new GuiTrackpadElement(mc, (value) -> this.setT(this.tx.value, value, this.tz.value));
+        this.ty.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.tz = new GuiTrackpadElement(mc, (value) -> this.setT(this.tx.value, this.ty.value, value));
+        this.tz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.sx = new GuiTrackpadElement(mc, (value) ->
         {
-            boolean one = this.one.button.isChecked();
+            boolean one = this.one.isToggled();
 
-            this.setS(value, one ? value : this.sy.trackpad.value, one ? value : this.sz.trackpad.value);
+            this.setS(value, one ? value : this.sy.value, one ? value : this.sz.value);
         });
-        this.sy = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.setS(this.sx.trackpad.value, value, this.sz.trackpad.value));
-        this.sz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.setS(this.sx.trackpad.value, this.sy.trackpad.value, value));
-        this.rx = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (value) -> this.setR(value, this.ry.trackpad.value, this.rz.trackpad.value));
-        this.ry = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (value) -> this.setR(this.rx.trackpad.value, value, this.rz.trackpad.value));
-        this.rz = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (value) -> this.setR(this.rx.trackpad.value, this.ry.trackpad.value, value));
-        this.one = GuiButtonElement.checkbox(mc, "", false, (b) ->
+        this.sx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.sy = new GuiTrackpadElement(mc, (value) -> this.setS(this.sx.value, value, this.sz.value));
+        this.sy.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.sz = new GuiTrackpadElement(mc, (value) -> this.setS(this.sx.value, this.sy.value, value));
+        this.sz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.rx = new GuiTrackpadElement(mc, (value) -> this.setR(value, this.ry.value, this.rz.value));
+        this.rx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.ry = new GuiTrackpadElement(mc, (value) -> this.setR(this.rx.value, value, this.rz.value));
+        this.ry.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.rz = new GuiTrackpadElement(mc, (value) -> this.setR(this.rx.value, this.ry.value, value));
+        this.rz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.one = new GuiToggleElement(mc, "", false, (b) ->
         {
-            boolean one = b.button.isChecked();
+            boolean one = b.isToggled();
 
             this.sy.setVisible(!one);
             this.sz.setVisible(!one);
 
             if (!one)
             {
-                this.sy.trackpad.setValueAndNotify(this.sx.trackpad.value);
-                this.sz.trackpad.setValueAndNotify(this.sx.trackpad.value);
+                this.sy.setValueAndNotify(this.sx.value);
+                this.sz.setValueAndNotify(this.sx.value);
             }
         });
 
-        this.tx.resizer().set(0, 0, 60, 20).parent(this.area);
-        this.ty.resizer().set(0, 25, 60, 20).relative(this.tx.resizer());
-        this.tz.resizer().set(0, 25, 60, 20).relative(this.ty.resizer());
-        this.sx.resizer().set(65, 0, 60, 20).relative(this.tx.resizer());
-        this.sy.resizer().set(0, 25, 60, 20).relative(this.sx.resizer());
-        this.sz.resizer().set(0, 25, 60, 20).relative(this.sy.resizer());
-        this.rx.resizer().set(65, 0, 60, 20).relative(this.sx.resizer());
-        this.ry.resizer().set(0, 25, 60, 20).relative(this.rx.resizer());
-        this.rz.resizer().set(0, 25, 60, 20).relative(this.ry.resizer());
-        this.one.resizer().relative(this.sx.resizer()).set(49, -13, 11, 11);
+        this.tx.flex().set(0, 0, 60, 20).relative(this.area);
+        this.ty.flex().set(0, 25, 60, 20).relative(this.tx.resizer());
+        this.tz.flex().set(0, 25, 60, 20).relative(this.ty.resizer());
+        this.sx.flex().set(65, 0, 60, 20).relative(this.tx.resizer());
+        this.sy.flex().set(0, 25, 60, 20).relative(this.sx.resizer());
+        this.sz.flex().set(0, 25, 60, 20).relative(this.sy.resizer());
+        this.rx.flex().set(65, 0, 60, 20).relative(this.sx.resizer());
+        this.ry.flex().set(0, 25, 60, 20).relative(this.rx.resizer());
+        this.rz.flex().set(0, 25, 60, 20).relative(this.ry.resizer());
+        this.one.flex().relative(this.sx.resizer()).set(49, -13, 11, 11);
 
-        this.children.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.one);
+        this.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.one);
     }
 
     public void fillT(float x, float y, float z)
@@ -105,12 +111,12 @@ public class GuiTransformations extends GuiElement
     {}
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.translate"), this.tx.area.x, this.tx.area.y - 12, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.scale"), this.sx.area.x, this.sx.area.y - 12, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.model_block.rotate"), this.rx.area.x, this.rx.area.y - 12, 0xffffff);
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
     }
 }

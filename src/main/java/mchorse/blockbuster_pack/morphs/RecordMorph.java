@@ -1,8 +1,5 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
@@ -13,11 +10,11 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
-import mchorse.mclib.client.gui.widgets.GuiInventory;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -27,6 +24,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class RecordMorph extends AbstractMorph
 {
@@ -70,6 +70,14 @@ public class RecordMorph extends AbstractMorph
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        return I18n.format("blockbuster.morph.record");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         this.initiateActor(player.world);
@@ -81,7 +89,7 @@ public class RecordMorph extends AbstractMorph
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 1, y - 9, 0);
         GlStateManager.scale(record, record, 1);
-        GuiInventory.drawItemStack(ICON, -8, -8, null);
+        GuiInventoryElement.drawItemStack(ICON, -8, -8, 0, null);
         GlStateManager.popMatrix();
         GlStateManager.enableDepth();
 
@@ -92,6 +100,7 @@ public class RecordMorph extends AbstractMorph
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         this.initiateActor(entity.world);
@@ -152,9 +161,9 @@ public class RecordMorph extends AbstractMorph
     }
 
     @Override
-    public void update(EntityLivingBase target, IMorphing cap)
+    public void update(EntityLivingBase target)
     {
-        super.update(target, cap);
+        super.update(target);
 
         if (target.world.isRemote)
         {
@@ -196,22 +205,29 @@ public class RecordMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        RecordMorph morph = new RecordMorph();
+        return new RecordMorph();
+    }
 
-        morph.name = this.name;
-        morph.settings = this.settings;
-        morph.record = this.record;
-        morph.loop = this.loop;
-        morph.randomSkip = this.randomSkip;
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
+    {
+        super.copy(from, isRemote);
 
-        if (this.initial != null)
+        if (from instanceof RecordMorph)
         {
-            morph.initial = this.initial.clone(isRemote);
-        }
+            RecordMorph morph = (RecordMorph) from;
 
-        return morph;
+            this.record = morph.record;
+            this.loop = morph.loop;
+            this.randomSkip = morph.randomSkip;
+
+            if (this.initial != null)
+            {
+                this.initial = morph.initial.clone(isRemote);
+            }
+        }
     }
 
     @Override

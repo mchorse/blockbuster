@@ -1,24 +1,21 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
-import mchorse.blockbuster.api.formats.obj.OBJMaterial;
+import mchorse.blockbuster.utils.BBIcons;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiTexturePicker;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
-import mchorse.mclib.client.gui.utils.GuiDrawable;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -26,12 +23,16 @@ import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
@@ -59,11 +60,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         };
 
         /* Nice shadow on bottom */
-        this.children.elements.add(0, new GuiDrawable((n) ->
+        this.prepend(new GuiDrawable((n) ->
         {
-            this.drawGradientRect(0, this.area.getY(1) - 30, this.area.w, this.area.getY(1), 0x00000000, 0x88000000);
+            this.drawGradientRect(0, this.area.ey() - 30, this.area.w, this.area.ey(), 0x00000000, 0x88000000);
         }));
-        this.children.elements.add(0, this.modelRenderer);
+        this.prepend(this.modelRenderer);
 
         /* Morph panels */
         this.poseEditor = new GuiPosePanel(mc, this);
@@ -72,10 +73,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.materials = new GuiMaterialsPanel(mc, this);
 
         this.defaultPanel = this.general;
-        this.registerPanel(this.materials, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.builder.materials"), 128, 64, 128, 80);
-        this.registerPanel(this.bodyPart, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.builder.body_part"), 128, 0, 128, 16);
-        this.registerPanel(this.poseEditor, GuiDashboard.GUI_ICONS, I18n.format("blockbuster.gui.builder.pose_editor"), 80, 32, 80, 48);
-        this.registerPanel(this.general, GuiDashboard.GUI_ICONS, "", 48, 0, 48, 16);
+        this.registerPanel(this.materials, I18n.format("blockbuster.gui.builder.materials"), Icons.MATERIAL);
+        this.registerPanel(this.bodyPart, I18n.format("blockbuster.gui.builder.body_part"), BBIcons.LIMB);
+        this.registerPanel(this.poseEditor, I18n.format("blockbuster.gui.builder.pose_editor"), Icons.POSE);
+        this.registerPanel(this.general, "", Icons.GEAR);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
      * Don't draw default morph
      */
     @Override
-    protected void drawMorph(int mouseX, int mouseY, float partialTicks)
+    protected void drawMorph(GuiContext context)
     {}
 
     /**
@@ -134,18 +135,18 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     {
         /* General options */
         public GuiStringListElement models;
-        public GuiButtonElement<GuiButton> model;
+        public GuiButtonElement model;
         public GuiTexturePicker textures;
-        public GuiButtonElement<GuiButton> skin;
-        public GuiButtonElement<GuiButton> reset;
+        public GuiButtonElement skin;
+        public GuiButtonElement reset;
         public GuiStringListElement poses;
-        public GuiButtonElement<GuiCheckBox> poseOnSneak;
+        public GuiToggleElement poseOnSneak;
         public GuiTrackpadElement scale;
         public GuiTrackpadElement scaleGui;
-        public GuiButtonElement<GuiCheckBox> animates;
-        public GuiButtonElement<GuiCheckBox> ignored;
+        public GuiToggleElement animates;
+        public GuiToggleElement ignored;
         public GuiTrackpadElement animationDuration;
-        public GuiButtonElement<GuiButton> pickInterpolation;
+        public GuiButtonElement pickInterpolation;
         public GuiListElement<Interpolation> interpolations;
 
         public GuiCustomMorphPanel(Minecraft mc, GuiCustomMorph editor)
@@ -155,14 +156,14 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             /* General options */
             this.models = new GuiStringListElement(mc, (string) ->
             {
-                this.morph.changeModel(string);
+                this.morph.changeModel(string.get(0));
                 this.editor.updateModelRenderer();
                 this.editor.poseEditor.fillData(this.morph);
                 this.editor.bodyPart.setLimbs(this.morph.model.limbs.keySet());
             });
-            this.models.setBackground();
+            this.models.background();
 
-            this.model = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
+            this.model = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
 
             this.textures = new GuiTexturePicker(mc, (rl) ->
             {
@@ -170,87 +171,90 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.editor.updateModelRenderer();
             });
 
-            this.skin = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
+            this.skin = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
             {
                 this.textures.refresh();
                 this.textures.fill(this.morph.skin);
                 this.textures.setVisible(true);
             });
 
-            this.reset = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
+            this.reset = new GuiButtonElement(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
             {
                 this.morph.currentPose = "";
                 this.poses.setCurrent("");
                 this.editor.updateModelRenderer();
             });
 
-            this.poseOnSneak = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.pose_sneak"), false, (b) ->
+            this.poseOnSneak = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.pose_sneak"), false, (b) ->
             {
-                this.morph.currentPoseOnSneak = b.button.isChecked();
+                this.morph.currentPoseOnSneak = this.poseOnSneak.isToggled();
                 this.editor.updateModelRenderer();
             });
 
             this.poses = new GuiStringListElement(mc, (str) ->
             {
-                this.morph.currentPose = str;
+                this.morph.currentPose = str.get(0);
                 this.editor.updateModelRenderer();
             });
 
-            this.scale = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale"), (value) ->
+            this.scale = new GuiTrackpadElement(mc, (value) ->
             {
                 this.morph.scale = value;
             });
+            this.scale.tooltip(I18n.format("blockbuster.gui.me.options.scale"));
 
-            this.scaleGui = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.me.options.scale_gui"), (value) ->
+            this.scaleGui = new GuiTrackpadElement(mc, (value) ->
             {
                 this.morph.scaleGui = value;
             });
+            this.scaleGui.tooltip(I18n.format("blockbuster.gui.me.options.scale_gui"));
 
-            this.animates = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.animates"), false, (b) ->
+            this.animates = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.animates"), false, (b) ->
             {
-                this.morph.animation.animates = b.button.isChecked();
+                this.morph.animation.animates = this.animates.isToggled();
             });
 
-            this.ignored = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.builder.ignored"), false, (b) ->
+            this.ignored = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.ignored"), false, (b) ->
             {
-                this.morph.animation.ignored = b.button.isChecked();
+                this.morph.animation.ignored = this.ignored.isToggled();
             });
 
-            this.animationDuration = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.builder.animation_duration"), (value) ->
+            this.animationDuration = new GuiTrackpadElement(mc, (value) ->
             {
                 this.morph.animation.duration = value.intValue();
             });
-            this.animationDuration.setLimit(0, Float.POSITIVE_INFINITY, true);
+            this.animationDuration.tooltip(I18n.format("blockbuster.gui.builder.animation_duration"));
+            this.animationDuration.limit(0).integer();
 
-            this.pickInterpolation = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_interpolation"), (b) ->
+            this.pickInterpolation = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_interpolation"), (b) ->
             {
                 this.interpolations.toggleVisible();
             });
 
             this.interpolations = new GuiInterpolationList(mc, (interp) ->
             {
-                this.morph.animation.interp = interp;
+                this.morph.animation.interp = interp.get(0);
             });
 
-            this.skin.resizer().parent(this.area).parent(this.area).set(10, 10, 105, 20);
-            this.model.resizer().relative(this.skin.resizer()).set(0, 25, 105, 20);
-            this.reset.resizer().relative(this.model.resizer()).set(0, 25, 105, 20);
-            this.poseOnSneak.resizer().parent(this.area).set(10, 0, 105, 11).y(1, -21);
-            this.poses.resizer().parent(this.area).set(10, 100, 105, 0).h(1, -125);
-            this.textures.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
-            this.models.resizer().relative(this.model.resizer()).set(0, 20, 0, 120).w(1, 0);
-            this.scale.resizer().parent(this.area).set(10, 10, 105, 20).x(1, -115).y(1, -50);
-            this.scaleGui.resizer().relative(this.scale.resizer()).set(0, 25, 105, 20);
+            this.skin.flex().relative(this.area).set(10, 10, 105, 20);
+            this.model.flex().relative(this.skin.resizer()).set(0, 25, 105, 20);
+            this.reset.flex().relative(this.model.resizer()).set(0, 25, 105, 20);
+            this.poseOnSneak.flex().relative(this.area).set(10, 0, 105, 11).y(1, -21);
+            this.poses.flex().relative(this.area).set(10, 100, 105, 0).h(1, -125);
+            this.textures.flex().relative(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+            this.models.flex().relative(this.model.resizer()).set(0, 20, 0, 120).w(1, 0);
+            this.scale.flex().relative(this.area).set(10, 10, 105, 20).x(1, -115).y(1, -50);
+            this.scaleGui.flex().relative(this.scale.resizer()).set(0, 25, 105, 20);
 
-            this.animates.resizer().parent(this.area).set(0, 40, this.animates.button.width, this.animates.button.height).x(1, -110);
-            this.ignored.resizer().relative(this.animates.resizer()).set(0, 0, this.ignored.button.width, this.ignored.button.height).y(1, 5);
-            this.animationDuration.resizer().relative(this.ignored.resizer()).set(0, 0, 100, 20).y(1, 5);
-            this.pickInterpolation.resizer().relative(this.animationDuration.resizer()).set(0, 0, 100, 20).y(1, 5);
-            this.interpolations.resizer().relative(this.pickInterpolation.resizer()).set(0, 20, 100, 96);
+            this.animates.flex().relative(this.area).set(0, 40, 105, 20).x(1, -110);
+            this.ignored.flex().relative(this.animates.resizer()).set(0, 0, 105, 20).y(1, 5);
+            this.animationDuration.flex().relative(this.ignored.resizer()).set(0, 0, 100, 20).y(1, 5);
+            this.pickInterpolation.flex().relative(this.animationDuration.resizer()).set(0, 0, 100, 20).y(1, 5);
+            this.interpolations.flex().relative(this.pickInterpolation.resizer()).set(0, 20, 100, 96);
 
-            this.children.add(this.model, this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui);
-            this.children.add(this.animates, this.ignored, this.animationDuration, this.pickInterpolation, this.interpolations);
-            this.children.add(this.models, this.textures);
+            this.add(this.model, this.skin, this.reset, this.poses, this.poseOnSneak, this.scale, this.scaleGui);
+            this.add(this.animates, this.ignored, this.animationDuration, this.pickInterpolation, this.interpolations);
+            this.add(this.models, this.textures);
         }
 
         @Override
@@ -265,11 +269,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             this.models.setCurrentScroll(morph.getKey());
 
             this.textures.setVisible(false);
-            this.poseOnSneak.button.setIsChecked(morph.currentPoseOnSneak);
+            this.poseOnSneak.toggled(morph.currentPoseOnSneak);
             this.scale.setValue(morph.scale);
             this.scaleGui.setValue(morph.scaleGui);
-            this.animates.button.setIsChecked(morph.animation.animates);
-            this.ignored.button.setIsChecked(morph.animation.ignored);
+            this.animates.toggled(morph.animation.animates);
+            this.ignored.toggled(morph.animation.ignored);
             this.animationDuration.setValue(morph.animation.duration);
             this.interpolations.setCurrent(morph.animation.interp);
             this.interpolations.setVisible(false);
@@ -285,11 +289,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         }
 
         @Override
-        public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+        public void draw(GuiContext context)
         {
-            Gui.drawRect(this.poses.area.x, this.poses.area.y, this.poses.area.getX(1), this.poses.area.getY(1), 0x88000000);
+            Gui.drawRect(this.poses.area.x, this.poses.area.y, this.poses.area.ex(), this.poses.area.ey(), 0x88000000);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.poses.area.x, this.poses.area.y - 12, 0xffffff);
-            super.draw(tooltip, mouseX, mouseY, partialTicks);
+            super.draw(context);
         }
 
         /**
@@ -297,7 +301,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
          */
         public static class GuiInterpolationList extends GuiListElement<Interpolation>
         {
-            public GuiInterpolationList(Minecraft mc, Consumer<Interpolation> callback)
+            public GuiInterpolationList(Minecraft mc, Consumer<List<Interpolation>> callback)
             {
                 super(mc, callback);
 
@@ -309,35 +313,21 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 }
 
                 this.sort();
-                this.setBackground();
+                this.background();
             }
 
             @Override
-            public void sort()
+            protected boolean sortElements()
             {
-                Collections.sort(this.list, new Comparator<Interpolation>()
-                {
-                    @Override
-                    public int compare(Interpolation o1, Interpolation o2)
-                    {
-                        return o1.key.compareTo(o2.key);
-                    }
-                });
+                Collections.sort(this.list, Comparator.comparing(o -> o.key));
 
-                this.update();
+                return true;
             }
 
             @Override
-            public void drawElement(Interpolation element, int i, int x, int y, boolean hover)
+            protected String elementToString(Interpolation element, int i, int x, int y, boolean hover, boolean selected)
             {
-                if (this.current == i)
-                {
-                    Gui.drawRect(x, y, x + this.scroll.w, y + this.scroll.scrollItemSize, 0x880088ff);
-                }
-
-                String label = I18n.format("blockbuster.gui.interpolations." + element.key);
-
-                this.font.drawStringWithShadow(label, x + 4, y + 4, hover ? 16777120 : 0xffffff);
+                return I18n.format("blockbuster.gui.interpolations." + element.key);
             }
         }
     }
@@ -350,7 +340,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     {
         /* Materials */
         public GuiStringListElement materials;
-        public GuiButtonElement<GuiButton> pickTexture;
+        public GuiButtonElement pickTexture;
         public GuiTexturePicker picker;
 
         public GuiMaterialsPanel(Minecraft mc, GuiCustomMorph editor)
@@ -358,19 +348,20 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             super(mc, editor);
 
             /* Materials view */
-            this.materials = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str));
-            this.pickTexture = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
+            this.materials = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str.get(0)));
+            this.pickTexture = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.setVisible(true);
                 this.picker.refresh();
             });
-            this.picker = new GuiTexturePicker(mc, (rl) -> this.setCurrentMaterialRL(rl));
+            this.picker = new GuiTexturePicker(mc, this::setCurrentMaterialRL);
 
-            this.materials.resizer().parent(this.area).set(10, 50, 105, 0).h(1, -60);
-            this.pickTexture.resizer().parent(this.area).set(10, 10, 105, 20);
-            this.picker.resizer().parent(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+            this.materials.flex().relative(this.area).set(10, 50, 105, 0).h(1, -60);
+            this.materials.background();
+            this.pickTexture.flex().relative(this.area).set(10, 10, 105, 20);
+            this.picker.flex().relative(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
 
-            this.children.add(this.materials, this.pickTexture, this.picker);
+            this.add(this.materials, this.pickTexture, this.picker);
         }
 
         private void setCurrentMaterial(String str)
@@ -383,7 +374,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         private void setCurrentMaterialRL(ResourceLocation rl)
         {
-            String key = this.materials.getCurrent();
+            String key = this.materials.getCurrentFirst();
 
             if (rl == null)
             {
@@ -422,11 +413,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         }
 
         @Override
-        public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+        public void draw(GuiContext context)
         {
-            Gui.drawRect(this.materials.area.x, this.materials.area.y, this.materials.area.getX(1), this.materials.area.getY(1), 0x88000000);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.obj_materials"), this.materials.area.x, this.materials.area.y - 12, 0xffffff);
-            super.draw(tooltip, mouseX, mouseY, partialTicks);
+            super.draw(context);
         }
     }
 
@@ -454,12 +444,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             super.renderModel(dummy, headYaw, headPitch, timer, yaw, pitch, partialTicks, factor);
 
             LayerBodyPart.renderBodyParts(dummy, this.morph, this.model, 0, 0, partialTicks, dummy.ticksExisted + partialTicks, headYaw, headPitch, factor);
-        }
-
-        @Override
-        public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-        {
-            super.draw(tooltip, mouseX, mouseY, partialTicks);
         }
     }
 }

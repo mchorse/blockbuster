@@ -7,6 +7,7 @@ import java.util.Objects;
 import mchorse.aperture.camera.modifiers.AbstractModifier;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.utils.BBIcons;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -14,6 +15,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -83,23 +85,21 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
     @Override
     @SideOnly(Side.CLIENT)
+    protected String getSubclassDisplayName()
+    {
+        return I18n.format("blockbuster.morph.sequencer");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
         this.updateCycle(true);
 
         if (this.morphs.isEmpty())
         {
-            Minecraft mc = Minecraft.getMinecraft();
-
-            if (mc.currentScreen != null)
-            {
-                GlStateManager.color(1, 1, 1);
-                GlStateManager.enableAlpha();
-                mc.renderEngine.bindTexture(GuiDashboard.GUI_ICONS);
-                /* Fuck you, Gui class, for not making the methods static */
-                mc.currentScreen.drawTexturedModalRect(x - 8, y - 20, 32, 16, 16, 16);
-                GlStateManager.disableAlpha();
-            }
+            GlStateManager.color(1, 1, 1);
+            BBIcons.CHICKEN.render(x - 8, y - 20);
         }
 
         AbstractMorph morph = this.currentMorph.get();
@@ -139,7 +139,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     }
 
     @Override
-    public void update(EntityLivingBase target, IMorphing cap)
+    public void update(EntityLivingBase target)
     {
         this.updateCycle(target.world.isRemote);
 
@@ -147,7 +147,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
         if (morph != null)
         {
-            morph.update(target, cap);
+            morph.update(target);
         }
     }
 
@@ -216,28 +216,34 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     }
 
     @Override
-    public AbstractMorph clone(boolean isRemote)
+    public AbstractMorph create(boolean isRemote)
     {
-        SequencerMorph morph = new SequencerMorph();
+        return new SequencerMorph();
+    }
 
-        morph.name = this.name;
-        morph.settings = this.settings;
+    @Override
+    public void copy(AbstractMorph from, boolean isRemote)
+    {
+        super.copy(from, isRemote);
 
-        for (SequenceEntry entry : this.morphs)
+        if (from instanceof SequencerMorph)
         {
-            morph.morphs.add(entry.clone());
+            SequencerMorph morph = (SequencerMorph) from;
+
+            for (SequenceEntry entry : morph.morphs)
+            {
+                this.morphs.add(entry.clone());
+            }
+
+            this.reverse = morph.reverse;
+            this.random = morph.random;
+
+            /* Runtime properties */
+            this.currentMorph.copy(morph.currentMorph, isRemote);
+            this.timer = morph.timer;
+            this.current = morph.current;
+            this.duration = morph.duration;
         }
-
-        morph.reverse = this.reverse;
-        morph.random = this.random;
-
-        /* Runtime properties */
-        morph.currentMorph.copy(this.currentMorph, isRemote);
-        morph.timer = this.timer;
-        morph.current = this.current;
-        morph.duration = this.duration;
-
-        return morph;
     }
 
     @Override

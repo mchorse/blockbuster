@@ -1,10 +1,10 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
-import java.util.function.Consumer;
-
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiBlockList;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.mclib.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.framework.GuiBase;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,19 +12,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 /**
  * Model block list 
  */
 public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
 {
-    public GuiModelBlockList(Minecraft mc, String title, Consumer<TileEntityModel> callback)
+    public GuiModelBlockList(Minecraft mc, String title, Consumer<List<TileEntityModel>> callback)
     {
         super(mc, title, callback);
     }
-
-    @Override
-    public void sort()
-    {}
 
     @Override
     public boolean addBlock(BlockPos pos)
@@ -45,29 +44,30 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
     }
 
     @Override
-    public void drawElement(TileEntityModel item, int i, int x, int y, boolean hovered)
+    protected void drawElementPart(TileEntityModel element, int i, int x, int y, boolean hover, boolean selected)
     {
+        GuiContext context = GuiBase.getCurrent();
         int h = this.scroll.scrollItemSize;
 
-        if (item.morph != null)
+        if (element.morph != null)
         {
             GuiScreen screen = this.mc.currentScreen;
 
-            int mny = MathHelper.clamp(y, this.scroll.y, this.scroll.getY(1));
-            int mxy = MathHelper.clamp(y + 20, this.scroll.y, this.scroll.getY(1));
+            int mny = MathHelper.clamp(y, this.scroll.y, this.scroll.ey());
+            int mxy = MathHelper.clamp(y + 20, this.scroll.y, this.scroll.ey());
 
             if (mxy - mny > 0)
             {
-                GuiUtils.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, screen.width, screen.height);
-                item.morph.renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
-                GuiUtils.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, screen.width, screen.height);
+                GuiDraw.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, context);
+                element.morph.renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
+                GuiDraw.unscissor(context);
             }
         }
 
-        BlockPos pos = item.getPos();
+        BlockPos pos = element.getPos();
         String label = String.format("(%s, %s, %s)", pos.getX(), pos.getY(), pos.getZ());
 
-        this.font.drawStringWithShadow(label, x + 10, y + 6, hovered ? 16777120 : 0xffffff);
+        this.font.drawStringWithShadow(label, x + 10, y + 6, hover ? 16777120 : 0xffffff);
         Gui.drawRect(x, y + h - 1, x + this.area.w, y + h, 0x88181818);
     }
 }

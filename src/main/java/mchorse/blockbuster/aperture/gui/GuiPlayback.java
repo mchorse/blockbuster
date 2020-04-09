@@ -10,11 +10,10 @@ import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.mclib.client.gui.framework.GuiBase;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.utils.Area;
-import mchorse.mclib.client.gui.widgets.buttons.GuiCirculate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -34,8 +33,8 @@ public class GuiPlayback extends GuiBase
     private String stringCameraMode = I18n.format("blockbuster.gui.playback.camera_mode");
     private String stringProfile = I18n.format("blockbuster.gui.playback.profile");
 
-    private GuiButtonElement<GuiCirculate> cameraMode;
-    private GuiButtonElement<GuiButton> done;
+    private GuiCirculateElement cameraMode;
+    private GuiButtonElement done;
 
     public GuiProfilesManager.GuiCameraProfilesList profiles;
     public Area frame = new Area();
@@ -48,22 +47,23 @@ public class GuiPlayback extends GuiBase
     public GuiPlayback()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        GuiCirculate circulate = new GuiCirculate(0, 0, 0, 0, 0);
 
-        circulate.addLabel(I18n.format("blockbuster.gui.playback.nothing"));
-        circulate.addLabel(I18n.format("blockbuster.gui.playback.play"));
-        circulate.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
 
         this.profiles = new GuiProfilesManager.GuiCameraProfilesList(mc, (profile) -> {});
-        this.profiles.setBackground();
-        this.cameraMode = new GuiButtonElement<GuiCirculate>(mc, circulate, (b) -> this.setValue(b.button.getValue()));
-        this.done = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.done"), (b) -> this.saveAndQuit());
+        this.profiles.background();
 
-        this.profiles.resizer().set(0, 35, 0, 0).parent(this.frame).w(1, 0).h(1, -100);
-        this.cameraMode.resizer().parent(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
-        this.done.resizer().parent(this.frame).set(0, 0, 0, 20).y(1, -20).w(1, 0);
+        this.cameraMode = new GuiCirculateElement(mc, (b) -> this.setValue(this.cameraMode.getValue()));
+        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.nothing"));
+        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.play"));
+        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
 
-        this.elements.add(this.profiles, this.cameraMode, this.done);
+        this.done = new GuiButtonElement(mc, I18n.format("blockbuster.gui.done"), (b) -> this.saveAndQuit());
+
+        this.profiles.flex().set(0, 35, 0, 0).relative(this.frame).w(1, 0).h(1, -100);
+        this.cameraMode.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);
+        this.done.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -20).w(1, 0);
+
+        this.root.add(this.profiles, this.cameraMode, this.done);
 
         /* Fill data */
         for (String filename : CameraAPI.getClientProfiles())
@@ -122,7 +122,7 @@ public class GuiPlayback extends GuiBase
 
     public void setValue(int value)
     {
-        this.cameraMode.button.setValue(value);
+        this.cameraMode.setValue(value);
         this.profiles.setVisible(value == 2);
     }
 
@@ -144,7 +144,7 @@ public class GuiPlayback extends GuiBase
         {
             if (this.profiles.getList().get(i).destination.toResourceLocation().toString().equals(profile))
             {
-                this.profiles.current = i;
+                this.profiles.setIndex(i);
 
                 break;
             }
@@ -159,14 +159,14 @@ public class GuiPlayback extends GuiBase
 
     private void saveAndQuit()
     {
-        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.button.getValue(), this.getSelected(), this.scene, this.director));
+        Dispatcher.sendToServer(new PacketPlaybackButton(this.cameraMode.getValue(), this.getSelected(), this.scene, this.director));
 
         this.mc.displayGuiScreen(null);
     }
 
     private String getSelected()
     {
-        GuiProfilesManager.CameraProfileEntry current = this.profiles.getCurrent();
+        GuiProfilesManager.CameraProfileEntry current = this.profiles.getCurrentFirst();
 
         if (current != null)
         {
@@ -187,7 +187,7 @@ public class GuiPlayback extends GuiBase
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        boolean isCameraProfile = this.cameraMode.button.getValue() == 2;
+        boolean isCameraProfile = this.cameraMode.getValue() == 2;
 
         this.drawDefaultBackground();
         this.drawString(this.fontRenderer, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);

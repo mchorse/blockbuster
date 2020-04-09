@@ -1,7 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
-import mchorse.mclib.client.gui.framework.elements.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
@@ -16,17 +16,20 @@ public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActio
     {
         super(mc);
 
-        this.x = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.x"), (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
-        this.y = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.y"), (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), v.intValue(), this.action.pos.getZ()));
-        this.z = new GuiTrackpadElement(mc, I18n.format("blockbuster.gui.model_block.z"), (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), this.action.pos.getY(), v.intValue()));
+        this.x = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
+        this.x.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.y = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), v.intValue(), this.action.pos.getZ()));
+        this.y.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.z = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), this.action.pos.getY(), v.intValue()));
+        this.z.tooltip(I18n.format("blockbuster.gui.model_block.z"));
 
-        this.x.trackpad.integer = this.y.trackpad.integer = this.z.trackpad.integer = true;
+        this.x.integer = this.y.integer = this.z.integer = true;
 
-        this.x.resizer().set(10, 0, 80, 20).parent(this.area).y(1, -80);
-        this.y.resizer().set(0, 25, 80, 20).relative(this.x.resizer());
-        this.z.resizer().set(0, 25, 80, 20).relative(this.y.resizer());
+        this.x.flex().set(10, 0, 80, 20).relative(this.area).y(1, -80);
+        this.y.flex().set(0, 25, 80, 20).relative(this.x.resizer());
+        this.z.flex().set(0, 25, 80, 20).relative(this.y.resizer());
 
-        this.children.add(this.x, this.y, this.z);
+        this.add(this.x, this.y, this.z);
     }
 
     @Override

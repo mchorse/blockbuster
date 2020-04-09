@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelRenderer;
 import org.lwjgl.opengl.GL11;
@@ -142,9 +143,9 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(GuiContext context)
     {
-        boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+        boolean result = super.mouseClicked(context);
 
         if (this.dragging && GuiScreen.isCtrlKeyDown())
         {
@@ -156,9 +157,9 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     }
 
     @Override
-    public void mouseReleased(int mouseX, int mouseY, int state)
+    public void mouseReleased(GuiContext context)
     {
-        super.mouseReleased(mouseX, mouseY, state);
+        super.mouseReleased(context);
         this.tryPicking = false;
     }
 

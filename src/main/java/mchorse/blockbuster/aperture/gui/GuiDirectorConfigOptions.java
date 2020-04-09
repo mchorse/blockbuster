@@ -7,14 +7,10 @@ import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,29 +19,25 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 {
     private String title = I18n.format("blockbuster.gui.aperture.config.title");
 
-    public GuiButtonElement<GuiCheckBox> actions;
-    public GuiButtonElement<GuiCheckBox> reload;
-    public GuiButtonElement<GuiButton> reloadScene;
-
-    public int max;
-    public int x;
-    public int y;
+    public GuiToggleElement actions;
+    public GuiToggleElement reload;
+    public GuiButtonElement reloadScene;
 
     public GuiDirectorConfigOptions(Minecraft mc, GuiCameraEditor editor)
     {
         super(mc, editor);
 
-        this.reload = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.aperture.config.reload"), CameraHandler.reload, (b) ->
+        this.reload = new GuiToggleElement(mc, I18n.format("blockbuster.gui.aperture.config.reload"), CameraHandler.reload, (b) ->
         {
-            CameraHandler.reload = b.button.isChecked();
+            CameraHandler.reload = this.reload.isToggled();
         });
 
-        this.actions = GuiButtonElement.checkbox(mc, I18n.format("blockbuster.gui.aperture.config.actions"), CameraHandler.actions, (b) ->
+        this.actions = new GuiToggleElement(mc, I18n.format("blockbuster.gui.aperture.config.actions"), CameraHandler.actions, (b) ->
         {
-            CameraHandler.actions = b.button.isChecked();
+            CameraHandler.actions = this.actions.isToggled();
         });
 
-        this.reloadScene = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.aperture.config.reload_scene"), (b) ->
+        this.reloadScene = new GuiButtonElement(mc, I18n.format("blockbuster.gui.aperture.config.reload_scene"), (b) ->
         {
             SceneLocation location = CameraHandler.get();
 
@@ -55,56 +47,19 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
             }
         });
 
-        this.reloadScene.button.width = 100;
-        this.children.add(this.reload, this.actions, this.reloadScene);
+        this.add(this.reload, this.actions, this.reloadScene);
+    }
 
-        int i = 0;
-
-        for (IGuiElement element : this.children.elements)
-        {
-            if (element instanceof GuiButtonElement)
-            {
-                GuiButtonElement button = (GuiButtonElement) element;
-
-                button.resizer().parent(this.area).set(4, 4 + i * 18 + 20, button.button.width, button.button.height);
-                this.max = Math.max(this.max, button.button.width);
-
-                i++;
-            }
-        }
+    @Override
+    public String getTitle()
+    {
+        return this.title;
     }
 
     @Override
     public void update()
     {
-        this.reload.button.setIsChecked(CameraHandler.reload);
-        this.actions.button.setIsChecked(CameraHandler.actions);
-    }
-
-    @Override
-    public int getWidth()
-    {
-        return Math.max(this.max + 8, Minecraft.getMinecraft().fontRenderer.getStringWidth(this.title) + 8);
-    }
-
-    @Override
-    public int getHeight()
-    {
-        return this.children.elements.size() * 18 + 30;
-    }
-
-    @Override
-    public boolean isActive()
-    {
-        return CameraHandler.canSync();
-    }
-
-    @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
-    {
-        Gui.drawRect(this.area.x, this.area.y, this.area.getX(1), this.area.y + 20, 0x88000000);
-        this.font.drawString(this.title, this.area.x + 6, this.area.y + 7, 0xffffff, true);
-
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        this.reload.toggled(CameraHandler.reload);
+        this.actions.toggled(CameraHandler.actions);
     }
 }

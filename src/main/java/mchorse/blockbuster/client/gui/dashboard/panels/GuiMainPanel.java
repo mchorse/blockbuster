@@ -1,24 +1,18 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.utils.GuiUtils;
-import mchorse.mclib.client.gui.utils.Resizer;
+import mchorse.mclib.client.gui.framework.GuiBase;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main panel GUI element
@@ -29,32 +23,8 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 public class GuiMainPanel extends GuiDashboardPanel
 {
     public List<GuiConfigOption> options = new ArrayList<GuiConfigOption>();
-    public GuiButtonElement<GuiButton> first;
-    public GuiButtonElement<GuiCheckBox> last;
-
-    /**
-     * Open web link in browser 
-     */
-    public static void openWebLink(String address)
-    {
-        URI url = null;
-
-        try
-        {
-            url = new URI(address);
-        }
-        catch (Exception e)
-        {}
-
-        try
-        {
-            Class<?> oclass = Class.forName("java.awt.Desktop");
-            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
-            oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {url});
-        }
-        catch (Throwable t)
-        {}
-    }
+    public GuiButtonElement first;
+    public GuiToggleElement last;
 
     public GuiMainPanel(Minecraft mc, GuiDashboard dashboard)
     {
@@ -68,57 +38,57 @@ public class GuiMainPanel extends GuiDashboardPanel
         this.options.add(new GuiConfigOption("model_block_disable_rendering", "model_block"));
         this.options.add(new GuiConfigOption("model_block_disable_item_rendering", "model_block"));
 
-        GuiButtonElement<GuiCheckBox> previous = null;
+        GuiToggleElement previous = null;
 
         for (GuiConfigOption option : this.options)
         {
             boolean value = this.getProp(option).getBoolean();
             String label = I18n.format("blockbuster.config." + option.category + "." + option.name);
 
-            option.button = GuiButtonElement.checkbox(mc, label, value, (button) -> this.setOption(option));
+            option.button = new GuiToggleElement(mc, label, value, (button) -> this.setOption(option));
 
             if (previous == null)
             {
-                option.button.resizer().set(10, 25, option.button.button.width, 11).parent(this.area);
+                option.button.flex().set(10, 25, 100, 20).relative(this.area);
             }
             else
             {
-                option.button.resizer().set(0, 16, option.button.button.width, 11).relative(previous.resizer());
+                option.button.flex().set(0, 16, 100, 20).relative(previous.resizer());
             }
 
             previous = option.button;
-            this.children.add(option.button);
+            this.add(option.button);
         }
 
         this.last = previous;
 
-        GuiElement element = this.first = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> openWebLink(Blockbuster.WIKI_URL()));
+        /* GuiElement element = this.first = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
         Resizer resizer = new Resizer().set(0, 40, 100, 20).parent(this.area).relative(previous.resizer());
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> openWebLink(Blockbuster.DISCORD_URL()));
+        element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink((Blockbuster.DISCORD_URL()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
         resizer = element.resizer();
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> openWebLink(Blockbuster.TUTORIAL_URL()));
+        element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink((Blockbuster.TUTORIAL_URL()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
         resizer = element.resizer();
 
-        element = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
+        element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.models"), (button) -> GuiUtils.openWebLink(new File(ClientProxy.configFile, "models").toURI()));
         this.children.add(element.setResizer(new Resizer().set(0, 25, 100, 20).relative(resizer)));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> openWebLink(Blockbuster.CHANNEL_URL()));
+        element = new GuiIconElement(mc, GuiDashboard.GUI_ICONS, 0, 0, 0, 16, (button) -> GuiUtils.openWebLink((Blockbuster.CHANNEL_URL()));
         resizer = new Resizer().set(0, 0, 16, 16).parent(this.area).x(1, -40).y(1, -20);
         this.children.add(element.setResizer(resizer));
 
-        element = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> openWebLink(Blockbuster.TWITTER_URL()));
+        element = new GuiIconElement(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> GuiUtils.openWebLink((Blockbuster.TWITTER_URL()));
         resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
-        this.children.add(element.setResizer(resizer));
+        this.children.add(element.setResizer(resizer)); */
     }
 
     private void setOption(GuiConfigOption option)
     {
-        this.getProp(option).set(option.button.button.isChecked());
+        this.getProp(option).set(option.button.isToggled());
     }
 
     private Property getProp(GuiConfigOption option)
@@ -131,23 +101,23 @@ public class GuiMainPanel extends GuiDashboardPanel
     {
         for (GuiConfigOption option : this.options)
         {
-            option.button.button.setIsChecked(this.getProp(option).getBoolean());
+            option.button.toggled(this.getProp(option).getBoolean());
         }
     }
 
     @Override
-    public void resize(int width, int height)
+    public void resize()
     {
-        if (height > 260)
+        /* if (GuiBase.getCurrent().screen.height > 260)
         {
-            this.first.resizer().set(0, 40, 100, 20).relative(this.last.resizer());
+            this.first.flex().set(0, 40, 100, 20).relative(this.last.resizer());
         }
         else
         {
-            this.first.resizer().set(0, 25, 100, 20).parent(this.area).x(1, -110);
-        }
+            this.first.flex().set(0, 25, 100, 20).relative(this.area).x(1, -110);
+        } */
 
-        super.resize(width, height);
+        super.resize();
     }
 
     @Override
@@ -157,20 +127,20 @@ public class GuiMainPanel extends GuiDashboardPanel
     }
 
     @Override
-    public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.first.area.x, this.first.area.y - 15, 0xffffff);
+        // this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.resources"), this.first.area.x, this.first.area.y - 15, 0xffffff);
         this.font.drawStringWithShadow(I18n.format("blockbuster.gui.main.options"), this.area.x + 10, this.area.y + 10, 0xffffff);
-        this.font.drawStringWithShadow("McHorse", this.area.getX(1) - 90, this.area.getY(1) - 16, 0xffffff);
+        this.font.drawStringWithShadow("McHorse", this.area.ex() - 90, this.area.ey() - 16, 0xffffff);
 
-        super.draw(tooltip, mouseX, mouseY, partialTicks);
+        super.draw(context);
     }
 
     public static class GuiConfigOption
     {
         public String name;
         public String category;
-        public GuiButtonElement<GuiCheckBox> button;
+        public GuiToggleElement button;
 
         public GuiConfigOption(String name, String category)
         {

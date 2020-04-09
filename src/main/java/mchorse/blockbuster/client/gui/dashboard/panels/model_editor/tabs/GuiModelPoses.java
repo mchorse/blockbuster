@@ -3,20 +3,18 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
-import mchorse.mclib.client.gui.framework.GuiTooltip.TooltipDirection;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
-import mchorse.mclib.client.gui.utils.Resizer.Measure;
-import mchorse.mclib.client.gui.widgets.buttons.GuiTextureButton;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.resizers.Flex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -24,11 +22,10 @@ import net.minecraft.nbt.JsonToNBT;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
-    private GuiButtonElement<GuiTextureButton> addPose;
-    private GuiButtonElement<GuiTextureButton> removePose;
-    private GuiButtonElement<GuiTextureButton> importPose;
-    private GuiButtonElement<GuiTextureButton> copyPose;
-    private GuiDelegateElement<IGuiElement> modal;
+    private GuiIconElement addPose;
+    private GuiIconElement removePose;
+    private GuiIconElement importPose;
+    private GuiIconElement copyPose;
 
     private GuiStringListElement posesList;
     private GuiThreeElement translate;
@@ -45,9 +42,9 @@ public class GuiModelPoses extends GuiModelEditorTab
 
         this.title = I18n.format("blockbuster.gui.me.poses.title");
 
-        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str));
-        this.posesList.resizer().set(0, 20, 80, 0).parent(this.area).h(1, -20).x(1, -80);
-        this.children.add(this.posesList);
+        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
+        this.posesList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).x(1, -80);
+        this.add(this.posesList);
 
         this.translate = new GuiThreeElement(mc, (values) ->
         {
@@ -74,33 +71,36 @@ public class GuiModelPoses extends GuiModelEditorTab
             this.panel.pose.size[1] = values[1];
         });
 
-        this.translate.resizer().set(10, 30, 110, 20).parent(this.area);
-        this.scale.resizer().set(0, 25, 110, 20).relative(this.translate.resizer());
-        this.rotation.resizer().set(0, 25, 110, 20).relative(this.scale.resizer());
+        this.translate.flex().set(10, 30, 110, 20).relative(this.area);
+        this.scale.flex().set(0, 25, 110, 20).relative(this.translate.resizer());
+        this.rotation.flex().set(0, 25, 110, 20).relative(this.scale.resizer());
 
-        this.hitbox.resizer().set(0, 40, 110, 20).relative(this.rotation.resizer());
-        this.children.add(this.translate, this.scale, this.rotation, this.hitbox);
+        this.hitbox.flex().set(0, 40, 110, 20).relative(this.rotation.resizer());
+        this.add(this.translate, this.scale, this.rotation, this.hitbox);
 
         /* Buttons */
-        this.addPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 32, 32, 32, 48, (b) -> this.addPose());
-        this.removePose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 64, 32, 64, 48, (b) -> this.removePose());
-        this.importPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 80, 32, 80, 48, (b) -> this.importPose()).tooltip(I18n.format("blockbuster.gui.me.poses.import_pose_tooltip"), TooltipDirection.BOTTOM);
-        this.copyPose = GuiButtonElement.icon(mc, GuiDashboard.GUI_ICONS, 80, 64, 80, 80, (b) -> this.copyPose()).tooltip(I18n.format("blockbuster.gui.me.poses.copy_pose_tooltip"), TooltipDirection.BOTTOM);
+        this.addPose = new GuiIconElement(mc, Icons.ADD, (b) -> this.addPose());
+        this.removePose = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removePose());
+        this.importPose = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.importPose());
+        this.importPose.tooltip(I18n.format("blockbuster.gui.me.poses.import_pose_tooltip"));
+        this.copyPose = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyPose());
+        this.copyPose.tooltip(I18n.format("blockbuster.gui.me.poses.copy_pose_tooltip"));
 
-        this.copyPose.resizer().set(2, 2, 16, 16).parent(this.area).x(1, -78);
-        this.importPose.resizer().set(20, 0, 16, 16).relative(this.copyPose.resizer());
-        this.addPose.resizer().set(20, 0, 16, 16).relative(this.importPose.resizer());
-        this.removePose.resizer().set(20, 0, 16, 16).relative(this.addPose.resizer());
-        this.children.add(this.copyPose, this.importPose, this.addPose, this.removePose);
-
-        this.modal = new GuiDelegateElement<IGuiElement>(mc, null);
-        this.modal.resizer().set(0, 0, 1, 1, Measure.RELATIVE).parent(this.area);
-        this.children.add(this.modal);
+        this.copyPose.flex().set(2, 2, 16, 16).relative(this.area).x(1, -78);
+        this.importPose.flex().set(20, 0, 16, 16).relative(this.copyPose.resizer());
+        this.addPose.flex().set(20, 0, 16, 16).relative(this.importPose.resizer());
+        this.removePose.flex().set(20, 0, 16, 16).relative(this.addPose.resizer());
+        this.add(this.copyPose, this.importPose, this.addPose, this.removePose);
     }
 
     private void addPose()
     {
-        this.modal.setDelegate(new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.new_pose"), (text) -> this.addPose(text)).setValue(pose));
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.poses.new_pose"), this::addPose);
+
+            return modal.setValue(this.pose);
+        });
     }
 
     private void addPose(String text)
@@ -120,7 +120,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         if (Model.REQUIRED_POSES.contains(this.pose))
         {
-            this.modal.setDelegate(new GuiMessageModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.poses.standard")));
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, I18n.format("blockbuster.gui.me.poses.standard")));
         }
         else
         {
@@ -136,10 +136,14 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void importPose()
     {
-        GuiPromptModal modal = new GuiPromptModal(mc, this.modal, I18n.format("blockbuster.gui.me.poses.import_pose"), (text) -> this.importPose(text));
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.poses.import_pose"), this::importPose);
 
-        modal.text.field.setMaxStringLength(10000);
-        this.modal.setDelegate(modal);
+            modal.text.field.setMaxStringLength(10000);
+
+            return modal;
+        });
     }
 
     private void importPose(String nbt)
@@ -156,10 +160,12 @@ public class GuiModelPoses extends GuiModelEditorTab
 
     private void copyPose()
     {
-        GuiListModal modal = new GuiListModal(this.mc, this.modal, I18n.format("blockbuster.gui.me.poses.copy_pose"), (text) -> this.copyPose(text));
-        modal.addValues(this.panel.model.poses.keySet());
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiListModal modal = new GuiListModal(this.mc, I18n.format("blockbuster.gui.me.poses.copy_pose"), this::copyPose);
 
-        this.modal.setDelegate(modal);
+            return modal.addValues(this.panel.model.poses.keySet());
+        });
     }
 
     private void copyPose(String text)
@@ -215,24 +221,24 @@ public class GuiModelPoses extends GuiModelEditorTab
     }
 
     @Override
-    public void resize(int width, int height)
+    public void resize()
     {
-        if (this.resizer().h.unit == Measure.RELATIVE)
+        if (this.flex().h.unit == Flex.Measure.RELATIVE)
         {
-            this.posesList.resizer().x(0).y(150).w(1, 0).h(1, -150);
+            this.posesList.flex().x(0).y(150).w(1, 0).h(1, -150);
         }
         else
         {
-            this.posesList.resizer().y(20).h(1, -20).w(80).x(1, -80);
+            this.posesList.flex().y(20).h(1, -20).w(80).x(1, -80);
         }
 
-        super.resize(width, height);
+        super.resize();
     }
 
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+    public boolean mouseClicked(GuiContext context)
     {
-        return super.mouseClicked(mouseX, mouseY, mouseButton) || this.area.isInside(mouseX, mouseY);
+        return super.mouseClicked(context) || this.area.isInside(context);
     }
 
     @Override
@@ -240,7 +246,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         super.drawLabels();
 
-        if (this.resizer().h.unit == Measure.RELATIVE)
+        if (this.flex().h.unit == Flex.Measure.RELATIVE)
         {
             int x = this.posesList.area.x;
             int y = this.posesList.area.y;

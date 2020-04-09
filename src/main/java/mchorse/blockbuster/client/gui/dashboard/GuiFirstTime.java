@@ -1,12 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiMainPanel;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
-import mchorse.mclib.client.gui.framework.elements.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.GuiUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
@@ -19,12 +18,12 @@ import java.util.List;
  */
 public class GuiFirstTime extends GuiElement
 {
-	public GuiButtonElement<GuiButton> close;
-	public GuiButtonElement<GuiButton> tutorial;
-	public GuiButtonElement<GuiButton> youtube;
-	public GuiButtonElement<GuiButton> channel;
-	public GuiButtonElement<GuiButton> discord;
-	public GuiButtonElement<GuiButton> twitter;
+	public GuiButtonElement close;
+	public GuiButtonElement tutorial;
+	public GuiButtonElement youtube;
+	public GuiButtonElement channel;
+	public GuiButtonElement discord;
+	public GuiButtonElement twitter;
 
 	private String title;
 	private List<String> welcome;
@@ -45,30 +44,28 @@ public class GuiFirstTime extends GuiElement
 		this.dashboard = dashboard;
 		this.overlay = overlay;
 
-		this.createChildren();
+		this.close = new GuiButtonElement(mc, I18n.format("blockbuster.gui.done"), (button) -> this.close());
+		this.tutorial = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
+		this.discord = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
+		this.youtube = new GuiButtonElement(mc, "YouTube", (button) -> GuiUtils.openWebLink("https://www.youtube.com/c/McHorsesMods"));
+		this.channel = new GuiButtonElement(mc, Blockbuster.langOrDefault("blockbuster.gui.first_time.channel", ""), (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
+		this.twitter = new GuiButtonElement(mc, "Twitter", (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
 
-		this.close = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.done"), (button) -> this.close());
-		this.tutorial = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiMainPanel.openWebLink(Blockbuster.TUTORIAL_URL()));
-		this.discord = GuiButtonElement.button(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiMainPanel.openWebLink(Blockbuster.DISCORD_URL()));
-		this.youtube = GuiButtonElement.button(mc, "YouTube", (button) -> GuiMainPanel.openWebLink("https://www.youtube.com/c/McHorsesMods"));
-		this.channel = GuiButtonElement.button(mc, Blockbuster.langOrDefault("blockbuster.gui.first_time.channel", ""), (button) -> GuiMainPanel.openWebLink(Blockbuster.CHANNEL_URL()));
-		this.twitter = GuiButtonElement.button(mc, "Twitter", (button) -> GuiMainPanel.openWebLink(Blockbuster.TWITTER_URL()));
+		this.tutorial.flex().set(10, 0, 0, 20).relative(this.area).w(0.5F, -12);
+		this.youtube.flex().set(0, 0, 0, 20).relative(this.area).x(0.5F, 2).w(0.5F, -12);
+		this.discord.flex().set(10, 0, 0, 20).relative(this.area).w(0.5F, -12).y(1, -55);
+		this.twitter.flex().set(0, 0, 0, 20).relative(this.area).x(0.5F, 2).w(0.5F, -12).y(1, -55);
+		this.close.flex().set(10, 0, 0, 20).relative(this.area).w(1, -20).y(1, -30);
 
-		this.tutorial.resizer().set(10, 0, 0, 20).parent(this.area).w(0.5F, -12);
-		this.youtube.resizer().set(0, 0, 0, 20).parent(this.area).x(0.5F, 2).w(0.5F, -12);
-		this.discord.resizer().set(10, 0, 0, 20).parent(this.area).w(0.5F, -12).y(1, -55);
-		this.twitter.resizer().set(0, 0, 0, 20).parent(this.area).x(0.5F, 2).w(0.5F, -12).y(1, -55);
-		this.close.resizer().set(10, 0, 0, 20).parent(this.area).w(1, -20).y(1, -30);
+		this.add(this.tutorial, this.discord, this.youtube, this.twitter, this.close);
 
-		this.children.add(this.tutorial, this.discord, this.youtube, this.twitter, this.close);
-
-		if (!this.channel.button.displayString.isEmpty())
+		if (!this.channel.label.isEmpty())
 		{
-			this.tutorial.resizer().set(10, 0, 0, 20).parent(this.area).w(0.33F, -10);
-			this.channel.resizer().set(0, 0, 0, 20).parent(this.area).x(0.5F, -30).w(60);
-			this.youtube.resizer().set(0, 0, 0, 20).parent(this.area).x(0.67F, 0).w(0.33F, -10);
+			this.tutorial.flex().set(10, 0, 0, 20).relative(this.area).w(0.33F, -10);
+			this.channel.flex().set(0, 0, 0, 20).relative(this.area).x(0.5F, -30).w(60);
+			this.youtube.flex().set(0, 0, 0, 20).relative(this.area).x(0.67F, 0).w(0.33F, -10);
 
-			this.children.add(this.channel);
+			this.add(this.channel);
 		}
 
 		this.title = I18n.format("blockbuster.gui.first_time.title");
@@ -78,7 +75,7 @@ public class GuiFirstTime extends GuiElement
 
 	private void close()
 	{
-		this.dashboard.elements.elements.remove(this.overlay);
+		this.dashboard.root.remove(this.overlay);
 
 		/* Don't show anymore this modal */
 		Property property = Blockbuster.proxy.config.config.getCategory(Configuration.CATEGORY_GENERAL).get("show_first_time_modal");
@@ -89,13 +86,7 @@ public class GuiFirstTime extends GuiElement
 	}
 
 	@Override
-	public void resize(int width, int height)
-	{
-		super.resize(width, height);
-	}
-
-	@Override
-	public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+	public void draw(GuiContext context)
 	{
 		final int lineHeight = 11;
 
@@ -103,7 +94,7 @@ public class GuiFirstTime extends GuiElement
 
 		/* Draw extra text */
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(this.area.getX(0.5F) - this.font.getStringWidth(this.title), this.area.y + 10, 0);
+		GlStateManager.translate(this.area.mx() - this.font.getStringWidth(this.title), this.area.y + 10, 0);
 		GlStateManager.scale(2, 2, 2);
 
 		this.font.drawStringWithShadow(this.title, 0, 0, 0xffffff);
@@ -121,12 +112,12 @@ public class GuiFirstTime extends GuiElement
 		y += 5;
 
 		/* Readjust buttons */
-		this.tutorial.resizer().y(y - this.area.y);
-		this.tutorial.resize(this.dashboard.width, this.dashboard.height);
-		this.channel.resizer().y(y - this.area.y);
-		this.channel.resize(this.dashboard.width, this.dashboard.height);
-		this.youtube.resizer().y(y - this.area.y);
-		this.youtube.resize(this.dashboard.width, this.dashboard.height);
+		this.tutorial.flex().y(y - this.area.y);
+		this.tutorial.resize();
+		this.channel.flex().y(y - this.area.y);
+		this.channel.resize();
+		this.youtube.flex().y(y - this.area.y);
+		this.youtube.resize();
 
 		/* Draw social paragraph */
 		y = this.discord.area.y - 5 - this.social.size() * lineHeight;
@@ -137,7 +128,7 @@ public class GuiFirstTime extends GuiElement
 			y += lineHeight;
 		}
 
-		super.draw(tooltip, mouseX, mouseY, partialTicks);
+		super.draw(context);
 	}
 
 	public static class Overlay extends GuiElement
@@ -148,25 +139,24 @@ public class GuiFirstTime extends GuiElement
 
 			GuiFirstTime firstTime = new GuiFirstTime(mc, dashboard, this);
 
-			firstTime.resizer().set(0, 0, 200, 250).parent(this.area).x(0.5F, -100).y(0.5F, -125);
+			firstTime.flex().set(0, 0, 200, 250).relative(this.area).x(0.5F, -100).y(0.5F, -125);
 
-			this.createChildren();
-			this.children.add(firstTime);
+			this.add(firstTime);
+			this.hideTooltip();
 		}
 
 		@Override
-		public boolean mouseClicked(int mouseX, int mouseY, int mouseButton)
+		public boolean mouseClicked(GuiContext context)
 		{
-			return super.mouseClicked(mouseX, mouseY, mouseButton) || this.isEnabled();
+			return super.mouseClicked(context) || this.isEnabled();
 		}
 
 		@Override
-		public void draw(GuiTooltip tooltip, int mouseX, int mouseY, float partialTicks)
+		public void draw(GuiContext context)
 		{
-			tooltip.set(null, null);
 			this.area.draw(0x88000000);
 
-			super.draw(tooltip, mouseX, mouseY, partialTicks);
+			super.draw(context);
 		}
 	}
 }

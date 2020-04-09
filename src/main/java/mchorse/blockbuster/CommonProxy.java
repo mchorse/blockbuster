@@ -166,8 +166,8 @@ public class CommonProxy
         GameRegistry.registerTileEntity(TileEntityModel.class, "blockbuster_model_tile_entity");
 
         /* Capabilities */
-        CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording.class);
-        CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun.class);
+        CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording::new);
+        CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun::new);
 
         /* Morphing */
         this.models = this.getHandler();
