@@ -34,7 +34,7 @@ public class ModelPack
     /**
      * List of ignored models
      */
-    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "yike", "empty");
+    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "empty");
 
     /**
      * List of model loaders
@@ -110,7 +110,6 @@ public class ModelPack
             this.addDefaultModel("steve_3d");
             this.addDefaultModel("fred");
             this.addDefaultModel("fred_3d");
-            this.addDefaultModel("yike");
             this.addDefaultModel("empty");
         }
         catch (Exception e)

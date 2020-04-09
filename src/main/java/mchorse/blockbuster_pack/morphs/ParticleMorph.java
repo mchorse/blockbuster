@@ -112,10 +112,11 @@ public class ParticleMorph extends AbstractMorph
         int size = (int) (scale * 1.5F);
         int offset = (int) (Math.floor(Math.abs(factor * factor) * 8) * 8);
 
+        GlStateManager.color(1, 1, 1);
         GlStateManager.enableTexture2D();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        Gui.drawScaledCustomSizeModalRect(x - size / 2, y - size / 2 - size / 4, offset, 0, 8, 8, size, size, 128, 128);
+        Gui.drawScaledCustomSizeModalRect(x - size / 2, y - size + size / 8, offset, 0, 8, 8, size, size, 128, 128);
     }
 
     @Override

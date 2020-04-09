@@ -182,46 +182,16 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
     /**
      * Give a morph to an actor
-     *
-     * Also contains some extra wubs and easter eggs
      */
     @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata)
     {
         NBTTagCompound tag = new NBTTagCompound();
-        boolean extraWubs = Blockbuster.proxy.config.extra_wubs;
 
-        if (extraWubs && this.rand.nextInt(100) <= 5)
-        {
-            this.setCustomNameTag(this.rand.nextInt(100) <= 100 ? "YokeFilms" : "YikeFilms");
-            tag.setString("Name", "blockbuster.yike");
-        }
-        else
-        {
-            tag.setString("Name", "blockbuster.steve");
-        }
-
+        tag.setString("Name", "blockbuster.steve");
         this.morph.fromNBT(tag);
 
         return super.onInitialSpawn(difficulty, livingdata);
-    }
-
-    /**
-     * Primarily used for easter eggs
-     */
-    @Override
-    public boolean attackEntityFrom(DamageSource source, float amount)
-    {
-        if (Blockbuster.proxy.config.extra_wubs && this.playback == null)
-        {
-            if (!this.world.isRemote && this.getCustomNameTag().equals("YokeFilms") && source.getTrueSource() instanceof EntityPlayerMP)
-            {
-                this.setCustomNameTag("YikeFilms");
-                ((EntityPlayerMP) source.getTrueSource()).sendMessage(new TextComponentTranslation("blockbuster.eggs.yike"));
-            }
-        }
-
-        return super.attackEntityFrom(source, amount);
     }
 
     /**
