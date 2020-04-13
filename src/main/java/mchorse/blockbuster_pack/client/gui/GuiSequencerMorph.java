@@ -1,11 +1,8 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
@@ -41,22 +38,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         return morph instanceof SequencerMorph;
     }
 
-    @Override
-    protected void drawMorph(GuiContext context)
-    {
-        try
-        {
-            AbstractMorph morph = this.general.entry == null ? null : this.general.entry.morph;
-
-            if (morph != null)
-            {
-                morph.renderOnScreen(this.mc.player, this.area.mx(), this.area.y(0.66F), this.area.h / 3, 1);
-            }
-        }
-        catch (Exception e)
-        {}
-    }
-
     /**
      * Sequencer morph panel 
      */
@@ -73,7 +54,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private GuiTrackpadElement random;
         private GuiToggleElement reverse;
         private GuiToggleElement randomOrder;
-        private GuiCreativeMorphs morphPicker;
 
         public SequenceEntry entry;
 
@@ -116,17 +96,17 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
             {
-                if (this.morphPicker == null)
+                if (this.entry == null)
                 {
-                    this.morphPicker = new GuiCreativeMorphsMenu(this.mc, null);
-                    this.morphPicker.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-                    this.morphPicker.callback = (morph) -> this.setMorph(morph);
-                    this.morphPicker.resize();
-                    this.add(this.morphPicker);
+                    return;
                 }
 
-                this.morphPicker.setSelected(this.entry == null ? null : this.entry.morph);
-                this.morphPicker.setVisible(true);
+                SequenceEntry entry = this.entry;
+
+                this.editor.morphs.nestEdit(entry.morph, (morph) ->
+                {
+                    entry.morph = morph;
+                });
             });
 
             this.duration = new GuiTrackpadElement(mc, (value) ->
@@ -174,25 +154,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.add(this.addPart, this.removePart, this.list, this.reverse, this.randomOrder, this.elements);
         }
 
-        private void setMorph(AbstractMorph morph)
-        {
-            if (this.entry != null)
-            {
-                this.entry.morph = morph;
-            }
-        }
-
         private void select(SequenceEntry entry)
         {
             this.entry = entry;
 
             if (entry != null)
             {
-                if (this.morphPicker != null)
-                {
-                    this.morphPicker.setSelected(entry.morph);
-                }
-
                 this.duration.setValue(entry.duration);
                 this.random.setValue(entry.random);
             }

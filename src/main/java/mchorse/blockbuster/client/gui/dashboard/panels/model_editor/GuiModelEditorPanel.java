@@ -95,7 +95,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.modelRenderer = new GuiBBModelRenderer(mc);
-        this.modelRenderer.pickingCallback = (limb) -> this.setLimb(limb);
+        this.modelRenderer.picker(this::setLimb);
         this.modelRenderer.flex().relative(this.area).w(1, 0).h(1, 0);
         this.add(this.modelRenderer);
 
@@ -146,7 +146,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.openPoses.tooltip(I18n.format("blockbuster.gui.me.tooltips.poses"), Direction.RIGHT);
         this.openOptions = new GuiIconElement(mc, Icons.GEAR, (b) -> this.toggle(this.options, this.limbs));
         this.openOptions.tooltip(I18n.format("blockbuster.gui.me.tooltips.options"), Direction.LEFT);
-        this.openLimbs = new GuiIconElement(mc, BBIcons.LIMB, (b) -> this.toggle(this.limbs, this.options));
+        this.openLimbs = new GuiIconElement(mc, Icons.LIMB, (b) -> this.toggle(this.limbs, this.options));
         this.openLimbs.tooltip(I18n.format("blockbuster.gui.me.tooltips.limbs"), Direction.LEFT);
 
         this.openModels.flex().set(2, 2, 16, 16).relative(this.area);

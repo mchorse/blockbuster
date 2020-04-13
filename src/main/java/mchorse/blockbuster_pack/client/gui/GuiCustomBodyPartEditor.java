@@ -21,7 +21,7 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements ILimbS
         {
             GuiCustomMorph parent = (GuiCustomMorph) this.editor;
 
-            parent.modelRenderer.limb = parent.morph.model.limbs.get(part.limb);
+            parent.bbRenderer.limb = parent.morph.model.limbs.get(part.limb);
         }
     }
 
@@ -31,7 +31,7 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements ILimbS
         GuiCustomMorph parent = (GuiCustomMorph) this.editor;
 
         super.pickLimb(limbName);
-        parent.modelRenderer.limb = parent.morph.model.limbs.get(limbName);
+        parent.bbRenderer.limb = parent.morph.model.limbs.get(limbName);
     }
 
     @Override

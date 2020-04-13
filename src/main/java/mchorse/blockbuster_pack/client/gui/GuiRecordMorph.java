@@ -36,17 +36,6 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         return morph instanceof RecordMorph;
     }
 
-    @Override
-    protected void drawMorph(GuiContext context)
-    {
-        try
-        {
-            this.morph.initial.renderOnScreen(this.mc.player, this.area.mx(), this.area.y(0.66F), this.area.h / 3, 1);
-        }
-        catch (Exception e)
-        {}
-    }
-
     @SideOnly(Side.CLIENT)
     public static class GuiRecordMorphPanel extends GuiMorphPanel<RecordMorph, GuiRecordMorph>
     {
@@ -64,17 +53,12 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             this.records.list.background();
             this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
             {
-                if (this.morphPicker == null)
+                RecordMorph record = this.morph;
+
+                this.editor.morphs.nestEdit(record.initial, (morph) ->
                 {
-                    this.morphPicker = new GuiCreativeMorphsMenu(mc, this::setMorph);
-                    this.morphPicker.flex().relative(this.area).wh(1F, 1F);
-
-                    this.morphPicker.resize();
-                    this.add(this.morphPicker);
-                }
-
-                this.morphPicker.setSelected(this.morph.initial);
-                this.morphPicker.setVisible(true);
+                    record.initial = morph == null ? null : morph.clone(true);
+                });
             });
             this.loop = new GuiToggleElement(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->
             {
@@ -90,11 +74,6 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             this.randomSkip.flex().relative(this.loop.resizer()).set(0, 16, 100, 20);
 
             this.add(this.pick, this.loop, this.randomSkip, this.records);
-        }
-
-        private void setMorph(AbstractMorph morph)
-        {
-            this.morph.initial = morph;
         }
 
         @Override

@@ -46,17 +46,6 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         return morph instanceof ParticleMorph;
     }
 
-    @Override
-    protected void drawMorph(GuiContext context)
-    {
-        try {
-            if (this.view.delegate == this.panel && this.morph.morph != null)
-            {
-                this.morph.morph.renderOnScreen(this.mc.player, this.area.mx(), this.area.y(0.66F), (float) (this.area.h / 3), 1.0F);
-            }
-        } catch (Exception e) {}
-    }
-
     public static class GuiParticleMorphGeneralPanel extends GuiMorphPanel<ParticleMorph, GuiParticleMorph>
     {
         public GuiCirculateElement mode;
@@ -225,7 +214,6 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
     public static class GuiParticleMorphMorphPanel extends GuiMorphPanel<ParticleMorph, GuiParticleMorph>
     {
         public GuiButtonElement pickMorph;
-        public GuiCreativeMorphs morphPicker;
         public GuiButtonElement pickType;
         public GuiStringListElement type;
         public GuiToggleElement yaw;
@@ -242,16 +230,12 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
             this.pickMorph = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
             {
-                if (this.morphPicker == null) {
-                    this.morphPicker = new GuiCreativeMorphsMenu(mc, (morph) -> this.morph.morph = morph);
-                    this.morphPicker.flex().relative(this.area).wh(1F, 1F);
+                ParticleMorph particle = this.morph;
 
-                    this.morphPicker.resize();
-                    this.add(this.morphPicker);
-                }
-
-                this.morphPicker.setSelected(this.morph.morph);
-                this.morphPicker.setVisible(true);
+                this.editor.morphs.nestEdit(particle.morph, (morph) ->
+                {
+                    particle.morph = morph == null ? null : morph.clone(true);
+                });
             });
 
             this.pickType = new GuiButtonElement(mc, I18n.format("blockbuster.gui.particle.pick_type"), (b) -> this.type.toggleVisible());
@@ -296,7 +280,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.sequencer.flex().relative(this.pitch.resizer()).set(0, 16, 100, 11);
             this.random.flex().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
 
-            this.add(this.pickMorph, this.morphPicker, this.pickType, this.yaw, this.pitch, this.sequencer, this.random, this.fade, this.lifeSpan, this.maximum, this.type);
+            this.add(this.pickMorph, this.pickType, this.yaw, this.pitch, this.sequencer, this.random, this.fade, this.lifeSpan, this.maximum, this.type);
         }
 
         @Override

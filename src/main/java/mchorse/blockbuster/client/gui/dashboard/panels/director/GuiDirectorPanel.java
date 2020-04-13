@@ -193,7 +193,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         /* Additional utility buttons */
         element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
         {
-            this.dashboard.morphs.setVisible(true);
+            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            this.dashboard.morphs.resize();
+            this.add(this.dashboard.morphs);
         });
         element.flex().set(10, 70, 80, 20).relative(this.area).x(0.5F, -40).y(1, -86);
 
@@ -221,16 +223,12 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         this.replayEditor.add(element);
 
-        // TODO: this.popup.resizer().parent(element.area).set(-125, -100, 120, 120);
-
         /* Scene manager */
         this.add(element = new GuiIconElement(mc, Icons.MORE, (b) -> this.scenes.toggleVisible()));
         element.flex().set(0, 6, 16, 16).relative(this.area).x(1, -24);
 
         this.add(this.scenes = new GuiSceneManager(mc, this));
         this.scenes.flex().set(0, 24, 160, 0).relative(this.area).x(1, -166).h(1, -100);
-
-        this.add(this.dashboard.morphDelegate);
     }
 
     public SceneLocation getLocation()
@@ -315,8 +313,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public void appear()
     {
         this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
-        this.dashboard.morphDelegate.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-        this.dashboard.morphDelegate.resize();
 
         if (!this.location.isEmpty())
         {

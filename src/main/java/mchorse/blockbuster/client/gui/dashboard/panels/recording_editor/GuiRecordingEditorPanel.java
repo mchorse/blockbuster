@@ -92,7 +92,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
             panel = this.panels.get(Action.class);
         }
 
-        this.dashboard.morphs.setVisible(false);
         panel.fill(action);
 
         return panel;
@@ -143,7 +142,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
 
         this.add(this.editor, this.selector, this.records, this.open);
         this.selector.add(this.add, this.dupe, this.remove, this.list);
-        this.add(this.dashboard.morphDelegate);
     }
 
     private void createAction(String str)
@@ -274,8 +272,6 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
                 this.editor.delegate.setMorph(morph);
             }
         };
-        this.dashboard.morphDelegate.flex().relative(this.area).xy(0, 0).wh(1F, 1F);
-        this.dashboard.morphDelegate.resize();
 
         if (this.editor.delegate != null)
         {

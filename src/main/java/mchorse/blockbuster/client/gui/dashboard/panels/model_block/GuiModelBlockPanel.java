@@ -141,7 +141,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         /* Buttons */
         this.subChildren.add(element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (button) ->
         {
-            this.dashboard.morphs.setVisible(true);
+            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            this.dashboard.morphs.resize();
+            this.add(this.dashboard.morphs);
         }));
         this.subChildren.add(this.one = new GuiToggleElement(mc, I18n.format("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()));
         this.one.tooltip(I18n.format("blockbuster.gui.model_block.one_tooltip"), Direction.LEFT);
@@ -185,7 +187,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         for (int i = 0; i < this.slots.length; i++)
         {
-            this.slots[i] = new GuiSlotElement(mc, i, this::pickSlot).inventory(this.inventory);
+            this.slots[i] = new GuiSlotElement(mc, i, this.inventory);
             this.slots[i].flex().relative(this.area).wh(20, 20).anchor(0.5F, 0.5F);
             this.add(this.slots[i]);
         }
@@ -199,12 +201,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -40);
 
         this.inventory.flex().relative(this.area).x(0.5F).y(1F, -10).anchor(0.5F, 1F);
-    }
-
-    private void pickSlot(GuiSlotElement slot)
-    {
-        this.inventory.linked = slot;
-        this.inventory.setVisible(true);
     }
 
     private void pickItem(ItemStack stack)
@@ -239,8 +235,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
                 this.model.morph = morph;
             }
         };
-        this.dashboard.morphDelegate.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, 0);
-        this.dashboard.morphDelegate.resize();
 
         this.setModelBlock(this.model);
     }
@@ -372,7 +366,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiContext context)
     {
-        if (this.model != null && !this.dashboard.morphs.isVisible())
+        if (this.model != null && !this.dashboard.morphs.hasParent())
         {
             AbstractMorph morph = this.dashboard.morphs.getSelected();
 

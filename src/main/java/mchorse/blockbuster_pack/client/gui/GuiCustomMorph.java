@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.utils.BBIcons;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
@@ -41,30 +42,17 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     public GuiCustomBodyPartEditor bodyPart;
     public GuiCustomMorphPanel general;
     public GuiMaterialsPanel materials;
-
-    public GuiModelRendererBodyPart modelRenderer;
+    public GuiModelRendererBodyPart bbRenderer;
 
     public GuiCustomMorph(Minecraft mc)
     {
         super(mc);
-
-        this.modelRenderer = new GuiModelRendererBodyPart(Minecraft.getMinecraft());
-        this.modelRenderer.looking = false;
-        this.modelRenderer.origin = true;
-        this.modelRenderer.pickingCallback = (limb) ->
-        {
-            if (this.view.delegate instanceof ILimbSelector)
-            {
-                ((ILimbSelector) this.view.delegate).setLimb(limb);
-            }
-        };
 
         /* Nice shadow on bottom */
         this.prepend(new GuiDrawable((n) ->
         {
             this.drawGradientRect(0, this.area.ey() - 30, this.area.w, this.area.ey(), 0x00000000, 0x88000000);
         }));
-        this.prepend(this.modelRenderer);
 
         /* Morph panels */
         this.poseEditor = new GuiPosePanel(mc, this);
@@ -74,15 +62,32 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         this.defaultPanel = this.general;
         this.registerPanel(this.materials, I18n.format("blockbuster.gui.builder.materials"), Icons.MATERIAL);
-        this.registerPanel(this.bodyPart, I18n.format("blockbuster.gui.builder.body_part"), BBIcons.LIMB);
+        this.registerPanel(this.bodyPart, I18n.format("blockbuster.gui.builder.body_part"), Icons.LIMB);
         this.registerPanel(this.poseEditor, I18n.format("blockbuster.gui.builder.pose_editor"), Icons.POSE);
         this.registerPanel(this.general, "", Icons.GEAR);
     }
 
     @Override
+    protected GuiModelRenderer createMorphRenderer(Minecraft mc)
+    {
+        this.bbRenderer = new GuiModelRendererBodyPart(Minecraft.getMinecraft());
+        this.bbRenderer.looking = false;
+        this.bbRenderer.origin = true;
+        this.bbRenderer.picker((limb) ->
+        {
+            if (this.view.delegate instanceof ILimbSelector)
+            {
+                ((ILimbSelector) this.view.delegate).setLimb(limb);
+            }
+        });
+
+        return this.bbRenderer;
+    }
+
+    @Override
     public void setPanel(GuiMorphPanel panel)
     {
-        this.modelRenderer.limb = null;
+        this.bbRenderer.limb = null;
         this.updateModelRenderer();
 
         super.setPanel(panel);
@@ -104,9 +109,9 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
         morph.parts.reinitBodyParts();
         this.updateModelRenderer();
-        this.modelRenderer.morph = morph;
-        this.modelRenderer.limb = null;
-        this.modelRenderer.reset();
+        this.bbRenderer.morph = morph;
+        this.bbRenderer.limb = null;
+        this.bbRenderer.reset();
         this.bodyPart.setLimbs(morph.model.limbs.keySet());
     }
 
@@ -114,18 +119,11 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     {
         CustomMorph custom = this.morph;
 
-        this.modelRenderer.materials = custom.materials;
-        this.modelRenderer.model = ModelCustom.MODELS.get(custom.getKey());
-        this.modelRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
-        this.modelRenderer.pose = custom.customPose == null ? custom.model.getPose(custom.currentPose) : custom.customPose;
+        this.bbRenderer.materials = custom.materials;
+        this.bbRenderer.model = ModelCustom.MODELS.get(custom.getKey());
+        this.bbRenderer.texture = custom.skin == null ? custom.model.defaultTexture : custom.skin;
+        this.bbRenderer.pose = custom.customPose == null ? custom.model.getPose(custom.currentPose) : custom.customPose;
     }
-
-    /** 
-     * Don't draw default morph
-     */
-    @Override
-    protected void drawMorph(GuiContext context)
-    {}
 
     /**
      * General custom morph panel which edits common custom morph 

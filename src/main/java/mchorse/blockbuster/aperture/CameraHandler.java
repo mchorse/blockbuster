@@ -259,7 +259,7 @@ public class CameraHandler
         editor.scrub.flex().x(30).w(1, -60);
 
         cameraEditorElements.clear();
-        cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements, dashboard.morphDelegate);
+        cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements);
         refresh.accept(toggle);
     }
 
@@ -351,7 +351,6 @@ public class CameraHandler
                 panel.records.flex().relative(editor.viewport);
                 panel.records.setVisible(false);
                 panel.open.flex().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
-                dashboard.morphDelegate.flex().relative(editor.viewport).xy(0, 0).wh(1F, 1F);
             }
             else if (current instanceof GuiCameraEditor)
             {

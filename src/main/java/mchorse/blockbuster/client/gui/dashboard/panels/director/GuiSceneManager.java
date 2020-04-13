@@ -58,7 +58,7 @@ public class GuiSceneManager extends GuiElement
 
 		/* Director block manager list */
 		this.directors = new GuiDirectorBlockList(mc, (director) -> this.parent.pickDirector(director.get(0).getPos()));
-		this.convert = new GuiIconElement(mc, Icons.REFRESH, (b) -> this.convertScene());
+		this.convert = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.convertScene());
 		this.convert.tooltip(I18n.format("blockbuster.gui.director.convert"));
 
 		this.directors.flex().relative(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);

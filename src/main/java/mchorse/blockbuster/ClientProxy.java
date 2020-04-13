@@ -196,12 +196,6 @@ public class ClientProxy extends CommonProxy
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        /* OMG, thank you very much Forge! */
-        if (!mc.getFramebuffer().isStencilEnabled())
-        {
-            mc.getFramebuffer().enableStencil();
-        }
-
         /* Register manually models for all chroma blocks */
         Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
         ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();

@@ -40,7 +40,6 @@ public class GuiDashboard extends GuiBase
     public GuiMainPanel mainPanel;
 
     public GuiCreativeMorphsMenu morphs;
-    public GuiDelegateElement<GuiCreativeMorphsMenu> morphDelegate;
 
     private boolean mainMenu;
 
@@ -79,7 +78,6 @@ public class GuiDashboard extends GuiBase
     {
         if (mc != null && mc.world != null && this.directorPanel == null)
         {
-            this.morphDelegate = new GuiDelegateElement<GuiCreativeMorphsMenu>(mc, null);
             this.directorPanel = new GuiDirectorPanel(mc, this);
             this.modelPanel = new GuiModelBlockPanel(mc, this);
             this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, this);
@@ -110,11 +108,15 @@ public class GuiDashboard extends GuiBase
             EntityPlayer player = mc.player;
             IMorphing morphing = player == null ? null : Morphing.get(player);
 
+            if (this.morphs != null)
+            {
+                this.morphs.removeFromParent();
+            }
+
             this.morphs = new GuiCreativeMorphsMenu(mc, null);
             this.directorPanel.open();
             this.modelPanel.open();
             this.recordingEditorPanel.open();
-            this.morphDelegate.setDelegate(this.morphs);
         }
 
         this.modelEditorPanel.open();
@@ -156,7 +158,6 @@ public class GuiDashboard extends GuiBase
         if (this.morphs != null)
         {
             this.morphs.callback = null;
-            this.morphs.setVisible(false);
             this.morphs.setFilter("");
             this.morphs.setSelected(null);
         }
@@ -179,7 +180,6 @@ public class GuiDashboard extends GuiBase
     public void clear()
     {
         this.morphs = null;
-        this.morphDelegate = null;
         this.directorPanel = null;
         this.modelPanel = null;
         this.recordingEditorPanel = null;

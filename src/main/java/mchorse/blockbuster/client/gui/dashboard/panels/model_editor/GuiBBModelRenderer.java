@@ -1,14 +1,5 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
 
-import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.function.Consumer;
-
-import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.model.ModelRenderer;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRenderer;
@@ -16,8 +7,10 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.utils.DummyEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -25,6 +18,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.util.Map;
 
 /**
  * Model renderer which renders Blockbuster models 
@@ -48,9 +44,6 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public ModelCustom model;
     public ModelPose pose;
     public ModelLimb limb;
-
-    private boolean tryPicking;
-    public Consumer<String> pickingCallback;
 
     public static void drawCube(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float red, float green, float blue, float alpha)
     {
@@ -169,8 +162,12 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     }
 
     @Override
-    protected void drawModel(float headYaw, float headPitch, int mouseX, int mouseY, float partial)
+    protected void drawUserModel(GuiContext context)
     {
+        float partial = context.partialTicks;
+        float headYaw = this.yaw;
+        float headPitch = this.pitch;
+
         final float factor = 1 / 16F;
         float limbSwing = this.swing + partial;
 
@@ -193,11 +190,12 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             RenderCustomModel.bindLastTexture(this.texture);
         }
 
-        this.renderModel(this.dummy, headYaw, headPitch, this.timer, mouseX, mouseY, partial, factor);
+        this.renderModel(this.dummy, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
+        this.tryPicking(context);
 
         if (this.items)
         {
-            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partial, this.timer, mouseX, mouseY, factor);
+            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partial, this.timer, context.mouseX, context.mouseY, factor);
         }
 
         /* Render highlighting things on top */
@@ -248,39 +246,18 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
     {
         this.model.render(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
+    }
 
-        if (this.tryPicking)
-        {
-            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-            int scale = Minecraft.getMinecraft().displayWidth / screen.width;
-            int x = yaw * scale;
-            int y = Minecraft.getMinecraft().displayHeight - pitch * scale - 1;
+    @Override
+    protected void drawForStencil(GuiContext context)
+    {
+        this.model.renderForStencil(this.dummy, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
+    }
 
-            GL11.glClearStencil(0);
-            GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-
-            GL11.glEnable(GL11.GL_STENCIL_TEST);
-            GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
-
-            this.model.renderForStencil(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
-
-            ByteBuffer buffer = ByteBuffer.allocateDirect(1);
-            GL11.glReadPixels(x, y, 1, 1, GL11.GL_STENCIL_INDEX, GL11.GL_UNSIGNED_BYTE, buffer);
-
-            buffer.rewind();
-
-            if (this.pickingCallback != null)
-            {
-                int value = buffer.get();
-
-                if (value > 0)
-                {
-                    this.pickingCallback.accept(this.model.limbs[value - 1].limb.name);
-                }
-            }
-
-            this.tryPicking = false;
-        }
+    @Override
+    protected String getStencilValue(int value)
+    {
+        return this.model.limbs[value - 1].limb.name;
     }
 
     /**

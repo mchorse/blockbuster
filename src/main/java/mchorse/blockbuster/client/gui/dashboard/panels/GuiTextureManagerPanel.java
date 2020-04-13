@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationListE
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -247,8 +248,8 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
             x -= fw + 10;
 
-            this.mc.renderEngine.bindTexture(BBIcons.ICONS);
-            GuiUtils.drawContinuousTexturedBox(x, y, 0, 96, fw, fh, 32, 32, 0, 0);
+            this.mc.renderEngine.bindTexture(Icons.ICONS);
+            GuiUtils.drawContinuousTexturedBox(x, y, 0, 240, fw, fh, 16, 16, 0, 0);
             this.mc.renderEngine.bindTexture(this.rl);
 
             GlStateManager.enableAlpha();

@@ -20,7 +20,12 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super(mc);
 
         this.dashboard = dashboard;
-        this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) -> this.dashboard.morphs.setVisible(true));
+        this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+        {
+            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            this.dashboard.morphs.resize();
+            this.add(this.dashboard.morphs);
+        });
         this.pick.flex().relative(this.area).set(0, 5, 60, 20).x(0.5F, -30);
 
         this.add(this.pick);

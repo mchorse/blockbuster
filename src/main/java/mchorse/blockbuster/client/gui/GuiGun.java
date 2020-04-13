@@ -104,7 +104,6 @@ public class GuiGun extends GuiBase
         this.panel.registerPanel(this.transformOptions, I18n.format("blockbuster.gui.gun.transforms"), Icons.POSE);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, this::setMorph);
-        this.morphs.setVisible(false);
 
         /* Gun options */
         Area area = this.gunOptions.area;
@@ -268,7 +267,7 @@ public class GuiGun extends GuiBase
         this.gun.set(this.props.gunTransform);
         this.projectile.set(this.props.projectileTransform);
 
-        this.root.add(this.panel, this.morphs);
+        this.root.add(this.panel);
     }
 
     @Override
@@ -286,8 +285,9 @@ public class GuiGun extends GuiBase
         else if (i == 4) morph = this.props.impactMorph;
 
         this.index = i;
-        this.morphs.setVisible(true);
+        this.morphs.resize();
         this.morphs.setSelected(morph);
+        this.root.add(this.morphs);
     }
 
     private void setMorph(AbstractMorph morph)
