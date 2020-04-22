@@ -9,7 +9,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,19 +22,20 @@ import java.util.Objects;
 
 public class SnowstormMorph extends AbstractMorph
 {
+	@SideOnly(Side.CLIENT)
 	public static final Matrix4f matrix = new Matrix4f();
+
+	@SideOnly(Side.CLIENT)
 	public static final Vector4f vector = new Vector4f();
 
 	public String scheme = "";
 
-	@SideOnly(Side.CLIENT)
 	private BedrockEmitter emitter;
-
-	@SideOnly(Side.CLIENT)
 	public List<BedrockEmitter> lastEmitters;
 
 	private boolean initialized;
 
+	@SideOnly(Side.CLIENT)
 	public static Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
 	{
 		vector.set(x, y, z, 1);
@@ -58,7 +58,6 @@ public class SnowstormMorph extends AbstractMorph
 		this.name = "snowstorm";
 	}
 
-	@SideOnly(Side.CLIENT)
 	public BedrockEmitter getEmitter()
 	{
 		if (this.emitter == null)
@@ -69,8 +68,6 @@ public class SnowstormMorph extends AbstractMorph
 		return this.emitter;
 	}
 
-
-	@SideOnly(Side.CLIENT)
 	public List<BedrockEmitter> getLastEmitters()
 	{
 		if (this.lastEmitters == null)
@@ -85,9 +82,13 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		this.scheme = key;
 		this.initialized = false;
+
+		if (this.emitter != null)
+		{
+			this.setClientScheme(key);
+		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	private void setClientScheme(String key)
 	{
 		this.getEmitter().setScheme(Blockbuster.proxy.particles.presets.get(key));
@@ -268,25 +269,19 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			SnowstormMorph snow = (SnowstormMorph) morph;
 
-			if (!this.scheme.equals(snow.scheme))
+			if (!this.scheme.equals(snow.scheme) && this.emitter != null)
 			{
-				this.merge(snow);
+				this.getEmitter().running = false;
+				this.getLastEmitters().add(this.getEmitter());
+
+				this.emitter = new BedrockEmitter();
+				this.setScheme(snow.scheme);
 			}
 
 			return true;
 		}
 
 		return super.canMerge(morph);
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void merge(SnowstormMorph snow)
-	{
-		this.getEmitter().running = false;
-		this.getLastEmitters().add(this.getEmitter());
-
-		this.emitter = new BedrockEmitter();
-		this.setScheme(snow.scheme);
 	}
 
 	@Override
