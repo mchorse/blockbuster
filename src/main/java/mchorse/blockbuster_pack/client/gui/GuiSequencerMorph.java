@@ -9,9 +9,8 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -68,7 +67,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.addPart = new GuiButtonElement(mc, I18n.format("blockbuster.gui.add"), (b) ->
             {
                 SequenceEntry current = this.list.getCurrentFirst();
-                SequenceEntry entry = new SequenceEntry(current == null ? null : current.morph.clone(true));
+                SequenceEntry entry = new SequenceEntry(MorphUtils.copy(current.morph));
 
                 if (current != null)
                 {

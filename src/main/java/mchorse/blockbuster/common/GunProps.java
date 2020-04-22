@@ -1,12 +1,11 @@
 package mchorse.blockbuster.common;
 
-import mchorse.blockbuster.common.entity.EntityGunProjectile;
-import org.lwjgl.opengl.GL11;
-
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,6 +15,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Blockbuster gun properties
@@ -91,7 +91,7 @@ public class GunProps
         }
 
         this.shoot = this.delay;
-        this.current.set(this.firingMorph == null ? null : this.firingMorph.clone(true), true);
+        this.current.set(MorphUtils.copy(this.firingMorph));
     }
 
     @SideOnly(Side.CLIENT)
@@ -149,7 +149,7 @@ public class GunProps
         {
             if (this.shoot == 0)
             {
-                this.current.set(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+                this.current.set(MorphUtils.copy(this.defaultMorph));
             }
 
             this.shoot--;
@@ -286,7 +286,7 @@ public class GunProps
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
         {
-            this.current.set(this.defaultMorph == null ? null : this.defaultMorph.clone(true), true);
+            this.current.set(MorphUtils.copy(this.defaultMorph));
         }
     }
 

@@ -9,6 +9,7 @@ import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -109,10 +110,7 @@ public class ItemGun extends Item
                     morph = props.random ? seq.getRandom() : seq.get(i % seq.morphs.size());
                 }
 
-                if (morph != null)
-                {
-                    morph = morph.clone(world.isRemote);
-                }
+                morph = MorphUtils.copy(morph);
 
                 EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
 

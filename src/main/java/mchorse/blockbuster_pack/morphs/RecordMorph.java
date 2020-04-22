@@ -12,6 +12,7 @@ import mchorse.blockbuster.recording.data.Mode;
 import mchorse.blockbuster.recording.data.Record;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -146,7 +147,7 @@ public class RecordMorph extends AbstractMorph
         if (this.actor == null)
         {
             this.actor = new EntityActor(world);
-            this.actor.morph.setDirect(this.initial == null ? null : this.initial.clone(world.isRemote));
+            this.actor.morph.setDirect(MorphUtils.copy(this.initial));
             this.actor.playback = new RecordPlayer(null, Mode.FRAMES, this.actor);
             this.actor.playback.tick = (int) (this.randomSkip * Math.random());
             this.actor.manual = true;
@@ -205,15 +206,15 @@ public class RecordMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph create(boolean isRemote)
+    public AbstractMorph create()
     {
         return new RecordMorph();
     }
 
     @Override
-    public void copy(AbstractMorph from, boolean isRemote)
+    public void copy(AbstractMorph from)
     {
-        super.copy(from, isRemote);
+        super.copy(from);
 
         if (from instanceof RecordMorph)
         {
@@ -222,11 +223,7 @@ public class RecordMorph extends AbstractMorph
             this.record = morph.record;
             this.loop = morph.loop;
             this.randomSkip = morph.randomSkip;
-
-            if (this.initial != null)
-            {
-                this.initial = morph.initial.clone(isRemote);
-            }
+            this.initial = MorphUtils.copy(morph.initial);
         }
     }
 

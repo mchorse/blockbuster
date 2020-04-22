@@ -228,15 +228,15 @@ public class StructureMorph extends AbstractMorph
     }
 
     @Override
-    public AbstractMorph create(boolean isRemote)
+    public AbstractMorph create()
     {
         return null;
     }
 
     @Override
-    public void copy(AbstractMorph from, boolean isRemote)
+    public void copy(AbstractMorph from)
     {
-        super.copy(from, isRemote);
+        super.copy(from);
 
         if (from instanceof StructureMorph)
         {

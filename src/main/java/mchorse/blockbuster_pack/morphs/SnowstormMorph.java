@@ -81,15 +81,10 @@ public class SnowstormMorph extends AbstractMorph
 		return this.lastEmitters;
 	}
 
-	public void setScheme(String key, boolean isRemote)
+	public void setScheme(String key)
 	{
 		this.scheme = key;
 		this.initialized = false;
-
-		if (isRemote)
-		{
-			this.setClientScheme(key);
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -221,21 +216,21 @@ public class SnowstormMorph extends AbstractMorph
 	}
 
 	@Override
-	public AbstractMorph create(boolean isRemote)
+	public AbstractMorph create()
 	{
 		return new SnowstormMorph();
 	}
 
 	@Override
-	public void copy(AbstractMorph from, boolean isRemote)
+	public void copy(AbstractMorph from)
 	{
-		super.copy(from, isRemote);
+		super.copy(from);
 
 		if (from instanceof SnowstormMorph)
 		{
 			SnowstormMorph morph = (SnowstormMorph) from;
 
-			this.setScheme(morph.scheme, isRemote);
+			this.setScheme(morph.scheme);
 		}
 	}
 
@@ -267,13 +262,13 @@ public class SnowstormMorph extends AbstractMorph
 	}
 
 	@Override
-	public boolean canMerge(AbstractMorph morph, boolean isRemote)
+	public boolean canMerge(AbstractMorph morph)
 	{
 		if (morph instanceof SnowstormMorph)
 		{
 			SnowstormMorph snow = (SnowstormMorph) morph;
 
-			if (!this.scheme.equals(snow.scheme) && isRemote)
+			if (!this.scheme.equals(snow.scheme))
 			{
 				this.merge(snow);
 			}
@@ -281,7 +276,7 @@ public class SnowstormMorph extends AbstractMorph
 			return true;
 		}
 
-		return super.canMerge(morph, isRemote);
+		return super.canMerge(morph);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -291,7 +286,7 @@ public class SnowstormMorph extends AbstractMorph
 		this.getLastEmitters().add(this.getEmitter());
 
 		this.emitter = new BedrockEmitter();
-		this.setScheme(snow.scheme, true);
+		this.setScheme(snow.scheme);
 	}
 
 	@Override
@@ -310,7 +305,7 @@ public class SnowstormMorph extends AbstractMorph
 
 		if (tag.hasKey("Scheme"))
 		{
-			this.setScheme(tag.getString("Scheme"), FMLCommonHandler.instance().getSide() == Side.CLIENT);
+			this.setScheme(tag.getString("Scheme"));
 		}
 	}
 

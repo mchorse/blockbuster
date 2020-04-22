@@ -8,6 +8,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
@@ -57,7 +58,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 
                 this.editor.morphs.nestEdit(record.initial, (morph) ->
                 {
-                    record.initial = morph == null ? null : morph.clone(true);
+                    record.initial = MorphUtils.copy(morph);
                 });
             });
             this.loop = new GuiToggleElement(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->

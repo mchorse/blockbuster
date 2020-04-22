@@ -71,7 +71,7 @@ public class Replay
 
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
-        actor.morph.set(this.morph == null ? null : this.morph.clone(remote), remote);
+        actor.morph.set(mchorse.metamorph.api.MorphUtils.copy(this.morph));
         actor.invisible = this.invisible;
         actor.setHealth(this.health);
         actor.notifyPlayers();
@@ -82,7 +82,7 @@ public class Replay
      */
     public void apply(EntityPlayer player)
     {
-        MorphAPI.morph(player, this.morph == null ? null : this.morph.clone(player.world.isRemote), true);
+        MorphAPI.morph(player, mchorse.metamorph.api.MorphUtils.copy(this.morph), true);
         player.setHealth(this.health);
     }
 
@@ -180,12 +180,7 @@ public class Replay
 
         replay.id = this.id;
         replay.name = this.name;
-
-        if (this.morph != null)
-        {
-            replay.morph = this.morph.clone(isRemote);
-        }
-
+        replay.morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
         replay.invincible = this.invincible;
         replay.invisible = this.invisible;
         replay.enabled = this.enabled;

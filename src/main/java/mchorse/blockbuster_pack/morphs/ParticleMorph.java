@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.morphs;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -87,12 +88,7 @@ public class ParticleMorph extends AbstractMorph
             morph = this.random ? seq.getRandom() : seq.get(this.morphIndex ++ % seq.morphs.size());
         }
 
-        if (morph != null)
-        {
-            return morph.clone(true);
-        }
-
-        return null;
+        return MorphUtils.copy(morph.copy());
     }
 
     @Override
@@ -290,29 +286,29 @@ public class ParticleMorph extends AbstractMorph
     }
 
     @Override
-    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    public boolean canMerge(AbstractMorph morph)
     {
         if (morph instanceof ParticleMorph)
         {
-            this.copy((ParticleMorph) morph, isRemote);
+            this.copy(morph);
             this.tick = this.morphIndex = 0;
 
             return true;
         }
 
-        return super.canMerge(morph, isRemote);
+        return super.canMerge(morph);
     }
 
     @Override
-    public AbstractMorph create(boolean isRemote)
+    public AbstractMorph create()
     {
         return new ParticleMorph();
     }
 
     @Override
-    public void copy(AbstractMorph from, boolean isRemote)
+    public void copy(AbstractMorph from)
     {
-        super.copy(from, isRemote);
+        super.copy(from);
 
         if (from instanceof ParticleMorph)
         {
@@ -335,7 +331,7 @@ public class ParticleMorph extends AbstractMorph
             this.count = morph.count;
             this.arguments = morph.arguments;
 
-            this.morph = morph.morph == null ? null : morph.morph.clone(isRemote);
+            this.morph = MorphUtils.copy(morph.morph);
             this.movementType = morph.movementType;
             this.yaw = morph.yaw;
             this.pitch = morph.pitch;

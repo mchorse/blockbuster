@@ -18,7 +18,7 @@ public class ClientHandlerGunProjectile extends ClientMessageHandler<PacketGunPr
 
         if (entity instanceof EntityGunProjectile)
         {
-            ((EntityGunProjectile) entity).morph.set(message.morph, true);
+            ((EntityGunProjectile) entity).morph.set(message.morph);
         }
     }
 }

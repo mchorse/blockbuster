@@ -10,6 +10,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.blockbuster.utils.BBIcons;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
@@ -197,9 +198,9 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             if (this.current >= 0 && this.current < size)
             {
                 SequenceEntry entry = this.morphs.get(this.current);
-                AbstractMorph morph = entry.morph == null ? null : entry.morph.clone(isRemote);
+                AbstractMorph morph = MorphUtils.copy(entry.morph);
 
-                this.currentMorph.set(morph, isRemote);
+                this.currentMorph.set(morph);
                 this.duration += entry.getDuration();
             }
 
@@ -216,15 +217,15 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     }
 
     @Override
-    public AbstractMorph create(boolean isRemote)
+    public AbstractMorph create()
     {
         return new SequencerMorph();
     }
 
     @Override
-    public void copy(AbstractMorph from, boolean isRemote)
+    public void copy(AbstractMorph from)
     {
-        super.copy(from, isRemote);
+        super.copy(from);
 
         if (from instanceof SequencerMorph)
         {
@@ -239,7 +240,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             this.random = morph.random;
 
             /* Runtime properties */
-            this.currentMorph.copy(morph.currentMorph, isRemote);
+            this.currentMorph.copy(morph.currentMorph);
             this.timer = morph.timer;
             this.current = morph.current;
             this.duration = morph.duration;
@@ -280,7 +281,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     }
 
     @Override
-    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    public boolean canMerge(AbstractMorph morph)
     {
         if (morph instanceof CustomMorph)
         {
@@ -322,7 +323,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
                 this.current = 0;
                 this.timer = 0;
                 this.duration = this.morphs.isEmpty() ? 0 : this.morphs.get(0).duration;
-                this.currentMorph.copy(sequencer.currentMorph, isRemote);
+                this.currentMorph.copy(sequencer.currentMorph);
 
                 this.reverse = sequencer.reverse;
                 this.random = sequencer.random;
@@ -331,7 +332,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             }
         }
 
-        return super.canMerge(morph, isRemote);
+        return super.canMerge(morph);
     }
 
     @Override
@@ -412,10 +413,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
                 if (i == 0)
                 {
-                    boolean isRemote = FMLCommonHandler.instance().getSide() == Side.CLIENT;
-
                     this.duration = entry.getDuration();
-                    this.currentMorph.set(morph == null ? null : morph.clone(isRemote), isRemote);
+                    this.currentMorph.set(MorphUtils.copy(morph));
                 }
 
                 this.morphs.add(entry);

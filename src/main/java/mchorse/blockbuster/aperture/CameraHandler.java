@@ -245,7 +245,7 @@ public class CameraHandler
             }
 
             cameraEditorElements = new GuiElement(dashboard.mc);
-            editor.hidden.elements.remove(editor.scrub);
+            editor.hidden.remove(editor.scrub);
             editor.root.add(cameraEditorElements);
 
             resetCameraEditorElements = false;

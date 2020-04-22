@@ -117,7 +117,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     {
         super();
 
-        this.settings = this.settings.clone();
+        this.settings = this.settings.copy();
         this.settings.hands = true;
     }
 
@@ -432,7 +432,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     }
 
     @Override
-    public boolean canMerge(AbstractMorph morph, boolean isRemote)
+    public boolean canMerge(AbstractMorph morph)
     {
         if (morph instanceof SequencerMorph)
         {
@@ -481,13 +481,13 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                 this.materials.put(entry.getKey(), RLUtils.clone(entry.getValue()));
             }
 
-            this.parts.merge(custom.parts, isRemote);
+            this.parts.merge(custom.parts);
             this.model = custom.model;
 
             return true;
         }
 
-        return super.canMerge(morph, isRemote);
+        return super.canMerge(morph);
     }
 
     @Override
@@ -502,15 +502,15 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     }
 
     @Override
-    public AbstractMorph create(boolean isRemote)
+    public AbstractMorph create()
     {
         return new CustomMorph();
     }
 
     @Override
-    public void copy(AbstractMorph from, boolean isRemote)
+    public void copy(AbstractMorph from)
     {
-        super.copy(from, isRemote);
+        super.copy(from);
 
         if (from instanceof CustomMorph)
         {
@@ -539,7 +539,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             }
 
             this.model = morph.model;
-            this.parts.copy(morph.parts, isRemote);
+            this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
         }
     }

@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiInterpolationList;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -292,41 +293,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             Gui.drawRect(this.poses.area.x, this.poses.area.y, this.poses.area.ex(), this.poses.area.ey(), 0x88000000);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.builder.pose"), this.poses.area.x, this.poses.area.y - 12, 0xffffff);
             super.draw(context);
-        }
-
-        /**
-         * Interpolations list 
-         */
-        public static class GuiInterpolationList extends GuiListElement<Interpolation>
-        {
-            public GuiInterpolationList(Minecraft mc, Consumer<List<Interpolation>> callback)
-            {
-                super(mc, callback);
-
-                this.scroll.scrollItemSize = 16;
-
-                for (Interpolation interp : Interpolation.values())
-                {
-                    this.add(interp);
-                }
-
-                this.sort();
-                this.background();
-            }
-
-            @Override
-            protected boolean sortElements()
-            {
-                Collections.sort(this.list, Comparator.comparing(o -> o.key));
-
-                return true;
-            }
-
-            @Override
-            protected String elementToString(Interpolation element, int i, int x, int y, boolean hover, boolean selected)
-            {
-                return I18n.format("blockbuster.gui.interpolations." + element.key);
-            }
         }
     }
 

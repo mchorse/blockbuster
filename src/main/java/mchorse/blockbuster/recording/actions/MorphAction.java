@@ -32,7 +32,7 @@ public class MorphAction extends Action
     @Override
     public void apply(EntityLivingBase actor)
     {
-        AbstractMorph morph = this.morph == null ? null : this.morph.clone(false);
+        AbstractMorph morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
 
         if (actor instanceof EntityPlayer)
         {
@@ -42,7 +42,7 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morph.set(morph, actor.world.isRemote);
+            act.morph.set(morph);
             act.notifyPlayers();
         }
     }

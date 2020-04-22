@@ -9,6 +9,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.metamorph.api.Morph;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
@@ -63,7 +64,7 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
         this.props = props;
         this.morph.setDirect(morph);
-        this.original = this.morph.clone(worldIn.isRemote);
+        this.original = this.morph.copy();
 
         if (props != null)
         {
@@ -260,9 +261,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
             if (this.impact == 0)
             {
                 boolean remote = this.world.isRemote;
-                AbstractMorph original = this.original == null ? null : this.original.clone(remote);
+                AbstractMorph original = MorphUtils.copy(this.original);
 
-                this.morph.set(original, remote);
+                this.morph.set(original);
 
                 Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), original));
             }
@@ -349,9 +350,9 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
                 if (this.props.impactDelay > 0)
                 {
                     boolean remote = this.world.isRemote;
-                    AbstractMorph morph = this.props.impactMorph == null ? null : this.props.impactMorph.clone(remote);
+                    AbstractMorph morph = MorphUtils.copy(this.props.impactMorph);
 
-                    this.morph.set(morph, remote);
+                    this.morph.set(morph);
                     this.impact = this.props.impactDelay;
 
                     Dispatcher.sendToTracked(this, new PacketGunProjectile(this.getEntityId(), morph));

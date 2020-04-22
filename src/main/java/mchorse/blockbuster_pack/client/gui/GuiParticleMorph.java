@@ -11,6 +11,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.utils.Direction;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
@@ -234,7 +235,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
                 this.editor.morphs.nestEdit(particle.morph, (morph) ->
                 {
-                    particle.morph = morph == null ? null : morph.clone(true);
+                    particle.morph = MorphUtils.copy(morph);
                 });
             });
 

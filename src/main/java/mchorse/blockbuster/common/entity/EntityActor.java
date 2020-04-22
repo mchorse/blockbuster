@@ -412,7 +412,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        this.morph.set(morph, this.world.isRemote);
+        this.morph.set(morph);
         this.invisible = invisible;
 
         if (!this.world.isRemote && notify)
