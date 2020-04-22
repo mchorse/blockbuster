@@ -2,10 +2,8 @@ package mchorse.blockbuster.recording.scene;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -93,7 +91,10 @@ public class Replay
         tag.setString("Id", this.id);
         tag.setString("Name", this.name);
 
-        MorphUtils.morphToNBT(tag, this.morph);
+        if (this.morph != null)
+        {
+            tag.setTag("Morph", this.morph.toNBT());
+        }
 
         tag.setBoolean("Invincible", this.invincible);
         tag.setBoolean("Invisible", this.invisible);
@@ -107,9 +108,7 @@ public class Replay
     {
         this.id = tag.getString("Id");
         this.name = tag.getString("Name");
-
-        this.morph = MorphUtils.morphFromNBT(tag);
-
+        this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
         this.invincible = tag.getBoolean("Invincible");
         this.invisible = tag.getBoolean("Invisible");
         this.fake = tag.getBoolean("Fake");

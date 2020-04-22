@@ -2,13 +2,13 @@ package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.MorphAPI;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Morph action
@@ -51,29 +51,31 @@ public class MorphAction extends Action
     public void fromBuf(ByteBuf buf)
     {
         super.fromBuf(buf);
-        this.morph = MorphUtils.morphFromNBT(ByteBufUtils.readTag(buf));
+
+        this.morph = MorphUtils.morphFromBuf(buf);
     }
 
     @Override
     public void toBuf(ByteBuf buf)
     {
         super.toBuf(buf);
-        NBTTagCompound tag = new NBTTagCompound();
 
-        MorphUtils.morphToNBT(tag, this.morph);
-        ByteBufUtils.writeTag(buf, tag);
+        MorphUtils.morphToBuf(buf, this.morph);
     }
 
     @Override
     public void fromNBT(NBTTagCompound tag)
     {
-        this.morph = MorphUtils.morphFromNBT(tag);
+        this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
     }
 
     @Override
     public void toNBT(NBTTagCompound tag)
     {
-        MorphUtils.morphToNBT(tag, this.morph);
+        if (this.morph != null)
+        {
+            tag.setTag("Morph", this.morph.toNBT());
+        }
     }
 
     @Override

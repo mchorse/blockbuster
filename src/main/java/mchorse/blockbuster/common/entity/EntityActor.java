@@ -1,9 +1,6 @@
 package mchorse.blockbuster.common.entity;
 
-import javax.annotation.Nullable;
-
 import com.mojang.authlib.GameProfile;
-
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
@@ -14,8 +11,9 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
-import mchorse.blockbuster_pack.MorphUtils;
 import mchorse.metamorph.api.Morph;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.block.state.IBlockState;
@@ -39,6 +37,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 /**
  * Actor entity class
@@ -439,7 +439,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.readEntityFromNBT(tag);
 
-        this.morph.setDirect(MorphUtils.morphFromNBT(tag));
+        this.morph.setDirect(MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph")));
         this.invisible = tag.getBoolean("Invisible");
         this.wasAttached = tag.getBoolean("WasAttached");
 
@@ -454,7 +454,11 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         super.writeEntityToNBT(tag);
 
-        MorphUtils.morphToNBT(tag, this.morph.get());
+        if (!this.morph.isEmpty())
+        {
+            tag.setTag("Morph", this.morph.get().toNBT());
+        }
+
         tag.setBoolean("Invisible", this.invisible);
         tag.setBoolean("WasAttached", this.wasAttached);
     }
