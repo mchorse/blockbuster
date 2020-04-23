@@ -88,12 +88,12 @@ public class GuiSceneManager extends GuiElement
 
 	private void convertScene()
 	{
-		if (!this.parent.getLocation().isDirector())
+		if (this.parent.getLocation().isScene())
 		{
 			return;
 		}
 
-		GuiModal.addFullModal(this.blocks, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
+		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -118,7 +118,7 @@ public class GuiSceneManager extends GuiElement
 
 	private void addScene()
 	{
-		GuiModal.addFullModal(this.scenes, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
+		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
