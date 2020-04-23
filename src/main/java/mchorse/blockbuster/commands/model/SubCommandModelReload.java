@@ -35,7 +35,7 @@ public class SubCommandModelReload extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        boolean force = args.length >= 1 ? CommandBase.parseBoolean(args[0]) : false;
+        boolean force = args.length >= 1 && CommandBase.parseBoolean(args[0]);
 
         /* Reload models and skin */
         ModelPack pack = Blockbuster.proxy.models.pack;

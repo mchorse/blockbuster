@@ -61,6 +61,11 @@ public class ModelHandler
 
             try
             {
+                if (force && cell != null)
+                {
+                    this.removeModel(model);
+                }
+
                 this.addModel(model, loader, timestamp);
             }
             catch (Exception e)

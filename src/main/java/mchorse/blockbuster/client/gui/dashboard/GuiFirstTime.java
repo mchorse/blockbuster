@@ -76,8 +76,7 @@ public class GuiFirstTime extends GuiElement
 		this.dashboard.root.remove(this.overlay);
 
 		/* Don't show anymore this modal */
-		Blockbuster.generalFirstTime.set(true);
-		Blockbuster.generalFirstTime.category.config.save();
+		Blockbuster.generalFirstTime.set(false);
 	}
 
 	@Override

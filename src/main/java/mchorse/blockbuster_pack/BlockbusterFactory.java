@@ -38,7 +38,7 @@ public class BlockbusterFactory implements IMorphFactory
     @Override
     public void register(MorphManager manager)
     {
-        manager.list.register(this.section = new BlockbusterSection("Blockbuster"));
+        manager.list.register(this.section = new BlockbusterSection("blockbuster"));
     }
 
     @Override

@@ -31,6 +31,8 @@ public class ModelClientHandler extends ModelHandler
     {
         super.removeModel(key);
 
+        final ModelCustom model = ModelCustom.MODELS.remove(key);
+
         Minecraft.getMinecraft().addScheduledTask(() ->
         {
             /* If this gets run on the integrated server on the server 
@@ -40,8 +42,6 @@ public class ModelClientHandler extends ModelHandler
              * 
              * Hopefully scheduling it fix this issue 
              */
-            ModelCustom model = ModelCustom.MODELS.remove(key);
-
             if (model != null)
             {
                 model.delete();

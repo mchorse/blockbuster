@@ -15,8 +15,9 @@ blockbuster:
     start_recording: "Starting recording {7}%s{r} in {7}%s{r}"
 
 # Metamorph category
-morph.category:
-    blockbuster: Blockbuster models
-    blockbuster_extra: Blockbuster extra
+morph.section.blockbuster: Blockbuster models
 
-metamorph.builder.blockbuster: Custom model builder
+morph.category:
+    blockbuster_extra: Blockbuster extra
+    blockbuster_structures: Blockbuster structures
+    blockbuster_models: Blockbuster models

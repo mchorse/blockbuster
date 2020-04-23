@@ -18,9 +18,13 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FilenameUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BlockbusterSection extends MorphSection
@@ -33,8 +37,8 @@ public class BlockbusterSection extends MorphSection
 	{
 		super(title);
 
-		this.extra = new MorphCategory(this, "Blockbuster extra");
-		this.structures = new MorphCategory(this, "Blockbuster structures");
+		this.extra = new MorphCategory(this, "blockbuster_extra");
+		this.structures = new MorphCategory(this, "blockbuster_structures");
 
 		/* Adding some default morphs which don't need to get reloaded */
 		ImageMorph image = new ImageMorph();
@@ -59,7 +63,7 @@ public class BlockbusterSection extends MorphSection
 
 		if (category == null)
 		{
-			category = new MorphCategory(this, path.isEmpty() ? "Blockbuster models" : "Blockbuster models (" + path + ")");
+			category = new BlockbusterCategory(this, "blockbuster_models", path);
 			this.models.put(path, category);
 			this.categories.add(category);
 		}
@@ -72,19 +76,17 @@ public class BlockbusterSection extends MorphSection
 		String path = this.getCategoryId(key);
 		String name = "blockbuster." + key;
 		MorphCategory category = this.models.get(path);
-		AbstractMorph morph = null;
+		List<AbstractMorph> morphs = new ArrayList<AbstractMorph>();
 
 		for (AbstractMorph m : category.getMorphs())
 		{
 			if (m.name.equals(name))
 			{
-				morph = m;
-
-				break;
+				morphs.add(m);
 			}
 		}
 
-		if (morph != null)
+		for (AbstractMorph morph : morphs)
 		{
 			category.remove(morph);
 		}
@@ -138,5 +140,34 @@ public class BlockbusterSection extends MorphSection
 
 		Blockbuster.proxy.particles.reload();
 		Dispatcher.sendToServer(new PacketStructureListRequest());
+	}
+
+	public static class BlockbusterCategory extends MorphCategory
+	{
+		public String subtitle = "";
+
+		public BlockbusterCategory(MorphSection parent, String title)
+		{
+			super(parent, title);
+		}
+
+		public BlockbusterCategory(MorphSection parent, String title, String subtitle)
+		{
+			super(parent, title);
+
+			this.subtitle = subtitle;
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public String getTitle()
+		{
+			if (!this.subtitle.isEmpty())
+			{
+				return super.getTitle() + " (" + this.subtitle + ")";
+			}
+
+			return super.getTitle();
+		}
 	}
 }
