@@ -18,7 +18,7 @@ public class ClientHandlerSceneLength extends ClientMessageHandler<PacketSceneLe
         GuiCameraEditor editor = ClientProxy.getCameraEditor();
 
         editor.maxScrub = message.length;
-        editor.scrub.value = CameraHandler.tick;
+        editor.timeline.value = CameraHandler.tick;
         editor.updateValues();
     }
 }

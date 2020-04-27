@@ -7,6 +7,7 @@ import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -26,14 +27,14 @@ public class GuiRecordList extends GuiElement
         this.panel = panel;
         this.records = new GuiStringSearchListElement(mc, (str) -> this.panel.selectRecord(str.get(0)));
         this.records.flex().relative(this.area).set(10, 35, 0, 0).h(1, -45).w(1, -20);
-        this.records.label = I18n.format("blockbuster.gui.search") + "...";
+        this.records.label = IKey.lang("blockbuster.gui.search");
 
         this.add(this.records);
     }
 
     public void clear()
     {
-        this.records.elements.clear();
+        this.records.list.clear();
         this.records.filter("", true);
     }
 
@@ -47,7 +48,7 @@ public class GuiRecordList extends GuiElement
             /* Display all replays */
             for (String record : records)
             {
-                this.records.elements.add(record);
+                this.records.list.add(record);
             }
         }
         else
@@ -55,9 +56,9 @@ public class GuiRecordList extends GuiElement
             /* Display only current director block's replays */
             for (Replay replay : replays)
             {
-                if (records.contains(replay.id) && !this.records.elements.contains(replay.id))
+                if (records.contains(replay.id) && !this.records.list.getList().contains(replay.id))
                 {
-                    this.records.elements.add(replay.id);
+                    this.records.list.getList().add(replay.id);
                 }
             }
         }

@@ -78,8 +78,9 @@ public class RenderingHandler
         float skyR = (color >> 16 & 0xff) / 255F;
         float skyG = (color >> 8 & 0xff) / 255F;
         float skyB = (color & 0xff) / 255F;
+        float skyA = (color >> 24 & 0xff) / 255F;
 
-        GlStateManager.clearColor(skyR, skyG, skyB, 1);
+        GlStateManager.clearColor(skyR, skyG, skyB, skyA);
         GlStateManager.clear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glDisable(GL11.GL_FOG);
     }

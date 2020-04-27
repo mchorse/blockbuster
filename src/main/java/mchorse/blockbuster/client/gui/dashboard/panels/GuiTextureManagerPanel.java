@@ -13,6 +13,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -57,12 +58,12 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
         this.textures = new GuiResourceLocationListElement(mc, (rl) -> this.pickRL(rl.get(0)));
         this.textures.background();
-        this.linear = new GuiToggleElement(mc, I18n.format("blockbuster.gui.texture.linear"), false, (b) -> this.setLinear(b.isToggled()));
-        this.linear.tooltip(I18n.format("blockbuster.gui.texture.linear_tooltip"), Direction.LEFT);
-        this.mipmap = new GuiToggleElement(mc, I18n.format("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.isToggled()));
-        this.mipmap.tooltip(I18n.format("blockbuster.gui.texture.mipmap_tooltip"), Direction.LEFT);
-        this.remove = new GuiButtonElement(mc, I18n.format("blockbuster.gui.remove"), (b) -> this.remove());
-        this.replace = new GuiButtonElement(mc, I18n.format("blockbuster.gui.texture.replace"), (b) -> this.replace());
+        this.linear = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.texture.linear"), false, (b) -> this.setLinear(b.isToggled()));
+        this.linear.tooltip(IKey.lang("blockbuster.gui.texture.linear_tooltip"), Direction.LEFT);
+        this.mipmap = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.texture.mipmap"), false, (b) -> this.setMipmap(b.isToggled()));
+        this.mipmap.tooltip(IKey.lang("blockbuster.gui.texture.mipmap_tooltip"), Direction.LEFT);
+        this.remove = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.remove"), (b) -> this.remove());
+        this.replace = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.texture.replace"), (b) -> this.replace());
 
         this.textures.flex().relative(this.area).set(10, 50, 0, 0).w(1, -30 - 128).h(1, -60);
         this.remove.flex().relative(this.area).set(0, 0, 128, 20).x(1, -138).y(1, -30);
@@ -173,7 +174,7 @@ public class GuiTextureManagerPanel extends GuiDashboardPanel
 
         GuiModal.addModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.texture.replace_modal"), this::replace);
+            GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.texture.replace_modal"), this::replace);
 
             modal.text.field.setMaxStringLength(2000);
             modal.setValue(this.rl.toString());

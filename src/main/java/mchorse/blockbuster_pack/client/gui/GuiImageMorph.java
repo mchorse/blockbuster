@@ -8,6 +8,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
@@ -23,7 +24,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         super(mc);
 
         this.defaultPanel = this.general = new GuiImageMorphPanel(mc, this);
-        this.registerPanel(this.general, I18n.format("blockbuster.morph.image"), Icons.GEAR);
+        this.registerPanel(this.general, IKey.lang("blockbuster.morph.image"), Icons.GEAR);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         {
             super(mc, editor);
 
-            this.texture = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
+            this.texture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.refresh();
                 this.picker.fill(this.morph.texture);
@@ -61,19 +62,19 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.morph.scale = value;
             });
-            this.scale.tooltip(I18n.format("blockbuster.gui.model_block.scale"));
+            this.scale.tooltip(IKey.lang("blockbuster.gui.model_block.scale"));
 
-            this.shaded = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.shading"), false, (b) ->
+            this.shaded = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) ->
             {
                 this.morph.shaded = this.shaded.isToggled();
             });
 
-            this.lighting = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.lighting"), false, (b) ->
+            this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) ->
             {
                 this.morph.lighting = this.lighting.isToggled();
             });
 
-            this.billboard = new GuiToggleElement(mc, I18n.format("blockbuster.gui.billboard"), false, (b) ->
+            this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) ->
             {
                 this.morph.billboard = this.billboard.isToggled();
             });
@@ -85,16 +86,16 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.picker.setVisible(false);
 
             this.left = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.x = value.intValue());
-            this.left.tooltip(I18n.format("blockbuster.gui.image.left"));
+            this.left.tooltip(IKey.lang("blockbuster.gui.image.left"));
             this.left.integer();
             this.right = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.w = value.intValue());
-            this.right.tooltip(I18n.format("blockbuster.gui.image.right"));
+            this.right.tooltip(IKey.lang("blockbuster.gui.image.right"));
             this.right.integer();
             this.top = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.y = value.intValue());
-            this.top.tooltip(I18n.format("blockbuster.gui.image.top"));
+            this.top.tooltip(IKey.lang("blockbuster.gui.image.top"));
             this.top.integer();
             this.bottom = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.h = value.intValue());
-            this.bottom.tooltip(I18n.format("blockbuster.gui.image.bottom"));
+            this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
 
             this.texture.flex().relative(this.area).set(10, 10, 115, 20);

@@ -18,6 +18,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -62,10 +63,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.materials = new GuiMaterialsPanel(mc, this);
 
         this.defaultPanel = this.general;
-        this.registerPanel(this.materials, I18n.format("blockbuster.gui.builder.materials"), Icons.MATERIAL);
-        this.registerPanel(this.bodyPart, I18n.format("blockbuster.gui.builder.body_part"), Icons.LIMB);
-        this.registerPanel(this.poseEditor, I18n.format("blockbuster.gui.builder.pose_editor"), Icons.POSE);
-        this.registerPanel(this.general, "", Icons.GEAR);
+        this.registerPanel(this.materials, IKey.lang("blockbuster.gui.builder.materials"), Icons.MATERIAL);
+        this.registerPanel(this.bodyPart, IKey.lang("blockbuster.gui.builder.body_part"), Icons.LIMB);
+        this.registerPanel(this.poseEditor, IKey.lang("blockbuster.gui.builder.pose_editor"), Icons.POSE);
+        this.registerPanel(this.general, IKey.EMPTY, Icons.GEAR);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             });
             this.models.background();
 
-            this.model = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
+            this.model = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
 
             this.textures = new GuiTexturePicker(mc, (rl) ->
             {
@@ -170,21 +171,21 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
                 this.editor.updateModelRenderer();
             });
 
-            this.skin = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
+            this.skin = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_skin"), (b) ->
             {
                 this.textures.refresh();
                 this.textures.fill(this.morph.skin);
                 this.textures.setVisible(true);
             });
 
-            this.reset = new GuiButtonElement(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
+            this.reset = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.morphs.reset"), (b) ->
             {
                 this.morph.currentPose = "";
                 this.poses.setCurrent("");
                 this.editor.updateModelRenderer();
             });
 
-            this.poseOnSneak = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.pose_sneak"), false, (b) ->
+            this.poseOnSneak = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.pose_sneak"), false, (b) ->
             {
                 this.morph.currentPoseOnSneak = this.poseOnSneak.isToggled();
                 this.editor.updateModelRenderer();
@@ -200,20 +201,20 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             {
                 this.morph.scale = value;
             });
-            this.scale.tooltip(I18n.format("blockbuster.gui.me.options.scale"));
+            this.scale.tooltip(IKey.lang("blockbuster.gui.me.options.scale"));
 
             this.scaleGui = new GuiTrackpadElement(mc, (value) ->
             {
                 this.morph.scaleGui = value;
             });
-            this.scaleGui.tooltip(I18n.format("blockbuster.gui.me.options.scale_gui"));
+            this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
 
-            this.animates = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.animates"), false, (b) ->
+            this.animates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.animates"), false, (b) ->
             {
                 this.morph.animation.animates = this.animates.isToggled();
             });
 
-            this.ignored = new GuiToggleElement(mc, I18n.format("blockbuster.gui.builder.ignored"), false, (b) ->
+            this.ignored = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.ignored"), false, (b) ->
             {
                 this.morph.animation.ignored = this.ignored.isToggled();
             });
@@ -222,10 +223,10 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             {
                 this.morph.animation.duration = value.intValue();
             });
-            this.animationDuration.tooltip(I18n.format("blockbuster.gui.builder.animation_duration"));
+            this.animationDuration.tooltip(IKey.lang("blockbuster.gui.builder.animation_duration"));
             this.animationDuration.limit(0).integer();
 
-            this.pickInterpolation = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_interpolation"), (b) ->
+            this.pickInterpolation = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_interpolation"), (b) ->
             {
                 this.interpolations.toggleVisible();
             });
@@ -313,7 +314,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
             /* Materials view */
             this.materials = new GuiStringListElement(mc, (str) -> this.setCurrentMaterial(str.get(0)));
-            this.pickTexture = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_texture"), (b) ->
+            this.pickTexture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.setVisible(true);
                 this.picker.refresh();

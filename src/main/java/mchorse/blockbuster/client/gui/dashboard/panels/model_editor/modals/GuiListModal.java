@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -18,14 +19,14 @@ public class GuiListModal extends GuiModal
     private GuiButtonElement cancel;
     private GuiStringListElement limbs;
 
-    public GuiListModal(Minecraft mc, String label, Consumer<String> callback)
+    public GuiListModal(Minecraft mc, IKey label, Consumer<String> callback)
     {
         super(mc, label);
 
         this.callback = callback;
 
-        this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.me.pick"), (b) -> this.send());
-        this.cancel = new GuiButtonElement(mc, I18n.format("blockbuster.gui.cancel"), (b) -> this.removeFromParent());
+        this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.me.pick"), (b) -> this.send());
+        this.cancel = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.cancel"), (b) -> this.removeFromParent());
         this.limbs = new GuiStringListElement(mc, null);
 
         this.pick.flex().relative(this.area).set(10, 0, 0, 20).y(1, -30).w(0.5F, -15);

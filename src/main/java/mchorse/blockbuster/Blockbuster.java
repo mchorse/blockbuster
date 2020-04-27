@@ -201,7 +201,7 @@ public class Blockbuster
         disableTPPlaybackButton = builder.getBoolean("disable_teleport_playback_button", false);
         debugPlaybackTicks = builder.getBoolean("debug_playback_ticks", false);
         chromaSky = builder.getBoolean("green_screen_sky", false);
-        chromaSkyColor = builder.getInt("green_screen_sky_color", 0x00ff00).color();
+        chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
 
         /* Model block */

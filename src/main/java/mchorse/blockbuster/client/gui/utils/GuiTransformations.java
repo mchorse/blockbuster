@@ -4,6 +4,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -30,29 +31,29 @@ public class GuiTransformations extends GuiElement
         super(mc);
 
         this.tx = new GuiTrackpadElement(mc, (value) -> this.setT(value, this.ty.value, this.tz.value));
-        this.tx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.tx.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.ty = new GuiTrackpadElement(mc, (value) -> this.setT(this.tx.value, value, this.tz.value));
-        this.ty.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.ty.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.tz = new GuiTrackpadElement(mc, (value) -> this.setT(this.tx.value, this.ty.value, value));
-        this.tz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.tz.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
         this.sx = new GuiTrackpadElement(mc, (value) ->
         {
             boolean one = this.one.isToggled();
 
             this.setS(value, one ? value : this.sy.value, one ? value : this.sz.value);
         });
-        this.sx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.sx.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.sy = new GuiTrackpadElement(mc, (value) -> this.setS(this.sx.value, value, this.sz.value));
-        this.sy.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.sy.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.sz = new GuiTrackpadElement(mc, (value) -> this.setS(this.sx.value, this.sy.value, value));
-        this.sz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.sz.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
         this.rx = new GuiTrackpadElement(mc, (value) -> this.setR(value, this.ry.value, this.rz.value));
-        this.rx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.rx.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.ry = new GuiTrackpadElement(mc, (value) -> this.setR(this.rx.value, value, this.rz.value));
-        this.ry.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.ry.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.rz = new GuiTrackpadElement(mc, (value) -> this.setR(this.rx.value, this.ry.value, value));
-        this.rz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
-        this.one = new GuiToggleElement(mc, "", false, (b) ->
+        this.rz.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
+        this.one = new GuiToggleElement(mc, IKey.EMPTY, false, (b) ->
         {
             boolean one = b.isToggled();
 

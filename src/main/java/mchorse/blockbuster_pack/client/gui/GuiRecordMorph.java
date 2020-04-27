@@ -8,10 +8,10 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         super(mc);
 
         this.defaultPanel = this.general = new GuiRecordMorphPanel(mc, this);
-        this.registerPanel(this.general, I18n.format("blockbuster.morph.record"), Icons.GEAR);
+        this.registerPanel(this.general, IKey.lang("blockbuster.morph.record"), Icons.GEAR);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 
             this.records = new GuiStringSearchListElement(mc, (str) -> this.morph.setRecord(str.get(0)));
             this.records.list.background();
-            this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+            this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
             {
                 RecordMorph record = this.morph;
 
@@ -61,12 +61,12 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
                     record.initial = MorphUtils.copy(morph);
                 });
             });
-            this.loop = new GuiToggleElement(mc, I18n.format("blockbuster.gui.director.loops"), true, (b) ->
+            this.loop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), true, (b) ->
             {
                 this.morph.loop = this.loop.isToggled();
             });
             this.randomSkip = new GuiTrackpadElement(mc, (value) -> this.morph.randomSkip = value.intValue());
-            this.randomSkip.tooltip(I18n.format("blockbuster.gui.record_morph.random_skip"));
+            this.randomSkip.tooltip(IKey.lang("blockbuster.gui.record_morph.random_skip"));
             this.randomSkip.limit(0, Integer.MAX_VALUE, true);
 
             this.records.flex().relative(this.area).set(10, 25, 105, 20).h(1, -35 - 25 - 16 - 25);
@@ -82,11 +82,11 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
         {
             super.fillData(morph);
 
-            this.records.elements.clear();
+            this.records.clear();
 
             if (ClientProxy.dashboard != null && ClientProxy.dashboard.recordingEditorPanel != null)
             {
-                this.records.elements.addAll(ClientProxy.dashboard.recordingEditorPanel.records.records.elements);
+                this.records.list.add(ClientProxy.dashboard.recordingEditorPanel.records.records.list.getList());
                 this.records.filter("", true);
             }
 

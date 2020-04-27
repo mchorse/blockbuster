@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumFacing;
@@ -19,12 +20,12 @@ public class GuiItemUseBlockActionPanel extends GuiItemUseActionPanel<ItemUseBlo
         super(mc);
 
         this.facing = new GuiCirculateElement(mc, (b) -> this.action.facing = EnumFacing.values()[this.facing.getValue()]);
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.down"));
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.up"));
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.north"));
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.south"));
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.west"));
-        this.facing.addLabel(I18n.format("blockbuster.gui.record_editor.actions.use_item_block.east"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.down"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.up"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.north"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.south"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.west"));
+        this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.east"));
         this.block = new GuiThreeElement(mc, (values) -> this.action.pos = new BlockPos(values[0], values[1], values[2]));
         this.block.a.integer = true;
         this.block.b.integer = true;

@@ -10,6 +10,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -37,8 +38,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         this.defaultPanel = this.general = new GuiParticleMorphGeneralPanel(mc, this);
         this.panel = new GuiParticleMorphMorphPanel(mc, this);
 
-        this.registerPanel(this.general, I18n.format("blockbuster.gui.particle.tooltip"), BBIcons.PARTICLE);
-        this.registerPanel(this.panel, I18n.format("blockbuster.gui.particle.morph"), Icons.POSE);
+        this.registerPanel(this.general, IKey.lang("blockbuster.gui.particle.tooltip"), BBIcons.PARTICLE);
+        this.registerPanel(this.panel, IKey.lang("blockbuster.gui.particle.morph"), Icons.POSE);
     }
 
     @Override
@@ -75,24 +76,24 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             {
                 this.morph.mode = ParticleMorph.ParticleMode.values()[this.mode.getValue()];
             });
-            this.mode.addLabel(I18n.format("blockbuster.gui.particle.types.vanilla"));
-            this.mode.addLabel(I18n.format("blockbuster.gui.particle.types.morph"));
+            this.mode.addLabel(IKey.lang("blockbuster.gui.particle.types.vanilla"));
+            this.mode.addLabel(IKey.lang("blockbuster.gui.particle.types.morph"));
 
-            this.mode.tooltip(I18n.format("blockbuster.gui.particle.type"), Direction.LEFT);
+            this.mode.tooltip(IKey.lang("blockbuster.gui.particle.type"), Direction.LEFT);
             this.frequency = new GuiTrackpadElement(mc, (value) -> this.morph.frequency = value.intValue());
-            this.frequency.tooltip(I18n.format("blockbuster.gui.particle.frequency"));
+            this.frequency.tooltip(IKey.lang("blockbuster.gui.particle.frequency"));
             this.frequency.limit(1, Integer.MAX_VALUE, true);
             this.duration = new GuiTrackpadElement(mc, (value) -> this.morph.duration = value.intValue());
-            this.duration.tooltip(I18n.format("blockbuster.gui.sequencer.duration"));
+            this.duration.tooltip(IKey.lang("blockbuster.gui.sequencer.duration"));
             this.duration.limit(-1, Integer.MAX_VALUE, true);
             this.delay = new GuiTrackpadElement(mc, (value) -> this.morph.delay = value.intValue());
-            this.delay.tooltip(I18n.format("blockbuster.gui.gun.delay"));
+            this.delay.tooltip(IKey.lang("blockbuster.gui.gun.delay"));
             this.delay.limit(0, Integer.MAX_VALUE, true);
             this.cap = new GuiTrackpadElement(mc, (value) -> this.morph.cap = value.intValue());
-            this.cap.tooltip(I18n.format("blockbuster.gui.particle.cap"));
+            this.cap.tooltip(IKey.lang("blockbuster.gui.particle.cap"));
             this.cap.limit(0, Integer.MAX_VALUE, true);
 
-            this.pickParticle = new GuiButtonElement(mc, I18n.format("blockbuster.gui.particle.particle"), (b) -> this.type.toggleVisible());
+            this.pickParticle = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.particle.particle"), (b) -> this.type.toggleVisible());
             this.type = new GuiStringListElement(mc, (value) ->
             {
                 this.morph.vanillaType = EnumParticleTypes.getByName(value.get(0));
@@ -107,21 +108,21 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.type.sort();
 
             this.x = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaX = value);
-            this.x.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+            this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
             this.y = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaY = value);
-            this.y.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+            this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
             this.z = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaZ = value);
-            this.z.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+            this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
             this.dx = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaDX = value);
-            this.dx.tooltip(I18n.format("blockbuster.gui.particle.dx"));
+            this.dx.tooltip(IKey.lang("blockbuster.gui.particle.dx"));
             this.dy = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaDY = value);
-            this.dy.tooltip(I18n.format("blockbuster.gui.particle.dy"));
+            this.dy.tooltip(IKey.lang("blockbuster.gui.particle.dy"));
             this.dz = new GuiTrackpadElement(mc, (value) -> this.morph.vanillaDZ = value);
-            this.dz.tooltip(I18n.format("blockbuster.gui.particle.dz"));
+            this.dz.tooltip(IKey.lang("blockbuster.gui.particle.dz"));
             this.speed = new GuiTrackpadElement(mc, (value) -> this.morph.speed = value);
-            this.speed.tooltip(I18n.format("blockbuster.gui.particle.speed"));
+            this.speed.tooltip(IKey.lang("blockbuster.gui.particle.speed"));
             this.count = new GuiTrackpadElement(mc, (value) -> this.morph.count = value.intValue());
-            this.count.tooltip(I18n.format("blockbuster.gui.particle.count"));
+            this.count.tooltip(IKey.lang("blockbuster.gui.particle.count"));
             this.count.limit(1, Integer.MAX_VALUE, true);
             this.args = new GuiTextElement(mc, (value) ->
             {
@@ -229,7 +230,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         {
             super(mc, editor);
 
-            this.pickMorph = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+            this.pickMorph = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
             {
                 ParticleMorph particle = this.morph;
 
@@ -239,8 +240,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
                 });
             });
 
-            this.pickType = new GuiButtonElement(mc, I18n.format("blockbuster.gui.particle.pick_type"), (b) -> this.type.toggleVisible());
-            this.pickType.tooltip(I18n.format("blockbuster.gui.particle.pick_type_tooltip"), Direction.RIGHT);
+            this.pickType = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.particle.pick_type"), (b) -> this.type.toggleVisible());
+            this.pickType.tooltip(IKey.lang("blockbuster.gui.particle.pick_type_tooltip"), Direction.RIGHT);
 
             this.type = new GuiStringListElement(mc, (value) ->
             {
@@ -255,18 +256,18 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.type.sort();
             this.type.background();
 
-            this.yaw = new GuiToggleElement(mc, I18n.format("blockbuster.gui.gun.yaw"), false, (b) -> this.morph.yaw = this.yaw.isToggled());
-            this.pitch = new GuiToggleElement(mc, I18n.format("blockbuster.gui.gun.pitch"), false, (b) -> this.morph.pitch = this.pitch.isToggled());
-            this.sequencer = new GuiToggleElement(mc, I18n.format("blockbuster.gui.gun.sequencer"), false, (b) -> this.morph.sequencer = this.sequencer.isToggled());
-            this.random = new GuiToggleElement(mc, I18n.format("blockbuster.gui.gun.random"), false, (b) -> this.morph.random = this.random.isToggled());
+            this.yaw = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.yaw"), false, (b) -> this.morph.yaw = this.yaw.isToggled());
+            this.pitch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.pitch"), false, (b) -> this.morph.pitch = this.pitch.isToggled());
+            this.sequencer = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.sequencer"), false, (b) -> this.morph.sequencer = this.sequencer.isToggled());
+            this.random = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.random"), false, (b) -> this.morph.random = this.random.isToggled());
             this.fade = new GuiTrackpadElement(mc, (value) -> this.morph.fade = value.intValue());
-            this.fade.tooltip(I18n.format("blockbuster.gui.particle.fade"));
+            this.fade.tooltip(IKey.lang("blockbuster.gui.particle.fade"));
             this.fade.limit(0, Integer.MAX_VALUE, true);
             this.lifeSpan = new GuiTrackpadElement(mc, (value) -> this.morph.lifeSpan = value.intValue());
-            this.lifeSpan.tooltip(I18n.format("blockbuster.gui.gun.life_span"));
+            this.lifeSpan.tooltip(IKey.lang("blockbuster.gui.gun.life_span"));
             this.lifeSpan.limit(0, Integer.MAX_VALUE, true);
             this.maximum = new GuiTrackpadElement(mc, (value) -> this.morph.maximum = value.intValue());
-            this.maximum.tooltip(I18n.format("blockbuster.gui.particle.maximum"));
+            this.maximum.tooltip(IKey.lang("blockbuster.gui.particle.maximum"));
             this.maximum.limit(1, Integer.MAX_VALUE, true);
 
             this.pickMorph.flex().relative(this.area).set(10, 30, 100, 20);

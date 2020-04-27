@@ -26,6 +26,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
@@ -99,7 +100,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelRenderer.flex().relative(this.area).w(1, 0).h(1, 0);
         this.add(this.modelRenderer);
 
-        this.pickSkin = new GuiButtonElement(mc, I18n.format("blockbuster.gui.builder.pick_skin"), (b) ->
+        this.pickSkin = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_skin"), (b) ->
         {
             if (!this.skinner.isVisible())
             {
@@ -141,13 +142,13 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         /* Top bar buttons */
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models, this.poses));
-        this.openModels.tooltip(I18n.format("blockbuster.gui.me.tooltips.models"), Direction.RIGHT);
+        this.openModels.tooltip(IKey.lang("blockbuster.gui.me.tooltips.models"), Direction.RIGHT);
         this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses, this.models));
-        this.openPoses.tooltip(I18n.format("blockbuster.gui.me.tooltips.poses"), Direction.RIGHT);
+        this.openPoses.tooltip(IKey.lang("blockbuster.gui.me.tooltips.poses"), Direction.RIGHT);
         this.openOptions = new GuiIconElement(mc, Icons.GEAR, (b) -> this.toggle(this.options, this.limbs));
-        this.openOptions.tooltip(I18n.format("blockbuster.gui.me.tooltips.options"), Direction.LEFT);
+        this.openOptions.tooltip(IKey.lang("blockbuster.gui.me.tooltips.options"), Direction.LEFT);
         this.openLimbs = new GuiIconElement(mc, Icons.LIMB, (b) -> this.toggle(this.limbs, this.options));
-        this.openLimbs.tooltip(I18n.format("blockbuster.gui.me.tooltips.limbs"), Direction.LEFT);
+        this.openLimbs.tooltip(IKey.lang("blockbuster.gui.me.tooltips.limbs"), Direction.LEFT);
 
         this.openModels.flex().set(2, 2, 16, 16).relative(this.area);
         this.openPoses.flex().set(0, 20, 16, 16).relative(this.openModels.resizer());
@@ -158,16 +159,16 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         /* Buttons */
         this.swipe = new GuiIconElement(mc, BBIcons.ARM1, (b) -> this.modelRenderer.swipe()).hovered(BBIcons.ARM2);
-        this.swipe.tooltip(I18n.format("blockbuster.gui.me.tooltips.models"), Direction.TOP);
+        this.swipe.tooltip(IKey.lang("blockbuster.gui.me.tooltips.models"), Direction.TOP);
         this.running = new GuiIconElement(mc, BBIcons.LEGS1, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging).hovered(BBIcons.LEGS2);
-        this.running.tooltip(I18n.format("blockbuster.gui.me.tooltips.swing"), Direction.TOP);
+        this.running.tooltip(IKey.lang("blockbuster.gui.me.tooltips.swing"), Direction.TOP);
         this.items = new GuiIconElement(mc, BBIcons.NO_ITEMS, (b) -> this.modelRenderer.toggleItems()).hovered(BBIcons.HELD_ITEMS);
-        this.items.tooltip(I18n.format("blockbuster.gui.me.tooltips.items"), Direction.TOP);
-        this.hitbox = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.hitbox"), this.modelRenderer.aabb, (b) ->
+        this.items.tooltip(IKey.lang("blockbuster.gui.me.tooltips.items"), Direction.TOP);
+        this.hitbox = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.hitbox"), this.modelRenderer.aabb, (b) ->
         {
             this.modelRenderer.aabb = this.modelRenderer.origin = b.isToggled();
         });
-        this.looking = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.looking"), this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.isToggled());
+        this.looking = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.looking"), this.modelRenderer.looking, (b) -> this.modelRenderer.looking = b.isToggled());
 
         this.swipe.flex().set(0, 0, 16, 16).relative(this.area).x(0.5F, -38).y(1, -18);
         this.running.flex().set(20, 0, 16, 16).relative(this.swipe.resizer());

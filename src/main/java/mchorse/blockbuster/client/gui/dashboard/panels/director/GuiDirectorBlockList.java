@@ -40,7 +40,7 @@ public class GuiDirectorBlockList extends GuiListElement<TileEntityDirector>
     }
 
     @Override
-    protected String elementToString(TileEntityDirector element, int i, int x, int y, boolean hover, boolean selected)
+    protected String elementToString(TileEntityDirector element)
     {
         BlockPos pos = element.getPos();
         String label = element.director.title;

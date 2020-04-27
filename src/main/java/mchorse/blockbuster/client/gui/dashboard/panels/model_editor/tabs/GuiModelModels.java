@@ -11,6 +11,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -37,16 +38,16 @@ public class GuiModelModels extends GuiModelEditorTab
     {
         super(mc, panel);
 
-        this.title = I18n.format("blockbuster.gui.me.models.title");
+        this.title = IKey.lang("blockbuster.gui.me.models.title");
 
         this.modelList = new GuiStringListElement(mc, (str) -> this.panel.setModel(str.get(0)));
         this.modelList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).w(1, 0);
         this.add(this.modelList);
 
         this.save = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
-        this.save.tooltip(I18n.format("blockbuster.gui.me.models.save"));
+        this.save.tooltip(IKey.lang("blockbuster.gui.me.models.save"));
         this.export = new GuiIconElement(mc, Icons.UPLOAD, (b) -> this.exportModel());
-        this.export.tooltip(I18n.format("blockbuster.gui.me.models.export"));
+        this.export.tooltip(IKey.lang("blockbuster.gui.me.models.export"));
 
         this.save.flex().set(2, 2, 16, 16).relative(this.area).x(1, -18);
         this.export.flex().set(-20, 0, 16, 16).relative(this.save.resizer());
@@ -64,7 +65,7 @@ public class GuiModelModels extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.models.name"), this::saveModel);
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.models.name"), this::saveModel);
 
             return modal.setValue(this.panel.modelName);
         });
@@ -109,7 +110,7 @@ public class GuiModelModels extends GuiModelEditorTab
 
         GuiModal.addFullModal(this, () ->
         {
-            GuiListModal modal = new GuiListModal(this.mc, I18n.format("blockbuster.gui.me.models.pick"), this::exportModel);
+            GuiListModal modal = new GuiListModal(this.mc, IKey.lang("blockbuster.gui.me.models.pick"), this::exportModel);
 
             return modal.addValues(mobs);
         });
@@ -135,7 +136,7 @@ public class GuiModelModels extends GuiModelEditorTab
         }
         catch (Exception e)
         {
-            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, I18n.format("blockbuster.gui.me.models.error", e.getMessage())));
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.str(I18n.format("blockbuster.gui.me.models.error", e.getMessage()))));
 
             e.printStackTrace();
         }

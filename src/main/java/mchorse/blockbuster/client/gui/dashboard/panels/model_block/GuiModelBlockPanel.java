@@ -16,6 +16,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.util.MMIcons;
@@ -92,11 +93,11 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Entity angles */
         this.subChildren.add(this.yaw = new GuiTrackpadElement(mc, (value) -> this.model.rotateYawHead = value));
-        this.yaw.tooltip(I18n.format("blockbuster.gui.model_block.yaw"));
+        this.yaw.tooltip(IKey.lang("blockbuster.gui.model_block.yaw"));
         this.subChildren.add(this.pitch = new GuiTrackpadElement(mc, (value) -> this.model.rotatePitch = value));
-        this.pitch.tooltip(I18n.format("blockbuster.gui.model_block.pitch"));
+        this.pitch.tooltip(IKey.lang("blockbuster.gui.model_block.pitch"));
         this.subChildren.add(this.body = new GuiTrackpadElement(mc, (value) -> this.model.rotateBody = value));
-        this.body.tooltip(I18n.format("blockbuster.gui.model_block.body"));
+        this.body.tooltip(IKey.lang("blockbuster.gui.model_block.body"));
 
         this.yaw.flex().set(10, 20, 80, 20).relative(this.area);
         this.pitch.flex().set(0, 25, 80, 20).relative(this.yaw.resizer());
@@ -104,11 +105,11 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Translation */
         this.subChildren.add(this.x = new GuiTrackpadElement(mc, (value) -> this.model.x = value));
-        this.x.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.subChildren.add(this.y = new GuiTrackpadElement(mc, (value) -> this.model.y = value));
-        this.y.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.subChildren.add(this.z = new GuiTrackpadElement(mc, (value) -> this.model.z = value));
-        this.z.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
         this.x.flex().set(0, 45, 80, 20).relative(this.body.resizer());
         this.y.flex().set(0, 25, 80, 20).relative(this.x.resizer());
@@ -116,11 +117,11 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Scale */
         this.subChildren.add(this.sx = new GuiTrackpadElement(mc, (value) -> this.model.sx = value));
-        this.sx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.sx.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.subChildren.add(this.sy = new GuiTrackpadElement(mc, (value) -> this.model.sy = value));
-        this.sy.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.sy.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.subChildren.add(this.sz = new GuiTrackpadElement(mc, (value) -> this.model.sz = value));
-        this.sz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.sz.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
         this.sx.flex().set(0, 20, 80, 20).relative(this.area).x(1, -90);
         this.sy.flex().set(0, 25, 80, 20).relative(this.sx.resizer());
@@ -128,30 +129,30 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Rotation */
         this.subChildren.add(this.rx = new GuiTrackpadElement(mc, (value) -> this.model.rx = value));
-        this.rx.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.rx.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.subChildren.add(this.ry = new GuiTrackpadElement(mc, (value) -> this.model.ry = value));
-        this.ry.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.ry.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.subChildren.add(this.rz = new GuiTrackpadElement(mc, (value) -> this.model.rz = value));
-        this.rz.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.rz.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
         this.rx.flex().set(0, 45, 80, 20).relative(this.sz.resizer());
         this.ry.flex().set(0, 25, 80, 20).relative(this.rx.resizer());
         this.rz.flex().set(0, 25, 80, 20).relative(this.ry.resizer());
 
         /* Buttons */
-        this.subChildren.add(element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (button) ->
+        this.subChildren.add(element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
         {
             this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             this.dashboard.morphs.resize();
             this.add(this.dashboard.morphs);
         }));
-        this.subChildren.add(this.one = new GuiToggleElement(mc, I18n.format("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()));
-        this.one.tooltip(I18n.format("blockbuster.gui.model_block.one_tooltip"), Direction.LEFT);
-        this.subChildren.add(this.shadow = new GuiToggleElement(mc, I18n.format("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.isToggled()));
-        this.subChildren.add(this.global = new GuiToggleElement(mc, I18n.format("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.isToggled()));
-        this.global.tooltip(I18n.format("blockbuster.gui.model_block.global_tooltip"), Direction.BOTTOM);
-        this.subChildren.add(this.enabled = new GuiToggleElement(mc, I18n.format("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled()));
-        this.enabled.tooltip(I18n.format("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
+        this.subChildren.add(this.one = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()));
+        this.one.tooltip(IKey.lang("blockbuster.gui.model_block.one_tooltip"), Direction.LEFT);
+        this.subChildren.add(this.shadow = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.isToggled()));
+        this.subChildren.add(this.global = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.isToggled()));
+        this.global.tooltip(IKey.lang("blockbuster.gui.model_block.global_tooltip"), Direction.BOTTOM);
+        this.subChildren.add(this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled()));
+        this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
 
         element.flex().set(0, 10, 90, 20).relative(this.area).x(0.5F, -45);
         this.shadow.flex().set(100, 4, 90, 11).relative(element.resizer());
@@ -161,7 +162,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         GuiElement second = element;
 
-        this.subChildren.add(element = new GuiButtonElement(mc, I18n.format("blockbuster.gui.model_block.look"), (button) ->
+        this.subChildren.add(element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
             this.model.ry = 180 - this.mc.player.rotationYaw;
             this.fillData();
@@ -170,12 +171,12 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         element.flex().relative(second.resizer()).set(0, 25, 90, 20);
 
         this.subChildren.add(this.order = new GuiCirculateElement(mc, (b) -> this.model.order = RotationOrder.values()[this.order.getValue()]));
-        this.order.addLabel("ZYX");
-        this.order.addLabel("XYZ");
+        this.order.addLabel(IKey.str("ZYX"));
+        this.order.addLabel(IKey.str("XYZ"));
         this.order.flex().set(40, -22, 40, 20).relative(this.rx.resizer());
 
         /* Model blocks */
-        this.add(this.list = new GuiModelBlockList(mc, I18n.format("blockbuster.gui.model_block.title"), (tile) -> this.setModelBlock(tile.get(0))));
+        this.add(this.list = new GuiModelBlockList(mc, IKey.lang("blockbuster.gui.model_block.title"), (tile) -> this.setModelBlock(tile.get(0))));
         this.list.flex().set(0, 0, 120, 0).relative(this.area).h(1F, 0).x(1F, -120);
 
         this.add(element = new GuiIconElement(mc, MMIcons.BLOCK, (b) -> this.list.toggleVisible()));

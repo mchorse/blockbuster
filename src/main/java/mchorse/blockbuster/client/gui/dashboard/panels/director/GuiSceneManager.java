@@ -10,8 +10,6 @@ import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.recording.scene.SceneManager;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.framework.elements.GuiElements;
-import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiConfirmModal;
@@ -20,6 +18,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -59,7 +58,7 @@ public class GuiSceneManager extends GuiElement
 		/* Director block manager list */
 		this.directors = new GuiDirectorBlockList(mc, (director) -> this.parent.pickDirector(director.get(0).getPos()));
 		this.convert = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.convertScene());
-		this.convert.tooltip(I18n.format("blockbuster.gui.director.convert"));
+		this.convert.tooltip(IKey.lang("blockbuster.gui.director.convert"));
 
 		this.directors.flex().relative(this.area).set(0, 20, 0, 0).w(1, 0).h(1, -20);
 		this.convert.flex().relative(this.area).set(0, 2, 16, 16).x(1, -18);
@@ -93,7 +92,7 @@ public class GuiSceneManager extends GuiElement
 			return;
 		}
 
-		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.director.convert_modal"), (name) ->
+		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.director.convert_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -118,7 +117,7 @@ public class GuiSceneManager extends GuiElement
 
 	private void addScene()
 	{
-		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.scenes.add_modal"), (name) ->
+		GuiModal.addFullModal(this, () -> new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.scenes.add_modal"), (name) ->
 		{
 			if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -142,7 +141,7 @@ public class GuiSceneManager extends GuiElement
 
 		GuiModal.addFullModal(this, () ->
 		{
-			GuiPromptModal modal = new GuiPromptModal(this.mc, I18n.format("blockbuster.gui.scenes.dupe_modal"), (name) ->
+			GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.scenes.dupe_modal"), (name) ->
 			{
 				if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -172,7 +171,7 @@ public class GuiSceneManager extends GuiElement
 
 		GuiModal.addFullModal(this, () ->
 		{
-			GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.scenes.rename_modal"), (name) ->
+			GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.scenes.rename_modal"), (name) ->
 			{
 				if (this.sceneList.getList().contains(name) || !SceneManager.isValidFilename(name)) return;
 
@@ -199,7 +198,7 @@ public class GuiSceneManager extends GuiElement
 			return;
 		}
 
-		GuiModal.addFullModal(this, () -> new GuiConfirmModal(this.mc, I18n.format("blockbuster.gui.scenes.remove_modal"), (value) ->
+		GuiModal.addFullModal(this, () -> new GuiConfirmModal(this.mc, IKey.lang("blockbuster.gui.scenes.remove_modal"), (value) ->
 		{
 			if (!value) return;
 

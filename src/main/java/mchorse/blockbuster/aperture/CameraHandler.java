@@ -209,7 +209,7 @@ public class CameraHandler
             boolean show = elements.isVisible();
 
             editor.panel.flex().h(1, show ? -150 : -70);
-            editor.scrub.flex().y(1, show ? -100 : -20);
+            editor.timeline.flex().y(1, show ? -100 : -20);
             record.records.flex().h(1, show ? -80 : 0);
             b.icon(show ? Icons.DOWNLOAD : Icons.UPLOAD);
 
@@ -241,12 +241,12 @@ public class CameraHandler
         {
             if (resetCameraEditorElements)
             {
-                editor.root.remove(cameraEditorElements);
+                editor.top.remove(cameraEditorElements);
             }
 
             cameraEditorElements = new GuiElement(dashboard.mc);
-            editor.hidden.remove(editor.scrub);
-            editor.root.add(cameraEditorElements);
+            editor.top.remove(editor.timeline);
+            editor.top.add(cameraEditorElements);
 
             resetCameraEditorElements = false;
         }
@@ -254,12 +254,12 @@ public class CameraHandler
         elements.setVisible(false);
         elements.add(drawable, record.selector, record.editor);
 
-        toggle.flex().relative(editor.scrub.resizer()).set(0, 0, 16, 16).x(1, 2).y(2);
+        toggle.flex().relative(editor.timeline.resizer()).set(0, 0, 16, 16).x(1, 2).y(2);
 
-        editor.scrub.flex().x(30).w(1, -60);
+        editor.timeline.flex().x(30).w(1, -60);
 
         cameraEditorElements.clear();
-        cameraEditorElements.add(record.records, editor.scrub, toggle, record.open, elements);
+        cameraEditorElements.add(record.records, editor.timeline, toggle, record.open, elements);
         refresh.accept(toggle);
     }
 
@@ -318,7 +318,7 @@ public class CameraHandler
 
             if (location != null)
             {
-                int tick = ClientProxy.getCameraEditor().scrub.value;
+                int tick = ClientProxy.getCameraEditor().timeline.value;
 
                 if (!(current instanceof GuiCameraEditor) && toOpenCamera)
                 {
@@ -350,7 +350,7 @@ public class CameraHandler
                 panel.editor.flex().relative(editor.viewport);
                 panel.records.flex().relative(editor.viewport);
                 panel.records.setVisible(false);
-                panel.open.flex().relative(editor.scrub.resizer()).set(-18, 2, 16, 16);
+                panel.open.flex().relative(editor.timeline.resizer()).set(-18, 2, 16, 16);
             }
             else if (current instanceof GuiCameraEditor)
             {

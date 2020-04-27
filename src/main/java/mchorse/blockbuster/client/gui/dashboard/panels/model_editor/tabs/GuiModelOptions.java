@@ -8,6 +8,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -27,7 +28,7 @@ public class GuiModelOptions extends GuiModelEditorTab
     {
         super(mc, panel);
 
-        this.title = "";
+        this.title = IKey.str("");
 
         this.name = new GuiTextElement(mc, 120, (str) -> this.panel.model.name = str);
         this.texture = new GuiTwoElement(mc, (value) ->
@@ -44,15 +45,15 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.scale[2] = value[2];
         });
         this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.panel.model.scaleGui = value);
-        this.scaleGui.tooltip(I18n.format("blockbuster.gui.me.options.scale_gui"));
+        this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
         this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : RLUtils.create(str));
         this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);
-        this.providesObj = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.options.provides_obj"), false, (b) ->
+        this.providesObj = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.provides_obj"), false, (b) ->
         {
             this.panel.model.providesObj = b.isToggled();
             this.panel.rebuildModel();
         });
-        this.providesMtl = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.options.provides_mtl"), false, (b) ->
+        this.providesMtl = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.provides_mtl"), false, (b) ->
         {
             this.panel.model.providesMtl = b.isToggled();
             this.panel.rebuildModel();

@@ -6,6 +6,7 @@ import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -20,7 +21,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super(mc);
 
         this.dashboard = dashboard;
-        this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+        this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
         {
             this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             this.dashboard.morphs.resize();

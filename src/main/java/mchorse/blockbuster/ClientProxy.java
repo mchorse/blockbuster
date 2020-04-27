@@ -222,23 +222,6 @@ public class ClientProxy extends CommonProxy
             CameraHandler.register();
         }
 
-        /* Attach resource listener so it would null the dashboard */
-        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener(new IResourceManagerReloadListener()
-        {
-            @Override
-            public void onResourceManagerReload(IResourceManager resourceManager)
-            {
-                boolean wasntNull = dashboard != null;
-
-                dashboard = null;
-
-                if (wasntNull && CameraHandler.isApertureLoaded())
-                {
-                    CameraHandler.reloadCameraEditor();
-                }
-            }
-        });
-
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
     }

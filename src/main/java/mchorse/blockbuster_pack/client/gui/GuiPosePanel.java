@@ -8,6 +8,7 @@ import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -36,7 +37,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.limbs.background();
         this.limbs.flex().relative(this.area).set(10, 50, 105, 90).h(1, -55);
 
-        this.resetPose = new GuiButtonElement(mc, I18n.format("blockbuster.gui.morphs.reset"), (b) ->
+        this.resetPose = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.morphs.reset"), (b) ->
         {
             this.editor.setPanel(this.editor.general);
             this.editor.morph.customPose = null;

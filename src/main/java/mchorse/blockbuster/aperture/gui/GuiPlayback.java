@@ -13,6 +13,7 @@ import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,11 +54,11 @@ public class GuiPlayback extends GuiBase
         this.profiles.background();
 
         this.cameraMode = new GuiCirculateElement(mc, (b) -> this.setValue(this.cameraMode.getValue()));
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.nothing"));
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.play"));
-        this.cameraMode.addLabel(I18n.format("blockbuster.gui.playback.load_profile"));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.nothing"));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.play"));
+        this.cameraMode.addLabel(IKey.lang("blockbuster.gui.playback.load_profile"));
 
-        this.done = new GuiButtonElement(mc, I18n.format("blockbuster.gui.done"), (b) -> this.saveAndQuit());
+        this.done = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.done"), (b) -> this.saveAndQuit());
 
         this.profiles.flex().set(0, 35, 0, 0).relative(this.frame).w(1, 0).h(1, -100);
         this.cameraMode.flex().relative(this.frame).set(0, 0, 0, 20).y(1, -45).w(1, 0);

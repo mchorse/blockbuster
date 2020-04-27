@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.BlockPos;
@@ -21,9 +22,9 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
     /**
      * Title of this panel 
      */
-    public String title;
+    public IKey title;
 
-    public GuiBlockList(Minecraft mc, String title, Consumer<List<T>> callback)
+    public GuiBlockList(Minecraft mc, IKey title, Consumer<List<T>> callback)
     {
         super(mc, callback);
 
@@ -45,7 +46,7 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
         this.area.draw(0xff333333);
 
         Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 30, 0x44000000);
-        this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 11, 0xcccccc);
+        this.font.drawStringWithShadow(this.title.get(), this.area.x + 10, this.area.y + 11, 0xcccccc);
 
         super.draw(context);
     }

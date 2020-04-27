@@ -4,8 +4,8 @@ import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -20,13 +20,13 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
         super(mc);
 
         this.armor = new GuiCirculateElement(mc, (b) -> this.action.armorSlot = (byte) (this.armor.getValue() - 1));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.none"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.main_hand"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.feet"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.legs"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.chest"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.head"));
-        this.armor.addLabel(I18n.format("blockbuster.gui.record_editor.actions.equip.off_hand"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.none"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.main_hand"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.feet"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.legs"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.chest"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.head"));
+        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.off_hand"));
         this.armor.flex().set(0, 0, 80, 20).relative(this.area).x(0.5F, -40).y(0.5F, -50);
 
         this.inventory = new GuiInventoryElement(mc, this::pickItem);

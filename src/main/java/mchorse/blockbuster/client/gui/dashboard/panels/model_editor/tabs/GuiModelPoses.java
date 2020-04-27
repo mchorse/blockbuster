@@ -14,6 +14,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.resizers.Flex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -40,7 +41,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         super(mc, panel);
 
-        this.title = I18n.format("blockbuster.gui.me.poses.title");
+        this.title = IKey.lang("blockbuster.gui.me.poses.title");
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
         this.posesList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).x(1, -80);
@@ -82,9 +83,9 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.addPose = new GuiIconElement(mc, Icons.ADD, (b) -> this.addPose());
         this.removePose = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removePose());
         this.importPose = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.importPose());
-        this.importPose.tooltip(I18n.format("blockbuster.gui.me.poses.import_pose_tooltip"));
+        this.importPose.tooltip(IKey.lang("blockbuster.gui.me.poses.import_pose_tooltip"));
         this.copyPose = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyPose());
-        this.copyPose.tooltip(I18n.format("blockbuster.gui.me.poses.copy_pose_tooltip"));
+        this.copyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.copy_pose_tooltip"));
 
         this.copyPose.flex().set(2, 2, 16, 16).relative(this.area).x(1, -78);
         this.importPose.flex().set(20, 0, 16, 16).relative(this.copyPose.resizer());
@@ -97,7 +98,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.poses.new_pose"), this::addPose);
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.poses.new_pose"), this::addPose);
 
             return modal.setValue(this.pose);
         });
@@ -120,7 +121,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         if (Model.REQUIRED_POSES.contains(this.pose))
         {
-            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, I18n.format("blockbuster.gui.me.poses.standard")));
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.poses.standard")));
         }
         else
         {
@@ -138,7 +139,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.poses.import_pose"), this::importPose);
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.poses.import_pose"), this::importPose);
 
             modal.text.field.setMaxStringLength(10000);
 
@@ -162,7 +163,7 @@ public class GuiModelPoses extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiListModal modal = new GuiListModal(this.mc, I18n.format("blockbuster.gui.me.poses.copy_pose"), this::copyPose);
+            GuiListModal modal = new GuiListModal(this.mc, IKey.lang("blockbuster.gui.me.poses.copy_pose"), this::copyPose);
 
             return modal.addValues(this.panel.model.poses.keySet());
         });

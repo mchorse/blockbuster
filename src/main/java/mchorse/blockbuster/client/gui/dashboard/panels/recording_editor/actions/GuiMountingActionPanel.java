@@ -2,8 +2,8 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 
 public class GuiMountingActionPanel extends GuiActionPanel<MountingAction>
 {
@@ -13,7 +13,7 @@ public class GuiMountingActionPanel extends GuiActionPanel<MountingAction>
     {
         super(mc);
 
-        this.mounting = new GuiToggleElement(mc, I18n.format("blockbuster.gui.record_editor.mounting"), false, (b) -> this.action.isMounting = b.isToggled());
+        this.mounting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.record_editor.mounting"), false, (b) -> this.action.isMounting = b.isToggled());
         this.mounting.flex().set(10, 0, 60, 11).relative(this.area).y(1, -21);
 
         this.add(this.mounting);

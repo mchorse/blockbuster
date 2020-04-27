@@ -21,6 +21,7 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.resizers.Flex;
 import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
@@ -70,7 +71,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         final GuiModelLimbs limbs = this;
 
-        this.title = I18n.format("blockbuster.gui.me.limbs.title");
+        this.title = IKey.lang("blockbuster.gui.me.limbs.title");
 
         this.scroll = new GuiScrollElement(mc)
         {
@@ -128,12 +129,12 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.rebuildModel();
         });
         this.slot = new GuiCirculateElement(mc, (b) -> this.panel.limb.slot = ArmorSlot.values()[this.slot.getValue()]);
-        this.slot.tooltip(I18n.format("blockbuster.gui.me.limbs.slot"), Direction.LEFT);
-        this.hold = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.holding"), false, (b) -> this.panel.limb.hold = b.isToggled());
+        this.slot.tooltip(IKey.lang("blockbuster.gui.me.limbs.slot"), Direction.LEFT);
+        this.hold = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.holding"), false, (b) -> this.panel.limb.hold = b.isToggled());
 
         for (ArmorSlot slot : ArmorSlot.values())
         {
-            this.slot.addLabel(I18n.format("blockbuster.gui.me.limbs.slots." + slot.name));
+            this.slot.addLabel(IKey.lang("blockbuster.gui.me.limbs.slots." + slot.name));
         }
 
         this.size.flex().relative(this.scroll.area).set(10, 20, 120, 20);
@@ -153,35 +154,35 @@ public class GuiModelLimbs extends GuiModelEditorTab
         });
         this.color.setLimit(0, 1);
         this.opacity = new GuiTrackpadElement(mc, (value) -> this.panel.limb.opacity = value);
-        this.opacity.tooltip(I18n.format("blockbuster.gui.me.limbs.opacity"));
+        this.opacity.tooltip(IKey.lang("blockbuster.gui.me.limbs.opacity"));
         this.opacity.limit(0, 1);
-        this.mirror = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.mirror"), false, (b) ->
+        this.mirror = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.mirror"), false, (b) ->
         {
             this.panel.limb.mirror = b.isToggled();
             this.panel.rebuildModel();
         });
-        this.lighting = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.panel.limb.lighting = b.isToggled());
-        this.shading = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.shading"), false, (b) -> this.panel.limb.shading = b.isToggled());
-        this.smooth = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.smooth"), false, (b) -> this.panel.limb.smooth = b.isToggled());
-        this.is3D = new GuiToggleElement(mc, "3D", false, (b) -> this.panel.limb.is3D = b.isToggled());
+        this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.panel.limb.lighting = b.isToggled());
+        this.shading = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) -> this.panel.limb.shading = b.isToggled());
+        this.smooth = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.smooth"), false, (b) -> this.panel.limb.smooth = b.isToggled());
+        this.is3D = new GuiToggleElement(mc, IKey.str("3D"), false, (b) -> this.panel.limb.is3D = b.isToggled());
 
         this.holding = new GuiCirculateElement(mc, (b) ->
         {
             this.panel.limb.holding = Holding.values()[this.holding.getValue()];
             this.panel.rebuildModel();
         });
-        this.holding.tooltip(I18n.format("blockbuster.gui.me.limbs.hold"), Direction.LEFT);
-        this.holding.addLabel(I18n.format("blockbuster.gui.me.limbs.none"));
-        this.holding.addLabel(I18n.format("blockbuster.gui.me.limbs.right"));
-        this.holding.addLabel(I18n.format("blockbuster.gui.me.limbs.left"));
+        this.holding.tooltip(IKey.lang("blockbuster.gui.me.limbs.hold"), Direction.LEFT);
+        this.holding.addLabel(IKey.lang("blockbuster.gui.me.limbs.none"));
+        this.holding.addLabel(IKey.lang("blockbuster.gui.me.limbs.right"));
+        this.holding.addLabel(IKey.lang("blockbuster.gui.me.limbs.left"));
 
-        this.swiping = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.swiping"), false, (b) -> this.panel.limb.swiping = b.isToggled());
-        this.looking = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.looking"), false, (b) -> this.panel.limb.looking = b.isToggled());
-        this.swinging = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.swinging"), false, (b) -> this.panel.limb.swinging = b.isToggled());
-        this.idle = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.idle"), false, (b) -> this.panel.limb.idle = b.isToggled());
-        this.invert = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.invert"), false, (b) -> this.panel.limb.invert = b.isToggled());
-        this.wheel = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.wheel"), false, (b) -> this.panel.limb.wheel = b.isToggled());
-        this.wing = new GuiToggleElement(mc, I18n.format("blockbuster.gui.me.limbs.wing"), false, (b) -> this.panel.limb.wing = b.isToggled());
+        this.swiping = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.swiping"), false, (b) -> this.panel.limb.swiping = b.isToggled());
+        this.looking = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.looking"), false, (b) -> this.panel.limb.looking = b.isToggled());
+        this.swinging = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.swinging"), false, (b) -> this.panel.limb.swinging = b.isToggled());
+        this.idle = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.idle"), false, (b) -> this.panel.limb.idle = b.isToggled());
+        this.invert = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.invert"), false, (b) -> this.panel.limb.invert = b.isToggled());
+        this.wheel = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.wheel"), false, (b) -> this.panel.limb.wheel = b.isToggled());
+        this.wing = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.wing"), false, (b) -> this.panel.limb.wing = b.isToggled());
 
         this.color.flex().relative(this.hold.resizer()).set(0, 40, 120, 20);
         this.opacity.flex().relative(this.color.resizer()).set(0, 25, 120, 20);
@@ -211,8 +212,8 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.addLimb = new GuiIconElement(mc, Icons.ADD, (b) -> this.addLimb());
         this.dupeLimb = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeLimb());
         this.removeLimb = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeLimb());
-        this.renameLimb = new GuiButtonElement(mc, I18n.format("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
-        this.parentLimb = new GuiButtonElement(mc, I18n.format("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
+        this.renameLimb = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.me.limbs.rename"), (b) -> this.renameLimb());
+        this.parentLimb = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.me.limbs.parent"), (b) -> this.parentLimb());
 
         this.addLimb.flex().set(0, 2, 16, 16).relative(this.area).x(1, -58);
         this.dupeLimb.flex().set(20, 0, 16, 16).relative(this.addLimb.resizer());
@@ -229,7 +230,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiPromptModal modal = new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.limbs.new_limb"), this::addLimb);
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.limbs.new_limb"), this::addLimb);
 
             return modal.setValue(this.panel.limb.name);
         });
@@ -270,7 +271,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         if (size == this.panel.model.getLimbCount(this.panel.limb))
         {
-            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, I18n.format("blockbuster.gui.me.limbs.last_limb")));
+            GuiModal.addFullModal(this, () -> new GuiMessageModal(this.mc, IKey.lang("blockbuster.gui.me.limbs.last_limb")));
         }
         else
         {
@@ -286,7 +287,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
     private void renameLimb()
     {
-        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, I18n.format("blockbuster.gui.me.limbs.rename_limb"), this::renameLimb).setValue(this.panel.limb.name));
+        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.limbs.rename_limb"), this::renameLimb).setValue(this.panel.limb.name));
     }
 
     private void renameLimb(String text)
@@ -302,7 +303,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
     {
         GuiModal.addFullModal(this, () ->
         {
-            GuiListModal modal = new GuiListModal(mc, I18n.format("blockbuster.gui.me.limbs.parent_limb"), this::parentLimb);
+            GuiListModal modal = new GuiListModal(mc, IKey.lang("blockbuster.gui.me.limbs.parent_limb"), this::parentLimb);
 
             return modal.addValues(this.panel.model.limbs.keySet()).setValue(this.panel.limb.parent);
         });

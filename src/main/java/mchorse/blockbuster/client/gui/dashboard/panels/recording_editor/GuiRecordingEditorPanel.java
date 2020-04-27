@@ -47,6 +47,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiLabelSearchListElemen
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -102,7 +103,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
         super(mc, dashboard);
 
         this.records = new GuiRecordList(mc, this);
-        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).h(1, 0);
+        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).hTo(this.selector.flex());
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
         this.selector.flex().relative(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
@@ -113,21 +114,21 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
 
         /* Add/remove */
         this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.list.toggleVisible());
-        this.add.tooltip(I18n.format("blockbuster.gui.add"), Direction.LEFT);
+        this.add.tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
         this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeAction());
-        this.dupe.tooltip(I18n.format("blockbuster.gui.duplicate"), Direction.LEFT);
+        this.dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeAction());
-        this.remove.tooltip(I18n.format("blockbuster.gui.remove"), Direction.LEFT);
+        this.remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
 
         this.list = new GuiLabelSearchListElement<String>(mc, (str) -> this.createAction(str.get(0).value));
-        this.list.label = I18n.format("blockbuster.gui.search") + "...";
-        this.list.background = true;
+        this.list.label(IKey.lang("blockbuster.gui.search"));
+        this.list.list.background();
 
         for (String key : ActionRegistry.NAME_TO_CLASS.keySet())
         {
-            String title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
+            IKey title = IKey.lang("blockbuster.gui.record_editor.actions." + key + ".title");
 
-            this.list.elements.add(new Label<String>(title, key));
+            this.list.list.add(new Label<String>(title, key));
         }
 
         this.list.filter("", false);

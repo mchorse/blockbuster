@@ -5,6 +5,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.resizers.layout.ColumnResizer;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.util.MMIcons;
@@ -29,27 +30,27 @@ public class GuiDespacito extends GuiElement
         this.dashboard = dashboard;
 
         GuiIconElement main = new GuiIconElement(mc, Icons.MORE, (button) -> dashboard.openPanel(dashboard.mainPanel));
-        main.tooltip(I18n.format("blockbuster.gui.dashboard.main"), Direction.RIGHT);
+        main.tooltip(IKey.lang("blockbuster.gui.dashboard.main"), Direction.RIGHT);
         main.flex().wh(24, 24);
 
         GuiIconElement director = new GuiIconElement(mc, MMIcons.BLOCK, (button) -> dashboard.openPanel(dashboard.directorPanel));
-        director.tooltip(I18n.format("blockbuster.gui.dashboard.director"), Direction.RIGHT);
+        director.tooltip(IKey.lang("blockbuster.gui.dashboard.director"), Direction.RIGHT);
         director.flex().wh(24, 24);
 
         GuiIconElement block = new GuiIconElement(mc, Icons.POSE, (button) -> dashboard.openPanel(dashboard.modelPanel));
-        block.tooltip(I18n.format("blockbuster.gui.dashboard.model"), Direction.RIGHT);
+        block.tooltip(IKey.lang("blockbuster.gui.dashboard.model"), Direction.RIGHT);
         block.flex().wh(24, 24);
 
         GuiIconElement model = new GuiIconElement(mc, MMIcons.BLOCK, (button) -> dashboard.openPanel(dashboard.modelEditorPanel));
-        model.tooltip(I18n.format("blockbuster.gui.dashboard.model_editor"), Direction.RIGHT);
+        model.tooltip(IKey.lang("blockbuster.gui.dashboard.model_editor"), Direction.RIGHT);
         model.flex().wh(24, 24);
 
         GuiIconElement editor = new GuiIconElement(mc, Icons.POSE, (button) -> dashboard.openPanel(dashboard.recordingEditorPanel));
-        editor.tooltip(I18n.format("blockbuster.gui.dashboard.player_recording"), Direction.RIGHT);
+        editor.tooltip(IKey.lang("blockbuster.gui.dashboard.player_recording"), Direction.RIGHT);
         editor.flex().wh(24, 24);
 
         GuiIconElement texture = new GuiIconElement(mc, Icons.MATERIAL, (button) -> dashboard.openPanel(dashboard.texturePanel));
-        texture.tooltip(I18n.format("blockbuster.gui.dashboard.texture"), Direction.RIGHT);
+        texture.tooltip(IKey.lang("blockbuster.gui.dashboard.texture"), Direction.RIGHT);
         texture.flex().wh(24, 24);
 
         this.add(main, director, block, model, editor, texture);

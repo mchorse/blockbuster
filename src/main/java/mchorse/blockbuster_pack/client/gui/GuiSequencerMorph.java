@@ -9,6 +9,7 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
@@ -28,7 +29,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         super(mc);
 
         this.defaultPanel = this.general = new GuiSequencerMorphPanel(mc, this);
-        this.registerPanel(this.general, I18n.format("blockbuster.morph.sequencer"), Icons.GEAR);
+        this.registerPanel(this.general, IKey.lang("blockbuster.morph.sequencer"), Icons.GEAR);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry.get(0)));
             this.list.background();
-            this.addPart = new GuiButtonElement(mc, I18n.format("blockbuster.gui.add"), (b) ->
+            this.addPart = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.add"), (b) ->
             {
                 SequenceEntry current = this.list.getCurrentFirst();
                 SequenceEntry entry = new SequenceEntry(MorphUtils.copy(current.morph));
@@ -81,7 +82,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.list.update();
             });
 
-            this.removePart = new GuiButtonElement(mc, I18n.format("blockbuster.gui.remove"), (b) ->
+            this.removePart = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.remove"), (b) ->
             {
                 if (!this.list.isDeselected())
                 {
@@ -93,7 +94,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 }
             });
 
-            this.pick = new GuiButtonElement(mc, I18n.format("blockbuster.gui.pick"), (b) ->
+            this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
             {
                 if (this.entry == null)
                 {
@@ -115,7 +116,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                     this.entry.duration = value;
                 }
             });
-            this.duration.tooltip(I18n.format("blockbuster.gui.sequencer.duration"));
+            this.duration.tooltip(IKey.lang("blockbuster.gui.sequencer.duration"));
             this.duration.limit(0, Float.MAX_VALUE);
 
             this.random = new GuiTrackpadElement(mc, (value) ->
@@ -125,15 +126,15 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                     this.entry.random = value;
                 }
             });
-            this.random.tooltip(I18n.format("blockbuster.gui.sequencer.random"));
+            this.random.tooltip(IKey.lang("blockbuster.gui.sequencer.random"));
             this.random.limit(0, Float.MAX_VALUE);
 
-            this.reverse = new GuiToggleElement(mc, I18n.format("blockbuster.gui.sequencer.reverse"), false, (b) ->
+            this.reverse = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.reverse"), false, (b) ->
             {
                 this.morph.reverse = b.isToggled();
             });
 
-            this.randomOrder = new GuiToggleElement(mc, I18n.format("blockbuster.gui.sequencer.random_order"), false, (b) ->
+            this.randomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.random_order"), false, (b) ->
             {
                 this.morph.random = b.isToggled();
             });
@@ -201,7 +202,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         }
 
         @Override
-        protected String elementToString(SequenceEntry element, int i, int x, int y, boolean hover, boolean selected)
+        protected String elementToString(SequenceEntry element)
         {
             String title = I18n.format("blockbuster.gui.sequencer.no_morph");
 

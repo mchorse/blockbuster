@@ -5,6 +5,7 @@ import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,7 +21,7 @@ import java.util.function.Consumer;
  */
 public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
 {
-    public GuiModelBlockList(Minecraft mc, String title, Consumer<List<TileEntityModel>> callback)
+    public GuiModelBlockList(Minecraft mc, IKey title, Consumer<List<TileEntityModel>> callback)
     {
         super(mc, title, callback);
     }
@@ -51,8 +52,6 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
 
         if (element.morph != null)
         {
-            GuiScreen screen = this.mc.currentScreen;
-
             int mny = MathHelper.clamp(y, this.scroll.y, this.scroll.ey());
             int mxy = MathHelper.clamp(y + 20, this.scroll.y, this.scroll.ey());
 

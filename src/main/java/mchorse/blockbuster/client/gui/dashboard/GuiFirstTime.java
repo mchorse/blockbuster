@@ -5,6 +5,7 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +24,7 @@ public class GuiFirstTime extends GuiElement
 	public GuiButtonElement discord;
 	public GuiButtonElement twitter;
 
-	private String title;
+	private IKey title;
 	private List<String> welcome;
 	private List<String> social;
 
@@ -42,12 +43,12 @@ public class GuiFirstTime extends GuiElement
 		this.dashboard = dashboard;
 		this.overlay = overlay;
 
-		this.close = new GuiButtonElement(mc, I18n.format("blockbuster.gui.done"), (button) -> this.close());
-		this.tutorial = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
-		this.discord = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
-		this.youtube = new GuiButtonElement(mc, "YouTube", (button) -> GuiUtils.openWebLink("https://www.youtube.com/c/McHorsesMods"));
-		this.channel = new GuiButtonElement(mc, Blockbuster.langOrDefault("blockbuster.gui.first_time.channel", ""), (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
-		this.twitter = new GuiButtonElement(mc, "Twitter", (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
+		this.close = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.done"), (button) -> this.close());
+		this.tutorial = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.tutorial"), (button) -> GuiUtils.openWebLink(Blockbuster.TUTORIAL_URL()));
+		this.discord = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.main.discord"), (button) -> GuiUtils.openWebLink(Blockbuster.DISCORD_URL()));
+		this.youtube = new GuiButtonElement(mc, IKey.str("YouTube"), (button) -> GuiUtils.openWebLink("https://www.youtube.com/c/McHorsesMods"));
+		this.channel = new GuiButtonElement(mc, IKey.str(Blockbuster.langOrDefault("blockbuster.gui.first_time.channel", "")), (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
+		this.twitter = new GuiButtonElement(mc, IKey.str("Twitter"), (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
 
 		this.tutorial.flex().set(10, 0, 0, 20).relative(this.area).w(0.5F, -12);
 		this.youtube.flex().set(0, 0, 0, 20).relative(this.area).x(0.5F, 2).w(0.5F, -12);
@@ -57,7 +58,7 @@ public class GuiFirstTime extends GuiElement
 
 		this.add(this.tutorial, this.discord, this.youtube, this.twitter, this.close);
 
-		if (!this.channel.label.isEmpty())
+		if (!this.channel.label.get().isEmpty())
 		{
 			this.tutorial.flex().set(10, 0, 0, 20).relative(this.area).w(0.33F, -10);
 			this.channel.flex().set(0, 0, 0, 20).relative(this.area).x(0.5F, -30).w(60);
@@ -66,7 +67,7 @@ public class GuiFirstTime extends GuiElement
 			this.add(this.channel);
 		}
 
-		this.title = I18n.format("blockbuster.gui.first_time.title");
+		this.title = IKey.lang("blockbuster.gui.first_time.title");
 		this.welcome = this.font.listFormattedStringToWidth(I18n.format("blockbuster.gui.first_time.welcome"), 180);
 		this.social = this.font.listFormattedStringToWidth(I18n.format("blockbuster.gui.first_time.social"), 180);
 	}
@@ -87,11 +88,13 @@ public class GuiFirstTime extends GuiElement
 		this.area.draw(0xff000000);
 
 		/* Draw extra text */
+		String title = this.title.get();
+
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(this.area.mx() - this.font.getStringWidth(this.title), this.area.y + 10, 0);
+		GlStateManager.translate(this.area.mx() - this.font.getStringWidth(title), this.area.y + 10, 0);
 		GlStateManager.scale(2, 2, 2);
 
-		this.font.drawStringWithShadow(this.title, 0, 0, 0xffffff);
+		this.font.drawStringWithShadow(title, 0, 0, 0xffffff);
 		GlStateManager.popMatrix();
 
 		/* Draw welcome paragraph */

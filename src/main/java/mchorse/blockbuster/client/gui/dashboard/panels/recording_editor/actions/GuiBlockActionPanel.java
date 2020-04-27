@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions
 
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
@@ -17,11 +18,11 @@ public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActio
         super(mc);
 
         this.x = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
-        this.x.tooltip(I18n.format("blockbuster.gui.model_block.x"));
+        this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
         this.y = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), v.intValue(), this.action.pos.getZ()));
-        this.y.tooltip(I18n.format("blockbuster.gui.model_block.y"));
+        this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
         this.z = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(this.action.pos.getX(), this.action.pos.getY(), v.intValue()));
-        this.z.tooltip(I18n.format("blockbuster.gui.model_block.z"));
+        this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
         this.x.integer = this.y.integer = this.z.integer = true;
 
