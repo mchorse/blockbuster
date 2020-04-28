@@ -50,6 +50,11 @@ public class InteractBlockAction extends Action
 
         if (frame == null) return;
 
+        player.width = actor.width;
+        player.height = actor.height;
+        player.eyeHeight = actor.getEyeHeight();
+        player.setEntityBoundingBox(actor.getEntityBoundingBox());
+
         player.posX = actor.posX;
         player.posY = actor.posY;
         player.posZ = actor.posZ;
