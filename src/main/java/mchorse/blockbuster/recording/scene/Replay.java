@@ -65,8 +65,6 @@ public class Replay
      */
     public void apply(EntityActor actor)
     {
-        boolean remote = actor.world.isRemote;
-
         actor.setCustomNameTag(this.name);
         actor.setEntityInvulnerable(this.invincible);
         actor.morph.set(mchorse.metamorph.api.MorphUtils.copy(this.morph));

@@ -116,6 +116,7 @@ public class ItemGun extends Item
 
                 projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
                 projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
+                projectile.setInitialMotion();
                 world.spawnEntity(projectile);
                 last = projectile;
             }

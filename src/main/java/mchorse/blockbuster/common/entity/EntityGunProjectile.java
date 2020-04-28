@@ -53,6 +53,12 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public double targetY;
     public double targetZ;
 
+    public double initMX;
+	public double initMY;
+	public double initMZ;
+
+	public boolean setInit;
+
     public EntityGunProjectile(World worldIn)
     {
         this(worldIn, null, null);
@@ -74,6 +80,13 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         this.impact = -1;
     }
 
+	public void setInitialMotion()
+	{
+		this.initMX = this.motionX;
+		this.initMY = this.motionY;
+		this.initMZ = this.motionZ;
+	}
+
     @Override
     public void onUpdate()
     {
@@ -89,6 +102,13 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         if (!this.world.isRemote)
         {
             this.setFlag(6, this.isGlowing());
+        }
+        else if (!this.setInit)
+        {
+        	this.setInit = true;
+        	this.motionX = this.initMX;
+	        this.motionY = this.initMY;
+	        this.motionZ = this.initMZ;
         }
 
         this.onEntityUpdate();
@@ -387,6 +407,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             ByteBufUtils.writeTag(buffer, this.morph.toNBT());
         }
+
+        buffer.writeDouble(this.initMX);
+	    buffer.writeDouble(this.initMY);
+	    buffer.writeDouble(this.initMZ);
     }
 
     @Override
@@ -402,6 +426,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
         {
             this.morph.fromNBT(ByteBufUtils.readTag(additionalData));
         }
+
+        this.initMX = additionalData.readDouble();
+	    this.initMY = additionalData.readDouble();
+	    this.initMZ = additionalData.readDouble();
     }
 
     /**
