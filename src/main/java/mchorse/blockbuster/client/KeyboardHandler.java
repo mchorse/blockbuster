@@ -79,7 +79,7 @@ public class KeyboardHandler
     {
         if (this.dashboard.isPressed())
         {
-            GuiDashboard dashboard = ClientProxy.getDashboard(false);
+            GuiDashboard dashboard = ClientProxy.getDashboard();
 
             dashboard.open().openPanel(GuiScreen.isCtrlKeyDown() ? dashboard.mainPanel : null);
         }
@@ -91,7 +91,7 @@ public class KeyboardHandler
 
         if (this.modelEditor.isPressed())
         {
-            GuiDashboard dashboard = ClientProxy.getDashboard(false);
+            GuiDashboard dashboard = ClientProxy.getDashboard();
 
             dashboard.open().openPanel(dashboard.modelEditorPanel);
         }

@@ -27,7 +27,7 @@ public class MenuHandler
         if (gui instanceof GuiMainMenu)
         {
             ModelExtrudedLayer.clear();
-            ClientProxy.getDashboard(true).clear();
+            ClientProxy.dashboard = null;
         }
     }
 }

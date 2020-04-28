@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -64,11 +65,11 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.elements = new GuiElement(mc);
 
             this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry.get(0)));
-            this.list.background();
+            this.list.sorting().background();
             this.addPart = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.add"), (b) ->
             {
                 SequenceEntry current = this.list.getCurrentFirst();
-                SequenceEntry entry = new SequenceEntry(MorphUtils.copy(current.morph));
+                SequenceEntry entry = new SequenceEntry(current == null ? null : MorphUtils.copy(current.morph));
 
                 if (current != null)
                 {
@@ -162,6 +163,12 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.duration.setValue(entry.duration);
                 this.random.setValue(entry.random);
+
+                ((GuiMorphRenderer) this.editor.renderer).morph = entry.morph;
+            }
+            else
+            {
+                ((GuiMorphRenderer) this.editor.renderer).morph = null;
             }
 
             this.elements.setVisible(entry != null);
@@ -173,7 +180,9 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             super.fillData(morph);
 
             this.list.setList(morph.morphs);
-            this.list.setIndex(-1);
+            this.list.setIndex(0);
+            this.select(this.list.getCurrentFirst());
+
             this.reverse.toggled(morph.reverse);
             this.randomOrder.toggled(morph.random);
 

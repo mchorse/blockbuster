@@ -41,8 +41,6 @@ public class GuiDashboard extends GuiBase
 
     public GuiCreativeMorphsMenu morphs;
 
-    private boolean mainMenu;
-
     public static void reset()
     {
         GuiModelBlockPanel.lastBlocks.clear();
@@ -65,13 +63,6 @@ public class GuiDashboard extends GuiBase
         this.sidebar.flex().set(0.5F, 0, 32, 0.5F).relative(this.viewport).h(1F, 0);
 
         this.root.add(this.panel, this.sidebar);
-    }
-
-    public GuiDashboard setMainMenu(boolean main)
-    {
-        this.mainMenu = main;
-
-        return this;
     }
 
     public void createWorldPanels(Minecraft mc, boolean reloadCamera)
@@ -202,15 +193,10 @@ public class GuiDashboard extends GuiBase
     protected void closeScreen()
     {
         this.panel.delegate.disappear();
-
-        if (!this.mainMenu)
-        {
-            this.directorPanel.close();
-            this.modelPanel.close();
-            this.recordingEditorPanel.close();
-            this.mainPanel.close();
-        }
-
+        this.directorPanel.close();
+        this.modelPanel.close();
+        this.recordingEditorPanel.close();
+        this.mainPanel.close();
         this.texturePanel.close();
 
         /* Remove a first time thing */
@@ -229,19 +215,7 @@ public class GuiDashboard extends GuiBase
             }
         }
 
-        this.mc.displayGuiScreen(this.mainMenu ? new GuiMainMenu() : null);
-    }
-
-    @Override
-    public void initGui()
-    {
-        /* If this GUI was opened in main menu, then the sidebar should 
-         * be hidden */
-        this.sidebar.setVisible(!this.mainMenu);
-        this.panel.flex().w.offset = this.mainMenu ? 0 : -32;
-        this.panel.flex().x.value = this.mainMenu ? 0 : 32;
-
-        super.initGui();
+        this.mc.displayGuiScreen(null);
     }
 
     @Override

@@ -87,6 +87,13 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     }
 
     @Override
+    protected void setupRenderer(CustomMorph morph)
+    {
+        super.setupRenderer(morph);
+        this.renderer.setRotation(180, 0);
+    }
+
+    @Override
     public void setPanel(GuiMorphPanel panel)
     {
         this.bbRenderer.limb = null;
@@ -113,7 +120,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.updateModelRenderer();
         this.bbRenderer.morph = morph;
         this.bbRenderer.limb = null;
-        this.bbRenderer.reset();
         this.bodyPart.setLimbs(morph.model.limbs.keySet());
     }
 

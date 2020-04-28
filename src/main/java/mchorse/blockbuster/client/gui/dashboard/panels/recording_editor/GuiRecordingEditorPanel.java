@@ -102,12 +102,12 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        this.records = new GuiRecordList(mc, this);
-        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).hTo(this.selector.flex());
-
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
         this.selector.flex().relative(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
+
+        this.records = new GuiRecordList(mc, this);
+        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).hTo(this.selector.flex());
 
         this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
         this.editor.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);

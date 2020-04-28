@@ -82,14 +82,14 @@ public class ClientProxy extends CommonProxy
     /**
      * Create dashboard GUI dynamically 
      */
-    public static GuiDashboard getDashboard(boolean mainMenu)
+    public static GuiDashboard getDashboard()
     {
         if (dashboard == null)
         {
             dashboard = new GuiDashboard();
         }
 
-        return dashboard.setMainMenu(mainMenu);
+        return dashboard;
     }
 
     /**

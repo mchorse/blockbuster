@@ -184,24 +184,24 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Inventory */
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
+        this.inventory.setVisible(false);
         this.add(this.inventory);
 
         for (int i = 0; i < this.slots.length; i++)
         {
             this.slots[i] = new GuiSlotElement(mc, i, this.inventory);
-            this.slots[i].flex().relative(this.area).wh(20, 20).anchor(0.5F, 0.5F);
+            this.slots[i].flex().relative(this.area).wh(24, 24).anchor(0.5F, 0.5F);
             this.add(this.slots[i]);
         }
 
-
         this.slots[0].flex().x(0.5F - 0.125F).y(0.5F, -15);
         this.slots[1].flex().x(0.5F - 0.125F).y(0.5F, 15);
-        this.slots[2].flex().x(0.5F + 0.125F).y(0.5F, 40);
+        this.slots[2].flex().x(0.5F + 0.125F).y(0.5F, 45);
         this.slots[3].flex().x(0.5F + 0.125F).y(0.5F, 15);
         this.slots[4].flex().x(0.5F + 0.125F).y(0.5F, -15);
-        this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -40);
+        this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -45);
 
-        this.inventory.flex().relative(this.area).x(0.5F).y(1F, -10).anchor(0.5F, 1F);
+        this.inventory.flex().relative(this.area).x(0.5F).y(1F, -10).wh(10 * 20, 5 * 20).anchor(0.5F, 1F);
     }
 
     private void pickItem(ItemStack stack)

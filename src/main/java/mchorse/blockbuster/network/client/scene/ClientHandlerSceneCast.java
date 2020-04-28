@@ -26,7 +26,7 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
 
         if (message.open && Minecraft.getMinecraft().currentScreen == null)
         {
-            ClientProxy.getDashboard(false).open();
+            ClientProxy.getDashboard().open();
             opened = true;
         }
 
