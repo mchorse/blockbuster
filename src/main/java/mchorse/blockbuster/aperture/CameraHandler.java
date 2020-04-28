@@ -1,5 +1,6 @@
 package mchorse.blockbuster.aperture;
 
+import mchorse.aperture.Aperture;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.client.gui.GuiCameraEditor;
@@ -87,17 +88,17 @@ public class CameraHandler
      */
     public static boolean isApertureLoaded()
     {
-        return Loader.isModLoaded("aperture");
+        return Loader.isModLoaded(Aperture.MOD_ID);
     }
 
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     public static void register()
     {
         ClientProxy.EVENT_BUS.register(new CameraHandler());
         MinecraftForge.EVENT_BUS.register(new CameraGUIHandler());
     }
 
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     public static void registerMessages()
     {
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
@@ -109,7 +110,7 @@ public class CameraHandler
     }
 
     @SideOnly(Side.CLIENT)
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     public static void reloadCameraEditor()
     {
         /* Reinitiate the recording GUI integration */
@@ -122,7 +123,7 @@ public class CameraHandler
         }
     }
 
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     public static void handlePlaybackItem(EntityPlayer player, NBTTagCompound tag)
     {
         /* To allow actors using playback item without a crash */
@@ -142,7 +143,7 @@ public class CameraHandler
     /* Event listeners */
 
     @SideOnly(Side.CLIENT)
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     @SubscribeEvent
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
@@ -165,7 +166,7 @@ public class CameraHandler
     }
 
     @SideOnly(Side.CLIENT)
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     @SubscribeEvent
     public void onCameraPlause(CameraEditorEvent.Playback event)
     {
@@ -178,7 +179,20 @@ public class CameraHandler
     }
 
     @SideOnly(Side.CLIENT)
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
+    @SubscribeEvent
+    public void onCameraRewind(CameraEditorEvent.Rewind event)
+    {
+        SceneLocation location = get();
+
+        if (location != null)
+        {
+            Dispatcher.sendToServer(new PacketScenePlay(location, PacketScenePlay.RESTART, event.position));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Method(modid = Aperture.MOD_ID)
     @SubscribeEvent
     public void onCameraOptions(CameraEditorEvent.Options event)
     {
@@ -186,7 +200,7 @@ public class CameraHandler
     }
 
     @SideOnly(Side.CLIENT)
-    @Method(modid = "aperture")
+    @Method(modid = Aperture.MOD_ID)
     @SubscribeEvent
     public void onCameraEditorInit(CameraEditorEvent.Init event)
     {
@@ -302,7 +316,7 @@ public class CameraHandler
     public static class CameraGUIHandler
     {
         @SideOnly(Side.CLIENT)
-        @Method(modid = "aperture")
+        @Method(modid = Aperture.MOD_ID)
         @SubscribeEvent
         public void onGuiOpen(GuiOpenEvent event)
         {
