@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -33,6 +34,7 @@ import java.util.Objects;
 public class ImageMorph extends AbstractMorph
 {
     public static final Matrix4f matrix = new Matrix4f();
+    public static Color temporary = new Color();
 
     /**
      * Image morph's texture 
@@ -63,6 +65,11 @@ public class ImageMorph extends AbstractMorph
      * Area to crop (x = left, w = right, y = top, h = bottom)
      */
     public Area cropping = new Area();
+
+    /**
+     * Color filter for the image morph
+     */
+    public int color = 0xffffffff;
 
     public ImageMorph()
     {
@@ -174,10 +181,10 @@ public class ImageMorph extends AbstractMorph
         int w = this.getWidth();
         int h = this.getHeight();
 
-        double x1 = 0;
-        double x2 = 0;
-        double y1 = 0;
-        double y2 = 0;
+        double x1;
+        double x2;
+        double y1;
+        double y2;
 
         double u1 = 1.0F - (flipX ? this.cropping.x : this.cropping.w) / (double) w;
         double u2 = (flipX ? this.cropping.w : this.cropping.x) / (double) w;
@@ -223,12 +230,13 @@ public class ImageMorph extends AbstractMorph
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        temporary.set(this.color, true);
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
-        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
@@ -268,6 +276,7 @@ public class ImageMorph extends AbstractMorph
             this.lighting = morph.lighting;
             this.billboard = morph.billboard;
             this.cropping.copy(morph.cropping);
+            this.color = morph.color;
         }
     }
 
@@ -286,6 +295,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
             result = result && image.cropping.equals(this.cropping);
+            result = result && image.color == this.color;
         }
 
         return result;
@@ -317,6 +327,7 @@ public class ImageMorph extends AbstractMorph
         if (this.cropping.w != 0) tag.setInteger("Right", this.cropping.w);
         if (this.cropping.y != 0) tag.setInteger("Top", this.cropping.y);
         if (this.cropping.h != 0) tag.setInteger("Bottom", this.cropping.h);
+        if (this.color != 0xffffffff) tag.setInteger("Color", this.color);
     }
 
     @Override
@@ -333,5 +344,6 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Right")) this.cropping.w = tag.getInteger("Right");
         if (tag.hasKey("Top")) this.cropping.y = tag.getInteger("Top");
         if (tag.hasKey("Bottom")) this.cropping.h = tag.getInteger("Bottom");
+        if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
     }
 }

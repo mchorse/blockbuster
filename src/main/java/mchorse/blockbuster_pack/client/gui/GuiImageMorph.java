@@ -4,6 +4,7 @@ import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -46,6 +47,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         public GuiTrackpadElement right;
         public GuiTrackpadElement top;
         public GuiTrackpadElement bottom;
+        public GuiColorElement color;
 
         public GuiImageMorphPanel(Minecraft mc, GuiImageMorph editor)
         {
@@ -97,6 +99,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.h = value.intValue());
             this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
+            this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
+            this.color.picker.editAlpha();
 
             this.texture.flex().relative(this.area).set(10, 10, 115, 20);
             this.scale.flex().relative(this.texture.resizer()).set(0, 25, 115, 20);
@@ -109,8 +113,9 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.right.flex().relative(this.left.resizer()).set(0, 25, 115, 20);
             this.top.flex().relative(this.right.resizer()).set(0, 25, 115, 20);
             this.bottom.flex().relative(this.top.resizer()).set(0, 25, 115, 20);
+            this.color.flex().relative(this.bottom.resizer()).set(0, 25, 115, 20);
 
-            this.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.left, this.right, this.top, this.bottom, this.picker);
+            this.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.left, this.right, this.top, this.bottom, this.color, this.picker);
         }
 
         @Override
@@ -127,6 +132,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.right.setValue(morph.cropping.w);
             this.top.setValue(morph.cropping.y);
             this.bottom.setValue(morph.cropping.h);
+
+            this.color.picker.setColor(morph.color);
         }
 
         @Override
