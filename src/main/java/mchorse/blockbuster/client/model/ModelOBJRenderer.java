@@ -252,11 +252,14 @@ public class ModelOBJRenderer extends ModelCustomRenderer
     {
         super.delete();
 
-        for (OBJDisplayList list : this.displayLists)
+        if (this.displayLists != null)
         {
-            if (list.id != -1)
+            for (OBJDisplayList list : this.displayLists)
             {
-                GL11.glDeleteLists(list.id, 1);
+                if (list.id != -1)
+                {
+                    GL11.glDeleteLists(list.id, 1);
+                }
             }
         }
 
