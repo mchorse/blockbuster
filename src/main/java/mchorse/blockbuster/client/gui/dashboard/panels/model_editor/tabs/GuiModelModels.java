@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
+import mchorse.blockbuster.api.resource.StreamEntry;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -132,7 +134,7 @@ public class GuiModelModels extends GuiModelEditorTab
 
             name = name.replaceAll(":", "_");
             model.fillInMissing();
-            this.panel.setModel(name, model);
+            this.panel.setModel(name, model, new ModelLazyLoaderJSON(new StreamEntry("", 0)));
         }
         catch (Exception e)
         {

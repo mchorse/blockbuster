@@ -165,8 +165,8 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     protected void drawUserModel(GuiContext context)
     {
         float partial = context.partialTicks;
-        float headYaw = this.yaw;
-        float headPitch = this.pitch;
+        float headYaw = this.yaw - 180;
+        float headPitch = -this.pitch;
 
         final float factor = 1 / 16F;
         float limbSwing = this.swing + partial;

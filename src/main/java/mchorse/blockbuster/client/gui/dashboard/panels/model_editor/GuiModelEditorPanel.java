@@ -102,19 +102,19 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.pickSkin = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_skin"), (b) ->
         {
-            if (!this.skinner.isVisible())
+            if (!this.skinner.hasParent())
             {
                 this.skinner.fill(this.renderTexture);
             }
 
-            this.skinner.toggleVisible();
+            this.skinner.resize();
+            this.add(this.skinner);
         });
         this.skinner = new GuiTexturePicker(mc, (rl) ->
         {
             this.renderTexture = rl;
             this.modelRenderer.texture = this.renderTexture;
         });
-        this.skinner.setVisible(false);
 
         this.pickSkin.flex().set(0, 0, 70, 20).relative(this.area).x(1, -76).y(1, -23);
         this.skinner.flex().relative(this.area).w(1, 0).h(1, 0);
@@ -176,7 +176,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.hitbox.flex().set(6, 0, 40, 11).relative(this.area).y(1, -16);
         this.looking.flex().set(50, 0, 40, 11).relative(this.hitbox.resizer());
 
-        this.add(this.swipe, this.running, this.items, this.hitbox, this.looking, this.skinner);
+        this.add(this.swipe, this.running, this.items, this.hitbox, this.looking);
 
         this.setModel("steve");
     }
@@ -305,15 +305,15 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         if (model != null)
         {
-            this.setModel(name, model.model);
+            this.setModel(name, model.model, ClientProxy.actorPack.pack.models.get(name));
         }
     }
 
-    public void setModel(String name, Model model)
+    public void setModel(String name, Model model, IModelLazyLoader loader)
     {
         this.modelName = name;
         this.model = model.clone();
-        this.modelEntry = ClientProxy.actorPack.pack.models.get(this.modelName);
+        this.modelEntry = loader;
 
         this.renderModel = this.buildModel();
         this.renderModel.pose = this.model.getPose("standing");
@@ -354,7 +354,6 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
         this.modelRenderer.pose = this.pose;
 
         this.limbs.fillData(this.model);
-
         this.options.fillData(this.model);
         this.poses.fillData(this.model);
         this.poses.setCurrent("standing");

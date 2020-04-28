@@ -67,7 +67,7 @@ public class GuiListModal extends GuiModal
             return;
         }
 
-        this.parent.removeFromParent();
+        this.removeFromParent();
 
         if (this.callback != null)
         {
