@@ -51,7 +51,7 @@ public class CommandDirector extends CommandBase
 
         String action = args[0];
         BlockPos pos = CommandBase.parseBlockPos(sender, args, 1, false);
-        TileEntityDirector tile = this.getDirector(server, pos);
+        TileEntityDirector tile = this.getDirector(sender, pos);
 
         if (tile == null)
         {
@@ -108,9 +108,9 @@ public class CommandDirector extends CommandBase
     /**
      * Get abstract director from block pos
      */
-    protected TileEntityDirector getDirector(MinecraftServer server, BlockPos pos)
+    protected TileEntityDirector getDirector(ICommandSender sender, BlockPos pos)
     {
-        TileEntity entity = server.getEntityWorld().getTileEntity(pos);
+        TileEntity entity = sender.getEntityWorld().getTileEntity(pos);
 
         if (entity instanceof TileEntityDirector)
         {
