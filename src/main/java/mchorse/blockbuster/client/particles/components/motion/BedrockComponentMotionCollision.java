@@ -61,7 +61,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 			double x = now.x - prev.x;
 			double y = now.y - prev.y;
 			double z = now.z - prev.z;
-			boolean veryBig = Math.abs(x) > 20 || Math.abs(y) > 20 || Math.abs(z) > 20;
+			boolean veryBig = Math.abs(x) > 10 || Math.abs(y) > 10 || Math.abs(z) > 10;
 
 			this.pos.setPos(now.x, now.y, now.z);
 
