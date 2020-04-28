@@ -28,8 +28,8 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	public MolangExpression sizeW = MolangParser.ZERO;
 	public MolangExpression sizeH = MolangParser.ZERO;
 	public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
-	public int textureWidth;
-	public int textureHeight;
+	public int textureWidth = 128;
+	public int textureHeight = 128;
 	public MolangExpression uvX = MolangParser.ZERO;
 	public MolangExpression uvY = MolangParser.ZERO;
 	public MolangExpression uvW = MolangParser.ZERO;
@@ -316,10 +316,12 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 
 			if (this.stretchFPS)
 			{
-				index = (int) ((particle.age + partialTicks) / particle.lifetime * max);
+				float lifetime = particle.lifetime <= 0 ? 0 : (particle.age + partialTicks) / particle.lifetime;
+
+				index = (int) (lifetime * max);
 			}
 
-			if (this.loop)
+			if (this.loop && max != 0)
 			{
 				index = index % max;
 			}
