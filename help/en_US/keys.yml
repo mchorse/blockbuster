@@ -4,9 +4,6 @@ key:
         # Categories
         category: Blockbuster
         
-        dashboard: Dashboard
-        model_editor: Model Editor
-        marker: Tick marker
         plause_director: Play/stop director
         record_director: Record director replay
         pause_director: Pause director replay

@@ -4,13 +4,13 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.client.ClientHandlerActorPause;
 import mchorse.blockbuster.network.client.ClientHandlerCaption;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
-import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.ClientHandlerStructureList;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
+import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunStuck;
 import mchorse.blockbuster.network.client.recording.ClientHandlerFrames;
 import mchorse.blockbuster.network.client.recording.ClientHandlerPlayback;
@@ -31,7 +31,6 @@ import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketReloadModels;
-import mchorse.blockbuster.network.common.PacketTickMarker;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
@@ -74,7 +73,6 @@ import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
 import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerStructureListRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
-import mchorse.blockbuster.network.server.ServerHandlerTickMarker;
 import mchorse.blockbuster.network.server.recording.ServerHandlerFramesChunk;
 import mchorse.blockbuster.network.server.recording.ServerHandlerPlayback;
 import mchorse.blockbuster.network.server.recording.ServerHandlerRequestFrames;
@@ -175,9 +173,6 @@ public class Dispatcher
             register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
             register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
             register(PacketStructureListRequest.class, ServerHandlerStructureListRequest.class, Side.SERVER);
-
-            /* Miscellaneous */
-            register(PacketTickMarker.class, ServerHandlerTickMarker.class, Side.SERVER);
 
             if (CameraHandler.isApertureLoaded())
             {
