@@ -1,7 +1,5 @@
 package mchorse.blockbuster.commands.record;
 
-import java.util.List;
-
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.recording.RecordUtils;
 import mchorse.blockbuster.recording.actions.Action;
@@ -11,14 +9,15 @@ import mchorse.blockbuster.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.Vec3d;
+
+import java.util.List;
 
 /**
  * Command /record origin
  *
- * This command is responsible for changing the origin of the player 
- * recording.
+ * This command is responsible for changing the origin of player recordings.
  */
 public class SubCommandRecordOrigin extends SubCommandRecordBase
 {
@@ -45,12 +44,12 @@ public class SubCommandRecordOrigin extends SubCommandRecordBase
     {
         String filename = args[0];
 
-        EntityPlayer player = getCommandSenderAsPlayer(sender);
+        Vec3d position = sender.getPositionVector();
         Record record = CommandRecord.getRecord(filename);
 
-        double x = player.posX;
-        double y = player.posY;
-        double z = player.posZ;
+        double x = position.x;
+        double y = position.y;
+        double z = position.z;
 
         double rotation = args.length >= 2 ? CommandBase.parseDouble(args[1]) : 0;
 
