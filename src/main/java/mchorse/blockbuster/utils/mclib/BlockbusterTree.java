@@ -1,4 +1,4 @@
-package mchorse.blockbuster.utils;
+package mchorse.blockbuster.utils.mclib;
 
 import java.io.File;
 

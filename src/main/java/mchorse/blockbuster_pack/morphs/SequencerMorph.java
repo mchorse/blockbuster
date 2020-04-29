@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import mchorse.blockbuster.api.ModelPose;
-import mchorse.blockbuster.utils.BBIcons;
+import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;

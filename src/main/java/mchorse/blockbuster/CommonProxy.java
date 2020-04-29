@@ -30,7 +30,7 @@ import mchorse.blockbuster.recording.RecordManager;
 import mchorse.blockbuster.recording.capturing.ActionHandler;
 import mchorse.blockbuster.recording.capturing.DamageControlManager;
 import mchorse.blockbuster.recording.scene.SceneManager;
-import mchorse.blockbuster.utils.BlockbusterResourceTransformer;
+import mchorse.blockbuster.utils.mclib.BlockbusterResourceTransformer;
 import mchorse.blockbuster_pack.BlockbusterFactory;
 import mchorse.blockbuster_pack.MetamorphHandler;
 import mchorse.mclib.utils.resources.RLUtils;

@@ -1,6 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
-import mchorse.blockbuster.utils.BBIcons;
+import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -14,8 +14,6 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
-import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;

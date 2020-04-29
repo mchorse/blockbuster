@@ -1,4 +1,4 @@
-package mchorse.blockbuster.utils;
+package mchorse.blockbuster.utils.mclib;
 
 import mchorse.mclib.client.gui.utils.Icon;
 import net.minecraft.util.ResourceLocation;

@@ -85,7 +85,6 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
-        EntityPlayer player = Minecraft.getMinecraft().player;
         GuiElement element = null;
 
         this.subChildren = new GuiElement(mc);
@@ -186,13 +185,13 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         /* Inventory */
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
         this.inventory.setVisible(false);
-        this.add(this.inventory);
+        this.subChildren.add(this.inventory);
 
         for (int i = 0; i < this.slots.length; i++)
         {
             this.slots[i] = new GuiSlotElement(mc, i, this.inventory);
             this.slots[i].flex().relative(this.area).wh(24, 24).anchor(0.5F, 0.5F);
-            this.add(this.slots[i]);
+            this.subChildren.add(this.slots[i]);
         }
 
         this.slots[0].flex().x(0.5F - 0.125F).y(0.5F, -15);

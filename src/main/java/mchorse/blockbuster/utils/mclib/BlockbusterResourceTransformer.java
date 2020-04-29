@@ -1,4 +1,4 @@
-package mchorse.blockbuster.utils;
+package mchorse.blockbuster.utils.mclib;
 
 import mchorse.mclib.utils.resources.IResourceTransformer;
 import org.apache.commons.lang3.StringUtils;

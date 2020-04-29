@@ -6,6 +6,7 @@ import mchorse.blockbuster.commands.CommandOnHead;
 import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.blockbuster.utils.mclib.ValueButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
 import mchorse.mclib.config.ConfigBuilder;
@@ -197,7 +198,9 @@ public class Blockbuster
         ConfigBuilder builder = event.createBuilder(MOD_ID);
 
         /* General */
-        generalFirstTime = builder.category("general").getBoolean("show_first_time_modal", true);
+        builder.category("general").register(new ValueButtons("buttons"));
+
+        generalFirstTime = builder.getBoolean("show_first_time_modal", true);
         disableTPPlaybackButton = builder.getBoolean("disable_teleport_playback_button", false);
         debugPlaybackTicks = builder.getBoolean("debug_playback_ticks", false);
         chromaSky = builder.getBoolean("green_screen_sky", false);

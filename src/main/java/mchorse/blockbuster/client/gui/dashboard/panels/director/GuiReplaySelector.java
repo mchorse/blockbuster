@@ -3,7 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 import java.util.function.Consumer;
 
 import mchorse.blockbuster.recording.scene.Scene;
-import mchorse.blockbuster.utils.BBIcons;
+import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 

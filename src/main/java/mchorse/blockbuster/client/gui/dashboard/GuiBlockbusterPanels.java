@@ -5,7 +5,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
-import mchorse.blockbuster.utils.BBIcons;
+import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.events.RegisterDashboardPanels;
