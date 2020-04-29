@@ -1,31 +1,27 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.recording.actions.MorphAction;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 
 public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 {
-    public GuiDashboard dashboard;
     public GuiButtonElement pick;
 
-    public GuiMorphActionPanel(Minecraft mc, GuiDashboard dashboard)
+    public GuiMorphActionPanel(Minecraft mc)
     {
         super(mc);
 
-        this.dashboard = dashboard;
         this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
         {
-            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            this.dashboard.morphs.resize();
-            this.add(this.dashboard.morphs);
+            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            ClientProxy.panels.morphs.resize();
+            this.add(ClientProxy.panels.morphs);
         });
         this.pick.flex().relative(this.area).set(0, 5, 60, 20).x(0.5F, -30);
 
@@ -43,7 +39,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     {
         super.fill(action);
 
-        this.dashboard.morphs.setSelected(action.morph);
+        ClientProxy.panels.morphs.setSelected(action.morph);
     }
 
     @Override

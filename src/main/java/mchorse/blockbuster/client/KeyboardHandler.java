@@ -3,7 +3,7 @@ package mchorse.blockbuster.client;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.GuiGun;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -51,11 +51,10 @@ public class KeyboardHandler
     @SubscribeEvent
     public void onUserLogOut(ClientDisconnectionFromServerEvent event)
     {
-        GuiDashboard.reset();
         ClientProxy.manager.reset();
         ClientProxy.recordingOverlay.setVisible(false);
 
-        Minecraft.getMinecraft().addScheduledTask(() -> StructureMorph.cleanUp());
+        Minecraft.getMinecraft().addScheduledTask(StructureMorph::cleanUp);
     }
 
     /**
@@ -66,31 +65,25 @@ public class KeyboardHandler
     {
         if (this.plauseDirector.isPressed())
         {
-            GuiDashboard dash = ClientProxy.dashboard;
-
-            if (dash != null && dash.directorPanel != null)
+            if (ClientProxy.panels.directorPanel != null)
             {
-                dash.directorPanel.plause();
+                ClientProxy.panels.directorPanel.plause();
             }
         }
 
         if (this.recordDirector.isPressed())
         {
-            GuiDashboard dash = ClientProxy.dashboard;
-
-            if (dash != null && dash.directorPanel != null)
+            if (ClientProxy.panels.directorPanel != null)
             {
-                dash.directorPanel.record();
+                ClientProxy.panels.directorPanel.record();
             }
         }
 
         if (this.pauseDirector.isPressed())
         {
-            GuiDashboard dash = ClientProxy.dashboard;
-
-            if (dash != null && dash.directorPanel != null)
+            if (ClientProxy.panels.directorPanel != null)
             {
-                dash.directorPanel.pause();
+                ClientProxy.panels.directorPanel.pause();
             }
         }
 

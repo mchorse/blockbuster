@@ -26,9 +26,9 @@ public class ClientHandlerActions extends ClientMessageHandler<PacketActions>
         {
             record.actions = message.actions;
 
-            if (ClientProxy.dashboard != null && ClientProxy.dashboard.recordingEditorPanel != null && message.open)
+            if (ClientProxy.panels.recordingEditorPanel != null && message.open)
             {
-                ClientProxy.dashboard.recordingEditorPanel.selectRecord(record);
+                ClientProxy.panels.recordingEditorPanel.selectRecord(record);
             }
         }
     }

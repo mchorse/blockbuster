@@ -13,9 +13,9 @@ public class ClientHandlerActionList extends ClientMessageHandler<PacketActionLi
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketActionList message)
     {
-        if (ClientProxy.dashboard != null)
+        if (ClientProxy.panels.recordingEditorPanel != null)
         {
-            ClientProxy.dashboard.recordingEditorPanel.addRecords(message.records);
+            ClientProxy.panels.recordingEditorPanel.addRecords(message.records);
         }
     }
 }

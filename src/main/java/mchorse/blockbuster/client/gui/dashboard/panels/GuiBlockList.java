@@ -3,8 +3,6 @@ package mchorse.blockbuster.client.gui.dashboard.panels;
 import java.util.List;
 import java.util.function.Consumer;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;

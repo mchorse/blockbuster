@@ -1,7 +1,7 @@
 package mchorse.blockbuster.network.client.scene;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.network.common.scene.PacketScenes;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -14,9 +14,9 @@ public class ClientHandlerScenes extends ClientMessageHandler<PacketScenes>
 	@SideOnly(Side.CLIENT)
 	public void run(EntityPlayerSP entityPlayerSP, PacketScenes packetScenes)
 	{
-		GuiDashboard dashboard = ClientProxy.dashboard;
+		GuiBlockbusterPanels dashboard = ClientProxy.panels;
 
-		if (dashboard != null && dashboard.directorPanel != null)
+		if (dashboard.directorPanel != null)
 		{
 			dashboard.directorPanel.scenes.add(packetScenes.scenes);
 		}

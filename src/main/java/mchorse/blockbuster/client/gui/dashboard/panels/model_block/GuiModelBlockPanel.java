@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
@@ -16,6 +15,8 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -142,9 +143,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         /* Buttons */
         this.subChildren.add(element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
         {
-            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            this.dashboard.morphs.resize();
-            this.add(this.dashboard.morphs);
+            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            ClientProxy.panels.morphs.resize();
+            this.add(ClientProxy.panels.morphs);
         }));
         this.subChildren.add(this.one = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.one"), false, (button) -> this.toggleOne()));
         this.one.tooltip(IKey.lang("blockbuster.gui.model_block.one_tooltip"), Direction.LEFT);
@@ -177,10 +178,10 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
 
         /* Model blocks */
         this.add(this.list = new GuiModelBlockList(mc, IKey.lang("blockbuster.gui.model_block.title"), (tile) -> this.setModelBlock(tile.get(0))));
-        this.list.flex().set(0, 0, 120, 0).relative(this.area).h(1F, 0).x(1F, -120);
+        this.list.flex().set(0, 0, 120, 0).relative(this).h(1F, 0).x(1F, -120);
 
         this.add(element = new GuiIconElement(mc, MMIcons.BLOCK, (b) -> this.list.toggleVisible()));
-        element.flex().set(0, 2, 24, 24).relative(this.area).x(1F, -28);
+        element.flex().set(0, 2, 24, 24).relative(this).x(1F, -28);
 
         /* Inventory */
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
@@ -221,15 +222,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     }
 
     @Override
-    public boolean needsBackground()
-    {
-        return false;
-    }
-
-    @Override
     public void appear()
     {
-        this.dashboard.morphs.callback = (morph) ->
+        ClientProxy.panels.morphs.callback = (morph) ->
         {
             if (this.model != null)
             {
@@ -257,12 +252,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     {
         if (this.model != null)
         {
-            /* Update model's morph */
-            if (this.model != null)
-            {
-                this.dashboard.morphs.finish();
-            }
-
+            ClientProxy.panels.morphs.finish();
             Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
         }
     }
@@ -322,7 +312,7 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     {
         if (this.model != null)
         {
-            this.dashboard.morphs.setSelected(this.model.morph);
+            ClientProxy.panels.morphs.setSelected(this.model.morph);
 
             this.yaw.setValue(this.model.rotateYawHead);
             this.pitch.setValue(this.model.rotatePitch);
@@ -367,9 +357,9 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     @Override
     public void draw(GuiContext context)
     {
-        if (this.model != null && !this.dashboard.morphs.hasParent())
+        if (this.model != null && !ClientProxy.panels.morphs.hasParent())
         {
-            AbstractMorph morph = this.dashboard.morphs.getSelected();
+            AbstractMorph morph = ClientProxy.panels.morphs.getSelected();
 
             if (morph != null)
             {

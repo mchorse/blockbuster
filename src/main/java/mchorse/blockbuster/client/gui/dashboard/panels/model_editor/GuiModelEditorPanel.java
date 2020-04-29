@@ -7,8 +7,6 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelModels;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
@@ -24,6 +22,8 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -34,7 +34,6 @@ import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 
@@ -97,6 +96,7 @@ public class GuiModelEditorPanel extends GuiDashboardPanel
 
         this.modelRenderer = new GuiBBModelRenderer(mc);
         this.modelRenderer.picker(this::setLimb);
+        this.modelRenderer.setRotation(180, 0);
         this.modelRenderer.flex().relative(this.area).w(1, 0).h(1, 0);
         this.add(this.modelRenderer);
 

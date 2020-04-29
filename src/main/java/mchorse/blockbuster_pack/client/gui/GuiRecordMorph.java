@@ -84,9 +84,9 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 
             this.records.clear();
 
-            if (ClientProxy.dashboard != null && ClientProxy.dashboard.recordingEditorPanel != null)
+            if (ClientProxy.panels.recordingEditorPanel != null)
             {
-                this.records.list.add(ClientProxy.dashboard.recordingEditorPanel.records.records.list.getList());
+                this.records.list.add(ClientProxy.panels.recordingEditorPanel.records.records.list.getList());
                 this.records.filter("", true);
             }
 

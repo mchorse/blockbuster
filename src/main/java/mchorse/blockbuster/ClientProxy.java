@@ -1,10 +1,5 @@
 package mchorse.blockbuster;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
 import mchorse.blockbuster.api.ModelHandler;
@@ -12,8 +7,7 @@ import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
-import mchorse.blockbuster.client.gui.MenuHandler;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.render.RenderActor;
 import mchorse.blockbuster.client.render.RenderGunProjectile;
 import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
@@ -26,12 +20,13 @@ import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
-import mchorse.blockbuster.recording.capturing.FrameHandler;
 import mchorse.blockbuster.recording.RecordManager;
+import mchorse.blockbuster.recording.capturing.FrameHandler;
 import mchorse.blockbuster.utils.BlockbusterTree;
 import mchorse.blockbuster_pack.client.render.RenderCustomActor;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
+import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -40,9 +35,7 @@ import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
@@ -59,6 +52,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Client proxy
  *
@@ -70,7 +68,7 @@ public class ClientProxy extends CommonProxy
 {
     public static ActorsPack actorPack;
     public static GuiRecordingOverlay recordingOverlay;
-    public static GuiDashboard dashboard;
+    public static GuiBlockbusterPanels panels;
 
     public static RecordManager manager = new RecordManager();
 
@@ -78,19 +76,6 @@ public class ClientProxy extends CommonProxy
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
     public static BlockbusterTree tree;
-
-    /**
-     * Create dashboard GUI dynamically 
-     */
-    public static GuiDashboard getDashboard()
-    {
-        if (dashboard == null)
-        {
-            dashboard = new GuiDashboard();
-        }
-
-        return dashboard;
-    }
 
     /**
      * Register mod items, blocks, tile entites and entities, load item,
@@ -212,10 +197,11 @@ public class ClientProxy extends CommonProxy
         super.load(event);
 
         /* Event listeners */
-        MinecraftForge.EVENT_BUS.register(new MenuHandler());
         MinecraftForge.EVENT_BUS.register(new FrameHandler());
         MinecraftForge.EVENT_BUS.register(keys = new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler(recordingOverlay));
+
+        McLib.EVENT_BUS.register(panels = new GuiBlockbusterPanels());
 
         if (CameraHandler.isApertureLoaded())
         {

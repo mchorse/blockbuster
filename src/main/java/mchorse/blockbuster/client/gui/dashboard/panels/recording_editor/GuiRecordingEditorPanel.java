@@ -1,7 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockActionPanel;
@@ -45,6 +44,8 @@ import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiLabelSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -251,7 +252,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
             this.panels.put(MountingAction.class, new GuiMountingActionPanel(this.mc));
             this.panels.put(InteractBlockAction.class, new GuiBlockActionPanel<InteractBlockAction>(this.mc));
             this.panels.put(BreakBlockAction.class, new GuiBreakBlockActionPanel(this.mc));
-            this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc, this.dashboard));
+            this.panels.put(MorphAction.class, new GuiMorphActionPanel(this.mc));
             this.panels.put(AttackAction.class, new GuiDamageActionPanel(this.mc));
             this.panels.put(DamageAction.class, new GuiDamageActionPanel(this.mc));
             this.panels.put(CommandAction.class, new GuiCommandActionPanel(this.mc));
@@ -266,7 +267,7 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     @Override
     public void appear()
     {
-        this.dashboard.morphs.callback = (morph) ->
+        ClientProxy.panels.morphs.callback = (morph) ->
         {
             if (this.editor.delegate != null)
             {

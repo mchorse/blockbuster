@@ -1,8 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.client.gui.dashboard.panels.GuiDashboardPanel;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
@@ -27,13 +27,14 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -194,9 +195,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         /* Additional utility buttons */
         element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
         {
-            this.dashboard.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            this.dashboard.morphs.resize();
-            this.add(this.dashboard.morphs);
+            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
+            ClientProxy.panels.morphs.resize();
+            this.add(ClientProxy.panels.morphs);
         });
         element.flex().set(10, 70, 80, 20).relative(this.area).x(0.5F, -40).y(1, -86);
 
@@ -313,7 +314,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     @Override
     public void appear()
     {
-        this.dashboard.morphs.callback = (morph) -> this.setMorph(morph);
+        ClientProxy.panels.morphs.callback = this::setMorph;
 
         if (!this.location.isEmpty())
         {
@@ -342,7 +343,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             if (this.replay != null)
             {
-                this.dashboard.morphs.finish();
+                ClientProxy.panels.morphs.finish();
             }
 
             if (this.location.isDirector())
@@ -411,7 +412,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.teleportBack.toggled(this.replay.teleportBack);
         this.health.setValue(this.replay.health);
 
-        this.dashboard.morphs.setSelected(this.replay.morph);
+        ClientProxy.panels.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
     }
 
@@ -529,7 +530,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel
             playback.setScene(this.location.getFilename());
         }
 
-        this.dashboard.close();
         this.mc.displayGuiScreen(playback);
     }
 
@@ -537,9 +537,9 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         if (this.replay != null && !this.replay.id.isEmpty())
         {
-            this.dashboard.openPanel(this.dashboard.recordingEditorPanel);
-            this.dashboard.recordingEditorPanel.selectRecord(this.replay.id);
-            this.dashboard.recordingEditorPanel.records.setVisible(false);
+            this.dashboard.panels.setPanel(ClientProxy.panels.recordingEditorPanel);
+            ClientProxy.panels.recordingEditorPanel.selectRecord(this.replay.id);
+            ClientProxy.panels.recordingEditorPanel.records.setVisible(false);
         }
     }
 

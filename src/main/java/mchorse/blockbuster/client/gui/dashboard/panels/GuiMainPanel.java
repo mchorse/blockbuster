@@ -1,23 +1,19 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-
 /**
  * Main panel GUI element
  * 
  * This panel is basically used as information section and also as 
  * configuration panel for commonly used config options.
  */
-public class GuiMainPanel extends GuiDashboardPanel
+public class GuiMainPanel
 {
-    public GuiMainPanel(Minecraft mc, GuiDashboard dashboard)
+    /*
+    public GuiMainPanel(Minecraft mc, GuiBlockbusterPanels dashboard)
     {
         super(mc, dashboard);
 
-        /* GuiElement element = this.first = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
+        GuiElement element = this.first = new GuiButtonElement(mc, I18n.format("blockbuster.gui.main.wiki"), (button) -> GuiUtils.openWebLink(Blockbuster.WIKI_URL()));
         Resizer resizer = new Resizer().set(0, 40, 100, 20).parent(this.area).relative(previous.resizer());
         this.children.add(element.setResizer(resizer));
 
@@ -38,22 +34,7 @@ public class GuiMainPanel extends GuiDashboardPanel
 
         element = new GuiIconElement(mc, GuiDashboard.GUI_ICONS, 16, 0, 16, 16, (button) -> GuiUtils.openWebLink((Blockbuster.TWITTER_URL()));
         resizer = new Resizer().set(20, 0, 16, 16).relative(resizer);
-        this.children.add(element.setResizer(resizer)); */
-    }
-
-    @Override
-    public void resize()
-    {
-        /* if (GuiBase.getCurrent().screen.height > 260)
-        {
-            this.first.flex().set(0, 40, 100, 20).relative(this.last.resizer());
-        }
-        else
-        {
-            this.first.flex().set(0, 25, 100, 20).relative(this.area).x(1, -110);
-        } */
-
-        super.resize();
+        this.children.add(element.setResizer(resizer));
     }
 
     @Override
@@ -65,4 +46,5 @@ public class GuiMainPanel extends GuiDashboardPanel
 
         super.draw(context);
     }
+    */
 }

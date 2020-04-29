@@ -4,9 +4,9 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
-import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -62,12 +62,12 @@ public class GuiHandler implements IGuiHandler
         else if (ID == MODEL_BLOCK)
         {
             TileEntityModel model = (TileEntityModel) world.getTileEntity(new BlockPos(x, y, z));
-            GuiDashboard dashboard = ClientProxy.getDashboard();
 
-            dashboard.createWorldPanels(dashboard.mc, true);
-            dashboard.onOpen();
-            dashboard.openPanel(dashboard.modelPanel);
-            dashboard.modelPanel.openModelBlock(model);
+            GuiDashboard dashboard = GuiDashboard.get();
+            GuiBlockbusterPanels panels = ClientProxy.panels;
+
+            dashboard.panels.setPanel(panels.modelPanel);
+            panels.modelPanel.openModelBlock(model);
 
             return dashboard;
         }

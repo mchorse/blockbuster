@@ -19,4 +19,6 @@ public class BBIcons
 	public static Icon HELD_ITEMS = new Icon(ICONS, 144, 0);
 	public static Icon BULLET = new Icon(ICONS, 160, 0);
 	public static Icon PARTICLE = new Icon(ICONS, 176, 0);
+	public static Icon SCENE = new Icon(ICONS, 192, 0);
+	public static Icon EDITOR = new Icon(ICONS, 208, 0);
 }

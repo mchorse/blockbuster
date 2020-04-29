@@ -40,7 +40,7 @@ public class GuiRecordList extends GuiElement
 
     public void add(List<String> records)
     {
-        List<Replay> replays = ClientProxy.dashboard.directorPanel.getReplays();
+        List<Replay> replays = ClientProxy.panels.directorPanel.getReplays();
         boolean loadAll = replays == null || !CameraHandler.canSync() || !(Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor);
 
         if (loadAll)

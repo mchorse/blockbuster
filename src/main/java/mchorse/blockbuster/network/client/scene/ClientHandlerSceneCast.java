@@ -1,8 +1,9 @@
 package mchorse.blockbuster.network.client.scene;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -26,7 +27,7 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
 
         if (message.open && Minecraft.getMinecraft().currentScreen == null)
         {
-            ClientProxy.getDashboard().open();
+            Minecraft.getMinecraft().displayGuiScreen(GuiDashboard.get());
             opened = true;
         }
 
@@ -38,24 +39,22 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
 
             if (opened)
             {
-                dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.openScene(message.location);
+                dashboard.panels.setPanel(ClientProxy.panels.directorPanel);
+                ClientProxy.panels.directorPanel.openScene(message.location);
             }
             else
             {
-                dashboard.openPanel(dashboard.directorPanel);
-                dashboard.directorPanel.setScene(message.location);
+                dashboard.panels.setPanel(ClientProxy.panels.directorPanel);
+                ClientProxy.panels.directorPanel.setScene(message.location);
             }
         }
-        else if (ClientProxy.dashboard != null)
+        else if (GuiDashboard.dashboard != null)
         {
-            GuiDashboard dashboard = ClientProxy.dashboard;
+            GuiBlockbusterPanels dashboard = ClientProxy.panels;
 
             if (!message.open)
             {
-                dashboard.createWorldPanels(Minecraft.getMinecraft(), false);
-                dashboard.onOpen();
-                dashboard.openPanel(dashboard.directorPanel);
+                GuiDashboard.get().panels.setPanel(dashboard.directorPanel);
                 dashboard.directorPanel.setScene(message.location);
             }
             else

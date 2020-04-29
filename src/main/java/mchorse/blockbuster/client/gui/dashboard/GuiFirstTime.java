@@ -2,8 +2,10 @@ package mchorse.blockbuster.client.gui.dashboard;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
@@ -28,7 +30,6 @@ public class GuiFirstTime extends GuiElement
 	private List<String> welcome;
 	private List<String> social;
 
-	private final GuiDashboard dashboard;
 	private final Overlay overlay;
 
 	public static boolean shouldOpen()
@@ -36,11 +37,36 @@ public class GuiFirstTime extends GuiElement
 		return Blockbuster.generalFirstTime.get();
 	}
 
-	public GuiFirstTime(Minecraft mc, GuiDashboard dashboard, Overlay overlay)
+	public static void addOverlay(GuiDashboard dashboard)
+	{
+		if (GuiFirstTime.shouldOpen())
+		{
+			boolean alreadyHas = false;
+
+			for (IGuiElement element : dashboard.root.getChildren())
+			{
+				if (element instanceof GuiFirstTime.Overlay)
+				{
+					alreadyHas = true;
+
+					break;
+				}
+			}
+
+			if (!alreadyHas)
+			{
+				GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(dashboard.mc);
+
+				overlay.flex().relative(dashboard.viewport).w(1, 0).h(1, 0);
+				dashboard.root.add(overlay);
+			}
+		}
+	}
+
+	public GuiFirstTime(Minecraft mc, Overlay overlay)
 	{
 		super(mc);
 
-		this.dashboard = dashboard;
 		this.overlay = overlay;
 
 		this.close = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.done"), (button) -> this.close());
@@ -74,7 +100,7 @@ public class GuiFirstTime extends GuiElement
 
 	private void close()
 	{
-		this.dashboard.root.remove(this.overlay);
+		this.overlay.removeFromParent();
 
 		/* Don't show anymore this modal */
 		Blockbuster.generalFirstTime.set(false);
@@ -130,11 +156,11 @@ public class GuiFirstTime extends GuiElement
 
 	public static class Overlay extends GuiElement
 	{
-		public Overlay(Minecraft mc, GuiDashboard dashboard)
+		public Overlay(Minecraft mc)
 		{
 			super(mc);
 
-			GuiFirstTime firstTime = new GuiFirstTime(mc, dashboard, this);
+			GuiFirstTime firstTime = new GuiFirstTime(mc, this);
 
 			firstTime.flex().set(0, 0, 200, 250).relative(this.area).x(0.5F, -100).y(0.5F, -125);
 

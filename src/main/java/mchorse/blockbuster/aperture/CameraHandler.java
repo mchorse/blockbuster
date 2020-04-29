@@ -16,7 +16,7 @@ import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
-import mchorse.blockbuster.client.gui.dashboard.GuiDashboard;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.network.Dispatcher;
@@ -27,6 +27,7 @@ import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
+import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
@@ -154,7 +155,7 @@ public class CameraHandler
             Dispatcher.sendToServer(new PacketSceneGoto(location, event.position, CameraHandler.actions));
         }
 
-        GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.dashboard;
+        GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
 
         if (dashboard != null && dashboard.recordingEditorPanel.selector.isVisible())
         {
@@ -204,11 +205,9 @@ public class CameraHandler
     @SubscribeEvent
     public void onCameraEditorInit(CameraEditorEvent.Init event)
     {
+        Minecraft mc = Minecraft.getMinecraft();
         GuiCameraEditor editor = event.editor;
-        GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard();
-
-        dashboard.createWorldPanels(dashboard.mc, false);
-
+        GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
         GuiRecordingEditorPanel record = dashboard.recordingEditorPanel;
 
         /* Just in case */
@@ -217,7 +216,7 @@ public class CameraHandler
             return;
         }
 
-        GuiElement elements = new GuiElement(dashboard.mc);
+        GuiElement elements = new GuiElement(mc);
         Consumer<GuiIconElement> refresh = (b) ->
         {
             boolean show = elements.isVisible();
@@ -230,7 +229,7 @@ public class CameraHandler
             editor.root.resize();
         };
 
-        GuiIconElement toggle = new GuiIconElement(dashboard.mc, Icons.UPLOAD, (b) ->
+        GuiIconElement toggle = new GuiIconElement(mc, Icons.UPLOAD, (b) ->
         {
             if (!record.selector.isVisible())
             {
@@ -258,7 +257,7 @@ public class CameraHandler
                 editor.top.remove(cameraEditorElements);
             }
 
-            cameraEditorElements = new GuiElement(dashboard.mc);
+            cameraEditorElements = new GuiElement(mc);
             editor.top.remove(editor.timeline);
             editor.top.add(cameraEditorElements);
 
@@ -352,14 +351,10 @@ public class CameraHandler
             if (toOpenCamera)
             {
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
-                GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard();
-
-                dashboard.createWorldPanels(dashboard.mc, true);
-                dashboard.onOpen();
-
+                GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
                 GuiRecordingEditorPanel panel = dashboard.recordingEditorPanel;
 
-                dashboard.openPanel(panel);
+                GuiDashboard.get().panels.setPanel(panel);
                 panel.selector.flex().relative(editor.viewport);
                 panel.editor.flex().relative(editor.viewport);
                 panel.records.flex().relative(editor.viewport);
@@ -368,7 +363,7 @@ public class CameraHandler
             }
             else if (current instanceof GuiCameraEditor)
             {
-                GuiDashboard dashboard = mchorse.blockbuster.ClientProxy.getDashboard();
+                GuiBlockbusterPanels dashboard = mchorse.blockbuster.ClientProxy.panels;
 
                 dashboard.recordingEditorPanel.save();
             }
