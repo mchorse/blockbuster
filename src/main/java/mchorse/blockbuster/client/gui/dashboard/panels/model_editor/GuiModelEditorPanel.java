@@ -96,7 +96,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.modelRenderer = new GuiBBModelRenderer(mc);
         this.modelRenderer.picker(this::setLimb);
-        this.modelRenderer.setRotation(180, 0);
         this.modelRenderer.flex().relative(this.area).w(1, 0).h(1, 0);
         this.add(this.modelRenderer);
 

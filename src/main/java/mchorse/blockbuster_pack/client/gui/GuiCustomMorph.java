@@ -86,7 +86,6 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     protected void setupRenderer(CustomMorph morph)
     {
         super.setupRenderer(morph);
-        this.renderer.setRotation(180, 0);
     }
 
     @Override

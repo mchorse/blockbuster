@@ -164,7 +164,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     protected void drawUserModel(GuiContext context)
     {
         float partial = context.partialTicks;
-        float headYaw = this.yaw - 180;
+        float headYaw = this.yaw;
         float headPitch = -this.pitch;
 
         final float factor = 1 / 16F;
@@ -183,6 +183,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.scale(model.model.scale[0], model.model.scale[1], model.model.scale[2]);
         GlStateManager.scale(-1.0F * scale, -1.0F * scale, 1.0F * scale);
         GlStateManager.translate(0.0F, -1.501F, 0.0F);
+        GlStateManager.rotate(180, 0, 1, 0);
 
         if (this.texture != null)
         {
