@@ -7,6 +7,7 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelModels;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
@@ -23,7 +24,6 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -42,7 +42,7 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Objects;
 
-public class GuiModelEditorPanel extends GuiDashboardPanel
+public class GuiModelEditorPanel extends GuiBlockbusterPanel
 {
     /* GUI stuff */
     public GuiBBModelRenderer modelRenderer;

@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
 import mchorse.blockbuster.network.Dispatcher;
@@ -16,7 +17,6 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -24,14 +24,13 @@ import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiModelBlockPanel extends GuiDashboardPanel
+public class GuiModelBlockPanel extends GuiBlockbusterPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
 
@@ -176,11 +175,14 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         this.order.flex().set(40, -22, 40, 20).relative(this.rx.resizer());
 
         /* Model blocks */
-        this.add(this.list = new GuiModelBlockList(mc, IKey.lang("blockbuster.gui.model_block.title"), (tile) -> this.setModelBlock(tile.get(0))));
-        this.list.flex().set(0, 0, 120, 0).relative(this).h(1F, 0).x(1F, -120);
+        this.list = new GuiModelBlockList(mc, IKey.lang("blockbuster.gui.model_block.title"), (tile) -> this.setModelBlock(tile.get(0)));
+        this.list.flex().relative(this.flex()).set(0, 0, 120, 0).h(1F).x(1F, -120);
+        this.add(this.list);
 
-        this.add(element = new GuiIconElement(mc, MMIcons.BLOCK, (b) -> this.list.toggleVisible()));
+        element = new GuiIconElement(mc, MMIcons.BLOCK, (b) -> this.list.toggleVisible());
         element.flex().set(0, 2, 24, 24).relative(this).x(1F, -28);
+
+        this.add(element);
 
         /* Inventory */
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
@@ -229,6 +231,8 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
     @Override
     public void appear()
     {
+        super.appear();
+
         ClientProxy.panels.morphs.callback = (morph) ->
         {
             if (this.model != null)

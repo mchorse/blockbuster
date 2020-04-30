@@ -57,7 +57,7 @@ public class GuiModelBlockList extends GuiBlockList<TileEntityModel>
 
             if (mxy - mny > 0)
             {
-                GuiDraw.scissor(x + this.scroll.w - 40, mny, 40, mxy - mny, context);
+                GuiDraw.scissor(x, mny, this.scroll.w, mxy - mny, context);
                 element.morph.renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
                 GuiDraw.unscissor(context);
             }

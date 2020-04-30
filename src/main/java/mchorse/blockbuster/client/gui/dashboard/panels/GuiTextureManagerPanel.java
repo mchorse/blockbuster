@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
+import mchorse.blockbuster.client.gui.dashboard.GuiFirstTime;
 import mchorse.blockbuster.client.textures.MipmapTexture;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -37,7 +39,7 @@ import java.util.Map;
  * Besides viewing, it also allows changing filter (linear/nearest), 
  * generating mipmaps and removing (clearing) textures from the manager.
  */
-public class GuiTextureManagerPanel extends GuiDashboardPanel
+public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 {
     public GuiResourceLocationListElement textures;
     public GuiToggleElement linear;

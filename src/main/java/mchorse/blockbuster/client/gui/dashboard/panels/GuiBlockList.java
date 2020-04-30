@@ -5,6 +5,8 @@ import java.util.function.Consumer;
 
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Area;
+import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -27,6 +29,8 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
         super(mc, callback);
 
         this.title = title;
+        this.area = new Area();
+        this.scroll = new ScrollArea(20);
     }
 
     public abstract boolean addBlock(BlockPos pos);
@@ -34,6 +38,9 @@ public abstract class GuiBlockList<T> extends GuiListElement<T>
     @Override
     public void resize()
     {
+        super.resize();
+
+        this.scroll.copy(this.area);
         this.scroll.y += 30;
         this.scroll.h -= 30;
     }

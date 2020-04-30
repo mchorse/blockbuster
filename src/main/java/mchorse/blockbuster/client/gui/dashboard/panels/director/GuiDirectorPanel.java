@@ -2,7 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
-import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
@@ -29,7 +29,6 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -53,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GuiDirectorPanel extends GuiDashboardPanel
+public class GuiDirectorPanel extends GuiBlockbusterPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
     public static final Pattern RECORDING_ID = Pattern.compile("^[\\w,\\-_]*$");
@@ -310,6 +309,8 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     @Override
     public void appear()
     {
+        super.appear();
+
         ClientProxy.panels.morphs.callback = this::setMorph;
 
         if (!this.location.isEmpty())

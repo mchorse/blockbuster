@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiBreakBlockActionPanel;
@@ -45,7 +46,6 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiLabelSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
-import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -59,7 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuiRecordingEditorPanel extends GuiDashboardPanel
+public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 {
     /**
      * A map of action editing panels mapped to their classes  
@@ -267,6 +267,8 @@ public class GuiRecordingEditorPanel extends GuiDashboardPanel
     @Override
     public void appear()
     {
+        super.appear();
+
         ClientProxy.panels.morphs.callback = (morph) ->
         {
             if (this.editor.delegate != null)

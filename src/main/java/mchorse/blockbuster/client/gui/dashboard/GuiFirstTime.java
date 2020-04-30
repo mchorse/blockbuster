@@ -39,27 +39,30 @@ public class GuiFirstTime extends GuiElement
 
 	public static void addOverlay(GuiDashboard dashboard)
 	{
-		if (GuiFirstTime.shouldOpen())
+		if (!GuiFirstTime.shouldOpen())
 		{
-			boolean alreadyHas = false;
+			return;
+		}
 
-			for (IGuiElement element : dashboard.root.getChildren())
+		boolean alreadyHas = false;
+
+		for (IGuiElement element : dashboard.root.getChildren())
+		{
+			if (element instanceof GuiFirstTime.Overlay)
 			{
-				if (element instanceof GuiFirstTime.Overlay)
-				{
-					alreadyHas = true;
+				alreadyHas = true;
 
-					break;
-				}
+				break;
 			}
+		}
 
-			if (!alreadyHas)
-			{
-				GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(dashboard.mc);
+		if (!alreadyHas)
+		{
+			GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(dashboard.mc);
 
-				overlay.flex().relative(dashboard.viewport).w(1, 0).h(1, 0);
-				dashboard.root.add(overlay);
-			}
+			overlay.flex().relative(dashboard.viewport).w(1, 0).h(1, 0);
+			overlay.resize();
+			dashboard.root.add(overlay);
 		}
 	}
 
