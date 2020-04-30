@@ -103,7 +103,7 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
     {
         float x = (arm.limb.size[0] * (0.5F - arm.limb.anchor[0])) * 0.0625F;
         float y = arm.limb.size[1] * (arm.limb.size[1] * (1 - arm.limb.anchor[1]) / arm.limb.size[1]) * -0.0625F;
-        float z = (arm.limb.size[2] * (arm.limb.anchor[2] - 0.5F)) * 0.0625F;
+        float z = (arm.limb.size[2] * (arm.limb.anchor[2])) * 0.0625F;
 
         if (arm.limb.size[0] > arm.limb.size[1])
         {
@@ -120,6 +120,19 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
         {
             GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
         }
+
+        /* if (p_188358_1_.isSneaking())
+        {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+        }
+        // Forge: moved this call down, fixes incorrect offset while sneaking.
+        this.translateToHand(handSide);
+        GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        boolean flag = handSide == EnumHandSide.LEFT;
+        GlStateManager.translate((float)(flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
+        Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
+        GlStateManager.popMatrix(); */
     }
 
     /**
