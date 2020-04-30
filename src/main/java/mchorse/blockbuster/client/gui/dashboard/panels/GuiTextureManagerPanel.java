@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.GuiFirstTime;
 import mchorse.blockbuster.client.textures.MipmapTexture;
@@ -204,6 +205,7 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
     public void open()
     {
         Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
+        ClientProxy.panels.morphs.reload();
 
         this.textures.clear();
         this.textures.getList().addAll(map.keySet());

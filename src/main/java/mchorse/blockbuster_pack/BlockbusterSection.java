@@ -54,11 +54,6 @@ public class BlockbusterSection extends MorphSection
 	public void add(String key, Model model)
 	{
 		String path = this.getCategoryId(key);
-		CustomMorph morph = new CustomMorph();
-
-		morph.name = "blockbuster." + key;
-		morph.model = model;
-
 		MorphCategory category = this.models.get(path);
 
 		if (category == null)
@@ -68,6 +63,18 @@ public class BlockbusterSection extends MorphSection
 			this.categories.add(category);
 		}
 
+		for (AbstractMorph morph : category.getMorphs())
+		{
+			if (morph instanceof CustomMorph && ((CustomMorph) morph).getKey().equals(key))
+			{
+				return;
+			}
+		}
+
+		CustomMorph morph = new CustomMorph();
+
+		morph.name = "blockbuster." + key;
+		morph.model = model;
 		category.add(morph);
 	}
 
@@ -145,11 +152,6 @@ public class BlockbusterSection extends MorphSection
 	public static class BlockbusterCategory extends MorphCategory
 	{
 		public String subtitle = "";
-
-		public BlockbusterCategory(MorphSection parent, String title)
-		{
-			super(parent, title);
-		}
 
 		public BlockbusterCategory(MorphSection parent, String title, String subtitle)
 		{
