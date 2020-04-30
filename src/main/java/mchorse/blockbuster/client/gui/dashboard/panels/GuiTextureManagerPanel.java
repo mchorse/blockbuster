@@ -9,6 +9,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiResourceLocationListE
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -250,17 +251,10 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
 
             this.mc.renderEngine.bindTexture(Icons.ICONS);
             GuiUtils.drawContinuousTexturedBox(x, y, 0, 240, fw, fh, 16, 16, 0, 0);
-            this.mc.renderEngine.bindTexture(this.rl);
 
             GlStateManager.enableAlpha();
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder vertexbuffer = tessellator.getBuffer();
-            vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            vertexbuffer.pos(x, y + fh, 0.0D).tex(0, 1).endVertex();
-            vertexbuffer.pos(x + fw, y + fh, 0.0D).tex(1, 1).endVertex();
-            vertexbuffer.pos(x + fw, y, 0.0D).tex(1, 0).endVertex();
-            vertexbuffer.pos(x, y, 0.0D).tex(0, 0).endVertex();
-            tessellator.draw();
+            this.mc.renderEngine.bindTexture(this.rl);
+            GuiDraw.drawBillboard(x, y, 0, 0, fw, fh, fw, fh);
         }
 
         super.draw(context);
