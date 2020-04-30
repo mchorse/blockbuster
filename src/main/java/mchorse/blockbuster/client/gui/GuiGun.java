@@ -2,31 +2,43 @@ package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.capabilities.gun.Gun;
 import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.client.gui.GuiPosePanel.GuiPoseTransformations;
+import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiPanelBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.capabilities.morphing.IMorphing;
 import mchorse.metamorph.capabilities.morphing.Morphing;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
+import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiGun extends GuiBase
@@ -83,6 +95,8 @@ public class GuiGun extends GuiBase
     public GuiElement transformOptions;
     public GuiPoseTransformations gun;
     public GuiPoseTransformations projectile;
+    public GuiMorphRenderer arms;
+    public GuiProjectileModelRenderer bullet;
 
     public GuiGun(ItemStack stack)
     {
@@ -97,7 +111,14 @@ public class GuiGun extends GuiBase
         this.transformOptions = new GuiElement(mc);
         this.impactOptions = new GuiElement(mc);
 
-        this.panel = new GuiPanelBase<GuiElement>(mc);
+        this.panel = new GuiPanelBase<GuiElement>(mc)
+        {
+            @Override
+            protected void drawBackground(GuiContext context, int x, int y, int w, int h)
+            {
+                Gui.drawRect(x, y, x + w, y + h, 0xff080808);
+            }
+        };
         this.panel.setPanel(this.gunOptions);
         this.panel.registerPanel(this.gunOptions, IKey.lang("blockbuster.gui.gun.fire_props"), Icons.GEAR);
         this.panel.registerPanel(this.projectileOptions, IKey.lang("blockbuster.gui.gun.projectile_props"), BBIcons.BULLET);
@@ -164,25 +185,15 @@ public class GuiGun extends GuiBase
         this.fadeOut.tooltip(IKey.lang("blockbuster.gui.gun.fade_out"));
         this.fadeOut.limit(0, Integer.MAX_VALUE, true);
 
-        this.pickProjectile.flex().relative(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
+        this.pickProjectile.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -60);
         this.tickCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
-        this.ticking.flex().relative(area).set(0, 10, 100, 20).x(1, -110);
-        this.lifeSpan.flex().relative(this.ticking.resizer()).set(0, 25, 100, 20);
-        this.yaw.flex().relative(area).relative(this.lifeSpan.resizer()).set(0, 25, 50, 11);
-        this.pitch.flex().relative(this.lifeSpan.resizer()).set(50, 25, 50, 11);
-        this.sequencer.flex().relative(this.yaw.resizer()).set(0, 16, 100, 11);
-        this.random.flex().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
-        this.hitboxX.flex().relative(this.gravity.resizer()).set(0, 25, 100, 20);
-        this.hitboxY.flex().relative(this.hitboxX.resizer()).set(0, 25, 100, 20);
-        this.speed.flex().relative(area).set(10, 10, 100, 20);
-        this.friction.flex().relative(this.speed.resizer()).set(0, 25, 100, 20);
-        this.gravity.flex().relative(this.friction.resizer()).set(0, 25, 100, 20);
-        this.fadeIn.flex().relative(this.random.resizer()).set(0, 16, 100, 20);
-        this.fadeOut.flex().relative(this.fadeIn.resizer()).set(0, 25, 100, 20);
 
-        this.projectileOptions.add(this.pickProjectile, this.tickCommand);
-        this.projectileOptions.add(this.yaw, this.pitch, this.sequencer, this.random);
-        this.projectileOptions.add(this.ticking, this.hitboxX, this.hitboxY, this.lifeSpan, this.speed, this.friction, this.gravity, this.fadeIn, this.fadeOut);
+        GuiElement projectileFields = new GuiElement(mc);
+
+        projectileFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
+        projectileFields.add(this.speed, this.friction, this.gravity, this.hitboxX, this.hitboxY, this.yaw, this.pitch);
+        projectileFields.add(this.ticking, this.lifeSpan, this.fadeIn, this.fadeOut, this.sequencer, this.random);
+        this.projectileOptions.add(this.pickProjectile, this.tickCommand, projectileFields);
 
         /* Impact options */
         area = this.impactOptions.area;
@@ -203,18 +214,16 @@ public class GuiGun extends GuiBase
         this.bounceFactor = new GuiTrackpadElement(mc, (value) -> this.props.bounceFactor = value);
         this.bounceFactor.tooltip(IKey.lang("blockbuster.gui.gun.bounce_factor"));
 
-        this.pickImpact.flex().relative(area).set(0, 0, 100, 20).x(0.5F, -50).y(1, -60);
+        this.pickImpact.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -60);
         this.impactCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
-        this.impactDelay.flex().relative(this.hits.resizer()).set(0, 25, 100, 20);
-        this.vanish.flex().relative(this.impactDelay.resizer()).set(0, 25, 100, 11);
-        this.bounce.flex().relative(this.vanish.resizer()).set(0, 16, 100, 11);
-        this.sticks.flex().relative(this.bounceFactor.resizer()).set(0, 25, 100, 11);
-        this.hits.flex().relative(this.damage.resizer()).set(0, 25, 100, 20);
-        this.damage.flex().relative(area).set(0, 10, 100, 20).x(1, -110);
-        this.bounceFactor.flex().relative(this.bounce.resizer()).set(0, 16, 100, 20);
 
-        this.impactOptions.add(this.pickImpact, this.impactCommand, this.impactDelay, this.vanish, this.bounce, this.sticks);
-        this.impactOptions.add(this.damage, this.hits, this.bounceFactor);
+        GuiElement impactFields = new GuiElement(mc);
+
+        impactFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
+        impactFields.add(this.impactDelay, this.vanish, this.bounce, this.sticks);
+        impactFields.add(this.damage, this.hits, this.bounceFactor);
+
+        this.impactOptions.add(this.pickImpact, this.impactCommand, impactFields);
 
         /* Gun transforms */
         area = this.transformOptions.area;
@@ -222,10 +231,33 @@ public class GuiGun extends GuiBase
         this.gun = new GuiPoseTransformations(mc);
         this.projectile = new GuiPoseTransformations(mc);
 
-        this.gun.flex().relative(area).set(0, 30, 190, 70).x(0.5F, -95);
-        this.projectile.flex().relative(area).set(0, 30, 190, 70).x(0.5F, -95).y(1, -80);
+        this.arms = new GuiMorphRenderer(mc);
+        this.arms.setRotation(61, -13);
+        this.arms.setPosition(0.1048045F, 1.081198F, 0.22774392F);
+        this.arms.setScale(1.5F);
 
-        this.transformOptions.add(this.gun, this.projectile);
+        try
+        {
+            this.arms.morph = MorphManager.INSTANCE.morphFromNBT(JsonToNBT.getTagFromJson("{Name:\"blockbuster.fred\"}"));
+            this.arms.getEntity().setItemStackToSlot(EntityEquipmentSlot.MAINHAND, stack);
+        }
+        catch (Exception e)
+        {}
+
+        this.bullet = new GuiProjectileModelRenderer(mc);
+        this.bullet.projectile.props = this.props;
+        this.bullet.projectile.morph.setDirect(this.props.projectileMorph);
+
+        this.bullet.setRotation(-64, 16);
+        this.bullet.setPosition(-0.042806394F, 0.40452564F, -0.001203875F);
+        this.bullet.setScale(2.5F);
+
+        this.gun.flex().relative(area).x(0.25F, -95).y(1, -80).wh(190, 70);
+        this.projectile.flex().relative(area).x(0.75F, -95).y(1, -80).wh(190, 70);
+        this.arms.flex().relative(area).wTo(this.bullet.flex()).h(1F);
+        this.bullet.flex().relative(area).x(0.5F).wh(0.5F, 1F);
+
+        this.transformOptions.add(this.arms, this.bullet, this.gun, this.projectile);
 
         /* Placement of the elements */
         this.morphs.flex().relative(this.viewport).wh(1F, 1F);
@@ -281,9 +313,18 @@ public class GuiGun extends GuiBase
     {
         AbstractMorph morph = this.props.defaultMorph;
 
-        if (i == 2) morph = this.props.firingMorph;
-        else if (i == 3) morph = this.props.projectileMorph;
-        else if (i == 4) morph = this.props.impactMorph;
+        if (i == 2)
+        {
+            morph = this.props.firingMorph;
+        }
+        else if (i == 3)
+        {
+            morph = this.props.projectileMorph;
+        }
+        else if (i == 4)
+        {
+            morph = this.props.impactMorph;
+        }
 
         this.index = i;
         this.morphs.resize();
@@ -293,10 +334,23 @@ public class GuiGun extends GuiBase
 
     private void setMorph(AbstractMorph morph)
     {
-        if (this.index == 1) this.props.defaultMorph = morph;
-        else if (this.index == 2) this.props.firingMorph = morph;
-        else if (this.index == 3) this.props.projectileMorph = morph;
-        else if (this.index == 4) this.props.impactMorph = morph;
+        if (this.index == 1)
+        {
+            this.props.defaultMorph = morph;
+        }
+        else if (this.index == 2)
+        {
+            this.props.firingMorph = morph;
+        }
+        else if (this.index == 3)
+        {
+            this.props.projectileMorph = morph;
+            this.bullet.projectile.morph.setDirect(this.props.projectileMorph);
+        }
+        else if (this.index == 4)
+        {
+            this.props.impactMorph = morph;
+        }
     }
 
     @Override
@@ -323,12 +377,12 @@ public class GuiGun extends GuiBase
         {
             if (this.props.defaultMorph != null)
             {
-                this.props.defaultMorph.renderOnScreen(player, this.viewport.mx() - w, this.viewport.my(), w * 0.5F, 1);
+                this.props.defaultMorph.renderOnScreen(player, this.pickDefault.area.mx(), this.pickDefault.area.y - 20, w * 0.5F, 1);
             }
 
             if (this.props.firingMorph != null)
             {
-                this.props.firingMorph.renderOnScreen(player, this.viewport.mx() + w, this.viewport.my(), w * 0.5F, 1);
+                this.props.firingMorph.renderOnScreen(player, this.pickFiring.area.mx(), this.pickFiring.area.y - 20, w * 0.5F, 1);
             }
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.fire_command"), this.fireCommand.area.x, this.fireCommand.area.y - 12, 0xffffff);
@@ -337,7 +391,7 @@ public class GuiGun extends GuiBase
         {
             if (this.props.projectileMorph != null)
             {
-                this.props.projectileMorph.renderOnScreen(player, this.viewport.mx(), this.viewport.my(), w * 0.5F, 1);
+                this.props.projectileMorph.renderOnScreen(player, this.pickProjectile.area.mx(), this.pickProjectile.area.y - 20, w * 0.5F, 1);
             }
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.tick_command"), this.tickCommand.area.x, this.tickCommand.area.y - 12, 0xffffff);
@@ -346,17 +400,81 @@ public class GuiGun extends GuiBase
         {
             if (this.props.impactMorph != null)
             {
-                this.props.impactMorph.renderOnScreen(player, this.viewport.mx(), this.viewport.my(), w * 0.5F, 1);
+                this.props.impactMorph.renderOnScreen(player, this.pickImpact.area.mx(), this.pickImpact.area.y - 20, w * 0.5F, 1);
             }
 
             this.fontRenderer.drawStringWithShadow(I18n.format("blockbuster.gui.gun.impact_command"), this.impactCommand.area.x, this.impactCommand.area.y - 12, 0xffffff);
         }
-        else if (this.panel.view.delegate == this.transformOptions)
-        {
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.gun_transforms"), this.gun.area.mx(), this.gun.area.y - 28, 0xffffff);
-            this.drawCenteredString(this.fontRenderer, I18n.format("blockbuster.gui.gun.projectile_transforms"), this.projectile.area.mx(), this.projectile.area.y - 28, 0xffffff);
-        }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        if (this.panel.view.delegate == this.transformOptions)
+        {
+            String gun = I18n.format("blockbuster.gui.gun.gun_transforms");
+            String trans = I18n.format("blockbuster.gui.gun.projectile_transforms");
+
+            GuiDraw.drawTextBackground(this.context.font, gun, this.gun.area.mx(this.context.font.getStringWidth(gun)), this.arms.area.y + 15, 0xffffff, 0x88000000);
+            GuiDraw.drawTextBackground(this.context.font, trans, this.projectile.area.mx(this.context.font.getStringWidth(trans)), this.arms.area.y + 15, 0xffffff, 0x88000000);
+        }
+    }
+
+    public static class GuiProjectileModelRenderer extends GuiModelRenderer
+    {
+        public EntityGunProjectile projectile;
+
+        public GuiProjectileModelRenderer(Minecraft mc)
+        {
+            super(mc);
+
+            this.projectile = new EntityGunProjectile(mc.world);
+        }
+
+        @Override
+        protected void drawUserModel(GuiContext context)
+        {
+            this.projectile.timer = this.projectile.props.fadeIn;
+            this.mc.getRenderManager().renderEntity(this.projectile, 0, 0.5F, 0, 0, context.partialTicks, false);
+
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, 0.5F, 0);
+
+            GL11.glLineWidth(5);
+            GL11.glBegin(GL11.GL_LINES);
+            GL11.glColor3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0.25);
+            GL11.glEnd();
+
+            GL11.glLineWidth(3);
+            GL11.glBegin(GL11.GL_LINES);
+            GL11.glColor3d(0, 1, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0.25);
+            GL11.glEnd();
+            GL11.glLineWidth(1);
+
+            GL11.glPointSize(12);
+            GL11.glBegin(GL11.GL_POINTS);
+            GL11.glColor3d(0, 0, 0);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glEnd();
+
+            GL11.glPointSize(10);
+            GL11.glBegin(GL11.GL_POINTS);
+            GL11.glColor3d(1, 1, 1);
+            GL11.glVertex3d(0, 0, 0);
+            GL11.glEnd();
+            GL11.glPointSize(1);
+
+            GlStateManager.popMatrix();
+
+            GlStateManager.enableDepth();
+            GlStateManager.enableLighting();
+            GlStateManager.enableTexture2D();
+        }
     }
 }

@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -27,8 +28,6 @@ import java.util.Map;
  */
 public class GuiBBModelRenderer extends GuiModelRenderer
 {
-    public static final ResourceLocation PIXEL = new ResourceLocation("blockbuster", "textures/pixel.png");
-
     public boolean swinging;
     private float swing;
     private float swingAmount;
@@ -107,7 +106,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public void toggleItems()
     {
         this.items = !this.items;
-        this.dummy.toggleItems(this.items);
+        ((DummyEntity) this.entity).toggleItems(this.items);
     }
 
     /**
@@ -190,12 +189,12 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             RenderCustomModel.bindLastTexture(this.texture);
         }
 
-        this.renderModel(this.dummy, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
+        this.renderModel(this.entity, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
         this.tryPicking(context);
 
         if (this.items)
         {
-            ItemRenderer.renderItems(this.dummy, this.model, limbSwing, this.swingAmount, partial, this.timer, context.mouseX, context.mouseY, factor);
+            ItemRenderer.renderItems(this.entity, this.model, limbSwing, this.swingAmount, partial, this.timer, context.mouseX, context.mouseY, factor);
         }
 
         /* Render highlighting things on top */
@@ -239,11 +238,11 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         this.model.materials = this.materials;
         this.model.pose = this.pose;
         this.model.swingProgress = this.swipe == -1 ? 0 : MathHelper.clamp(1.0F - (this.swipe - 1.0F * partial) / 6.0F, 0.0F, 1.0F);
-        this.model.setLivingAnimations(this.dummy, headYaw, headPitch, partial);
-        this.model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.dummy);
+        this.model.setLivingAnimations(this.entity, headYaw, headPitch, partial);
+        this.model.setRotationAngles(limbSwing, this.swingAmount, this.timer, headYaw, headPitch, factor, this.entity);
     }
 
-    protected void renderModel(DummyEntity dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
+    protected void renderModel(EntityLivingBase dummy, float headYaw, float headPitch, int timer, int yaw, int pitch, float partial, float factor)
     {
         this.model.render(dummy, headYaw, headPitch, timer, yaw, pitch, factor);
     }
@@ -251,7 +250,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     @Override
     protected void drawForStencil(GuiContext context)
     {
-        this.model.renderForStencil(this.dummy, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
+        this.model.renderForStencil(this.entity, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
     }
 
     @Override
