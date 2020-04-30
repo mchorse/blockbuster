@@ -54,8 +54,8 @@ public class TileEntityModel extends TileEntity implements ITickable
     public float sy = 1;
     public float sz = 1;
 
-    public boolean shadow;
-    public boolean global = true;
+    public boolean shadow = true;
+    public boolean global = false;
     public boolean enabled = true;
 
     public TileEntityModel()
@@ -230,8 +230,8 @@ public class TileEntityModel extends TileEntity implements ITickable
         if (this.sy != 1) compound.setFloat("ScaleY", this.sy);
         if (this.sz != 1) compound.setFloat("ScaleZ", this.sz);
 
-        if (this.shadow) compound.setBoolean("Shadow", this.shadow);
-        if (!this.global) compound.setBoolean("Global", this.global);
+        if (!this.shadow) compound.setBoolean("Shadow", this.shadow);
+        if (this.global) compound.setBoolean("Global", this.global);
         if (!this.enabled) compound.setBoolean("Enabled", this.enabled);
 
         NBTTagList list = new NBTTagList();

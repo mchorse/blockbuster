@@ -15,16 +15,16 @@ import net.minecraft.client.resources.I18n;
  */
 public class GuiTransformations extends GuiElement
 {
-    private GuiTrackpadElement tx;
-    private GuiTrackpadElement ty;
-    private GuiTrackpadElement tz;
-    private GuiTrackpadElement sx;
-    private GuiTrackpadElement sy;
-    private GuiTrackpadElement sz;
-    private GuiTrackpadElement rx;
-    private GuiTrackpadElement ry;
-    private GuiTrackpadElement rz;
-    private GuiToggleElement one;
+    public GuiTrackpadElement tx;
+    public GuiTrackpadElement ty;
+    public GuiTrackpadElement tz;
+    public GuiTrackpadElement sx;
+    public GuiTrackpadElement sy;
+    public GuiTrackpadElement sz;
+    public GuiTrackpadElement rx;
+    public GuiTrackpadElement ry;
+    public GuiTrackpadElement rz;
+    public GuiToggleElement one;
 
     public GuiTransformations(Minecraft mc)
     {
@@ -67,18 +67,22 @@ public class GuiTransformations extends GuiElement
             }
         });
 
-        this.tx.flex().set(0, 0, 60, 20).relative(this.area);
-        this.ty.flex().set(0, 25, 60, 20).relative(this.tx.resizer());
-        this.tz.flex().set(0, 25, 60, 20).relative(this.ty.resizer());
-        this.sx.flex().set(65, 0, 60, 20).relative(this.tx.resizer());
-        this.sy.flex().set(0, 25, 60, 20).relative(this.sx.resizer());
-        this.sz.flex().set(0, 25, 60, 20).relative(this.sy.resizer());
-        this.rx.flex().set(65, 0, 60, 20).relative(this.sx.resizer());
-        this.ry.flex().set(0, 25, 60, 20).relative(this.rx.resizer());
-        this.rz.flex().set(0, 25, 60, 20).relative(this.ry.resizer());
-        this.one.flex().relative(this.sx.resizer()).set(49, -13, 11, 11);
+        this.one.flex().relative(this.sx).x(1F).y(-13).wh(20, 11).anchorX(1F);
 
-        this.add(this.tx, this.ty, this.tz, this.sx, this.sy, this.sz, this.rx, this.ry, this.rz, this.one);
+        GuiElement first = new GuiElement(mc);
+        GuiElement second = new GuiElement(mc);
+        GuiElement third = new GuiElement(mc);
+
+        first.flex().relative(this).w(1F).h(20).row(5).height(20);
+        first.add(this.tx, sx, rx);
+
+        second.flex().relative(this).y(0.5F, -10).w(1F).h(20).row(5).height(20);
+        second.add(this.ty, sy, ry);
+
+        third.flex().relative(this).y(1F, -20).w(1F).h(20).row(5).height(20);
+        third.add(this.tz, sz, rz);
+
+        this.add(first, second, third, this.one);
     }
 
     public void fillT(float x, float y, float z)
