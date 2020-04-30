@@ -161,7 +161,7 @@ public class GuiReplaySelector extends GuiElement
                 int w = this.font.getStringWidth(hovered);
                 int x = hoverX - w / 2;
 
-                Gui.drawRect(x - 2, this.scroll.my() - 1, x + w + 2, this.scroll.ey() + 9, 0x88000000);
+                Gui.drawRect(x - 2, this.scroll.my() - 1, x + w + 2, this.scroll.my() + 9, 0x88000000);
                 this.font.drawStringWithShadow(hovered, x, this.scroll.my(), 0xffffff);
             }
 

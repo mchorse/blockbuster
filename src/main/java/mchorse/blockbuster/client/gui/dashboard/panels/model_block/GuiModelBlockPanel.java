@@ -204,6 +204,12 @@ public class GuiModelBlockPanel extends GuiDashboardPanel
         this.inventory.flex().relative(this.area).x(0.5F).y(1F, -10).wh(10 * 20, 5 * 20).anchor(0.5F, 1F);
     }
 
+    @Override
+    public boolean needsBackground()
+    {
+        return false;
+    }
+
     private void pickItem(ItemStack stack)
     {
         if (this.inventory.linked != null)

@@ -27,8 +27,10 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.mclib.GuiDashboardPanel;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
@@ -40,6 +42,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -79,9 +82,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     public GuiToggleElement fake;
     public GuiToggleElement teleportBack;
     public GuiTrackpadElement health;
-
-    public GuiButtonElement attach;
     public GuiButtonElement record;
+    public GuiButtonElement rename;
+    public GuiButtonElement attach;
+
+    public GuiLabel recordingId;
 
     public GuiSceneManager scenes;
 
@@ -108,15 +113,17 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         super(mc, dashboard);
 
+        this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
+        this.selector.flex().set(0, 0, 0, 60).relative(this).w(1, 0).y(1, -60);
+
         this.subChildren = new GuiElement(mc);
         this.subChildren.setVisible(false);
         this.replays = new GuiElement(mc);
         this.replayEditor = new GuiElement(mc);
+        this.replayEditor.flex().relative(this).w(1F).hTo(this.selector.flex()).column(5).width(100).scroll().height(20).padding(10);
         this.replayEditor.setVisible(false);
         this.configOptions = new GuiElement(mc);
         this.mainView = new GuiDelegateElement<GuiElement>(mc, this.replays);
-        this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
-        this.selector.flex().set(0, 0, 0, 60).relative(this.area).w(1, 0).y(1, -60);
 
         this.add(this.subChildren);
         this.subChildren.add(this.mainView);
@@ -128,8 +135,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.loops"), false, (b) -> this.location.getScene().loops = b.isToggled());
         this.disableStates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.disable_states"), false, (b) -> this.location.getDirector().disableStates = b.isToggled());
         this.hide = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.isToggled());
-        this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
-        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
 
         this.title.flex().set(10, 50, 0, 20).relative(this.area).w(1, -20);
         this.startCommand.flex().set(10, 90, 0, 20).relative(this.area).w(1, -20);
@@ -137,12 +142,15 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.loops.flex().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
         this.disableStates.flex().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.flex().set(0, 16, 60, 11).relative(this.disableStates.resizer());
-        this.attach.flex().set(10, 155, 80, 20).relative(this.area).x(1, -90);
 
-        this.configOptions.add(this.title, this.loops, this.disableStates, this.hide, this.startCommand, this.stopCommand);
+        this.configOptions.add(this.title, this.startCommand, this.stopCommand, this.loops, this.disableStates, this.hide);
 
         /* Replay options */
-        this.id = new GuiTextElement(mc, 120, (str) -> this.replay.id = str);
+        this.id = new GuiTextElement(mc, 120, (str) ->
+        {
+            this.replay.id = str;
+            this.updateLabel();
+        });
         this.id.field.setValidator((str) -> RECORDING_ID.matcher(str).matches());
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
@@ -153,82 +161,70 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         this.teleportBack.tooltip(IKey.lang("blockbuster.gui.director.tp_back_tooltip"), Direction.RIGHT);
         this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value);
         this.health.tooltip(IKey.lang("blockbuster.gui.director.health"));
-        this.health.min = 0;
+        this.health.limit(0);
+        this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 
-        this.id.flex().set(10, 30, 120, 20).relative(this.area);
-        this.name.flex().set(0, 40, 120, 20).relative(this.id.resizer());
-        this.invincible.flex().set(0, 30, 80, 11).relative(this.name.resizer());
-        this.invisible.flex().set(0, 16, 80, 11).relative(this.invincible.resizer());
-        this.enabled.flex().set(0, 16, 80, 11).relative(this.invisible.resizer());
-        this.fake.flex().set(0, 16, 80, 11).relative(this.enabled.resizer());
-        this.teleportBack.flex().set(0, 16, 80, 20).relative(this.fake.resizer());
-        this.health.flex().set(0, 30, 80, 20).relative(this.area).x(1, -90);
+        this.invincible.flex().h(14);
+        this.invisible.flex().h(14);
+        this.enabled.flex().h(14);
+        this.fake.flex().h(14);
+        this.teleportBack.flex().h(14);
 
-        this.replayEditor.add(this.id, this.name, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack, this.health, this.attach);
+        this.replayEditor.add(this.recordingId, this.id);
+        this.replayEditor.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
+        this.replayEditor.add(this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
         this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
-        GuiElement element = new GuiIconElement(mc, Icons.GEAR, (b) ->
+        GuiIconElement toggle = new GuiIconElement(mc, Icons.GEAR, (b) ->
         {
             this.mainView.setDelegate(this.mainView.delegate == this.configOptions ? this.replays : this.configOptions);
-        }).tooltip(IKey.lang("blockbuster.gui.director.config"), Direction.LEFT);
-        element.flex().set(0, 6, 16, 16).relative(this.area).x(1, -42);
+        });
 
-        this.subChildren.add(element);
+        GuiIconElement toggleScenes = new GuiIconElement(mc, Icons.MORE, (b) -> this.scenes.toggleVisible());
+        toggleScenes.flex().set(0, 6, 16, 16).relative(this.area).x(1, -24);
+
+        toggle.tooltip(IKey.lang("blockbuster.gui.director.config"), Direction.LEFT);
+        toggle.flex().set(0, 6, 16, 16).relative(this.area).x(1, -42);
+
+        this.add(toggleScenes);
+        this.subChildren.add(toggle);
 
         /* Add, duplicate and remove replay buttons */
-        element = new GuiIconElement(mc, Icons.ADD, (b) -> this.addReplay()).tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
-        element.flex().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
+        GuiIconElement add = new GuiIconElement(mc, Icons.ADD, (b) -> this.addReplay());
+        GuiIconElement dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeReplay());
+        GuiIconElement remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeReplay());
 
-        this.replays.add(element);
+        add.tooltip(IKey.lang("blockbuster.gui.add"), Direction.LEFT);
+        dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
+        remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
 
-        element = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeReplay()).tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
-        element.flex().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
+        add.flex().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
+        dupe.flex().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
+        remove.flex().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
 
-        this.replays.add(element);
-
-        element = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeReplay()).tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
-        element.flex().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
-
-        this.replays.add(element);
+        this.replays.add(add, dupe, remove);
 
         /* Additional utility buttons */
-        element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+        GuiButtonElement morph = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
         {
             ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
             this.add(ClientProxy.panels.morphs);
         });
-        element.flex().set(10, 70, 80, 20).relative(this.area).x(0.5F, -40).y(1, -86);
+        this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
+        GuiButtonElement edit = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
+        GuiButtonElement update = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData());
+        this.rename = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
+        this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
 
-        this.replayEditor.add(element);
+        update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.RIGHT);
+        this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.RIGHT);
+        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
 
-        element = this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
-        element.flex().set(10, 55, 80, 20).relative(this.area).x(1, -90);
-
-        this.replayEditor.add(element);
-
-        element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
-        element.flex().set(10, 80, 80, 20).relative(this.area).x(1, -90);
-
-        this.replayEditor.add(element);
-
-        element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData());
-        element.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.LEFT);
-        element.flex().set(10, 105, 80, 20).relative(this.area).x(1, -90);
-
-        this.replayEditor.add(element);
-
-        element = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
-        element.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.LEFT);
-        element.flex().set(10, 130, 80, 20).relative(this.area).x(1, -90);
-
-        this.replayEditor.add(element);
+        this.replayEditor.add(this.record, edit, update, this.rename, this.attach, morph);
 
         /* Scene manager */
-        this.add(element = new GuiIconElement(mc, Icons.MORE, (b) -> this.scenes.toggleVisible()));
-        element.flex().set(0, 6, 16, 16).relative(this.area).x(1, -24);
-
         this.add(this.scenes = new GuiSceneManager(mc, this));
         this.scenes.flex().set(0, 24, 160, 0).relative(this.area).x(1, -166).h(1, -100);
     }
@@ -414,6 +410,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
 
         ClientProxy.panels.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
+        this.updateLabel();
     }
 
     /**
@@ -456,9 +453,11 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         Scene scene = this.location.getScene();
 
         scene.replays.remove(this.replay);
-        int size = scene.replays.size();
 
-        this.setReplay(size == 0 ? null : scene.replays.get(size - 1));
+        int size = scene.replays.size();
+        int index = MathHelper.clamp(this.selector.current, 0, size - 1);
+
+        this.setReplay(size == 0 ? null : scene.replays.get(index));
         this.selector.update();
     }
 
@@ -474,6 +473,13 @@ public class GuiDirectorPanel extends GuiDashboardPanel
     {
         this.scenes.setScene(this.location.getScene());
         this.scenes.updateList(lastBlocks);
+    }
+
+    private void updateLabel()
+    {
+        boolean error = this.replay != null && this.replay.id.isEmpty();
+
+        this.recordingId.color(error ? 0xff3355 : 0xcccccc);
     }
 
     /**
@@ -554,7 +560,7 @@ public class GuiDirectorPanel extends GuiDashboardPanel
         {
             GuiPromptModal modal = new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.director.rename_prefix_popup"), this::renamePrefix);
 
-            modal.flex().relative(this.area).set(-125, -100, 120, 120);
+            modal.markIgnored().flex().relative(this.rename).y(1F).w(1F).h(120);
 
             return modal;
         });
@@ -593,14 +599,6 @@ public class GuiDirectorPanel extends GuiDashboardPanel
                     morph.renderOnScreen(this.mc.player, x, y, this.area.h / 3.5F, 1.0F);
                     GuiDraw.unscissor(context);
                 }
-            }
-
-            boolean error = this.replay != null && this.replay.id.isEmpty();
-
-            if (this.replayEditor.isVisible())
-            {
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.id"), this.id.area.x, this.id.area.y - 12, error ? 0xffff3355 : 0xcccccc);
-                this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.name"), this.name.area.x, this.name.area.y - 12, 0xcccccc);
             }
         }
         else
