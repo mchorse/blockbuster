@@ -4,12 +4,16 @@ blockbuster.info:
     
     director:
         already_registered: "{f}This actor is already registered by this director block!"
-        looped: "{f}Now given director block is looped!"
-        unlooped: "{f}Now given director block is unlooped!"
+        looped: "{f}Given director block is looped!"
+        unlooped: "{f}Given director block is unlooped!"
         
-        enabled_state: "{f}Now given director block changes state of the block!"
-        disabled_state: "{f}Now given director block doesn't change the state of the block!"
-    
+        enabled_state: "{f}Given director block now can change the state of the block!"
+        disabled_state: "{f}Given director block now can't change the state of the block!"
+
+    scene:
+        looped: "{f}Given scene is looped now!"
+        unlooped: "{f}Given scene is unlooped now!"
+
     # General command infos
     commands:
         load_chunks: "{f}Loaded all generated chunks in render distance."

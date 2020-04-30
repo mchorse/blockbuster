@@ -30,7 +30,7 @@ public class CommandDirector extends CommandBase
     }
 
     @Override
-    public String getUsage(ICommandSender icommandsender)
+    public String getUsage(ICommandSender sender)
     {
         return "blockbuster.commands.director";
     }

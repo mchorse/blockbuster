@@ -8,6 +8,12 @@ blockbuster:
                 
                 {r}Start, stop or toggle playback of director block located at {7}<x>{r}, {7}<y>{r}, and {7}<z>{r} (you can use F3 to determine coordinates). There are also {7}loop{r} and {7}disable_state{r} which allow to change looping and ability to change redstone sides with {7}[flag]{r} argument ({7}true{r} or {7}false{r}).
 
+        scene:
+            |
+            {l}{6}/{r}scene {8}<play|toggle|stop|loop>{r} {7}<name> [flag]{r}
+
+            {r}Start, stop or toggle playback of scene by {7}<name>{r}. There is also {7}loop{r} which allow to change looping with {7}[flag]{r} argument ({7}true{r} or {7}false{r}).
+
         # Record's commands
         record:
             help: "{r}{o}Record command{r}. This command provides few sub-commands for manipulating player recording actions."

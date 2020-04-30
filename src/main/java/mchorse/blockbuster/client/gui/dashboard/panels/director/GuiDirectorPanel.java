@@ -377,7 +377,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.stopCommand.setText(this.location.getScene().stopCommand);
         this.loops.toggled(this.location.getScene().loops);
         this.attach.setEnabled(false);
-        this.record.setEnabled(this.location.isDirector());
 
         if (this.mc != null && this.mc.player != null)
         {
@@ -488,11 +487,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
      */
     private void sendRecordMessage()
     {
-        if (!this.location.isDirector())
-        {
-            return;
-        }
-
         EntityPlayer player = this.mc.player;
 
         if (this.replay.id.isEmpty())
@@ -502,8 +496,18 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             return;
         }
 
-        BlockPos pos = this.location.getPosition();
-        String command = "/action record " + this.replay.id + " " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
+        String command;
+
+        if (this.location.isScene())
+        {
+            command = "/action record " + this.replay.id + " " + this.location.getFilename();
+        }
+        else
+        {
+            BlockPos pos = this.location.getPosition();
+
+            command = "/action record " + this.replay.id + " " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
+        }
 
         ITextComponent component = new TextComponentString(I18n.format("blockbuster.info.recording.clickhere"));
         component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));

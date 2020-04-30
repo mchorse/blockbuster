@@ -31,6 +31,12 @@ blockbuster.error:
         missing: "{f}There is no director block at (%s{f}, %s{f}, %s{f})!"
         no_director: "{f}No director block exists at (%s{f}, %s{f}, %s{f})."
         empty_filename: "{f}Director block has a replay with empty {7}Recording ID{f} field. Please fill empty {7}Recording ID{f}."
+
+    scene:
+        playing: "{f}Scene by name %s{f} is playing!"
+        stopped: "{f}Scene by name %s{f} is stopped!"
+
+        no_scene: "{f}No scene exists by name %s{f}."
     
     # Errors for /model export
     model:
