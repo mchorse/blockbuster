@@ -239,6 +239,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             this.close();
         }
 
+        this.list.setCurrent(model);
         this.subChildren.setVisible(model != null);
         this.model = model;
         this.fillData();
@@ -254,6 +255,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         {
             this.list.addBlock(pos);
         }
+
+        this.list.setCurrent(this.model);
     }
 
     private void fillData()
