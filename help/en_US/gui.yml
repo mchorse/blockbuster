@@ -270,6 +270,7 @@ blockbuster.gui:
 
     particle:
         tooltip: General properties
+        emission: Emission properties
         morph: Morph properties
         vanilla: Vanilla properties
         common: Common properties

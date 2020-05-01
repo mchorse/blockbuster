@@ -186,8 +186,6 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.reverse.toggled(morph.reverse);
             this.randomOrder.toggled(morph.random);
-
-            this.elements.setVisible(false);
         }
 
         @Override

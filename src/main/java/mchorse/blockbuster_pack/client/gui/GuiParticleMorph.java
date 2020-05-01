@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -9,6 +10,8 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
@@ -80,7 +83,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.mode.addLabel(IKey.lang("blockbuster.gui.particle.types.vanilla"));
             this.mode.addLabel(IKey.lang("blockbuster.gui.particle.types.morph"));
 
-            this.mode.tooltip(IKey.lang("blockbuster.gui.particle.type"), Direction.LEFT);
+            this.mode.tooltip(IKey.lang("blockbuster.gui.particle.type"));
             this.frequency = new GuiTrackpadElement(mc, (value) -> this.morph.frequency = value.intValue());
             this.frequency.tooltip(IKey.lang("blockbuster.gui.particle.frequency"));
             this.frequency.limit(1, Integer.MAX_VALUE, true);
@@ -150,25 +153,18 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
                 this.morph.arguments = array;
             });
 
-            this.mode.flex().relative(this.area).set(0, 35, 100, 20).x(1, -110);
-            this.frequency.flex().relative(this.pickParticle.resizer()).set(0, 25, 100, 20);
-            this.duration.flex().relative(this.frequency.resizer()).set(0, 25, 100, 20);
-            this.delay.flex().relative(this.duration.resizer()).set(0, 25, 100, 20);
-            this.cap.flex().relative(this.delay.resizer()).set(0, 25, 100, 20);
+            this.type.flex().relative(this.pickParticle).set(0, 20, 0, 80).w(1F);
 
-            this.pickParticle.flex().relative(this.mode.resizer()).set(0, 25, 100, 20);
-            this.type.flex().relative(this.pickParticle.resizer()).set(0, 20, 100, 80);
-            this.x.flex().relative(this.area).set(10, 30, 100, 20);
-            this.y.flex().relative(this.x.resizer()).set(0, 19, 100, 20);
-            this.z.flex().relative(this.y.resizer()).set(0, 19, 100, 20);
-            this.dx.flex().relative(this.x.resizer()).set(110, 0, 100, 20);
-            this.dy.flex().relative(this.dx.resizer()).set(0, 19, 100, 20);
-            this.dz.flex().relative(this.dy.resizer()).set(0, 19, 100, 20);
-            this.speed.flex().relative(this.z.resizer()).set(0, 25, 100, 20);
-            this.count.flex().relative(this.dz.resizer()).set(0, 25, 100, 20);
-            this.args.flex().relative(this.speed.resizer()).set(0, 40, 100, 20);
+            GuiElement element = new GuiElement(mc);
 
-            this.add(this.mode, this.frequency, this.duration, this.delay, this.cap, this.pickParticle, this.x, this.y, this.z, this.dx, this.dy, this.dz, this.speed, this.count, this.args, this.type);
+            element.flex().relative(this).wh(1F, 1F).column(5).width(110).padding(10).height(20);
+            element.add(this.mode, this.pickParticle);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.emission"), 16).anchor(0, 1F), this.frequency, this.duration, this.delay, this.cap, this.speed, this.count);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.vanilla"), 16).anchor(0, 1F), this.x, this.y, this.z);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.common"), 16).anchor(0, 1F), this.dx, this.dy, this.dz);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.args"), 16).anchor(0, 1F), this.args);
+
+            this.add(element, this.type);
         }
 
         @Override
@@ -201,16 +197,6 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             }
 
             this.args.setText(joiner.toString());
-        }
-
-        @Override
-        public void draw(GuiContext context)
-        {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.particle.vanilla"), this.x.area.x, this.x.area.y - 16, 0xffffff);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.particle.common"), this.dx.area.x, this.dx.area.y - 16, 0xffffff);
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.particle.args"), this.args.area.x, this.args.area.y - 11, 0xffffff);
-
-            super.draw(context);
         }
     }
 
@@ -271,19 +257,18 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.maximum.tooltip(IKey.lang("blockbuster.gui.particle.maximum"));
             this.maximum.limit(1, Integer.MAX_VALUE, true);
 
-            this.pickMorph.flex().relative(this.area).set(10, 30, 100, 20);
-            this.pickType.flex().relative(this.pickMorph.resizer()).set(0, 25, 100, 20);
-            this.type.flex().relative(this.pickType.resizer()).set(0, 20, 100, 80);
+            this.type.flex().relative(this.pickType).set(0, 20, 0, 80).w(1F);
+            this.yaw.flex().h(14);
+            this.pitch.flex().h(14);
+            this.sequencer.flex().h(14);
+            this.random.flex().h(14);
 
-            this.fade.flex().relative(this.pickType.resizer()).set(0, 25, 100, 20);
-            this.lifeSpan.flex().relative(this.fade.resizer()).set(0, 25, 100, 20);
-            this.maximum.flex().relative(this.lifeSpan.resizer()).set(0, 25, 100, 20);
-            this.yaw.flex().relative(this.pickMorph.resizer()).set(0, 0, 100, 11).x(1, 10);
-            this.pitch.flex().relative(this.yaw.resizer()).set(0, 16, 100, 11);
-            this.sequencer.flex().relative(this.pitch.resizer()).set(0, 16, 100, 11);
-            this.random.flex().relative(this.sequencer.resizer()).set(0, 16, 100, 11);
+            GuiElement element = new GuiElement(mc);
 
-            this.add(this.pickMorph, this.pickType, this.yaw, this.pitch, this.sequencer, this.random, this.fade, this.lifeSpan, this.maximum, this.type);
+            element.flex().relative(this).wh(1F, 1F).column(5).width(110).padding(10).height(20);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.morph")), this.pickMorph, this.pickType, this.fade, this.lifeSpan, this.maximum, this.yaw, this.pitch, this.sequencer, this.random);
+
+            this.add(element, this.type);
         }
 
         @Override
@@ -305,8 +290,6 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         @Override
         public void draw(GuiContext context)
         {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.particle.morph"), this.pickMorph.area.x, this.pickMorph.area.y - 16, 0xffffff);
-
             super.draw(context);
         }
     }
