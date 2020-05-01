@@ -142,7 +142,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.records.toggleVisible());
         this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28);
 
-        this.add(this.editor, this.selector, this.records, this.open);
+        this.add(this.open);
         this.selector.add(this.add, this.dupe, this.remove, this.list);
     }
 
@@ -234,10 +234,15 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.records.clear();
         Dispatcher.sendToServer(new PacketRequestActions());
 
+        this.selector.removeFromParent();
         this.selector.flex().relative(this.area);
+        this.editor.removeFromParent();
         this.editor.flex().relative(this.area);
-        this.records.flex().relative(this.area);
-        this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28).y(2);
+        this.records.removeFromParent();
+        this.records.flex().relative(this.area).hTo(this.editor.flex());
+
+        this.prepend(this.records);
+        this.add(this.editor, this.selector);
 
         if (this.panels.isEmpty())
         {

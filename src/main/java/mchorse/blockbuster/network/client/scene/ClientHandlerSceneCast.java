@@ -23,44 +23,29 @@ public class ClientHandlerSceneCast extends ClientMessageHandler<PacketSceneCast
     @SideOnly(Side.CLIENT)
     public void run(EntityPlayerSP player, PacketSceneCast message)
     {
-        boolean opened = false;
-
-        if (message.open && Minecraft.getMinecraft().currentScreen == null)
-        {
-            Minecraft.getMinecraft().displayGuiScreen(GuiDashboard.get());
-            opened = true;
-        }
-
+        GuiDashboard dashboard = GuiDashboard.get();
+        GuiBlockbusterPanels panels = ClientProxy.panels;
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GuiDashboard)
-        {
-            GuiDashboard dashboard = (GuiDashboard) screen;
+        boolean opened = message.open && screen == null;
 
-            if (opened)
-            {
-                dashboard.panels.setPanel(ClientProxy.panels.directorPanel);
-                ClientProxy.panels.directorPanel.openScene(message.location);
-            }
-            else
-            {
-                dashboard.panels.setPanel(ClientProxy.panels.directorPanel);
-                ClientProxy.panels.directorPanel.setScene(message.location);
-            }
+        if (opened)
+        {
+            panels.directorPanel.openScene(message.location);
         }
-        else if (GuiDashboard.dashboard != null)
+        else if (screen == dashboard)
         {
-            GuiBlockbusterPanels dashboard = ClientProxy.panels;
+            panels.directorPanel.setScene(message.location);
+        }
+        else
+        {
+            panels.directorPanel.set(message.location);
+        }
 
-            if (!message.open)
-            {
-                GuiDashboard.get().panels.setPanel(dashboard.directorPanel);
-                dashboard.directorPanel.setScene(message.location);
-            }
-            else
-            {
-                dashboard.directorPanel.set(message.location);
-            }
+        if (opened)
+        {
+            dashboard.panels.setPanel(panels.directorPanel);
+            Minecraft.getMinecraft().displayGuiScreen(GuiDashboard.get());
         }
     }
 }

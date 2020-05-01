@@ -65,6 +65,7 @@ public class GuiRecordList extends GuiElement
 
         this.director = !loadAll;
         this.records.filter("", true);
+        this.records.list.update();
     }
 
     @Override

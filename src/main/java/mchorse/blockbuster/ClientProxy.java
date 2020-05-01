@@ -203,10 +203,7 @@ public class ClientProxy extends CommonProxy
 
         McLib.EVENT_BUS.register(panels = new GuiBlockbusterPanels());
 
-        if (CameraHandler.isApertureLoaded())
-        {
-            CameraHandler.register();
-        }
+        CameraHandler.register();
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());

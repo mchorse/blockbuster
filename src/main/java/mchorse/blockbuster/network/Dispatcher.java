@@ -174,10 +174,7 @@ public class Dispatcher
             register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
             register(PacketStructureListRequest.class, ServerHandlerStructureListRequest.class, Side.SERVER);
 
-            if (CameraHandler.isApertureLoaded())
-            {
-                CameraHandler.registerMessages();
-            }
+            CameraHandler.registerMessages();
         }
     };
 

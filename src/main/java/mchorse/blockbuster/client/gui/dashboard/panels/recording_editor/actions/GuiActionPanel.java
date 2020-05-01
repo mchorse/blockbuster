@@ -7,6 +7,8 @@ import mchorse.blockbuster.recording.actions.Action;
 import mchorse.mclib.client.gui.framework.GuiTooltip;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -14,8 +16,8 @@ import net.minecraft.client.resources.I18n;
 public abstract class GuiActionPanel<T extends Action> extends GuiElement
 {
     public T action;
-    private String title = "";
-    private String description = "";
+    private IKey title = IKey.lang("");
+    private IKey description = IKey.lang("");
 
     public GuiActionPanel(Minecraft mc)
     {
@@ -47,31 +49,21 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
 
     public void setKey(String key)
     {
-        this.title = I18n.format("blockbuster.gui.record_editor.actions." + key + ".title");
-        this.description = I18n.format("blockbuster.gui.record_editor.actions." + key + ".desc");
-    }
-
-    @Override
-    public boolean mouseClicked(GuiContext context)
-    {
-        return super.mouseClicked(context) || this.area.isInside(context);
-    }
-
-    @Override
-    public boolean mouseScrolled(GuiContext context)
-    {
-        return super.mouseScrolled(context) || this.area.isInside(context);
+        this.title.set("blockbuster.gui.record_editor.actions." + key + ".title");
+        this.description.set("blockbuster.gui.record_editor.actions." + key + ".desc");
     }
 
     @Override
     public void draw(GuiContext context)
     {
-        super.draw(context);
+        String title = this.title.get();
 
-        if (!this.title.isEmpty())
+        if (!title.isEmpty())
         {
-            this.font.drawStringWithShadow(this.title, this.area.x + 10, this.area.y + 10, 0xffffff);
-            this.font.drawSplitString(this.description, this.area.x + 10, this.area.y + 30, this.area.w / 3, 0xcccccc);
+            this.font.drawStringWithShadow(title, this.area.x + 10, this.area.y + 10, 0xffffff);
+            GuiDraw.drawMultiText(this.font, this.description.get(), this.area.x + 10, this.area.y + 30, 0xcccccc, this.area.w / 3);
         }
+
+        super.draw(context);
     }
 }

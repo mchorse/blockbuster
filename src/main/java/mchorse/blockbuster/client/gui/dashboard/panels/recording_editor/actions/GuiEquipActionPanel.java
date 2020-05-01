@@ -32,8 +32,8 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
         this.slot = new GuiSlotElement(mc,0, this::setSlot);
 
-        this.slot.flex().relative(this.area).xy(0.5F, 0.5F).wh(20, 20).anchor(0.5F, 0.5F);
-        this.inventory.flex().under(this.slot.flex(), 10).wh(400, 100);
+        this.slot.flex().relative(this.area).xy(0.5F, 0.5F).wh(24, 24).anchor(0.5F, 0.5F);
+        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F).wh(200, 100);
         this.add(this.slot, this.inventory);
     }
 

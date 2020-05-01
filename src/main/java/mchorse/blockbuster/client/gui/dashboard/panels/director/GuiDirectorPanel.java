@@ -257,7 +257,11 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     public GuiDirectorPanel openScene(SceneLocation location)
     {
-        if (location.isDirector()) tryAddingBlock(location.getPosition());
+        if (location.isDirector())
+        {
+            tryAddingBlock(location.getPosition());
+        }
+
         this.scenes.setVisible(false);
 
         return this.setScene(location);
@@ -322,6 +326,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     @Override
     public void open()
     {
+        this.setScene(this.location);
         this.scenes.setScene(this.location.getScene());
         this.scenes.updateSceneList();
 
