@@ -50,6 +50,7 @@ import net.minecraftforge.fml.common.Optional.Method;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
 
@@ -274,8 +275,13 @@ public class CameraHandler
             refresh.accept(b);
         });
 
+        IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
+        IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
+
         open.tooltip(IKey.lang("blockbuster.gui.dashboard.player_recording"), Direction.TOP);
-        toggle.tooltip(IKey.str("Toggle player recording editor"), Direction.TOP);
+        open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_V, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
+        toggle.tooltip(toggleEditor, Direction.TOP);
+        toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
 
         editorElement.setVisible(false);
 

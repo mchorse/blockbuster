@@ -375,3 +375,8 @@ blockbuster.gui:
             reload: Reload actors
             actions: Preview actions
             reload_scene: Reload scene
+
+        keys:
+            category: Player recording editor
+            toggle_list: Toggle player recording list
+            toggle_editor: Toggle player recording editor
