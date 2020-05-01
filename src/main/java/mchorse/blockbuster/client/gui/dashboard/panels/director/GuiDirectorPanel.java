@@ -209,6 +209,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         {
             ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
+            ClientProxy.panels.morphs.setSelected(this.replay.morph);
             this.add(ClientProxy.panels.morphs);
         });
         this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
@@ -326,6 +327,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     @Override
     public void open()
     {
+        ClientProxy.panels.morphs.reload();
+
         this.setScene(this.location);
         this.scenes.setScene(this.location.getScene());
         this.scenes.updateSceneList();
@@ -413,7 +416,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.teleportBack.toggled(this.replay.teleportBack);
         this.health.setValue(this.replay.health);
 
-        ClientProxy.panels.morphs.setSelected(this.replay.morph);
         this.selector.setReplay(this.replay);
         this.updateLabel();
     }

@@ -205,7 +205,6 @@ public class GuiTextureManagerPanel extends GuiBlockbusterPanel
     public void open()
     {
         Map<ResourceLocation, ITextureObject> map = ReflectionUtils.getTextures(this.mc.renderEngine);
-        ClientProxy.panels.morphs.reload();
 
         this.textures.clear();
         this.textures.getList().addAll(map.keySet());

@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphs;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -41,10 +42,9 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
     public static class GuiRecordMorphPanel extends GuiMorphPanel<RecordMorph, GuiRecordMorph>
     {
         private GuiStringSearchListElement records;
-        private GuiButtonElement pick;
+        private GuiNestedEdit pick;
         private GuiToggleElement loop;
         private GuiTrackpadElement randomSkip;
-        private GuiCreativeMorphs morphPicker;
 
         public GuiRecordMorphPanel(Minecraft mc, GuiRecordMorph editor)
         {
@@ -52,11 +52,11 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 
             this.records = new GuiStringSearchListElement(mc, (str) -> this.morph.setRecord(str.get(0)));
             this.records.list.background();
-            this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+            this.pick = new GuiNestedEdit(mc, (editing) ->
             {
                 RecordMorph record = this.morph;
 
-                this.editor.morphs.nestEdit(record.initial, (morph) ->
+                this.editor.morphs.nestEdit(record.initial, editing, (morph) ->
                 {
                     record.initial = MorphUtils.copy(morph);
                 });
@@ -93,11 +93,6 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
             this.records.list.setCurrent(morph.record);
             this.loop.toggled(morph.loop);
             this.randomSkip.setValue(morph.randomSkip);
-
-            if (this.morphPicker != null)
-            {
-                this.morphPicker.setSelected(morph.initial);
-            }
         }
 
         @Override

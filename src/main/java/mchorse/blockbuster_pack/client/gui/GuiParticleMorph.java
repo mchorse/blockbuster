@@ -14,6 +14,7 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
         this.registerPanel(this.general, IKey.lang("blockbuster.gui.particle.tooltip"), BBIcons.PARTICLE);
         this.registerPanel(this.panel, IKey.lang("blockbuster.gui.particle.morph"), Icons.POSE);
+
+        this.renderer.setVisible(false);
     }
 
     @Override
@@ -213,7 +216,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
 
     public static class GuiParticleMorphMorphPanel extends GuiMorphPanel<ParticleMorph, GuiParticleMorph>
     {
-        public GuiButtonElement pickMorph;
+        public GuiNestedEdit pickMorph;
         public GuiButtonElement pickType;
         public GuiStringListElement type;
         public GuiToggleElement yaw;
@@ -228,11 +231,11 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         {
             super(mc, editor);
 
-            this.pickMorph = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+            this.pickMorph = new GuiNestedEdit(mc, (editing) ->
             {
                 ParticleMorph particle = this.morph;
 
-                this.editor.morphs.nestEdit(particle.morph, (morph) ->
+                this.editor.morphs.nestEdit(particle.morph, editing, (morph) ->
                 {
                     particle.morph = MorphUtils.copy(morph);
                 });

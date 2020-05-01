@@ -107,8 +107,9 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         GuiButtonElement pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
         {
-            ClientProxy.panels.morphs.flex().reset().relative(this).wh(1F, 1F);
+            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
+            ClientProxy.panels.morphs.setSelected(this.model.morph);
             this.add(ClientProxy.panels.morphs);
         });
 
@@ -263,8 +264,6 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            ClientProxy.panels.morphs.setSelected(this.model.morph);
-
             this.yaw.setValue(this.model.rotateYawHead);
             this.pitch.setValue(this.model.rotatePitch);
             this.body.setValue(this.model.rotateBody);
@@ -286,9 +285,9 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     @Override
     public void draw(GuiContext context)
     {
-        if (this.model != null && !ClientProxy.panels.morphs.hasParent())
+        if (this.model != null)
         {
-            AbstractMorph morph = ClientProxy.panels.morphs.getSelected();
+            AbstractMorph morph = this.model.morph;
 
             if (morph != null)
             {

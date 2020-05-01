@@ -13,6 +13,7 @@ import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -50,7 +51,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private GuiButtonElement addPart;
         private GuiButtonElement removePart;
 
-        private GuiButtonElement pick;
+        private GuiNestedEdit pick;
         private GuiTrackpadElement duration;
         private GuiTrackpadElement random;
         private GuiToggleElement reverse;
@@ -95,7 +96,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 }
             });
 
-            this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+            this.pick = new GuiNestedEdit(mc, (editing) ->
             {
                 if (this.entry == null)
                 {
@@ -104,7 +105,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                 SequenceEntry entry = this.entry;
 
-                this.editor.morphs.nestEdit(entry.morph, (morph) ->
+                this.editor.morphs.nestEdit(entry.morph, editing, (morph) ->
                 {
                     entry.morph = morph;
                 });
