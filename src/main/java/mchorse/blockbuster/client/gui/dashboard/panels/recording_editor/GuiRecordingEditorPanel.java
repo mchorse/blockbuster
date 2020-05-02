@@ -104,14 +104,9 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         super(mc, dashboard);
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
-        this.selector.flex().relative(this.area).set(0, 0, 0, 80).y(1, -80).w(1, 0);
         this.selector.setVisible(false);
-
         this.records = new GuiRecordList(mc, this);
-        this.records.flex().set(0, 0, 120, 0).relative(this.area).x(1, -120).hTo(this.selector.flex());
-
         this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
-        this.editor.flex().relative(this.area).set(0, 0, 0, 0).w(1, 0).h(1, -80);
 
         /* Add/remove */
         this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.list.toggleVisible());
@@ -235,11 +230,11 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         Dispatcher.sendToServer(new PacketRequestActions());
 
         this.selector.removeFromParent();
-        this.selector.flex().relative(this.area);
+        this.selector.flex().reset().relative(this.area).h(80).y(1F, -80).w(1F);
         this.editor.removeFromParent();
-        this.editor.flex().relative(this.area);
+        this.editor.flex().reset().relative(this.area).w(1F).h(1, -80);
         this.records.removeFromParent();
-        this.records.flex().relative(this.area).hTo(this.editor.flex());
+        this.records.flex().reset().relative(this).w(120).x(1, -120).hTo(this.selector.flex());
 
         this.prepend(this.records);
         this.add(this.editor, this.selector);
