@@ -286,11 +286,5 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.lifeSpan.setValue(morph.lifeSpan);
             this.maximum.setValue(morph.maximum);
         }
-
-        @Override
-        public void draw(GuiContext context)
-        {
-            super.draw(context);
-        }
     }
 }
