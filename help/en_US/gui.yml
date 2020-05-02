@@ -32,6 +32,7 @@ blockbuster.gui:
         pose: Pose
         sneak: Apply on sneak
         reset: Reset pose
+        create: Create pose
     
     confirm:
         title: Confirm Breaking Director Block

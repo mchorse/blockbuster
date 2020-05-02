@@ -57,7 +57,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.picker.refresh();
                 this.picker.fill(this.morph.texture);
-                this.picker.setVisible(true);
+                this.add(this.picker);
             });
 
             this.scale = new GuiTrackpadElement(mc, (value) ->
@@ -85,7 +85,6 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.morph.texture = rl;
             });
-            this.picker.setVisible(false);
 
             this.left = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.x = value.intValue());
             this.left.tooltip(IKey.lang("blockbuster.gui.image.left"));
@@ -107,7 +106,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.shaded.flex().relative(this.scale.resizer()).set(0, 25, 80, 11);
             this.lighting.flex().relative(this.shaded.resizer()).set(0, 16, 80, 11);
             this.billboard.flex().relative(this.lighting.resizer()).set(0, 16, 80, 11);
-            this.picker.flex().relative(this.area).set(10, 10, 0, 0).w(1, -20).h(1, -20);
+            this.picker.flex().relative(this.area).wh(1F, 1F);
 
             this.left.flex().relative(this.billboard.resizer()).set(0, 11 + 30, 115, 20);
             this.right.flex().relative(this.left.resizer()).set(0, 25, 115, 20);
@@ -115,13 +114,15 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom.flex().relative(this.top.resizer()).set(0, 25, 115, 20);
             this.color.flex().relative(this.bottom.resizer()).set(0, 25, 115, 20);
 
-            this.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.left, this.right, this.top, this.bottom, this.color, this.picker);
+            this.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.left, this.right, this.top, this.bottom, this.color);
         }
 
         @Override
         public void fillData(ImageMorph morph)
         {
             super.fillData(morph);
+
+            this.picker.removeFromParent();
 
             this.scale.setValue(morph.scale);
             this.shaded.toggled(morph.shaded);
