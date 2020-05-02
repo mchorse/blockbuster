@@ -2,12 +2,14 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -70,16 +72,19 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.morph.shaded = this.shaded.isToggled();
             });
+            this.shaded.flex().h(14);
 
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) ->
             {
                 this.morph.lighting = this.lighting.isToggled();
             });
+            this.lighting.flex().h(14);
 
             this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) ->
             {
                 this.morph.billboard = this.billboard.isToggled();
             });
+            this.billboard.flex().h(14);
 
             this.picker = new GuiTexturePicker(mc, (rl) ->
             {
@@ -101,20 +106,14 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
             this.color.picker.editAlpha();
 
-            this.texture.flex().relative(this.area).set(10, 10, 115, 20);
-            this.scale.flex().relative(this.texture.resizer()).set(0, 25, 115, 20);
-            this.shaded.flex().relative(this.scale.resizer()).set(0, 25, 80, 11);
-            this.lighting.flex().relative(this.shaded.resizer()).set(0, 16, 80, 11);
-            this.billboard.flex().relative(this.lighting.resizer()).set(0, 16, 80, 11);
             this.picker.flex().relative(this.area).wh(1F, 1F);
 
-            this.left.flex().relative(this.billboard.resizer()).set(0, 11 + 30, 115, 20);
-            this.right.flex().relative(this.left.resizer()).set(0, 25, 115, 20);
-            this.top.flex().relative(this.right.resizer()).set(0, 25, 115, 20);
-            this.bottom.flex().relative(this.top.resizer()).set(0, 25, 115, 20);
-            this.color.flex().relative(this.bottom.resizer()).set(0, 25, 115, 20);
+            GuiElement animated = new GuiElement(mc);
 
-            this.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, this.left, this.right, this.top, this.bottom, this.color);
+            animated.flex().relative(this).w(130).column(5).vertical().stretch().height(20).padding(10);
+            animated.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color);
+
+            this.add(animated);
         }
 
         @Override
@@ -140,13 +139,11 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         @Override
         public void draw(GuiContext context)
         {
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.crop"), this.left.area.x, this.left.area.y - 12, 0xffffff);
-
             GifTexture.bindTexture(this.morph.texture);
             int w = this.morph.getWidth();
             int h = this.morph.getHeight();
 
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.dimensions", w, h), this.bottom.area.x, this.bottom.area.y + 25, 0xaaaaaa);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.dimensions", w, h), this.color.area.x, this.color.area.y + 25, 0xaaaaaa);
 
             super.draw(context);
         }
