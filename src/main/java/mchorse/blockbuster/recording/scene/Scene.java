@@ -301,7 +301,10 @@ public class Scene
 		this.setPlaying(true);
 		this.sendCommand(this.startCommand);
 
-		CommonProxy.damage.addDamageControl(this, firstActor);
+		if (firstActor != null)
+		{
+			CommonProxy.damage.addDamageControl(this, firstActor);
+		}
 	}
 
 	/**
@@ -368,7 +371,7 @@ public class Scene
 			RecordPlayer actor = entry.getValue();
 			boolean notAttached = true;
 
-			if (j == 0)
+			if (j == 0 && actor.actor != null)
 			{
 				CommonProxy.damage.addDamageControl(this, actor.actor);
 			}
