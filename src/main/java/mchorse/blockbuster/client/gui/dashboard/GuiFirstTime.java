@@ -58,7 +58,7 @@ public class GuiFirstTime extends GuiElement
 
 		if (!alreadyHas)
 		{
-			GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(dashboard.mc);
+			GuiFirstTime.Overlay overlay = new GuiFirstTime.Overlay(Minecraft.getMinecraft());
 
 			overlay.flex().relative(dashboard.viewport).w(1, 0).h(1, 0);
 			overlay.resize();
