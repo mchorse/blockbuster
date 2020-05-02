@@ -12,6 +12,7 @@ import mchorse.blockbuster.network.Dispatcher;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,6 @@ public class GuiPlayback extends GuiBase
     public GuiPlayback()
     {
         Minecraft mc = Minecraft.getMinecraft();
-
 
         this.profiles = new GuiProfilesManager.GuiCameraProfilesList(mc, (profile) -> {});
         this.profiles.background();
@@ -190,7 +190,7 @@ public class GuiPlayback extends GuiBase
     {
         boolean isCameraProfile = this.cameraMode.getValue() == 2;
 
-        this.drawDefaultBackground();
+        GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
         this.drawString(this.fontRenderer, this.stringTitle, this.frame.x, this.frame.y, 0xffffffff);
         this.drawString(this.fontRenderer, this.stringCameraMode, this.frame.x, this.cameraMode.area.y - 12, 0xffcccccc);
 

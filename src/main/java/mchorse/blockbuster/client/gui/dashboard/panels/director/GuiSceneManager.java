@@ -264,9 +264,12 @@ public class GuiSceneManager extends GuiElement
 
 	public void add(List<String> scenes)
 	{
+		String current = this.sceneList.getCurrentFirst();
+
 		this.sceneList.clear();
 		this.sceneList.add(scenes);
 		this.sceneList.sort();
+		this.sceneList.setCurrent(current);
 	}
 
 	@Override

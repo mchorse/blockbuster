@@ -364,7 +364,7 @@ public class GuiGun extends GuiBase
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        this.drawDefaultBackground();
+        GuiDraw.drawCustomBackground(0, 0, this.width, this.height);
 
         Gui.drawRect(0, 0, this.width, 35, 0x88000000);
         this.drawGradientRect(0, 35, this.width, 45, 0x88000000, 0x00000000);
