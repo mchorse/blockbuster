@@ -20,27 +20,46 @@ import java.util.Map;
 public class ModelLazyLoaderJSON implements IModelLazyLoader
 {
 	public IResourceEntry model;
+	public long lastTime;
+	public int lastCount = -1;
 
 	public ModelLazyLoaderJSON(IResourceEntry model)
 	{
 		this.model = model;
 	}
 
-	@Override
-	public long lastModified()
+	public int count()
 	{
-		return this.model.lastModified();
+		return this.model.exists() ? 1 : 0;
 	}
 
 	@Override
-	public int getFilenameHash()
+	public long getLastTime()
 	{
-		return this.getName(this.model).hashCode();
+		return this.lastTime;
 	}
 
-	protected String getName(IResourceEntry entry)
+	@Override
+	public void setLastTime(long lastTime)
 	{
-		return entry.exists() ? entry.getName() : "";
+		if (this.lastCount == -1)
+		{
+			this.lastCount = this.count();
+		}
+
+		this.lastTime = lastTime;
+	}
+
+	@Override
+	public boolean stillExists()
+	{
+		return this.lastCount == this.count();
+	}
+
+	@Override
+	public boolean hasChanged()
+	{
+		return this.model.hasChanged();
 	}
 
 	@Override

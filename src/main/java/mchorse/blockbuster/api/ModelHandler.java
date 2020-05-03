@@ -1,21 +1,15 @@
 package mchorse.blockbuster.api;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
-import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
-import mchorse.blockbuster.api.resource.StreamEntry;
-import mchorse.blockbuster.recording.data.Mode;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class responsible for storing domain custom models and sending models to
@@ -26,7 +20,7 @@ public class ModelHandler
     /**
      * Cached models, they're loaded from stuffs
      */
-    public Map<String, ModelCell> models = new HashMap<String, ModelCell>();
+    public Map<String, Model> models = new HashMap<String, Model>();
 
     /**
      * Actors pack from which ModelHandler loads its models
@@ -40,42 +34,29 @@ public class ModelHandler
     {
         pack.reload();
 
-        /* Keys which are going to be used to determine whether the
-         * model was removed */
-        Set<String> keys = new HashSet<String>(this.models.keySet());
-
         /* Load user provided models */
-        for (String model : pack.getModels())
+        for (Map.Entry<String, IModelLazyLoader> entry : (force ? pack.models.entrySet() : pack.changed.entrySet()))
         {
-            IModelLazyLoader loader = pack.models.get(model);
-            ModelCell cell = this.models.get(model);
-            long timestamp = loader.lastModified();
-
-            keys.remove(model);
-
-            /* Whether the model should be reloaded */
-            if (!force && cell != null && !cell.hasChanged(timestamp, loader.getFilenameHash()))
-            {
-                continue;
-            }
+            IModelLazyLoader loader = entry.getValue();
 
             try
             {
-                if (force && cell != null)
+                if (force)
                 {
-                    this.removeModel(model);
+                    this.removeModel(entry.getKey());
                 }
 
-                this.addModel(model, loader, timestamp);
+                this.addModel(entry.getKey(), loader);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
+                System.out.println("Error happened with " + entry.getKey());
             }
         }
 
         /* Remove unloaded models */
-        for (String key : keys)
+        for (String key : pack.removed)
         {
             this.removeModel(key);
         }
@@ -84,11 +65,11 @@ public class ModelHandler
     /**
      * Add model to the model handler 
      */
-    public void addModel(String key, IModelLazyLoader loader, long timestamp) throws Exception
+    public void addModel(String key, IModelLazyLoader loader) throws Exception
     {
         Model model = loader.loadModel(key);
 
-        this.models.put(key, new ModelCell(model, timestamp, loader.getFilenameHash()));
+        this.models.put(key, model);
 
         Blockbuster.proxy.factory.section.add(key, model);
     }
@@ -98,9 +79,12 @@ public class ModelHandler
      */
     public void removeModel(String key)
     {
-        this.models.remove(key);
+        Model model = this.models.remove(key);
 
-        Blockbuster.proxy.factory.section.remove(key);
+        if (model != null)
+        {
+            Blockbuster.proxy.factory.section.remove(key);
+        }
     }
 
     /**
@@ -119,25 +103,6 @@ public class ModelHandler
     @SideOnly(Side.CLIENT)
     public void onClientConnect(ClientConnectedToServerEvent event)
     {
-        Blockbuster.proxy.loadModels(Blockbuster.proxy.getPack(), false);
-    }
-
-    public static class ModelCell
-    {
-        public Model model;
-        private long timestamp;
-        private int hash;
-
-        public ModelCell(Model model, long timestamp, int hash)
-        {
-            this.model = model;
-            this.timestamp = timestamp;
-            this.hash = hash;
-        }
-
-        public boolean hasChanged(long timestamp, int hash)
-        {
-            return timestamp > this.timestamp || this.hash != hash;
-        }
+        Blockbuster.proxy.loadModels(false);
     }
 }

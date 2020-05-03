@@ -38,20 +38,7 @@ public class SubCommandModelReload extends CommandBase
         boolean force = args.length >= 1 && CommandBase.parseBoolean(args[0]);
 
         /* Reload models and skin */
-        ModelPack pack = Blockbuster.proxy.models.pack;
-
-        if (pack == null)
-        {
-            pack = Blockbuster.proxy.getPack();
-
-            if (Minecraft.getMinecraft().isSingleplayer())
-            {
-                pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
-            }
-        }
-
-        Blockbuster.proxy.loadModels(pack, force);
-        ClientProxy.actorPack.pack.reload();
+        Blockbuster.proxy.loadModels(force);
 
         Dispatcher.sendToServer(new PacketReloadModels(force));
     }

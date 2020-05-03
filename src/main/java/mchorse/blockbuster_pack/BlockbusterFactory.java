@@ -1,7 +1,6 @@
 package mchorse.blockbuster_pack;
 
 import mchorse.blockbuster.api.ModelHandler;
-import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster_pack.client.gui.GuiCustomMorph;
 import mchorse.blockbuster_pack.client.gui.GuiImageMorph;
 import mchorse.blockbuster_pack.client.gui.GuiParticleMorph;
@@ -90,13 +89,8 @@ public class BlockbusterFactory implements IMorphFactory
         {
             /* Custom model morphs */
             CustomMorph custom = new CustomMorph();
-            ModelCell entry = this.models.models.get(name);
 
-            if (entry != null)
-            {
-                custom.model = entry.model;
-            }
-
+            custom.model = this.models.models.get(name);
             morph = custom;
         }
 

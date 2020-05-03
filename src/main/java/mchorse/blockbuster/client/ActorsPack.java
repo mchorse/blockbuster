@@ -10,7 +10,9 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import jdk.nashorn.internal.ir.Block;
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.client.textures.GifProcessThread;
 import mchorse.blockbuster.client.textures.URLDownloadThread;
@@ -34,8 +36,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ActorsPack implements IResourcePack
 {
-    public ModelPack pack = new ModelPack();
-
     /**
      * Cached last file from {@link #resourceExists(ResourceLocation)} 
      * method
@@ -69,7 +69,7 @@ public class ActorsPack implements IResourcePack
          * in other method first, find the file */
         if (fileFile == null)
         {
-            for (File file : this.pack.folders)
+            for (File file : Blockbuster.proxy.pack.folders)
             {
                 File packFile = new File(file, path);
 
@@ -155,7 +155,7 @@ public class ActorsPack implements IResourcePack
         }
 
         /* Handle models path */
-        for (File file : this.pack.folders)
+        for (File file : Blockbuster.proxy.pack.folders)
         {
             this.lastFile = new File(file, path);
 

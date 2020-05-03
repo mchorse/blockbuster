@@ -46,6 +46,12 @@ public class StreamEntry implements IResourceEntry
     }
 
     @Override
+    public boolean hasChanged()
+    {
+        return false;
+    }
+
+    @Override
     public long lastModified()
     {
         return this.time;

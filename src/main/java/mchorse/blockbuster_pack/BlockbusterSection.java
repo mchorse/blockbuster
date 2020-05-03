@@ -11,11 +11,15 @@ import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FileEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -75,7 +79,44 @@ public class BlockbusterSection extends MorphSection
 
 		morph.name = "blockbuster." + key;
 		morph.model = model;
+		morph.skin = this.getSkin(key, model);
+
 		category.add(morph);
+		category.sort();
+	}
+
+	/**
+	 * Get the first skin which can be found
+	 */
+	private ResourceLocation getSkin(String key, Model model)
+	{
+		FolderEntry folder = ClientProxy.tree.getByPath(key + "/skins", null);
+
+		if (folder != null)
+		{
+			for (AbstractEntry skinEntry : folder.getEntries())
+			{
+				if (skinEntry instanceof FileEntry)
+				{
+					return ((FileEntry) skinEntry).resource;
+				}
+			}
+		}
+
+		folder = ClientProxy.tree.getByPath(model.skins + "/skins", null);
+
+		if (folder != null)
+		{
+			for (AbstractEntry skinEntry : folder.getEntries())
+			{
+				if (skinEntry instanceof FileEntry)
+				{
+					return  ((FileEntry) skinEntry).resource;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public void remove(String key)
@@ -130,21 +171,7 @@ public class BlockbusterSection extends MorphSection
 	private void reloadModels()
 	{
 		/* Reload models and skin */
-		ModelPack pack = Blockbuster.proxy.models.pack;
-
-		if (pack == null)
-		{
-			pack = Blockbuster.proxy.getPack();
-
-			if (Minecraft.getMinecraft().isSingleplayer())
-			{
-				pack.addFolder(DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models");
-			}
-		}
-
-		ClientProxy.actorPack.pack.reload();
-		Blockbuster.proxy.loadModels(pack, false);
-
+		Blockbuster.proxy.loadModels(false);
 		Blockbuster.proxy.particles.reload();
 		Dispatcher.sendToServer(new PacketStructureListRequest());
 	}

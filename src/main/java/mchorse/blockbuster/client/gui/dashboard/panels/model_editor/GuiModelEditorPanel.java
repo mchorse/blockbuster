@@ -231,12 +231,12 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             FileUtils.write(file, output, Charset.defaultCharset());
 
-            mchorse.blockbuster.api.ModelHandler.ModelCell model = Blockbuster.proxy.models.models.get(name);
+            Model model = Blockbuster.proxy.models.models.get(name);
             IModelLazyLoader loader = Blockbuster.proxy.models.pack.models.get(this.modelName);
 
             if (model != null)
             {
-                model.model.copy(this.model.clone());
+                model.copy(this.model.clone());
             }
 
             /* Copy OBJ files */
@@ -246,7 +246,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             }
 
             Blockbuster.proxy.models.pack.reload();
-            Blockbuster.proxy.models.addModel(name, loader, file.lastModified());
+            Blockbuster.proxy.models.addModel(name, loader);
             this.modelName = name;
         }
         catch (Exception e)
@@ -304,7 +304,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         if (model != null)
         {
-            this.setModel(name, model.model, ClientProxy.actorPack.pack.models.get(name));
+            this.setModel(name, model.model, Blockbuster.proxy.pack.models.get(name));
         }
     }
 

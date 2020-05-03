@@ -16,14 +16,18 @@ import java.io.IOException;
  */
 public interface IModelLazyLoader
 {
-	public long lastModified();
+	public long getLastTime();
 
-	public int getFilenameHash();
+	public void setLastTime(long time);
+
+	public boolean stillExists();
+
+	public boolean hasChanged();
+
+	public boolean copyFiles(File folder);
 
 	public Model loadModel(String key) throws Exception;
 
 	@SideOnly(Side.CLIENT)
 	public ModelCustom loadClientModel(String key, Model model) throws Exception;
-
-	public boolean copyFiles(File folder);
 }

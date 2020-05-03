@@ -1,14 +1,9 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.base.Objects;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.ModelHandler.ModelCell;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -18,11 +13,9 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.mclib.utils.Interpolation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
-import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
-import mchorse.metamorph.capabilities.morphing.IMorphing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBase;
@@ -41,6 +34,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Custom morph
@@ -142,7 +138,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         this.name = "blockbuster." + model;
         this.key = null;
-        this.model = Blockbuster.proxy.models.models.get(model).model;
+        this.model = Blockbuster.proxy.models.models.get(model);
     }
 
     @Override
@@ -601,9 +597,9 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         /* Replace the current model */
         if (!name.equals(this.name))
         {
-            ModelCell cell = Blockbuster.proxy.models.models.get(this.getKey());
+            Model model = Blockbuster.proxy.models.models.get(this.getKey());
 
-            this.model = cell == null ? this.model : cell.model;
+            this.model = model == null ? this.model : model;
         }
 
         if (tag.hasKey("Skin"))

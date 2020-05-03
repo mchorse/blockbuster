@@ -35,15 +35,15 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 	}
 
 	@Override
-	public int getFilenameHash()
+	public int count()
 	{
-		return (this.getName(this.model) + ":" + this.getName(this.obj) + ":" + this.getName(this.mtl)).hashCode();
+		return super.count() + (this.obj.exists() ? 2 : 0) + (this.mtl.exists() ? 4 : 0);
 	}
 
 	@Override
-	public long lastModified()
+	public boolean hasChanged()
 	{
-		return Math.max(this.model.lastModified(), Math.max(this.obj.lastModified(), this.mtl.lastModified()));
+		return super.hasChanged() || this.obj.hasChanged() || this.mtl.hasChanged();
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class ModelLazyLoaderOBJ extends ModelLazyLoaderJSON
 			return null;
 		}
 
-		long lastModified = this.lastModified();
+		long lastModified = Math.max(this.model.lastModified(), Math.max(this.obj.lastModified(), this.mtl.lastModified()));
 
 		if (this.lastModified < lastModified)
 		{

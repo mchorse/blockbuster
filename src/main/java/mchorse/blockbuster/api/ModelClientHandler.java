@@ -19,11 +19,11 @@ public class ModelClientHandler extends ModelHandler
 {
     @Override
     @SuppressWarnings("unchecked")
-    public void addModel(String key, IModelLazyLoader loader, long timestamp) throws Exception
+    public void addModel(String key, IModelLazyLoader loader) throws Exception
     {
-        super.addModel(key, loader, timestamp);
+        super.addModel(key, loader);
 
-        ModelCustom.MODELS.put(key, loader.loadClientModel(key, this.models.get(key).model));
+        ModelCustom.MODELS.put(key, loader.loadClientModel(key, this.models.get(key)));
     }
 
     @Override
@@ -32,6 +32,11 @@ public class ModelClientHandler extends ModelHandler
         super.removeModel(key);
 
         final ModelCustom model = ModelCustom.MODELS.remove(key);
+
+        if (model == null)
+        {
+            return;
+        }
 
         Minecraft.getMinecraft().addScheduledTask(() ->
         {
@@ -42,11 +47,8 @@ public class ModelClientHandler extends ModelHandler
              * 
              * Hopefully scheduling it fix this issue 
              */
-            if (model != null)
-            {
-                model.delete();
-                ModelExtrudedLayer.clearByModel(model);
-            }
+            model.delete();
+            ModelExtrudedLayer.clearByModel(model);
         });
     }
 }

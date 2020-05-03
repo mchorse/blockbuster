@@ -32,6 +32,8 @@ public interface IResourceEntry
 
     public boolean exists();
 
+    public boolean hasChanged();
+
     public long lastModified();
 
     public boolean copyTo(File file);

@@ -10,10 +10,12 @@ import java.io.InputStream;
 public class FileEntry implements IResourceEntry
 {
     public File file;
+    public long lastModified;
 
     public FileEntry(File file)
     {
         this.file = file;
+        this.lastModified = this.lastModified();
     }
 
     @Override
@@ -32,6 +34,17 @@ public class FileEntry implements IResourceEntry
     public boolean exists()
     {
         return this.file != null && this.file.exists();
+    }
+
+    @Override
+    public boolean hasChanged()
+    {
+        long lastModified = this.lastModified();
+        boolean result = lastModified > this.lastModified;
+
+        this.lastModified = lastModified;
+
+        return result;
     }
 
     @Override

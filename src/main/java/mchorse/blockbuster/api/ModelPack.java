@@ -2,13 +2,12 @@ package mchorse.blockbuster.api;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
+import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.loaders.IModelLoader;
 import mchorse.blockbuster.api.loaders.ModelLoaderJSON;
 import mchorse.blockbuster.api.loaders.ModelLoaderOBJ;
@@ -16,26 +15,13 @@ import mchorse.blockbuster.api.loaders.ModelLoaderVOX;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.resource.StreamEntry;
+import net.minecraftforge.common.DimensionManager;
 
 /**
  * Model pack class
- *
- * Previously was known to be part of ActorsPack, but was decomposed since
- * this code is also required to be on the server side, because the newer
- * code has to collect information about models and skin in save's "blockbuster"
- * folder.
- *
- * This class is responsible for collecting information about models and skins
- * in the given folders. You add which folders to check upon by using
- * {@link #addFolder(String)} method.
  */
 public class ModelPack
 {
-    /**
-     * List of ignored models
-     */
-    public static Set<String> IGNORED_MODELS = ImmutableSet.of("steve", "alex", "fred", "empty");
-
     /**
      * List of model loaders
      */
@@ -47,25 +33,52 @@ public class ModelPack
     public Map<String, IModelLazyLoader> models = new HashMap<String, IModelLazyLoader>();
 
     /**
-     * Folders which to check when reloading models and skins
+     * Folders which to check when reloading models
      */
     public List<File> folders = new ArrayList<File>();
 
+    /**
+     * Map for only changed models
+     */
+    public Map<String, IModelLazyLoader> changed = new HashMap<String, IModelLazyLoader>();
+
+    /**
+     * List of removed models
+     */
+    public List<String> removed = new ArrayList<String>();
+
+    private long lastTime;
+
     public ModelPack()
     {
-        /* TODO: implement reading of loading models from the jar */
         this.loaders.add(new ModelLoaderVOX());
         this.loaders.add(new ModelLoaderOBJ());
         this.loaders.add(new ModelLoaderJSON());
+
+        this.setupFolders();
+    }
+
+    /**
+     * Setup folders
+     */
+    public void setupFolders()
+    {
+        this.folders.clear();
+        this.addFolder(new File(CommonProxy.configFile, "models"));
+
+        File server = DimensionManager.getCurrentSaveRootDirectory();
+
+        if (server != null)
+        {
+            this.addFolder(new File(server, "blockbuster/models"));
+        }
     }
 
     /**
      * Add a folder to the list of folders to where to look up models and skins
      */
-    public void addFolder(String path)
+    private void addFolder(File folder)
     {
-        File folder = new File(path);
-
         folder.mkdirs();
 
         if (folder.isDirectory())
@@ -75,26 +88,15 @@ public class ModelPack
     }
 
     /**
-     * Get available models
-     */
-    public List<String> getModels()
-    {
-        return new ArrayList<String>(this.models.keySet());
-    }
-
-    /**
-     * Reload actor resources.
-     *
-     * Damn, that won't be fun to reload the game every time you want to put
-     * another skin in the skins folder, so why not just reload it every time
-     * the GUI is showed? It's easy to implement and requires no extra code.
-     *
-     * This method reloads models from config/blockbuster/models/ and skins from
-     * config/blockbuster/models/$model/skins/.
+     * Reload model handler
      */
     public void reload()
     {
-        this.models.clear();
+        this.setupFolders();
+
+        this.changed.clear();
+        this.removed.clear();
+        this.lastTime = System.currentTimeMillis();
 
         for (File folder : this.folders)
         {
@@ -116,6 +118,30 @@ public class ModelPack
         {
             e.printStackTrace();
         }
+
+        this.removeOld();
+    }
+
+    /**
+     * Remove old entries
+     */
+    private void removeOld()
+    {
+        Iterator<Map.Entry<String, IModelLazyLoader>> it = this.models.entrySet().iterator();
+
+        while (it.hasNext())
+        {
+            Map.Entry<String, IModelLazyLoader> entry = it.next();
+            long lastTime = entry.getValue().getLastTime();
+
+            if (lastTime < this.lastTime && lastTime >= 0)
+            {
+                it.remove();
+
+                this.removed.add(entry.getKey());
+                System.out.println("BB removing: " + entry.getKey() + " " + entry.getValue().getLastTime() + " " + this.lastTime);
+            }
+        }
     }
 
     /**
@@ -123,19 +149,25 @@ public class ModelPack
      */
     private void addDefaultModel(String id) throws Exception
     {
-        if (!this.models.containsKey(id))
+        IModelLazyLoader lazy = this.models.get(id);
+
+        if (lazy == null)
         {
             String path = "assets/blockbuster/models/entity/";
             ClassLoader loader = this.getClass().getClassLoader();
 
-            this.models.put(id, new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader)));
+            lazy = new ModelLazyLoaderJSON(new StreamEntry(path + id + ".json", 0, loader));
+            lazy.setLastTime(-1);
+
+            this.models.put(id, lazy);
+            System.out.println("BB adding default: " + id);
         }
     }
 
     /**
      * Reload models
      *
-     * Simply caches files in the map for retrieval in actor GUI
+     * Simply caches files in the map
      */
     protected void reloadModels(File folder, String prefix)
     {
@@ -143,12 +175,39 @@ public class ModelPack
         {
             String name = file.getName();
 
-            if (name.startsWith("__") || !file.isDirectory())
+            if (name.startsWith("__") || name.equals("skins") || file.isFile())
             {
                 continue;
             }
 
-            IModelLazyLoader lazyLoader = null;
+            String path = prefix + name;
+            IModelLazyLoader lazyLoader = this.models.get(path);
+
+            if (lazyLoader != null && lazyLoader.getLastTime() >= 0)
+            {
+                if (lazyLoader.stillExists())
+                {
+                    lazyLoader.setLastTime(this.lastTime);
+
+                    if (lazyLoader.hasChanged())
+                    {
+                        this.changed.put(path, lazyLoader);
+
+                        System.out.println("BB changing: " + path + " " + ((ModelLazyLoaderJSON) lazyLoader).count() + " " + ((ModelLazyLoaderJSON) lazyLoader).lastCount);
+                    }
+                    else
+                    {
+                        System.out.println("BB preserving: " + path);
+                    }
+
+                    continue;
+                }
+            }
+            else
+            {
+                /* Overwriting the default model */
+                lazyLoader = null;
+            }
 
             for (IModelLoader loader : this.loaders)
             {
@@ -156,17 +215,21 @@ public class ModelPack
 
                 if (lazyLoader != null)
                 {
+                    lazyLoader.setLastTime(this.lastTime);
+
                     break;
                 }
             }
 
             if (lazyLoader != null)
             {
-                this.models.put(prefix + name, lazyLoader);
+                this.models.put(path, lazyLoader);
+                this.changed.put(path, lazyLoader);
+                System.out.println("BB adding: " + path);
             }
-            else if (!file.getName().equals("skins"))
+            else
             {
-                this.reloadModels(file, prefix + name + "/");
+                this.reloadModels(file, path + "/");
             }
         }
     }

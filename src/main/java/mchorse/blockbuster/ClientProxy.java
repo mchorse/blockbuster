@@ -146,10 +146,6 @@ public class ClientProxy extends CommonProxy
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(actorPack = new ActorsPack());
-
-            actorPack.pack.addFolder(path + "/models");
-            actorPack.pack.reload();
-
             IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 
             if (manager instanceof SimpleReloadableResourceManager)
@@ -158,7 +154,7 @@ public class ClientProxy extends CommonProxy
             }
 
             /* File tree */
-            GlobalTree.TREE.register(tree = new BlockbusterTree(actorPack.pack.folders.get(0)));
+            GlobalTree.TREE.register(tree = new BlockbusterTree(this.pack.folders.get(0)));
 
             /* Create steve, alex and fred skins folders */
             new File(path + "/models/steve/skins").mkdirs();

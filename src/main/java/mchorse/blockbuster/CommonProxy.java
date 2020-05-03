@@ -88,6 +88,11 @@ public class CommonProxy
     public ModelHandler models;
 
     /**
+     * Model pack
+     */
+    public ModelPack pack;
+
+    /**
      * Bedrock particle library
      */
     public BedrockLibrary particles;
@@ -147,7 +152,8 @@ public class CommonProxy
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording::new);
         CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun::new);
 
-        /* Morphing */
+        /* Models and morphing */
+        this.pack = new ModelPack();
         this.models = this.getHandler();
         this.factory = new BlockbusterFactory();
         this.factory.models = this.models;
@@ -183,25 +189,11 @@ public class CommonProxy
      * Load models from given model pack
      *
      * This method is responsible only for loading domain models (in form of
-     * data). For client models, you should look up {@link ClientProxy}'s
-     * {@link #loadModels(ModelPack, boolean)} method.
+     * data).
      */
-    public void loadModels(ModelPack pack, boolean force)
+    public void loadModels(boolean force)
     {
-        this.models.pack = pack;
         this.models.loadModels(pack, force);
-    }
-
-    /**
-     * Get an model pack
-     */
-    public ModelPack getPack()
-    {
-        ModelPack pack = new ModelPack();
-
-        pack.addFolder(configFile.getAbsolutePath() + "/models");
-
-        return pack;
     }
 
     /**

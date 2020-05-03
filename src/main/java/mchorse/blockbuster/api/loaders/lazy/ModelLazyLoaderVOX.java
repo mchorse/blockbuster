@@ -32,15 +32,15 @@ public class ModelLazyLoaderVOX extends ModelLazyLoaderJSON
 	}
 
 	@Override
-	public int getFilenameHash()
+	public int count()
 	{
-		return (this.getName(this.model) + ":" + this.getName(this.vox)).hashCode();
+		return super.count() + (this.vox.exists() ? 2 : 0);
 	}
 
 	@Override
-	public long lastModified()
+	public boolean hasChanged()
 	{
-		return Math.max(this.model.lastModified(), this.vox.lastModified());
+		return super.hasChanged() || this.vox.hasChanged();
 	}
 
 	@Override

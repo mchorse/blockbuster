@@ -186,11 +186,7 @@ public class Blockbuster
      */
     public static void reloadServerModels(boolean force)
     {
-        String path = DimensionManager.getCurrentSaveRootDirectory() + "/blockbuster/models";
-
-        proxy.models.pack = proxy.getPack();
-        proxy.models.pack.addFolder(path);
-        proxy.loadModels(proxy.models.pack, force);
+        proxy.loadModels(force);
     }
 
     @SubscribeEvent
