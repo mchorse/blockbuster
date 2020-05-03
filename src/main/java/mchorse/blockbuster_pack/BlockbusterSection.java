@@ -3,7 +3,6 @@ package mchorse.blockbuster_pack;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
-import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.structure.PacketStructureListRequest;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
@@ -11,6 +10,7 @@ import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
@@ -18,16 +18,15 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FilenameUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +52,32 @@ public class BlockbusterSection extends MorphSection
 		this.extra.add(new ParticleMorph());
 		this.extra.add(new SequencerMorph());
 		this.extra.add(new RecordMorph());
+	}
+
+	public void addStructure(String name)
+	{
+		this.remove(name);
+
+		StructureMorph morph = new StructureMorph();
+
+		morph.structure = name;
+		this.structures.add(morph);
+		this.structures.sort();
+	}
+
+	public void removeStructure(String name)
+	{
+		Iterator<AbstractMorph> it = this.structures.getMorphs().iterator();
+
+		while (it.hasNext())
+		{
+			AbstractMorph morph = it.next();
+
+			if (((StructureMorph) morph).structure.equals(name))
+			{
+				it.remove();
+			}
+		}
 	}
 
 	public void add(String key, Model model)

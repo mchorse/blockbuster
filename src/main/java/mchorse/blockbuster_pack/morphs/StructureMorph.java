@@ -230,7 +230,7 @@ public class StructureMorph extends AbstractMorph
     @Override
     public AbstractMorph create()
     {
-        return null;
+        return new StructureMorph();
     }
 
     @Override

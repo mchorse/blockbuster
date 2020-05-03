@@ -3,6 +3,7 @@ package mchorse.blockbuster.network.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.structure.PacketStructure;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
@@ -54,6 +55,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
                     if (renderer != null)
                     {
                         renderer.delete();
+                        Blockbuster.proxy.factory.section.removeStructure(message.name);
                     }
 
                     return;
@@ -69,6 +71,7 @@ public class ClientHandlerStructure extends ClientMessageHandler<PacketStructure
                 }
 
                 StructureMorph.STRUCTURES.put(message.name, renderer);
+                Blockbuster.proxy.factory.section.addStructure(message.name);
             }
             catch (Exception e)
             {
