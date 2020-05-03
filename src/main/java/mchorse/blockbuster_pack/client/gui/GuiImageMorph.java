@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -11,12 +12,17 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 {
@@ -34,6 +40,16 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
     public boolean canEdit(AbstractMorph morph)
     {
         return morph instanceof ImageMorph;
+    }
+
+    @Override
+    public List<Label<NBTTagCompound>> getPresets(ImageMorph morph)
+    {
+        List<Label<NBTTagCompound>> list = new ArrayList<Label<NBTTagCompound>>();
+
+        GuiCustomMorph.addSkins(morph, list, "Texture", ClientProxy.tree.getByPath("image/skins", null));
+
+        return list;
     }
 
     public static class GuiImageMorphPanel extends GuiMorphPanel<ImageMorph, GuiImageMorph>

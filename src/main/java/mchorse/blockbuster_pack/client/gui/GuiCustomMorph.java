@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.client.gui;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -12,17 +13,25 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.files.entries.AbstractEntry;
+import mchorse.mclib.utils.files.entries.FileEntry;
+import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -33,6 +42,37 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     public GuiCustomBodyPartEditor bodyPart;
     public GuiMaterialsPanel materials;
     public GuiModelRendererBodyPart bbRenderer;
+
+    public static void addSkins(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, FolderEntry entry)
+    {
+        if (entry == null)
+        {
+            return;
+        }
+
+        for (AbstractEntry skinEntry : entry.getEntries())
+        {
+            if (skinEntry instanceof FileEntry)
+            {
+                ResourceLocation location = ((FileEntry) skinEntry).resource;
+
+                addPreset(morph, list, name, location.getResourcePath(), location);
+            }
+        }
+    }
+
+    public static void addPreset(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, String label, ResourceLocation skin)
+    {
+        try
+        {
+            NBTTagCompound tag = morph.toNBT();
+
+            tag.setString(name, skin.toString());
+            list.add(new Label<>(IKey.str(label), tag));
+        }
+        catch (Exception e)
+        {}
+    }
 
     public GuiCustomMorph(Minecraft mc)
     {
@@ -100,6 +140,18 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.bbRenderer.morph = morph;
         this.bbRenderer.limb = null;
         this.bodyPart.setLimbs(morph.model.limbs.keySet());
+    }
+
+    @Override
+    public List<Label<NBTTagCompound>> getPresets(CustomMorph morph)
+    {
+        List<Label<NBTTagCompound>> list = new ArrayList<Label<NBTTagCompound>>();
+        String key = morph.getKey();
+
+        addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(key + "/skins", null));
+        addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(morph.model.skins + "/skins", null));
+
+        return list;
     }
 
     public void updateModelRenderer()
