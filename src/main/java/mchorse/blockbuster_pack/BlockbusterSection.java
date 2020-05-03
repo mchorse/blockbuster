@@ -178,7 +178,7 @@ public class BlockbusterSection extends MorphSection
 
 	public static class BlockbusterCategory extends MorphCategory
 	{
-		public String subtitle = "";
+		public String subtitle;
 
 		public BlockbusterCategory(MorphSection parent, String title, String subtitle)
 		{

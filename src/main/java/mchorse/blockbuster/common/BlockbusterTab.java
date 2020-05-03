@@ -1,7 +1,9 @@
 package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.Blockbuster;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
@@ -45,5 +47,11 @@ public class BlockbusterTab extends CreativeTabs
         ItemMonsterPlacer.applyEntityIdToItemStack(stack, new ResourceLocation("blockbuster", "actor"));
 
         items.add(stack);
+
+        if (Blockbuster.addUtilityBlocks.get())
+        {
+            items.add(new ItemStack(Blocks.COMMAND_BLOCK));
+            items.add(new ItemStack(Blocks.STRUCTURE_BLOCK));
+        }
     }
 }

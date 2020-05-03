@@ -8,6 +8,7 @@ blockbuster.config.comments:
         green_screen_sky: Makes the sky solid color for chroma keying purposes
         green_screen_sky_color: Specifies the sky color for chroma sky feature
         url_skins_sync_download: Synchronous downloading of URL skins. It makes it work URL skins with 3D outer layers at cost of freezing the game to download a skin
+        add_utility_blocks: Add blocks such as command and structure blocks to Blockbuster's creative tab to simplify access to these items
 
     model_block:
         model_block_disable_rendering: Whether model blocks should be rendered

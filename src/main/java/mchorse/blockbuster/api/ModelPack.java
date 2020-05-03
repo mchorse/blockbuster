@@ -139,7 +139,6 @@ public class ModelPack
                 it.remove();
 
                 this.removed.add(entry.getKey());
-                System.out.println("BB removing: " + entry.getKey() + " " + entry.getValue().getLastTime() + " " + this.lastTime);
             }
         }
     }
@@ -160,7 +159,6 @@ public class ModelPack
             lazy.setLastTime(-1);
 
             this.models.put(id, lazy);
-            System.out.println("BB adding default: " + id);
         }
     }
 
@@ -192,12 +190,6 @@ public class ModelPack
                     if (lazyLoader.hasChanged())
                     {
                         this.changed.put(path, lazyLoader);
-
-                        System.out.println("BB changing: " + path + " " + ((ModelLazyLoaderJSON) lazyLoader).count() + " " + ((ModelLazyLoaderJSON) lazyLoader).lastCount);
-                    }
-                    else
-                    {
-                        System.out.println("BB preserving: " + path);
                     }
 
                     continue;
@@ -225,7 +217,6 @@ public class ModelPack
             {
                 this.models.put(path, lazyLoader);
                 this.changed.put(path, lazyLoader);
-                System.out.println("BB adding: " + path);
             }
             else
             {
