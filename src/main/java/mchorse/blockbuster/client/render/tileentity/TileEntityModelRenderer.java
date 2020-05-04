@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel.RotationOrder;
+import mchorse.mclib.client.Draw;
 import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -137,14 +137,14 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-            GuiBBModelRenderer.drawCube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, (te.enabled ? 0 : 1), (te.enabled ? 0.5F : 0.85F), (te.enabled ? 1 : 0), 0.35F);
-            GuiBBModelRenderer.drawCube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
+            Draw.cube(buffer, x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, (te.enabled ? 0 : 1), (te.enabled ? 0.5F : 0.85F), (te.enabled ? 1 : 0), 0.35F);
+            Draw.cube(buffer, x + 0.45F + te.x, y + te.y, z + 0.45F + te.z, x + 0.55F + te.x, y + 0.1F + te.y, z + 0.55F + te.z, 1, 1, 1, 0.85F);
 
             double distance = MathHelper.sqrt(Vec3d.ZERO.squareDistanceTo(te.x, te.y, te.z));
 
             if (distance > 0.1)
             {
-                GuiBBModelRenderer.drawCube(buffer, x + 0.45F, y, z + 0.45F, x + 0.55F, y + 0.1F, z + 0.55F, 1, 1, 1, 0.85F);
+                Draw.cube(buffer, x + 0.45F, y, z + 0.45F, x + 0.55F, y + 0.1F, z + 0.55F, 1, 1, 1, 0.85F);
 
                 tessellator.draw();
 
@@ -157,7 +157,7 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
                 GL11.glRotated(yaw, 0.0F, 1.0F, 0.0F);
                 GL11.glRotated(pitch, 1.0F, 0.0F, 0.0F);
 
-                GuiBBModelRenderer.drawCube(-0.025F, -0.025F, 0, 0.025F, 0.025F, -distance, 0, 0, 0, 0.5F);
+                Draw.cube(-0.025F, -0.025F, 0, 0.025F, 0.025F, -distance, 0, 0, 0, 0.5F);
 
                 GL11.glPopMatrix();
             }

@@ -48,9 +48,6 @@ public class BlockbusterFactory implements IMorphFactory
         editors.add(new GuiSequencerMorph(mc));
         editors.add(new GuiRecordMorph(mc));
         editors.add(new GuiParticleMorph(mc));
-        /* TODO: in the future...
-           editors.add(new GuiSnowstormMorph(mc));
-         */
     }
 
     @Override

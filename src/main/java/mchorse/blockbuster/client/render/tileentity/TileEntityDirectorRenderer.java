@@ -1,9 +1,9 @@
 package mchorse.blockbuster.client.render.tileentity;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
+import mchorse.mclib.client.Draw;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,11 +38,11 @@ public class TileEntityDirectorRenderer extends TileEntitySpecialRenderer<TileEn
 
             if (playing)
             {
-                GuiBBModelRenderer.drawCube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 1, 0, 0.5F);
+                Draw.cube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 0, 1, 0, 0.5F);
             }
             else
             {
-                GuiBBModelRenderer.drawCube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 1, 0, 0, 0.5F);
+                Draw.cube(x + 0.25F, y + 0.25F, z + 0.25F, x + 0.75F, y + 0.75F, z + 0.75F, 1, 0, 0, 0.5F);
             }
 
             GlStateManager.disableBlend();

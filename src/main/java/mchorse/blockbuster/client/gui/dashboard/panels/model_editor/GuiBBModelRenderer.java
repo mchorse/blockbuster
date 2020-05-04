@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRe
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.utils.DummyEntity;
@@ -43,55 +44,6 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public ModelCustom model;
     public ModelPose pose;
     public ModelLimb limb;
-
-    public static void drawCube(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float red, float green, float blue, float alpha)
-    {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        drawCube(buffer, minX, minY, minZ, maxX, maxY, maxZ, red, green, blue, alpha);
-        tessellator.draw();
-    }
-
-    public static void drawCube(BufferBuilder buffer, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float red, float green, float blue, float alpha)
-    {
-        /* Top */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-
-        /* Bottom */
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-
-        /* Left */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-
-        /* Right */
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-
-        /* Front */
-        buffer.pos(minX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, minZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, minZ).color(red, green, blue, alpha).endVertex();
-
-        /* Back */
-        buffer.pos(minX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(minX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, minY, maxZ).color(red, green, blue, alpha).endVertex();
-        buffer.pos(maxX, maxY, maxZ).color(red, green, blue, alpha).endVertex();
-    }
 
     public GuiBBModelRenderer(Minecraft mc)
     {
@@ -292,52 +244,14 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
 
-        drawCube(minX + o, minY - o, minZ -o, maxX - o, maxY + o, maxZ + o, 0F, 0.5F, 1F, alpha);
+        Draw.cube(minX + o, minY - o, minZ -o, maxX - o, maxY + o, maxZ + o, 0F, 0.5F, 1F, alpha);
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
 
         if (this.origin)
         {
-            GL11.glLineWidth(5);
-            GL11.glBegin(GL11.GL_LINES);
-            GL11.glColor3d(0, 0, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0.25, 0, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0, 0.25, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0, 0, 0.25);
-            GL11.glEnd();
-
-            GL11.glLineWidth(3);
-            GL11.glBegin(GL11.GL_LINES);
-            GL11.glColor3d(1, 0, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0.25, 0, 0);
-
-            GL11.glColor3d(0, 1, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0, 0.25, 0);
-
-            GL11.glColor3d(0, 0, 1);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glVertex3d(0, 0, 0.25);
-            GL11.glEnd();
-            GL11.glLineWidth(1);
-
-            GL11.glPointSize(12);
-            GL11.glBegin(GL11.GL_POINTS);
-            GL11.glColor3d(0, 0, 0);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glEnd();
-
-            GL11.glPointSize(10);
-            GL11.glBegin(GL11.GL_POINTS);
-            GL11.glColor3d(1, 1, 1);
-            GL11.glVertex3d(0, 0, 0);
-            GL11.glEnd();
-            GL11.glPointSize(1);
+            Draw.axis(0.25F);
         }
     }
 
