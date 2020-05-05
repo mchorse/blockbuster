@@ -78,7 +78,9 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.picker.refresh();
                 this.picker.fill(this.morph.texture);
+
                 this.add(this.picker);
+                this.picker.resize();
             });
 
             this.scale = new GuiTrackpadElement(mc, (value) ->
