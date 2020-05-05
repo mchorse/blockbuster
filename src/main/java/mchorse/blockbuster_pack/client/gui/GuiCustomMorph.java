@@ -50,13 +50,29 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             return;
         }
 
-        for (AbstractEntry skinEntry : entry.getEntries())
+        for (AbstractEntry childEntry : entry.getEntries())
         {
-            if (skinEntry instanceof FileEntry)
+            if (childEntry instanceof FileEntry)
             {
-                ResourceLocation location = ((FileEntry) skinEntry).resource;
+                ResourceLocation location = ((FileEntry) childEntry).resource;
+                String label = location.getResourcePath();
+                int index = label.indexOf("/skins/");
 
-                addPreset(morph, list, name, location.getResourcePath(), location);
+                if (index != -1)
+                {
+                    label = label.substring(index + 7);
+                }
+
+                addPreset(morph, list, name, label, location);
+            }
+            else if (childEntry instanceof FolderEntry)
+            {
+                FolderEntry childFolder = (FolderEntry) childEntry;
+
+                if (!childFolder.isTop())
+                {
+                    addSkins(morph, list, name, childFolder);
+                }
             }
         }
     }
