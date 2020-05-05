@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.client.gui;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.mclib.client.gui.utils.Label;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,12 @@ public class GuiSnowstormMorph extends GuiAbstractMorph<SnowstormMorph>
 	public GuiSnowstormMorph(Minecraft mc)
 	{
 		super(mc);
+	}
+
+	@Override
+	public boolean canEdit(AbstractMorph morph)
+	{
+		return morph instanceof SnowstormMorph;
 	}
 
 	@Override
