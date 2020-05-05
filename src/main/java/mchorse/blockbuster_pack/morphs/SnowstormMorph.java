@@ -63,6 +63,7 @@ public class SnowstormMorph extends AbstractMorph
 		if (this.emitter == null)
 		{
 			this.emitter = new BedrockEmitter();
+			this.setClientScheme(this.scheme);
 		}
 
 		return this.emitter;
@@ -91,7 +92,11 @@ public class SnowstormMorph extends AbstractMorph
 
 	private void setClientScheme(String key)
 	{
-		this.getEmitter().setScheme(Blockbuster.proxy.particles.presets.get(key));
+		this.getEmitter().running = false;
+		this.getLastEmitters().add(this.getEmitter());
+
+		this.emitter = new BedrockEmitter();
+		this.emitter.setScheme(Blockbuster.proxy.particles.presets.get(key));
 	}
 
 	@Override
@@ -271,10 +276,6 @@ public class SnowstormMorph extends AbstractMorph
 
 			if (!this.scheme.equals(snow.scheme) && this.emitter != null)
 			{
-				this.getEmitter().running = false;
-				this.getLastEmitters().add(this.getEmitter());
-
-				this.emitter = new BedrockEmitter();
 				this.setScheme(snow.scheme);
 			}
 

@@ -70,8 +70,12 @@ public class ModelHandler
         Model model = loader.loadModel(key);
 
         this.models.put(key, model);
+        this.addMorph(key, model);
+    }
 
-        Blockbuster.proxy.factory.section.add(key, model);
+    protected void addMorph(String key, Model model)
+    {
+        Blockbuster.proxy.factory.section.add(key, model, false);
     }
 
     /**

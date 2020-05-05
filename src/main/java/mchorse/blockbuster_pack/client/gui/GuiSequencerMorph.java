@@ -18,10 +18,13 @@ import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@SideOnly(Side.CLIENT)
 public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 {
     public GuiSequencerMorphPanel general;

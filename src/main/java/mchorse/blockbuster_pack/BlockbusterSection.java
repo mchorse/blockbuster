@@ -10,6 +10,7 @@ import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.morphs.ParticleMorph;
 import mchorse.blockbuster_pack.morphs.RecordMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
+import mchorse.blockbuster_pack.morphs.SnowstormMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
@@ -45,13 +46,16 @@ public class BlockbusterSection extends MorphSection
 
 		/* Adding some default morphs which don't need to get reloaded */
 		ImageMorph image = new ImageMorph();
+		SnowstormMorph snow = new SnowstormMorph();
 
 		image.texture = RLUtils.create("blockbuster", "textures/gui/icon.png");
+		snow.setScheme("default_rain");
 
 		this.extra.add(image);
 		this.extra.add(new ParticleMorph());
 		this.extra.add(new SequencerMorph());
 		this.extra.add(new RecordMorph());
+		this.extra.add(snow);
 	}
 
 	public void addStructure(String name)
@@ -80,7 +84,7 @@ public class BlockbusterSection extends MorphSection
 		}
 	}
 
-	public void add(String key, Model model)
+	public void add(String key, Model model, boolean isRemote)
 	{
 		String path = this.getCategoryId(key);
 		MorphCategory category = this.models.get(path);
@@ -104,7 +108,11 @@ public class BlockbusterSection extends MorphSection
 
 		morph.name = "blockbuster." + key;
 		morph.model = model;
-		morph.skin = this.getSkin(key, model);
+
+		if (isRemote)
+		{
+			morph.skin = this.getSkin(key, model);
+		}
 
 		category.add(morph);
 		category.sort();
@@ -113,6 +121,7 @@ public class BlockbusterSection extends MorphSection
 	/**
 	 * Get the first skin which can be found
 	 */
+	@SideOnly(Side.CLIENT)
 	private ResourceLocation getSkin(String key, Model model)
 	{
 		FolderEntry folder = ClientProxy.tree.getByPath(key + "/skins", null);

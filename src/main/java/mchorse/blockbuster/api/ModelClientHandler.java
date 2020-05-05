@@ -1,5 +1,6 @@
 package mchorse.blockbuster.api;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
@@ -24,6 +25,12 @@ public class ModelClientHandler extends ModelHandler
         super.addModel(key, loader);
 
         ModelCustom.MODELS.put(key, loader.loadClientModel(key, this.models.get(key)));
+    }
+
+    @Override
+    protected void addMorph(String key, Model model)
+    {
+        Blockbuster.proxy.factory.section.add(key, model, true);
     }
 
     @Override
