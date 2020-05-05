@@ -232,7 +232,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             FileUtils.write(file, output, Charset.defaultCharset());
 
             Model model = Blockbuster.proxy.models.models.get(name);
-            IModelLazyLoader loader = Blockbuster.proxy.models.pack.models.get(this.modelName);
+            IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(this.modelName);
 
             if (model != null)
             {
@@ -245,7 +245,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
                 loader.copyFiles(folder);
             }
 
-            Blockbuster.proxy.models.pack.reload();
             Blockbuster.proxy.models.addModel(name, loader);
             this.modelName = name;
         }
@@ -326,8 +325,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         if (this.renderTexture == null)
         {
-            Blockbuster.proxy.models.pack.reload();
-
             FolderEntry folder = ClientProxy.tree.getByPath(name + "/skins", null);
 
             if (folder != null)
