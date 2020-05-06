@@ -58,14 +58,28 @@ public class BlockbusterSection extends MorphSection
 		this.extra.add(snow);
 	}
 
-	public void addStructure(String name)
+	public void addStructure(String name, boolean sort)
 	{
-		this.remove(name);
-
 		StructureMorph morph = new StructureMorph();
 
 		morph.structure = name;
 		this.structures.add(morph);
+
+		if (sort)
+		{
+			this.structures.sort();
+		}
+	}
+
+	public void addStructures(List<String> structures)
+	{
+		this.structures.clear();
+
+		for (String name : structures)
+		{
+			this.addStructure(name, false);
+		}
+
 		this.structures.sort();
 	}
 
@@ -189,7 +203,10 @@ public class BlockbusterSection extends MorphSection
 	@Override
 	public void update(World world)
 	{
-		this.reloadModels();
+		/* Reload models and skin */
+		Blockbuster.proxy.loadModels(false);
+		Blockbuster.proxy.particles.reload();
+		Dispatcher.sendToServer(new PacketStructureListRequest());
 
 		this.categories.clear();
 		this.add(this.extra);
@@ -202,12 +219,10 @@ public class BlockbusterSection extends MorphSection
 		}
 	}
 
-	private void reloadModels()
+	@Override
+	public void reset()
 	{
-		/* Reload models and skin */
-		Blockbuster.proxy.loadModels(false);
-		Blockbuster.proxy.particles.reload();
-		Dispatcher.sendToServer(new PacketStructureListRequest());
+		this.structures.clear();
 	}
 
 	public static class BlockbusterCategory extends MorphCategory

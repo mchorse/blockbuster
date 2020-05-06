@@ -1,5 +1,6 @@
 package mchorse.blockbuster.network.client;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.blockbuster_pack.morphs.StructureMorph.StructureRenderer;
@@ -24,5 +25,7 @@ public class ClientHandlerStructureList extends ClientMessageHandler<PacketStruc
                 StructureMorph.STRUCTURES.put(str, renderer);
             }
         }
+
+        Blockbuster.proxy.factory.section.addStructures(message.structures);
     }
 }
