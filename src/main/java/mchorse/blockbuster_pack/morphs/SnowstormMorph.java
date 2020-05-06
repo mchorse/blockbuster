@@ -23,10 +23,10 @@ import java.util.Objects;
 public class SnowstormMorph extends AbstractMorph
 {
 	@SideOnly(Side.CLIENT)
-	public static final Matrix4f matrix = new Matrix4f();
+	private static Matrix4f matrix;
 
 	@SideOnly(Side.CLIENT)
-	public static final Vector4f vector = new Vector4f();
+	private static Vector4f vector;
 
 	public String scheme = "";
 
@@ -35,21 +35,41 @@ public class SnowstormMorph extends AbstractMorph
 
 	private boolean initialized;
 
+	public static Matrix4f getMatrix()
+	{
+		if (matrix == null)
+		{
+			matrix = new Matrix4f();
+		}
+
+		return matrix;
+	}
+
+	public static Vector4f getVector()
+	{
+		if (vector == null)
+		{
+			vector = new Vector4f();
+		}
+
+		return vector;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static Vector4f calculateGlobal(Matrix4f matrix, EntityLivingBase entity, float x, float y, float z, float partial)
 	{
-		vector.set(x, y, z, 1);
+		Vector4f vector4f = getVector();
 
-		matrix.transform(vector);
-
-		vector.add(new Vector4f(
+		vector4f.set(x, y, z, 1);
+		matrix.transform(vector4f);
+		vector4f.add(new Vector4f(
 			(float) Interpolations.lerp(entity.prevPosX, entity.posX, partial),
 			(float) Interpolations.lerp(entity.prevPosY, entity.posY, partial),
 			(float) Interpolations.lerp(entity.prevPosZ, entity.posZ, partial),
 			(float) 0
 		));
 
-		return vector;
+		return vector4f;
 	}
 
 	public SnowstormMorph()
@@ -122,7 +142,7 @@ public class SnowstormMorph extends AbstractMorph
 		if (MatrixUtils.matrix != null)
 		{
 			Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-			Matrix4f matrix4f = MatrixUtils.readModelView(matrix);
+			Matrix4f matrix4f = MatrixUtils.readModelView(getMatrix());
 
 			parent.invert();
 			parent.mul(matrix4f);

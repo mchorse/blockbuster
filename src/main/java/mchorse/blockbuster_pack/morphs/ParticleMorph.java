@@ -122,7 +122,7 @@ public class ParticleMorph extends AbstractMorph
         if (MatrixUtils.matrix != null)
         {
             Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
-            Matrix4f matrix4f = MatrixUtils.readModelView(SnowstormMorph.matrix);
+            Matrix4f matrix4f = MatrixUtils.readModelView(SnowstormMorph.getMatrix());
 
             parent.invert();
             parent.mul(matrix4f);
