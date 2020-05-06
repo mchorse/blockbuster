@@ -279,7 +279,7 @@ public class CameraHandler
         IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
 
         open.tooltip(IKey.lang("blockbuster.gui.dashboard.player_recording"), Direction.TOP);
-        open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_V, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
+        open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
         toggle.tooltip(toggleEditor, Direction.TOP);
         toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
 
