@@ -4,9 +4,12 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
+import mchorse.blockbuster.client.gui.GuiActor;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
+import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +28,7 @@ public class GuiHandler implements IGuiHandler
 {
     /* GUI ids */
     public static final int PLAYBACK = 0;
+    public static final int ACTOR = 1;
     public static final int DIRECTOR = 2;
     public static final int MODEL_BLOCK = 3;
 
@@ -54,6 +58,10 @@ public class GuiHandler implements IGuiHandler
         if (ID == PLAYBACK && CameraHandler.isApertureLoaded())
         {
             return this.getPlayback();
+        }
+        else if (ID == ACTOR && entity instanceof EntityActor)
+        {
+            return new GuiActor(Minecraft.getMinecraft(), (EntityActor) entity);
         }
         else if (ID == DIRECTOR)
         {

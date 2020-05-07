@@ -222,7 +222,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             {
                 ClientProxy.panels.morphs.finish();
             }
-            
+
             Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
         }
     }

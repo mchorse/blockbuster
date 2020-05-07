@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.common.GuiHandler;
+import mchorse.blockbuster.common.item.ItemActorConfig;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.recording.PacketRequestFrames;
@@ -395,6 +397,12 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
                     player.startRiding(this);
                 }
             }
+
+            return true;
+        }
+        else if (item.getItem() instanceof ItemActorConfig)
+        {
+            player.openGui(Blockbuster.instance, GuiHandler.ACTOR, player.world, this.getEntityId(), 0, 0);
 
             return true;
         }
