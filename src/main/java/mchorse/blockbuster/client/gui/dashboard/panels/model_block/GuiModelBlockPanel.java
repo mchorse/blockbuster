@@ -218,7 +218,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         if (this.model != null)
         {
-            ClientProxy.panels.morphs.finish();
+            if (ClientProxy.panels.morphs.hasParent())
+            {
+                ClientProxy.panels.morphs.finish();
+            }
+            
             Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
         }
     }
