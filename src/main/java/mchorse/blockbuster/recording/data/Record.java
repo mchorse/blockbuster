@@ -243,7 +243,7 @@ public class Record
         /* I hope it won't cause a lag...  */
         int threshold = 0;
 
-        while (tick > threshold)
+        while (tick >= threshold)
         {
             List<Action> actions = this.actions.get(tick);
 
