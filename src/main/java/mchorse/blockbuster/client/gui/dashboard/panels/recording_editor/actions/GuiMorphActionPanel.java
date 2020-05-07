@@ -24,7 +24,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
             ClientProxy.panels.morphs.setSelected(action.morph);
             this.add(ClientProxy.panels.morphs);
         });
-        this.pick.flex().relative(this.area).set(0, 5, 60, 20).x(0.5F, -30);
+        this.pick.flex().relative(this.area).set(0, 5, 80, 20).x(0.5F, -30);
 
         this.add(this.pick);
     }

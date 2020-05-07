@@ -115,12 +115,18 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
         this.selector.flex().set(0, 0, 0, 60).relative(this).w(1, 0).y(1, -60);
 
+        GuiElement left = new GuiElement(mc);
+        GuiElement right = new GuiElement(mc);
+
+        left.flex().relative(this).w(120).y(20).hTo(this.selector.flex()).column(5).width(100).height(20).padding(10);
+        right.flex().relative(this).x(1F).y(20).w(120).hTo(this.selector.flex()).anchorX(1F).column(5).width(100).height(20).padding(10);
+
         this.subChildren = new GuiElement(mc);
         this.subChildren.setVisible(false);
         this.replays = new GuiElement(mc);
         this.replayEditor = new GuiElement(mc);
-        this.replayEditor.flex().relative(this).w(1F).hTo(this.selector.flex()).column(5).width(100).scroll().height(20).padding(10);
         this.replayEditor.setVisible(false);
+        this.replayEditor.add(left, right);
         this.configOptions = new GuiElement(mc);
         this.mainView = new GuiDelegateElement<GuiElement>(mc, this.replays);
 
@@ -159,7 +165,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.teleportBack = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.tp_back"), false, (b) -> this.replay.teleportBack = b.isToggled());
         this.teleportBack.tooltip(IKey.lang("blockbuster.gui.director.tp_back_tooltip"), Direction.RIGHT);
         this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value);
-        this.health.tooltip(IKey.lang("blockbuster.gui.director.health"));
         this.health.limit(0);
         this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 
@@ -169,10 +174,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.fake.flex().h(14);
         this.teleportBack.flex().h(14);
 
-        this.replayEditor.add(this.recordingId, this.id);
-        this.replayEditor.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
-        this.replayEditor.add(this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
-        this.replays.add(this.replayEditor, this.selector);
+        left.add(this.recordingId, this.id);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
+        left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
+        this.replays.add(this.selector, this.replayEditor);
 
         /* Toggle view button */
         GuiIconElement toggle = new GuiIconElement(mc, Icons.GEAR, (b) ->
@@ -181,10 +186,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         });
 
         GuiIconElement toggleScenes = new GuiIconElement(mc, Icons.MORE, (b) -> this.scenes.toggleVisible());
-        toggleScenes.flex().set(0, 6, 16, 16).relative(this.area).x(1, -24);
+        toggleScenes.flex().y(4).wh(20, 20).relative(this.area).x(1, -24);
 
         toggle.tooltip(IKey.lang("blockbuster.gui.director.config"), Direction.LEFT);
-        toggle.flex().set(0, 6, 16, 16).relative(this.area).x(1, -42);
+        toggle.flex().y(4).wh(20, 20).relative(this.area).x(1, -44);
 
         this.add(toggleScenes);
         this.subChildren.add(toggle);
@@ -218,15 +223,18 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.rename = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
         this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
 
+        morph.flex().relative(this.selector).x(0.5F).y(-10).wh(80, 20).anchor(0.5F, 1F);
+
         update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.RIGHT);
         this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.RIGHT);
         this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
 
-        this.replayEditor.add(this.record, edit, update, this.rename, this.attach, morph);
+        right.add(this.record, edit, update, this.rename, this.attach);
+        this.replayEditor.add(morph);
 
         /* Scene manager */
         this.add(this.scenes = new GuiSceneManager(mc, this));
-        this.scenes.flex().set(0, 24, 160, 0).relative(this.area).x(1, -166).h(1, -100);
+        this.scenes.flex().relative(toggleScenes).xy(1F, 1F).w(160).hTo(this.selector.flex()).anchorX(1F);
     }
 
     public SceneLocation getLocation()
@@ -595,9 +603,14 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             Gui.drawRect(x, y, x + 20, y + 20, 0x88000000);
         }
 
+        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 24, 0x88000000);
+        this.drawGradientRect(this.area.x, this.area.y + 24, this.area.ex(), this.area.y + 32, 0x88000000, 0x00000000);
+
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
         {
+            this.font.drawStringWithShadow(this.location.isScene() ? I18n.format("blockbuster.gui.scenes.title") : I18n.format("blockbuster.gui.director.title"), this.area.x + 10, this.area.y + 10, 0xffffff);
+
             if (this.replay != null)
             {
                 AbstractMorph morph = this.replay.morph;
@@ -615,9 +628,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         }
         else
         {
-            Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 24, 0x88000000);
-            this.drawGradientRect(this.area.x, this.area.y + 24, this.area.ex(), this.area.y + 32, 0x88000000, 0x00000000);
-
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.start_command"), this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
