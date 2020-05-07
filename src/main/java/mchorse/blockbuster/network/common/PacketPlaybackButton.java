@@ -1,4 +1,4 @@
-package mchorse.blockbuster.aperture.network.common;
+package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;

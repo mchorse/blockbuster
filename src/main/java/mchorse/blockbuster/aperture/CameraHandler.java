@@ -7,13 +7,14 @@ import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
+import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
-import mchorse.blockbuster.aperture.network.common.PacketPlaybackButton;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
-import mchorse.blockbuster.aperture.network.server.ServerHandlerPlaybackButton;
+import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
@@ -28,7 +29,6 @@ import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -124,7 +124,6 @@ public class CameraHandler
         Dispatcher.DISPATCHER.register(PacketRequestProfiles.class, ServerHandlerRequestProfiles.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketCameraProfileList.class, ClientHandlerCameraProfileList.class, Side.CLIENT);
 
-        Dispatcher.DISPATCHER.register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
@@ -144,6 +143,39 @@ public class CameraHandler
                 CameraAPI.playCameraProfile((EntityPlayerMP) player, RLUtils.create(tag.getString("CameraProfile")));
             }
         }
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+	public static void attach(SceneLocation location)
+    {
+        GuiPlayback playback = new GuiPlayback();
+
+        if (location.isDirector())
+        {
+            playback.setDirector(location.getPosition());
+        }
+        else if (location.isScene())
+        {
+            playback.setScene(location.getFilename());
+        }
+
+        Minecraft.getMinecraft().displayGuiScreen(playback);
+	}
+
+    public static boolean isCameraEditorOpen()
+    {
+        if (isApertureLoaded())
+        {
+            return isCurrentScreenCameraEditor();
+        }
+
+        return false;
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    private static boolean isCurrentScreenCameraEditor()
+    {
+        return Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor;
     }
 
     /* Event listeners */

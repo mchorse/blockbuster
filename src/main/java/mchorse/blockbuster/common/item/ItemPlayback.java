@@ -86,16 +86,13 @@ public class ItemPlayback extends Item
             return;
         }
 
-        if (CameraHandler.isApertureLoaded())
+        if (tag.hasKey("CameraProfile"))
         {
-            if (tag.hasKey("CameraProfile"))
-            {
-                tooltip.add(I18n.format("blockbuster.info.playback_profile", tag.getString("CameraProfile")));
-            }
-            else if (tag.hasKey("CameraPlay"))
-            {
-                tooltip.add(I18n.format("blockbuster.info.playback_play"));
-            }
+            tooltip.add(I18n.format("blockbuster.info.playback_profile", tag.getString("CameraProfile")));
+        }
+        else if (tag.hasKey("CameraPlay"))
+        {
+            tooltip.add(I18n.format("blockbuster.info.playback_play"));
         }
 
         BlockPos pos = getBlockPos("Dir", stack);
@@ -162,7 +159,7 @@ public class ItemPlayback extends Item
 
             if (stack.getTagCompound().hasKey("Scene"))
             {
-                if (CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world))
+                if (CommonProxy.scenes.toggle(stack.getTagCompound().getString("Scene"), player.world) && CameraHandler.isApertureLoaded())
                 {
                     CameraHandler.handlePlaybackItem(player, tag);
                 }

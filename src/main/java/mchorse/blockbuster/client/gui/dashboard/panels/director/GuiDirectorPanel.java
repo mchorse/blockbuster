@@ -1,7 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
 import mchorse.blockbuster.ClientProxy;
-import mchorse.blockbuster.aperture.gui.GuiPlayback;
+import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
@@ -545,18 +546,16 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     private void attach()
     {
-        GuiPlayback playback = new GuiPlayback();
-
-        if (this.location.isDirector())
+        if (CameraHandler.isApertureLoaded())
         {
-            playback.setDirector(this.location.getPosition());
+            CameraHandler.attach(this.location);
         }
-        else if (this.location.isScene())
+        else
         {
-            playback.setScene(this.location.getFilename());
-        }
+            Dispatcher.sendToServer(new PacketPlaybackButton(0, "", this.location.getFilename(), this.location.getPosition()));
 
-        this.mc.displayGuiScreen(playback);
+            this.mc.displayGuiScreen(null);
+        }
     }
 
     private void openRecordEditor()

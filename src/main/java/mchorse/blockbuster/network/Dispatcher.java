@@ -30,6 +30,7 @@ import mchorse.blockbuster.network.common.PacketActorRotate;
 import mchorse.blockbuster.network.common.PacketCaption;
 import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketReloadModels;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
@@ -70,6 +71,7 @@ import mchorse.blockbuster.network.server.ServerHandlerActorRotate;
 import mchorse.blockbuster.network.server.ServerHandlerGunInfo;
 import mchorse.blockbuster.network.server.ServerHandlerModifyActor;
 import mchorse.blockbuster.network.server.ServerHandlerModifyModelBlock;
+import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.network.server.ServerHandlerReloadModels;
 import mchorse.blockbuster.network.server.ServerHandlerStructureListRequest;
 import mchorse.blockbuster.network.server.ServerHandlerStructureRequest;
@@ -173,6 +175,9 @@ public class Dispatcher
             register(PacketStructureRequest.class, ServerHandlerStructureRequest.class, Side.SERVER);
             register(PacketStructureList.class, ClientHandlerStructureList.class, Side.CLIENT);
             register(PacketStructureListRequest.class, ServerHandlerStructureListRequest.class, Side.SERVER);
+
+            /* Playback button */
+            register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
 
             CameraHandler.registerMessages();
         }
