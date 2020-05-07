@@ -346,7 +346,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         if (!this.location.isEmpty())
         {
-            if (this.replay != null)
+            if (ClientProxy.panels.morphs.hasParent())
             {
                 ClientProxy.panels.morphs.finish();
             }
