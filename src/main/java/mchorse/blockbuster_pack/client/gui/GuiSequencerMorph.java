@@ -18,6 +18,7 @@ import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -110,7 +111,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
                 this.editor.morphs.nestEdit(entry.morph, editing, (morph) ->
                 {
-                    entry.morph = morph;
+                    entry.morph = MorphUtils.copy(morph);
                 });
             });
 
@@ -197,6 +198,31 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.sequencer.morphs"), this.list.area.x, this.list.area.y - 12, 0xffffff);
 
             super.draw(context);
+        }
+
+        @Override
+        public void fromNBT(NBTTagCompound tag)
+        {
+            super.fromNBT(tag);
+
+            this.list.setIndex(tag.getInteger("Index"));
+
+            SequenceEntry entry = this.list.getCurrentFirst();
+
+            if (entry != null)
+            {
+                this.select(entry);
+            }
+        }
+
+        @Override
+        public NBTTagCompound toNBT()
+        {
+            NBTTagCompound tag = super.toNBT();
+
+            tag.setInteger("Index", this.list.getIndex());
+
+            return tag;
         }
     }
 
