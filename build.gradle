@@ -14,6 +14,11 @@ buildscript
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+if (project.hasProperty("dev")) 
+{
+    version += "-dev" + dev
+}
+
 group = "mchorse.blockbuster"
 archivesBaseName = "blockbuster"
 sourceCompatibility = targetCompatibility = "1.8"

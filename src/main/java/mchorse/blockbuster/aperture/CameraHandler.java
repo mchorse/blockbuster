@@ -10,11 +10,9 @@ import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
-import mchorse.blockbuster.network.server.ServerHandlerPlaybackButton;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
@@ -145,6 +143,7 @@ public class CameraHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
 	public static void attach(SceneLocation location)
     {
@@ -180,9 +179,9 @@ public class CameraHandler
 
     /* Event listeners */
 
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    @SubscribeEvent
     public void onCameraScrub(CameraEditorEvent.Scrubbed event)
     {
         SceneLocation location = get();
@@ -203,9 +202,9 @@ public class CameraHandler
         }
     }
 
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    @SubscribeEvent
     public void onCameraPlause(CameraEditorEvent.Playback event)
     {
         SceneLocation location = get();
@@ -216,9 +215,9 @@ public class CameraHandler
         }
     }
 
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    @SubscribeEvent
     public void onCameraRewind(CameraEditorEvent.Rewind event)
     {
         SceneLocation location = get();
@@ -229,17 +228,17 @@ public class CameraHandler
         }
     }
 
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    @SubscribeEvent
     public void onCameraOptions(CameraEditorEvent.Options event)
     {
         event.options.add(new GuiDirectorConfigOptions(Minecraft.getMinecraft(), event.editor));
     }
 
+    @SubscribeEvent
     @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
-    @SubscribeEvent
     public void onCameraEditorInit(CameraEditorEvent.Init event)
     {
         GuiDashboard.get();
@@ -367,9 +366,9 @@ public class CameraHandler
      */
     public static class CameraGUIHandler
     {
+        @SubscribeEvent
         @SideOnly(Side.CLIENT)
         @Method(modid = Aperture.MOD_ID)
-        @SubscribeEvent
         public void onGuiOpen(GuiOpenEvent event)
         {
             if (Minecraft.getMinecraft().player == null)
