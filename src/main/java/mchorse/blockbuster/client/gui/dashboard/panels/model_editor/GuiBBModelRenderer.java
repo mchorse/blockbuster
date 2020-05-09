@@ -142,8 +142,8 @@ public class GuiBBModelRenderer extends GuiModelRenderer
             RenderCustomModel.bindLastTexture(this.texture);
         }
 
-        this.renderModel(this.entity, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
         this.tryPicking(context);
+        this.renderModel(this.entity, headYaw, headPitch, this.timer, context.mouseX, context.mouseY, partial, factor);
 
         if (this.items)
         {
