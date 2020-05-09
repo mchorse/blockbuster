@@ -276,11 +276,6 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
                 this.editor.delegate.setMorph(morph);
             }
         };
-
-        if (this.editor.delegate != null)
-        {
-            this.editor.delegate.appear();
-        }
     }
 
     @Override
@@ -318,6 +313,12 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public void selectAction(Action action)
     {
         this.save();
+
+        if (this.editor.delegate != null)
+        {
+            this.editor.delegate.disappear();
+        }
+
         this.editor.setDelegate(getPanel(action));
     }
 

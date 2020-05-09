@@ -44,12 +44,12 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     }
 
     @Override
-    public void appear()
+    public void disappear()
     {
-        if (this.action != null)
-        {
-            this.fill(action);
-        }
+        ClientProxy.panels.morphs.finish();
+        ClientProxy.panels.morphs.removeFromParent();
+
+        super.disappear();
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
         }
     }
 
-    public void appear()
+    public void disappear()
     {}
 
     public void setMorph(AbstractMorph morph)
