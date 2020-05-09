@@ -342,6 +342,10 @@ public class TileEntityModel extends TileEntity implements ITickable
         {
             this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
         }
+        else
+        {
+            this.morph = null;
+        }
     }
 
     public void toBytes(ByteBuf buf)

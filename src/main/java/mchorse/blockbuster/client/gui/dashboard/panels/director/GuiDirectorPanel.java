@@ -35,6 +35,7 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -87,6 +88,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiButtonElement attach;
 
     public GuiLabel recordingId;
+    public GuiNestedEdit pickMorph;
 
     public GuiSceneManager scenes;
 
@@ -211,11 +213,17 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.replays.add(add, dupe, remove);
 
         /* Additional utility buttons */
-        GuiButtonElement morph = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
         {
             ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
             ClientProxy.panels.morphs.setSelected(this.replay.morph);
+
+            if (editing)
+            {
+                ClientProxy.panels.morphs.enterEditMorph();
+            }
+
             this.add(ClientProxy.panels.morphs);
         });
         this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
@@ -224,14 +232,14 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.rename = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
         this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
 
-        morph.flex().relative(this.selector).x(0.5F).y(-10).wh(80, 20).anchor(0.5F, 1F);
+        this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).wh(100, 20).anchor(0.5F, 1F);
 
         update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.RIGHT);
         this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.RIGHT);
         this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
 
         right.add(this.record, edit, update, this.rename, this.attach);
-        this.replayEditor.add(morph);
+        this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
         this.add(this.scenes = new GuiSceneManager(mc, this));
@@ -424,6 +432,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.fake.toggled(this.replay.fake);
         this.teleportBack.toggled(this.replay.teleportBack);
         this.health.setValue(this.replay.health);
+        this.pickMorph.setMorph(this.replay.morph);
 
         this.selector.setReplay(this.replay);
         this.updateLabel();
@@ -483,6 +492,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         {
             this.replay.morph = morph;
         }
+
+        this.pickMorph.setMorph(morph);
     }
 
     private void updateList()

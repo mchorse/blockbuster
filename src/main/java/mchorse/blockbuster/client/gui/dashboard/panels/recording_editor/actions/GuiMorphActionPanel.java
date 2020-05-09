@@ -7,32 +7,40 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
 
 public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 {
-    public GuiButtonElement pick;
+    public GuiNestedEdit pickMorph;
 
     public GuiMorphActionPanel(Minecraft mc)
     {
         super(mc);
 
-        this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (b) ->
+        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
         {
             ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
             ClientProxy.panels.morphs.setSelected(action.morph);
+
+            if (editing)
+            {
+                ClientProxy.panels.morphs.enterEditMorph();
+            }
+
             this.add(ClientProxy.panels.morphs);
         });
-        this.pick.flex().relative(this.area).set(0, 5, 80, 20).x(0.5F, -30);
+        this.pickMorph.flex().relative(this.area).set(0, 5, 80, 20).x(0.5F, -30);
 
-        this.add(this.pick);
+        this.add(this.pickMorph);
     }
 
     @Override
     public void setMorph(AbstractMorph morph)
     {
         this.action.morph = morph;
+        this.pickMorph.setMorph(action.morph);
     }
 
     @Override
@@ -41,6 +49,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super.fill(action);
 
         ClientProxy.panels.morphs.removeFromParent();
+        this.pickMorph.setMorph(action.morph);
     }
 
     @Override

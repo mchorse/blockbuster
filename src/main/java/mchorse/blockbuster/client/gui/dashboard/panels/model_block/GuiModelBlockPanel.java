@@ -20,6 +20,7 @@ import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -42,6 +43,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     private GuiModelBlockTransformations trans;
 
+    private GuiNestedEdit pickMorph;
     private GuiCirculateElement order;
     private GuiToggleElement shadow;
     private GuiToggleElement global;
@@ -105,11 +107,17 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        GuiButtonElement pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.pick"), (button) ->
+        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
         {
             ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
             ClientProxy.panels.morphs.resize();
             ClientProxy.panels.morphs.setSelected(this.model.morph);
+
+            if (editing)
+            {
+                ClientProxy.panels.morphs.enterEditMorph();
+            }
+
             this.add(ClientProxy.panels.morphs);
         });
 
@@ -128,7 +136,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
         this.enabled.flex().h(14);
 
-        column.add(pick, look, this.shadow, this.global, this.enabled);
+        column.add(this.pickMorph, look, this.shadow, this.global, this.enabled);
         this.subChildren.add(column);
 
         /* Model blocks */
@@ -185,20 +193,22 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         }
     }
 
+    private void setMorph(AbstractMorph morph)
+    {
+        if (this.model != null)
+        {
+            this.model.morph = morph;
+        }
+
+        this.pickMorph.setMorph(morph);
+    }
+
     @Override
     public void appear()
     {
         super.appear();
 
-        ClientProxy.panels.morphs.callback = (morph) ->
-        {
-            if (this.model != null)
-            {
-                this.model.morph = morph;
-            }
-        };
-
-        this.setModelBlock(this.model);
+        ClientProxy.panels.morphs.callback = this::setMorph;
     }
 
     @Override
@@ -216,15 +226,23 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     @Override
     public void close()
     {
-        if (this.model != null)
-        {
-            if (ClientProxy.panels.morphs.hasParent())
-            {
-                ClientProxy.panels.morphs.finish();
-            }
+        this.save(null);
+    }
 
-            Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
+    public void save(TileEntityModel model)
+    {
+        if (this.model == null || this.model == model)
+        {
+            return;
         }
+
+        if (ClientProxy.panels.morphs.hasParent())
+        {
+            ClientProxy.panels.morphs.finish();
+            ClientProxy.panels.morphs.removeFromParent();
+        }
+
+        Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
     }
 
     public GuiModelBlockPanel openModelBlock(TileEntityModel model)
@@ -239,11 +257,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     public GuiModelBlockPanel setModelBlock(TileEntityModel model)
     {
-        if (this.model == model && model != null)
-        {
-            this.close();
-        }
-
+        this.save(model);
         this.list.setCurrent(model);
         this.subChildren.setVisible(model != null);
         this.model = model;
@@ -274,6 +288,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
             this.trans.set(this.model);
 
+            this.pickMorph.setMorph(this.model.morph);
             this.order.setValue(this.model.order.ordinal());
             this.shadow.toggled(this.model.shadow);
             this.global.toggled(this.model.global);
