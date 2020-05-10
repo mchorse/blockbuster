@@ -1,23 +1,12 @@
 package mchorse.blockbuster.recording.data;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.io.FilenameUtils;
-
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.recording.scene.Replay;
-import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
+import mchorse.blockbuster.recording.scene.Replay;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -26,6 +15,16 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class stores actions and frames states for a recording (to be played
@@ -414,6 +413,28 @@ public class Record
                     this.actions.set(tick, null);
                 }
             }
+        }
+    }
+
+    /**
+     * Replace an action at given tick and index
+     */
+    public void replaceAction(int tick, int index, Action action)
+    {
+        if (tick < 0 || tick >= this.actions.size())
+        {
+            return;
+        }
+
+        List<Action> actions = this.actions.get(tick);
+
+        if (actions == null || index < 0 || index >= actions.size())
+        {
+            this.addAction(tick, action);
+        }
+        else
+        {
+            actions.set(index, action);
         }
     }
 

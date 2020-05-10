@@ -42,7 +42,7 @@ public class ServerHandlerAction extends ServerMessageHandler<PacketAction>
             /* Edit an action */
             else
             {
-                record.actions.get(message.tick).set(message.index, message.action);
+                record.replaceAction(message.tick, message.index, message.action);
             }
 
             record.dirty = true;
