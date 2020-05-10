@@ -67,10 +67,10 @@ public class ItemGun extends Item
                 }
             }
 
-            return EnumActionResult.SUCCESS;
+            return EnumActionResult.PASS;
         }
 
-        return this.shoot(stack, player, world) ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+        return this.shoot(stack, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
     }
 
     public boolean shoot(ItemStack stack, EntityPlayer player, World world)
