@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
@@ -12,9 +13,9 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction>
     public GuiInventoryElement inventory;
     public GuiSlotElement slot;
 
-    public GuiDropActionPanel(Minecraft mc)
+    public GuiDropActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
         this.slot = new GuiSlotElement(mc,0, this::setSlot);

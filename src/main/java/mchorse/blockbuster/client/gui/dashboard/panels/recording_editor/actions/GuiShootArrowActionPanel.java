@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.ShootArrowAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -9,9 +10,9 @@ public class GuiShootArrowActionPanel extends GuiActionPanel<ShootArrowAction>
 {
     public GuiTrackpadElement charge;
 
-    public GuiShootArrowActionPanel(Minecraft mc)
+    public GuiShootArrowActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.charge = new GuiTrackpadElement(mc, (charge) -> this.action.charge = charge.intValue());
         this.charge.tooltip(IKey.lang("blockbuster.gui.record_editor.arrow_charge"));

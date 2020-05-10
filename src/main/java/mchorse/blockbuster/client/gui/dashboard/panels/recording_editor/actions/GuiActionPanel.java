@@ -1,27 +1,34 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
-import java.util.Map.Entry;
-
-import mchorse.blockbuster.recording.actions.ActionRegistry;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.Action;
-import mchorse.mclib.client.gui.framework.GuiTooltip;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Map.Entry;
 
 public abstract class GuiActionPanel<T extends Action> extends GuiElement
 {
     public T action;
+    public GuiRecordingEditorPanel panel;
+
     private IKey title = IKey.lang("");
     private IKey description = IKey.lang("");
 
-    public GuiActionPanel(Minecraft mc)
+    public GuiActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
         super(mc);
+
+        this.panel = panel;
 
         this.hideTooltip();
     }
@@ -30,14 +37,11 @@ public abstract class GuiActionPanel<T extends Action> extends GuiElement
     {
         this.action = action;
 
-        for (Entry<String, Class<? extends Action>> entry : ActionRegistry.NAME_TO_CLASS.entrySet())
-        {
-            if (entry.getValue() == action.getClass())
-            {
-                this.setKey(entry.getKey());
+        String key = ActionRegistry.NAME_TO_CLASS.inverse().get(action.getClass());
 
-                break;
-            }
+        if (key != null)
+        {
+            this.setKey(key);
         }
     }
 

@@ -143,7 +143,10 @@ blockbuster.gui:
         directors: Director's records
         not_selected: Select a player recording...
         action: action
-        
+
+        copy: Copy action
+        paste: Paste action
+
         drop: Drop block
         damage: Damage
         progress: Progress

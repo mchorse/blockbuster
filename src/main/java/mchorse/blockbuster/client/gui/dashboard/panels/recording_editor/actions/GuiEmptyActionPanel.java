@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
@@ -7,9 +8,9 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiEmptyActionPanel extends GuiActionPanel<Action>
 {
-    public GuiEmptyActionPanel(Minecraft mc)
+    public GuiEmptyActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
     }
 
     @Override

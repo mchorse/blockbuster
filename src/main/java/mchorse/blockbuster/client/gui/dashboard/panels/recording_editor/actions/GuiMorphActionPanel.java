@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -14,9 +15,9 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
 {
     public GuiNestedEdit pickMorph;
 
-    public GuiMorphActionPanel(Minecraft mc)
+    public GuiMorphActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.pickMorph = new GuiNestedEdit(mc, (editing) ->
         {

@@ -53,7 +53,6 @@ public class GuiRecordSelector extends GuiElement
         super.resize();
 
         this.scroll.copy(this.area);
-        this.scroll.w -= 20;
 
         this.vertical.copy(this.area);
         this.vertical.w = 4;
@@ -232,10 +231,7 @@ public class GuiRecordSelector extends GuiElement
 
                         if (i == this.tick && j == this.index)
                         {
-                            Gui.drawRect(x, y, x + h + 1, y + 1, 0xffffffff);
-                            Gui.drawRect(x, y + 19, x + h + 1, y + 20, 0xffffffff);
-                            Gui.drawRect(x, y + 1, x + 1, y + 19, 0xffffffff);
-                            Gui.drawRect(x + h, y + 1, x + h + 1, y + 19, 0xffffffff);
+                            GuiDraw.drawOutline(x, y, x + h, y + 20, 0xffffffff);
                         }
 
                         j++;
@@ -275,8 +271,10 @@ public class GuiRecordSelector extends GuiElement
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
 
-        Gui.drawRect(this.area.ex() - 20, this.area.y, this.area.ex(), this.area.ey(), 0xff222222);
-        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 28, this.area.y, this.area.ex() - 20, this.area.ey(), 0x00000000, 0x88000000, 0);
+        Gui.drawRect(this.area.ex(), this.area.y, this.area.ex() + 20, this.area.ey(), 0xff222222);
+        Gui.drawRect(this.area.x - 20, this.area.y, this.area.x, this.area.ey(), 0xff222222);
+        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 8, this.area.y, this.area.ex(), this.area.ey(), 0x00000000, 0x88000000, 0);
+        GuiDraw.drawHorizontalGradientRect(this.area.x, this.area.y, this.area.x + 8, this.area.ey(), 0x88000000, 0x00000000, 0);
 
         super.draw(context);
     }

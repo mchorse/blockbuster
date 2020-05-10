@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -10,9 +11,9 @@ public class GuiItemUseActionPanel<T extends ItemUseAction> extends GuiActionPan
 {
     public GuiCirculateElement hand;
 
-    public GuiItemUseActionPanel(Minecraft mc)
+    public GuiItemUseActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.hand = new GuiCirculateElement(mc, (b) -> this.action.hand = EnumHand.values()[this.hand.getValue()]);
         this.hand.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.main_hand"));

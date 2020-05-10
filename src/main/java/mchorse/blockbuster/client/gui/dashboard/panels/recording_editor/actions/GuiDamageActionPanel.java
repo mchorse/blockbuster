@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -9,9 +10,9 @@ public class GuiDamageActionPanel extends GuiActionPanel<DamageAction>
 {
     public GuiTrackpadElement damage;
 
-    public GuiDamageActionPanel(Minecraft mc)
+    public GuiDamageActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.damage = new GuiTrackpadElement(mc, (charge) -> this.action.damage = charge.intValue());
         this.damage.tooltip(IKey.lang("blockbuster.gui.record_editor.damage"));

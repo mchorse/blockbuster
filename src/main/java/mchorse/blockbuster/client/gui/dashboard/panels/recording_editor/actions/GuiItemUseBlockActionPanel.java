@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -15,9 +16,9 @@ public class GuiItemUseBlockActionPanel extends GuiItemUseActionPanel<ItemUseBlo
     public GuiThreeElement block;
     public GuiThreeElement hit;
 
-    public GuiItemUseBlockActionPanel(Minecraft mc)
+    public GuiItemUseBlockActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.facing = new GuiCirculateElement(mc, (b) -> this.action.facing = EnumFacing.values()[this.facing.getValue()]);
         this.facing.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.use_item_block.down"));

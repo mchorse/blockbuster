@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
@@ -15,9 +16,9 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
     public GuiInventoryElement inventory;
     public GuiSlotElement slot;
 
-    public GuiEquipActionPanel(Minecraft mc)
+    public GuiEquipActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.armor = new GuiCirculateElement(mc, (b) -> this.action.armorSlot = (byte) (this.armor.getValue() - 1));
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.none"));

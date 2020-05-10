@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -13,9 +14,9 @@ public class GuiBlockActionPanel<T extends InteractBlockAction> extends GuiActio
     public GuiTrackpadElement y;
     public GuiTrackpadElement z;
 
-    public GuiBlockActionPanel(Minecraft mc)
+    public GuiBlockActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.x = new GuiTrackpadElement(mc, (v) -> this.action.pos = new BlockPos(v.intValue(), this.action.pos.getY(), this.action.pos.getZ()));
         this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));

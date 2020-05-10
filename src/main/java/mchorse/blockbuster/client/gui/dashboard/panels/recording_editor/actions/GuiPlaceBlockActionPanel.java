@@ -1,20 +1,20 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.recording.actions.PlaceBlockAction;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 
 public class GuiPlaceBlockActionPanel extends GuiBlockActionPanel<PlaceBlockAction>
 {
     public GuiTextElement block;
     public GuiTrackpadElement meta;
 
-    public GuiPlaceBlockActionPanel(Minecraft mc)
+    public GuiPlaceBlockActionPanel(Minecraft mc, GuiRecordingEditorPanel panel)
     {
-        super(mc);
+        super(mc, panel);
 
         this.block = new GuiTextElement(mc, (str) -> this.action.block = str);
         this.meta = new GuiTrackpadElement(mc, (value) -> this.action.metadata = value.byteValue());
