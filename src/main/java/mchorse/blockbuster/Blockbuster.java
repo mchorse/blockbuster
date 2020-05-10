@@ -262,6 +262,7 @@ public class Blockbuster
     {
         TileEntityDirector.playing = 0;
         StructureMorph.STRUCTURE_CACHE.clear();
+        proxy.loadModels(false);
 
         /* Register commands */
         event.registerServerCommand(new CommandAction());

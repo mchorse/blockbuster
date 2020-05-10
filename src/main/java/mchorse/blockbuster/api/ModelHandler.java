@@ -17,6 +17,8 @@ import java.util.Map;
  */
 public class ModelHandler
 {
+    public static long lastUpdate;
+
     /**
      * Cached models, they're loaded from stuffs
      */
@@ -60,6 +62,8 @@ public class ModelHandler
         {
             this.removeModel(key);
         }
+
+        lastUpdate = System.currentTimeMillis();
     }
 
     /**
@@ -89,15 +93,6 @@ public class ModelHandler
         {
             Blockbuster.proxy.factory.section.remove(key);
         }
-    }
-
-    /**
-     * Clear models when disconnecting from server
-     */
-    @SubscribeEvent
-    public void onClientDisconnect(ClientDisconnectionFromServerEvent event)
-    {
-        this.models.clear();
     }
 
     /**

@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
+import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -106,6 +107,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
      */
     private String key;
 
+    private long lastUpdate;
+
     /**
      * Make hands true!
      */
@@ -205,6 +208,15 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         return this.key;
     }
 
+    private void updateModel()
+    {
+        if (this.lastUpdate < ModelHandler.lastUpdate)
+        {
+            this.lastUpdate = ModelHandler.lastUpdate;
+            this.model = Blockbuster.proxy.models.models.get(this.getKey());
+        }
+    }
+
     /**
      * Render actor morph on the screen
      *
@@ -215,6 +227,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
+        this.updateModel();
+
         ModelCustom model = ModelCustom.MODELS.get(this.getKey());
 
         if (model != null && this.model != null)
@@ -304,6 +318,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @SideOnly(Side.CLIENT)
     public boolean renderHand(EntityPlayer player, EnumHand hand)
     {
+        this.updateModel();
+
         RenderCustomModel renderer = ClientProxy.actorRenderer;
 
         /* This */
@@ -331,6 +347,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        this.updateModel();
+
         if (this.model != null)
         {
             this.parts.initBodyParts();
@@ -357,6 +375,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     @Override
     public void update(EntityLivingBase target)
     {
+        this.updateModel();
         this.animation.update();
 
         if (this.model != null)
