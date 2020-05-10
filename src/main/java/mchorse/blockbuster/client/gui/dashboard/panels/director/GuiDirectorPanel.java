@@ -213,19 +213,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.replays.add(add, dupe, remove);
 
         /* Additional utility buttons */
-        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
-        {
-            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            ClientProxy.panels.morphs.resize();
-            ClientProxy.panels.morphs.setSelected(this.replay.morph);
-
-            if (editing)
-            {
-                ClientProxy.panels.morphs.enterEditMorph();
-            }
-
-            this.add(ClientProxy.panels.morphs);
-        });
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.replay.morph));
         this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
         GuiButtonElement edit = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         GuiButtonElement update = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData());
@@ -333,7 +321,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         super.appear();
 
-        ClientProxy.panels.morphs.callback = this::setMorph;
+        ClientProxy.panels.picker(this::setMorph);
 
         if (!this.location.isEmpty())
         {

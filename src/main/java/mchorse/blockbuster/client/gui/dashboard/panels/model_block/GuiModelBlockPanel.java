@@ -107,19 +107,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
         column.flex().relative(this).w(120).column(5).vertical().stretch().height(20).padding(10);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
-        {
-            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            ClientProxy.panels.morphs.resize();
-            ClientProxy.panels.morphs.setSelected(this.model.morph);
-
-            if (editing)
-            {
-                ClientProxy.panels.morphs.enterEditMorph();
-            }
-
-            this.add(ClientProxy.panels.morphs);
-        });
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.model.morph));
 
         GuiButtonElement look = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.model_block.look"), (button) ->
         {
@@ -208,7 +196,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
     {
         super.appear();
 
-        ClientProxy.panels.morphs.callback = this::setMorph;
+        ClientProxy.panels.picker(this::setMorph);
     }
 
     @Override

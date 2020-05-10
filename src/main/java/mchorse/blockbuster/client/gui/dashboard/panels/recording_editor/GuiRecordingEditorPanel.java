@@ -56,6 +56,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
 import java.util.List;
@@ -111,6 +112,9 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
         this.selector.setVisible(false);
+        this.selector.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
+            .held(Keyboard.KEY_LCONTROL)
+            .category(IKey.lang("blockbuster.gui.aperture.keys.category"));
         this.records = new GuiRecordList(mc, this);
         this.editor = new GuiDelegateElement<GuiActionPanel<? extends Action>>(mc, null);
 
@@ -327,13 +331,13 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         super.appear();
 
-        ClientProxy.panels.morphs.callback = (morph) ->
+        ClientProxy.panels.picker((morph) ->
         {
             if (this.editor.delegate != null)
             {
                 this.editor.delegate.setMorph(morph);
             }
-        };
+        });
     }
 
     @Override

@@ -330,6 +330,19 @@ public class GuiGun extends GuiBase
             morph = this.props.impactMorph;
         }
 
+        if (this.morphs.hasParent())
+        {
+            if (i == this.index)
+            {
+                return;
+            }
+            else
+            {
+                this.morphs.finish();
+                this.morphs.removeFromParent();
+            }
+        }
+
         this.index = i;
         this.morphs.resize();
         this.morphs.setSelected(morph);

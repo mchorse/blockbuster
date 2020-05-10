@@ -19,19 +19,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     {
         super(mc, panel);
 
-        this.pickMorph = new GuiNestedEdit(mc, (editing) ->
-        {
-            ClientProxy.panels.morphs.flex().reset().relative(this.area).wh(1F, 1F);
-            ClientProxy.panels.morphs.resize();
-            ClientProxy.panels.morphs.setSelected(action.morph);
-
-            if (editing)
-            {
-                ClientProxy.panels.morphs.enterEditMorph();
-            }
-
-            this.add(ClientProxy.panels.morphs);
-        });
+        this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.action.morph));
         this.pickMorph.flex().relative(this.area).set(0, 5, 80, 20).x(0.5F, -30);
 
         this.add(this.pickMorph);

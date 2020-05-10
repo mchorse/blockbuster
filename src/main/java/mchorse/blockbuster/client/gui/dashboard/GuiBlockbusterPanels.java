@@ -1,21 +1,26 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.utils.mclib.BBIcons;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.events.RegisterDashboardPanels;
 import mchorse.mclib.events.RemoveDashboardPanels;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
 import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.function.Consumer;
 
 /**
  * Blockbuster's dashboard GUI entry
@@ -30,6 +35,31 @@ public class GuiBlockbusterPanels
     public GuiTextureManagerPanel texturePanel;
 
     public GuiCreativeMorphsMenu morphs;
+
+    public void picker(Consumer<AbstractMorph> callback)
+    {
+        this.morphs.removeFromParent();
+        this.morphs.callback = callback;
+    }
+
+    public void addMorphs(GuiElement parent, boolean editing, AbstractMorph morph)
+    {
+        if (this.morphs.hasParent())
+        {
+            return;
+        }
+
+        this.morphs.flex().reset().relative(parent).wh(1F, 1F);
+        this.morphs.resize();
+        this.morphs.setSelected(morph);
+
+        if (editing)
+        {
+            this.morphs.enterEditMorph();
+        }
+
+        parent.add(this.morphs);
+    }
 
     @SubscribeEvent
     public void onRegister(RegisterDashboardPanels event)
