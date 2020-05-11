@@ -65,8 +65,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     private GuiButtonElement pickSkin;
     private GuiTexturePicker skinner;
 
-    /* Limb props */
-
     /* Current data */
     public String modelName;
     public Model model;
@@ -105,6 +103,10 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             {
                 this.skinner.fill(this.renderTexture);
             }
+            else
+            {
+                return;
+            }
 
             this.skinner.resize();
             this.add(this.skinner);
@@ -116,7 +118,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         });
 
         this.pickSkin.flex().set(0, 0, 70, 20).relative(this.area).x(1, -76).y(1, -23);
-        this.skinner.flex().relative(this.area).w(1, 0).h(1, 0);
+        this.skinner.flex().relative(this).wh(1F, 1F);
         this.add(this.pickSkin);
 
         this.models = new GuiModelModels(mc, this);
@@ -191,12 +193,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             this.setModel("steve");
         }
-    }
-
-    @Override
-    public void disappear()
-    {
-        this.skinner.setVisible(false);
     }
 
     private void toggle(GuiElement main, GuiElement secondary)
