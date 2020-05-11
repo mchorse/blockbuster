@@ -1,177 +1,83 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
-import java.util.function.Consumer;
-
-import mchorse.blockbuster.recording.scene.Scene;
-import mchorse.blockbuster.utils.mclib.BBIcons;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
-
 import mchorse.blockbuster.recording.scene.Replay;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
-import mchorse.mclib.client.gui.utils.ScrollArea;
-import mchorse.mclib.client.gui.utils.ScrollArea.ScrollDirection;
+import mchorse.blockbuster.utils.mclib.BBIcons;
+import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 /**
  * This GUI is responsible for drawing replays available in the 
  * director thing
  */
-public class GuiReplaySelector extends GuiElement
+public class GuiReplaySelector extends GuiListElement<Replay>
 {
-    private Scene scene;
-    private Consumer<Replay> callback;
-    public ScrollArea scroll;
-    public int current = -1;
+    private String hovered;
+    private int hoverX;
+    private int hoverY;
 
-    public GuiReplaySelector(Minecraft mc, Consumer<Replay> callback)
+    public GuiReplaySelector(Minecraft mc, Consumer<List<Replay>> callback)
     {
-        super(mc);
+        super(mc, callback);
 
-        this.callback = callback;
-        this.scroll = new ScrollArea(40);
-        this.scroll.direction = ScrollDirection.HORIZONTAL;
-    }
-
-    public void setScene(Scene scene)
-    {
-        this.scene = scene;
-        this.current = -1;
-        this.update();
-    }
-
-    public void setReplay(Replay replay)
-    {
-        if (this.scene != null)
-        {
-            this.current = this.scene.replays.indexOf(replay);
-        }
-    }
-
-    public void update()
-    {
-        this.scroll.setSize(this.scene.replays.size());
-        this.scroll.clamp();
-    }
-
-    @Override
-    public void resize()
-    {
-        super.resize();
-
-        this.scroll.copy(this.area);
-        this.scroll.w -= 32;
-        this.scroll.clamp();
-    }
-
-    @Override
-    public boolean mouseClicked(GuiContext context)
-    {
-        if (super.mouseClicked(context) || this.scroll.mouseClicked(context))
-        {
-            return true;
-        }
-
-        if (this.scroll.isInside(context))
-        {
-            int index = this.scroll.getIndex(context.mouseX, context.mouseY);
-            int size = this.scene.replays.size();
-
-            if (this.callback != null && index >= 0 && index < size)
-            {
-                this.current = index;
-                this.callback.accept(this.scene.replays.get(index));
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean mouseScrolled(GuiContext context)
-    {
-        if (super.mouseScrolled(context))
-        {
-            return true;
-        }
-
-        return this.scroll.mouseScroll(context);
-    }
-
-    @Override
-    public void mouseReleased(GuiContext context)
-    {
-        super.mouseReleased(context);
-
-        this.scroll.mouseReleased(context);
+        this.horizontal().sorting();
+        this.scroll.scrollItemSize = 40;
     }
 
     @Override
     public void draw(GuiContext context)
     {
+        this.hovered = null;
+
         super.draw(context);
 
-        /* Background and shadows */
-        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.ey(), 0x88000000);
-        this.drawGradientRect(this.area.x, this.area.y - 16, this.area.ex(), this.area.y, 0x00000000, 0x88000000);
-
-        this.scroll.drag(context);
-
-        if (this.scene != null && !this.scene.replays.isEmpty())
+        if (this.hovered != null)
         {
-            int i = 0;
-            int h = this.scroll.scrollItemSize;
-            int hoverX = -1;
-            String hovered = null;
+            int w = this.font.getStringWidth(hovered);
+            int x = this.hoverX - w / 2;
 
-            GuiDraw.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, context);
-
-            for (Replay replay : this.scene.replays)
-            {
-                int x = this.area.x + i * h - this.scroll.scroll + h / 2;
-                boolean hover = this.scroll.isInside(context) && context.mouseX >= x - h / 2 && context.mouseX < x + h / 2;
-                boolean active = i == this.current || hover;
-
-                if (replay.morph != null)
-                {
-                    replay.morph.renderOnScreen(this.mc.player, x, this.area.y(active ? 0.9F : 0.8F), active ? 32 : 24, 1);
-                }
-                else
-                {
-                    GlStateManager.color(1, 1, 1);
-                    BBIcons.CHICKEN.render(x - 8, this.area.my() - 8);
-                }
-
-                if (hover && !replay.id.isEmpty() && hovered == null)
-                {
-                    hovered = replay.id;
-                    hoverX = x;
-                }
-
-                i++;
-            }
-
-            if (hovered != null)
-            {
-                int w = this.font.getStringWidth(hovered);
-                int x = hoverX - w / 2;
-
-                Gui.drawRect(x - 2, this.scroll.my() - 1, x + w + 2, this.scroll.my() + 9, 0x88000000);
-                this.font.drawStringWithShadow(hovered, x, this.scroll.my(), 0xffffff);
-            }
-
-            GuiDraw.unscissor(context);
+            Gui.drawRect(x - 2, this.hoverY - 1, x + w + 2, this.hoverY + 9, 0x88000000);
+            this.font.drawStringWithShadow(this.hovered, x, this.hoverY, 0xffffff);
         }
-        else
+        else if (this.getList().isEmpty())
         {
             this.drawCenteredString(this.font, I18n.format("blockbuster.gui.director.no_replays"), this.area.mx(), this.area.my() - 6, 0xffffff);
         }
+    }
 
-        this.scroll.drawScrollbar();
+    @Override
+    public void drawListElement(Replay replay, int i, int x, int y, boolean hover, boolean selected)
+    {
+        if (this.getDraggingIndex() != i)
+        {
+            x += this.scroll.scrollItemSize / 2;
+        }
+        else
+        {
+            y -= 20;
+        }
+
+        if (replay.morph != null)
+        {
+            replay.morph.renderOnScreen(this.mc.player, x, y + (int) (this.scroll.h * (selected ? 0.9F : 0.8F)), selected ? 32 : 24, 1);
+        }
+        else
+        {
+            GlStateManager.color(1, 1, 1);
+            BBIcons.CHICKEN.render(x - 8, y + this.scroll.h / 2 - 8);
+        }
+
+        if (hover && !replay.id.isEmpty() && this.hovered == null)
+        {
+            this.hovered = replay.id;
+            this.hoverX = x;
+            this.hoverY = y + this.scroll.h / 2;
+        }
     }
 }

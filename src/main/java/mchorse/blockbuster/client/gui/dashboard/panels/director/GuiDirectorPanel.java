@@ -115,8 +115,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         super(mc, dashboard);
 
-        this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay));
-        this.selector.flex().set(0, 0, 0, 60).relative(this).w(1, 0).y(1, -60);
+        this.selector = new GuiReplaySelector(mc, (replay) -> this.setReplay(replay.get(0)));
+        this.selector.flex().set(0, 0, 0, 60).relative(this).w(1, -20).y(1, -60);
 
         GuiElement left = new GuiElement(mc);
         GuiElement right = new GuiElement(mc);
@@ -180,7 +180,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);
-        this.replays.add(this.selector, this.replayEditor);
+        this.replays.add(this.replayEditor, this.selector);
 
         /* Toggle view button */
         GuiIconElement toggle = new GuiIconElement(mc, Icons.GEAR, (b) ->
@@ -206,9 +206,9 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         dupe.tooltip(IKey.lang("blockbuster.gui.duplicate"), Direction.LEFT);
         remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
 
-        add.flex().set(0, 8, 16, 16).relative(this.selector.resizer()).x(1, -24);
-        dupe.flex().set(0, 24, 16, 16).relative(this.selector.resizer()).x(1, -24);
-        remove.flex().set(0, 40, 16, 16).relative(this.selector.resizer()).x(1, -24);
+        add.flex().set(0, 0, 20, 20).relative(this.selector.resizer()).x(1F);
+        dupe.flex().set(0, 20, 20, 20).relative(this.selector.resizer()).x(1F);
+        remove.flex().set(0, 40, 20, 20).relative(this.selector.resizer()).x(1F);
 
         this.replays.add(add, dupe, remove);
 
@@ -290,7 +290,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
             return this;
         }
 
-        this.selector.setScene(location.getScene());
+        this.selector.setList(location.getScene().replays);
 
         if (!this.location.getScene().replays.isEmpty())
         {
@@ -379,7 +379,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.replay = replay;
         this.replayEditor.setVisible(this.replay != null);
         this.mainView.setDelegate(this.replays);
-        this.selector.setReplay(replay);
+        this.selector.setCurrent(replay);
         this.fillReplayData();
     }
 
@@ -422,7 +422,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.health.setValue(this.replay.health);
         this.pickMorph.setMorph(this.replay.morph);
 
-        this.selector.setReplay(this.replay);
+        this.selector.setCurrent(this.replay);
         this.updateLabel();
     }
 
@@ -448,12 +448,17 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
      */
     private void dupeReplay()
     {
+        if (this.selector.isDeselected())
+        {
+            return;
+        }
+
         Scene scene = this.location.getScene();
 
         if (scene.dupe(scene.replays.indexOf(this.replay), true))
         {
             this.selector.update();
-            this.selector.scroll.scrollTo(this.selector.current * this.selector.scroll.scrollItemSize);
+            this.selector.scroll.scrollTo(this.selector.getIndex() * this.selector.scroll.scrollItemSize);
             this.setReplay(scene.replays.get(scene.replays.size() - 1));
         }
     }
@@ -463,12 +468,17 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
      */
     private void removeReplay()
     {
+        if (this.selector.isDeselected())
+        {
+            return;
+        }
+
         Scene scene = this.location.getScene();
 
         scene.replays.remove(this.replay);
 
         int size = scene.replays.size();
-        int index = MathHelper.clamp(this.selector.current, 0, size - 1);
+        int index = MathHelper.clamp(this.selector.getIndex(), 0, size - 1);
 
         this.setReplay(size == 0 ? null : scene.replays.get(index));
         this.selector.update();
@@ -607,6 +617,9 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         /* Draw additional stuff */
         if (this.mainView.delegate == this.replays)
         {
+            Gui.drawRect(this.selector.area.x, this.selector.area.y, this.selector.area.ex() + 20, this.selector.area.ey(), 0x88000000);
+            this.drawGradientRect(this.selector.area.x, this.selector.area.y - 16, this.selector.area.ex() + 20, this.selector.area.y, 0x00000000, 0x88000000);
+
             this.font.drawStringWithShadow(this.location.isScene() ? I18n.format("blockbuster.gui.scenes.title") : I18n.format("blockbuster.gui.director.title"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
             if (this.replay != null)
