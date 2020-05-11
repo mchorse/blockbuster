@@ -144,6 +144,7 @@ blockbuster.gui:
         not_selected: Select a player recording...
         action: action
 
+        cut: Cut action
         copy: Copy action
         paste: Paste action
 

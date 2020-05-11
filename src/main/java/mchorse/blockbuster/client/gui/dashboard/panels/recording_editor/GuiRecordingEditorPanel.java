@@ -77,6 +77,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     public GuiIconElement dupe;
     public GuiIconElement remove;
 
+    public GuiIconElement cut;
     public GuiIconElement copy;
     public GuiIconElement paste;
 
@@ -126,6 +127,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeAction());
         this.remove.tooltip(IKey.lang("blockbuster.gui.remove"), Direction.LEFT);
 
+        this.cut = new GuiIconElement(mc, Icons.CUT, (icon) -> this.cutAction());
+        this.cut.tooltip(IKey.lang("blockbuster.gui.record_editor.cut"), Direction.RIGHT);
         this.copy = new GuiIconElement(mc, Icons.COPY, (icon) -> this.toNBT());
         this.copy.tooltip(IKey.lang("blockbuster.gui.record_editor.copy"), Direction.RIGHT);
         this.paste = new GuiIconElement(mc, Icons.PASTE, (b) -> this.pasteAction());
@@ -147,7 +150,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.add.flex().relative(this.selector).x(1F).wh(20, 20);
         this.dupe.flex().relative(this.add.resizer()).set(0, 20, 20, 20);
         this.remove.flex().relative(this.dupe.resizer()).set(0, 20, 20, 20);
-        this.copy.flex().relative(this.selector).x(-20).wh(20, 20);
+        this.cut.flex().relative(this.selector).x(-20).wh(20, 20);
+        this.copy.flex().set(0, 20, 20, 20).relative(this.cut.resizer());
         this.paste.flex().set(0, 20, 20, 20).relative(this.copy.resizer());
         this.list.flex().set(0, 0, 80, 80).relative(this.selector.area).x(1, -80);
 
@@ -155,7 +159,18 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.open.flex().relative(this.area).set(0, 2, 24, 24).x(1, -28);
 
         this.add(this.open);
-        this.selector.add(this.add, this.dupe, this.remove, this.copy, this.paste, this.list);
+        this.selector.add(this.add, this.dupe, this.remove, this.cut, this.copy, this.paste, this.list);
+    }
+
+    private void cutAction()
+    {
+        if (this.editor.delegate == null)
+        {
+            return;
+        }
+
+        this.toNBT();
+        this.removeAction();
     }
 
     private void toNBT()
