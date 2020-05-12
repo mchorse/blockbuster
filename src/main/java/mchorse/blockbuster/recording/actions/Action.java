@@ -1,7 +1,10 @@
 package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.blockbuster.recording.data.Frame;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -26,6 +29,22 @@ public abstract class Action
 
     public void flip(String axis, double coordinate)
     {}
+
+    public void copyActor(EntityLivingBase actor, EntityPlayer player, Frame frame)
+    {
+        player.width = actor.width;
+        player.height = actor.height;
+        player.eyeHeight = actor.getEyeHeight();
+        player.setEntityBoundingBox(actor.getEntityBoundingBox());
+
+        player.posX = actor.posX;
+        player.posY = actor.posY;
+        player.posZ = actor.posZ;
+        player.rotationYaw = frame.yaw;
+        player.rotationPitch = frame.pitch;
+        player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
+        player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+    }
 
     /**
      * Persist action from byte buffer. Used for sending the action 

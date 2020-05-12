@@ -184,5 +184,7 @@ public class ActionRegistry
 
         /* Set next ID to max */
         NEXT_ID = 20;
+
+        register("interact_entity", InteractEntityAction.class);
     }
 }

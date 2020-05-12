@@ -50,18 +50,10 @@ public class InteractBlockAction extends Action
 
         if (frame == null) return;
 
-        player.width = actor.width;
-        player.height = actor.height;
-        player.eyeHeight = actor.getEyeHeight();
-        player.setEntityBoundingBox(actor.getEntityBoundingBox());
-
-        player.posX = actor.posX;
-        player.posY = actor.posY;
-        player.posZ = actor.posZ;
-        player.rotationYaw = frame.yaw;
-        player.rotationPitch = frame.pitch;
-        player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, actor.getHeldItemMainhand());
-        player.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, actor.getHeldItemOffhand());
+        if (player != actor)
+        {
+            this.copyActor(actor, player, frame);
+        }
 
         state.getBlock().onBlockActivated(actor.world, this.pos, state, player, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
     }

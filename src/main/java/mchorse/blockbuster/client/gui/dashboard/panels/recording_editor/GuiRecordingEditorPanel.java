@@ -12,6 +12,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiDropActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEmptyActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiEquipActionPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiInteractEntityActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiItemUseBlockActionPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.actions.GuiMorphActionPanel;
@@ -34,6 +35,7 @@ import mchorse.blockbuster.recording.actions.DamageAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.EquipAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.InteractEntityAction;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
@@ -336,6 +338,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
             this.panels.put(BreakBlockAnimation.class, new GuiBreakBlockAnimationPanel(this.mc, this));
             this.panels.put(ItemUseAction.class, new GuiItemUseActionPanel<ItemUseAction>(this.mc, this));
             this.panels.put(ItemUseBlockAction.class, new GuiItemUseBlockActionPanel(this.mc, this));
+            this.panels.put(InteractEntityAction.class, new GuiInteractEntityActionPanel(this.mc, this));
 
             MinecraftForge.EVENT_BUS.post(new ActionPanelRegisterEvent(this));
         }

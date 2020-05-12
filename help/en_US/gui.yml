@@ -218,6 +218,9 @@ blockbuster.gui:
             use_item_block:
                 title: Item block use
                 desc: Uses an item currently held in given hand on a block with given facing and a hit vector
+            interact_entity:
+                title: Interact with entity
+                desc: Interacts with entity at which currently the actor is looking (used with some items like name tags, item frames or modded entities)
                 
                 down: Down
                 up: Up

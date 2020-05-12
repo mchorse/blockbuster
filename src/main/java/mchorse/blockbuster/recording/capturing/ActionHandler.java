@@ -19,6 +19,7 @@ import mchorse.blockbuster.recording.actions.ChatAction;
 import mchorse.blockbuster.recording.actions.CommandAction;
 import mchorse.blockbuster.recording.actions.DropAction;
 import mchorse.blockbuster.recording.actions.InteractBlockAction;
+import mchorse.blockbuster.recording.actions.InteractEntityAction;
 import mchorse.blockbuster.recording.actions.ItemUseAction;
 import mchorse.blockbuster.recording.actions.ItemUseBlockAction;
 import mchorse.blockbuster.recording.actions.MorphAction;
@@ -162,6 +163,21 @@ public class ActionHandler
         if (!player.world.isRemote && events != null)
         {
             events.add(new InteractBlockAction(event.getPos()));
+        }
+    }
+
+    /**
+     * Event listener for entity interact event
+     */
+    @SubscribeEvent
+    public void onRightClickEntity(PlayerInteractEvent.EntityInteract event)
+    {
+        EntityPlayer player = event.getEntityPlayer();
+        List<Action> events = CommonProxy.manager.getActions(player);
+
+        if (!player.world.isRemote && events != null)
+        {
+            events.add(new InteractEntityAction(event.getHand()));
         }
     }
 
