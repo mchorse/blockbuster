@@ -45,6 +45,8 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     public int timer;
     public int hits;
     public int impact;
+	public boolean vanish;
+    public int vanishDelay;
     public boolean stuck;
 
     /* Syncing on the client side the position */
@@ -90,6 +92,16 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     @Override
     public void onUpdate()
     {
+    	if (!this.world.isRemote && this.vanish)
+	    {
+		    if (this.vanishDelay <= 0)
+		    {
+		    	this.setDead();
+		    }
+
+		    this.vanishDelay --;
+	    }
+
         if (!this.world.isBlockLoaded(this.getPosition(), false))
         {
             this.setDead();
@@ -362,14 +374,14 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
                 if (shouldDie)
                 {
-                    this.setDead();
+                    this.vanish = true;
+                    this.vanishDelay = this.props.vanishDelay;
                     return;
                 }
 
                 /* Change to impact morph */
                 if (this.props.impactDelay > 0)
                 {
-                    boolean remote = this.world.isRemote;
                     AbstractMorph morph = MorphUtils.copy(this.props.impactMorph);
 
                     this.morph.set(morph);

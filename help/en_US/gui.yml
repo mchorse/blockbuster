@@ -363,6 +363,7 @@ blockbuster.gui:
         hits: Hits
         damage: Damage
         bounce_factor: Factor
+        vanish_delay: Vanish delay
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations

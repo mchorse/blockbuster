@@ -91,6 +91,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement hits;
     public GuiTrackpadElement damage;
     public GuiTrackpadElement bounceFactor;
+    public GuiTrackpadElement vanishDelay;
 
     /* Transforms */
     public GuiElement transformOptions;
@@ -213,6 +214,8 @@ public class GuiGun extends GuiBase
         this.damage.tooltip(IKey.lang("blockbuster.gui.gun.damage"));
         this.bounceFactor = new GuiTrackpadElement(mc, (value) -> this.props.bounceFactor = value);
         this.bounceFactor.tooltip(IKey.lang("blockbuster.gui.gun.bounce_factor"));
+        this.vanishDelay = new GuiTrackpadElement(mc, (value) -> this.props.vanishDelay = value.intValue());
+        this.vanishDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.vanish_delay"));
 
         this.pickImpact.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -60);
         this.impactCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
@@ -221,7 +224,7 @@ public class GuiGun extends GuiBase
 
         impactFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
         impactFields.add(this.impactDelay, this.vanish, this.bounce, this.sticks);
-        impactFields.add(this.damage, this.hits, this.bounceFactor);
+        impactFields.add(this.damage, this.hits, this.bounceFactor, this.vanishDelay);
 
         this.impactOptions.add(this.pickImpact, this.impactCommand, impactFields);
 
@@ -299,6 +302,7 @@ public class GuiGun extends GuiBase
         this.hits.setValue(this.props.hits);
         this.damage.setValue(this.props.damage);
         this.bounceFactor.setValue(this.props.bounceFactor);
+        this.vanishDelay.setValue(this.props.vanishDelay);
 
         /* Gun transforms */
         this.gun.set(this.props.gunTransform);
