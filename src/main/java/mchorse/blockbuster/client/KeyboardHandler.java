@@ -40,7 +40,7 @@ public class KeyboardHandler
         this.plauseDirector = new KeyBinding("key.blockbuster.plause_director", Keyboard.KEY_RCONTROL, category);
         this.recordDirector = new KeyBinding("key.blockbuster.record_director", Keyboard.KEY_RMENU, category);
         this.pauseDirector = new KeyBinding("key.blockbuster.pause_director", Keyboard.KEY_RSHIFT, category);
-        this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_NONE, category);
+        this.openGun = new KeyBinding("key.blockbuster.open_gun", Keyboard.KEY_END  , category);
 
         ClientRegistry.registerKeyBinding(this.plauseDirector);
         ClientRegistry.registerKeyBinding(this.recordDirector);
