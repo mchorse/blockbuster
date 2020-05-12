@@ -91,6 +91,8 @@ blockbuster.gui:
         attach: Attach
         attach_tooltip: Attach this director block/scene to playback button
 
+        camera: Edit camera
+
     scenes:
         title: Scenes
 
@@ -377,7 +379,8 @@ blockbuster.gui:
     aperture:
         config:
             title: Director
-            
+
+            detach: Detach scene
             reload: Reload actors
             actions: Preview actions
             reload_scene: Reload scene

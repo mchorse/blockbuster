@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
+import javafx.scene.Camera;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
@@ -86,6 +87,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiButtonElement record;
     public GuiButtonElement rename;
     public GuiButtonElement attach;
+    public GuiButtonElement camera;
 
     public GuiLabel recordingId;
     public GuiNestedEdit pickMorph;
@@ -227,6 +229,18 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
 
         right.add(this.record, edit, update, this.rename, this.attach);
+
+        if (CameraHandler.isApertureLoaded())
+        {
+            this.camera = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.camera"), (b) ->
+            {
+                CameraHandler.location = this.location;
+                CameraHandler.openCameraEditor();
+            });
+
+            right.add(this.camera);
+        }
+
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */

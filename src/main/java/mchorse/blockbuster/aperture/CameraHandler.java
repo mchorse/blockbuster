@@ -85,6 +85,8 @@ public class CameraHandler
     @SideOnly(Side.CLIENT)
     public static GuiElement editorElement;
 
+    public static SceneLocation location;
+
     /**
      * Check whether Aperture is loaded
      */
@@ -124,6 +126,18 @@ public class CameraHandler
 
         Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
+    }
+
+    @Method(modid = Aperture.MOD_ID)
+    public static void openCameraEditor()
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+        GuiCameraEditor editor = ClientProxy.getCameraEditor();
+
+        editor.updateCameraEditor(player);
+        player.setVelocity(0, 0, 0);
+        mc.displayGuiScreen(editor);
     }
 
     @Method(modid = Aperture.MOD_ID)
@@ -241,6 +255,8 @@ public class CameraHandler
     @Method(modid = Aperture.MOD_ID)
     public void onCameraEditorInit(CameraEditorEvent.Init event)
     {
+        location = null;
+
         GuiDashboard.get();
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -349,7 +365,7 @@ public class CameraHandler
             }
         }
 
-        return null;
+        return location;
     }
 
     public static boolean canSync()
