@@ -50,8 +50,9 @@ public class BlockbusterTab extends CreativeTabs
 
         if (Blockbuster.addUtilityBlocks.get())
         {
-            items.add(new ItemStack(Blocks.COMMAND_BLOCK));
+            items.add(new ItemStack(Blocks.BARRIER));
             items.add(new ItemStack(Blocks.STRUCTURE_BLOCK));
+            items.add(new ItemStack(Blocks.COMMAND_BLOCK));
         }
     }
 }
