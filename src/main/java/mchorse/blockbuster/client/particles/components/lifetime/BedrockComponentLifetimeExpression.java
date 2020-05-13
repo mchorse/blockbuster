@@ -28,6 +28,17 @@ public class BedrockComponentLifetimeExpression extends BedrockComponentBase imp
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isOne(this.activation)) object.add("activation_expression", this.activation.toJson());
+		if (!MolangExpression.isZero(this.expiration)) object.add("expiration_expression", this.expiration.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void update(BedrockEmitter emitter)
 	{
 		if (!Operation.equals(this.activation.get(), 0))

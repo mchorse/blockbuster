@@ -25,6 +25,7 @@ import javax.vecmath.Vector4f;
 
 public class BedrockComponentAppearanceBillboard extends BedrockComponentBase implements IComponentParticleRender
 {
+	/* Options */
 	public MolangExpression sizeW = MolangParser.ZERO;
 	public MolangExpression sizeH = MolangParser.ZERO;
 	public CameraFacing facing = CameraFacing.LOOKAT_XYZ;
@@ -166,6 +167,86 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		if (flipbook.has("max_frame")) this.maxFrame = parser.parseJson(flipbook.get("max_frame"));
 		if (flipbook.has("stretch_to_lifetime")) this.stretchFPS = flipbook.get("stretch_to_lifetime").getAsBoolean();
 		if (flipbook.has("loop")) this.loop = flipbook.get("loop").getAsBoolean();
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+		JsonArray size = new JsonArray();
+		JsonObject uv = new JsonObject();
+
+		size.add(this.sizeW.toJson());
+		size.add(this.sizeH.toJson());
+
+		/* Adding "uv" properties */
+		uv.addProperty("texture_width", this.textureWidth);
+		uv.addProperty("texture_height", this.textureHeight);
+
+		if (!this.flipbook && !MolangExpression.isZero(this.uvX) || !MolangExpression.isZero(this.uvY))
+		{
+			JsonArray uvs = new JsonArray();
+			uvs.add(this.uvX.toJson());
+			uvs.add(this.uvY.toJson());
+
+			uv.add("uv", uvs);
+		}
+
+		if (!this.flipbook && !MolangExpression.isZero(this.uvW) || !MolangExpression.isZero(this.uvH))
+		{
+			JsonArray uvs = new JsonArray();
+			uvs.add(this.uvW.toJson());
+			uvs.add(this.uvH.toJson());
+
+			uv.add("uv_size", uvs);
+		}
+
+		/* Adding "flipbook" properties to "uv" */
+		if (this.flipbook)
+		{
+			JsonObject flipbook = new JsonObject();
+
+			if (!MolangExpression.isZero(this.uvX) || !MolangExpression.isZero(this.uvY))
+			{
+				JsonArray base = new JsonArray();
+				base.add(this.uvX.toJson());
+				base.add(this.uvY.toJson());
+
+				flipbook.add("base_UV", base);
+			}
+
+			if (!MolangExpression.isZero(this.uvW) || !MolangExpression.isZero(this.uvH))
+			{
+				JsonArray uvSize = new JsonArray();
+				uvSize.add(this.uvW.toJson());
+				uvSize.add(this.uvH.toJson());
+
+				flipbook.add("size_UV", uvSize);
+			}
+
+			if (this.stepX != 0 || this.stepY != 0)
+			{
+				JsonArray step = new JsonArray();
+				step.add(this.stepX);
+				step.add(this.stepY);
+
+				flipbook.add("step_UV", step);
+			}
+
+			if (this.fps != 0) flipbook.addProperty("frames_per_second", this.fps);
+			if (!MolangExpression.isZero(this.maxFrame)) flipbook.add("max_frame", this.maxFrame.toJson());
+			if (this.stretchFPS) flipbook.addProperty("stretch_to_lifetime", true);
+			if (this.loop) flipbook.addProperty("loop", true);
+
+			uv.add("flipbook", flipbook);
+		}
+
+		/* Add main properties */
+		object.add("size", size);
+		object.addProperty("facing_camera_mode", this.facing.id);
+		object.add("uv", uv);
+
+		return object;
 	}
 
 	@Override

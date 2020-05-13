@@ -11,7 +11,7 @@ import mchorse.mclib.math.Operation;
 
 public class BedrockComponentRateInstant extends BedrockComponentBase implements IComponentEmitterUpdate
 {
-	public int particles;
+	public int particles = 10;
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -22,6 +22,19 @@ public class BedrockComponentRateInstant extends BedrockComponentBase implements
 		if (element.has("num_particles")) this.particles = element.get("num_particles").getAsInt();
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (this.particles != 10)
+		{
+			object.addProperty("num_particles", this.particles);
+		}
+
+		return object;
 	}
 
 	@Override

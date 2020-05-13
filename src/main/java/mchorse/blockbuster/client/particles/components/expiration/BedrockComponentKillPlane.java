@@ -40,6 +40,19 @@ public class BedrockComponentKillPlane extends BedrockComponentBase implements I
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonArray array = new JsonArray();
+
+		array.add(this.a);
+		array.add(this.b);
+		array.add(this.c);
+		array.add(this.d);
+
+		return array;
+	}
+
+	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		if (particle.dead)

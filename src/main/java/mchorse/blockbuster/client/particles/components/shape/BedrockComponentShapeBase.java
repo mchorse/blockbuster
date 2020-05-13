@@ -61,4 +61,25 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 
 		return super.fromJson(element, parser);
 	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+		JsonArray offset = new JsonArray();
+
+		for (MolangExpression expression : this.offset)
+		{
+			offset.add(expression.toJson());
+		}
+
+		object.add("offset", offset);
+
+		if (this.direction != ShapeDirection.OUTWARDS)
+		{
+			object.add("direction", this.direction.toJson());
+		}
+
+		return object;
+	}
 }

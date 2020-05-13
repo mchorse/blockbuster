@@ -36,6 +36,22 @@ public class BedrockComponentShapeBox extends BedrockComponentShapeSurfaced
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = (JsonObject) super.toJson();
+		JsonArray array = new JsonArray();
+
+		for (MolangExpression expression : this.halfDimensions)
+		{
+			array.add(expression.toJson());
+		}
+
+		object.add("half_dimensions", array);
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		float centerX = (float) this.offset[0].get();

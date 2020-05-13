@@ -46,6 +46,24 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = (JsonObject) super.toJson();
+		JsonArray array = new JsonArray();
+
+		for (MolangExpression expression : this.normal)
+		{
+			array.add(expression.toJson());
+		}
+
+		object.add("plane_normal", array);
+
+		if (!MolangExpression.isOne(this.radius)) object.add("radius", this.radius.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		float centerX = (float) this.offset[0].get();

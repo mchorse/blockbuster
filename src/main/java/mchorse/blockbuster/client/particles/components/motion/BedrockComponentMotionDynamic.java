@@ -45,6 +45,26 @@ public class BedrockComponentMotionDynamic extends BedrockComponentBase implemen
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+		JsonArray acceleration = new JsonArray();
+
+		for (MolangExpression expression : this.motionAcceleration)
+		{
+			acceleration.add(expression.toJson());
+		}
+
+		object.add("linear_acceleration", acceleration);
+
+		if (!MolangExpression.isZero(this.motionDrag)) object.add("linear_drag_coefficient", this.motionDrag.toJson());
+		if (!MolangExpression.isZero(this.rotationAcceleration)) object.add("rotation_acceleration", this.rotationAcceleration.toJson());
+		if (!MolangExpression.isZero(this.rotationDrag)) object.add("rotation_drag_coefficient", this.rotationDrag.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.acceleration.x += (float) this.motionAcceleration[0].get();

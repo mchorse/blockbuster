@@ -44,6 +44,24 @@ public class BedrockComponentMotionParametric extends BedrockComponentBase imple
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+		JsonArray position = new JsonArray();
+
+		for (MolangExpression expression : this.position)
+		{
+			position.add(expression.toJson());
+		}
+
+		object.add("relative_position", position);
+
+		if (!MolangExpression.isZero(this.rotation)) object.add("rotation", this.rotation.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		Vector3f position = new Vector3f((float) this.position[0].get(), (float) this.position[1].get(), (float) this.position[2].get());

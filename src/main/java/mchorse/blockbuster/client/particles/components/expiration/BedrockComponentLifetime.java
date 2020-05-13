@@ -14,7 +14,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentLifetime extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
 {
-	public MolangExpression expression;
+	public MolangExpression expression = MolangParser.ZERO;
 	public boolean max;
 
 	@Override
@@ -43,6 +43,16 @@ public class BedrockComponentLifetime extends BedrockComponentBase implements IC
 		this.expression = parser.parseJson(expression);
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		object.add(this.max ? "max_lifetime" : "expiration_expression", this.expression.toJson());
+
+		return object;
 	}
 
 	@Override

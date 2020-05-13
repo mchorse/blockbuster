@@ -27,6 +27,17 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (this.position) object.addProperty("position", true);
+		if (this.rotation) object.addProperty("rotation", true);
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.relativePosition = this.position;

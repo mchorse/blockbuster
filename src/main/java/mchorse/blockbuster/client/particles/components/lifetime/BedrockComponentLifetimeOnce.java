@@ -11,7 +11,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentLifetimeOnce extends BedrockComponentBase implements IComponentEmitterUpdate
 {
-	public MolangExpression activeTime;
+	public MolangExpression activeTime = BedrockComponentLifetimeLooping.DEFAULT_ACTIVE;
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -22,6 +22,16 @@ public class BedrockComponentLifetimeOnce extends BedrockComponentBase implement
 		if (element.has("active_time")) this.activeTime = parser.parseJson(element.get("active_time"));
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isConstant(this.activeTime, 10)) object.add("active_time", this.activeTime.toJson());
+
+		return object;
 	}
 
 	@Override

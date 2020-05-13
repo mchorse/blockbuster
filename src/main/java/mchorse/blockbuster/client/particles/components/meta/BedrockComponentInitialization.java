@@ -28,6 +28,17 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isZero(this.creation)) object.add("creation_expression", this.creation.toJson());
+		if (!MolangExpression.isZero(this.update)) object.add("per_update_expression", this.update.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter)
 	{
 		this.creation.get();

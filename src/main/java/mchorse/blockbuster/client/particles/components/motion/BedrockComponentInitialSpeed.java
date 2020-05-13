@@ -36,6 +36,24 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		if (this.direction != null)
+		{
+			JsonArray array = new JsonArray();
+
+			for (MolangExpression expression : this.direction)
+			{
+				array.add(expression.toJson());
+			}
+
+			return array;
+		}
+
+		return this.speed.toJson();
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		if (this.direction != null)

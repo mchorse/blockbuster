@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.particles.components.expiration;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
@@ -40,6 +41,24 @@ public abstract class BedrockComponentExpireBlocks extends BedrockComponentBase
 		}
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonArray array = new JsonArray();
+
+		for (Block block : this.blocks)
+		{
+			ResourceLocation rl = ForgeRegistries.BLOCKS.getKey(block);
+
+			if (rl != null)
+			{
+				array.add(rl.toString());
+			}
+		}
+
+		return array;
 	}
 
 	public Block getBlock(BedrockEmitter emitter, BedrockParticle particle)

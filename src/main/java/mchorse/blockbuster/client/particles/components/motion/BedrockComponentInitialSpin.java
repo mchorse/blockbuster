@@ -29,6 +29,17 @@ public class BedrockComponentInitialSpin extends BedrockComponentBase implements
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isZero(this.rotation)) object.add("rotation", this.rotation.toJson());
+		if (!MolangExpression.isZero(this.rate)) object.add("rotation_rate", this.rate.toJson());
+
+		return object;
+	}
+
+	@Override
 	public void apply(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		particle.initialRotation = (float) this.rotation.get();

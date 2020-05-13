@@ -46,6 +46,20 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	}
 
 	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isOne(this.enabled)) object.add("enabled", this.enabled.toJson());
+		if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);
+		if (this.bounciness != 1) object.addProperty("coefficient_of_restitution", this.bounciness);
+		if (this.radius != 0.01F) object.addProperty("collision_radius", this.radius);
+		if (this.expireOnImpact) object.addProperty("expire_on_contact", true);
+
+		return object;
+	}
+
+	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
 		if (emitter.world == null)

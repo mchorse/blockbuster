@@ -9,12 +9,16 @@ import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
+import mchorse.mclib.math.Constant;
 import net.minecraft.client.renderer.BufferBuilder;
 
 public class BedrockComponentRateSteady extends BedrockComponentBase implements IComponentParticleRender
 {
-	public MolangExpression spawnRate;
-	public MolangExpression maxParticles;
+	public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(50));
+
+	public MolangExpression spawnRate = MolangParser.ONE;
+	public MolangExpression maxParticles = DEFAULT_PARTICLES;
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -26,6 +30,17 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 		if (element.has("max_particles")) this.maxParticles = parser.parseJson(element.get("max_particles"));
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isOne(this.spawnRate)) object.add("spawn_rate", this.spawnRate.toJson());
+		if (!MolangExpression.isConstant(this.maxParticles, 50)) object.add("max_particles", this.maxParticles.toJson());
+
+		return object;
 	}
 
 	@Override

@@ -9,20 +9,23 @@ public enum CameraFacing
 	LOOKAT_XYZ("lookat_xyz"), LOOKAT_Y("lookat_y"),
 	DIRECTION_X("direction_x"), DIRECTION_Y("direction_y"), DIRECTION_Z("direction_z");
 
-	public final String name;
+	public final String id;
 
 	public static CameraFacing fromString(String string)
 	{
 		for (CameraFacing facing : values())
 		{
-			if (facing.name.equals(string)) return facing;
+			if (facing.id.equals(string))
+			{
+				return facing;
+			}
 		}
 
 		return null;
 	}
 
-	private CameraFacing(String name)
+	private CameraFacing(String id)
 	{
-		this.name = name;
+		this.id = id;
 	}
 }

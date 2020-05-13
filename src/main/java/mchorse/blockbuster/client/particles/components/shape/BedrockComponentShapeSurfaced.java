@@ -21,4 +21,14 @@ public abstract class BedrockComponentShapeSurfaced extends BedrockComponentShap
 
 		return super.fromJson(element, parser);
 	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = (JsonObject) super.toJson();
+
+		if (this.surface) object.addProperty("surface_only", true);
+
+		return object;
+	}
 }

@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.particles;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentBase;
@@ -50,6 +51,14 @@ public class BedrockScheme
 			.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
 			.create()
 			.fromJson(json, BedrockScheme.class);
+	}
+
+	public static JsonElement toJson(BedrockScheme scheme)
+	{
+		return new GsonBuilder()
+				.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
+				.create()
+				.toJsonTree(scheme);
 	}
 
 	public void setup()

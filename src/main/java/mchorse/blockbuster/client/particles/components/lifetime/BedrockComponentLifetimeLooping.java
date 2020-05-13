@@ -13,7 +13,9 @@ import mchorse.mclib.math.Constant;
 
 public class BedrockComponentLifetimeLooping extends BedrockComponentBase implements IComponentEmitterUpdate
 {
-	public MolangExpression activeTime = new MolangValue(null, new Constant(10));
+	public static final MolangExpression DEFAULT_ACTIVE = new MolangValue(null, new Constant(10));
+
+	public MolangExpression activeTime = DEFAULT_ACTIVE;
 	public MolangExpression sleepTime = MolangParser.ZERO;
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -26,6 +28,17 @@ public class BedrockComponentLifetimeLooping extends BedrockComponentBase implem
 		if (element.has("sleep_time")) this.sleepTime = parser.parseJson(element.get("sleep_time"));
 
 		return super.fromJson(element, parser);
+	}
+
+	@Override
+	public JsonElement toJson()
+	{
+		JsonObject object = new JsonObject();
+
+		if (!MolangExpression.isConstant(this.activeTime, 10)) object.add("active_time", this.activeTime.toJson());
+		if (!MolangExpression.isZero(this.sleepTime)) object.add("sleep_time", this.sleepTime.toJson());
+
+		return object;
 	}
 
 	@Override
