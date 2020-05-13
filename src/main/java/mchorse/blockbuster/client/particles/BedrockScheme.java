@@ -21,12 +21,14 @@ import java.util.Map;
 
 public class BedrockScheme
 {
+	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Blockbuster.MOD_ID, "textures/default_particles.png");
+
 	/* Particles identifier */
 	public String identifier = "";
 
 	/* Particle description */
 	public BedrockMaterial material = BedrockMaterial.OPAQUE;
-	public ResourceLocation texture = new ResourceLocation(Blockbuster.MOD_ID, "textures/default_particles.png");
+	public ResourceLocation texture = DEFAULT_TEXTURE;
 
 	/* Particle's curves */
 	public Map<String, BedrockCurve> curves = new HashMap<String, BedrockCurve>();

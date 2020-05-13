@@ -1,11 +1,11 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
-import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -33,6 +33,7 @@ public class GuiBlockbusterPanels
     public GuiModelEditorPanel modelEditorPanel;
     public GuiRecordingEditorPanel recordingEditorPanel;
     public GuiTextureManagerPanel texturePanel;
+    public GuiSnowstorm particleEditor;
 
     public GuiCreativeMorphsMenu morphs;
 
@@ -71,6 +72,7 @@ public class GuiBlockbusterPanels
         this.modelEditorPanel = new GuiModelEditorPanel(mc, event.dashboard);
         this.recordingEditorPanel = new GuiRecordingEditorPanel(mc, event.dashboard);
         this.texturePanel = new GuiTextureManagerPanel(mc, event.dashboard);
+        this.particleEditor = new GuiSnowstorm(mc, event.dashboard);
 
         this.morphs = new GuiCreativeMorphsMenu(mc, null);
 
@@ -79,6 +81,7 @@ public class GuiBlockbusterPanels
         event.dashboard.panels.registerPanel(this.modelEditorPanel, IKey.lang("blockbuster.gui.dashboard.model_editor"), Icons.POSE);
         event.dashboard.panels.registerPanel(this.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
         event.dashboard.panels.registerPanel(this.texturePanel, IKey.lang("blockbuster.gui.dashboard.texture"), Icons.MATERIAL);
+        event.dashboard.panels.registerPanel(this.particleEditor, IKey.lang("blockbuster.gui.dashboard.particle"), BBIcons.PARTICLE);
     }
 
     @SubscribeEvent

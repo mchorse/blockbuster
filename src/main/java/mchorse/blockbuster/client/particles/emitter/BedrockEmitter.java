@@ -8,11 +8,13 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.math.Variable;
+import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -52,6 +54,14 @@ public class BedrockEmitter
 	public float random4 = (float) Math.random();
 
 	private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+
+	/* Camera properties */
+	public float cYaw;
+	public float cPitch;
+
+	public double cX;
+	public double cY;
+	public double cZ;
 
 	/* Cached variable references to avoid hash look ups */
 	private Variable varAge;
@@ -337,6 +347,17 @@ public class BedrockEmitter
 			return;
 		}
 
+		if (this.world != null)
+		{
+			Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+
+			this.cYaw = 180 - Interpolations.lerp(camera.prevRotationYaw, camera.rotationYaw, partialTicks);
+			this.cPitch = 180 - Interpolations.lerp(camera.prevRotationPitch, camera.rotationPitch, partialTicks);
+			this.cX = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
+			this.cY = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
+			this.cZ = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
+		}
+
 		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 		List<IComponentParticleRender> renders = this.scheme.particleRender;
 
@@ -375,7 +396,7 @@ public class BedrockEmitter
 	 */
 	public int getBrightnessForRender(float partialTicks, double x, double y, double z)
 	{
-		if (this.lit)
+		if (this.lit || this.world == null)
 		{
 			return 15728880;
 		}

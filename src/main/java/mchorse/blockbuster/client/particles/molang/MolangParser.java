@@ -121,12 +121,9 @@ public class MolangParser extends MathBuilder
 	 */
 	public MolangExpression parseExpression(String expression) throws MolangException
 	{
-		expression = expression.toLowerCase();
-
-		String[] splits = expression.trim().split(";");
 		List<String> lines = new ArrayList<String>();
 
-		for (String split : splits)
+		for (String split : expression.toLowerCase().trim().split(";"))
 		{
 			if (!split.trim().isEmpty())
 			{
@@ -161,8 +158,9 @@ public class MolangParser extends MathBuilder
 	{
 		if (expression.startsWith(RETURN))
 		{
-			try {
-				return new MolangValue(this, this.parse(expression.substring(RETURN.length())));
+			try
+			{
+				return new MolangValue(this, this.parse(expression.substring(RETURN.length()))).addReturn();
 			}
 			catch (Exception e)
 			{

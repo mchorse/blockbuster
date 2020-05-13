@@ -48,6 +48,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
+		if (emitter.world == null)
+		{
+			return;
+		}
+
 		if (!particle.manual && !Operation.equals(this.enabled.get(), 0))
 		{
 			float r = this.radius;

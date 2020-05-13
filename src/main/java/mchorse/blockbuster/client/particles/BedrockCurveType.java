@@ -2,15 +2,25 @@ package mchorse.blockbuster.client.particles;
 
 public enum BedrockCurveType
 {
-	LINEAR, HERMITE;
+	LINEAR("linear"), HERMITE("catmull_rom");
+
+	public final String id;
 
 	public static BedrockCurveType fromString(String type)
 	{
-		if (type.equals("catmull_rom"))
+		for (BedrockCurveType t : values())
 		{
-			return HERMITE;
+			if (t.id.equals(type))
+			{
+				return t;
+			}
 		}
 
 		return LINEAR;
+	}
+
+	private BedrockCurveType(String id)
+	{
+		this.id = id;
 	}
 }

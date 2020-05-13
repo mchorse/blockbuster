@@ -202,22 +202,15 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		}
 
 		/* Calculate yaw and pitch based on the facing mode */
-		Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-
-		float entityYaw = 180 - camera.prevRotationYaw + (camera.rotationYaw - camera.prevRotationYaw) * partialTicks;
-		float entityPitch = 180 - camera.prevRotationPitch + (camera.rotationPitch - camera.prevRotationPitch) * partialTicks;
+		float entityYaw = emitter.cYaw;
+		float entityPitch = emitter.cPitch;
 		boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
 
 		if (lookAt)
 		{
-			double cx = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
-			double cy = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
-			double cz = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
-
-			double dX = cx - px;
-			double dY = cy - py;
-			double dZ = cz - pz;
-
+			double dX = emitter.cX - px;
+			double dY = emitter.cY - py;
+			double dZ = emitter.cZ - pz;
 			double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
 			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;

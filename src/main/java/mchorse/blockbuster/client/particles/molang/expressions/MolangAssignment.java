@@ -26,4 +26,10 @@ public class MolangAssignment extends MolangExpression
 
 		return value;
 	}
+
+	@Override
+	public String toString()
+	{
+		return this.variable.getName() + " = " + this.expression.toString();
+	}
 }

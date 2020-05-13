@@ -45,6 +45,7 @@ blockbuster.gui:
         model_editor: Model editor
         player_recording: Player recording editor
         texture: Texture manager
+        particle: Particle editor
     
     # Main page of dashboard
     main:

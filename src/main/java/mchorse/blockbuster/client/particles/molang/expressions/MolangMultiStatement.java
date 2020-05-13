@@ -4,6 +4,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class MolangMultiStatement extends MolangExpression
 {
@@ -24,6 +25,19 @@ public class MolangMultiStatement extends MolangExpression
 			value = expression.get();
 		}
 
-		return (float) value;
+		return value;
+	}
+
+	@Override
+	public String toString()
+	{
+		StringJoiner builder = new StringJoiner("; ");
+
+		for (MolangExpression expression : this.expressions)
+		{
+			builder.add(expression.toString());
+		}
+
+		return builder.toString();
 	}
 }

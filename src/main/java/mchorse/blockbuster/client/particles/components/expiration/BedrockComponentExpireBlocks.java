@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -43,6 +44,11 @@ public abstract class BedrockComponentExpireBlocks extends BedrockComponentBase
 
 	public Block getBlock(BedrockEmitter emitter, BedrockParticle particle)
 	{
+		if (emitter.world == null)
+		{
+			return Blocks.AIR;
+		}
+
 		Vector3d position = particle.getGlobalPosition(emitter);
 
 		this.pos.setPos(position.getX(), position.getY(), position.getZ());

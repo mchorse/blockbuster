@@ -2,19 +2,25 @@ package mchorse.blockbuster.client.particles;
 
 public enum  BedrockMaterial
 {
-	OPAQUE, ALPHA, BLEND;
+	OPAQUE("particles_opaque"), ALPHA("particles_alpha"), BLEND("particles_blend");
+
+	public final String id;
 
 	public static BedrockMaterial fromString(String material)
 	{
-		if ("particles_alpha".equals(material))
+		for (BedrockMaterial mat : values())
 		{
-			return ALPHA;
-		}
-		else if ("particles_blend".equals(material))
-		{
-			return BLEND;
+			if (mat.id.equals(material))
+			{
+				return mat;
+			}
 		}
 
 		return OPAQUE;
+	}
+
+	private BedrockMaterial(String id)
+	{
+		this.id = id;
 	}
 }

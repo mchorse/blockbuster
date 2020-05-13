@@ -1,11 +1,15 @@
 package mchorse.blockbuster.client.particles;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
@@ -32,57 +36,55 @@ import mchorse.blockbuster.client.particles.components.shape.BedrockComponentSha
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapePoint;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeSphere;
 import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.resources.RLUtils;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 
-public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
+public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>, JsonSerializer<BedrockScheme>
 {
-	public Map<String, IComponentParser> components = new HashMap<String, IComponentParser>();
+	public BiMap<String, Class<? extends BedrockComponentBase>> components = HashBiMap.create();
 
 	public BedrockSchemeJsonAdapter()
 	{
 		/* Meta components */
-		this.components.put("minecraft:emitter_local_space", (element, parser) -> new BedrockComponentLocalSpace().fromJson(element, parser));
-		this.components.put("minecraft:emitter_initialization", (element, parser) -> new BedrockComponentInitialization().fromJson(element, parser));
+		this.components.put("minecraft:emitter_local_space", BedrockComponentLocalSpace.class);
+		this.components.put("minecraft:emitter_initialization", BedrockComponentInitialization.class);
 
 		/* Rate */
-		this.components.put("minecraft:emitter_rate_instant", (element, parser) -> new BedrockComponentRateInstant().fromJson(element, parser));
-		this.components.put("minecraft:emitter_rate_steady", (element, parser) -> new BedrockComponentRateSteady().fromJson(element, parser));
+		this.components.put("minecraft:emitter_rate_instant", BedrockComponentRateInstant.class);
+		this.components.put("minecraft:emitter_rate_steady", BedrockComponentRateSteady.class);
 
 		/* Lifetime emitter */
-		this.components.put("minecraft:emitter_lifetime_looping", (element, parser) -> new BedrockComponentLifetimeLooping().fromJson(element, parser));
-		this.components.put("minecraft:emitter_lifetime_once", (element, parser) -> new BedrockComponentLifetimeOnce().fromJson(element, parser));
-		this.components.put("minecraft:emitter_lifetime_expression", (element, parser) -> new BedrockComponentLifetimeExpression().fromJson(element, parser));
+		this.components.put("minecraft:emitter_lifetime_looping", BedrockComponentLifetimeLooping.class);
+		this.components.put("minecraft:emitter_lifetime_once", BedrockComponentLifetimeOnce.class);
+		this.components.put("minecraft:emitter_lifetime_expression", BedrockComponentLifetimeExpression.class);
 
 		/* Shapes */
-		this.components.put("minecraft:emitter_shape_disc", (element, parser) -> new BedrockComponentShapeDisc().fromJson(element, parser));
-		this.components.put("minecraft:emitter_shape_box", (element, parser) -> new BedrockComponentShapeBox().fromJson(element, parser));
-		this.components.put("minecraft:emitter_shape_entity_aabb", (element, parser) -> new BedrockComponentShapeEntityAABB().fromJson(element, parser));
-		this.components.put("minecraft:emitter_shape_point", (element, parser) -> new BedrockComponentShapePoint().fromJson(element, parser));
-		this.components.put("minecraft:emitter_shape_sphere", (element, parser) -> new BedrockComponentShapeSphere().fromJson(element, parser));
+		this.components.put("minecraft:emitter_shape_disc", BedrockComponentShapeDisc.class);
+		this.components.put("minecraft:emitter_shape_box", BedrockComponentShapeBox.class);
+		this.components.put("minecraft:emitter_shape_entity_aabb", BedrockComponentShapeEntityAABB.class);
+		this.components.put("minecraft:emitter_shape_point", BedrockComponentShapePoint.class);
+		this.components.put("minecraft:emitter_shape_sphere", BedrockComponentShapeSphere.class);
 
 		/* Lifetime particle */
-		this.components.put("minecraft:particle_lifetime_expression", (element, parser) -> new BedrockComponentLifetime().fromJson(element, parser));
-		this.components.put("minecraft:particle_expire_if_in_blocks", (element, parser) -> new BedrockComponentExpireInBlocks().fromJson(element, parser));
-		this.components.put("minecraft:particle_expire_if_not_in_blocks", (element, parser) -> new BedrockComponentExpireNotInBlocks().fromJson(element, parser));
-		this.components.put("minecraft:particle_kill_plane", (element, parser) -> new BedrockComponentKillPlane().fromJson(element, parser));
+		this.components.put("minecraft:particle_lifetime_expression", BedrockComponentLifetime.class);
+		this.components.put("minecraft:particle_expire_if_in_blocks", BedrockComponentExpireInBlocks.class);
+		this.components.put("minecraft:particle_expire_if_not_in_blocks", BedrockComponentExpireNotInBlocks.class);
+		this.components.put("minecraft:particle_kill_plane", BedrockComponentKillPlane.class);
 
 		/* Appearance */
-		this.components.put("minecraft:particle_appearance_billboard", (element, parser) -> new BedrockComponentAppearanceBillboard().fromJson(element, parser));
-		this.components.put("minecraft:particle_appearance_lighting", (element, parser) -> new BedrockComponentAppearanceLighting());
-		this.components.put("minecraft:particle_appearance_tinting", (element, parser) -> new BedrockComponentAppearanceTinting().fromJson(element, parser));
+		this.components.put("minecraft:particle_appearance_billboard", BedrockComponentAppearanceBillboard.class);
+		this.components.put("minecraft:particle_appearance_lighting", BedrockComponentAppearanceLighting.class);
+		this.components.put("minecraft:particle_appearance_tinting", BedrockComponentAppearanceTinting.class);
 
 		/* Motion & Rotation */
-		this.components.put("minecraft:particle_initial_speed", (element, parser) -> new BedrockComponentInitialSpeed().fromJson(element, parser));
-		this.components.put("minecraft:particle_initial_spin", (element, parser) -> new BedrockComponentInitialSpin().fromJson(element, parser));
-		this.components.put("minecraft:particle_motion_collision", (element, parser) -> new BedrockComponentMotionCollision().fromJson(element, parser));
-		this.components.put("minecraft:particle_motion_dynamic", (element, parser) -> new BedrockComponentMotionDynamic().fromJson(element, parser));
-		this.components.put("minecraft:particle_motion_parametric", (element, parser) -> new BedrockComponentMotionParametric().fromJson(element, parser));
+		this.components.put("minecraft:particle_initial_speed", BedrockComponentInitialSpeed.class);
+		this.components.put("minecraft:particle_initial_spin", BedrockComponentInitialSpin.class);
+		this.components.put("minecraft:particle_motion_collision", BedrockComponentMotionCollision.class);
+		this.components.put("minecraft:particle_motion_dynamic", BedrockComponentMotionDynamic.class);
+		this.components.put("minecraft:particle_motion_parametric", BedrockComponentMotionParametric.class);
 	}
 
 	@Override
@@ -169,36 +171,8 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 			if (element.isJsonObject())
 			{
 				BedrockCurve curve = new BedrockCurve();
-				JsonObject object = element.getAsJsonObject();
 
-				if (object.has("type"))
-				{
-					curve.type = BedrockCurveType.fromString(object.get("type").getAsString());
-				}
-
-				if (object.has("input"))
-				{
-					curve.input = scheme.parser.parseJson(object.get("input"));
-				}
-
-				if (object.has("horizontal_range"))
-				{
-					curve.range = scheme.parser.parseJson(object.get("horizontal_range"));
-				}
-
-				if (object.has("nodes"))
-				{
-					JsonArray nodes = object.getAsJsonArray("nodes");
-					MolangExpression[] result = new MolangExpression[nodes.size()];
-
-					for (int i = 0, c = result.length; i < c; i ++)
-					{
-						result[i] = scheme.parser.parseJson(nodes.get(i));
-					}
-
-					curve.nodes = result;
-				}
-
+				curve.fromJson(element.getAsJsonObject(), scheme.parser);
 				scheme.curves.put(entry.getKey(), curve);
 			}
 		}
@@ -212,7 +186,24 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 
 			if (this.components.containsKey(key))
 			{
-				scheme.components.add(this.components.get(key).parse(entry.getValue(), scheme.parser));
+				BedrockComponentBase component = null;
+
+				try
+				{
+					component = this.components.get(key).getConstructor().newInstance();
+				}
+				catch (Exception e)
+				{}
+
+				if (component != null)
+				{
+					component.fromJson(entry.getValue(), scheme.parser);
+					scheme.components.add(component);
+				}
+				else
+				{
+					System.out.println("Failed to parse given component " + key + " in " + scheme.identifier + "!");
+				}
 			}
 		}
 	}
@@ -228,8 +219,65 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		return object.get(key).getAsJsonObject();
 	}
 
-	public static interface IComponentParser
+	/**
+	 * Turn given bedrock scheme into JSON
+	 */
+	@Override
+	public JsonElement serialize(BedrockScheme src, Type typeOfSrc, JsonSerializationContext context)
 	{
-		public BedrockComponentBase parse(JsonElement element, MolangParser parser) throws MolangException;
+		JsonObject object = new JsonObject();
+		JsonObject effect = new JsonObject();
+
+		object.addProperty("format_version", "1.10.0");
+		object.add("particle_effect", effect);
+
+		this.addDescription(effect, src);
+		this.addCurves(effect, src);
+		this.addComponents(effect, src);
+
+		return object;
+	}
+
+	private void addDescription(JsonObject effect, BedrockScheme scheme)
+	{
+		JsonObject desc = new JsonObject();
+		JsonObject render = new JsonObject();
+
+		effect.add("description", desc);
+
+		desc.addProperty("identifier", scheme.identifier);
+		desc.add("basic_render_parameters", render);
+
+		render.addProperty("material", scheme.material.id);
+		render.addProperty("texture", "textures/particle/particles");
+
+		if (scheme.texture != null && !scheme.texture.equals(BedrockScheme.DEFAULT_TEXTURE))
+		{
+			render.addProperty("texture", scheme.texture.toString());
+		}
+	}
+
+	private void addCurves(JsonObject effect, BedrockScheme scheme)
+	{
+		JsonObject curves = new JsonObject();
+
+		effect.add("curves", curves);
+
+		for (Map.Entry<String, BedrockCurve> entry : scheme.curves.entrySet())
+		{
+			curves.add(entry.getKey(), entry.getValue().toJson());
+		}
+	}
+
+	private void addComponents(JsonObject effect, BedrockScheme scheme)
+	{
+		JsonObject components = new JsonObject();
+
+		effect.add("components", components);
+
+		for (BedrockComponentBase component : scheme.components)
+		{
+			components.add(this.components.inverse().get(component.getClass()), component.toJson());
+		}
 	}
 }

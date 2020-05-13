@@ -1,5 +1,9 @@
 package mchorse.blockbuster.client.particles;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Variable;
@@ -66,5 +70,54 @@ public class BedrockCurve
 		}
 
 		return this.nodes[index];
+	}
+
+	public void fromJson(JsonObject object, MolangParser parser) throws MolangException
+	{
+		if (object.has("type"))
+		{
+			this.type = BedrockCurveType.fromString(object.get("type").getAsString());
+		}
+
+		if (object.has("input"))
+		{
+			this.input = parser.parseJson(object.get("input"));
+		}
+
+		if (object.has("horizontal_range"))
+		{
+			this.range = parser.parseJson(object.get("horizontal_range"));
+		}
+
+		if (object.has("nodes"))
+		{
+			JsonArray nodes = object.getAsJsonArray("nodes");
+			MolangExpression[] result = new MolangExpression[nodes.size()];
+
+			for (int i = 0, c = result.length; i < c; i ++)
+			{
+				result[i] = parser.parseJson(nodes.get(i));
+			}
+
+			this.nodes = result;
+		}
+	}
+
+	public JsonElement toJson()
+	{
+		JsonObject curve = new JsonObject();
+		JsonArray nodes = new JsonArray();
+
+		curve.addProperty("type", this.type.id);
+		curve.add("nodes", nodes);
+		curve.add("input", this.input.toJson());
+		curve.add("horizontal_range", this.range.toJson());
+
+		for (MolangExpression expression : this.nodes)
+		{
+			nodes.add(expression.toJson());
+		}
+
+		return curve;
 	}
 }
