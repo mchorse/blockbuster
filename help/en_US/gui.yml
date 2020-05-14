@@ -308,6 +308,8 @@ blockbuster.gui:
         cap: Capacity
 
     snowstorm:
+        mode: Mode
+
         general:
             title: General
             pick: Pick texture
@@ -315,6 +317,28 @@ blockbuster.gui:
             particles_opaque: Opaque
             particles_alpha: Alpha
             particles_blend: Blend
+
+        space:
+            title: Particle space
+
+            position: Local position
+            rotation: Local rotation
+
+        initialization:
+            title: Initialization expressions
+
+            create: Creation expression, it runs when emitter starts
+            update: Update expression, it runs every tick
+
+        rate:
+            title: Spawn rate
+
+            instant: Instant
+            steady: Steady
+
+            spawn_rate: Spawn rate expression determines how many particles in a second will be emitted
+            max_particles: How many particles at the same time will be present
+            particles: How many particles will get emitted at once
 
     record_morph:
         random_skip: Random Skip

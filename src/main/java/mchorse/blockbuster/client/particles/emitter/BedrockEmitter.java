@@ -42,9 +42,8 @@ public class BedrockEmitter
 	public Matrix3f rotation = new Matrix3f();
 
 	/* Runtime properties */
-	private int age;
-	private int lifetime;
-	private boolean wasStopped;
+	public int age;
+	public int lifetime;
 	public double spawnedParticles;
 	public boolean playing = true;
 
@@ -191,7 +190,6 @@ public class BedrockEmitter
 		this.age = 0;
 		this.spawnedParticles = 0;
 		this.playing = false;
-		this.wasStopped = true;
 	}
 
 	/**
@@ -214,12 +212,7 @@ public class BedrockEmitter
 		this.setEmitterVariables(0);
 		this.updateParticles();
 
-		if (!this.wasStopped)
-		{
-			this.age++;
-		}
-
-		this.wasStopped = false;
+		this.age++;
 	}
 
 	/**

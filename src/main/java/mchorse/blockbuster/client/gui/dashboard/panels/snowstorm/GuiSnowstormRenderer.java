@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm;
 
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;

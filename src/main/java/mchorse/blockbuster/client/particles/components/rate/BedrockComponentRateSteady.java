@@ -13,12 +13,16 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
 import mchorse.mclib.math.Constant;
 import net.minecraft.client.renderer.BufferBuilder;
 
-public class BedrockComponentRateSteady extends BedrockComponentBase implements IComponentParticleRender
+public class BedrockComponentRateSteady extends BedrockComponentRate implements IComponentParticleRender
 {
 	public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(50));
 
 	public MolangExpression spawnRate = MolangParser.ONE;
-	public MolangExpression maxParticles = DEFAULT_PARTICLES;
+
+	public BedrockComponentRateSteady()
+	{
+		this.particles = DEFAULT_PARTICLES;
+	}
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -27,7 +31,7 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 		JsonObject element = elem.getAsJsonObject();
 
 		if (element.has("spawn_rate")) this.spawnRate = parser.parseJson(element.get("spawn_rate"));
-		if (element.has("max_particles")) this.maxParticles = parser.parseJson(element.get("max_particles"));
+		if (element.has("max_particles")) this.particles = parser.parseJson(element.get("max_particles"));
 
 		return super.fromJson(element, parser);
 	}
@@ -38,7 +42,7 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 		JsonObject object = new JsonObject();
 
 		if (!MolangExpression.isOne(this.spawnRate)) object.add("spawn_rate", this.spawnRate.toJson());
-		if (!MolangExpression.isConstant(this.maxParticles, 50)) object.add("max_particles", this.maxParticles.toJson());
+		if (!MolangExpression.isConstant(this.particles, 50)) object.add("max_particles", this.particles.toJson());
 
 		return object;
 	}
@@ -70,7 +74,7 @@ public class BedrockComponentRateSteady extends BedrockComponentBase implements 
 
 				for (int i = 0; i < spawn; i++)
 				{
-					if (emitter.particles.size() <= this.maxParticles.get())
+					if (emitter.particles.size() <= this.particles.get())
 					{
 						emitter.spawnParticle();
 					}

@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormInitializationSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormRateSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSpaceSection;
 import mchorse.blockbuster.client.particles.BedrockScheme;
@@ -51,6 +52,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.addSection(new GuiSnowstormGeneralSection(mc));
 		this.addSection(new GuiSnowstormSpaceSection(mc));
 		this.addSection(new GuiSnowstormInitializationSection(mc));
+		this.addSection(new GuiSnowstormRateSection(mc));
 
 		/* TODO: Add link to snowstorm web editor */
 
@@ -108,5 +110,9 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	private void drawOverlay(GuiContext context)
 	{
 		this.editor.area.draw(0x88000000);
+
+		String label = this.renderer.emitter.particles.size() + "P";
+
+		this.font.drawStringWithShadow(label, this.area.ex() - this.font.getStringWidth(label) - 4, this.area.ey() - 12, 0xffffff);
 	}
 }

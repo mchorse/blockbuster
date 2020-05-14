@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public class BedrockScheme
 		return this.getOrCreate(clazz, clazz);
 	}
 
-	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz, Class<T> subclass)
+	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz, Class subclass)
 	{
 		T result = null;
 
@@ -119,7 +120,7 @@ public class BedrockScheme
 		{
 			try
 			{
-				result = subclass.getConstructor().newInstance();
+				result = (T) subclass.getConstructor().newInstance();
 
 				this.components.add(result);
 				this.setup();
@@ -127,6 +128,35 @@ public class BedrockScheme
 			catch (Exception e)
 			{}
 		}
+
+		return result;
+	}
+
+	public <T extends BedrockComponentBase> T replace(Class<T> clazz, Class subclass)
+	{
+		Iterator<BedrockComponentBase> it = this.components.iterator();
+
+		while (it.hasNext())
+		{
+			if (clazz.isAssignableFrom(it.next().getClass()))
+			{
+				it.remove();
+
+				break;
+			}
+		}
+
+		T result = null;
+
+		try
+		{
+			result = (T) subclass.getConstructor().newInstance();
+
+			this.components.add(result);
+			this.setup();
+		}
+		catch (Exception e)
+		{}
 
 		return result;
 	}

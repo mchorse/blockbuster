@@ -7,11 +7,19 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
+import mchorse.mclib.math.Constant;
 import mchorse.mclib.math.Operation;
 
-public class BedrockComponentRateInstant extends BedrockComponentBase implements IComponentEmitterUpdate
+public class BedrockComponentRateInstant extends BedrockComponentRate implements IComponentEmitterUpdate
 {
-	public int particles = 10;
+	public static final MolangExpression DEFAULT_PARTICLES = new MolangValue(null, new Constant(10));
+
+	public BedrockComponentRateInstant()
+	{
+		this.particles = DEFAULT_PARTICLES;
+	}
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -19,7 +27,10 @@ public class BedrockComponentRateInstant extends BedrockComponentBase implements
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("num_particles")) this.particles = element.get("num_particles").getAsInt();
+		if (element.has("num_particles"))
+		{
+			this.particles = parser.parseJson(element.get("num_particles"));
+		}
 
 		return super.fromJson(element, parser);
 	}
@@ -29,9 +40,9 @@ public class BedrockComponentRateInstant extends BedrockComponentBase implements
 	{
 		JsonObject object = new JsonObject();
 
-		if (this.particles != 10)
+		if (!MolangExpression.isConstant(this.particles, 10))
 		{
-			object.addProperty("num_particles", this.particles);
+			object.add("num_particles", this.particles.toJson());
 		}
 
 		return object;
@@ -40,11 +51,13 @@ public class BedrockComponentRateInstant extends BedrockComponentBase implements
 	@Override
 	public void update(BedrockEmitter emitter)
 	{
-		if (Operation.equals(emitter.getAge(), 0))
+		double age = emitter.getAge();
+
+		if (Operation.equals(age, 0))
 		{
 			emitter.setEmitterVariables(0);
 
-			for (int i = 0; i < this.particles; i ++)
+			for (int i = 0, c = (int) this.particles.get(); i < c; i ++)
 			{
 				emitter.spawnParticle();
 			}

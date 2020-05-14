@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -49,5 +50,40 @@ public class GuiSnowstormSection extends GuiElement
 	public void setScheme(BedrockScheme scheme)
 	{
 		this.scheme = scheme;
+	}
+
+	/**
+	 * Toggle visibility of the field section
+	 */
+	@Override
+	public boolean mouseClicked(GuiContext context)
+	{
+		if (super.mouseClicked(context))
+		{
+			return true;
+		}
+
+		if (this.title.area.isInside(context))
+		{
+			if (this.fields.hasParent())
+			{
+				this.fields.removeFromParent();
+			}
+			else
+			{
+				this.add(this.fields);
+			}
+
+			this.resizeParent();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected void resizeParent()
+	{
+		this.getParent().resize();
 	}
 }
