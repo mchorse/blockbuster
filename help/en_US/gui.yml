@@ -308,8 +308,13 @@ blockbuster.gui:
         cap: Capacity
 
     snowstorm:
-        tooltip: Snowstorm morph panel
-        local: Local space rendering
+        general:
+            title: General
+            pick: Pick texture
+
+            particles_opaque: Opaque
+            particles_alpha: Alpha
+            particles_blend: Blend
 
     record_morph:
         random_skip: Random Skip

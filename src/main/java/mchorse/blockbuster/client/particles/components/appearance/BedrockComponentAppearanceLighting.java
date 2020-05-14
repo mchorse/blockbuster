@@ -11,4 +11,10 @@ public class BedrockComponentAppearanceLighting extends BedrockComponentBase imp
 	{
 		emitter.lit = false;
 	}
+
+	@Override
+	public boolean canBeEmpty()
+	{
+		return true;
+	}
 }

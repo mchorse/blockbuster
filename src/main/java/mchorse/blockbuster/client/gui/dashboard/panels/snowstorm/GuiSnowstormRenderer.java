@@ -20,6 +20,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 
 	public void setScheme(BedrockScheme scheme)
 	{
+		this.emitter = new BedrockEmitter();
 		this.emitter.setScheme(scheme);
 	}
 
@@ -28,12 +29,21 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 	{
 		super.update();
 
-		this.emitter.update();
+		if (this.emitter != null)
+		{
+			this.emitter.rotation.setIdentity();
+			this.emitter.update();
+		}
 	}
 
 	@Override
 	protected void drawUserModel(GuiContext context)
 	{
+		if (this.emitter == null)
+		{
+			return;
+		}
+
 		this.emitter.cYaw = 180 - this.yaw;
 		this.emitter.cPitch = this.pitch;
 		this.emitter.cX = this.temp.x;

@@ -16,4 +16,9 @@ public abstract class BedrockComponentBase
 	{
 		return new JsonObject();
 	}
+
+	public boolean canBeEmpty()
+	{
+		return false;
+	}
 }

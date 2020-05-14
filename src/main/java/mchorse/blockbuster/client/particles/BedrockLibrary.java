@@ -78,4 +78,19 @@ public class BedrockLibrary
 			e.printStackTrace();
 		}
 	}
+
+	public void save(String filename, BedrockScheme scheme)
+	{
+		String json = JsonUtils.jsonToPretty(BedrockScheme.toJson(scheme));
+		File file = new File(this.folder, filename + ".json");
+
+		try
+		{
+			FileUtils.writeStringToFile(file, json, Charset.defaultCharset());
+		}
+		catch (Exception e)
+		{}
+
+		this.loadScheme(file);
+	}
 }

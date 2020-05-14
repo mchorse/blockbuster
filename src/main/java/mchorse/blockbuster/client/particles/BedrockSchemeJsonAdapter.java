@@ -8,6 +8,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
@@ -37,6 +38,7 @@ import mchorse.blockbuster.client.particles.components.shape.BedrockComponentSha
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeSphere;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.mclib.math.Operation;
 import mchorse.mclib.utils.resources.RLUtils;
 
 import java.lang.reflect.Type;
@@ -277,7 +279,41 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 
 		for (BedrockComponentBase component : scheme.components)
 		{
-			components.add(this.components.inverse().get(component.getClass()), component.toJson());
+			JsonElement element = component.toJson();
+
+			if (this.isEmpty(element) && !component.canBeEmpty())
+			{
+				continue;
+			}
+
+			components.add(this.components.inverse().get(component.getClass()), element);
 		}
+	}
+
+	private boolean isEmpty(JsonElement element)
+	{
+		if (element.isJsonArray())
+		{
+			return element.getAsJsonArray().size() == 0;
+		}
+		else if (element.isJsonObject())
+		{
+			return element.getAsJsonObject().size() == 0;
+		}
+		else if (element.isJsonPrimitive())
+		{
+			JsonPrimitive primitive = element.getAsJsonPrimitive();
+
+			if (primitive.isString())
+			{
+				return primitive.getAsString().isEmpty();
+			}
+			else if (primitive.isNumber())
+			{
+				return Operation.equals(primitive.getAsDouble(), 0);
+			}
+		}
+
+		return element.isJsonNull();
 	}
 }
