@@ -11,17 +11,15 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormRateSection extends GuiSnowstormSection
+public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<BedrockComponentRate>
 {
 	public GuiCirculateElement mode;
 	public GuiTextElement rate;
 	public GuiTextElement particles;
 
-	private BedrockComponentRate component;
-
 	public GuiSnowstormRateSection(Minecraft mc)
 	{
-		super(mc, IKey.lang("blockbuster.gui.snowstorm.rate.title"));
+		super(mc);
 
 		this.mode = new GuiCirculateElement(mc, (b) -> this.toggleMode());
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.rate.instant"));
@@ -39,6 +37,12 @@ public class GuiSnowstormRateSection extends GuiSnowstormSection
 		GuiElement row = Elements.row(mc, 5, 0, 20, Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F), this.mode);
 
 		this.fields.add(row, this.particles);
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return "blockbuster.gui.snowstorm.rate.title";
 	}
 
 	private void toggleMode()
@@ -70,15 +74,13 @@ public class GuiSnowstormRateSection extends GuiSnowstormSection
 	}
 
 	@Override
-	public void setScheme(BedrockScheme scheme)
+	protected BedrockComponentRate getComponent(BedrockScheme scheme)
 	{
-		super.setScheme(scheme);
-
-		this.component = this.scheme.getOrCreate(BedrockComponentRate.class, BedrockComponentRateInstant.class);
-		this.fillData();
+		return scheme.getOrCreate(BedrockComponentRate.class, BedrockComponentRateInstant.class);
 	}
 
-	private void fillData()
+	@Override
+	protected void fillData()
 	{
 		this.updateVisibility();
 		this.mode.setValue(this.isInstant() ? 0 : 1);

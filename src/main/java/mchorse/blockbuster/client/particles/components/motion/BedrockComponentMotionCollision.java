@@ -25,6 +25,7 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public boolean expireOnImpact;
 
 	/* Runtime options */
+	public boolean json;
 	private Vector3d previous = new Vector3d();
 	private Vector3d current = new Vector3d();
 	private BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -49,6 +50,11 @@ public class BedrockComponentMotionCollision extends BedrockComponentBase implem
 	public JsonElement toJson()
 	{
 		JsonObject object = new JsonObject();
+
+		if (MolangExpression.isZero(this.enabled))
+		{
+			return object;
+		}
 
 		if (!MolangExpression.isOne(this.enabled)) object.add("enabled", this.enabled.toJson());
 		if (this.collissionDrag != 0) object.addProperty("collision_drag", this.collissionDrag);

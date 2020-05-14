@@ -6,16 +6,14 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormInitializationSection extends GuiSnowstormSection
+public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSection<BedrockComponentInitialization>
 {
 	public GuiTextElement create;
 	public GuiTextElement update;
 
-	private BedrockComponentInitialization component;
-
 	public GuiSnowstormInitializationSection(Minecraft mc)
 	{
-		super(mc, IKey.lang("blockbuster.gui.snowstorm.initialization.title"));
+		super(mc);
 
 		this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.component.creation));
 		this.create.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create"));
@@ -26,11 +24,20 @@ public class GuiSnowstormInitializationSection extends GuiSnowstormSection
 	}
 
 	@Override
-	public void setScheme(BedrockScheme scheme)
+	public String getTitle()
 	{
-		super.setScheme(scheme);
+		return "blockbuster.gui.snowstorm.initialization.title";
+	}
 
-		this.component = this.scheme.getOrCreate(BedrockComponentInitialization.class);
+	@Override
+	protected BedrockComponentInitialization getComponent(BedrockScheme scheme)
+	{
+		return this.scheme.getOrCreate(BedrockComponentInitialization.class);
+	}
+
+	@Override
+	protected void fillData()
+	{
 		this.create.setText(this.component.creation.toString());
 		this.update.setText(this.component.update.toString());
 	}

@@ -97,6 +97,36 @@ public class BedrockScheme
 		return list;
 	}
 
+	public <T extends BedrockComponentBase> T get(Class<T> clazz)
+	{
+		for (BedrockComponentBase component : this.components)
+		{
+			if (clazz.isAssignableFrom(component.getClass()))
+			{
+				return (T) component;
+			}
+		}
+
+		return null;
+	}
+
+	public <T extends BedrockComponentBase> T add(Class<T> clazz)
+	{
+		T result = null;
+
+		try
+		{
+			result = (T) clazz.getConstructor().newInstance();
+
+			this.components.add(result);
+			this.setup();
+		}
+		catch (Exception e)
+		{}
+
+		return result;
+	}
+
 	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz)
 	{
 		return this.getOrCreate(clazz, clazz);
@@ -104,29 +134,11 @@ public class BedrockScheme
 
 	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz, Class subclass)
 	{
-		T result = null;
-
-		for (BedrockComponentBase component : this.components)
-		{
-			if (clazz.isAssignableFrom(component.getClass()))
-			{
-				result = (T) component;
-
-				break;
-			}
-		}
+		T result = this.get(clazz);
 
 		if (result == null)
 		{
-			try
-			{
-				result = (T) subclass.getConstructor().newInstance();
-
-				this.components.add(result);
-				this.setup();
-			}
-			catch (Exception e)
-			{}
+			result = (T) this.add(subclass);
 		}
 
 		return result;
@@ -146,19 +158,7 @@ public class BedrockScheme
 			}
 		}
 
-		T result = null;
-
-		try
-		{
-			result = (T) subclass.getConstructor().newInstance();
-
-			this.components.add(result);
-			this.setup();
-		}
-		catch (Exception e)
-		{}
-
-		return result;
+		return (T) this.add(subclass);
 	}
 
 	/**

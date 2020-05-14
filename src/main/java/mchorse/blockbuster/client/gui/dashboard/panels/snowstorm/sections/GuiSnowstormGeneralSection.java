@@ -20,7 +20,7 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 
 	public GuiSnowstormGeneralSection(Minecraft mc)
 	{
-		super(mc, IKey.lang("blockbuster.gui.snowstorm.general.title"));
+		super(mc);
 
 		this.identifier = new GuiTextElement(mc, (str) -> this.scheme.identifier = str);
 		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
@@ -49,6 +49,12 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 		});
 
 		this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return "blockbuster.gui.snowstorm.general.title";
 	}
 
 	@Override

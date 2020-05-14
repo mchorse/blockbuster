@@ -1,12 +1,10 @@
 package mchorse.blockbuster.client.particles;
 
-import com.google.gson.JsonElement;
 import mchorse.mclib.utils.JsonUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,10 +21,10 @@ public class BedrockLibrary
 		this.folder.mkdirs();
 
 		/* Load factory (default) presets */
-		this.loadFactory("default_fire", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/fire.json"));
-		this.loadFactory("default_magic", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/magic.json"));
-		this.loadFactory("default_rain", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/rain.json"));
-		this.loadFactory("default_snow", this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/snow.json"));
+		this.storeFactory("default_fire");
+		this.storeFactory("default_magic");
+		this.storeFactory("default_rain");
+		this.storeFactory("default_snow");
 	}
 
 	public void reload()
@@ -38,45 +36,77 @@ public class BedrockLibrary
 		{
 			if (file.isFile() && file.getName().endsWith(".json"))
 			{
-				this.loadScheme(file);
+				this.storeScheme(file);
 			}
 		}
 	}
 
-	/**
-	 * Load a scheme from a file
-	 */
-	private void loadScheme(File file)
+	public BedrockScheme load(String name)
 	{
-		String name = file.getName();
+		BedrockScheme scheme = this.loadScheme(new File(this.folder, name + ".json"));
 
-		try
+		if (scheme != null)
 		{
-			BedrockScheme particle = BedrockScheme.parse(FileUtils.readFileToString(file, Charset.defaultCharset()));
-
-			this.presets.put(name.substring(0, name.indexOf(".json")), particle);
+			return scheme;
 		}
-		catch (Exception e)
+
+		return this.loadFactory(name);
+	}
+
+	private void storeScheme(File file)
+	{
+		BedrockScheme scheme = this.loadScheme(file);
+
+		if (scheme != null)
 		{
-			e.printStackTrace();
+			String name = file.getName();
+
+			this.presets.put(name.substring(0, name.indexOf(".json")), scheme);
 		}
 	}
 
 	/**
 	 * Load a scheme from a file
 	 */
-	private void loadFactory(String name, InputStream stream)
+	public BedrockScheme loadScheme(File file)
 	{
 		try
 		{
-			BedrockScheme particle = BedrockScheme.parse(IOUtils.toString(stream, Charset.defaultCharset()));
-
-			this.factory.put(name, particle);
+			return BedrockScheme.parse(FileUtils.readFileToString(file, Charset.defaultCharset()));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+
+		return null;
+	}
+
+	private void storeFactory(String name)
+	{
+		BedrockScheme scheme = this.loadFactory(name);
+
+		if (scheme != null)
+		{
+			this.factory.put(name, scheme);
+		}
+	}
+
+	/**
+	 * Load a scheme from Blockbuster's zip
+	 */
+	public BedrockScheme loadFactory(String name)
+	{
+		try
+		{
+			return BedrockScheme.parse(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/" + name + ".json"), Charset.defaultCharset()));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public void save(String filename, BedrockScheme scheme)

@@ -6,16 +6,14 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormSpaceSection extends GuiSnowstormSection
+public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<BedrockComponentLocalSpace>
 {
 	public GuiToggleElement position;
 	public GuiToggleElement rotation;
 
-	private BedrockComponentLocalSpace component;
-
 	public GuiSnowstormSpaceSection(Minecraft mc)
 	{
-		super(mc, IKey.lang("blockbuster.gui.snowstorm.space.title"));
+		super(mc);
 
 		this.position = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.position"), (b) -> this.component.position = b.isToggled());
 		this.rotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.rotation"), (b) -> this.component.rotation = b.isToggled());
@@ -24,11 +22,20 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormSection
 	}
 
 	@Override
-	public void setScheme(BedrockScheme scheme)
+	public String getTitle()
 	{
-		super.setScheme(scheme);
+		return "blockbuster.gui.snowstorm.space.title";
+	}
 
-		this.component = scheme.getOrCreate(BedrockComponentLocalSpace.class);
+	@Override
+	protected BedrockComponentLocalSpace getComponent(BedrockScheme scheme)
+	{
+		return scheme.getOrCreate(BedrockComponentLocalSpace.class);
+	}
+
+	@Override
+	protected void fillData()
+	{
 		this.position.toggled(this.component.position);
 		this.rotation.toggled(this.component.rotation);
 	}

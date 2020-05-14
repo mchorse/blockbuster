@@ -11,24 +11,26 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormSection extends GuiElement
+public abstract class GuiSnowstormSection extends GuiElement
 {
 	public GuiLabel title;
 	public GuiElement fields;
 
 	protected BedrockScheme scheme;
 
-	public GuiSnowstormSection(Minecraft mc, IKey title)
+	public GuiSnowstormSection(Minecraft mc)
 	{
 		super(mc);
 
-		this.title = Elements.label(title).background(0x88000000 + McLib.primaryColor.get());
+		this.title = Elements.label(IKey.lang(this.getTitle())).background(0x88000000 + McLib.primaryColor.get());
 		this.fields = new GuiElement(mc);
 		this.fields.flex().column(5).stretch().vertical().height(20);
 
 		this.flex().column(5).stretch().vertical();
 		this.add(this.title, this.fields);
 	}
+
+	public abstract String getTitle();
 
 	public MolangExpression parse(String string, MolangExpression old)
 	{
@@ -51,6 +53,9 @@ public class GuiSnowstormSection extends GuiElement
 	{
 		this.scheme = scheme;
 	}
+
+	public void beforeSave(BedrockScheme scheme)
+	{}
 
 	/**
 	 * Toggle visibility of the field section
