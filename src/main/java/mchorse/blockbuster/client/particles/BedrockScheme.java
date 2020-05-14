@@ -56,9 +56,9 @@ public class BedrockScheme
 	public static JsonElement toJson(BedrockScheme scheme)
 	{
 		return new GsonBuilder()
-				.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
-				.create()
-				.toJsonTree(scheme);
+			.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
+			.create()
+			.toJsonTree(scheme);
 	}
 
 	public void setup()
@@ -76,7 +76,7 @@ public class BedrockScheme
 		}
 	}
 
-	public  <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
+	public <T extends IComponentBase> List<T> getComponents(Class<T> clazz)
 	{
 		List<T> list = new ArrayList<T>();
 
@@ -94,6 +94,41 @@ public class BedrockScheme
 		}
 
 		return list;
+	}
+
+	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz)
+	{
+		return this.getOrCreate(clazz, clazz);
+	}
+
+	public <T extends BedrockComponentBase> T getOrCreate(Class<T> clazz, Class<T> subclass)
+	{
+		T result = null;
+
+		for (BedrockComponentBase component : this.components)
+		{
+			if (clazz.isAssignableFrom(component.getClass()))
+			{
+				result = (T) component;
+
+				break;
+			}
+		}
+
+		if (result == null)
+		{
+			try
+			{
+				result = subclass.getConstructor().newInstance();
+
+				this.components.add(result);
+				this.setup();
+			}
+			catch (Exception e)
+			{}
+		}
+
+		return result;
 	}
 
 	/**

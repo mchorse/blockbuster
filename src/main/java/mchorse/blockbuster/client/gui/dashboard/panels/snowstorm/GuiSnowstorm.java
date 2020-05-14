@@ -3,7 +3,9 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormInitializationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSpaceSection;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -41,12 +43,16 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.particles.flex().relative(this).x(1F).wh(140, 200).anchorX(1F);
 
 		this.editor = new GuiScrollElement(mc);
-		this.editor.flex().relative(this).w(200).h(1F).column(10).vertical().stretch().scroll().padding(10);
+		this.editor.flex().relative(this).w(200).h(1F).column(20).vertical().stretch().scroll().padding(10);
 
 		this.save = new GuiIconElement(mc, Icons.SAVE, (b) -> Blockbuster.proxy.particles.save(this.filename, this.scheme));
 		this.save.flex().relative(this.particles).x(-20).wh(20, 20);
 
 		this.addSection(new GuiSnowstormGeneralSection(mc));
+		this.addSection(new GuiSnowstormSpaceSection(mc));
+		this.addSection(new GuiSnowstormInitializationSection(mc));
+
+		/* TODO: Add link to snowstorm web editor */
 
 		this.add(this.renderer, new GuiDrawable(this::drawOverlay), this.editor, this.particles, this.save);
 	}

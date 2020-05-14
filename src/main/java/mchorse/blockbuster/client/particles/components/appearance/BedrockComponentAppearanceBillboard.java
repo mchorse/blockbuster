@@ -63,6 +63,9 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	};
 	private Vector3f vector = new Vector3f();
 
+	public BedrockComponentAppearanceBillboard()
+	{}
+
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{

@@ -38,9 +38,14 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_blend"));
 		this.texture = new GuiTexturePicker(mc, (rl) ->
 		{
-			/* TODO: set texture size */
+			if (rl == null)
+			{
+				rl = BedrockScheme.DEFAULT_TEXTURE;
+			}
 
 			this.scheme.texture = rl;
+
+			/* TODO: set texture size */
 		});
 
 		this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));

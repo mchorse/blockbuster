@@ -173,12 +173,6 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.health.limit(0);
         this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 
-        this.invincible.flex().h(14);
-        this.invisible.flex().h(14);
-        this.enabled.flex().h(14);
-        this.fake.flex().h(14);
-        this.teleportBack.flex().h(14);
-
         left.add(this.recordingId, this.id);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.name")).color(0xcccccc), this.name);
         left.add(Elements.label(IKey.lang("blockbuster.gui.director.health")).color(0xcccccc), this.health, this.invincible, this.invisible, this.enabled, this.fake, this.teleportBack);

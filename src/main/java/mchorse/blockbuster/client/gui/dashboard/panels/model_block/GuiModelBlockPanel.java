@@ -116,13 +116,10 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         });
 
         this.shadow = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.shadow"), false, (button) -> this.model.shadow = button.isToggled());
-        this.shadow.flex().h(14);
         this.global = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.global"), false, (button) -> this.model.global = button.isToggled());
         this.global.tooltip(IKey.lang("blockbuster.gui.model_block.global_tooltip"), Direction.BOTTOM);
-        this.global.flex().h(14);
         this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.model_block.enabled"), false, (button) -> this.model.enabled = button.isToggled());
         this.enabled.tooltip(IKey.lang("blockbuster.gui.model_block.enabled_tooltip"), Direction.BOTTOM);
-        this.enabled.flex().h(14);
 
         column.add(this.pickMorph, look, this.shadow, this.global, this.enabled);
         this.subChildren.add(column);
@@ -144,7 +141,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         for (int i = 0; i < this.slots.length; i++)
         {
             this.slots[i] = new GuiSlotElement(mc, i, this.inventory);
-            this.slots[i].flex().relative(this.area).wh(24, 24).anchor(0.5F, 0.5F);
+            this.slots[i].flex().relative(this.area).anchor(0.5F, 0.5F);
             this.subChildren.add(this.slots[i]);
         }
 

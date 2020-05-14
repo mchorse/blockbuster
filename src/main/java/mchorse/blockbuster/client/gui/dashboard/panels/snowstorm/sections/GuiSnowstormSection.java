@@ -1,6 +1,8 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
 import mchorse.blockbuster.client.particles.BedrockScheme;
+import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
@@ -25,6 +27,23 @@ public class GuiSnowstormSection extends GuiElement
 
 		this.flex().column(5).stretch().vertical();
 		this.add(this.title, this.fields);
+	}
+
+	public MolangExpression parse(String string, MolangExpression old)
+	{
+		if (string.isEmpty())
+		{
+			return MolangParser.ZERO;
+		}
+
+		try
+		{
+			return this.scheme.parser.parseExpression(string);
+		}
+		catch (Exception e)
+		{}
+
+		return old;
 	}
 
 	public void setScheme(BedrockScheme scheme)
