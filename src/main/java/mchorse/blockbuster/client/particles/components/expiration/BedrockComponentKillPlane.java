@@ -8,6 +8,8 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.mclib.math.Operation;
 
 import javax.vecmath.Vector3d;
 
@@ -44,6 +46,11 @@ public class BedrockComponentKillPlane extends BedrockComponentBase implements I
 	{
 		JsonArray array = new JsonArray();
 
+		if (Operation.equals(this.a, 0) && Operation.equals(this.b, 0) && Operation.equals(this.c, 0) && Operation.equals(this.d, 0))
+		{
+			return array;
+		}
+
 		array.add(this.a);
 		array.add(this.b);
 		array.add(this.c);
@@ -55,7 +62,7 @@ public class BedrockComponentKillPlane extends BedrockComponentBase implements I
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		if (particle.dead)
+		if (particle.dead || emitter.world == null)
 		{
 			return;
 		}

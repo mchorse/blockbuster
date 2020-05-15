@@ -4,11 +4,13 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
@@ -22,16 +24,31 @@ import net.minecraft.item.ItemStack;
 
 public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 {
+	public GuiTrackpadElement a;
+	public GuiTrackpadElement b;
+	public GuiTrackpadElement c;
+	public GuiTrackpadElement d;
+
 	public GuiInventoryElement inventory;
 	public GuiBlocksSection inBlocksSection;
 	public GuiBlocksSection notInBlocksSection;
 
+	private BedrockComponentKillPlane plane;
 	private BedrockComponentExpireInBlocks inBlocks;
 	private BedrockComponentExpireNotInBlocks notInBlocks;
 
 	public GuiSnowstormExpirationSection(Minecraft mc)
 	{
 		super(mc);
+
+		this.a = new GuiTrackpadElement(mc, (value) -> this.plane.a = value);
+		this.a.tooltip(IKey.str("Ax"));
+		this.b = new GuiTrackpadElement(mc, (value) -> this.plane.b = value);
+		this.b.tooltip(IKey.str("By"));
+		this.c = new GuiTrackpadElement(mc, (value) -> this.plane.c = value);
+		this.c.tooltip(IKey.str("Cz"));
+		this.d = new GuiTrackpadElement(mc, (value) -> this.plane.d = value);
+		this.d.tooltip(IKey.str("D"));
 
 		this.inventory = new GuiInventoryElement(mc, (stack) ->
 		{
@@ -48,6 +65,10 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 		this.inBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.in_blocks"), this);
 		this.notInBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.not_in_blocks"), this);
 
+		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane"), 20).anchor(0, 0.5F)
+			.tooltip(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane_tooltip")));
+		this.fields.add(Elements.row(mc, 5, 0, 20, this.a, this.b));
+		this.fields.add(Elements.row(mc, 5, 0, 20, this.c, this.d));
 		this.fields.add(this.inBlocksSection, this.notInBlocksSection);
 	}
 
@@ -62,9 +83,16 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	{
 		super.setScheme(scheme);
 
-		this.inventory.setVisible(false);
+		this.plane = scheme.getOrCreate(BedrockComponentKillPlane.class);
 		this.inBlocks = scheme.getOrCreate(BedrockComponentExpireInBlocks.class);
 		this.notInBlocks = scheme.getOrCreate(BedrockComponentExpireNotInBlocks.class);
+
+		this.inventory.setVisible(false);
+
+		this.a.setValue(this.plane.a);
+		this.b.setValue(this.plane.b);
+		this.c.setValue(this.plane.c);
+		this.d.setValue(this.plane.d);
 
 		if (!this.inventory.hasParent())
 		{
@@ -129,8 +157,9 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 			GuiLabel label = Elements.label(title).anchor(0, 0.5F);
 			GuiElement row = Elements.row(mc, 5, 0, 20, label, add);
 
-			row.flex().row(5).preferred(0);
+			add.flex().wh(10, 16);
 			label.flex().h(0);
+			row.flex().row(5).preferred(0);
 			this.blocks = new GuiElement(mc);
 			this.blocks.flex().grid(7).items(6).resizes(true);
 
