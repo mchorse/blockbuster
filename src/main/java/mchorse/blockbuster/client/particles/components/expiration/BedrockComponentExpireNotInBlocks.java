@@ -10,7 +10,7 @@ public class BedrockComponentExpireNotInBlocks extends BedrockComponentExpireBlo
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		if (particle.dead)
+		if (particle.dead || emitter.world == null)
 		{
 			return;
 		}

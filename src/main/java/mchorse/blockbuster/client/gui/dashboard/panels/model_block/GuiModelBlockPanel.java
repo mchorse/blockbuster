@@ -172,9 +172,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
             this.model.slots[slot.slot] = slot.stack;
             this.model.updateEntity();
-
-            this.inventory.linked = null;
-            this.inventory.setVisible(false);
+            this.inventory.unlink();
         }
     }
 

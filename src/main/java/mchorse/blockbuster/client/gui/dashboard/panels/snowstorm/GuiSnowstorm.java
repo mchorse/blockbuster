@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormCollisionSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormExpirationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormInitializationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormRateSection;
@@ -47,13 +48,14 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.editor = new GuiScrollElement(mc);
 		this.editor.flex().relative(this).w(200).h(1F).column(20).vertical().stretch().scroll().padding(10);
 
-		this.save = new GuiIconElement(mc, Icons.SAVE, (b) -> this.save());
+		this.save = new GuiIconElement(mc, Icons.SAVED, (b) -> this.save());
 		this.save.flex().relative(this.particles).x(-20).wh(20, 20);
 
 		this.addSection(new GuiSnowstormGeneralSection(mc));
 		this.addSection(new GuiSnowstormSpaceSection(mc));
 		this.addSection(new GuiSnowstormInitializationSection(mc));
 		this.addSection(new GuiSnowstormRateSection(mc));
+		this.addSection(new GuiSnowstormExpirationSection(mc));
 		this.addSection(new GuiSnowstormCollisionSection(mc));
 
 		/* TODO: Add link to snowstorm web editor */
@@ -87,6 +89,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		{
 			section.setScheme(this.scheme);
 		}
+
+		this.editor.resize();
 	}
 
 	@Override

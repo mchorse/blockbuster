@@ -33,6 +33,7 @@ public abstract class ShapeDirection
 
 			vector.sub(new Vector3d(x, y, z));
 			vector.normalize();
+			vector.scale(this.factor);
 
 			particle.speed.set(vector);
 		}
