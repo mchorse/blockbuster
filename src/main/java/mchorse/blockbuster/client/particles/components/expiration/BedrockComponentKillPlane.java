@@ -62,7 +62,7 @@ public class BedrockComponentKillPlane extends BedrockComponentBase implements I
 	@Override
 	public void update(BedrockEmitter emitter, BedrockParticle particle)
 	{
-		if (particle.dead || emitter.world == null)
+		if (particle.dead)
 		{
 			return;
 		}
