@@ -107,7 +107,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 
 	private void calculate(float i, float j, float a, float b, float c, float d)
 	{
-		final float radius = 10;
+		final float radius = 5;
 
 		if (b != 0)
 		{

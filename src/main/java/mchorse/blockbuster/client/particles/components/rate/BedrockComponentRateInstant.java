@@ -53,7 +53,7 @@ public class BedrockComponentRateInstant extends BedrockComponentRate implements
 	{
 		double age = emitter.getAge();
 
-		if (Operation.equals(age, 0))
+		if (emitter.playing && Operation.equals(age, 0))
 		{
 			emitter.setEmitterVariables(0);
 

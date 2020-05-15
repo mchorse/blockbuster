@@ -2,7 +2,6 @@ package mchorse.blockbuster.client.particles;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -18,7 +17,7 @@ import mchorse.blockbuster.client.particles.components.appearance.BedrockCompone
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
-import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentLifetime;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentParticleLifetime;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeExpression;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeLooping;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeOnce;
@@ -37,7 +36,6 @@ import mchorse.blockbuster.client.particles.components.shape.BedrockComponentSha
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapePoint;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeSphere;
 import mchorse.blockbuster.client.particles.molang.MolangException;
-import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
 import mchorse.mclib.utils.resources.RLUtils;
 
@@ -71,7 +69,7 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 		this.components.put("minecraft:emitter_shape_sphere", BedrockComponentShapeSphere.class);
 
 		/* Lifetime particle */
-		this.components.put("minecraft:particle_lifetime_expression", BedrockComponentLifetime.class);
+		this.components.put("minecraft:particle_lifetime_expression", BedrockComponentParticleLifetime.class);
 		this.components.put("minecraft:particle_expire_if_in_blocks", BedrockComponentExpireInBlocks.class);
 		this.components.put("minecraft:particle_expire_if_not_in_blocks", BedrockComponentExpireNotInBlocks.class);
 		this.components.put("minecraft:particle_kill_plane", BedrockComponentKillPlane.class);

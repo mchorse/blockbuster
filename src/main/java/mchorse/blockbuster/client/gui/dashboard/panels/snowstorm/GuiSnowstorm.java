@@ -6,14 +6,17 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSno
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormExpirationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormInitializationSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormLifetimeSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormRateSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSpaceSection;
 import mchorse.blockbuster.client.particles.BedrockScheme;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -55,6 +58,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.addSection(new GuiSnowstormSpaceSection(mc));
 		this.addSection(new GuiSnowstormInitializationSection(mc));
 		this.addSection(new GuiSnowstormRateSection(mc));
+		this.addSection(new GuiSnowstormLifetimeSection(mc));
 		this.addSection(new GuiSnowstormExpirationSection(mc));
 		this.addSection(new GuiSnowstormCollisionSection(mc));
 
@@ -125,9 +129,11 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	private void drawOverlay(GuiContext context)
 	{
-		this.editor.area.draw(0x88000000);
+		this.editor.area.draw(0xff000000, 150, 0, 0, 0);
+		GuiDraw.drawHorizontalGradientRect(this.editor.area.x - 50, this.editor.area.y, this.editor.area.x + 150, this.editor.area.ey(), 0, 0xff000000);
 
-		String label = this.renderer.emitter.particles.size() + "P";
+		BedrockEmitter emitter = this.renderer.emitter;
+		String label = emitter.particles.size() + "P - " + emitter.age + "A";
 
 		this.font.drawStringWithShadow(label, this.area.x + 4, this.area.ey() - 12, 0xffffff);
 	}

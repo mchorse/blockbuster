@@ -187,7 +187,6 @@ public class BedrockEmitter
 			return;
 		}
 
-		this.age = 0;
 		this.spawnedParticles = 0;
 		this.playing = false;
 	}

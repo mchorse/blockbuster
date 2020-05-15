@@ -10,19 +10,29 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Operation;
 
-public class BedrockComponentLifetimeExpression extends BedrockComponentBase implements IComponentEmitterUpdate
+public class BedrockComponentLifetimeExpression extends BedrockComponentLifetime
 {
-	public MolangExpression activation = MolangParser.ONE;
 	public MolangExpression expiration = MolangParser.ZERO;
+
+	@Override
+	protected String getPropertyName()
+	{
+		return "activation_expression";
+	}
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
-		if (!elem.isJsonObject()) return super.fromJson(elem, parser);
+		if (!elem.isJsonObject())
+		{
+			return super.fromJson(elem, parser);
+		}
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("activation_expression")) this.activation = parser.parseJson(element.get("activation_expression"));
-		if (element.has("expiration_expression")) this.expiration = parser.parseJson(element.get("expiration_expression"));
+		if (element.has("expiration_expression"))
+		{
+			this.expiration = parser.parseJson(element.get("expiration_expression"));
+		}
 
 		return super.fromJson(element, parser);
 	}
@@ -30,10 +40,12 @@ public class BedrockComponentLifetimeExpression extends BedrockComponentBase imp
 	@Override
 	public JsonElement toJson()
 	{
-		JsonObject object = new JsonObject();
+		JsonObject object = (JsonObject) super.toJson();
 
-		if (!MolangExpression.isOne(this.activation)) object.add("activation_expression", this.activation.toJson());
-		if (!MolangExpression.isZero(this.expiration)) object.add("expiration_expression", this.expiration.toJson());
+		if (!MolangExpression.isZero(this.expiration))
+		{
+			object.add("expiration_expression", this.expiration.toJson());
+		}
 
 		return object;
 	}
@@ -41,7 +53,7 @@ public class BedrockComponentLifetimeExpression extends BedrockComponentBase imp
 	@Override
 	public void update(BedrockEmitter emitter)
 	{
-		if (!Operation.equals(this.activation.get(), 0))
+		if (!Operation.equals(this.activeTime.get(), 0))
 		{
 			emitter.start();
 		}

@@ -4,14 +4,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
-import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
+import mchorse.mclib.math.Constant;
 
-public class BedrockComponentLifetimeLooping extends BedrockComponentLifetime
+public abstract class BedrockComponentLifetime extends BedrockComponentBase implements IComponentEmitterUpdate
 {
-	public MolangExpression sleepTime = MolangParser.ZERO;
+	public static final MolangExpression DEFAULT_ACTIVE = new MolangValue(null, new Constant(10));
+
+	public MolangExpression activeTime = DEFAULT_ACTIVE;
 
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
 	{
@@ -22,9 +25,9 @@ public class BedrockComponentLifetimeLooping extends BedrockComponentLifetime
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("sleep_time"))
+		if (element.has("active_time"))
 		{
-			this.sleepTime = parser.parseJson(element.get("sleep_time"));
+			this.activeTime = parser.parseJson(element.get("active_time"));
 		}
 
 		return super.fromJson(element, parser);
@@ -33,31 +36,24 @@ public class BedrockComponentLifetimeLooping extends BedrockComponentLifetime
 	@Override
 	public JsonElement toJson()
 	{
-		JsonObject object = (JsonObject) super.toJson();
+		JsonObject object = new JsonObject();
 
-		if (!MolangExpression.isZero(this.sleepTime))
+		if (!MolangExpression.isConstant(this.activeTime, 10))
 		{
-			object.add("sleep_time", this.sleepTime.toJson());
+			object.add("active_time", this.activeTime.toJson());
 		}
 
 		return object;
 	}
 
-	@Override
-	public void update(BedrockEmitter emitter)
+	protected String getPropertyName()
 	{
-		double active = this.activeTime.get();
-		double sleep = this.sleepTime.get();
-		double age = emitter.getAge();
+		return "active_time";
+	}
 
-		if (age >= active && emitter.playing)
-		{
-			emitter.stop();
-		}
-
-		if (age >= sleep && !emitter.playing)
-		{
-			emitter.start();
-		}
+	@Override
+	public int getSortingIndex()
+	{
+		return -10;
 	}
 }

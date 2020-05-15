@@ -5,7 +5,7 @@ import mchorse.blockbuster.client.particles.components.expiration.BedrockCompone
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
-import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentLifetime;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentParticleLifetime;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -39,7 +39,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	public GuiBlocksSection inBlocksSection;
 	public GuiBlocksSection notInBlocksSection;
 
-	private BedrockComponentLifetime lifetime;
+	private BedrockComponentParticleLifetime lifetime;
 	private BedrockComponentKillPlane plane;
 	private BedrockComponentExpireInBlocks inBlocks;
 	private BedrockComponentExpireNotInBlocks notInBlocks;
@@ -108,7 +108,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	{
 		super.setScheme(scheme);
 
-		this.lifetime = scheme.getOrCreate(BedrockComponentLifetime.class);
+		this.lifetime = scheme.getOrCreate(BedrockComponentParticleLifetime.class);
 		this.plane = scheme.getOrCreate(BedrockComponentKillPlane.class);
 		this.inBlocks = scheme.getOrCreate(BedrockComponentExpireInBlocks.class);
 		this.notInBlocks = scheme.getOrCreate(BedrockComponentExpireNotInBlocks.class);

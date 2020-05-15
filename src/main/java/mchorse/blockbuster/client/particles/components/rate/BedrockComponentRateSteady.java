@@ -74,7 +74,7 @@ public class BedrockComponentRateSteady extends BedrockComponentRate implements 
 
 				for (int i = 0; i < spawn; i++)
 				{
-					if (emitter.particles.size() <= this.particles.get())
+					if (emitter.particles.size() < this.particles.get())
 					{
 						emitter.spawnParticle();
 					}

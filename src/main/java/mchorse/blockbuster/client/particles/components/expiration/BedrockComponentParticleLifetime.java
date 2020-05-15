@@ -12,7 +12,7 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentLifetime extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
+public class BedrockComponentParticleLifetime extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
 {
 	public MolangExpression expression = MolangParser.ZERO;
 	public boolean max;

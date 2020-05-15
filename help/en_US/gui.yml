@@ -340,8 +340,22 @@ blockbuster.gui:
             max_particles: How many particles at the same time will be present
             particles: How many particles will get emitted at once
 
+        lifetime:
+            title: Emitter's lifetime
+
+            expression: Expression
+            looping: Looping
+            once: Once
+
+            active_expression: Expression that responsible for restarting the emitter, if evaluated result is a non-zero
+            active_looping: Expression that determines for how long a single cycle will be active before a sleeping phase
+            active_once: Expression that determines for how long the single
+
+            expiration_expression: Expression that responsible for stopping the emitter, if evaluated result is a non-zero
+            sleep_time: Expression that determines for how long emitter will be sleeping before next cycle
+
         expiration:
-            title: Particle expiration
+            title: Particle's lifetime
 
             expression: Expression
             expression_tooltip: This expression keeps particle alive until the expression's result is a zero
