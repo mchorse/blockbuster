@@ -46,6 +46,33 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 {
 	public BiMap<String, Class<? extends BedrockComponentBase>> components = HashBiMap.create();
 
+	public static boolean isEmpty(JsonElement element)
+	{
+		if (element.isJsonArray())
+		{
+			return element.getAsJsonArray().size() == 0;
+		}
+		else if (element.isJsonObject())
+		{
+			return element.getAsJsonObject().size() == 0;
+		}
+		else if (element.isJsonPrimitive())
+		{
+			JsonPrimitive primitive = element.getAsJsonPrimitive();
+
+			if (primitive.isString())
+			{
+				return primitive.getAsString().isEmpty();
+			}
+			else if (primitive.isNumber())
+			{
+				return Operation.equals(primitive.getAsDouble(), 0);
+			}
+		}
+
+		return element.isJsonNull();
+	}
+
 	public BedrockSchemeJsonAdapter()
 	{
 		/* Meta components */
@@ -286,32 +313,5 @@ public class BedrockSchemeJsonAdapter implements JsonDeserializer<BedrockScheme>
 
 			components.add(this.components.inverse().get(component.getClass()), element);
 		}
-	}
-
-	private boolean isEmpty(JsonElement element)
-	{
-		if (element.isJsonArray())
-		{
-			return element.getAsJsonArray().size() == 0;
-		}
-		else if (element.isJsonObject())
-		{
-			return element.getAsJsonObject().size() == 0;
-		}
-		else if (element.isJsonPrimitive())
-		{
-			JsonPrimitive primitive = element.getAsJsonPrimitive();
-
-			if (primitive.isString())
-			{
-				return primitive.getAsString().isEmpty();
-			}
-			else if (primitive.isNumber())
-			{
-				return Operation.equals(primitive.getAsDouble(), 0);
-			}
-		}
-
-		return element.isJsonNull();
 	}
 }

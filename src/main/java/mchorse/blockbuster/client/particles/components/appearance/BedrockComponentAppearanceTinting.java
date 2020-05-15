@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.particles.components.appearance;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import mchorse.blockbuster.client.particles.BedrockSchemeJsonAdapter;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
@@ -44,8 +45,12 @@ public class BedrockComponentAppearanceTinting extends BedrockComponentBase impl
 	public JsonElement toJson()
 	{
 		JsonObject object = new JsonObject();
+		JsonElement element = this.color.toJson();
 
-		if (this.color != DEFAULT_COLOR) object.add("color", this.color.toJson());
+		if (!BedrockSchemeJsonAdapter.isEmpty(element))
+		{
+			object.add("color", element);
+		}
 
 		return object;
 	}

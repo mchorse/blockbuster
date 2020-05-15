@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSno
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormInitializationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormLifetimeSection;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormLightingSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormRateSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSpaceSection;
@@ -60,6 +61,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.addSection(new GuiSnowstormRateSection(mc));
 		this.addSection(new GuiSnowstormLifetimeSection(mc));
 		this.addSection(new GuiSnowstormExpirationSection(mc));
+		this.addSection(new GuiSnowstormLightingSection(mc));
 		this.addSection(new GuiSnowstormCollisionSection(mc));
 
 		/* TODO: Add link to snowstorm web editor */
@@ -125,6 +127,10 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	public void close()
 	{
 		/* TODO: Clean up particles */
+		if (this.renderer.emitter != null)
+		{
+			this.renderer.emitter.particles.clear();
+		}
 	}
 
 	private void drawOverlay(GuiContext context)

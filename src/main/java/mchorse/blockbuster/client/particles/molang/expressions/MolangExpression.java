@@ -33,6 +33,18 @@ public abstract class MolangExpression implements IValue
 		return false;
 	}
 
+	public static boolean isExpressionConstant(MolangExpression expression)
+	{
+		if (expression instanceof MolangValue)
+		{
+			MolangValue value = (MolangValue) expression;
+
+			return value.value instanceof Constant;
+		}
+
+		return false;
+	}
+
 	public MolangExpression(MolangParser context)
 	{
 		this.context = context;

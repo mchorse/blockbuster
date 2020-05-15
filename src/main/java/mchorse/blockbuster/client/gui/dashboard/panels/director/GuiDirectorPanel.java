@@ -1,13 +1,12 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.director;
 
-import javafx.scene.Camera;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.recording.PacketUpdatePlayerData;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.scene.PacketScenePause;
@@ -240,6 +239,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         /* Scene manager */
         this.add(this.scenes = new GuiSceneManager(mc, this));
         this.scenes.flex().relative(toggleScenes).xy(1F, 1F).w(160).hTo(this.selector.flex()).anchorX(1F);
+        this.scenes.setVisible(false);
     }
 
     public SceneLocation getLocation()

@@ -144,19 +144,28 @@ public class BedrockScheme
 		return result;
 	}
 
-	public <T extends BedrockComponentBase> T replace(Class<T> clazz, Class subclass)
+	public <T extends BedrockComponentBase> T remove(Class<T> clazz)
 	{
 		Iterator<BedrockComponentBase> it = this.components.iterator();
 
 		while (it.hasNext())
 		{
-			if (clazz.isAssignableFrom(it.next().getClass()))
+			BedrockComponentBase component = it.next();
+
+			if (clazz.isAssignableFrom(component.getClass()))
 			{
 				it.remove();
 
-				break;
+				return (T) component;
 			}
 		}
+
+		return null;
+	}
+
+	public <T extends BedrockComponentBase> T replace(Class<T> clazz, Class subclass)
+	{
+		this.remove(clazz);
 
 		return (T) this.add(subclass);
 	}

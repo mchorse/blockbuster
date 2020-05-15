@@ -3,6 +3,8 @@ package mchorse.blockbuster.client.particles.components.appearance;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.JsonAdapter;
+import mchorse.blockbuster.client.particles.BedrockSchemeJsonAdapter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
@@ -78,7 +80,7 @@ public abstract class Tint
 	{
 		JsonElement gradient = color.get("gradient");
 
-		MolangExpression expression = parser.parseJson(color.get("interpolant"));
+		MolangExpression expression = MolangParser.ZERO;
 		List<Tint.Gradient.ColorStop> colorStops = new ArrayList<Gradient.ColorStop>();
 		boolean equal = true;
 
@@ -106,6 +108,11 @@ public abstract class Tint
 			}
 		}
 
+		if (color.has("interpolant"))
+		{
+			expression = parser.parseJson(color.get("interpolant"));
+		}
+
 		return new Tint.Gradient(colorStops, expression, equal);
 	}
 
@@ -131,6 +138,12 @@ public abstract class Tint
 			this.a = a;
 		}
 
+		public boolean isConstant()
+		{
+			return MolangExpression.isExpressionConstant(this.r) && MolangExpression.isExpressionConstant(this.g)
+				&& MolangExpression.isExpressionConstant(this.b) && MolangExpression.isExpressionConstant(this.a);
+		}
+
 		@Override
 		public void compute(BedrockParticle particle)
 		{
@@ -144,6 +157,11 @@ public abstract class Tint
 		public JsonElement toJson()
 		{
 			JsonArray array = new JsonArray();
+
+			if (MolangExpression.isOne(this.r) && MolangExpression.isOne(this.g) && MolangExpression.isOne(this.b) && MolangExpression.isOne(this.a))
+			{
+				return array;
+			}
 
 			array.add(this.r.toJson());
 			array.add(this.g.toJson());
@@ -223,6 +241,7 @@ public abstract class Tint
 		public JsonElement toJson()
 		{
 			JsonObject object = new JsonObject();
+			JsonElement color;
 
 			if (this.equal)
 			{
@@ -233,7 +252,7 @@ public abstract class Tint
 					gradient.add(stop.color.toJson());
 				}
 
-				object.add("gradient", gradient);
+				color = gradient;
 			}
 			else
 			{
@@ -244,10 +263,18 @@ public abstract class Tint
 					gradient.add(String.valueOf(stop.stop), stop.color.toJson());
 				}
 
-				object.add("gradient", gradient);
+				color = gradient;
 			}
 
-			object.add("interpolant", this.interpolant.toJson());
+			if (!BedrockSchemeJsonAdapter.isEmpty(color))
+			{
+				object.add("gradient", color);
+			}
+
+			if (!MolangExpression.isZero(this.interpolant))
+			{
+				object.add("interpolant", this.interpolant.toJson());
+			}
 
 			return object;
 		}
