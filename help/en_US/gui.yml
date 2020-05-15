@@ -368,6 +368,19 @@ blockbuster.gui:
             in_blocks: Expire in blocks
             not_in_blocks: Expire not in blocks
 
+        lighting:
+            title: Color and lighting
+
+            lighting: Lighting
+
+            solid: Solid
+            expression: Expression
+
+            red: Red
+            green: Green
+            blue: Blue
+            alpha: Alpha
+
         collision:
             title: Collision
 

@@ -129,19 +129,19 @@ public class BedrockEmitter
 
 	private void setupVariables()
 	{
-		this.varAge = scheme.parser.variables.get("variable.particle_age");
-		this.varLifetime = scheme.parser.variables.get("variable.particle_lifetime");
-		this.varRandom1 = scheme.parser.variables.get("variable.particle_random_1");
-		this.varRandom2 = scheme.parser.variables.get("variable.particle_random_2");
-		this.varRandom3 = scheme.parser.variables.get("variable.particle_random_3");
-		this.varRandom4 = scheme.parser.variables.get("variable.particle_random_4");
+		this.varAge = this.scheme.parser.variables.get("variable.particle_age");
+		this.varLifetime = this.scheme.parser.variables.get("variable.particle_lifetime");
+		this.varRandom1 = this.scheme.parser.variables.get("variable.particle_random_1");
+		this.varRandom2 = this.scheme.parser.variables.get("variable.particle_random_2");
+		this.varRandom3 = this.scheme.parser.variables.get("variable.particle_random_3");
+		this.varRandom4 = this.scheme.parser.variables.get("variable.particle_random_4");
 
-		this.varEmitterAge = scheme.parser.variables.get("variable.emitter_age");
-		this.varEmitterLifetime = scheme.parser.variables.get("variable.emitter_lifetime");
-		this.varEmitterRandom1 = scheme.parser.variables.get("variable.emitter_random_1");
-		this.varEmitterRandom2 = scheme.parser.variables.get("variable.emitter_random_2");
-		this.varEmitterRandom3 = scheme.parser.variables.get("variable.emitter_random_3");
-		this.varEmitterRandom4 = scheme.parser.variables.get("variable.emitter_random_4");
+		this.varEmitterAge = this.scheme.parser.variables.get("variable.emitter_age");
+		this.varEmitterLifetime = this.scheme.parser.variables.get("variable.emitter_lifetime");
+		this.varEmitterRandom1 = this.scheme.parser.variables.get("variable.emitter_random_1");
+		this.varEmitterRandom2 = this.scheme.parser.variables.get("variable.emitter_random_2");
+		this.varEmitterRandom3 = this.scheme.parser.variables.get("variable.emitter_random_3");
+		this.varEmitterRandom4 = this.scheme.parser.variables.get("variable.emitter_random_4");
 	}
 
 	public void setParticleVariables(BedrockParticle particle, float partialTicks)

@@ -2,6 +2,8 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.particles.BedrockLibrary;
+import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
@@ -34,6 +36,7 @@ public class SnowstormMorph extends AbstractMorph
 	public List<BedrockEmitter> lastEmitters;
 
 	private boolean initialized;
+	private long lastUpdate;
 
 	public static Matrix4f getMatrix()
 	{
@@ -116,7 +119,12 @@ public class SnowstormMorph extends AbstractMorph
 		this.getLastEmitters().add(this.getEmitter());
 
 		this.emitter = new BedrockEmitter();
-		this.emitter.setScheme(Blockbuster.proxy.particles.presets.get(key));
+		this.emitter.setScheme(this.getScheme(key));
+	}
+
+	private BedrockScheme getScheme(String key)
+	{
+		return Blockbuster.proxy.particles.presets.get(key);
 	}
 
 	@Override
@@ -137,6 +145,16 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
 	{
+		if (this.emitter != null && this.emitter.scheme != null && this.lastUpdate < BedrockLibrary.lastUpdate)
+		{
+			this.lastUpdate = BedrockLibrary.lastUpdate;
+
+			if (this.emitter.scheme != this.getScheme(this.scheme))
+			{
+				this.setClientScheme(this.scheme);
+			}
+		}
+
 		BedrockEmitter emitter = this.getEmitter();
 
 		if (MatrixUtils.matrix != null)

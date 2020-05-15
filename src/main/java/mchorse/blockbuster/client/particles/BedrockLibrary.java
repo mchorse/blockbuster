@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class BedrockLibrary
 {
+	public static long lastUpdate;
+
 	public Map<String, BedrockScheme> presets = new HashMap<String, BedrockScheme>();
 	public Map<String, BedrockScheme> factory = new HashMap<String, BedrockScheme>();
 	public File folder;
@@ -121,6 +123,8 @@ public class BedrockLibrary
 		catch (Exception e)
 		{}
 
-		this.loadScheme(file);
+		this.storeScheme(file);
+
+		lastUpdate = System.currentTimeMillis();
 	}
 }
