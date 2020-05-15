@@ -343,6 +343,11 @@ blockbuster.gui:
         expiration:
             title: Particle expiration
 
+            expression: Expression
+            expression_tooltip: This expression keeps particle alive until the expression's result is a zero
+            max: Max
+            max_tooltip: This expression defines particle's lifetime in terms of seconds)
+
             kill_plane: Kill plane
             kill_plane_tooltip: You can specify a plane in terms of Ax + By + Cz + D = 0, if a particle crosses this plane, then it expires
 

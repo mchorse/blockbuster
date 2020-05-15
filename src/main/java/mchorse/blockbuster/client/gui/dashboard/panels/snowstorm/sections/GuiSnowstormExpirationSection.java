@@ -5,11 +5,14 @@ import mchorse.blockbuster.client.particles.components.expiration.BedrockCompone
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireNotInBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
+import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentLifetime;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.IGuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiSlotElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
@@ -24,6 +27,9 @@ import net.minecraft.item.ItemStack;
 
 public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 {
+	public GuiCirculateElement mode;
+	public GuiTextElement expression;
+
 	public GuiTrackpadElement a;
 	public GuiTrackpadElement b;
 	public GuiTrackpadElement c;
@@ -33,6 +39,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	public GuiBlocksSection inBlocksSection;
 	public GuiBlocksSection notInBlocksSection;
 
+	private BedrockComponentLifetime lifetime;
 	private BedrockComponentKillPlane plane;
 	private BedrockComponentExpireInBlocks inBlocks;
 	private BedrockComponentExpireNotInBlocks notInBlocks;
@@ -40,6 +47,17 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	public GuiSnowstormExpirationSection(Minecraft mc)
 	{
 		super(mc);
+
+		this.mode = new GuiCirculateElement(mc, (b) ->
+		{
+			this.lifetime.max = this.mode.getValue() == 1;
+			this.updateTooltip();
+		});
+		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.expression"));
+		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.max"));
+
+		this.expression = new GuiTextElement(mc, (str) -> this.lifetime.expression = this.parse(str, this.lifetime.expression));
+		this.expression.tooltip(IKey.lang(""));
 
 		this.a = new GuiTrackpadElement(mc, (value) -> this.plane.a = value);
 		this.a.tooltip(IKey.str("Ax"));
@@ -65,11 +83,18 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 		this.inBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.in_blocks"), this);
 		this.notInBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.not_in_blocks"), this);
 
+		this.fields.add(Elements.row(mc, 5, 0, 20, Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F), this.mode));
+		this.fields.add(this.expression);
 		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane"), 20).anchor(0, 0.5F)
 			.tooltip(IKey.lang("blockbuster.gui.snowstorm.expiration.kill_plane_tooltip")));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.a, this.b));
 		this.fields.add(Elements.row(mc, 5, 0, 20, this.c, this.d));
 		this.fields.add(this.inBlocksSection, this.notInBlocksSection);
+	}
+
+	private void updateTooltip()
+	{
+		this.expression.tooltip.label.set(this.lifetime.max ? "blockbuster.gui.snowstorm.expiration.max_tooltip" : "blockbuster.gui.snowstorm.expiration.expression_tooltip");
 	}
 
 	@Override
@@ -83,16 +108,21 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	{
 		super.setScheme(scheme);
 
+		this.lifetime = scheme.getOrCreate(BedrockComponentLifetime.class);
 		this.plane = scheme.getOrCreate(BedrockComponentKillPlane.class);
 		this.inBlocks = scheme.getOrCreate(BedrockComponentExpireInBlocks.class);
 		this.notInBlocks = scheme.getOrCreate(BedrockComponentExpireNotInBlocks.class);
 
-		this.inventory.setVisible(false);
+		this.mode.setValue(this.lifetime.max ? 1 : 0);
+		this.expression.setText(this.lifetime.expression.toString());
+		this.updateTooltip();
 
 		this.a.setValue(this.plane.a);
 		this.b.setValue(this.plane.b);
 		this.c.setValue(this.plane.c);
 		this.d.setValue(this.plane.d);
+
+		this.inventory.setVisible(false);
 
 		if (!this.inventory.hasParent())
 		{
@@ -136,6 +166,9 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 		}
 	}
 
+	/**
+	 * Blocks module
+	 */
 	public static class GuiBlocksSection extends GuiElement
 	{
 		public GuiElement blocks;
@@ -156,11 +189,12 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 			});
 			GuiLabel label = Elements.label(title).anchor(0, 0.5F);
 			GuiElement row = Elements.row(mc, 5, 0, 20, label, add);
+			this.blocks = new GuiElement(mc);
+
 
 			add.flex().wh(10, 16);
 			label.flex().h(0);
 			row.flex().row(5).preferred(0);
-			this.blocks = new GuiElement(mc);
 			this.blocks.flex().grid(7).items(6).resizes(true);
 
 			this.flex().column(5).vertical().stretch();
