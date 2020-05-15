@@ -10,8 +10,8 @@ import javax.vecmath.Vector3d;
 
 public abstract class ShapeDirection
 {
-	public static final ShapeDirection INWARDS = new Inwards(1);
-	public static final ShapeDirection OUTWARDS = new Inwards(-1);
+	public static final ShapeDirection INWARDS = new Inwards(-1);
+	public static final ShapeDirection OUTWARDS = new Inwards(1);
 
 	public abstract void applyDirection(BedrockParticle particle, double x, double y, double z);
 

@@ -43,13 +43,13 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 		this.particles = new GuiStringSearchListElement(mc, (list) -> this.setScheme(list.get(0)));
 		this.particles.list.background();
-		this.particles.flex().relative(this).x(1F).wh(140, 200).anchorX(1F);
+		this.particles.flex().relative(this).wh(140, 200);
 
 		this.editor = new GuiScrollElement(mc);
-		this.editor.flex().relative(this).w(200).h(1F).column(20).vertical().stretch().scroll().padding(10);
+		this.editor.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F).column(20).vertical().stretch().scroll().padding(10);
 
 		this.save = new GuiIconElement(mc, Icons.SAVED, (b) -> this.save());
-		this.save.flex().relative(this.particles).x(-20).wh(20, 20);
+		this.save.flex().relative(this.particles).x(1F).wh(20, 20);
 
 		this.addSection(new GuiSnowstormGeneralSection(mc));
 		this.addSection(new GuiSnowstormSpaceSection(mc));
@@ -129,6 +129,6 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 		String label = this.renderer.emitter.particles.size() + "P";
 
-		this.font.drawStringWithShadow(label, this.area.ex() - this.font.getStringWidth(label) - 4, this.area.ey() - 12, 0xffffff);
+		this.font.drawStringWithShadow(label, this.area.x + 4, this.area.ey() - 12, 0xffffff);
 	}
 }
