@@ -314,6 +314,8 @@ blockbuster.gui:
             title: General
             pick: Pick texture
 
+            identifier: Identifier of this particle effect, this can be used as a display name, but in Bedrock edition it's an ID of the particle effect
+
             particles_opaque: Opaque
             particles_alpha: Alpha
             particles_blend: Blend

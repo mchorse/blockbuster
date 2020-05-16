@@ -117,7 +117,8 @@
             "size": [ 0.6, 0.6, 0.6 ],
             "limbs": {
                 "head": {
-                    "translate": [ 0.0, 8.0, 0.0 ]
+                    "translate": [ 0.0, 8.0, 0.0 ],
+                    "rotate": [ -45, 0.0, 0.0 ]
                 },
                 "right_arm": {
                     "translate": [ -6.0, -2.0, 0.0 ]
