@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -32,21 +33,15 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 	public GuiToggleElement stretch;
 	public GuiToggleElement loop;
 
-	public GuiSnowstormAppearanceSection(Minecraft mc)
+	public GuiSnowstormAppearanceSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.mode = new GuiCirculateElement(mc, (b) ->
 		{
 			this.component.flipbook = this.mode.getValue() == 1;
-			this.flipbook.removeFromParent();
-
-			if (this.component.flipbook)
-			{
-				this.fields.add(this.flipbook);
-			}
-
-			this.resizeParent();
+			this.updateElements();
+			this.parent.dirty();
 		});
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.regular"));
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.appearance.animated"));
@@ -66,18 +61,38 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 		this.uvH = new GuiTextElement(mc, 10000, (str) -> this.component.uvH = this.parse(str, this.uvH, this.component.uvH));
 		this.uvH.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.uv_h"));
 
-		this.stepX = new GuiTrackpadElement(mc, (value) -> this.component.stepX = value);
+		this.stepX = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.stepX = value;
+			this.parent.dirty();
+		});
 		this.stepX.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.step_x"));
-		this.stepY = new GuiTrackpadElement(mc, (value) -> this.component.stepY = value);
+		this.stepY = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.stepY = value;
+			this.parent.dirty();
+		});
 		this.stepY.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.step_y"));
-		this.fps = new GuiTrackpadElement(mc, (value) -> this.component.fps = value);
+		this.fps = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.fps = value;
+			this.parent.dirty();
+		});
 		this.fps.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.fps"));
 		this.max = new GuiTextElement(mc, 10000, (str) -> this.component.maxFrame = this.parse(str, this.max, this.component.maxFrame));
 		this.max.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.max"));
 
-		this.stretch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.appearance.stretch"), (b) -> this.component.stretchFPS = b.isToggled());
+		this.stretch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.appearance.stretch"), (b) ->
+		{
+			this.component.stretchFPS = b.isToggled();
+			this.parent.dirty();
+		});
 		this.stretch.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.stretch_tooltip"));
-		this.loop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.appearance.loop"), (b) -> this.component.loop = b.isToggled());
+		this.loop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.appearance.loop"), (b) ->
+		{
+			this.component.loop = b.isToggled();
+			this.parent.dirty();
+		});
 		this.loop.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.loop_tooltip"));
 
 		this.flipbook = new GuiElement(mc);
@@ -92,6 +107,18 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 		this.fields.add(this.sizeW, this.sizeH);
 		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.appearance.mapping"), 20).anchor(0, 1F));
 		this.fields.add(this.uvX, this.uvY, this.uvW, this.uvH);
+	}
+
+	private void updateElements()
+	{
+		this.flipbook.removeFromParent();
+
+		if (this.component.flipbook)
+		{
+			this.fields.add(this.flipbook);
+		}
+
+		this.resizeParent();
 	}
 
 	@Override
@@ -127,13 +154,6 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 		this.stretch.toggled(this.component.stretchFPS);
 		this.loop.toggled(this.component.loop);
 
-		this.flipbook.removeFromParent();
-
-		if (this.component.flipbook)
-		{
-			this.fields.add(this.flipbook);
-		}
-
-		this.resizeParent();
+		this.updateElements();
 	}
 }

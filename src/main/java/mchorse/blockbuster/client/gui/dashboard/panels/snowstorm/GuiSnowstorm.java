@@ -24,6 +24,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	private String filename;
 	private BedrockScheme scheme;
+	private boolean dirty;
 
 	public GuiSnowstorm(Minecraft mc, GuiDashboard dashboard)
 	{
@@ -58,21 +60,32 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.save = new GuiIconElement(mc, Icons.SAVED, (b) -> this.save());
 		this.save.flex().relative(this.particles).x(1F).wh(20, 20);
 
-		this.addSection(new GuiSnowstormGeneralSection(mc));
-		this.addSection(new GuiSnowstormSpaceSection(mc));
-		this.addSection(new GuiSnowstormInitializationSection(mc));
-		this.addSection(new GuiSnowstormRateSection(mc));
-		this.addSection(new GuiSnowstormLifetimeSection(mc));
-		this.addSection(new GuiSnowstormShapeSection(mc));
-		this.addSection(new GuiSnowstormMotionSection(mc));
-		this.addSection(new GuiSnowstormExpirationSection(mc));
-		this.addSection(new GuiSnowstormAppearanceSection(mc));
-		this.addSection(new GuiSnowstormLightingSection(mc));
-		this.addSection(new GuiSnowstormCollisionSection(mc));
+		this.addSection(new GuiSnowstormGeneralSection(mc, this));
+		this.addSection(new GuiSnowstormSpaceSection(mc, this));
+		this.addSection(new GuiSnowstormInitializationSection(mc, this));
+		this.addSection(new GuiSnowstormRateSection(mc, this));
+		this.addSection(new GuiSnowstormLifetimeSection(mc, this));
+		this.addSection(new GuiSnowstormShapeSection(mc, this));
+		this.addSection(new GuiSnowstormMotionSection(mc, this));
+		this.addSection(new GuiSnowstormExpirationSection(mc, this));
+		this.addSection(new GuiSnowstormAppearanceSection(mc, this));
+		this.addSection(new GuiSnowstormLightingSection(mc, this));
+		this.addSection(new GuiSnowstormCollisionSection(mc, this));
 
 		/* TODO: Add link to snowstorm web editor */
 
 		this.add(this.renderer, new GuiDrawable(this::drawOverlay), this.editor, this.particles, this.save);
+	}
+
+	public void dirty()
+	{
+		this.dirty = true;
+		this.updateSaveButton();
+	}
+
+	private void updateSaveButton()
+	{
+		this.save.both(this.dirty ? Icons.SAVE : Icons.SAVED);
 	}
 
 	private void save()
@@ -83,6 +96,9 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		}
 
 		Blockbuster.proxy.particles.save(this.filename, this.scheme);
+
+		this.dirty = false;
+		this.updateSaveButton();
 	}
 
 	private void addSection(GuiSnowstormSection section)
@@ -93,6 +109,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	private void setScheme(String scheme)
 	{
+		this.dirty = false;
+		this.updateSaveButton();
 		this.filename = scheme;
 		this.scheme = Blockbuster.proxy.particles.load(scheme);
 		this.renderer.setScheme(this.scheme);
@@ -132,7 +150,6 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	@Override
 	public void close()
 	{
-		/* TODO: Clean up particles */
 		if (this.renderer.emitter != null)
 		{
 			this.renderer.emitter.particles.clear();
@@ -141,6 +158,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	private void drawOverlay(GuiContext context)
 	{
+		/* Draw debug info */
 		this.editor.area.draw(0xff000000, 150, 0, 0, 0);
 		GuiDraw.drawHorizontalGradientRect(this.editor.area.x - 50, this.editor.area.y, this.editor.area.x + 150, this.editor.area.ey(), 0, 0xff000000);
 

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentLocalSpace;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -11,12 +12,21 @@ public class GuiSnowstormSpaceSection extends GuiSnowstormComponentSection<Bedro
 	public GuiToggleElement position;
 	public GuiToggleElement rotation;
 
-	public GuiSnowstormSpaceSection(Minecraft mc)
+	public GuiSnowstormSpaceSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
-		this.position = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.position"), (b) -> this.component.position = b.isToggled());
-		this.rotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.rotation"), (b) -> this.component.rotation = b.isToggled());
+		this.position = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.position"), (b) ->
+		{
+			this.component.position = b.isToggled();
+			this.parent.dirty();
+		});
+
+		this.rotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.space.rotation"), (b) ->
+		{
+			this.component.rotation = b.isToggled();
+			this.parent.dirty();
+		});
 
 		this.fields.add(this.position, this.rotation);
 	}

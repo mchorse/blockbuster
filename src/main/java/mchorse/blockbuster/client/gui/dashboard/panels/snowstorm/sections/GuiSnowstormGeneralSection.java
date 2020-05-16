@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
@@ -21,35 +22,46 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 	public GuiCirculateElement material;
 	public GuiTexturePicker texture;
 
-	public GuiSnowstormGeneralSection(Minecraft mc)
+	public GuiSnowstormGeneralSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
-		this.identifier = new GuiTextElement(mc, 100, (str) -> this.scheme.identifier = str);
+		this.identifier = new GuiTextElement(mc, 100, (str) ->
+		{
+			this.scheme.identifier = str;
+			this.parent.dirty();
+		});
 		this.identifier.tooltip(IKey.lang("blockbuster.gui.snowstorm.general.identifier"));
+
 		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
 		{
-			GuiElement parent = this.getParentContainer();
+			GuiElement container = this.getParentContainer();
 
 			this.texture.fill(this.scheme.texture);
-			this.texture.flex().relative(parent).wh(1F, 1F);
+			this.texture.flex().relative(container).wh(1F, 1F);
 			this.texture.resize();
-			parent.add(this.texture);
+			container.add(this.texture);
 		});
-		this.material = new GuiCirculateElement(mc, (b) -> this.scheme.material = BedrockMaterial.values()[this.material.getValue()]);
+
+		this.material = new GuiCirculateElement(mc, (b) ->
+		{
+			this.scheme.material = BedrockMaterial.values()[this.material.getValue()];
+			this.parent.dirty();
+		});
 		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_opaque"));
 		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_alpha"));
 		this.material.addLabel(IKey.lang("blockbuster.gui.snowstorm.general.particles_blend"));
+
 		this.texture = new GuiTexturePicker(mc, (rl) ->
 		{
 			if (rl == null)
 			{
 				rl = BedrockScheme.DEFAULT_TEXTURE;
-
 			}
 
 			this.setTextureSize(rl);
 			this.scheme.texture = rl;
+			this.parent.dirty();
 		});
 
 		this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBase;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeBox;
 import mchorse.blockbuster.client.particles.components.shape.BedrockComponentShapeDisc;
@@ -33,9 +34,9 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 	public GuiTextElement y;
 	public GuiTextElement z;
 
-	public GuiSnowstormShapeSection(Minecraft mc)
+	public GuiSnowstormShapeSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.offsetX = new GuiTextElement(mc, 10000, (str) -> this.component.offset[0] = this.parse(str, this.offsetX, this.component.offset[0]));
 		this.offsetX.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
@@ -44,7 +45,11 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		this.offsetZ = new GuiTextElement(mc, 10000, (str) -> this.component.offset[2] = this.parse(str, this.offsetZ, this.component.offset[2]));
 		this.offsetZ.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 		this.direction = new GuiDirectionSection(mc, this);
-		this.surface = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.shape.surface"), (b) -> this.component.surface = b.isToggled());
+		this.surface = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.shape.surface"), (b) ->
+		{
+			this.component.surface = b.isToggled();
+			this.parent.dirty();
+		});
 		this.surface.tooltip(IKey.lang("blockbuster.gui.snowstorm.shape.surface_tooltip"));
 
 		this.radiusLabel = Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.radius"), 20).anchor(0, 1F);
@@ -239,6 +244,7 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 					this.parent.component.direction = new ShapeDirection.Vector(MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO);
 				}
 
+				this.parent.parent.dirty();
 				this.fillData();
 			});
 			this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.shape.direction_outwards"));

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpeed;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpin;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotion;
@@ -30,9 +31,9 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 	private BedrockComponentInitialSpeed speed;
 	private BedrockComponentInitialSpin spin;
 
-	public GuiSnowstormMotionSection(Minecraft mc)
+	public GuiSnowstormMotionSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.positionSpeed = new GuiTextElement(mc, 10000, (str) -> this.speed.speed = this.parse(str, this.positionSpeed, this.speed.speed));
 		this.positionSpeed.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.position_speed"));

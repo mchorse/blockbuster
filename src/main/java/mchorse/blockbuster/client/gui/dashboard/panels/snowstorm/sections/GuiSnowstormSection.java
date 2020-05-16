@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
@@ -18,11 +19,13 @@ public abstract class GuiSnowstormSection extends GuiElement
 	public GuiElement fields;
 
 	protected BedrockScheme scheme;
+	protected GuiSnowstorm parent;
 
-	public GuiSnowstormSection(Minecraft mc)
+	public GuiSnowstormSection(Minecraft mc, GuiSnowstorm parent)
 	{
 		super(mc);
 
+		this.parent = parent;
 		this.title = Elements.label(IKey.lang(this.getTitle())).background(0x88000000 + McLib.primaryColor.get());
 		this.fields = new GuiElement(mc);
 		this.fields.flex().column(5).stretch().vertical().height(20);
@@ -45,6 +48,7 @@ public abstract class GuiSnowstormSection extends GuiElement
 			MolangExpression expression = this.scheme.parser.parseExpression(string);
 
 			element.field.setTextColor(0xffffff);
+			this.parent.dirty();
 
 			return expression;
 		}

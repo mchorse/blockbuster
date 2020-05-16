@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRate;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateInstant;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
@@ -13,9 +14,9 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
 	public GuiTextElement rate;
 	public GuiTextElement particles;
 
-	public GuiSnowstormRateSection(Minecraft mc)
+	public GuiSnowstormRateSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.rate = new GuiTextElement(mc, 10000, (str) ->
 		{

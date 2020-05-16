@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceLighting;
 import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceTinting;
@@ -34,11 +35,15 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 
 	private BedrockComponentAppearanceTinting component;
 
-	public GuiSnowstormLightingSection(Minecraft mc)
+	public GuiSnowstormLightingSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
-		this.mode = new GuiCirculateElement(mc, (b) -> this.fillData());
+		this.mode = new GuiCirculateElement(mc, (b) ->
+		{
+			this.fillData();
+			this.parent.dirty();
+		});
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.solid"));
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.expression"));
 
@@ -51,6 +56,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 			solid.g = this.set(solid.g, original.g);
 			solid.b = this.set(solid.b, original.b);
 			solid.a = this.set(solid.a, original.a);
+			this.parent.dirty();
 		});
 		this.color.picker.editAlpha();
 
@@ -86,7 +92,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		});
 		this.a.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.alpha"));
 
-		this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.lighting.lighting"), null);
+		this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.lighting.lighting"), (b) -> this.parent.dirty());
 
 		GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
 

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireBlocks;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentExpireInBlocks;
@@ -44,14 +45,15 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 	private BedrockComponentExpireInBlocks inBlocks;
 	private BedrockComponentExpireNotInBlocks notInBlocks;
 
-	public GuiSnowstormExpirationSection(Minecraft mc)
+	public GuiSnowstormExpirationSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.mode = new GuiCirculateElement(mc, (b) ->
 		{
 			this.lifetime.max = this.mode.getValue() == 1;
 			this.updateTooltip();
+			this.parent.dirty();
 		});
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.expression"));
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.max"));
@@ -59,13 +61,29 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 		this.expression = new GuiTextElement(mc, 10000, (str) -> this.lifetime.expression = this.parse(str, this.expression, this.lifetime.expression));
 		this.expression.tooltip(IKey.lang(""));
 
-		this.a = new GuiTrackpadElement(mc, (value) -> this.plane.a = value);
+		this.a = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.plane.a = value;
+			this.parent.dirty();
+		});
 		this.a.tooltip(IKey.str("Ax"));
-		this.b = new GuiTrackpadElement(mc, (value) -> this.plane.b = value);
+		this.b = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.plane.b = value;
+			this.parent.dirty();
+		});
 		this.b.tooltip(IKey.str("By"));
-		this.c = new GuiTrackpadElement(mc, (value) -> this.plane.c = value);
+		this.c = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.plane.c = value;
+			this.parent.dirty();
+		});
 		this.c.tooltip(IKey.str("Cz"));
-		this.d = new GuiTrackpadElement(mc, (value) -> this.plane.d = value);
+		this.d = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.plane.d = value;
+			this.parent.dirty();
+		});
 		this.d.tooltip(IKey.str("D"));
 
 		this.inventory = new GuiInventoryElement(mc, (stack) ->
@@ -78,6 +96,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 			{
 				this.inventory.linked.stack = stack;
 				this.inventory.unlink();
+				this.parent.dirty();
 			}
 		});
 		this.inBlocksSection = new GuiBlocksSection(mc, IKey.lang("blockbuster.gui.snowstorm.expiration.in_blocks"), this);

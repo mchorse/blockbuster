@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.meta.BedrockComponentInitialization;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -11,9 +12,9 @@ public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSect
 	public GuiTextElement create;
 	public GuiTextElement update;
 
-	public GuiSnowstormInitializationSection(Minecraft mc)
+	public GuiSnowstormInitializationSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.create, this.component.creation));
 		this.create.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create"));

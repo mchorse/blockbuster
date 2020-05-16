@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.motion.BedrockComponentMotionCollision;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
@@ -18,18 +19,34 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 
 	private boolean wasPresent;
 
-	public GuiSnowstormCollisionSection(Minecraft mc)
+	public GuiSnowstormCollisionSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
-		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), null);
-		this.drag = new GuiTrackpadElement(mc, (value) -> this.component.collissionDrag = value);
+		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
+		this.drag = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.collissionDrag = value;
+			this.parent.dirty();
+		});
 		this.drag.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.drag"));
-		this.bounciness = new GuiTrackpadElement(mc, (value) -> this.component.bounciness = value);
+		this.bounciness = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.bounciness = value;
+			this.parent.dirty();
+		});
 		this.bounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.bounciness"));
-		this.radius = new GuiTrackpadElement(mc, (value) -> this.component.radius = value);
+		this.radius = new GuiTrackpadElement(mc, (value) ->
+		{
+			this.component.radius = value;
+			this.parent.dirty();
+		});
 		this.radius.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.radius"));
-		this.expire = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.expire"), (b) -> this.component.expireOnImpact = b.isToggled());
+		this.expire = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.expire"), (b) ->
+		{
+			this.component.expireOnImpact = b.isToggled();
+			this.parent.dirty();
+		});
 
 		this.fields.add(this.enabled, this.drag, this.bounciness, this.radius, this.expire);
 	}

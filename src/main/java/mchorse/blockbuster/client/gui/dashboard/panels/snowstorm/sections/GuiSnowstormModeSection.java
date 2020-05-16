@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.BedrockComponentBase;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -13,9 +14,9 @@ public abstract class GuiSnowstormModeSection <T extends BedrockComponentBase> e
 	public GuiCirculateElement mode;
 	public GuiLabel modeLabel;
 
-	public GuiSnowstormModeSection(Minecraft mc)
+	public GuiSnowstormModeSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.mode = new GuiCirculateElement(mc, (b) -> this.updateMode(this.mode.getValue()));
 		this.fillModes(this.mode);
@@ -54,6 +55,7 @@ public abstract class GuiSnowstormModeSection <T extends BedrockComponentBase> e
 
 		this.component = this.scheme.replace(this.getBaseClass(), this.getModeClass(this.mode.getValue()));
 		this.restoreInfo(this.component, old);
+		this.parent.dirty();
 
 		this.fillData();
 	}

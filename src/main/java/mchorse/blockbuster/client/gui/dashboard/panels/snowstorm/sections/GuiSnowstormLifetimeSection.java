@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetime;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeExpression;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeLooping;
@@ -14,9 +15,9 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 	public GuiTextElement active;
 	public GuiTextElement expiration;
 
-	public GuiSnowstormLifetimeSection(Minecraft mc)
+	public GuiSnowstormLifetimeSection(Minecraft mc, GuiSnowstorm parent)
 	{
-		super(mc);
+		super(mc, parent);
 
 		this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.active, this.component.activeTime));
 		this.active.tooltip(IKey.lang(""));
@@ -34,6 +35,8 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 
 				component.expiration = this.parse(str, this.expiration, component.expiration);
 			}
+
+			this.parent.dirty();
 		});
 		this.expiration.tooltip(IKey.lang(""));
 
