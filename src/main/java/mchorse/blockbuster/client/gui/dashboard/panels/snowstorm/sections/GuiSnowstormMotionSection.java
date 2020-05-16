@@ -34,25 +34,25 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 	{
 		super(mc);
 
-		this.positionSpeed = new GuiTextElement(mc, 10000, (str) -> this.speed.speed = this.parse(str, this.speed.speed));
+		this.positionSpeed = new GuiTextElement(mc, 10000, (str) -> this.speed.speed = this.parse(str, this.positionSpeed, this.speed.speed));
 		this.positionSpeed.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.position_speed"));
-		this.positionX = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, 0));
+		this.positionX = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionX, 0));
 		this.positionX.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
-		this.positionY = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, 1));
+		this.positionY = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionY, 1));
 		this.positionY.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
-		this.positionZ = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, 2));
+		this.positionZ = new GuiTextElement(mc, 10000, (str) -> this.updatePosition(str, this.positionZ, 2));
 		this.positionZ.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 		this.positionDrag = new GuiTextElement(mc, 10000, (str) ->
 		{
 			BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
 
-			component.motionDrag = this.parse(str, component.motionDrag);
+			component.motionDrag = this.parse(str, this.positionDrag, component.motionDrag);
 		});
 		this.positionDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.position_drag"));
 
-		this.rotationAngle = new GuiTextElement(mc, 10000, (str) -> this.spin.rotation = this.parse(str, this.spin.rotation));
+		this.rotationAngle = new GuiTextElement(mc, 10000, (str) -> this.spin.rotation = this.parse(str, this.rotationAngle, this.spin.rotation));
 		this.rotationAngle.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_angle"));
-		this.rotationRate = new GuiTextElement(mc, 10000, (str) -> this.spin.rate = this.parse(str, this.spin.rate));
+		this.rotationRate = new GuiTextElement(mc, 10000, (str) -> this.spin.rate = this.parse(str, this.rotationRate, this.spin.rate));
 		this.rotationRate.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_speed"));
 		this.rotationAcceleration = new GuiTextElement(mc, 10000, (str) ->
 		{
@@ -60,13 +60,13 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 			{
 				BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
 
-				component.rotationAcceleration = this.parse(str, component.rotationAcceleration);
+				component.rotationAcceleration = this.parse(str, this.rotationAcceleration, component.rotationAcceleration);
 			}
 			else
 			{
 				BedrockComponentMotionParametric component = (BedrockComponentMotionParametric) this.component;
 
-				component.rotation = this.parse(str, component.rotation);
+				component.rotation = this.parse(str, this.rotationAcceleration, component.rotation);
 			}
 		});
 		this.rotationAcceleration.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_acceleration"));
@@ -74,7 +74,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		{
 			BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
 
-			component.rotationDrag = this.parse(str, component.rotationDrag);
+			component.rotationDrag = this.parse(str, this.rotationDrag, component.rotationDrag);
 		});
 		this.rotationDrag.tooltip(IKey.lang("blockbuster.gui.snowstorm.motion.rotation_drag"));
 
@@ -91,19 +91,19 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		this.add(this.position, this.rotation);
 	}
 
-	private void updatePosition(String str, int index)
+	private void updatePosition(String str, GuiTextElement element, int index)
 	{
 		if (this.component instanceof BedrockComponentMotionDynamic)
 		{
 			BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
 
-			component.motionAcceleration[index] = this.parse(str, component.motionAcceleration[index]);
+			component.motionAcceleration[index] = this.parse(str, element, component.motionAcceleration[index]);
 		}
 		else
 		{
 			BedrockComponentMotionParametric component = (BedrockComponentMotionParametric) this.component;
 
-			component.position[index] = this.parse(str, component.position[index]);
+			component.position[index] = this.parse(str, element, component.position[index]);
 		}
 	}
 
@@ -151,9 +151,9 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		this.speed = this.scheme.getOrCreate(BedrockComponentInitialSpeed.class);
 		this.spin = this.scheme.getOrCreate(BedrockComponentInitialSpin.class);
 
-		this.positionSpeed.setText(this.speed.speed.toString());
-		this.rotationAngle.setText(this.spin.rotation.toString());
-		this.rotationRate.setText(this.spin.rate.toString());
+		this.set(this.positionSpeed, this.speed.speed);
+		this.set(this.rotationAngle, this.spin.rotation);
+		this.set(this.rotationRate, this.spin.rate);
 
 		this.positionDrag.removeFromParent();
 		this.rotationDrag.removeFromParent();
@@ -162,13 +162,13 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		{
 			BedrockComponentMotionDynamic component = (BedrockComponentMotionDynamic) this.component;
 
-			this.positionX.setText(component.motionAcceleration[0].toString());
-			this.positionY.setText(component.motionAcceleration[1].toString());
-			this.positionZ.setText(component.motionAcceleration[2].toString());
-			this.rotationAcceleration.setText(component.rotationAcceleration.toString());
+			this.set(this.positionX, component.motionAcceleration[0]);
+			this.set(this.positionY, component.motionAcceleration[1]);
+			this.set(this.positionZ, component.motionAcceleration[2]);
+			this.set(this.rotationAcceleration, component.rotationAcceleration);
 
-			this.positionDrag.setText(component.motionDrag.toString());
-			this.rotationDrag.setText(component.rotationDrag.toString());
+			this.set(this.positionDrag, component.motionDrag);
+			this.set(this.rotationDrag, component.rotationDrag);
 
 			this.position.add(this.positionDrag);
 			this.rotation.add(this.rotationDrag);
@@ -177,10 +177,10 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		{
 			BedrockComponentMotionParametric component = (BedrockComponentMotionParametric) this.component;
 
-			this.positionX.setText(component.position[0].toString());
-			this.positionY.setText(component.position[1].toString());
-			this.positionZ.setText(component.position[2].toString());
-			this.rotationAcceleration.setText(component.rotation.toString());
+			this.set(this.positionX, component.position[0]);
+			this.set(this.positionY, component.position[1]);
+			this.set(this.positionZ, component.position[2]);
+			this.set(this.rotationAcceleration, component.rotation);
 		}
 
 		this.resizeParent();

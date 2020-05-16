@@ -37,11 +37,11 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 	{
 		super(mc);
 
-		this.offsetX = new GuiTextElement(mc, 10000, (str) -> this.component.offset[0] = this.parse(str, this.component.offset[0]));
+		this.offsetX = new GuiTextElement(mc, 10000, (str) -> this.component.offset[0] = this.parse(str, this.offsetX, this.component.offset[0]));
 		this.offsetX.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
-		this.offsetY = new GuiTextElement(mc, 10000, (str) -> this.component.offset[1] = this.parse(str, this.component.offset[1]));
+		this.offsetY = new GuiTextElement(mc, 10000, (str) -> this.component.offset[1] = this.parse(str, this.offsetY, this.component.offset[1]));
 		this.offsetY.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
-		this.offsetZ = new GuiTextElement(mc, 10000, (str) -> this.component.offset[2] = this.parse(str, this.component.offset[2]));
+		this.offsetZ = new GuiTextElement(mc, 10000, (str) -> this.component.offset[2] = this.parse(str, this.offsetZ, this.component.offset[2]));
 		this.offsetZ.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 		this.direction = new GuiDirectionSection(mc, this);
 		this.surface = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.shape.surface"), (b) -> this.component.surface = b.isToggled());
@@ -52,15 +52,15 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		{
 			BedrockComponentShapeSphere sphere = (BedrockComponentShapeSphere) this.component;
 
-			sphere.radius = this.parse(str, sphere.radius);
+			sphere.radius = this.parse(str, this.radius, sphere.radius);
 		});
 
 		this.label = Elements.label(IKey.lang(""));
-		this.x = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, 0));
+		this.x = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.x, 0));
 		this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
-		this.y = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, 1));
+		this.y = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.y, 1));
 		this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
-		this.z = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, 2));
+		this.z = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, this.z, 2));
 		this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
 		this.modeLabel.label.set("blockbuster.gui.snowstorm.shape.shape");
@@ -68,19 +68,19 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.offset")), this.offsetX, this.offsetY, this.offsetZ, this.direction, this.surface);
 	}
 
-	private void updateNormalDimension(String str, int index)
+	private void updateNormalDimension(String str, GuiTextElement element, int index)
 	{
 		if (this.component instanceof BedrockComponentShapeBox)
 		{
 			BedrockComponentShapeBox box = (BedrockComponentShapeBox) this.component;
 
-			box.halfDimensions[index] = this.parse(str, box.halfDimensions[index]);
+			box.halfDimensions[index] = this.parse(str, element, box.halfDimensions[index]);
 		}
 		else if (this.component instanceof BedrockComponentShapeDisc)
 		{
 			BedrockComponentShapeDisc disc = (BedrockComponentShapeDisc) this.component;
 
-			disc.normal[index] = this.parse(str, disc.normal[index]);
+			disc.normal[index] = this.parse(str, element, disc.normal[index]);
 		}
 	}
 
@@ -153,15 +153,15 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 	{
 		super.fillData();
 
-		this.offsetX.setText(this.component.offset[0].toString());
-		this.offsetY.setText(this.component.offset[1].toString());
-		this.offsetZ.setText(this.component.offset[2].toString());
+		this.set(this.offsetX, this.component.offset[0]);
+		this.set(this.offsetY, this.component.offset[1]);
+		this.set(this.offsetZ, this.component.offset[2]);
 		this.direction.fillData();
 		this.surface.toggled(this.component.surface);
 
 		if (this.component instanceof BedrockComponentShapeSphere)
 		{
-			this.radius.setText(((BedrockComponentShapeSphere) this.component).radius.toString());
+			this.set(this.radius, ((BedrockComponentShapeSphere) this.component).radius);
 		}
 
 		this.setNormalDimension(this.x, 0);
@@ -200,11 +200,11 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 	{
 		if (this.component instanceof BedrockComponentShapeBox)
 		{
-			text.setText(((BedrockComponentShapeBox) this.component).halfDimensions[index].toString());
+			this.set(text, ((BedrockComponentShapeBox) this.component).halfDimensions[index]);
 		}
 		else if (this.component instanceof BedrockComponentShapeDisc)
 		{
-			text.setText(((BedrockComponentShapeDisc) this.component).normal[index].toString());
+			this.set(text, ((BedrockComponentShapeDisc) this.component).normal[index]);
 		}
 	}
 
@@ -245,11 +245,11 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 			this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.shape.direction_inwards"));
 			this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.shape.direction_vector"));
 
-			this.x = new GuiTextElement(mc, 10000, (str) -> this.getVector().x = this.parent.parse(str, this.getVector().x));
+			this.x = new GuiTextElement(mc, 10000, (str) -> this.getVector().x = this.parent.parse(str, this.x, this.getVector().x));
 			this.x.tooltip(IKey.lang("blockbuster.gui.model_block.x"));
-			this.y = new GuiTextElement(mc, 10000, (str) -> this.getVector().y = this.parent.parse(str, this.getVector().y));
+			this.y = new GuiTextElement(mc, 10000, (str) -> this.getVector().y = this.parent.parse(str, this.y, this.getVector().y));
 			this.y.tooltip(IKey.lang("blockbuster.gui.model_block.y"));
-			this.z = new GuiTextElement(mc, 10000, (str) -> this.getVector().z = this.parent.parse(str, this.getVector().z));
+			this.z = new GuiTextElement(mc, 10000, (str) -> this.getVector().z = this.parent.parse(str, this.z, this.getVector().z));
 			this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
 			this.flex().column(5).vertical().stretch().height(20);
@@ -285,9 +285,9 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 			{
 				ShapeDirection.Vector vector = (ShapeDirection.Vector) this.parent.component.direction;
 
-				this.x.setText(vector.x.toString());
-				this.y.setText(vector.y.toString());
-				this.z.setText(vector.z.toString());
+				this.parent.set(this.x, vector.x);
+				this.parent.set(this.y, vector.y);
+				this.parent.set(this.z, vector.z);
 
 				this.add(this.x, this.y, this.z);
 			}

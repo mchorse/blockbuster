@@ -21,10 +21,10 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
 		{
 			BedrockComponentRateSteady comp = (BedrockComponentRateSteady) this.component;
 
-			comp.spawnRate = this.parse(str, comp.spawnRate);
+			comp.spawnRate = this.parse(str, this.rate, comp.spawnRate);
 		});
 		this.rate.tooltip(IKey.lang("blockbuster.gui.snowstorm.rate.spawn_rate"));
-		this.particles = new GuiTextElement(mc, 10000, (str) -> this.component.particles = this.parse(str, this.component.particles));
+		this.particles = new GuiTextElement(mc, 10000, (str) -> this.component.particles = this.parse(str, this.particles, this.component.particles));
 		this.particles.tooltip(IKey.lang(""));
 
 		this.fields.add(this.particles);
@@ -73,12 +73,12 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
 		super.fillData();
 
 		this.updateVisibility();
-		this.particles.setText(this.component.particles.toString());
+		this.set(this.particles, this.component.particles);
 		this.particles.tooltip.label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
 
 		if (this.component instanceof BedrockComponentRateSteady)
 		{
-			this.rate.setText(((BedrockComponentRateSteady) this.component).spawnRate.toString());
+			this.set(this.rate, ((BedrockComponentRateSteady) this.component).spawnRate );
 		}
 	}
 

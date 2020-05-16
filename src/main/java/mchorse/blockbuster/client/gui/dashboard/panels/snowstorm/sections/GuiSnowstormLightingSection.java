@@ -58,7 +58,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		{
 			Tint.Solid solid = this.getSolid();
 
-			solid.r = this.parse(str, solid.r);
+			solid.r = this.parse(str, this.r, solid.r);
 		});
 		this.r.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.red"));
 
@@ -66,7 +66,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		{
 			Tint.Solid solid = this.getSolid();
 
-			solid.g = this.parse(str, solid.g);
+			solid.g = this.parse(str, this.r, solid.g);
 		});
 		this.g.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.green"));
 
@@ -74,7 +74,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		{
 			Tint.Solid solid = this.getSolid();
 
-			solid.b = this.parse(str, solid.b);
+			solid.b = this.parse(str, this.r, solid.b);
 		});
 		this.b.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.blue"));
 
@@ -82,7 +82,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		{
 			Tint.Solid solid = this.getSolid();
 
-			solid.a = this.parse(str, solid.a);
+			solid.a = this.parse(str, this.r, solid.a);
 		});
 		this.a.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.alpha"));
 
@@ -198,10 +198,10 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		}
 		else
 		{
-			this.r.setText(solid.r.toString());
-			this.g.setText(solid.g.toString());
-			this.b.setText(solid.b.toString());
-			this.a.setText(solid.a.toString());
+			this.set(this.r, solid.r);
+			this.set(this.g, solid.g);
+			this.set(this.b, solid.b);
+			this.set(this.a, solid.a);
 
 			this.fields.add(this.first);
 			this.fields.add(this.second);

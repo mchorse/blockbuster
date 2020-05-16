@@ -18,7 +18,7 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 	{
 		super(mc);
 
-		this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.component.activeTime));
+		this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.active, this.component.activeTime));
 		this.active.tooltip(IKey.lang(""));
 		this.expiration = new GuiTextElement(mc, 10000, (str) ->
 		{
@@ -26,13 +26,13 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 			{
 				BedrockComponentLifetimeLooping component = (BedrockComponentLifetimeLooping) this.component;
 
-				component.sleepTime = this.parse(str, component.sleepTime);
+				component.sleepTime = this.parse(str, this.expiration, component.sleepTime);
 			}
 			else
 			{
 				BedrockComponentLifetimeExpression component = (BedrockComponentLifetimeExpression) this.component;
 
-				component.expiration = this.parse(str, component.expiration);
+				component.expiration = this.parse(str, this.expiration, component.expiration);
 			}
 		});
 		this.expiration.tooltip(IKey.lang(""));
@@ -98,14 +98,14 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 
 		if (this.component instanceof BedrockComponentLifetimeExpression)
 		{
-			this.expiration.setText(((BedrockComponentLifetimeExpression) this.component).expiration.toString());
+			this.set(this.expiration, ((BedrockComponentLifetimeExpression) this.component).expiration);
 			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
 
 			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_expression");
 		}
 		else if (this.component instanceof BedrockComponentLifetimeLooping)
 		{
-			this.expiration.setText(((BedrockComponentLifetimeLooping) this.component).sleepTime.toString());
+			this.set(this.expiration, ((BedrockComponentLifetimeLooping) this.component).sleepTime);
 			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
 
 			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_looping");
@@ -115,7 +115,7 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_once");
 		}
 
-		this.active.setText(this.component.activeTime.toString());
+		this.set(this.active, this.component.activeTime);
 		this.expiration.removeFromParent();
 
 		if (!once)

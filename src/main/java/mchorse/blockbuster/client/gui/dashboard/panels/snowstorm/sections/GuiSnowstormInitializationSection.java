@@ -15,9 +15,9 @@ public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSect
 	{
 		super(mc);
 
-		this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.component.creation));
+		this.create = new GuiTextElement(mc, 10000, (str) -> this.component.creation = this.parse(str, this.create, this.component.creation));
 		this.create.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.create"));
-		this.update = new GuiTextElement(mc, 10000, (str) -> this.component.update = this.parse(str, this.component.update));
+		this.update = new GuiTextElement(mc, 10000, (str) -> this.component.update = this.parse(str, this.update, this.component.update));
 		this.update.tooltip(IKey.lang("blockbuster.gui.snowstorm.initialization.update"));
 
 		this.fields.add(this.create, this.update);
@@ -38,7 +38,7 @@ public class GuiSnowstormInitializationSection extends GuiSnowstormComponentSect
 	@Override
 	protected void fillData()
 	{
-		this.create.setText(this.component.creation.toString());
-		this.update.setText(this.component.update.toString());
+		this.set(this.create, this.component.creation);
+		this.set(this.update, this.component.update);
 	}
 }

@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.utils.Elements;
@@ -32,7 +33,7 @@ public abstract class GuiSnowstormSection extends GuiElement
 
 	public abstract String getTitle();
 
-	public MolangExpression parse(String string, MolangExpression old)
+	public MolangExpression parse(String string, GuiTextElement element, MolangExpression old)
 	{
 		if (string.isEmpty())
 		{
@@ -41,12 +42,24 @@ public abstract class GuiSnowstormSection extends GuiElement
 
 		try
 		{
-			return this.scheme.parser.parseExpression(string);
+			MolangExpression expression = this.scheme.parser.parseExpression(string);
+
+			element.field.setTextColor(0xffffff);
+
+			return expression;
 		}
 		catch (Exception e)
 		{}
 
+		element.field.setTextColor(0xff2244);
+
 		return old;
+	}
+
+	public void set(GuiTextElement element, MolangExpression expression)
+	{
+		element.field.setTextColor(0xffffff);
+		element.setText(expression.toString());
 	}
 
 	public void setScheme(BedrockScheme scheme)
