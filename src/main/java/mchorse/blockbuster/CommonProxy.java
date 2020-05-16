@@ -115,7 +115,7 @@ public class CommonProxy
 
         /* Configuration */
         configFile = new File(event.getModConfigurationDirectory(), "blockbuster");
-        this.particles = new BedrockLibrary(new File(configFile, "particles"));
+        this.particles = new BedrockLibrary(new File(configFile, "models/particles"));
 
         MinecraftForge.EVENT_BUS.register(new EventHandler());
 

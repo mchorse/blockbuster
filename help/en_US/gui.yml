@@ -308,7 +308,12 @@ blockbuster.gui:
         cap: Capacity
 
     snowstorm:
+        title: Particles
         mode: Mode
+
+        keys:
+            category: Particle editor
+            save: Save current particle effect
 
         general:
             title: General
