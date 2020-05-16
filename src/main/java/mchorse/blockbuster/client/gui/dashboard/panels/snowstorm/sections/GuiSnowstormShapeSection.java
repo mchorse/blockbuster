@@ -63,6 +63,8 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 		this.z = new GuiTextElement(mc, (str) -> this.updateNormalDimension(str, 2));
 		this.z.tooltip(IKey.lang("blockbuster.gui.model_block.z"));
 
+		this.modeLabel.label.set("blockbuster.gui.snowstorm.shape.shape");
+
 		this.fields.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.shape.offset")), this.offsetX, this.offsetY, this.offsetZ, this.direction, this.surface);
 	}
 
@@ -149,15 +151,7 @@ public class GuiSnowstormShapeSection extends GuiSnowstormModeSection<BedrockCom
 	@Override
 	protected void fillData()
 	{
-		for (int i = 0; i < 5; i ++)
-		{
-			if (this.getModeClass(i) == this.component.getClass())
-			{
-				this.mode.setValue(i);
-
-				break;
-			}
-		}
+		super.fillData();
 
 		this.offsetX.setText(this.component.offset[0].toString());
 		this.offsetY.setText(this.component.offset[1].toString());

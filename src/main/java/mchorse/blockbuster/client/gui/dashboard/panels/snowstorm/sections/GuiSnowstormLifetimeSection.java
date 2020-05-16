@@ -75,11 +75,11 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 	@Override
 	protected Class getModeClass(int value)
 	{
-		if (this.mode.getValue() == 0)
+		if (value == 0)
 		{
 			return BedrockComponentLifetimeExpression.class;
 		}
-		else if (this.mode.getValue() == 1)
+		else if (value == 1)
 		{
 			return BedrockComponentLifetimeLooping.class;
 		}
@@ -90,13 +90,14 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 	@Override
 	protected void fillData()
 	{
+		super.fillData();
+
 		boolean once = this.component instanceof BedrockComponentLifetimeOnce;
 
 		this.expiration.setVisible(!once);
 
 		if (this.component instanceof BedrockComponentLifetimeExpression)
 		{
-			this.mode.setValue(0);
 			this.expiration.setText(((BedrockComponentLifetimeExpression) this.component).expiration.toString());
 			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.expiration_expression");
 
@@ -104,7 +105,6 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 		}
 		else if (this.component instanceof BedrockComponentLifetimeLooping)
 		{
-			this.mode.setValue(1);
 			this.expiration.setText(((BedrockComponentLifetimeLooping) this.component).sleepTime.toString());
 			this.expiration.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.sleep_time");
 
@@ -112,8 +112,6 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<Bedrock
 		}
 		else
 		{
-			this.mode.setValue(2);
-
 			this.active.tooltip.label.set("blockbuster.gui.snowstorm.lifetime.active_once");
 		}
 

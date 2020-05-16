@@ -70,8 +70,9 @@ public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComp
 	@Override
 	protected void fillData()
 	{
+		super.fillData();
+
 		this.updateVisibility();
-		this.mode.setValue(this.isInstant() ? 0 : 1);
 		this.particles.setText(this.component.particles.toString());
 		this.particles.tooltip.label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
 

@@ -14,7 +14,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import javax.vecmath.Vector3f;
 
-public class BedrockComponentMotionParametric extends BedrockComponentBase implements IComponentParticleInitialize, IComponentParticleUpdate
+public class BedrockComponentMotionParametric extends BedrockComponentMotion implements IComponentParticleInitialize, IComponentParticleUpdate
 {
 	public MolangExpression[] position = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public MolangExpression rotation = MolangParser.ZERO;

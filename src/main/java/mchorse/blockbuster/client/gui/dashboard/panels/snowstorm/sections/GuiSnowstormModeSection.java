@@ -30,6 +30,22 @@ public abstract class GuiSnowstormModeSection <T extends BedrockComponentBase> e
 		return scheme.getOrCreate(this.getBaseClass(), this.getDefaultClass());
 	}
 
+	@Override
+	protected void fillData()
+	{
+		for (int i = 0, c = this.mode.getLabels().size(); i < c; i ++)
+		{
+			if (this.getModeClass(i) == this.component.getClass())
+			{
+				this.mode.setValue(i);
+
+				break;
+			}
+		}
+
+		super.fillData();
+	}
+
 	protected abstract void fillModes(GuiCirculateElement button);
 
 	protected void updateMode(int value)
@@ -38,6 +54,7 @@ public abstract class GuiSnowstormModeSection <T extends BedrockComponentBase> e
 
 		this.component = this.scheme.replace(this.getBaseClass(), this.getModeClass(this.mode.getValue()));
 		this.restoreInfo(this.component, old);
+
 		this.fillData();
 	}
 

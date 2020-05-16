@@ -11,7 +11,7 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentMotionDynamic extends BedrockComponentBase implements IComponentParticleUpdate
+public class BedrockComponentMotionDynamic extends BedrockComponentMotion implements IComponentParticleUpdate
 {
 	public MolangExpression[] motionAcceleration = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public MolangExpression motionDrag = MolangParser.ZERO;
@@ -72,7 +72,7 @@ public class BedrockComponentMotionDynamic extends BedrockComponentBase implemen
 		particle.acceleration.z += (float) this.motionAcceleration[2].get();
 		particle.drag = (float) this.motionDrag.get();
 
-		particle.rotationAcceleration = (float) this.rotationAcceleration.get();
+		particle.rotationAcceleration += (float) this.rotationAcceleration.get() / 20F;
 		particle.rotationDrag = (float) this.rotationDrag.get();
 	}
 }

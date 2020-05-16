@@ -359,6 +359,7 @@ blockbuster.gui:
         shape:
             title: Emitter's shape
 
+            shape: Shape
             point: Point
             box: Box
             sphere: Sphere
@@ -378,6 +379,22 @@ blockbuster.gui:
 
             normal: Normal
             radius: Radius
+
+        motion:
+            title: Motion
+
+            dynamic: Dynamic
+            parametric: Parametric
+
+            position: Position
+            position_speed: Initial speed
+            position_drag: Motion drag
+
+            rotation: Rotation
+            rotation_angle: Initial rotation
+            rotation_speed: Initial rotation speed
+            rotation_acceleration: Rotation acceleration
+            rotation_drag: Rotation drag
 
         expiration:
             title: Particle's lifetime
