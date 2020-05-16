@@ -13,6 +13,7 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 {
 	public MolangExpression[] offset = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 	public ShapeDirection direction = ShapeDirection.OUTWARDS;
+	public boolean surface = false;
 
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -59,6 +60,11 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 			}
 		}
 
+		if (element.has("surface_only"))
+		{
+			this.surface = element.get("surface_only").getAsBoolean();
+		}
+
 		return super.fromJson(element, parser);
 	}
 
@@ -78,6 +84,11 @@ public abstract class BedrockComponentShapeBase extends BedrockComponentBase imp
 		if (this.direction != ShapeDirection.OUTWARDS)
 		{
 			object.add("direction", this.direction.toJson());
+		}
+
+		if (this.surface)
+		{
+			object.addProperty("surface_only", true);
 		}
 
 		return object;

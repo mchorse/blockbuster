@@ -1,20 +1,16 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
-import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetime;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeExpression;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeLooping;
 import mchorse.blockbuster.client.particles.components.lifetime.BedrockComponentLifetimeOnce;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
-import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormLifetimeSection extends GuiSnowstormComponentSection<BedrockComponentLifetime>
+public class GuiSnowstormLifetimeSection extends GuiSnowstormModeSection<BedrockComponentLifetime>
 {
-	public GuiCirculateElement mode;
 	public GuiTextElement active;
 	public GuiTextElement expiration;
 
@@ -22,13 +18,9 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormComponentSection<Be
 	{
 		super(mc);
 
-		this.mode = new GuiCirculateElement(mc, (b) -> this.switchMode());
-		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.expression"));
-		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.looping"));
-		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.once"));
-		this.active = new GuiTextElement(mc, (str) -> this.component.activeTime = this.parse(str, this.component.activeTime));
+		this.active = new GuiTextElement(mc, 10000, (str) -> this.component.activeTime = this.parse(str, this.component.activeTime));
 		this.active.tooltip(IKey.lang(""));
-		this.expiration = new GuiTextElement(mc, (str) ->
+		this.expiration = new GuiTextElement(mc, 10000, (str) ->
 		{
 			if (this.component instanceof BedrockComponentLifetimeLooping)
 			{
@@ -45,30 +37,7 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormComponentSection<Be
 		});
 		this.expiration.tooltip(IKey.lang(""));
 
-		GuiLabel label = Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F);
-
-		this.fields.add(Elements.row(mc, 5, 0, 20, label, this.mode));
 		this.fields.add(this.active);
-	}
-
-	private void switchMode()
-	{
-		BedrockComponentLifetime old = this.component;
-		Class clazz = BedrockComponentLifetimeOnce.class;
-
-		if (this.mode.getValue() == 0)
-		{
-			clazz = BedrockComponentLifetimeExpression.class;
-		}
-		else if (this.mode.getValue() == 1)
-		{
-			clazz = BedrockComponentLifetimeLooping.class;
-		}
-
-		this.component = this.scheme.replace(BedrockComponentLifetime.class, clazz);
-		this.component.activeTime = old.activeTime;
-
-		this.fillData();
 	}
 
 	@Override
@@ -78,9 +47,44 @@ public class GuiSnowstormLifetimeSection extends GuiSnowstormComponentSection<Be
 	}
 
 	@Override
-	protected BedrockComponentLifetime getComponent(BedrockScheme scheme)
+	protected void fillModes(GuiCirculateElement button)
 	{
-		return scheme.getOrCreate(BedrockComponentLifetime.class, BedrockComponentLifetimeLooping.class);
+		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.expression"));
+		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.looping"));
+		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.lifetime.once"));
+	}
+
+	@Override
+	protected void restoreInfo(BedrockComponentLifetime component, BedrockComponentLifetime old)
+	{
+		component.activeTime = old.activeTime;
+	}
+
+	@Override
+	protected Class<BedrockComponentLifetime> getBaseClass()
+	{
+		return BedrockComponentLifetime.class;
+	}
+
+	@Override
+	protected Class getDefaultClass()
+	{
+		return BedrockComponentLifetimeLooping.class;
+	}
+
+	@Override
+	protected Class getModeClass(int value)
+	{
+		if (this.mode.getValue() == 0)
+		{
+			return BedrockComponentLifetimeExpression.class;
+		}
+		else if (this.mode.getValue() == 1)
+		{
+			return BedrockComponentLifetimeLooping.class;
+		}
+
+		return BedrockComponentLifetimeOnce.class;
 	}
 
 	@Override

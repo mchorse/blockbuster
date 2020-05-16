@@ -10,7 +10,7 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
-public class BedrockComponentShapeBox extends BedrockComponentShapeSurfaced
+public class BedrockComponentShapeBox extends BedrockComponentShapeBase
 {
 	public MolangExpression[] halfDimensions = {MolangParser.ZERO, MolangParser.ZERO, MolangParser.ZERO};
 

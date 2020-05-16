@@ -16,10 +16,9 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
-public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
+public class BedrockComponentShapeDisc extends BedrockComponentShapeSphere
 {
 	public MolangExpression[] normal = {MolangParser.ZERO, MolangParser.ONE, MolangParser.ZERO};
-	public MolangExpression radius = MolangParser.ONE;
 
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -40,8 +39,6 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 			}
 		}
 
-		if (element.has("radius")) this.radius = parser.parseJson(element.get("radius"));
-
 		return super.fromJson(element, parser);
 	}
 
@@ -57,8 +54,6 @@ public class BedrockComponentShapeDisc extends BedrockComponentShapeSurfaced
 		}
 
 		object.add("plane_normal", array);
-
-		if (!MolangExpression.isOne(this.radius)) object.add("radius", this.radius.toJson());
 
 		return object;
 	}

@@ -54,7 +54,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		});
 		this.color.picker.editAlpha();
 
-		this.r = new GuiTextElement(mc, (str) ->
+		this.r = new GuiTextElement(mc, 10000, (str) ->
 		{
 			Tint.Solid solid = this.getSolid();
 
@@ -62,7 +62,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		});
 		this.r.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.red"));
 
-		this.g = new GuiTextElement(mc, (str) ->
+		this.g = new GuiTextElement(mc, 10000, (str) ->
 		{
 			Tint.Solid solid = this.getSolid();
 
@@ -70,7 +70,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		});
 		this.g.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.green"));
 
-		this.b = new GuiTextElement(mc, (str) ->
+		this.b = new GuiTextElement(mc, 10000, (str) ->
 		{
 			Tint.Solid solid = this.getSolid();
 
@@ -78,7 +78,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		});
 		this.b.tooltip(IKey.lang("blockbuster.gui.snowstorm.lighting.blue"));
 
-		this.a = new GuiTextElement(mc, (str) ->
+		this.a = new GuiTextElement(mc, 10000, (str) ->
 		{
 			Tint.Solid solid = this.getSolid();
 

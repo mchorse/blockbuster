@@ -22,7 +22,7 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 	{
 		super(mc);
 
-		this.identifier = new GuiTextElement(mc, (str) -> this.scheme.identifier = str);
+		this.identifier = new GuiTextElement(mc, 100, (str) -> this.scheme.identifier = str);
 		this.pick = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.snowstorm.general.pick"), (b) ->
 		{
 			GuiElement parent = this.getParentContainer();

@@ -11,7 +11,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 import javax.vecmath.Vector3f;
 
-public class BedrockComponentShapeSphere extends BedrockComponentShapeSurfaced
+public class BedrockComponentShapeSphere extends BedrockComponentShapeBase
 {
 	public MolangExpression radius = MolangParser.ONE;
 

@@ -1,19 +1,15 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
-import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRate;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateInstant;
 import mchorse.blockbuster.client.particles.components.rate.BedrockComponentRateSteady;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
-import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
-public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<BedrockComponentRate>
+public class GuiSnowstormRateSection extends GuiSnowstormModeSection<BedrockComponentRate>
 {
-	public GuiCirculateElement mode;
 	public GuiTextElement rate;
 	public GuiTextElement particles;
 
@@ -21,9 +17,6 @@ public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<Bedroc
 	{
 		super(mc);
 
-		this.mode = new GuiCirculateElement(mc, (b) -> this.toggleMode());
-		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.rate.instant"));
-		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.rate.steady"));
 		this.rate = new GuiTextElement(mc, 10000, (str) ->
 		{
 			BedrockComponentRateSteady comp = (BedrockComponentRateSteady) this.component;
@@ -34,9 +27,7 @@ public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<Bedroc
 		this.particles = new GuiTextElement(mc, 10000, (str) -> this.component.particles = this.parse(str, this.component.particles));
 		this.particles.tooltip(IKey.lang(""));
 
-		GuiElement row = Elements.row(mc, 5, 0, 20, Elements.label(IKey.lang("blockbuster.gui.snowstorm.mode"), 20).anchor(0, 0.5F), this.mode);
-
-		this.fields.add(row, this.particles);
+		this.fields.add(this.particles);
 	}
 
 	@Override
@@ -45,18 +36,49 @@ public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<Bedroc
 		return "blockbuster.gui.snowstorm.rate.title";
 	}
 
-	private void toggleMode()
+	@Override
+	protected void fillModes(GuiCirculateElement button)
 	{
-		BedrockComponentRate old = this.component;
-
-		this.component = this.scheme.replace(BedrockComponentRate.class, this.isInstant() ? BedrockComponentRateSteady.class : BedrockComponentRateInstant.class);
-		this.component.particles = old.particles;
-		this.fillData();
+		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.rate.instant"));
+		button.addLabel(IKey.lang("blockbuster.gui.snowstorm.rate.steady"));
 	}
 
-	private boolean isInstant()
+	@Override
+	protected void restoreInfo(BedrockComponentRate component, BedrockComponentRate old)
 	{
-		return this.component instanceof BedrockComponentRateInstant;
+		component.particles = old.particles;
+	}
+
+	@Override
+	protected Class<BedrockComponentRate> getBaseClass()
+	{
+		return BedrockComponentRate.class;
+	}
+
+	@Override
+	protected Class getDefaultClass()
+	{
+		return BedrockComponentRateInstant.class;
+	}
+
+	@Override
+	protected Class getModeClass(int value)
+	{
+		return value == 0 ? BedrockComponentRateInstant.class : BedrockComponentRateSteady.class;
+	}
+
+	@Override
+	protected void fillData()
+	{
+		this.updateVisibility();
+		this.mode.setValue(this.isInstant() ? 0 : 1);
+		this.particles.setText(this.component.particles.toString());
+		this.particles.tooltip.label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
+
+		if (this.component instanceof BedrockComponentRateSteady)
+		{
+			this.rate.setText(((BedrockComponentRateSteady) this.component).spawnRate.toString());
+		}
 	}
 
 	private void updateVisibility()
@@ -73,23 +95,8 @@ public class GuiSnowstormRateSection extends GuiSnowstormComponentSection<Bedroc
 		this.resizeParent();
 	}
 
-	@Override
-	protected BedrockComponentRate getComponent(BedrockScheme scheme)
+	private boolean isInstant()
 	{
-		return scheme.getOrCreate(BedrockComponentRate.class, BedrockComponentRateInstant.class);
-	}
-
-	@Override
-	protected void fillData()
-	{
-		this.updateVisibility();
-		this.mode.setValue(this.isInstant() ? 0 : 1);
-		this.particles.setText(this.component.particles.toString());
-		this.particles.tooltip.label.set(this.isInstant() ? "blockbuster.gui.snowstorm.rate.particles" : "blockbuster.gui.snowstorm.rate.max_particles");
-
-		if (this.component instanceof BedrockComponentRateSteady)
-		{
-			this.rate.setText(((BedrockComponentRateSteady) this.component).spawnRate.toString());
-		}
+		return this.component instanceof BedrockComponentRateInstant;
 	}
 }

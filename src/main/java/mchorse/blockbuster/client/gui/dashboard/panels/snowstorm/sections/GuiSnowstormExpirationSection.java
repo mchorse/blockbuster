@@ -56,7 +56,7 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.expression"));
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.expiration.max"));
 
-		this.expression = new GuiTextElement(mc, (str) -> this.lifetime.expression = this.parse(str, this.lifetime.expression));
+		this.expression = new GuiTextElement(mc, 10000, (str) -> this.lifetime.expression = this.parse(str, this.lifetime.expression));
 		this.expression.tooltip(IKey.lang(""));
 
 		this.a = new GuiTrackpadElement(mc, (value) -> this.plane.a = value);

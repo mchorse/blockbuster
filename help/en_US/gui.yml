@@ -354,6 +354,29 @@ blockbuster.gui:
             expiration_expression: Expression that responsible for stopping the emitter, if evaluated result is a non-zero
             sleep_time: Expression that determines for how long emitter will be sleeping before next cycle
 
+        shape:
+            title: Emitter's shape
+
+            point: Point
+            box: Box
+            sphere: Sphere
+            disc: Disc
+            aabb: Entity's hitbox
+
+            offset: Offset
+            direction: Direction
+            direction_outwards: Outwards
+            direction_inwards: Inwards
+            direction_vector: Vector
+
+            surface: Surface
+            surface_tooltip: Spawn particles around the surface of the shape
+
+            box_size: Box size
+
+            normal: Normal
+            radius: Radius
+
         expiration:
             title: Particle's lifetime
 
