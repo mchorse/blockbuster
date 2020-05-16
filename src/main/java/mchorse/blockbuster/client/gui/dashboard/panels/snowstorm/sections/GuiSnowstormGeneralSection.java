@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections;
 
 import mchorse.blockbuster.client.particles.BedrockMaterial;
 import mchorse.blockbuster.client.particles.BedrockScheme;
+import mchorse.blockbuster.client.particles.components.appearance.BedrockComponentAppearanceBillboard;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -10,6 +11,8 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 {
@@ -42,14 +45,29 @@ public class GuiSnowstormGeneralSection extends GuiSnowstormSection
 			if (rl == null)
 			{
 				rl = BedrockScheme.DEFAULT_TEXTURE;
+
 			}
 
+			this.setTextureSize(rl);
 			this.scheme.texture = rl;
-
-			/* TODO: set texture size */
 		});
 
 		this.fields.add(this.identifier, Elements.row(mc, 5, 0, 20, this.pick, this.material));
+	}
+
+	private void setTextureSize(ResourceLocation rl)
+	{
+		BedrockComponentAppearanceBillboard component = this.scheme.get(BedrockComponentAppearanceBillboard.class);
+
+		if (component == null)
+		{
+			return;
+		}
+
+		this.mc.renderEngine.bindTexture(rl);
+
+		component.textureWidth = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
+		component.textureHeight = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
 	}
 
 	@Override
