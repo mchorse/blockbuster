@@ -410,6 +410,30 @@ blockbuster.gui:
             in_blocks: Expire in blocks
             not_in_blocks: Expire not in blocks
 
+        appearance:
+            title: Texture
+
+            regular: Regular
+            animated: Animated
+
+            size: Billboard size
+            width: Width
+            height: Height
+
+            mapping: UV mapping
+            uv_x: Texture coordinate X expression
+            uv_y: Texture coordinate Y expression
+            uv_w: Width of texture quad
+            uv_h: Height of texture quad
+            step_x: Coordinate step X per frame
+            step_y: Coordinate step Y per frame
+            fps: Animation frames per second
+            max: Maximum frames in the animation
+            stretch: Stretch
+            stretch_tooltip: Stretch texture animation to the lifetime of the particle
+            loop: Loop
+            loop_tooltip: Rewind the animation back to start when it reaches the last (maximum) frame
+
         lighting:
             title: Color and lighting
 

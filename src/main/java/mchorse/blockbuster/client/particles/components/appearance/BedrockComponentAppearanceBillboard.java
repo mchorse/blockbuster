@@ -11,11 +11,9 @@ import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -333,10 +331,15 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			this.transform.transform(vertex);
 		}
 
-		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(this.u1, this.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(this.u2, this.v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(this.u2, this.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(this.u1, this.v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		float u1 = this.u1 / (float) this.textureWidth;
+		float u2 = this.u2 / (float) this.textureWidth;
+		float v1 = this.v1 / (float) this.textureHeight;
+		float v2 = this.v2 / (float) this.textureHeight;
+
+		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).lightmap(lightX, lightY).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 	}
 
 	@Override
@@ -375,7 +378,7 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		Tessellator.getInstance().draw();
 	}
 
-	private void calculateUVs(BedrockParticle particle, float partialTicks)
+	public void calculateUVs(BedrockParticle particle, float partialTicks)
 	{
 		/* Update particle's UVs and size */
 		this.w = (float) this.sizeW.get() * 2.25F;
@@ -412,10 +415,10 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			v += this.stepY * index;
 		}
 
-		this.u1 = u / (float) this.textureWidth;
-		this.v1 = v / (float) this.textureHeight;
-		this.u2 = (u + w) / (float) this.textureWidth;
-		this.v2 = (v + h) / (float) this.textureHeight;
+		this.u1 = u;
+		this.v1 = v;
+		this.u2 = u + w;
+		this.v2 = v + h;
 	}
 
 	@Override

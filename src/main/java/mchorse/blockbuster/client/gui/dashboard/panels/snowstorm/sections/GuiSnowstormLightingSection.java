@@ -38,7 +38,7 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 	{
 		super(mc);
 
-		this.mode = new GuiCirculateElement(mc, (b) -> this.updateElements());
+		this.mode = new GuiCirculateElement(mc, (b) -> this.fillData());
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.solid"));
 		this.mode.addLabel(IKey.lang("blockbuster.gui.snowstorm.lighting.expression"));
 
@@ -127,20 +127,15 @@ public class GuiSnowstormLightingSection extends GuiSnowstormSection
 		return expression;
 	}
 
-	private void updateElements()
+	@Override
+	public String getTitle()
 	{
-		this.fillData();
+		return "blockbuster.gui.snowstorm.lighting.title";
 	}
 
 	private Tint.Solid getSolid()
 	{
 		return (Tint.Solid) this.component.color;
-	}
-
-	@Override
-	public String getTitle()
-	{
-		return "blockbuster.gui.snowstorm.lighting.title";
 	}
 
 	@Override

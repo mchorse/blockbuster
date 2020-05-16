@@ -80,12 +80,12 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 
 		this.position = new GuiElement(mc);
 		this.position.flex().column(5).vertical().stretch();
-		this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position")), this.positionSpeed);
+		this.position.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.position"), 20).anchor(0, 1F), this.positionSpeed);
 		this.position.add(this.positionX, this.positionY, this.positionZ);
 
 		this.rotation = new GuiElement(mc);
 		this.rotation.flex().column(5).vertical().stretch();
-		this.rotation.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation")), this.rotationAngle, this.rotationRate);
+		this.rotation.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation"), 20).anchor(0, 1F), this.rotationAngle, this.rotationRate);
 		this.rotation.add(this.rotationAcceleration);
 
 		this.add(this.position, this.rotation);

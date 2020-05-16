@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.snowstorm;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormAppearanceSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormCollisionSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormExpirationSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormGeneralSection;
@@ -65,6 +66,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.addSection(new GuiSnowstormShapeSection(mc));
 		this.addSection(new GuiSnowstormMotionSection(mc));
 		this.addSection(new GuiSnowstormExpirationSection(mc));
+		this.addSection(new GuiSnowstormAppearanceSection(mc));
 		this.addSection(new GuiSnowstormLightingSection(mc));
 		this.addSection(new GuiSnowstormCollisionSection(mc));
 
