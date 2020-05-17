@@ -367,13 +367,18 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 			this.transform.transform(vertex);
 		}
 
+		float u1 = this.u1 / (float) this.textureWidth;
+		float u2 = this.u2 / (float) this.textureWidth;
+		float v1 = this.v1 / (float) this.textureHeight;
+		float v2 = this.v2 / (float) this.textureHeight;
+
 		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(this.u1, this.v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(this.u2, this.v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(this.u2, this.v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
-		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(this.u1, this.v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[0].x, this.vertices[0].y, this.vertices[0].z).tex(u1, v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[1].x, this.vertices[1].y, this.vertices[1].z).tex(u2, v1).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[2].x, this.vertices[2].y, this.vertices[2].z).tex(u2, v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
+		builder.pos(this.vertices[3].x, this.vertices[3].y, this.vertices[3].z).tex(u1, v2).color(particle.r, particle.g, particle.b, particle.a).endVertex();
 
 		Tessellator.getInstance().draw();
 	}
