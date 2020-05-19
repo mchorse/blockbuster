@@ -2,12 +2,14 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.blockbuster_pack.morphs.SequencerMorph.SequenceEntry;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.metamorph.api.MorphUtils;
@@ -19,6 +21,7 @@ import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -148,16 +151,16 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.pick.flex().relative(this.area).set(0, 0, 105, 20).x(1, -115);
             this.addPart.flex().relative(this.area).set(10, 10, 50, 20);
             this.removePart.flex().relative(this.addPart.resizer()).set(55, 0, 50, 20);
-            this.list.flex().relative(this.area).set(10, 50, 105, 0).h(1, -60);
+            this.list.flex().relative(this.area).set(10, 50, 105, 0).hTo(this.reverse.area, -5);
             this.duration.flex().relative(this.pick.resizer()).set(0, 25, 105, 20);
             this.random.flex().relative(this.duration.resizer()).set(0, 25, 105, 20);
-            this.reverse.flex().relative(this.removePart.resizer()).set(55, 4, 105, 11);
-            this.randomOrder.flex().relative(this.reverse.resizer()).set(0, 0, 105, 11).y(1, 5);
+            this.randomOrder.flex().relative(this).x(10).y(1F, -24).w(105);
+            this.reverse.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
 
             this.pick.flex().y(1, -(this.random.resizer().getY() + this.random.resizer().getH() + 10));
 
             this.elements.add(this.pick, this.duration, this.random);
-            this.add(this.addPart, this.removePart, this.list, this.reverse, this.randomOrder, this.elements);
+            this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements);
         }
 
         private void select(SequenceEntry entry)
@@ -231,21 +234,38 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
      */
     public static class GuiSequenceEntryList extends GuiListElement<SequenceEntry>
     {
+        public static IKey ticks = IKey.lang("blockbuster.gui.sequencer.ticks");
+
         public GuiSequenceEntryList(Minecraft mc, Consumer<List<SequenceEntry>> callback)
         {
             super(mc, callback);
 
-            this.scroll.scrollItemSize = 16;
+            this.scroll.scrollItemSize = 24;
+        }
+
+        @Override
+        protected void drawElementPart(SequenceEntry element, int i, int x, int y, boolean hover, boolean selected)
+        {
+            GuiContext context = GuiBase.getCurrent();
+
+            if (element.morph != null)
+            {
+                GuiDraw.scissor(x, y, this.scroll.w, this.scroll.scrollItemSize, context);
+                element.morph.renderOnScreen(this.mc.player, x + this.scroll.w - 16, y + 30, 20, 1);
+                GuiDraw.unscissor(context);
+            }
+
+            super.drawElementPart(element, i, x, y, hover, selected);
         }
 
         @Override
         protected String elementToString(SequenceEntry element)
         {
-            String title = I18n.format("blockbuster.gui.sequencer.no_morph");
+            String title = element.duration + " " + ticks.get();
 
-            if (element.morph != null)
+            if (element.morph == null)
             {
-                title = element.morph.name;
+                title += " " + I18n.format("blockbuster.gui.sequencer.no_morph");
             }
 
             return title;

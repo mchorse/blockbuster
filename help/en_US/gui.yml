@@ -278,6 +278,7 @@ blockbuster.gui:
         no_morph: (no morph)
         morphs: Morphs
         random_order: Random order
+        ticks: ticks
 
     particle:
         tooltip: General properties
