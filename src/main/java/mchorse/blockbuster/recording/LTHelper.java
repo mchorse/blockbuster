@@ -37,6 +37,9 @@ public class LTHelper
 				Vec3d pos = new Vec3d(frame.x, frame.y, frame.z);
 				Vec3d look = player.getLookVec().scale(5);
 
+				pos = pos.addVector(0, player.getEyeHeight(), 0);
+				look = look.addVector(0, player.getEyeHeight(), 0);
+
 				Object object = method.invoke(null, player, pos, pos.add(look));
 
 				return object instanceof Boolean && ((Boolean) object).booleanValue();
