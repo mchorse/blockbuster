@@ -149,13 +149,15 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
     @Override
     public void startEdit(CustomMorph morph)
     {
-        super.startEdit(morph);
-
         morph.parts.reinitBodyParts();
-        this.updateModelRenderer();
+        this.bodyPart.setLimbs(morph.model.limbs.keySet());
+
         this.bbRenderer.morph = morph;
         this.bbRenderer.limb = null;
-        this.bodyPart.setLimbs(morph.model.limbs.keySet());
+
+        super.startEdit(morph);
+
+        this.updateModelRenderer();
     }
 
     @Override

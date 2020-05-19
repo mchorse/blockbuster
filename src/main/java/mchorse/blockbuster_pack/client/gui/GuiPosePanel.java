@@ -213,6 +213,15 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.models.setCurrentScroll(morph.getKey());
     }
 
+    @Override
+    public void startEditing()
+    {
+        super.startEditing();
+
+        this.updateList();
+        this.updateElements();
+    }
+
     private void updateElements()
     {
         this.create.setVisible(this.morph.customPose == null);
@@ -223,7 +232,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
     private void updateList()
     {
-        String current = this.list.getCurrentFirst();
+        String current;
 
         this.list.clear();
 
