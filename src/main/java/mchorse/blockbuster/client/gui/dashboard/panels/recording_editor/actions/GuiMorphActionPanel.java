@@ -7,6 +7,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
         super(mc, panel);
 
         this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.action.morph));
-        this.pickMorph.flex().relative(this.area).set(0, 5, 80, 20).x(0.5F, -30);
+        this.pickMorph.flex().relative(this.area).set(0, 5, 100, 20).x(0.5F, -30);
 
         this.add(this.pickMorph);
     }
@@ -28,7 +29,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     @Override
     public void setMorph(AbstractMorph morph)
     {
-        this.action.morph = morph;
+        this.action.morph = MorphUtils.copy(morph);
         this.pickMorph.setMorph(action.morph);
     }
 
