@@ -6,6 +6,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.lang.reflect.Method;
 
+/**
+ * LittleTiles helper method
+ *
+ * This bad boy is responsible contacting LittleTile API (introduced in v1.5.0-pre199_31_mc1.12.2)
+ * to allow opening the doors. Big thanks to CreativeMD for helping out with this issue!
+ *
+ * @link https://www.curseforge.com/minecraft/mc-mods/littletiles/files/2960578
+ */
 public class LTHelper
 {
 	private static Method method;
@@ -38,7 +46,6 @@ public class LTHelper
 				Vec3d look = player.getLookVec().scale(5);
 
 				pos = pos.addVector(0, player.getEyeHeight(), 0);
-				look = look.addVector(0, player.getEyeHeight(), 0);
 
 				Object object = method.invoke(null, player, pos, pos.add(look));
 
