@@ -49,13 +49,12 @@ public class LTHelper
 
 				Object object = method.invoke(null, player, pos, pos.add(look));
 
-				System.out.println("Position: " + pos);
-				System.out.println("Look: " + look);
-
 				return object instanceof Boolean && ((Boolean) object).booleanValue();
 			}
 			catch (Exception e)
-			{}
+			{
+				e.printStackTrace();
+			}
 		}
 
 		return false;

@@ -131,7 +131,14 @@ public class ActionHandler
             Vec3d hit = event.getHitVec();
             BlockPos pos = event.getPos();
 
-            events.add(new ItemUseBlockAction(pos, event.getHand(), event.getFace(), (float) hit.x - pos.getX(), (float) hit.y - pos.getY(), (float) hit.z - pos.getZ()));
+            if (hit == null)
+            {
+                events.add(new ItemUseBlockAction(pos, event.getHand(), event.getFace()));
+            }
+            else
+            {
+                events.add(new ItemUseBlockAction(pos, event.getHand(), event.getFace(), (float) hit.x - pos.getX(), (float) hit.y - pos.getY(), (float) hit.z - pos.getZ()));
+            }
         }
     }
 

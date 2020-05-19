@@ -40,7 +40,14 @@ public class PlaceBlockAction extends InteractBlockAction
 
         if (block != null)
         {
-            IBlockState state = block.getStateFromMeta(this.metadata);
+            IBlockState state = actor.world.getBlockState(this.pos);
+
+            if (InteractBlockAction.BLACKLIST.contains(state.getBlock().getRegistryName()))
+            {
+                return;
+            }
+
+            state = block.getStateFromMeta(this.metadata);
             actor.world.setBlockState(this.pos, state);
 
             World world = actor.world;

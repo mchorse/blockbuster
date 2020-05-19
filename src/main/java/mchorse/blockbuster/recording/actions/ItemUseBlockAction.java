@@ -25,11 +25,16 @@ public class ItemUseBlockAction extends ItemUseAction
     public ItemUseBlockAction()
     {}
 
-    public ItemUseBlockAction(BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public ItemUseBlockAction(BlockPos pos, EnumHand hand, EnumFacing facing)
     {
         super(hand);
         this.pos = pos;
         this.facing = facing;
+    }
+
+    public ItemUseBlockAction(BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    {
+        this(pos, hand, facing);
         this.hitX = hitX;
         this.hitY = hitY;
         this.hitZ = hitZ;
