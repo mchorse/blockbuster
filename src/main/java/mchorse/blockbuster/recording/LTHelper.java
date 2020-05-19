@@ -43,11 +43,14 @@ public class LTHelper
 				player.rotationYaw = frame.yaw;
 
 				Vec3d pos = new Vec3d(frame.x, frame.y, frame.z);
-				Vec3d look = player.getLookVec().scale(5);
+				Vec3d look = player.getLookVec().scale(8);
 
 				pos = pos.addVector(0, player.getEyeHeight(), 0);
 
 				Object object = method.invoke(null, player, pos, pos.add(look));
+
+				System.out.println("Position: " + pos);
+				System.out.println("Look: " + look);
 
 				return object instanceof Boolean && ((Boolean) object).booleanValue();
 			}

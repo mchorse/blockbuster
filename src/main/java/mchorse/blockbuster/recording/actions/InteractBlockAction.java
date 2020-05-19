@@ -1,5 +1,6 @@
 package mchorse.blockbuster.recording.actions;
 
+import com.google.common.collect.ImmutableSet;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -12,8 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Set;
 
 /**
  * Interact block action
@@ -26,6 +30,10 @@ import net.minecraft.util.math.Vec3d;
  */
 public class InteractBlockAction extends Action
 {
+    public static final Set<ResourceLocation> BLACKLIST = ImmutableSet.of(
+        new ResourceLocation("littletiles:blocklittletiles")
+    );
+
     public BlockPos pos = BlockPos.ORIGIN;
 
     public InteractBlockAction()
@@ -59,6 +67,11 @@ public class InteractBlockAction extends Action
 
         if (!LTHelper.playerRightClickServer(player, frame))
         {
+            if (BLACKLIST.contains(state.getBlock().getRegistryName()))
+            {
+                return;
+            }
+
             state.getBlock().onBlockActivated(actor.world, this.pos, state, player, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
         }
     }
