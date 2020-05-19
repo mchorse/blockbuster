@@ -57,9 +57,10 @@ public class InteractBlockAction extends Action
             this.copyActor(actor, player, frame);
         }
 
-        state.getBlock().onBlockActivated(actor.world, this.pos, state, player, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
-
-        LTHelper.playerRightClickServer(player, frame);
+        if (!LTHelper.playerRightClickServer(player, frame))
+        {
+            state.getBlock().onBlockActivated(actor.world, this.pos, state, player, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+        }
     }
 
     @Override

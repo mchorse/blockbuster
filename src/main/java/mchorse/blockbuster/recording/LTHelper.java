@@ -11,7 +11,7 @@ public class LTHelper
 	private static Method method;
 	private static boolean weTried;
 
-	public static void playerRightClickServer(EntityPlayer player, Frame frame)
+	public static boolean playerRightClickServer(EntityPlayer player, Frame frame)
 	{
 		try
 		{
@@ -37,10 +37,14 @@ public class LTHelper
 				Vec3d pos = new Vec3d(frame.x, frame.y, frame.z);
 				Vec3d look = player.getLookVec().scale(5);
 
-				method.invoke(null, player, pos, pos.add(look));
+				Object object = method.invoke(null, player, pos, pos.add(look));
+
+				return object instanceof Boolean && ((Boolean) object).booleanValue();
 			}
 			catch (Exception e)
 			{}
 		}
+
+		return false;
 	}
 }
