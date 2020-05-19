@@ -139,11 +139,11 @@ public class GuiPlayback extends GuiBase
     @Optional.Method(modid = Aperture.MOD_ID)
     public void selectCurrent(String profile)
     {
-        List<GuiProfilesManager.CameraProfileEntry> list = (List<GuiProfilesManager.CameraProfileEntry>) this.profiles.getList();
+        List<CameraProfile> list = (List<CameraProfile>) this.profiles.getList();
 
         for (int i = 0; i < list.size(); i ++)
         {
-            if (list.get(i).destination.toResourceLocation().toString().equals(profile))
+            if (list.get(i).getDestination().toResourceLocation().toString().equals(profile))
             {
                 this.profiles.setIndex(i);
 
@@ -161,11 +161,11 @@ public class GuiPlayback extends GuiBase
     @Optional.Method(modid = Aperture.MOD_ID)
     private String getSelected()
     {
-        GuiProfilesManager.CameraProfileEntry current = (GuiProfilesManager.CameraProfileEntry) this.profiles.getCurrentFirst();
+        CameraProfile current = (CameraProfile) this.profiles.getCurrentFirst();
 
         if (current != null)
         {
-            return current.destination.toResourceLocation().toString();
+            return current.getDestination().toResourceLocation().toString();
         }
 
         return "";
@@ -174,7 +174,7 @@ public class GuiPlayback extends GuiBase
     @Optional.Method(modid = Aperture.MOD_ID)
     public void addDestination(AbstractDestination destination)
     {
-        this.profiles.add(new GuiProfilesManager.CameraProfileEntry(destination, this.dummy));
+        this.profiles.add(new CameraProfile(destination));
     }
 
     /* Remaining methods */
