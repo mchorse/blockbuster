@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster.recording.LTHelper;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.block.state.IBlockState;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * Interact block action
@@ -56,6 +58,8 @@ public class InteractBlockAction extends Action
         }
 
         state.getBlock().onBlockActivated(actor.world, this.pos, state, player, EnumHand.MAIN_HAND, null, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+
+        LTHelper.playerRightClickServer(player, frame);
     }
 
     @Override
