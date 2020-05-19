@@ -217,6 +217,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.record.addAction(tick, index, action);
         this.selector.recalculateVertical();
+        this.selector.index = this.record.actions.get(tick).size() - 1;
+        this.selectAction(action);
         Dispatcher.sendToServer(new PacketAction(this.record.filename, tick, index, action, true));
     }
 
