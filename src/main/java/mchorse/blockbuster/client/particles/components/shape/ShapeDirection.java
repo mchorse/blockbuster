@@ -41,7 +41,7 @@ public abstract class ShapeDirection
 		@Override
 		public JsonElement toJson()
 		{
-			return new JsonPrimitive(this.factor > 0 ? "inwards" : "outwards");
+			return new JsonPrimitive(this.factor < 0 ? "inwards" : "outwards");
 		}
 	}
 

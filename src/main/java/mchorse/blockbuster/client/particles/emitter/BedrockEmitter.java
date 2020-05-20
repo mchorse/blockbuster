@@ -284,6 +284,7 @@ public class BedrockEmitter
 		}
 
 		particle.prevPosition.set(particle.position);
+		particle.rotation = particle.initialRotation;
 		particle.prevRotation = particle.rotation;
 
 		return particle;

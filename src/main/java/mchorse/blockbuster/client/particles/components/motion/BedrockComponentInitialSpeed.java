@@ -66,7 +66,15 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 		}
 		else
 		{
-			particle.speed.scale((float) this.speed.get());
+			float speed = (float) this.speed.get();
+
+			particle.speed.scale(speed);
 		}
+	}
+
+	@Override
+	public int getSortingIndex()
+	{
+		return 5;
 	}
 }
