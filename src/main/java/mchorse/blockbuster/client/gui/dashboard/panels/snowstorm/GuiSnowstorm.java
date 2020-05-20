@@ -15,6 +15,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSno
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormShapeSection;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.sections.GuiSnowstormSpaceSection;
+import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.McLib;
@@ -23,6 +24,9 @@ import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringSearchListElement;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiConfirmModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
+import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
@@ -32,6 +36,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
@@ -40,6 +45,8 @@ import java.util.List;
 
 public class GuiSnowstorm extends GuiBlockbusterPanel
 {
+	public static final String DEFAULT_PARTICLE = "default_snow";
+
 	public GuiSnowstormRenderer renderer;
 	public GuiScrollElement editor;
 
@@ -55,6 +62,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	public List<GuiSnowstormSection> sections = new ArrayList<GuiSnowstormSection>();
 
+	private BedrockLibrary library;
+
 	private String filename;
 	private BedrockScheme scheme;
 	private boolean dirty;
@@ -64,6 +73,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		super(mc, dashboard);
 
 		/* TODO: Add link to snowstorm web editor */
+		this.library = Blockbuster.proxy.particles;
 
 		this.renderer = new GuiSnowstormRenderer(mc);
 		this.renderer.flex().relative(this).wh(1F, 1F);
@@ -84,10 +94,10 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 			.anchor(0, 0.5F);
 		label.flex().relative(this.modal).xy(10, 10).w(1F, -20);
 
-		this.add = new GuiIconElement(mc, Icons.ADD, (b) -> {});
-		this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> {});
-		this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> {});
-		this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(Blockbuster.proxy.particles.folder.toURI()));
+		this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.addEffect());
+		this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeEffect());
+		this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeEffect());
+		this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(this.library.folder.toURI()));
 
 		this.particles = new GuiStringSearchListElement(mc, (list) -> this.setScheme(list.get(0)));
 		this.particles.flex().relative(this.modal).xy(10, 35).w(1F, -20).h(1F, -45);
@@ -117,6 +127,75 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 			.held(Keyboard.KEY_LCONTROL).category(IKey.lang("blockbuster.gui.snowstorm.keys.category"));
 	}
 
+	private void addEffect()
+	{
+		GuiModal.addFullModal(this.modal, () -> new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.snowstorm.add_modal"), (name) ->
+		{
+			if (this.library.hasEffect(name) || name.isEmpty())
+			{
+				return;
+			}
+
+			BedrockScheme scheme = this.library.load(DEFAULT_PARTICLE);
+
+			scheme.identifier = name;
+			this.setScheme(name, scheme);
+			this.particles.list.setCurrent("");
+			this.dirty();
+		}));
+	}
+
+	private void dupeEffect()
+	{
+		GuiModal.addFullModal(this.modal, () -> new GuiPromptModal(this.mc, IKey.lang("blockbuster.gui.snowstorm.dupe_modal"), (name) ->
+		{
+			if (this.library.hasEffect(name) || name.isEmpty())
+			{
+				return;
+			}
+
+			BedrockScheme scheme = BedrockScheme.dupe(this.scheme);
+
+			scheme.identifier = name;
+			this.setScheme(name, scheme);
+			this.particles.list.add(name);
+			this.particles.list.sort();
+			this.particles.list.setCurrent(name);
+			this.dirty();
+		}).setValue(this.filename));
+	}
+
+	private void removeEffect()
+	{
+		if (this.scheme.isFactory())
+		{
+			return;
+		}
+
+		GuiModal.addFullModal(this.modal, () -> new GuiConfirmModal(this.mc, IKey.lang("blockbuster.gui.snowstorm.remove_modal"), (confirm) ->
+		{
+			if (!confirm || !this.library.hasEffect(this.filename))
+			{
+				return;
+			}
+
+			int index = this.particles.list.getIndex();
+
+			if (this.library.file(this.filename).delete())
+			{
+				if (!this.library.factory.containsKey(this.filename))
+				{
+					this.particles.list.remove(this.filename);
+				}
+
+				index = MathUtils.clamp(index, 0, this.particles.list.getList().size() - 1);
+
+				this.particles.list.setIndex(index);
+				this.setScheme(this.particles.list.getCurrentFirst());
+			}
+		}));
+	}
+
 	public void dirty()
 	{
 		this.dirty = true;
@@ -128,6 +207,11 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.save.both(this.dirty ? Icons.SAVE : Icons.SAVED);
 	}
 
+	private void updateRemoveButton()
+	{
+		this.remove.setEnabled(!this.scheme.isFactory());
+	}
+
 	private void save()
 	{
 		for (GuiSnowstormSection section : this.sections)
@@ -135,10 +219,19 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 			section.beforeSave(this.scheme);
 		}
 
-		Blockbuster.proxy.particles.save(this.filename, this.scheme);
+		this.library.save(this.filename, this.scheme);
+
+		if (!this.particles.list.getList().contains(this.filename))
+		{
+			this.particles.list.add(this.filename);
+			this.particles.list.sort();
+			this.particles.list.setCurrent(this.filename);
+		}
 
 		this.dirty = false;
+		this.scheme.factory(false);
 		this.updateSaveButton();
+		this.updateRemoveButton();
 	}
 
 	private void addSection(GuiSnowstormSection section)
@@ -149,11 +242,18 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 	private void setScheme(String scheme)
 	{
+		this.setScheme(scheme, this.library.load(scheme));
+	}
+
+	private void setScheme(String name, BedrockScheme scheme)
+	{
+		this.filename = name;
+		this.scheme = scheme;
+		this.renderer.setScheme(this.scheme);
+
 		this.dirty = false;
 		this.updateSaveButton();
-		this.filename = scheme;
-		this.scheme = Blockbuster.proxy.particles.load(scheme);
-		this.renderer.setScheme(this.scheme);
+		this.updateRemoveButton();
 
 		for (GuiSnowstormSection section : this.sections)
 		{
@@ -173,13 +273,13 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.particles.filter("", true);
 
 		this.particles.list.clear();
-		this.particles.list.add(Blockbuster.proxy.particles.presets.keySet());
+		this.particles.list.add(this.library.presets.keySet());
 		this.particles.list.sort();
 
 		if (this.scheme == null)
 		{
-			this.setScheme("default_snow");
-			this.particles.list.setCurrent("default_snow");
+			this.setScheme(DEFAULT_PARTICLE);
+			this.particles.list.setCurrent(DEFAULT_PARTICLE);
 		}
 		else
 		{
@@ -199,8 +299,7 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	private void drawOverlay(GuiContext context)
 	{
 		/* Draw debug info */
-		this.editor.area.draw(0xff000000, 150, 0, 0, 0);
-		GuiDraw.drawHorizontalGradientRect(this.editor.area.x - 50, this.editor.area.y, this.editor.area.x + 150, this.editor.area.ey(), 0, 0xff000000);
+		this.editor.area.draw(0x88000000);
 
 		BedrockEmitter emitter = this.renderer.emitter;
 		String label = emitter.particles.size() + "P - " + emitter.age + "A";

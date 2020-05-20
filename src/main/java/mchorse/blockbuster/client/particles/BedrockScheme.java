@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.particles;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import mchorse.blockbuster.Blockbuster;
@@ -24,6 +25,9 @@ import java.util.Map;
 public class BedrockScheme
 {
 	public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(Blockbuster.MOD_ID, "textures/default_particles.png");
+	public static final Gson JSON_PARSER = new GsonBuilder()
+		.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
+		.create();
 
 	/* Particles identifier */
 	public String identifier = "";
@@ -43,23 +47,45 @@ public class BedrockScheme
 	public List<IComponentParticleUpdate> particleUpdates;
 	public List<IComponentParticleRender> particleRender;
 
+	private boolean factory;
+
 	/* MoLang integration */
 	public MolangParser parser = new MolangParser();
 
 	public static BedrockScheme parse(String json)
 	{
-		return new GsonBuilder()
-			.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
-			.create()
-			.fromJson(json, BedrockScheme.class);
+		return JSON_PARSER.fromJson(json, BedrockScheme.class);
+	}
+
+	public static BedrockScheme parse(JsonElement json)
+	{
+		return JSON_PARSER.fromJson(json, BedrockScheme.class);
 	}
 
 	public static JsonElement toJson(BedrockScheme scheme)
 	{
-		return new GsonBuilder()
-			.registerTypeAdapter(BedrockScheme.class, new BedrockSchemeJsonAdapter())
-			.create()
-			.toJsonTree(scheme);
+		return JSON_PARSER.toJsonTree(scheme);
+	}
+
+	/**
+	 * Probably it's very expensive, but it's much easier than implementing copy methods
+	 * to every component in the particle system...
+	 */
+	public static BedrockScheme dupe(BedrockScheme scheme)
+	{
+		return parse(toJson(scheme));
+	}
+
+	public BedrockScheme factory(boolean factory)
+	{
+		this.factory = factory;
+
+		return this;
+	}
+
+	public boolean isFactory()
+	{
+		return this.factory;
 	}
 
 	public void setup()

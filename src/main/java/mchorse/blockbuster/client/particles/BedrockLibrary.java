@@ -29,6 +29,16 @@ public class BedrockLibrary
 		this.storeFactory("default_snow");
 	}
 
+	public File file(String name)
+	{
+		return new File(this.folder, name + ".json");
+	}
+
+	public boolean hasEffect(String name)
+	{
+		return this.file(name).isFile();
+	}
+
 	public void reload()
 	{
 		this.presets.clear();
@@ -45,7 +55,7 @@ public class BedrockLibrary
 
 	public BedrockScheme load(String name)
 	{
-		BedrockScheme scheme = this.loadScheme(new File(this.folder, name + ".json"));
+		BedrockScheme scheme = this.loadScheme(this.file(name));
 
 		if (scheme != null)
 		{
@@ -101,7 +111,7 @@ public class BedrockLibrary
 	{
 		try
 		{
-			return BedrockScheme.parse(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/" + name + ".json"), Charset.defaultCharset()));
+			return BedrockScheme.parse(IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("assets/blockbuster/particles/" + name + ".json"), Charset.defaultCharset())).factory(true);
 		}
 		catch (Exception e)
 		{
@@ -114,7 +124,7 @@ public class BedrockLibrary
 	public void save(String filename, BedrockScheme scheme)
 	{
 		String json = JsonUtils.jsonToPretty(BedrockScheme.toJson(scheme));
-		File file = new File(this.folder, filename + ".json");
+		File file = this.file(filename);
 
 		try
 		{
