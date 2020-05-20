@@ -173,7 +173,7 @@ public class ModelPack
         {
             String name = file.getName();
 
-            if (name.startsWith("__") || name.equals("skins") || file.isFile())
+            if (name.startsWith("__") || name.equals("skins") || file.isFile() || (name.equals("particles") && prefix.isEmpty()))
             {
                 continue;
             }
