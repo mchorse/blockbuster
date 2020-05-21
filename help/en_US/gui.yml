@@ -311,6 +311,17 @@ blockbuster.gui:
     snowstorm:
         title: Particles
         mode: Mode
+        add_modal: "Enter a name for a new blank particle effect:"
+        dupe_modal: "Enter a new name for a copy of current particle effect:"
+        remove_modal: "Are you sure you want to remove this particle effect for ever?"
+
+        open_tooltip: Particle effect manager
+        save_tooltip: Save current particle effect
+        add_tooltip: Create a new particle effect
+        dupe_tooltip: Duplicate current particle effect
+        remove_tooltip: Remove current particle effect
+        remove_factory_tooltip: You cannot remove a factory preset...
+        folder_tooltip: Open folder with particle effects
 
         keys:
             category: Particle editor

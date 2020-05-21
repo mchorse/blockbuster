@@ -82,8 +82,10 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		this.editor.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F).column(20).vertical().stretch().scroll().padding(10);
 
 		this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.modal.toggleVisible());
+		this.open.tooltip(IKey.lang("blockbuster.gui.snowstorm.open_tooltip"));
 		this.open.flex().relative(this).wh(20, 20);
 		this.save = new GuiIconElement(mc, Icons.SAVE, (b) -> this.save());
+		this.save.tooltip(IKey.lang("blockbuster.gui.snowstorm.save_tooltip"));
 		this.save.flex().relative(this.open).x(20).wh(20, 20);
 
 		/* Modal */
@@ -95,9 +97,12 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 		label.flex().relative(this.modal).xy(10, 10).w(1F, -20);
 
 		this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.addEffect());
+		this.add.tooltip(IKey.lang("blockbuster.gui.snowstorm.add_tooltip"));
 		this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.dupeEffect());
+		this.dupe.tooltip(IKey.lang("blockbuster.gui.snowstorm.dupe_tooltip"));
 		this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeEffect());
 		this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(this.library.folder.toURI()));
+		this.folder.tooltip(IKey.lang("blockbuster.gui.snowstorm.folder_tooltip"));
 
 		this.particles = new GuiStringSearchListElement(mc, (list) -> this.setScheme(list.get(0)));
 		this.particles.flex().relative(this.modal).xy(10, 35).w(1F, -20).h(1F, -45);
@@ -140,8 +145,9 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 			scheme.identifier = name;
 			this.setScheme(name, scheme);
-			this.particles.list.setCurrent("");
 			this.dirty();
+
+			this.particles.list.setCurrent("");
 		}));
 	}
 
@@ -154,13 +160,16 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 				return;
 			}
 
+			if (!this.scheme.isFactory())
+			{
+				this.particles.list.setCurrent("");
+			}
+
 			BedrockScheme scheme = BedrockScheme.dupe(this.scheme);
 
+			scheme.factory(this.library.factory.containsKey(name));
 			scheme.identifier = name;
 			this.setScheme(name, scheme);
-			this.particles.list.add(name);
-			this.particles.list.sort();
-			this.particles.list.setCurrent(name);
 			this.dirty();
 		}).setValue(this.filename));
 	}
@@ -210,6 +219,15 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	private void updateRemoveButton()
 	{
 		this.remove.setEnabled(!this.scheme.isFactory());
+
+		if (this.remove.isEnabled())
+		{
+			this.remove.tooltip(IKey.lang("blockbuster.gui.snowstorm.remove_tooltip"));
+		}
+		else
+		{
+			this.remove.tooltip(IKey.lang("blockbuster.gui.snowstorm.remove_factory_tooltip"));
+		}
 	}
 
 	private void save()
