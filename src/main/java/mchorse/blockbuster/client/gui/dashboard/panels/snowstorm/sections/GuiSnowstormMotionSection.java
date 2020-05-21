@@ -89,7 +89,7 @@ public class GuiSnowstormMotionSection extends GuiSnowstormModeSection<BedrockCo
 		this.rotation.add(Elements.label(IKey.lang("blockbuster.gui.snowstorm.motion.rotation"), 20).anchor(0, 1F), this.rotationAngle, this.rotationRate);
 		this.rotation.add(this.rotationAcceleration);
 
-		this.add(this.position, this.rotation);
+		this.fields.add(this.position, this.rotation);
 	}
 
 	private void updatePosition(String str, GuiTextElement element, int index)
