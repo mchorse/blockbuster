@@ -63,8 +63,8 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             /* Apply entity rotations */
             BlockPos pos = te.getPos();
 
-            entity.setPositionAndRotation(pos.getX() + 0.5F, pos.getY() + te.y, pos.getZ() + 0.5F, 0, 0);
-            entity.setLocationAndAngles(pos.getX() + 0.5F, pos.getY() + te.y, pos.getZ() + 0.5F, 0, 0);
+            entity.setPositionAndRotation(pos.getX() + 0.5F + te.x, pos.getY() + te.y, pos.getZ() + 0.5F + te.z, 0, 0);
+            entity.setLocationAndAngles(pos.getX() + 0.5F + te.x, pos.getY() + te.y, pos.getZ() + 0.5F + te.z, 0, 0);
             entity.rotationYawHead = entity.prevRotationYawHead = te.rotateYawHead;
             entity.rotationYaw = entity.prevRotationYaw = 0;
             entity.rotationPitch = entity.prevRotationPitch = te.rotatePitch;
@@ -78,10 +78,10 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
             /* Apply transformations */
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5, y, z + 0.5);
+            GlStateManager.translate(te.x, te.y, te.z);
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
-            GlStateManager.translate(te.x, te.y, te.z);
 
             if (te.order == RotationOrder.ZYX)
             {

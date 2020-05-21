@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.RenderingHandler;
 import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -145,6 +146,11 @@ public class SnowstormMorph extends AbstractMorph
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
 	{
+		if (GuiModelRenderer.isRendering())
+		{
+			return;
+		}
+
 		if (this.emitter != null && this.emitter.scheme != null && this.lastUpdate < BedrockLibrary.lastUpdate)
 		{
 			this.lastUpdate = BedrockLibrary.lastUpdate;
