@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.MorphManager;
@@ -119,6 +120,11 @@ public class ParticleMorph extends AbstractMorph
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
     {
+        if (GuiModelRenderer.isRendering())
+        {
+            return;
+        }
+
         if (MatrixUtils.matrix != null)
         {
             Matrix4f parent = new Matrix4f(MatrixUtils.matrix);
