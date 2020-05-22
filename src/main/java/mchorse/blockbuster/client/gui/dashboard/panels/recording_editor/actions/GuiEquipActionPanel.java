@@ -28,14 +28,15 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.chest"));
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.head"));
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.off_hand"));
-        this.armor.flex().set(0, 0, 80, 20).relative(this.area).x(0.5F, -40).y(0.5F, -50);
+        this.armor.flex().relative(this).wh(80, 20).x(10).y(1F, -30);
+
+        this.slot = new GuiSlotElement(mc,0, this::setSlot);
+        this.slot.flex().relative(this).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
 
         this.inventory = new GuiInventoryElement(mc, this::pickItem);
-        this.slot = new GuiSlotElement(mc,0, this::setSlot);
+        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F) ;
 
-        this.slot.flex().relative(this.area).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
-        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F).wh(200, 100);
-        this.add(this.slot, this.inventory);
+        this.add(this.armor, this.slot, this.inventory);
     }
 
     private void setSlot(GuiSlotElement slot)

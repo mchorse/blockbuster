@@ -21,7 +21,7 @@ public class GuiDropActionPanel extends GuiActionPanel<DropAction>
         this.slot = new GuiSlotElement(mc,0, this::setSlot);
 
         this.slot.flex().relative(this.area).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
-        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F).wh(200, 100);
+        this.inventory.flex().under(this.slot.flex(), 10).x(0.5F).anchorX(0.5F);
         this.add(this.slot, this.inventory);
     }
 
