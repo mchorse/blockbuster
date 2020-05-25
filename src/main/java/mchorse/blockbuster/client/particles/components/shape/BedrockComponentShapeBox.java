@@ -70,12 +70,12 @@ public class BedrockComponentShapeBox extends BedrockComponentShapeBase
 		{
 			int roll = (int) (Math.random() * 6 * 100) % 6;
 
-			if (roll == 0) particle.position.x += w / 2F;
-			else if (roll == 1) particle.position.x -= w / 2F;
-			else if (roll == 2) particle.position.y += h / 2F;
-			else if (roll == 3) particle.position.y -= h / 2F;
-			else if (roll == 4) particle.position.z += d / 2F;
-			else if (roll == 5) particle.position.z -= d / 2F;
+			if (roll == 0) particle.position.x = centerX + w / 2F;
+			else if (roll == 1) particle.position.x = centerX - w / 2F;
+			else if (roll == 2) particle.position.y = centerY + h / 2F;
+			else if (roll == 3) particle.position.y = centerY - h / 2F;
+			else if (roll == 4) particle.position.z = centerZ + d / 2F;
+			else if (roll == 5) particle.position.z = centerZ - d / 2F;
 		}
 
 		this.direction.applyDirection(particle, centerX, centerY, centerZ);
