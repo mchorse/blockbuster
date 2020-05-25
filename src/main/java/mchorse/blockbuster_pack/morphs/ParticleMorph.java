@@ -20,8 +20,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -66,6 +68,7 @@ public class ParticleMorph extends AbstractMorph
 
     /* Runtime fields */
     private Vector3d lastGlobal = new Vector3d();
+    private Matrix3f lastRotation = new Matrix3f();
     private int tick;
     private List<MorphParticle> morphParticles = new ArrayList<>();
     private int morphIndex;
@@ -135,12 +138,26 @@ public class ParticleMorph extends AbstractMorph
 
             Vector4f zero = SnowstormMorph.calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
 
+            Vector3f ax = new Vector3f(parent.m00, parent.m01, parent.m02);
+            Vector3f ay = new Vector3f(parent.m10, parent.m11, parent.m12);
+            Vector3f az = new Vector3f(parent.m20, parent.m21, parent.m22);
+
+            ax.normalize();
+            ay.normalize();
+            az.normalize();
+
+            this.lastRotation.setRow(0, ax);
+            this.lastRotation.setRow(1, ay);
+            this.lastRotation.setRow(2, az);
+
             this.lastGlobal.x = zero.x;
             this.lastGlobal.y = zero.y;
             this.lastGlobal.z = zero.z;
         }
         else
         {
+            this.lastRotation.setIdentity();
+
             this.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
             this.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
             this.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
@@ -191,6 +208,14 @@ public class ParticleMorph extends AbstractMorph
                         double sx = this.rand.nextGaussian() * this.speed;
                         double sy = this.rand.nextGaussian() * this.speed;
                         double sz = this.rand.nextGaussian() * this.speed;
+
+                        Vector3f vector3f = new Vector3f((float) dx, (float) dy, (float) dz);
+
+                        this.lastRotation.transform(vector3f);
+                        
+                        dx = vector3f.x;
+                        dy = vector3f.y;
+                        dz = vector3f.z;
 
                         try
                         {
