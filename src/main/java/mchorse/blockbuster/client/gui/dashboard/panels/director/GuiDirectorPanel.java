@@ -34,6 +34,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
 import net.minecraft.client.Minecraft;
@@ -496,7 +497,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         if (this.replay != null)
         {
-            this.replay.morph = morph;
+            this.replay.morph = MorphUtils.copy(morph);
         }
 
         this.pickMorph.setMorph(morph);
