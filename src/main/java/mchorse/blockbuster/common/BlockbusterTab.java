@@ -1,6 +1,7 @@
 package mchorse.blockbuster.common;
 
 import mchorse.blockbuster.Blockbuster;
+import mchorse.blockbuster.common.item.ItemBlockGreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -41,7 +42,25 @@ public class BlockbusterTab extends CreativeTabs
     @SideOnly(Side.CLIENT)
     public void displayAllRelevantItems(NonNullList<ItemStack> items)
     {
-        super.displayAllRelevantItems(items);
+        Item.getItemFromBlock(Blockbuster.greenBlock).getSubItems(this, items);
+        items.add(ItemStack.EMPTY);
+        Item.getItemFromBlock(Blockbuster.dimGreenBlock).getSubItems(this, items);
+        items.add(ItemStack.EMPTY);
+
+        for (int i = 0; i < 9; i ++)
+        {
+            items.add(ItemStack.EMPTY);
+        }
+
+        for (Item item : Item.REGISTRY)
+        {
+            if (item instanceof ItemBlockGreen)
+            {
+                continue;
+            }
+
+            item.getSubItems(this, items);
+        }
 
         ItemStack stack = new ItemStack(Items.SPAWN_EGG);
         ItemMonsterPlacer.applyEntityIdToItemStack(stack, new ResourceLocation("blockbuster", "actor"));
@@ -50,9 +69,9 @@ public class BlockbusterTab extends CreativeTabs
 
         if (Blockbuster.addUtilityBlocks.get())
         {
-            items.add(new ItemStack(Blocks.BARRIER));
-            items.add(new ItemStack(Blocks.STRUCTURE_BLOCK));
             items.add(new ItemStack(Blocks.COMMAND_BLOCK));
+            items.add(new ItemStack(Blocks.STRUCTURE_BLOCK));
+            items.add(new ItemStack(Blocks.BARRIER));
         }
     }
 }
