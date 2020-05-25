@@ -385,6 +385,11 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     private void setReplay(Replay replay)
     {
+        if (this.replay != null)
+        {
+            this.replay.morph = MorphUtils.copy(this.replay.morph);
+        }
+
         this.replay = replay;
         this.replayEditor.setVisible(this.replay != null);
         this.mainView.setDelegate(this.replays);
@@ -497,7 +502,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     {
         if (this.replay != null)
         {
-            this.replay.morph = MorphUtils.copy(morph);
+            this.replay.morph = morph;
         }
 
         this.pickMorph.setMorph(morph);
