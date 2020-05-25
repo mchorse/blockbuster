@@ -47,6 +47,7 @@ blockbuster.config:
         actor_always_render_names: Always render actor names
         actor_swish_swipe: Swipe swish
         actor_y: Fix Y motion
+        actor_disable_riding: Disable riding
 
     damage_control:
         title: Damage control

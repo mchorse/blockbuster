@@ -32,6 +32,7 @@ blockbuster.config.comments:
         actor_always_render_names: Enable unconditional actor nametag rendering
         actor_swish_swipe: Do actors emit swish sound when swiping?
         actor_y: Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp)
+        actor_disable_riding: Disable an option to being able to ride the actor by right clicking it
 
     damage_control:
         damage_control: Whether damage control is enabled

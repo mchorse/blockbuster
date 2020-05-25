@@ -390,7 +390,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (empty)
         {
-            if (!this.world.isRemote)
+            if (!this.world.isRemote && !Blockbuster.actorDisableRiding.get())
             {
                 if (!player.isSneaking())
                 {

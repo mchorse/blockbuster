@@ -169,6 +169,7 @@ public class Blockbuster
     public static ValueBoolean actorAlwaysRenderNames;
     public static ValueBoolean actorSwishSwipe;
     public static ValueBoolean actorFixY;
+    public static ValueBoolean actorDisableRiding;
 
     public static ValueBoolean damageControl;
     public static ValueInt damageControlDistance;
@@ -228,6 +229,7 @@ public class Blockbuster
         actorAlwaysRenderNames = builder.getBoolean("actor_always_render_names", false);
         actorSwishSwipe = builder.getBoolean("actor_swish_swipe", false);
         actorFixY = builder.getBoolean("actor_y", false);
+        actorDisableRiding = builder.getBoolean("actor_disable_riding", false);
 
         /* Damage control */
         damageControl = builder.category("damage_control").getBoolean("damage_control", true);
