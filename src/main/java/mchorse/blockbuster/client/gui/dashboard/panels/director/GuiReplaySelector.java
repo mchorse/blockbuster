@@ -54,13 +54,13 @@ public class GuiReplaySelector extends GuiListElement<Replay>
     @Override
     public void drawListElement(Replay replay, int i, int x, int y, boolean hover, boolean selected)
     {
-        if (this.getDraggingIndex() != i)
+        if (this.isDragging() && this.getDraggingIndex() == i)
         {
-            x += this.scroll.scrollItemSize / 2;
+            y -= 20;
         }
         else
         {
-            y -= 20;
+            x += this.scroll.scrollItemSize / 2;
         }
 
         if (replay.morph != null)
