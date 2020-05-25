@@ -127,7 +127,7 @@ public class BedrockEmitter
 
 	/* Variable related code */
 
-	private void setupVariables()
+	public void setupVariables()
 	{
 		this.varAge = this.scheme.parser.variables.get("variable.particle_age");
 		this.varLifetime = this.scheme.parser.variables.get("variable.particle_lifetime");

@@ -209,6 +209,8 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	{
 		this.dirty = true;
 		this.updateSaveButton();
+
+		this.renderer.emitter.setupVariables();
 	}
 
 	private void updateSaveButton()
