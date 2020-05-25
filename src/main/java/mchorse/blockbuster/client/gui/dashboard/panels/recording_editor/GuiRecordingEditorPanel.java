@@ -370,6 +370,8 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         if (this.editor.delegate != null && this.record != null)
         {
+            this.editor.delegate.disappear();
+
             Action old = this.editor.delegate.action;
 
             Dispatcher.sendToServer(new PacketAction(this.record.filename, this.selector.tick, this.selector.index, old));

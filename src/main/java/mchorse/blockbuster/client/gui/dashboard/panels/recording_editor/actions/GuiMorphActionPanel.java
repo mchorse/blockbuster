@@ -29,7 +29,7 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     @Override
     public void setMorph(AbstractMorph morph)
     {
-        this.action.morph = MorphUtils.copy(morph);
+        this.action.morph = morph;
         this.pickMorph.setMorph(action.morph);
     }
 
@@ -47,6 +47,8 @@ public class GuiMorphActionPanel extends GuiActionPanel<MorphAction>
     {
         ClientProxy.panels.morphs.finish();
         ClientProxy.panels.morphs.removeFromParent();
+
+        this.action.morph = MorphUtils.copy(this.action.morph);
 
         super.disappear();
     }
