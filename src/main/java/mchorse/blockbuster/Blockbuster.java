@@ -131,6 +131,7 @@ public class Blockbuster
     public static Block directorBlock;
     public static Block modelBlock;
     public static Block greenBlock;
+    public static Block dimGreenBlock;
 
     /* Forge stuff */
     @Mod.Instance

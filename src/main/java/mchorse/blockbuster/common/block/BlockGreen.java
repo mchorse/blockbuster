@@ -32,8 +32,6 @@ public class BlockGreen extends Block
         super(Material.CLAY);
         this.setCreativeTab(Blockbuster.blockbusterTab);
         this.setResistance(6000000.0F);
-        this.setRegistryName("green");
-        this.setUnlocalizedName("blockbuster.green");
         this.setLightLevel(1.0F);
 
         this.setDefaultState(this.getDefaultState().withProperty(COLOR, ChromaColor.GREEN));

@@ -102,14 +102,7 @@ public class ClientProxy extends CommonProxy
         Item item = Item.getItemFromBlock(Blockbuster.modelBlock);
         ModelBakery.registerItemVariants(item, model, modelStatic);
 
-        ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
-        {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack)
-            {
-                return Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model;
-            }
-        });
+        ModelLoader.setCustomMeshDefinition(item, (stack) -> Blockbuster.modelBlockDisableItemRendering.get() ? modelStatic : model);
 
         Blockbuster.modelBlockItem.setTileEntityItemStackRenderer(new TileEntityModelItemStackRenderer());
         Blockbuster.gunItem.setTileEntityItemStackRenderer(new TileEntityGunItemStackRenderer());
@@ -178,12 +171,16 @@ public class ClientProxy extends CommonProxy
         Minecraft mc = Minecraft.getMinecraft();
 
         /* Register manually models for all chroma blocks */
-        Item item = Item.getItemFromBlock(Blockbuster.greenBlock);
+        Item green = Item.getItemFromBlock(Blockbuster.greenBlock);
+        Item dimGreen = Item.getItemFromBlock(Blockbuster.dimGreenBlock);
         ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
 
         for (ChromaColor color : ChromaColor.values())
         {
-            mesher.register(item, color.ordinal(), new ModelResourceLocation("blockbuster:green", "color=" + color.name));
+            ModelResourceLocation location = new ModelResourceLocation("blockbuster:green", "color=" + color.name);
+
+            mesher.register(green, color.ordinal(), location);
+            mesher.register(dimGreen, color.ordinal(), location);
         }
 
         /* Initiate rendering overlay and renderer */

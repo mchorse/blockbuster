@@ -12,6 +12,7 @@ blockbuster:
         director_block: Manages actors and replays
         model_block: Allows to place morphs as static models
         green_block: "%s chroma block. Can be used for chroma keying."
+        dim_green_block: "Doesn't glow."
 
     morph:
         image: Image 
@@ -28,6 +29,7 @@ tile.blockbuster:
     director.name: Director block
     model.name: Model block
     green.name: Chroma block
+    dim_green.name: Dim chroma block
 
 # Item names
 item:

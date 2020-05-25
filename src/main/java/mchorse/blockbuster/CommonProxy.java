@@ -13,6 +13,7 @@ import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.common.BlockbusterTab;
 import mchorse.blockbuster.common.EventHandler;
 import mchorse.blockbuster.common.GuiHandler;
+import mchorse.blockbuster.common.block.BlockDimGreen;
 import mchorse.blockbuster.common.block.BlockDirector;
 import mchorse.blockbuster.common.block.BlockGreen;
 import mchorse.blockbuster.common.block.BlockModel;
@@ -132,6 +133,10 @@ public class CommonProxy
         Block director = new BlockDirector();
         Block model = new BlockModel();
         Block green = new BlockGreen();
+        Block dimGreen = new BlockDimGreen();
+
+        green.setRegistryName("green").setUnlocalizedName("blockbuster.green");
+        dimGreen.setRegistryName("dim_green").setUnlocalizedName("blockbuster.dim_green");
 
         ForgeRegistries.BLOCKS.register(Blockbuster.directorBlock = director);
         ForgeRegistries.ITEMS.register(new ItemBlock(director).setRegistryName(director.getRegistryName()));
@@ -141,6 +146,9 @@ public class CommonProxy
 
         ForgeRegistries.BLOCKS.register(Blockbuster.greenBlock = green);
         ForgeRegistries.ITEMS.register(new ItemBlockGreen(green, true).setRegistryName(green.getRegistryName()));
+
+        ForgeRegistries.BLOCKS.register(Blockbuster.dimGreenBlock = dimGreen);
+        ForgeRegistries.ITEMS.register(new ItemBlockGreen(dimGreen, true).setRegistryName(dimGreen.getRegistryName()));
 
         Blockbuster.modelBlockItem = Item.getItemFromBlock(Blockbuster.modelBlock);
 
