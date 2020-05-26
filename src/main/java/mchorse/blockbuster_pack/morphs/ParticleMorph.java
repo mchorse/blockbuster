@@ -34,7 +34,7 @@ import java.util.Random;
 public class ParticleMorph extends AbstractMorph
 {
     private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
-    private static final int[] EMPTY_ARGS = new int[]{};
+    private static final int[] EMPTY_ARGS = {};
 
     /* Common arguments */
     public ParticleMode mode = ParticleMode.VANILLA;
@@ -53,6 +53,7 @@ public class ParticleMorph extends AbstractMorph
     public double vanillaDZ = 0.1;
     public double speed = 0.1;
     public int count = 10;
+    public boolean localRotation = true;
     public int[] arguments = EMPTY_ARGS;
 
     /* Morph parameters */
@@ -200,6 +201,8 @@ public class ParticleMorph extends AbstractMorph
                     double y = this.lastGlobal.y + this.vanillaY;
                     double z = this.lastGlobal.z + this.vanillaZ;
 
+                    Vector3f vector = new Vector3f(0, 0, 0);
+
                     for (int i = 0; i < this.count; i ++)
                     {
                         double dx = this.rand.nextGaussian() * this.vanillaDX;
@@ -209,13 +212,15 @@ public class ParticleMorph extends AbstractMorph
                         double sy = this.rand.nextGaussian() * this.speed;
                         double sz = this.rand.nextGaussian() * this.speed;
 
-                        Vector3f vector3f = new Vector3f((float) dx, (float) dy, (float) dz);
+                        if (this.localRotation)
+                        {
+                            vector.set((float) dx, (float) dy, (float) dz);
+                            this.lastRotation.transform(vector);
 
-                        this.lastRotation.transform(vector3f);
-                        
-                        dx = vector3f.x;
-                        dy = vector3f.y;
-                        dz = vector3f.z;
+                            dx = vector.x;
+                            dy = vector.y;
+                            dz = vector.z;
+                        }
 
                         try
                         {
@@ -412,6 +417,7 @@ public class ParticleMorph extends AbstractMorph
         if (tag.hasKey("DZ")) this.vanillaDZ = tag.getDouble("DZ");
         if (tag.hasKey("Speed")) this.speed = tag.getDouble("Speed");
         if (tag.hasKey("Count")) this.count = tag.getInteger("Count");
+        if (tag.hasKey("LocalRotation")) this.localRotation = tag.getBoolean("LocalRotation");
         if (tag.hasKey("Args")) this.arguments = tag.getIntArray("Args");
 
         if (tag.hasKey("Morph")) this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
@@ -430,22 +436,23 @@ public class ParticleMorph extends AbstractMorph
     {
         super.toNBT(tag);
 
-        tag.setString("Mode", this.mode.type);
-        tag.setInteger("Frequency", this.frequency);
-        tag.setInteger("Duration", this.duration);
-        tag.setInteger("Delay", this.delay);
-        tag.setInteger("Cap", this.cap);
+        if (this.mode != ParticleMode.VANILLA) tag.setString("Mode", this.mode.type);
+        if (this.frequency != 2) tag.setInteger("Frequency", this.frequency);
+        if (this.duration != -1) tag.setInteger("Duration", this.duration);
+        if (this.delay != 0) tag.setInteger("Delay", this.delay);
+        if (this.cap != 2500) tag.setInteger("Cap", this.cap);
 
-        tag.setString("Type", this.vanillaType.getParticleName());
-        tag.setDouble("X", this.vanillaX);
-        tag.setDouble("Y", this.vanillaY);
-        tag.setDouble("Z", this.vanillaZ);
-        tag.setDouble("DX", this.vanillaDX);
-        tag.setDouble("DY", this.vanillaDY);
-        tag.setDouble("DZ", this.vanillaDZ);
-        tag.setDouble("Speed", this.speed);
-        tag.setInteger("Count", this.count);
-        tag.setIntArray("Args", this.arguments);
+        if (this.vanillaType != EnumParticleTypes.EXPLOSION_NORMAL) tag.setString("Type", this.vanillaType.getParticleName());
+        if (this.vanillaX != 0) tag.setDouble("X", this.vanillaX);
+        if (this.vanillaY != 0) tag.setDouble("Y", this.vanillaY);
+        if (this.vanillaZ != 0) tag.setDouble("Z", this.vanillaZ);
+        if (this.vanillaDX != 0.1) tag.setDouble("DX", this.vanillaDX);
+        if (this.vanillaDY != 0.1) tag.setDouble("DY", this.vanillaDY);
+        if (this.vanillaDZ != 0.1) tag.setDouble("DZ", this.vanillaDZ);
+        if (this.speed != 0.1) tag.setDouble("Speed", this.speed);
+        if (this.count != 10) tag.setInteger("Count", this.count);
+        if (!this.localRotation) tag.setBoolean("LocalRotation", this.localRotation);
+        if (this.arguments.length != 0) tag.setIntArray("Args", this.arguments);
 
         if (this.morph != null)
         {
@@ -455,21 +462,21 @@ public class ParticleMorph extends AbstractMorph
             tag.setTag("Morph", morph);
         }
 
-        tag.setString("Movement", this.movementType.id);
-        tag.setBoolean("Yaw", this.yaw);
-        tag.setBoolean("Pitch", this.pitch);
-        tag.setBoolean("Sequencer", this.sequencer);
-        tag.setBoolean("Random", this.random);
-        tag.setInteger("Fade", this.fade);
-        tag.setInteger("Life", this.lifeSpan);
-        tag.setInteger("Max", this.maximum);
+        if (this.movementType != MorphParticle.MovementType.OUT) tag.setString("Movement", this.movementType.id);
+        if (!this.yaw) tag.setBoolean("Yaw", this.yaw);
+        if (!this.pitch) tag.setBoolean("Pitch", this.pitch);
+        if (this.sequencer) tag.setBoolean("Sequencer", this.sequencer);
+        if (this.random) tag.setBoolean("Random", this.random);
+        if (this.fade != 10) tag.setInteger("Fade", this.fade);
+        if (this.lifeSpan != 50) tag.setInteger("Life", this.lifeSpan);
+        if (this.maximum != 25) tag.setInteger("Max", this.maximum);
     }
 
     public static class MorphParticle
     {
         public ParticleMorph parent;
         public AbstractMorph morph;
-        public MovementType movementType = MovementType.OUT;
+        public MovementType movementType;
 
         public float targetX;
         public float targetY;

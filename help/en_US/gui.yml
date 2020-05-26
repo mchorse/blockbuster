@@ -302,6 +302,8 @@ blockbuster.gui:
         dz: Offset Z
         speed: Speed
         count: Count
+        local_rotation: Local rotation
+        local_rotation_tooltip: When attached to body parts, vanilla particles will be emitted relative to body part's rotation, otherwise they'll emitted relative to the world
         args: Additional arguments
 
         fade: Fade

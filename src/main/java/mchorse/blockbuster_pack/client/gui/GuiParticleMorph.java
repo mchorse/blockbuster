@@ -73,6 +73,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
         public GuiTrackpadElement dz;
         public GuiTrackpadElement speed;
         public GuiTrackpadElement count;
+        public GuiToggleElement localRotation;
         public GuiTextElement args;
 
         public GuiParticleMorphGeneralPanel(Minecraft mc, GuiParticleMorph editor)
@@ -128,6 +129,8 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.dz.tooltip(IKey.lang("blockbuster.gui.particle.dz"));
             this.speed = new GuiTrackpadElement(mc, (value) -> this.morph.speed = value);
             this.speed.tooltip(IKey.lang("blockbuster.gui.particle.speed"));
+            this.localRotation = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.particle.local_rotation"), (b) -> this.morph.localRotation = b.isToggled());
+            this.localRotation.tooltip(IKey.lang("blockbuster.gui.particle.local_rotation_tooltip"));
             this.count = new GuiTrackpadElement(mc, (value) -> this.morph.count = value.intValue());
             this.count.tooltip(IKey.lang("blockbuster.gui.particle.count"));
             this.count.limit(1, Integer.MAX_VALUE, true);
@@ -165,7 +168,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             element.add(Elements.label(IKey.lang("blockbuster.gui.particle.emission"), 16).anchor(0, 1F), this.frequency, this.duration, this.delay, this.cap, this.speed, this.count);
             element.add(Elements.label(IKey.lang("blockbuster.gui.particle.vanilla"), 16).anchor(0, 1F), this.x, this.y, this.z);
             element.add(Elements.label(IKey.lang("blockbuster.gui.particle.common"), 16).anchor(0, 1F), this.dx, this.dy, this.dz);
-            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.args"), 16).anchor(0, 1F), this.args);
+            element.add(Elements.label(IKey.lang("blockbuster.gui.particle.args"), 16).anchor(0, 1F), this.args, this.localRotation);
 
             this.add(element, this.type);
         }
@@ -190,6 +193,7 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.dy.setValue((float) morph.vanillaDY);
             this.dz.setValue((float) morph.vanillaDZ);
             this.speed.setValue((float) morph.speed);
+            this.localRotation.toggled(morph.localRotation);
             this.count.setValue(morph.count);
 
             StringJoiner joiner = new StringJoiner(", ");
