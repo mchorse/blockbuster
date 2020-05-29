@@ -169,7 +169,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.fake = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.fake_player"), false, (b) -> this.replay.fake = b.isToggled());
         this.teleportBack = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.tp_back"), false, (b) -> this.replay.teleportBack = b.isToggled());
         this.teleportBack.tooltip(IKey.lang("blockbuster.gui.director.tp_back_tooltip"), Direction.RIGHT);
-        this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value);
+        this.health = new GuiTrackpadElement(mc, (value) -> this.replay.health = value.floatValue());
         this.health.limit(0);
         this.recordingId = Elements.label(IKey.lang("blockbuster.gui.director.id")).color(0xcccccc);
 

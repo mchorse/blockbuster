@@ -104,7 +104,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.size.setLimit(1, 8192, true);
         this.sizeOffset = new GuiTrackpadElement(mc, (value) ->
         {
-            this.panel.limb.sizeOffset = value;
+            this.panel.limb.sizeOffset = value.floatValue();
             this.panel.rebuildModel();
         });
         this.texture = new GuiTwoElement(mc, (values) ->
@@ -153,7 +153,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
             this.panel.limb.color[2] = values[2];
         });
         this.color.setLimit(0, 1);
-        this.opacity = new GuiTrackpadElement(mc, (value) -> this.panel.limb.opacity = value);
+        this.opacity = new GuiTrackpadElement(mc, (value) -> this.panel.limb.opacity = value.floatValue());
         this.opacity.tooltip(IKey.lang("blockbuster.gui.me.limbs.opacity"));
         this.opacity.limit(0, 1);
         this.mirror = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.mirror"), false, (b) ->

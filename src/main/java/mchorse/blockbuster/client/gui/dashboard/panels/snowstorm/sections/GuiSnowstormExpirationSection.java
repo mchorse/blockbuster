@@ -63,25 +63,25 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 
 		this.a = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.plane.a = value;
+			this.plane.a = value.floatValue();
 			this.parent.dirty();
 		});
 		this.a.tooltip(IKey.str("Ax"));
 		this.b = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.plane.b = value;
+			this.plane.b = value.floatValue();
 			this.parent.dirty();
 		});
 		this.b.tooltip(IKey.str("By"));
 		this.c = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.plane.c = value;
+			this.plane.c = value.floatValue();
 			this.parent.dirty();
 		});
 		this.c.tooltip(IKey.str("Cz"));
 		this.d = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.plane.d = value;
+			this.plane.d = value.floatValue();
 			this.parent.dirty();
 		});
 		this.d.tooltip(IKey.str("D"));

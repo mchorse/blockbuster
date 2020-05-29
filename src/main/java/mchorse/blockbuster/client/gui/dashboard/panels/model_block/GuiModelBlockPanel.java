@@ -86,11 +86,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.subChildren.add(this.trans);
 
         /* Entity angles */
-        this.subChildren.add(this.yaw = new GuiTrackpadElement(mc, (value) -> this.model.rotateYawHead = value));
+        this.subChildren.add(this.yaw = new GuiTrackpadElement(mc, (value) -> this.model.rotateYawHead = value.floatValue()));
         this.yaw.tooltip(IKey.lang("blockbuster.gui.model_block.yaw"));
-        this.subChildren.add(this.pitch = new GuiTrackpadElement(mc, (value) -> this.model.rotatePitch = value));
+        this.subChildren.add(this.pitch = new GuiTrackpadElement(mc, (value) -> this.model.rotatePitch = value.floatValue()));
         this.pitch.tooltip(IKey.lang("blockbuster.gui.model_block.pitch"));
-        this.subChildren.add(this.body = new GuiTrackpadElement(mc, (value) -> this.model.rotateBody = value));
+        this.subChildren.add(this.body = new GuiTrackpadElement(mc, (value) -> this.model.rotateBody = value.floatValue()));
         this.body.tooltip(IKey.lang("blockbuster.gui.model_block.body"));
 
         this.yaw.flex().set(-85, 0, 80, 20).relative(this.trans);
@@ -349,27 +349,27 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         }
 
         @Override
-        public void setT(float x, float y, float z)
+        public void setT(double x, double y, double z)
         {
-            this.model.x = x;
-            this.model.y = y;
-            this.model.z = z;
+            this.model.x = (float) x;
+            this.model.y = (float) y;
+            this.model.z = (float) z;
         }
 
         @Override
-        public void setS(float x, float y, float z)
+        public void setS(double x, double y, double z)
         {
-            this.model.sx = x;
-            this.model.sy = y;
-            this.model.sz = z;
+            this.model.sx = (float) x;
+            this.model.sy = (float) y;
+            this.model.sz = (float) z;
         }
 
         @Override
-        public void setR(float x, float y, float z)
+        public void setR(double x, double y, double z)
         {
-            this.model.rx = x;
-            this.model.ry = y;
-            this.model.rz = z;
+            this.model.rx = (float) x;
+            this.model.ry = (float) y;
+            this.model.rz = (float) z;
         }
     }
 }

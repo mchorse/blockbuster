@@ -85,7 +85,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             this.scale = new GuiTrackpadElement(mc, (value) ->
             {
-                this.morph.scale = value;
+                this.morph.scale = value.floatValue();
             });
             this.scale.tooltip(IKey.lang("blockbuster.gui.model_block.scale"));
 

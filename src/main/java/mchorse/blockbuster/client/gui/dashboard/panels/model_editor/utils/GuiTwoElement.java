@@ -20,12 +20,12 @@ public class GuiTwoElement extends GuiElement
         this.array = new Float[] {0F, 0F};
         this.a = new GuiTrackpadElement(mc, (value) ->
         {
-            this.array[0] = value;
+            this.array[0] = value.floatValue();
             a.accept(this.array);
         });
         this.b = new GuiTrackpadElement(mc, (value) ->
         {
-            this.array[1] = value;
+            this.array[1] = value.floatValue();
             a.accept(this.array);
         });
 

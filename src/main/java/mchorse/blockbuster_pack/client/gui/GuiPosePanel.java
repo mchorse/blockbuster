@@ -146,12 +146,12 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.model = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
         this.scale = new GuiTrackpadElement(mc, (value) ->
         {
-            this.morph.scale = value;
+            this.morph.scale = value.floatValue();
         });
         this.scale.tooltip(IKey.lang("blockbuster.gui.me.options.scale"));
         this.scaleGui = new GuiTrackpadElement(mc, (value) ->
         {
-            this.morph.scaleGui = value;
+            this.morph.scaleGui = value.floatValue();
         });
         this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
 
@@ -295,27 +295,27 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         }
 
         @Override
-        public void setT(float x, float y, float z)
+        public void setT(double x, double y, double z)
         {
-            this.trans.translate[0] = x;
-            this.trans.translate[1] = y;
-            this.trans.translate[2] = z;
+            this.trans.translate[0] = (float) x;
+            this.trans.translate[1] = (float) y;
+            this.trans.translate[2] = (float) z;
         }
 
         @Override
-        public void setS(float x, float y, float z)
+        public void setS(double x, double y, double z)
         {
-            this.trans.scale[0] = x;
-            this.trans.scale[1] = y;
-            this.trans.scale[2] = z;
+            this.trans.scale[0] = (float) x;
+            this.trans.scale[1] = (float) y;
+            this.trans.scale[2] = (float) z;
         }
 
         @Override
-        public void setR(float x, float y, float z)
+        public void setR(double x, double y, double z)
         {
-            this.trans.rotate[0] = x;
-            this.trans.rotate[1] = y;
-            this.trans.rotate[2] = z;
+            this.trans.rotate[0] = (float) x;
+            this.trans.rotate[1] = (float) y;
+            this.trans.rotate[2] = (float) z;
         }
     }
 }

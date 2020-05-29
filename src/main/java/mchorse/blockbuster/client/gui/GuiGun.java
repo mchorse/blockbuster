@@ -140,7 +140,7 @@ public class GuiGun extends GuiBase
         this.projectiles = new GuiTrackpadElement(mc, (value) -> this.props.projectiles = value.intValue());
         this.projectiles.tooltip(IKey.lang("blockbuster.gui.gun.projectiles"));
         this.projectiles.limit(0, Integer.MAX_VALUE, true);
-        this.scatter = new GuiTrackpadElement(mc, (value) -> this.props.scatter = value);
+        this.scatter = new GuiTrackpadElement(mc, (value) -> this.props.scatter = value.floatValue());
         this.scatter.tooltip(IKey.lang("blockbuster.gui.gun.scatter"));
         this.launch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.launch"), false, (b) -> this.props.launch = b.isToggled());
 
@@ -169,15 +169,15 @@ public class GuiGun extends GuiBase
         this.pitch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.pitch"), false, (b) -> this.props.pitch = b.isToggled());
         this.sequencer = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.sequencer"), false, (b) -> this.props.sequencer = b.isToggled());
         this.random = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.random"), false, (b) -> this.props.random = b.isToggled());
-        this.hitboxX = new GuiTrackpadElement(mc, (value) -> this.props.hitboxX = value);
+        this.hitboxX = new GuiTrackpadElement(mc, (value) -> this.props.hitboxX = value.floatValue());
         this.hitboxX.tooltip(IKey.lang("blockbuster.gui.gun.hitbox_x"));
-        this.hitboxY = new GuiTrackpadElement(mc, (value) -> this.props.hitboxY = value);
+        this.hitboxY = new GuiTrackpadElement(mc, (value) -> this.props.hitboxY = value.floatValue());
         this.hitboxY.tooltip(IKey.lang("blockbuster.gui.gun.hitbox_y"));
-        this.speed = new GuiTrackpadElement(mc, (value) -> this.props.speed = value);
+        this.speed = new GuiTrackpadElement(mc, (value) -> this.props.speed = value.floatValue());
         this.speed.tooltip(IKey.lang("blockbuster.gui.gun.speed"));
-        this.friction = new GuiTrackpadElement(mc, (value) -> this.props.friction = value);
+        this.friction = new GuiTrackpadElement(mc, (value) -> this.props.friction = value.floatValue());
         this.friction.tooltip(IKey.lang("blockbuster.gui.gun.friction"));
-        this.gravity = new GuiTrackpadElement(mc, (value) -> this.props.gravity = value);
+        this.gravity = new GuiTrackpadElement(mc, (value) -> this.props.gravity = value.floatValue());
         this.gravity.tooltip(IKey.lang("blockbuster.gui.gun.gravity"));
         this.fadeIn = new GuiTrackpadElement(mc, (value) -> this.props.fadeIn = value.intValue());
         this.fadeIn.tooltip(IKey.lang("blockbuster.gui.gun.fade_in"));
@@ -210,9 +210,9 @@ public class GuiGun extends GuiBase
         this.hits = new GuiTrackpadElement(mc, (value) -> this.props.hits = value.intValue());
         this.hits.tooltip(IKey.lang("blockbuster.gui.gun.hits"));
         this.hits.limit(0, Integer.MAX_VALUE, true);
-        this.damage = new GuiTrackpadElement(mc, (value) -> this.props.damage = value);
+        this.damage = new GuiTrackpadElement(mc, (value) -> this.props.damage = value.floatValue());
         this.damage.tooltip(IKey.lang("blockbuster.gui.gun.damage"));
-        this.bounceFactor = new GuiTrackpadElement(mc, (value) -> this.props.bounceFactor = value);
+        this.bounceFactor = new GuiTrackpadElement(mc, (value) -> this.props.bounceFactor = value.floatValue());
         this.bounceFactor.tooltip(IKey.lang("blockbuster.gui.gun.bounce_factor"));
         this.vanishDelay = new GuiTrackpadElement(mc, (value) -> this.props.vanishDelay = value.intValue());
         this.vanishDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.vanish_delay"));

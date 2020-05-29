@@ -44,7 +44,7 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.model.scale[1] = value[1];
             this.panel.model.scale[2] = value[2];
         });
-        this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.panel.model.scaleGui = value);
+        this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.panel.model.scaleGui = value.floatValue());
         this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
         this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : RLUtils.create(str));
         this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);

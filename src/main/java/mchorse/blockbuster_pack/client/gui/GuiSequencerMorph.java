@@ -122,7 +122,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 if (this.entry != null)
                 {
-                    this.entry.duration = value;
+                    this.entry.duration = value.floatValue();
                 }
             });
             this.duration.tooltip(IKey.lang("blockbuster.gui.sequencer.duration"));
@@ -132,7 +132,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 if (this.entry != null)
                 {
-                    this.entry.random = value;
+                    this.entry.random = value.floatValue();
                 }
             });
             this.random.tooltip(IKey.lang("blockbuster.gui.sequencer.random"));

@@ -26,19 +26,19 @@ public class GuiSnowstormCollisionSection extends GuiSnowstormComponentSection<B
 		this.enabled = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.snowstorm.collision.enabled"), (b) -> this.parent.dirty());
 		this.drag = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.collissionDrag = value;
+			this.component.collissionDrag = value.floatValue();
 			this.parent.dirty();
 		});
 		this.drag.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.drag"));
 		this.bounciness = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.bounciness = value;
+			this.component.bounciness = value.floatValue();
 			this.parent.dirty();
 		});
 		this.bounciness.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.bounciness"));
 		this.radius = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.radius = value;
+			this.component.radius = value.floatValue();
 			this.parent.dirty();
 		});
 		this.radius.tooltip(IKey.lang("blockbuster.gui.snowstorm.collision.radius"));

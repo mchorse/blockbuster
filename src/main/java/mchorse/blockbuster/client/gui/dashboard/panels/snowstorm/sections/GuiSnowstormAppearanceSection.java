@@ -63,19 +63,19 @@ public class GuiSnowstormAppearanceSection extends GuiSnowstormComponentSection<
 
 		this.stepX = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.stepX = value;
+			this.component.stepX = value.floatValue();
 			this.parent.dirty();
 		});
 		this.stepX.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.step_x"));
 		this.stepY = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.stepY = value;
+			this.component.stepY = value.floatValue();
 			this.parent.dirty();
 		});
 		this.stepY.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.step_y"));
 		this.fps = new GuiTrackpadElement(mc, (value) ->
 		{
-			this.component.fps = value;
+			this.component.fps = value.floatValue();
 			this.parent.dirty();
 		});
 		this.fps.tooltip(IKey.lang("blockbuster.gui.snowstorm.appearance.fps"));
