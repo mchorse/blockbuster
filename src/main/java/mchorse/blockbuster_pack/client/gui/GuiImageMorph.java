@@ -3,7 +3,9 @@ package mchorse.blockbuster_pack.client.gui;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
+import mchorse.blockbuster_pack.utils.GuiAnimation;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
@@ -70,6 +72,11 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         public GuiTrackpadElement bottom;
         public GuiColorElement color;
 
+        public GuiTrackpadElement offsetX;
+        public GuiTrackpadElement offsetY;
+
+        public GuiAnimation animation;
+
         public GuiImageMorphPanel(Minecraft mc, GuiImageMorph editor)
         {
             super(mc, editor);
@@ -127,14 +134,22 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
             this.color.picker.editAlpha();
 
+            this.offsetX = new GuiTrackpadElement(mc, (value) -> this.morph.offsetX = value.floatValue());
+            this.offsetX.tooltip(IKey.lang("blockbuster.gui.image.offset_x"));
+            this.offsetY = new GuiTrackpadElement(mc, (value) -> this.morph.offsetY = value.floatValue());
+            this.offsetY.tooltip(IKey.lang("blockbuster.gui.image.offset_y"));
+
             this.picker.flex().relative(this.area).wh(1F, 1F);
 
-            GuiElement animated = new GuiElement(mc);
+            GuiScrollElement column = new GuiScrollElement(mc);
 
-            animated.flex().relative(this).w(130).column(5).vertical().stretch().height(20).padding(10);
-            animated.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color);
+            column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
+            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color, this.offsetX, this.offsetY);
 
-            this.add(animated);
+            this.animation = new GuiAnimation(mc);
+            this.animation.flex().relative(this).x(1F, -130).w(130);
+
+            this.add(column, this.animation, this.animation.interpolations);
         }
 
         @Override
@@ -155,6 +170,10 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom.setValue(morph.cropping.h);
 
             this.color.picker.setColor(morph.color);
+            this.offsetX.setValue(morph.offsetX);
+            this.offsetY.setValue(morph.offsetY);
+
+            this.animation.fill(morph.animation);
         }
 
         @Override
@@ -164,7 +183,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             int w = this.morph.getWidth();
             int h = this.morph.getHeight();
 
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.dimensions", w, h), this.color.area.x, this.color.area.y + 25, 0xaaaaaa);
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.dimensions", w, h), this.offsetY.area.x, this.offsetY.area.y + 25, 0xaaaaaa);
 
             super.draw(context);
         }

@@ -1,11 +1,13 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.blockbuster_pack.utils.Animation;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -34,7 +36,6 @@ import java.util.Objects;
 public class ImageMorph extends AbstractMorph
 {
     public static final Matrix4f matrix = new Matrix4f();
-    public static Color temporary = new Color();
 
     /**
      * Image morph's texture 
@@ -71,6 +72,19 @@ public class ImageMorph extends AbstractMorph
      */
     public int color = 0xffffffff;
 
+    /**
+     * UV horizontal shift
+     */
+    public float offsetX;
+
+    /**
+     * UV vertical shift
+     */
+    public float offsetY;
+
+    public ImageAnimation animation = new ImageAnimation();
+    public ImageProperties image = new ImageProperties();
+
     public ImageMorph()
     {
         super();
@@ -94,11 +108,13 @@ public class ImageMorph extends AbstractMorph
             return;
         }
 
+        this.updateAnimation(Minecraft.getMinecraft().getRenderPartialTicks());
+
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y - scale / 2, 0);
         GL11.glScalef(1.5F, 1.5F, 1.5F);
 
-        this.renderPicture(scale, false);
+        this.renderPicture(false);
 
         GL11.glPopMatrix();
     }
@@ -111,6 +127,8 @@ public class ImageMorph extends AbstractMorph
         {
             return;
         }
+
+        this.updateAnimation(partialTicks);
 
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -154,7 +172,7 @@ public class ImageMorph extends AbstractMorph
             GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
         }
 
-        this.renderPicture(this.scale, true);
+        this.renderPicture(true);
 
         GL11.glPopMatrix();
 
@@ -174,7 +192,20 @@ public class ImageMorph extends AbstractMorph
         GlStateManager.disableRescaleNormal();
     }
 
-    private void renderPicture(float scale, boolean flipX)
+    @SideOnly(Side.CLIENT)
+    private void updateAnimation(float partialTicks)
+    {
+        if (this.animation.isInProgress())
+        {
+            this.animation.apply(this.image, partialTicks);
+        }
+        else
+        {
+            this.image.from(this);
+        }
+    }
+
+    private void renderPicture(boolean flipX)
     {
         GifTexture.bindTexture(this.texture);
 
@@ -216,10 +247,15 @@ public class ImageMorph extends AbstractMorph
             u2 = 1 - u2;
         }
 
-        x1 *= scale;
-        x2 *= scale;
-        y1 *= scale;
-        y2 *= scale;
+        u1 += this.image.x / (float) w;
+        u2 += this.image.x / (float) w;
+        v1 += this.image.y / (float) h;
+        v2 += this.image.y / (float) h;
+
+        x1 *= this.image.scale;
+        x2 *= this.image.scale;
+        y1 *= this.image.scale;
+        y2 *= this.image.scale;
 
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
@@ -230,19 +266,28 @@ public class ImageMorph extends AbstractMorph
         BufferBuilder vertexbuffer = tessellator.getBuffer();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        temporary.set(this.color, true);
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
-        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).color(temporary.r, temporary.g, temporary.b, temporary.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        Color color = this.image.color;
+
+        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.enableCull();
+    }
+
+    @Override
+    public void update(EntityLivingBase target)
+    {
+        super.update(target);
+
+        this.animation.update();
     }
 
     public int getWidth()
@@ -277,6 +322,9 @@ public class ImageMorph extends AbstractMorph
             this.billboard = morph.billboard;
             this.cropping.copy(morph.cropping);
             this.color = morph.color;
+            this.offsetX = morph.offsetX;
+            this.offsetY = morph.offsetY;
+            this.animation.copy(morph.animation);
         }
     }
 
@@ -296,9 +344,28 @@ public class ImageMorph extends AbstractMorph
             result = result && image.billboard == this.billboard;
             result = result && image.cropping.equals(this.cropping);
             result = result && image.color == this.color;
+            result = result && image.offsetX == this.offsetX;
+            result = result && image.offsetY == this.offsetY;
+            result = result && Objects.equals(image.animation, this.animation);
         }
 
         return result;
+    }
+
+    @Override
+    public boolean canMerge(AbstractMorph morph)
+    {
+        if (morph instanceof ImageMorph)
+        {
+            ImageMorph image = (ImageMorph) morph;
+
+            this.animation.merge(this, image);
+            this.copy(image);
+
+            return true;
+        }
+
+        return super.canMerge(morph);
     }
 
     @Override
@@ -311,6 +378,14 @@ public class ImageMorph extends AbstractMorph
     public float getHeight(EntityLivingBase target)
     {
         return 0;
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+
+        this.animation.reset();
     }
 
     @Override
@@ -328,6 +403,15 @@ public class ImageMorph extends AbstractMorph
         if (this.cropping.y != 0) tag.setInteger("Top", this.cropping.y);
         if (this.cropping.h != 0) tag.setInteger("Bottom", this.cropping.h);
         if (this.color != 0xffffffff) tag.setInteger("Color", this.color);
+        if (this.offsetX != 0) tag.setFloat("OffsetX", this.offsetX);
+        if (this.offsetY != 0) tag.setFloat("OffsetY", this.offsetY);
+
+        NBTTagCompound animation = this.animation.toNBT();
+
+        if (!animation.hasNoTags())
+        {
+            tag.setTag("Animation", animation);
+        }
     }
 
     @Override
@@ -345,5 +429,50 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Top")) this.cropping.y = tag.getInteger("Top");
         if (tag.hasKey("Bottom")) this.cropping.h = tag.getInteger("Bottom");
         if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
+        if (tag.hasKey("OffsetX")) this.offsetX = tag.getFloat("OffsetX");
+        if (tag.hasKey("OffsetY")) this.offsetY = tag.getFloat("OffsetY");
+        if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
+    }
+
+    public static class ImageAnimation extends Animation
+    {
+        public ImageProperties last = new ImageProperties();
+        public ImageProperties next = new ImageProperties();
+
+        public void merge(ImageMorph last, ImageMorph next)
+        {
+            this.merge(next.animation);
+            this.last.from(last);
+            this.next.from(next);
+        }
+
+        public void apply(ImageProperties properties, float partialTicks)
+        {
+            float factor = this.getFactor(partialTicks);
+
+            properties.x = this.interp.interpolate(this.last.x, this.next.x, factor);
+            properties.y = this.interp.interpolate(this.last.y, this.next.y, factor);
+            properties.color.r = this.interp.interpolate(this.last.color.r, this.next.color.r, factor);
+            properties.color.g = this.interp.interpolate(this.last.color.g, this.next.color.g, factor);
+            properties.color.b = this.interp.interpolate(this.last.color.b, this.next.color.b, factor);
+            properties.color.a = this.interp.interpolate(this.last.color.a, this.next.color.a, factor);
+            properties.scale = this.interp.interpolate(this.last.scale, this.next.scale, factor);
+        }
+    }
+
+    public static class ImageProperties
+    {
+        public Color color = new Color();
+        public float scale;
+        public float x;
+        public float y;
+
+        public void from(ImageMorph morph)
+        {
+            this.color.set(morph.color, true);
+            this.scale = morph.scale;
+            this.x = morph.offsetX;
+            this.y = morph.offsetY;
+        }
     }
 }

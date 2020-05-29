@@ -11,7 +11,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
-import mchorse.mclib.utils.Interpolation;
+import mchorse.blockbuster_pack.utils.Animation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -95,7 +95,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     /**
      * Animation details
      */
-    public CustomAnimation animation = new CustomAnimation();
+    public PoseAnimation animation = new PoseAnimation();
 
     /**
      * Body part manager 
@@ -663,69 +663,26 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     /**
      * Animation details 
      */
-    public static class CustomAnimation
+    public static class PoseAnimation extends Animation
     {
-        public boolean animates;
-        public boolean ignored;
-        public int duration = 10;
-        public Interpolation interp = Interpolation.LINEAR;
         public ModelPose last;
         public ModelPose pose = new ModelPose();
 
-        public int progress = 0;
-
-        public void reset()
-        {
-            this.progress = this.duration;
-        }
-
-        public void merge(CustomAnimation animation)
-        {
-            this.copy(animation);
-            this.progress = 0;
-            this.pose.limbs.clear();
-        }
-
-        public void copy(CustomAnimation animation)
-        {
-            this.animates = animation.animates;
-            this.duration = animation.duration;
-            this.interp = animation.interp;
-            this.ignored = animation.ignored;
-        }
-
         @Override
-        public boolean equals(Object obj)
+        public void merge(Animation animation)
         {
-            if (obj instanceof CustomAnimation)
-            {
-                CustomAnimation animation = (CustomAnimation) obj;
-
-                return this.animates == animation.animates &&
-                       this.duration == animation.duration &&
-                       this.ignored == animation.ignored &&
-                       this.interp == animation.interp;
-            }
-
-            return super.equals(obj);
-        }
-
-        public void update()
-        {
-            if (this.animates)
-            {
-                this.progress++;
-            }
+            super.merge(animation);
+            this.pose.limbs.clear();
         }
 
         public boolean isInProgress()
         {
-            return this.animates && this.progress < this.duration && this.last != null;
+            return super.isInProgress() && this.last != null;
         }
 
         public ModelPose calculatePose(ModelPose current, float partialTicks)
         {
-            float factor = (this.progress + partialTicks) / (float) this.duration;
+            float factor = this.getFactor(partialTicks);
 
             for (Map.Entry<String, ModelTransform> entry : current.limbs.entrySet())
             {
@@ -753,26 +710,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             }
 
             return this.pose;
-        }
-
-        public NBTTagCompound toNBT()
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            if (this.animates) tag.setBoolean("Animates", this.animates);
-            if (this.ignored) tag.setBoolean("Ignored", this.ignored);
-            if (this.duration != 10) tag.setInteger("Duration", this.duration);
-            if (this.interp != Interpolation.LINEAR) tag.setInteger("Interp", this.interp.ordinal());
-
-            return tag;
-        }
-
-        public void fromNBT(NBTTagCompound tag)
-        {
-            if (tag.hasKey("Animates")) this.animates = tag.getBoolean("Animates");
-            if (tag.hasKey("Ignored")) this.ignored = tag.getBoolean("Ignored");
-            if (tag.hasKey("Duration")) this.duration = tag.getInteger("Duration");
-            if (tag.hasKey("Interp")) this.interp = Interpolation.values()[tag.getInteger("Interp")];
         }
     }
 }

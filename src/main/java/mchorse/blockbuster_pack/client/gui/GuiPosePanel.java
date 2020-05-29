@@ -4,6 +4,7 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.blockbuster_pack.utils.GuiAnimation;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -31,12 +32,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
     public GuiToggleElement poseOnSneak;
     public GuiPoseTransformations transforms;
 
-    /* Animated poses */
-    public GuiToggleElement animates;
-    public GuiToggleElement ignored;
-    public GuiTrackpadElement animationDuration;
-    public GuiButtonElement pickInterpolation;
-    public GuiListElement<Interpolation> interpolations;
+    public GuiAnimation animation;
 
     /* General options */
     public GuiStringListElement models;
@@ -106,41 +102,8 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.transforms = new GuiPoseTransformations(mc);
         this.transforms.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
 
-        /* Animated poses */
-        this.animates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.animates"), false, (b) ->
-        {
-            this.morph.animation.animates = this.animates.isToggled();
-        });
-        this.animates.flex().h(14);
-
-        this.ignored = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.ignored"), false, (b) ->
-        {
-            this.morph.animation.ignored = this.ignored.isToggled();
-        });
-        this.ignored.flex().h(14);
-
-        this.animationDuration = new GuiTrackpadElement(mc, (value) ->
-        {
-            this.morph.animation.duration = value.intValue();
-        });
-        this.animationDuration.tooltip(IKey.lang("blockbuster.gui.builder.animation_duration"));
-        this.animationDuration.limit(0).integer();
-
-        this.pickInterpolation = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_interpolation"), (b) ->
-        {
-            this.interpolations.toggleVisible();
-        });
-
-        this.interpolations = new GuiInterpolationList(mc, (interp) ->
-        {
-            this.morph.animation.interp = interp.get(0);
-        });
-        this.interpolations.flex().relative(this.pickInterpolation).y(1F).w(1F).h(96);
-
-        GuiElement animated = new GuiElement(mc);
-
-        animated.flex().relative(this).x(1F, -130).w(130).column(5).vertical().stretch().height(20).padding(10);
-        animated.add(this.animates, this.animationDuration, this.ignored, this.pickInterpolation);
+        this.animation = new GuiAnimation(mc);
+        this.animation.flex().relative(this).x(1F, -130).w(130);
 
         /* General options */
         this.model = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_model"), (b) -> this.models.toggleVisible());
@@ -170,7 +133,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         options.flex().relative(this).x(1F, -130).y(1F).w(130).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
         options.add(this.model, this.scale, this.scaleGui);
 
-        this.add(this.reset, this.create, this.poseOnSneak, this.list, animated, options, this.transforms, this.models, this.interpolations);
+        this.add(this.reset, this.create, this.poseOnSneak, this.list, this.animation, options, this.transforms, this.models, this.animation.interpolations);
     }
 
     @Override
@@ -197,11 +160,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         this.updateElements();
 
         this.poseOnSneak.toggled(morph.currentPoseOnSneak);
-        this.animates.toggled(morph.animation.animates);
-        this.ignored.toggled(morph.animation.ignored);
-        this.animationDuration.setValue(morph.animation.duration);
-        this.interpolations.setCurrent(morph.animation.interp);
-        this.interpolations.setVisible(false);
+        this.animation.fill(morph.animation);
 
         this.scale.setValue(morph.scale);
         this.scaleGui.setValue(morph.scaleGui);
