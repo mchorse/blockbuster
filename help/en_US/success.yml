@@ -37,3 +37,4 @@ blockbuster.success:
         cut: "{f}Player recording %s{f} was cut between %s{f} and %s{f} frames."
         restored: "{f}Player recording %s{f}'s %s{f} iteration was restored!"
         reversed: "{f}Player recording %s{f} was successfully reversed!"
+        fill: "{f}Successfully filled %s{f} frames at %s{f} tick in %s{f} player recording (final length is %s{f} ticks)!"

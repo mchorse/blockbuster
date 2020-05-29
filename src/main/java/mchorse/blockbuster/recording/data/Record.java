@@ -117,18 +117,28 @@ public class Record
     }
 
     /**
+     * Get actions on given tick
+     */
+    public List<Action> getActions(int tick)
+    {
+        if (tick >= this.actions.size() || tick < 0)
+        {
+            return null;
+        }
+
+        return this.actions.get(tick);
+    }
+
+    /**
      * Get an action on given tick and index 
      */
     public Action getAction(int tick, int index)
     {
-        if (tick >= 0 && tick < this.actions.size())
-        {
-            List<Action> actions = this.actions.get(tick);
+        List<Action> actions = this.getActions(tick);
 
-            if (actions != null && index >= 0 && index < actions.size())
-            {
-                return actions.get(index);
-            }
+        if (actions != null && index >= 0 && index < actions.size())
+        {
+            return actions.get(index);
         }
 
         return null;

@@ -48,6 +48,12 @@ blockbuster:
 
                     {r}This command fades out {7}<filename>{r} player recording to the first frame using linear interpolation that fades {7}<fade_out>{r} ticks.
 
+            fill:
+                |
+                    {l}{6}/{r}record {8}fill{r} {7}<filename> <count> [tick]{r}
+
+                    {r}This command inserts {7}<count>{f} frames at {7}[tick]{f} in {7}<filename>{r} player recording. If {7}[tick]{r} is not provided, it would use the length of given player recording.
+
             flip:
                 |
                     {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}
