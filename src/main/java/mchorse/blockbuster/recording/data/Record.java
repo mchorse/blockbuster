@@ -234,7 +234,14 @@ public class Record
                     continue;
                 }
 
-                action.apply(actor);
+                try
+                {
+                    action.apply(actor);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -267,7 +274,15 @@ public class Record
             {
                 if (action instanceof MorphAction)
                 {
-                    action.apply(actor);
+                    try
+                    {
+                        action.apply(actor);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
                     return;
                 }
             }
