@@ -171,6 +171,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             {
                 this.duration.setValue(entry.duration);
                 this.random.setValue(entry.random);
+                this.pick.setMorph(entry.morph);
 
                 ((GuiMorphRenderer) this.editor.renderer).morph = entry.morph;
             }
