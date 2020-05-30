@@ -4,7 +4,6 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.utils.GuiAnimation;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -74,6 +73,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
         public GuiTrackpadElement offsetX;
         public GuiTrackpadElement offsetY;
+        public GuiTrackpadElement rotation;
 
         public GuiAnimation animation;
 
@@ -119,16 +119,16 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
                 this.morph.texture = rl;
             });
 
-            this.left = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.x = value.intValue());
+            this.left = new GuiTrackpadElement(mc, (value) -> this.morph.crop.x = value.intValue());
             this.left.tooltip(IKey.lang("blockbuster.gui.image.left"));
             this.left.integer();
-            this.right = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.w = value.intValue());
+            this.right = new GuiTrackpadElement(mc, (value) -> this.morph.crop.z = value.intValue());
             this.right.tooltip(IKey.lang("blockbuster.gui.image.right"));
             this.right.integer();
-            this.top = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.y = value.intValue());
+            this.top = new GuiTrackpadElement(mc, (value) -> this.morph.crop.y = value.intValue());
             this.top.tooltip(IKey.lang("blockbuster.gui.image.top"));
             this.top.integer();
-            this.bottom = new GuiTrackpadElement(mc, (value) -> this.morph.cropping.h = value.intValue());
+            this.bottom = new GuiTrackpadElement(mc, (value) -> this.morph.crop.w = value.intValue());
             this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
             this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
@@ -138,6 +138,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.offsetX.tooltip(IKey.lang("blockbuster.gui.image.offset_x"));
             this.offsetY = new GuiTrackpadElement(mc, (value) -> this.morph.offsetY = value.floatValue());
             this.offsetY.tooltip(IKey.lang("blockbuster.gui.image.offset_y"));
+            this.rotation = new GuiTrackpadElement(mc, (value) -> this.morph.rotation = value.floatValue());
+            this.rotation.tooltip(IKey.lang("blockbuster.gui.image.rotation"));
 
             this.picker.flex().relative(this.area).wh(1F, 1F);
 
@@ -145,7 +147,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             column.scroll.opposite = true;
             column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
-            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color, this.offsetX, this.offsetY);
+            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color, this.offsetX, this.offsetY, this.rotation);
 
             this.animation = new GuiAnimation(mc);
             this.animation.flex().relative(this).x(1F, -130).w(130);
@@ -165,10 +167,10 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.lighting.toggled(morph.lighting);
             this.billboard.toggled(morph.billboard);
 
-            this.left.setValue(morph.cropping.x);
-            this.right.setValue(morph.cropping.w);
-            this.top.setValue(morph.cropping.y);
-            this.bottom.setValue(morph.cropping.h);
+            this.left.setValue(morph.crop.x);
+            this.right.setValue(morph.crop.z);
+            this.top.setValue(morph.crop.y);
+            this.bottom.setValue(morph.crop.w);
 
             this.color.picker.setColor(morph.color);
             this.offsetX.setValue(morph.offsetX);

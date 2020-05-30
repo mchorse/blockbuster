@@ -2,7 +2,6 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.utils.Animation;
-import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -63,9 +62,9 @@ public class ImageMorph extends AbstractMorph
     public boolean billboard = false;
 
     /**
-     * Area to crop (x = left, w = right, y = top, h = bottom)
+     * Area to crop (x = left, z = right, y = top, w = bottom)
      */
-    public Area cropping = new Area();
+    public Vector4f crop = new Vector4f();
 
     /**
      * Color filter for the image morph
@@ -81,6 +80,11 @@ public class ImageMorph extends AbstractMorph
      * UV vertical shift
      */
     public float offsetY;
+
+    /**
+     * Rotation around Z axis
+     */
+    public float rotation;
 
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
@@ -218,10 +222,10 @@ public class ImageMorph extends AbstractMorph
         double y1;
         double y2;
 
-        double u1 = 1.0F - (flipX ? this.cropping.x : this.cropping.w) / (double) w;
-        double u2 = (flipX ? this.cropping.w : this.cropping.x) / (double) w;
-        double v1 = 1.0F - this.cropping.h / (double) h;
-        double v2 = this.cropping.y / (double) h;
+        double u1 = 1.0F - (flipX ? this.image.crop.x : this.image.crop.w) / (double) w;
+        double u2 = (flipX ? this.image.crop.z : this.image.crop.x) / (double) w;
+        double v1 = 1.0F - this.image.crop.w / (double) h;
+        double v2 = this.image.crop.y / (double) h;
 
         if (w > h)
         {
@@ -248,11 +252,6 @@ public class ImageMorph extends AbstractMorph
             u2 = 1 - u2;
         }
 
-        u1 += this.image.x / (float) w;
-        u2 += this.image.x / (float) w;
-        v1 += this.image.y / (float) h;
-        v2 += this.image.y / (float) h;
-
         x1 *= scale;
         x2 *= scale;
         y1 *= scale;
@@ -267,6 +266,19 @@ public class ImageMorph extends AbstractMorph
         BufferBuilder buffer = tessellator.getBuffer();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
+        boolean textureMatrix = this.image.x != 0 || this.image.y != 0 || this.image.rotation != 0;
+
+        if (textureMatrix)
+        {
+            GlStateManager.matrixMode(GL11.GL_TEXTURE);
+            GlStateManager.loadIdentity();
+            GlStateManager.translate(0.5F, 0.5F, 0);
+            GlStateManager.translate(this.image.x / (float) w, this.image.y / (float) h, 0);
+            GlStateManager.rotate(this.image.rotation, 0, 0, 1);
+            GlStateManager.translate(-0.5F, -0.5F, 0);
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        }
+
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
         Color color = this.image.color;
@@ -277,6 +289,13 @@ public class ImageMorph extends AbstractMorph
         buffer.pos(x1, y2, 0).tex(u2, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
+
+        if (textureMatrix)
+        {
+            GlStateManager.matrixMode(GL11.GL_TEXTURE);
+            GlStateManager.loadIdentity();
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        }
 
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
@@ -321,10 +340,11 @@ public class ImageMorph extends AbstractMorph
             this.shaded = morph.shaded;
             this.lighting = morph.lighting;
             this.billboard = morph.billboard;
-            this.cropping.copy(morph.cropping);
+            this.crop.set(morph.crop);
             this.color = morph.color;
             this.offsetX = morph.offsetX;
             this.offsetY = morph.offsetY;
+            this.rotation = morph.rotation;
             this.animation.copy(morph.animation);
             this.animation.reset();
         }
@@ -344,10 +364,11 @@ public class ImageMorph extends AbstractMorph
             result = result && image.shaded == this.shaded;
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
-            result = result && image.cropping.equals(this.cropping);
+            result = result && image.crop.equals(this.crop);
             result = result && image.color == this.color;
             result = result && image.offsetX == this.offsetX;
             result = result && image.offsetY == this.offsetY;
+            result = result && image.rotation == this.rotation;
             result = result && Objects.equals(image.animation, this.animation);
         }
 
@@ -401,13 +422,14 @@ public class ImageMorph extends AbstractMorph
         if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
         if (this.billboard == true) tag.setBoolean("Billboard", this.billboard);
-        if (this.cropping.x != 0) tag.setInteger("Left", this.cropping.x);
-        if (this.cropping.w != 0) tag.setInteger("Right", this.cropping.w);
-        if (this.cropping.y != 0) tag.setInteger("Top", this.cropping.y);
-        if (this.cropping.h != 0) tag.setInteger("Bottom", this.cropping.h);
+        if (this.crop.x != 0) tag.setInteger("Left", (int) this.crop.x);
+        if (this.crop.z != 0) tag.setInteger("Right", (int) this.crop.z);
+        if (this.crop.y != 0) tag.setInteger("Top", (int) this.crop.y);
+        if (this.crop.w != 0) tag.setInteger("Bottom", (int) this.crop.w);
         if (this.color != 0xffffffff) tag.setInteger("Color", this.color);
         if (this.offsetX != 0) tag.setFloat("OffsetX", this.offsetX);
         if (this.offsetY != 0) tag.setFloat("OffsetY", this.offsetY);
+        if (this.rotation != 0) tag.setFloat("Rotation", this.rotation);
 
         NBTTagCompound animation = this.animation.toNBT();
 
@@ -427,13 +449,14 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
         if (tag.hasKey("Billboard")) this.billboard = tag.getBoolean("Billboard");
-        if (tag.hasKey("Left")) this.cropping.x = tag.getInteger("Left");
-        if (tag.hasKey("Right")) this.cropping.w = tag.getInteger("Right");
-        if (tag.hasKey("Top")) this.cropping.y = tag.getInteger("Top");
-        if (tag.hasKey("Bottom")) this.cropping.h = tag.getInteger("Bottom");
+        if (tag.hasKey("Left")) this.crop.x = tag.getInteger("Left");
+        if (tag.hasKey("Right")) this.crop.z = tag.getInteger("Right");
+        if (tag.hasKey("Top")) this.crop.y = tag.getInteger("Top");
+        if (tag.hasKey("Bottom")) this.crop.w = tag.getInteger("Bottom");
         if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
         if (tag.hasKey("OffsetX")) this.offsetX = tag.getFloat("OffsetX");
         if (tag.hasKey("OffsetY")) this.offsetY = tag.getFloat("OffsetY");
+        if (tag.hasKey("Rotation")) this.rotation = tag.getFloat("Rotation");
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
 
         this.animation.reset();
@@ -453,29 +476,38 @@ public class ImageMorph extends AbstractMorph
         {
             float factor = this.getFactor(partialTicks);
 
-            properties.x = this.interp.interpolate(this.last.x, properties.x, factor);
-            properties.y = this.interp.interpolate(this.last.y, properties.y, factor);
             properties.color.r = this.interp.interpolate(this.last.color.r, properties.color.r, factor);
             properties.color.g = this.interp.interpolate(this.last.color.g, properties.color.g, factor);
             properties.color.b = this.interp.interpolate(this.last.color.b, properties.color.b, factor);
             properties.color.a = this.interp.interpolate(this.last.color.a, properties.color.a, factor);
+            properties.crop.x = (int) this.interp.interpolate(this.last.crop.x, properties.crop.x, factor);
+            properties.crop.y = (int) this.interp.interpolate(this.last.crop.y, properties.crop.y, factor);
+            properties.crop.z = (int) this.interp.interpolate(this.last.crop.z, properties.crop.z, factor);
+            properties.crop.w = (int) this.interp.interpolate(this.last.crop.w, properties.crop.w, factor);
             properties.scale = this.interp.interpolate(this.last.scale, properties.scale, factor);
+            properties.x = this.interp.interpolate(this.last.x, properties.x, factor);
+            properties.y = this.interp.interpolate(this.last.y, properties.y, factor);
+            properties.rotation = this.interp.interpolate(this.last.rotation, properties.rotation, factor);
         }
     }
 
     public static class ImageProperties
     {
         public Color color = new Color();
+        public Vector4f crop = new Vector4f();
         public float scale;
         public float x;
         public float y;
+        public float rotation;
 
         public void from(ImageMorph morph)
         {
             this.color.set(morph.color, true);
+            this.crop.set(morph.crop);
             this.scale = morph.scale;
             this.x = morph.offsetX;
             this.y = morph.offsetY;
+            this.rotation = morph.rotation;
         }
     }
 }

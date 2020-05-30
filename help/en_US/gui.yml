@@ -272,6 +272,7 @@ blockbuster.gui:
         dimensions: "Size (%spx, %spx)"
         offset_x: X coordinate shift
         offset_y: Y coordinate shift
+        rotation: Rotation
 
     sequencer:
         duration: Duration
