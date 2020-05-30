@@ -128,6 +128,7 @@ public class CameraHandler
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
     }
 
+    @SideOnly(Side.CLIENT)
     @Method(modid = Aperture.MOD_ID)
     public static void openCameraEditor()
     {
@@ -186,6 +187,7 @@ public class CameraHandler
     }
 
     @Method(modid = Aperture.MOD_ID)
+    @SideOnly(Side.CLIENT)
     private static boolean isCurrentScreenCameraEditor()
     {
         return Minecraft.getMinecraft().currentScreen instanceof GuiCameraEditor;
@@ -347,6 +349,7 @@ public class CameraHandler
     /**
      * Get scene location from playback button
      */
+    @SideOnly(Side.CLIENT)
     public static SceneLocation get()
     {
         ItemStack right = Minecraft.getMinecraft().player.getHeldItemMainhand();

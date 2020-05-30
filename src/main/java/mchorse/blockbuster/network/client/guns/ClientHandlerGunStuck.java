@@ -5,10 +5,13 @@ import mchorse.blockbuster.network.common.guns.PacketGunStuck;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerGunStuck extends ClientMessageHandler<PacketGunStuck>
 {
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void run(EntityPlayerSP player, PacketGunStuck packet)
 	{
 		Entity entity = player.world.getEntityByID(packet.id);
