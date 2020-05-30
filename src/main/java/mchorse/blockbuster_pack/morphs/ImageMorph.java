@@ -382,9 +382,12 @@ public class ImageMorph extends AbstractMorph
         {
             ImageMorph image = (ImageMorph) morph;
 
-            this.animation.merge(this, image);
-            this.copy(image);
-            this.animation.progress = 0;
+            if (!image.animation.ignored)
+            {
+                this.animation.merge(this, image);
+                this.copy(image);
+                this.animation.progress = 0;
+            }
 
             return true;
         }
