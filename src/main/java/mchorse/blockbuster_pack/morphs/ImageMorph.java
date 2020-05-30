@@ -31,7 +31,7 @@ import java.util.Objects;
 /**
  * Image morph 
  * 
- * This bad boy is basically replacement for 
+ * This bad boy is basically replacement for Imaginary
  */
 public class ImageMorph extends AbstractMorph
 {
@@ -114,7 +114,7 @@ public class ImageMorph extends AbstractMorph
         GL11.glTranslatef(x, y - scale / 2, 0);
         GL11.glScalef(1.5F, 1.5F, 1.5F);
 
-        this.renderPicture(false);
+        this.renderPicture(scale, false);
 
         GL11.glPopMatrix();
     }
@@ -172,7 +172,7 @@ public class ImageMorph extends AbstractMorph
             GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
         }
 
-        this.renderPicture(true);
+        this.renderPicture(this.scale, true);
 
         GL11.glPopMatrix();
 
@@ -197,6 +197,7 @@ public class ImageMorph extends AbstractMorph
     {
         if (this.animation.isInProgress())
         {
+            this.image.from(this);
             this.animation.apply(this.image, partialTicks);
         }
         else
@@ -205,7 +206,7 @@ public class ImageMorph extends AbstractMorph
         }
     }
 
-    private void renderPicture(boolean flipX)
+    private void renderPicture(float scale, boolean flipX)
     {
         GifTexture.bindTexture(this.texture);
 
@@ -252,10 +253,10 @@ public class ImageMorph extends AbstractMorph
         v1 += this.image.y / (float) h;
         v2 += this.image.y / (float) h;
 
-        x1 *= this.image.scale;
-        x2 *= this.image.scale;
-        y1 *= this.image.scale;
-        y2 *= this.image.scale;
+        x1 *= scale;
+        x2 *= scale;
+        y1 *= scale;
+        y2 *= scale;
 
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
@@ -263,17 +264,17 @@ public class ImageMorph extends AbstractMorph
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexbuffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
         Color color = this.image.color;
 
-        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(x1, y1, 0).tex(u2, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(x2, y1, 0).tex(u1, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(x2, y2, 0).tex(u1, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(x1, y2, 0).tex(u2, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
@@ -325,6 +326,7 @@ public class ImageMorph extends AbstractMorph
             this.offsetX = morph.offsetX;
             this.offsetY = morph.offsetY;
             this.animation.copy(morph.animation);
+            this.animation.reset();
         }
     }
 
@@ -361,6 +363,7 @@ public class ImageMorph extends AbstractMorph
 
             this.animation.merge(this, image);
             this.copy(image);
+            this.animation.progress = 0;
 
             return true;
         }
@@ -432,31 +435,31 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("OffsetX")) this.offsetX = tag.getFloat("OffsetX");
         if (tag.hasKey("OffsetY")) this.offsetY = tag.getFloat("OffsetY");
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
+
+        this.animation.reset();
     }
 
     public static class ImageAnimation extends Animation
     {
         public ImageProperties last = new ImageProperties();
-        public ImageProperties next = new ImageProperties();
 
         public void merge(ImageMorph last, ImageMorph next)
         {
             this.merge(next.animation);
             this.last.from(last);
-            this.next.from(next);
         }
 
         public void apply(ImageProperties properties, float partialTicks)
         {
             float factor = this.getFactor(partialTicks);
 
-            properties.x = this.interp.interpolate(this.last.x, this.next.x, factor);
-            properties.y = this.interp.interpolate(this.last.y, this.next.y, factor);
-            properties.color.r = this.interp.interpolate(this.last.color.r, this.next.color.r, factor);
-            properties.color.g = this.interp.interpolate(this.last.color.g, this.next.color.g, factor);
-            properties.color.b = this.interp.interpolate(this.last.color.b, this.next.color.b, factor);
-            properties.color.a = this.interp.interpolate(this.last.color.a, this.next.color.a, factor);
-            properties.scale = this.interp.interpolate(this.last.scale, this.next.scale, factor);
+            properties.x = this.interp.interpolate(this.last.x, properties.x, factor);
+            properties.y = this.interp.interpolate(this.last.y, properties.y, factor);
+            properties.color.r = this.interp.interpolate(this.last.color.r, properties.color.r, factor);
+            properties.color.g = this.interp.interpolate(this.last.color.g, properties.color.g, factor);
+            properties.color.b = this.interp.interpolate(this.last.color.b, properties.color.b, factor);
+            properties.color.a = this.interp.interpolate(this.last.color.a, properties.color.a, factor);
+            properties.scale = this.interp.interpolate(this.last.scale, properties.scale, factor);
         }
     }
 

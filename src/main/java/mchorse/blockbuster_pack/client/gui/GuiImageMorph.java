@@ -143,6 +143,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             GuiScrollElement column = new GuiScrollElement(mc);
 
+            column.scroll.opposite = true;
             column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
             column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color, this.offsetX, this.offsetY);
 
@@ -182,8 +183,9 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             GifTexture.bindTexture(this.morph.texture);
             int w = this.morph.getWidth();
             int h = this.morph.getHeight();
+            String label = I18n.format("blockbuster.gui.image.dimensions", w, h);
 
-            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.image.dimensions", w, h), this.offsetY.area.x, this.offsetY.area.y + 25, 0xaaaaaa);
+            this.font.drawStringWithShadow(label, this.area.x(0.5F, this.font.getStringWidth(label)), this.area.y + 16, 0xaaaaaa);
 
             super.draw(context);
         }

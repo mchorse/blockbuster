@@ -10,7 +10,7 @@ public class Animation
 	public int duration = 10;
 	public Interpolation interp = Interpolation.LINEAR;
 
-	public int progress = 0;
+	public int progress;
 
 	public float getFactor(float partialTicks)
 	{
