@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.formats.obj.OBJMaterial;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiBBModelRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
@@ -126,6 +127,20 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         });
 
         return this.bbRenderer;
+    }
+
+    @Override
+    protected void setupRenderer(CustomMorph morph)
+    {
+        super.setupRenderer(morph);
+
+        ModelPose pose = morph.getCurrentPose();
+
+        if (pose != null)
+        {
+            this.bbRenderer.setScale(1.25F + pose.size[0]);
+            this.bbRenderer.setPosition(0, pose.size[1] / 2F, 0);
+        }
     }
 
     @Override
