@@ -345,6 +345,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
                 this.fillS(model.sx, model.sy, model.sz);
                 this.fillR(model.rx, model.ry, model.rz);
                 this.one.toggled(model.one);
+                this.updateScaleFields();
             }
         }
 
