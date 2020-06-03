@@ -4,6 +4,8 @@ import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
+import mchorse.blockbuster.client.RenderingHandler;
+import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
@@ -505,7 +507,7 @@ public class ActionHandler
         /* Update TEs in the model's TEISR */
         if (player.world.isRemote)
         {
-            this.updateClientTEISRs();
+            this.updateClient();
         }
         else
         {
@@ -520,7 +522,7 @@ public class ActionHandler
     }
 
     @SideOnly(Side.CLIENT)
-    private void updateClientTEISRs()
+    private void updateClient()
     {
         for (TEModel model : TileEntityModelItemStackRenderer.models.values())
         {
@@ -531,5 +533,7 @@ public class ActionHandler
         {
             model.gun.getProps().update();
         }
+
+        RenderingHandler.updateEmitters();
     }
 }

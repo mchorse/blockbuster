@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
 import mchorse.blockbuster.client.particles.components.IComponentParticleInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
+import mchorse.blockbuster.client.particles.components.motion.BedrockComponentInitialSpeed;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import net.minecraft.util.ResourceLocation;
 
@@ -90,6 +91,8 @@ public class BedrockScheme
 
 	public void setup()
 	{
+		this.getOrCreate(BedrockComponentInitialSpeed.class);
+
 		this.emitterInitializes = this.getComponents(IComponentEmitterInitialize.class);
 		this.emitterUpdates = this.getComponents(IComponentEmitterUpdate.class);
 		this.particleInitializes = this.getComponents(IComponentParticleInitialize.class);

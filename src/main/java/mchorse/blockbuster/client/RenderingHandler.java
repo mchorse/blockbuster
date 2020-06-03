@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -26,6 +27,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -130,6 +132,7 @@ public class RenderingHandler
             for (BedrockEmitter emitter : emitters)
             {
                 emitter.render(partialTicks);
+                emitter.running = emitter.sanityTicks < 2;
             }
 
             builder.setTranslation(0, 0, 0);
@@ -137,13 +140,35 @@ public class RenderingHandler
             GlStateManager.disableBlend();
             GlStateManager.alphaFunc(516, 0.1F);
         }
-
-        emitters.clear();
     }
 
-    public static void addEmitter(BedrockEmitter emitter)
+    public static void addEmitter(BedrockEmitter emitter, EntityLivingBase target)
     {
-        emitters.add(emitter);
+        if (!emitter.added)
+        {
+            emitters.add(emitter);
+
+            emitter.added = true;
+            emitter.setTarget(target);
+        }
+    }
+
+    public static void updateEmitters()
+    {
+        Iterator<BedrockEmitter> it = emitters.iterator();
+
+        while (it.hasNext())
+        {
+            BedrockEmitter emitter = it.next();
+
+            emitter.update();
+
+            if (emitter.isFinished())
+            {
+                it.remove();
+                emitter.added = false;
+            }
+        }
     }
 
     public RenderingHandler(GuiRecordingOverlay overlay)

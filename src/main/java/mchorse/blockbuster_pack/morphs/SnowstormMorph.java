@@ -36,7 +36,6 @@ public class SnowstormMorph extends AbstractMorph
 	private BedrockEmitter emitter;
 	public List<BedrockEmitter> lastEmitters;
 
-	private boolean initialized;
 	private long lastUpdate;
 
 	public static Matrix4f getMatrix()
@@ -106,7 +105,6 @@ public class SnowstormMorph extends AbstractMorph
 	public void setScheme(String key)
 	{
 		this.scheme = key;
-		this.initialized = false;
 
 		if (this.emitter != null)
 		{
@@ -144,7 +142,7 @@ public class SnowstormMorph extends AbstractMorph
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void render(EntityLivingBase entityLivingBase, double x, double y, double z, float yaw, float partialTicks)
+	public void render(EntityLivingBase target, double x, double y, double z, float yaw, float partialTicks)
 	{
 		if (GuiModelRenderer.isRendering())
 		{
@@ -171,7 +169,7 @@ public class SnowstormMorph extends AbstractMorph
 			parent.invert();
 			parent.mul(matrix4f);
 
-			Vector4f zero = calculateGlobal(parent, entityLivingBase, 0, 0, 0, partialTicks);
+			Vector4f zero = calculateGlobal(parent, target, 0, 0, 0, partialTicks);
 
 			emitter.lastGlobal.x = zero.x;
 			emitter.lastGlobal.y = zero.y;
@@ -190,41 +188,49 @@ public class SnowstormMorph extends AbstractMorph
 			emitter.rotation.setRow(1, ay);
 			emitter.rotation.setRow(2, az);
 
-			for (BedrockEmitter last : this.getLastEmitters())
+			Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
+
+			while (it.hasNext())
 			{
+				BedrockEmitter last = it.next();
+
+				if (!last.added)
+				{
+					it.remove();
+
+					continue;
+				}
+
 				last.lastGlobal.set(emitter.lastGlobal);
 				last.rotation.set(emitter.rotation);
 			}
-
-			this.initialized = true;
 		}
 		else
 		{
-			emitter.lastGlobal.x = Interpolations.lerp(entityLivingBase.prevPosX, entityLivingBase.posX, partialTicks);
-			emitter.lastGlobal.y = Interpolations.lerp(entityLivingBase.prevPosY, entityLivingBase.posY, partialTicks);
-			emitter.lastGlobal.z = Interpolations.lerp(entityLivingBase.prevPosZ, entityLivingBase.posZ, partialTicks);
+			emitter.lastGlobal.x = Interpolations.lerp(target.prevPosX, target.posX, partialTicks);
+			emitter.lastGlobal.y = Interpolations.lerp(target.prevPosY, target.posY, partialTicks);
+			emitter.lastGlobal.z = Interpolations.lerp(target.prevPosZ, target.posZ, partialTicks);
 			emitter.rotation.setIdentity();
 
-			for (BedrockEmitter last : this.getLastEmitters())
+			Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
+
+			while (it.hasNext())
 			{
+				BedrockEmitter last = it.next();
+
+				if (!last.added)
+				{
+					it.remove();
+
+					continue;
+				}
+
 				last.lastGlobal.set(emitter.lastGlobal);
 				last.rotation.set(emitter.rotation);
 			}
-
-			this.initialized = true;
 		}
 
-		if (this.initialized)
-		{
-			this.setupEmitter(emitter, entityLivingBase);
-			RenderingHandler.addEmitter(emitter);
-
-			for (BedrockEmitter last : this.getLastEmitters())
-			{
-				this.setupEmitter(last, entityLivingBase);
-				RenderingHandler.addEmitter(last);
-			}
-		}
+		RenderingHandler.addEmitter(emitter, target);
 	}
 
 	@Override
@@ -232,37 +238,21 @@ public class SnowstormMorph extends AbstractMorph
 	{
 		super.update(target);
 
-		if (target.world.isRemote && this.initialized)
+		if (target.world.isRemote)
 		{
-			this.updateEmitter(target);
+			this.updateClient();
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void updateEmitter(EntityLivingBase target)
+	private void updateClient()
 	{
-		this.setupEmitter(this.getEmitter(), target);
-		this.getEmitter().update();
+		this.getEmitter().sanityTicks = 0;
 
-		Iterator<BedrockEmitter> it = this.getLastEmitters().iterator();
-
-		while (it.hasNext())
+		for (BedrockEmitter emitter : this.getLastEmitters())
 		{
-			BedrockEmitter last = it.next();
-
-			this.setupEmitter(last, target);
-			last.update();
-
-			if (last.isFinished())
-			{
-				it.remove();
-			}
+			emitter.sanityTicks = 0;
 		}
-	}
-
-	private void setupEmitter(BedrockEmitter emitter, EntityLivingBase target)
-	{
-		emitter.setTarget(target);
 	}
 
 	@Override
@@ -335,7 +325,6 @@ public class SnowstormMorph extends AbstractMorph
 		super.reset();
 
 		this.scheme = "";
-		this.initialized = false;
 	}
 
 	@Override

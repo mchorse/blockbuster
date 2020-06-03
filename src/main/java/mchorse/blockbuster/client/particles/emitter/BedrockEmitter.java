@@ -34,8 +34,11 @@ public class BedrockEmitter
 	public EntityLivingBase target;
 	public World world;
 	public boolean lit;
+
+	public boolean added;
+	public int sanityTicks;
 	public boolean running = true;
-	private BedrockParticle particle;
+	private BedrockParticle guiParticle;
 
 	/* Intermediate values */
 	public Vector3d lastGlobal = new Vector3d();
@@ -96,11 +99,6 @@ public class BedrockEmitter
 	{
 		this.target = target;
 		this.world = target == null ? null : target.world;
-	}
-
-	public void setWorld(World world)
-	{
-		this.world = world;
 	}
 
 	public void setScheme(BedrockScheme scheme)
@@ -211,7 +209,8 @@ public class BedrockEmitter
 		this.setEmitterVariables(0);
 		this.updateParticles();
 
-		this.age++;
+		this.age += 1;
+		this.sanityTicks += 1;
 	}
 
 	/**
@@ -310,19 +309,19 @@ public class BedrockEmitter
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
 
-			if (this.particle == null || this.particle.dead)
+			if (this.guiParticle == null || this.guiParticle.dead)
 			{
-				this.particle = this.createParticle(true);
+				this.guiParticle = this.createParticle(true);
 			}
 
 			this.rotation.setIdentity();
-			this.particle.update(this);
+			this.guiParticle.update(this);
 			this.setEmitterVariables(partialTicks);
-			this.setParticleVariables(this.particle, partialTicks);
+			this.setParticleVariables(this.guiParticle, partialTicks);
 
 			for (IComponentParticleRender render : list)
 			{
-				render.renderOnScreen(this.particle, x, y, scale, partialTicks);
+				render.renderOnScreen(this.guiParticle, x, y, scale, partialTicks);
 			}
 
 			GlStateManager.disableBlend();
