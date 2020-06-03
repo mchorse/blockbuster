@@ -83,10 +83,10 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 
 		this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.modal.toggleVisible());
 		this.open.tooltip(IKey.lang("blockbuster.gui.snowstorm.open_tooltip"));
-		this.open.flex().relative(this).wh(20, 20);
+		this.open.flex().relative(this);
 		this.save = new GuiIconElement(mc, Icons.SAVE, (b) -> this.save());
 		this.save.tooltip(IKey.lang("blockbuster.gui.snowstorm.save_tooltip"));
-		this.save.flex().relative(this.open).x(20).wh(20, 20);
+		this.save.flex().relative(this.open).x(20);
 
 		/* Modal */
 		this.modal = new GuiElement(mc);

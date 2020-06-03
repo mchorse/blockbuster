@@ -100,19 +100,16 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             {
                 this.morph.shaded = this.shaded.isToggled();
             });
-            this.shaded.flex().h(14);
 
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) ->
             {
                 this.morph.lighting = this.lighting.isToggled();
             });
-            this.lighting.flex().h(14);
 
             this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) ->
             {
                 this.morph.billboard = this.billboard.isToggled();
             });
-            this.billboard.flex().h(14);
 
             this.picker = new GuiTexturePicker(mc, (rl) ->
             {

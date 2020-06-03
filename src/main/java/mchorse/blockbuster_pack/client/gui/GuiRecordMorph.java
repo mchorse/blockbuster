@@ -78,8 +78,7 @@ public class GuiRecordMorph extends GuiAbstractMorph<RecordMorph>
 	        element.flex().relative(this).y(1F).w(130).anchorY(1F).column(5).stretch().vertical().height(20).padding(10);
             element.add(this.pick, this.loop, this.randomSkip);
 
-	        this.records.flex().relative(this).set(10, 25, 110, 20).hTo(element.flex());
-            this.loop.flex().h(14);
+            this.records.flex().relative(this).set(10, 25, 110, 20).hTo(element.flex());
 
             this.add(element, this.records);
         }

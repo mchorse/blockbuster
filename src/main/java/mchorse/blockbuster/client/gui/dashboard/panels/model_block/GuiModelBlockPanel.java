@@ -152,7 +152,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.slots[4].flex().x(0.5F + 0.125F).y(0.5F, -15);
         this.slots[5].flex().x(0.5F + 0.125F).y(0.5F, -45);
 
-        this.inventory.flex().relative(this.area).xy(0.5F, 0.5F).wh(10 * 20, 5 * 20).anchor(0.5F, 0.5F);
+        this.inventory.flex().relative(this.area).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
         this.subChildren.add(this.inventory);
     }
 

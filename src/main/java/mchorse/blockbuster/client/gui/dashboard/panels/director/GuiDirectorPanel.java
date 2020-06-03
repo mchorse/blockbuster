@@ -185,10 +185,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         });
 
         GuiIconElement toggleScenes = new GuiIconElement(mc, Icons.MORE, (b) -> this.scenes.toggleVisible());
-        toggleScenes.flex().y(4).wh(20, 20).relative(this.area).x(1, -24);
+        toggleScenes.flex().y(4).relative(this.area).x(1, -24);
 
         toggle.tooltip(IKey.lang("blockbuster.gui.director.config"), Direction.LEFT);
-        toggle.flex().y(4).wh(20, 20).relative(this.area).x(1, -44);
+        toggle.flex().y(4).relative(this.area).x(1, -44);
 
         this.add(toggleScenes);
         this.subChildren.add(toggle);
@@ -216,7 +216,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.rename = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
         this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
 
-        this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).wh(100, 20).anchor(0.5F, 1F);
+        this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).w(100).anchor(0.5F, 1F);
 
         update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.RIGHT);
         this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.RIGHT);

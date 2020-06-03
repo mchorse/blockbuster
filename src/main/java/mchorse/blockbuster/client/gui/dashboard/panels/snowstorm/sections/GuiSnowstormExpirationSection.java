@@ -237,7 +237,6 @@ public class GuiSnowstormExpirationSection extends GuiSnowstormSection
 			GuiSlotElement slotElement = new GuiSlotElement(this.mc, 0, this.parent.inventory);
 
 			slotElement.stack = new ItemStack(block, 1);
-			slotElement.flex().wh(24, 24);
 			slotElement.context(() -> new GuiSimpleContextMenu(this.mc).action(Icons.REMOVE, IKey.lang("Remove block"), () ->
 			{
 				slotElement.removeFromParent();

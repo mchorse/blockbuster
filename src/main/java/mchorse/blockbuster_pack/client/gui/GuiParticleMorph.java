@@ -265,10 +265,6 @@ public class GuiParticleMorph extends GuiAbstractMorph<ParticleMorph>
             this.maximum.limit(1, Integer.MAX_VALUE, true);
 
             this.type.flex().relative(this.pickType).set(0, 20, 0, 80).w(1F);
-            this.yaw.flex().h(14);
-            this.pitch.flex().h(14);
-            this.sequencer.flex().h(14);
-            this.random.flex().h(14);
 
             GuiElement element = new GuiElement(mc);
 

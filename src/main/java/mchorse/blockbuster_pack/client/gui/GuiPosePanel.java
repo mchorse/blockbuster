@@ -62,7 +62,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
 
             this.editor.updateModelRenderer();
         });
-        this.reset.flex().relative(this).xy(10, 10).wh(110, 20);
+        this.reset.flex().relative(this).xy(10, 10).w(110);
 
         this.create = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.morphs.create"), (b) ->
         {
@@ -75,14 +75,14 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
             this.updateElements();
             this.editor.updateModelRenderer();
         });
-        this.create.flex().relative(this.reset).y(25).wh(110, 20);
+        this.create.flex().relative(this.reset).y(25).w(110);
 
         this.poseOnSneak = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.pose_sneak"), false, (b) ->
         {
             this.morph.currentPoseOnSneak = this.poseOnSneak.isToggled();
             this.editor.updateModelRenderer();
         });
-        this.poseOnSneak.flex().relative(this).x(10).y(1F, -24).wh(110, 14);
+        this.poseOnSneak.flex().relative(this).x(10).y(1F, -22).w(110);
 
         this.list = new GuiStringListElement(mc, (str) ->
         {

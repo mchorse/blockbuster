@@ -42,9 +42,6 @@ public class ValueButtons extends Value
 		GuiIconElement youtube = new GuiIconElement(mc, BBIcons.YOUTUBE, (button) -> GuiUtils.openWebLink(Blockbuster.CHANNEL_URL()));
 		GuiIconElement twitter = new GuiIconElement(mc, BBIcons.TWITTER, (button) -> GuiUtils.openWebLink(Blockbuster.TWITTER_URL()));
 
-		youtube.flex().wh(20, 20);
-		twitter.flex().wh(20, 20);
-
 		GuiElement first = Elements.row(mc, 5, 0, 20, models, discord);
 		GuiElement second = Elements.row(mc, 5, 0, 20, tutorial, wiki, twitter, youtube);
 

@@ -149,12 +149,12 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
         this.list.filter("", false);
 
-        this.add.flex().relative(this.selector).x(1F).wh(20, 20);
-        this.dupe.flex().relative(this.add.resizer()).set(0, 20, 20, 20);
-        this.remove.flex().relative(this.dupe.resizer()).set(0, 20, 20, 20);
-        this.cut.flex().relative(this.selector).x(-20).wh(20, 20);
-        this.copy.flex().set(0, 20, 20, 20).relative(this.cut.resizer());
-        this.paste.flex().set(0, 20, 20, 20).relative(this.copy.resizer());
+        this.add.flex().relative(this.selector).x(1F);
+        this.dupe.flex().relative(this.add.resizer()).y(20);
+        this.remove.flex().relative(this.dupe.resizer()).y(20);
+        this.cut.flex().relative(this.selector).x(-20);
+        this.copy.flex().relative(this.cut.resizer()).y(20);
+        this.paste.flex().relative(this.copy.resizer()).y(20);
         this.list.flex().set(0, 0, 80, 80).relative(this.selector.area).x(1, -80);
 
         this.open = new GuiIconElement(mc, Icons.MORE, (b) -> this.records.toggleVisible());

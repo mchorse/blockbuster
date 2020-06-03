@@ -34,13 +34,11 @@ public class GuiAnimation extends GuiElement
 		{
 			this.animation.animates = this.animates.isToggled();
 		});
-		this.animates.flex().h(14);
 
 		this.ignored = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.builder.ignored"), false, (b) ->
 		{
 			this.animation.ignored = this.ignored.isToggled();
 		});
-		this.ignored.flex().h(14);
 
 		this.animationDuration = new GuiTrackpadElement(mc, (value) ->
 		{

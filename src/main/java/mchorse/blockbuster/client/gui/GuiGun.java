@@ -144,8 +144,8 @@ public class GuiGun extends GuiBase
         this.scatter.tooltip(IKey.lang("blockbuster.gui.gun.scatter"));
         this.launch = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.gun.launch"), false, (b) -> this.props.launch = b.isToggled());
 
-        this.pickDefault.flex().relative(area).wh(100, 20).x(0.25F, -50).y(1, -100);
-        this.pickFiring.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -100);
+        this.pickDefault.flex().relative(area).w(100).x(0.25F, -50).y(1, -100);
+        this.pickFiring.flex().relative(area).w(100).x(0.75F, -50).y(1, -100);
         this.fireCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
         this.delay.flex().relative(this.pickDefault.resizer()).set(0, 25, 100, 20);
         this.projectiles.flex().relative(this.pickFiring.resizer()).set(0, 25, 100, 20);
@@ -186,7 +186,7 @@ public class GuiGun extends GuiBase
         this.fadeOut.tooltip(IKey.lang("blockbuster.gui.gun.fade_out"));
         this.fadeOut.limit(0, Integer.MAX_VALUE, true);
 
-        this.pickProjectile.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -60);
+        this.pickProjectile.flex().relative(area).w(100).x(0.75F, -50).y(1, -60);
         this.tickCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
 
         GuiElement projectileFields = new GuiElement(mc);
@@ -217,7 +217,7 @@ public class GuiGun extends GuiBase
         this.vanishDelay = new GuiTrackpadElement(mc, (value) -> this.props.vanishDelay = value.intValue());
         this.vanishDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.vanish_delay"));
 
-        this.pickImpact.flex().relative(area).wh(100, 20).x(0.75F, -50).y(1, -60);
+        this.pickImpact.flex().relative(area).w(100).x(0.75F, -50).y(1, -60);
         this.impactCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
 
         GuiElement impactFields = new GuiElement(mc);

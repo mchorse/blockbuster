@@ -33,7 +33,7 @@ public class GuiActor extends GuiBase
 			this.morphs.setSelected(this.renderer.morph);
 			this.root.add(this.morphs);
 		});
-		this.pick.flex().relative(this.viewport).x(0.5F).y(1F, -10).wh(80, 20).anchor(0.5F, 1F);
+		this.pick.flex().relative(this.viewport).x(0.5F).y(1F, -10).w(100).anchor(0.5F, 1F);
 
 		this.morphs = new GuiCreativeMorphsMenu(mc, (morph) -> this.renderer.morph = morph);
 		this.morphs.flex().reset().relative(this.viewport).wh(1F, 1F);
