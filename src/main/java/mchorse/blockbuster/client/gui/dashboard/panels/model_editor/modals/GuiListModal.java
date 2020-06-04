@@ -3,9 +3,11 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Keyboard;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -73,5 +75,29 @@ public class GuiListModal extends GuiModal
         {
             this.callback.accept(this.limbs.getIndex() == 0 ? "" : this.limbs.getCurrentFirst());
         }
+    }
+
+    @Override
+    public boolean keyTyped(GuiContext context)
+    {
+        if (super.keyTyped(context))
+        {
+            return true;
+        }
+
+        if (context.keyCode == Keyboard.KEY_RETURN)
+        {
+            this.send();
+
+            return true;
+        }
+        else if (context.keyCode == Keyboard.KEY_ESCAPE)
+        {
+            this.removeFromParent();
+
+            return true;
+        }
+
+        return false;
     }
 }

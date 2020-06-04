@@ -29,9 +29,6 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiIconElement copyPose;
 
     private GuiStringListElement posesList;
-    private GuiThreeElement translate;
-    private GuiThreeElement scale;
-    private GuiThreeElement rotation;
     private GuiTwoElement hitbox;
 
     private ModelTransform transform;
@@ -47,37 +44,14 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.posesList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).x(1, -80);
         this.add(this.posesList);
 
-        this.translate = new GuiThreeElement(mc, (values) ->
-        {
-            this.transform.translate[0] = values[0];
-            this.transform.translate[1] = values[1];
-            this.transform.translate[2] = values[2];
-        });
-        this.scale = new GuiThreeElement(mc, (values) ->
-        {
-            this.transform.scale[0] = values[0];
-            this.transform.scale[1] = values[1];
-            this.transform.scale[2] = values[2];
-        });
-        this.rotation = new GuiThreeElement(mc, (values) ->
-        {
-            this.transform.rotate[0] = values[0];
-            this.transform.rotate[1] = values[1];
-            this.transform.rotate[2] = values[2];
-        });
-
         this.hitbox = new GuiTwoElement(mc, (values) ->
         {
-            this.panel.pose.size[0] = values[0];
-            this.panel.pose.size[1] = values[1];
+            this.panel.pose.size[0] = values[0].floatValue();
+            this.panel.pose.size[1] = values[1].floatValue();
         });
 
-        this.translate.flex().set(10, 30, 110, 20).relative(this.area);
-        this.scale.flex().set(0, 25, 110, 20).relative(this.translate.resizer());
-        this.rotation.flex().set(0, 25, 110, 20).relative(this.scale.resizer());
-
-        this.hitbox.flex().set(0, 40, 110, 20).relative(this.rotation.resizer());
-        this.add(this.translate, this.scale, this.rotation, this.hitbox);
+        this.hitbox.flex().set(0, 40, 110, 20);
+        this.add(this.hitbox);
 
         /* Buttons */
         this.addPose = new GuiIconElement(mc, Icons.ADD, (b) -> this.addPose());
@@ -179,7 +153,6 @@ public class GuiModelPoses extends GuiModelEditorTab
         }
 
         this.transform.copy(pose.limbs.get(this.panel.limb.name));
-        this.fillTransformData(this.transform);
     }
 
     public void setPose(String str)
@@ -199,7 +172,6 @@ public class GuiModelPoses extends GuiModelEditorTab
     public void setLimb(String name)
     {
         this.transform = this.panel.pose.limbs.get(name);
-        this.fillTransformData(this.transform);
     }
 
     public void fillData(Model model)
@@ -212,13 +184,6 @@ public class GuiModelPoses extends GuiModelEditorTab
     public void fillPoseData()
     {
         this.hitbox.setValues(this.panel.pose.size[0], this.panel.pose.size[1]);
-    }
-
-    private void fillTransformData(ModelTransform transform)
-    {
-        this.translate.setValues(transform.translate[0], transform.translate[1], transform.translate[2]);
-        this.scale.setValues(transform.scale[0], transform.scale[1], transform.scale[2]);
-        this.rotation.setValues(transform.rotate[0], transform.rotate[1], transform.rotate[2]);
     }
 
     @Override

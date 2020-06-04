@@ -20,24 +20,14 @@ public abstract class GuiModelEditorTab extends GuiElement
     }
 
     @Override
-    public boolean mouseClicked(GuiContext context)
-    {
-        return super.mouseClicked(context) || this.isEnabled() && this.area.isInside(context);
-    }
-
-    @Override
     public void draw(GuiContext context)
     {
-        this.area.draw(0x88000000);
-
         this.drawLabels();
         super.draw(context);
     }
 
     protected void drawLabels()
     {
-        Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.y + 20, 0x88000000);
-
         this.font.drawStringWithShadow(this.title.get(), this.area.x + 6, this.area.y + 6, 0xeeeeee);
     }
 }

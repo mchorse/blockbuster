@@ -10,22 +10,17 @@ public class GuiThreeElement extends GuiTwoElement
 {
     public GuiTrackpadElement c;
 
-    public GuiThreeElement(Minecraft mc, Consumer<Float[]> a)
+    public GuiThreeElement(Minecraft mc, Consumer<Double[]> a)
     {
         super(mc, a);
 
-        this.array = new Float[] {0F, 0F, 0F};
+        this.array = new Double[] {0D, 0D, 0D};
         this.c = new GuiTrackpadElement(mc, (value) ->
         {
-            this.array[2] = value.floatValue();
+            this.array[2] = value;
             a.accept(this.array);
         });
         this.add(this.c);
-
-        this.c.flex().relative(this.area).set(0.667F, 0, 0.333F, 1, Flex.Measure.RELATIVE);
-
-        this.a.flex().w.value = this.b.flex().w.value = 0.333F;
-        this.b.flex().x.set(0.333F, Flex.Measure.RELATIVE, 0);
     }
 
     @Override
@@ -40,12 +35,10 @@ public class GuiThreeElement extends GuiTwoElement
     public void setLimit(int min, int max, boolean integer)
     {
         super.setLimit(min, max, integer);
-        this.c.min = min;
-        this.c.max = max;
-        this.c.integer = integer;
+        this.c.limit(min, max, integer);
     }
 
-    public void setValues(float a, float b, float c)
+    public void setValues(double a, double b, double c)
     {
         this.setValues(a, b);
         this.c.setValue(c);

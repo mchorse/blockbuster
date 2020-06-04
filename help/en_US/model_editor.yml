@@ -26,6 +26,7 @@ blockbuster.gui.me:
         right: Right
         left: Left
 
+        animation: Animation properties
         holding: Hold
         swiping: Swiping
         looking: Looking

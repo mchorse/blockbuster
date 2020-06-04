@@ -11,47 +11,39 @@ public class GuiTwoElement extends GuiElement
 {
     public GuiTrackpadElement a;
     public GuiTrackpadElement b;
-    public Float[] array;
+    public Double[] array;
 
-    public GuiTwoElement(Minecraft mc, Consumer<Float[]> a)
+    public GuiTwoElement(Minecraft mc, Consumer<Double[]> a)
     {
         super(mc);
 
-        this.array = new Float[] {0F, 0F};
+        this.array = new Double[] {0D, 0D};
         this.a = new GuiTrackpadElement(mc, (value) ->
         {
-            this.array[0] = value.floatValue();
+            this.array[0] = value;
             a.accept(this.array);
         });
         this.b = new GuiTrackpadElement(mc, (value) ->
         {
-            this.array[1] = value.floatValue();
+            this.array[1] = value;
             a.accept(this.array);
         });
 
-        this.a.flex().relative(this.area).set(0, 0, 0.5F, 1, Flex.Measure.RELATIVE);
-        this.a.flex().w.offset = -2;
-        this.b.flex().relative(this.area).set(0.5F, 0, 0.5F, 1, Flex.Measure.RELATIVE);
-        this.b.flex().w.offset = -2;
-        this.b.flex().x.offset = 2;
-
-        this.add(this.a);
-        this.add(this.b);
+        this.flex().h(20).row(5);
+        this.add(this.a, this.b);
     }
 
     public void setLimit(int min, int max)
     {
-        this.a.min = this.b.min = min;
-        this.a.max = this.b.max = max;
+        this.a.limit(min, max);
     }
 
     public void setLimit(int min, int max, boolean integer)
     {
-        this.setLimit(min, max);
-        this.a.integer = this.b.integer = integer;
+        this.a.limit(min, max, integer);
     }
 
-    public void setValues(float a, float b)
+    public void setValues(double a, double b)
     {
         this.a.setValue(a);
         this.b.setValue(b);

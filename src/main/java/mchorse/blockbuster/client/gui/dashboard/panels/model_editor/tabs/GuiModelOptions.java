@@ -40,9 +40,9 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.texture.setLimit(1, 8196, true);
         this.scale = new GuiThreeElement(mc, (value) ->
         {
-            this.panel.model.scale[0] = value[0];
-            this.panel.model.scale[1] = value[1];
-            this.panel.model.scale[2] = value[2];
+            this.panel.model.scale[0] = value[0].floatValue();
+            this.panel.model.scale[1] = value[1].floatValue();
+            this.panel.model.scale[2] = value[2].floatValue();
         });
         this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.panel.model.scaleGui = value.floatValue());
         this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));

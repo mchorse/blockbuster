@@ -33,9 +33,9 @@ public class GuiItemUseBlockActionPanel extends GuiItemUseActionPanel<ItemUseBlo
         this.block.c.integer = true;
         this.hit = new GuiThreeElement(mc, (values) ->
         {
-            this.action.hitX = values[0];
-            this.action.hitY = values[1];
-            this.action.hitZ = values[2];
+            this.action.hitX = values[0].floatValue();
+            this.action.hitY = values[1].floatValue();
+            this.action.hitZ = values[2].floatValue();
         });
 
         this.hit.flex().set(0, -25, 200, 20).relative(this.hand.resizer());
