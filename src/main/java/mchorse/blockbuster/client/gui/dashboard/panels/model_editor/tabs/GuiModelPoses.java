@@ -2,17 +2,16 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
-import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.modals.GuiListModal;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThreeElement;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
-import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.client.gui.utils.resizers.Flex;
@@ -31,7 +30,6 @@ public class GuiModelPoses extends GuiModelEditorTab
     private GuiStringListElement posesList;
     private GuiTwoElement hitbox;
 
-    private ModelTransform transform;
     private String pose;
 
     public GuiModelPoses(Minecraft mc, GuiModelEditorPanel panel)
@@ -40,18 +38,11 @@ public class GuiModelPoses extends GuiModelEditorTab
 
         this.title = IKey.lang("blockbuster.gui.me.poses.title");
 
-        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
-        this.posesList.flex().set(0, 20, 80, 0).relative(this.area).h(1, -20).x(1, -80);
-        this.add(this.posesList);
-
         this.hitbox = new GuiTwoElement(mc, (values) ->
         {
             this.panel.pose.size[0] = values[0].floatValue();
             this.panel.pose.size[1] = values[1].floatValue();
         });
-
-        this.hitbox.flex().set(0, 40, 110, 20);
-        this.add(this.hitbox);
 
         /* Buttons */
         this.addPose = new GuiIconElement(mc, Icons.ADD, (b) -> this.addPose());
@@ -61,11 +52,17 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.copyPose = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyPose());
         this.copyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.copy_pose_tooltip"));
 
-        this.copyPose.flex().set(2, 2, 16, 16).relative(this.area).x(1, -78);
-        this.importPose.flex().set(20, 0, 16, 16).relative(this.copyPose.resizer());
-        this.addPose.flex().set(20, 0, 16, 16).relative(this.importPose.resizer());
-        this.removePose.flex().set(20, 0, 16, 16).relative(this.addPose.resizer());
-        this.add(this.copyPose, this.importPose, this.addPose, this.removePose);
+        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.importPose, this.copyPose);
+        GuiElement bottom = new GuiElement(mc);
+
+        sidebar.flex().relative(this).x(1F).h(20).anchorX(1F).row(0).resize();
+        bottom.flex().relative(this).y(1F).w(1F).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
+
+        this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
+        this.posesList.background().flex().relative(this).y(20).w(1F).hTo(bottom.area);
+
+        bottom.add(Elements.label(IKey.lang("blockbuster.gui.me.poses.hitbox")), this.hitbox);
+        this.add(sidebar, bottom, this.posesList);
     }
 
     private void addPose()
@@ -127,7 +124,6 @@ public class GuiModelPoses extends GuiModelEditorTab
         {
             this.panel.pose.fromNBT(JsonToNBT.getTagFromJson(nbt));
             this.panel.model.fillInMissing();
-            this.setLimb(this.panel.limb.name);
         }
         catch (Exception e)
         {}
@@ -152,7 +148,7 @@ public class GuiModelPoses extends GuiModelEditorTab
             return;
         }
 
-        this.transform.copy(pose.limbs.get(this.panel.limb.name));
+        this.panel.transform.copy(pose.limbs.get(this.panel.limb.name));
     }
 
     public void setPose(String str)
@@ -169,11 +165,6 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.fillPoseData();
     }
 
-    public void setLimb(String name)
-    {
-        this.transform = this.panel.pose.limbs.get(name);
-    }
-
     public void fillData(Model model)
     {
         this.posesList.clear();
@@ -184,42 +175,5 @@ public class GuiModelPoses extends GuiModelEditorTab
     public void fillPoseData()
     {
         this.hitbox.setValues(this.panel.pose.size[0], this.panel.pose.size[1]);
-    }
-
-    @Override
-    public void resize()
-    {
-        if (this.flex().h.unit == Flex.Measure.RELATIVE)
-        {
-            this.posesList.flex().x(0).y(150).w(1, 0).h(1, -150);
-        }
-        else
-        {
-            this.posesList.flex().y(20).h(1, -20).w(80).x(1, -80);
-        }
-
-        super.resize();
-    }
-
-    @Override
-    public boolean mouseClicked(GuiContext context)
-    {
-        return super.mouseClicked(context) || this.area.isInside(context);
-    }
-
-    @Override
-    protected void drawLabels()
-    {
-        super.drawLabels();
-
-        if (this.flex().h.unit == Flex.Measure.RELATIVE)
-        {
-            int x = this.posesList.area.x;
-            int y = this.posesList.area.y;
-
-            Gui.drawRect(x, y, x + this.posesList.area.w, y + this.posesList.area.h, 0x88000000);
-        }
-
-        this.font.drawStringWithShadow(I18n.format("blockbuster.gui.me.poses.hitbox"), this.hitbox.area.x, this.hitbox.area.y - 12, 0xeeeeee);
     }
 }

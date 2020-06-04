@@ -31,7 +31,7 @@ public class Model
     /**
      * Poses that are required by custom models
      */
-    public static final List<String> REQUIRED_POSES = Arrays.<String>asList("standing", "sneaking", "sleeping", "flying");
+    public static final List<String> REQUIRED_POSES = Arrays.asList("standing");
 
     /**
      * Scheme version. Would be used in future versions for extracting and

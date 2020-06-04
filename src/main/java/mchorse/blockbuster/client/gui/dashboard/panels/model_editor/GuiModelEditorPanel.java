@@ -10,6 +10,7 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
@@ -32,6 +33,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
     private GuiPosePanel.GuiPoseTransformations poseEditor;
     private GuiModelLimbs limbs;
+    private GuiModelPoses poses;
 
     /* Current data */
     public String modelName;
@@ -57,7 +59,10 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.limbs = new GuiModelLimbs(mc, this);
         this.limbs.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F);
 
-        this.add(this.modelRenderer, this.poseEditor, this.limbs);
+        this.poses = new GuiModelPoses(mc, this);
+        this.poses.flex().relative(this).w(140).h(1F);
+
+        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs);
 
         this.setModel("steve");
     }
@@ -75,11 +80,16 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         if (limb != null)
         {
             this.limb = limb;
-            this.transform = this.pose.limbs.get(str);
+
+            if (this.pose != null)
+            {
+                this.transform = this.pose.limbs.get(str);
+            }
 
             this.modelRenderer.limb = limb;
             this.poseEditor.set(this.transform);
             this.limbs.fillLimbData(limb);
+            this.limbs.setCurrent(str);
         }
     }
 
@@ -91,8 +101,16 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             this.pose = pose;
             this.modelRenderer.pose = pose;
-
             this.renderModel.pose = pose;
+
+            if (this.limb != null)
+            {
+                this.transform = pose.limbs.get(this.limb.name);
+            }
+
+            this.poses.setCurrent(str);
+            this.poses.fillPoseData();
+            this.poseEditor.set(this.transform);
         }
     }
 
@@ -201,9 +219,23 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.modelEntry = loader;
 
         this.renderModel = this.buildModel();
-        this.renderModel.pose = this.model.getPose("standing");
-        this.pose = this.renderModel.pose;
+        this.modelRenderer.model = this.renderModel;
+        this.modelRenderer.texture = this.getFirstResourceLocation();
+        this.modelRenderer.limb = this.limb;
+        this.modelRenderer.pose = this.pose;
 
+        this.limbs.fillData(model);
+        this.poses.fillData(model);
+
+        this.setPose("standing");
+        this.setLimb(this.model.limbs.keySet().iterator().next());
+    }
+
+    /**
+     * Get the first available resource location for this model
+     */
+    private ResourceLocation getFirstResourceLocation()
+    {
         ResourceLocation rl = this.model.defaultTexture;
 
         if (rl != null && rl.getResourcePath().isEmpty())
@@ -213,7 +245,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         if (rl == null)
         {
-            FolderEntry folder = ClientProxy.tree.getByPath(name + "/skins", null);
+            FolderEntry folder = ClientProxy.tree.getByPath(this.modelName + "/skins", null);
 
             if (folder != null)
             {
@@ -227,18 +259,6 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             }
         }
 
-        if (rl == null)
-        {
-            rl = RLUtils.create("blockbuster", "textures/entity/actor.png");
-        }
-
-        this.modelRenderer.model = this.renderModel;
-        this.modelRenderer.texture = rl;
-        this.modelRenderer.limb = this.limb;
-        this.modelRenderer.pose = this.pose;
-
-        this.limbs.fillData(model);
-
-        this.setLimb(this.model.limbs.keySet().iterator().next());
+        return rl == null ? RLUtils.create("blockbuster", "textures/entity/actor.png") : null;
     }
 }
