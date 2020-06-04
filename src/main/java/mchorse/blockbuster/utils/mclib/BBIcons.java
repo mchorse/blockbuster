@@ -21,4 +21,5 @@ public class BBIcons
 	public static Icon PARTICLE = new Icon(ICONS, 176, 0);
 	public static Icon SCENE = new Icon(ICONS, 192, 0);
 	public static Icon EDITOR = new Icon(ICONS, 208, 0);
+	public static Icon LOOKING = new Icon(ICONS, 224, 0);
 }

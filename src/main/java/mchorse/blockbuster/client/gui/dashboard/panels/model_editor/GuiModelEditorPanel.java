@@ -17,6 +17,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelU
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
@@ -24,6 +25,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.DummyEntity;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -44,6 +46,11 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     private GuiIconElement openModels;
     private GuiIconElement openPoses;
     private GuiIconElement saveModel;
+    private GuiIconElement swipe;
+    private GuiIconElement running;
+    private GuiIconElement items;
+    private GuiIconElement hitbox;
+    private GuiIconElement looking;
 
     private GuiPoseTransformations poseEditor;
     private GuiModelLimbs limbs;
@@ -61,6 +68,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     public ModelCustom renderModel;
 
     private boolean dirty;
+    private boolean held;
 
     public GuiModelEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
@@ -69,6 +77,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.modelRenderer = new GuiBBModelRenderer(mc);
         this.modelRenderer.picker(this::setLimb);
         this.modelRenderer.flex().relative(this).wh(1F, 1F);
+        this.modelRenderer.origin = this.modelRenderer.items = true;
 
         this.poseEditor = new GuiModelPoseTransformations(mc, this);
         this.poseEditor.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
@@ -87,10 +96,22 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
         this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses));
         this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
+        this.swipe = new GuiIconElement(mc, BBIcons.ARM1, (b) -> this.modelRenderer.swipe());
+        this.swipe.hovered(BBIcons.ARM2);
+        this.running = new GuiIconElement(mc, BBIcons.LEGS1, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging);
+        this.running.hovered(BBIcons.LEGS2).hoverColor(0xffffffff);
+        this.items = new GuiIconElement(mc, BBIcons.NO_ITEMS, (b) ->
+        {
+            this.held = !this.held;
+            ((DummyEntity) this.modelRenderer.getEntity()).toggleItems(this.held);
+        });
+        this.items.hovered(BBIcons.HELD_ITEMS);
+        this.hitbox = new GuiIconElement(mc, BBIcons.HITBOX, (b) -> this.modelRenderer.aabb = !this.modelRenderer.aabb);
+        this.looking = new GuiIconElement(mc, BBIcons.LOOKING, (b) -> this.modelRenderer.looking = !this.modelRenderer.looking);
 
         this.icons = new GuiElement(mc);
         this.icons.flex().relative(this).h(20).row(0).resize().height(20);
-        this.icons.add(this.openModels, this.openPoses, this.saveModel);
+        this.icons.add(this.openModels, this.openPoses, this.saveModel, this.swipe, this.running, this.items, this.hitbox, this.looking);
 
         this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.icons, this.models);
 
@@ -341,6 +362,26 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         else if (this.poses.isVisible())
         {
             this.openPoses.area.draw(0xaa000000);
+        }
+
+        if (this.modelRenderer.swinging)
+        {
+            this.running.area.draw(0x66000000);
+        }
+
+        if (this.held)
+        {
+            this.items.area.draw(0x66000000);
+        }
+
+        if (this.modelRenderer.aabb)
+        {
+            this.hitbox.area.draw(0x66000000);
+        }
+
+        if (this.modelRenderer.looking)
+        {
+            this.looking.area.draw(0x66000000);
         }
 
         super.draw(context);
