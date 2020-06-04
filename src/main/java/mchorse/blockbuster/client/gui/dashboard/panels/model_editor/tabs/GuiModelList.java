@@ -11,6 +11,7 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
@@ -56,7 +57,7 @@ public class GuiModelList extends GuiModelEditorTab
     private GuiTwoElement texture;
     private GuiThreeElement scale;
     private GuiTrackpadElement scaleGui;
-    private GuiTextElement defaultTexture;
+    private GuiButtonElement defaultTexture;
     private GuiTextElement skins;
     private GuiToggleElement providesObj;
     private GuiToggleElement providesMtl;
@@ -95,10 +96,13 @@ public class GuiModelList extends GuiModelEditorTab
             this.panel.dirty();
         });
         this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
-        this.defaultTexture = new GuiTextElement(mc, 1000, (str) ->
+        this.defaultTexture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.me.options.default_texture"), (b) ->
         {
-            this.panel.model.defaultTexture = str.isEmpty() ? null : RLUtils.create(str);
-            this.panel.dirty();
+            this.panel.pickTexture(this.panel.model.defaultTexture, (rl) ->
+            {
+                this.panel.model.defaultTexture = rl;
+                this.panel.dirty();
+            });
         });
         this.skins = new GuiTextElement(mc, 120, (str) ->
         {
@@ -122,8 +126,7 @@ public class GuiModelList extends GuiModelEditorTab
         element.flex().column(5).width(180).scroll().padding(10).height(20);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.default")), this.defaultTexture);
+        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui, this.defaultTexture);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl);
 
         GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.dupe, this.export, this.folder);
@@ -158,7 +161,6 @@ public class GuiModelList extends GuiModelEditorTab
         this.texture.setValues(model.texture[0], model.texture[1]);
         this.scale.setValues(model.scale[0], model.scale[1], model.scale[2]);
         this.scaleGui.setValue(model.scaleGui);
-        this.defaultTexture.setText(model.defaultTexture == null ? "" : model.defaultTexture.toString());
         this.skins.setText(model.skins);
         this.providesObj.toggled(model.providesObj);
         this.providesMtl.toggled(model.providesMtl);

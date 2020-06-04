@@ -44,7 +44,6 @@ blockbuster.gui.me:
         
         rename: Rename
         parent: Parent
-        page: Switch page
         
         new_limb: Type in a name for a new limb...
         last_limb: You can't remove the last limb...
@@ -80,6 +79,7 @@ blockbuster.gui.me:
         skins: Skins folder
         provides_obj: Provides OBJ
         provides_mtl: Provides MTL
+        default_texture: Pick default texture
     
     poses:
         title: Poses

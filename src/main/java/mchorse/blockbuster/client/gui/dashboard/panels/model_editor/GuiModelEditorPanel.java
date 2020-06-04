@@ -21,6 +21,7 @@ import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -36,6 +37,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.function.Consumer;
 
 public class GuiModelEditorPanel extends GuiBlockbusterPanel
 {
@@ -51,11 +53,14 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     private GuiIconElement items;
     private GuiIconElement hitbox;
     private GuiIconElement looking;
+    private GuiIconElement skin;
 
     private GuiPoseTransformations poseEditor;
     private GuiModelLimbs limbs;
     private GuiModelPoses poses;
     private GuiModelList models;
+
+    private GuiTexturePicker picker;
 
     /* Current data */
     public String modelName;
@@ -79,6 +84,9 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.modelRenderer.flex().relative(this).wh(1F, 1F);
         this.modelRenderer.origin = this.modelRenderer.items = true;
 
+        this.picker = new GuiTexturePicker(mc, null);
+        this.picker.flex().relative(this).wh(1F, 1F);
+
         this.poseEditor = new GuiModelPoseTransformations(mc, this);
         this.poseEditor.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
 
@@ -90,7 +98,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.poses.setVisible(false);
 
         this.models = new GuiModelList(mc, this);
-        this.models.flex().relative(this).y(20).wTo(this.limbs.area, -10).hTo(this.poseEditor.area).maxH(200);
+        this.models.flex().relative(this).y(20).wTo(this.limbs.area, -10).hTo(this.poseEditor.area, -20).maxH(230);
         this.models.setVisible(false);
 
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
@@ -108,12 +116,17 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.items.hovered(BBIcons.HELD_ITEMS);
         this.hitbox = new GuiIconElement(mc, BBIcons.HITBOX, (b) -> this.modelRenderer.aabb = !this.modelRenderer.aabb);
         this.looking = new GuiIconElement(mc, BBIcons.LOOKING, (b) -> this.modelRenderer.looking = !this.modelRenderer.looking);
+        this.skin = new GuiIconElement(mc, Icons.MATERIAL, (b) -> this.pickTexture(this.modelRenderer.texture, (rl) -> this.modelRenderer.texture = rl));
 
         this.icons = new GuiElement(mc);
         this.icons.flex().relative(this).h(20).row(0).resize().height(20);
-        this.icons.add(this.openModels, this.openPoses, this.saveModel, this.swipe, this.running, this.items, this.hitbox, this.looking);
+        this.icons.add(this.openModels, this.openPoses, this.saveModel);
 
-        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.icons, this.models);
+        GuiElement icons = new GuiElement(mc);
+        icons.flex().relative(this.icons).x(1F, 20).h(20).row(0).resize().height(20);
+        icons.add(this.swipe, this.running, this.items, this.hitbox, this.looking, this.skin);
+
+        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.models, this.icons, icons);
 
         this.keys()
                 .register(IKey.lang("blockbuster.gui.me.keys.save"), Keyboard.KEY_S, () -> this.saveModel.clickItself(GuiBase.getCurrent()))
@@ -152,6 +165,15 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     public void open()
     {
         this.models.updateModelList();
+    }
+
+    public void pickTexture(ResourceLocation location, Consumer<ResourceLocation> callback)
+    {
+        this.picker.fill(location);
+        this.picker.callback = callback;
+
+        this.picker.resize();
+        this.add(this.picker);
     }
 
     public void setLimb(String str)
