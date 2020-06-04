@@ -120,7 +120,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
         float headPitch = -this.pitch;
 
         final float factor = 1 / 16F;
-        float limbSwing = this.swing + partial;
+        float limbSwing = this.swinging ? this.swing + partial : 0;
 
         if (!this.looking)
         {
