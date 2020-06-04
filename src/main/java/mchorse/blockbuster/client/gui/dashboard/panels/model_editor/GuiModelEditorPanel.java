@@ -101,22 +101,35 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.models.flex().relative(this).y(20).wTo(this.limbs.area, -10).hTo(this.poseEditor.area, -20).maxH(230);
         this.models.setVisible(false);
 
+        /* Toolbar buttons */
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
         this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses));
+
         this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
+        this.saveModel.tooltip(IKey.lang("blockbuster.gui.me.tooltips.save"));
+
         this.swipe = new GuiIconElement(mc, BBIcons.ARM1, (b) -> this.modelRenderer.swipe());
+        this.swipe.tooltip(IKey.lang("blockbuster.gui.me.tooltips.swipe"));
         this.swipe.hovered(BBIcons.ARM2);
+
         this.running = new GuiIconElement(mc, BBIcons.LEGS1, (b) -> this.modelRenderer.swinging = !this.modelRenderer.swinging);
-        this.running.hovered(BBIcons.LEGS2).hoverColor(0xffffffff);
+        this.running.hovered(BBIcons.LEGS2).hoverColor(0xffffffff).tooltip(IKey.lang("blockbuster.gui.me.tooltips.running"));
+
         this.items = new GuiIconElement(mc, BBIcons.NO_ITEMS, (b) ->
         {
             this.held = !this.held;
             ((DummyEntity) this.modelRenderer.getEntity()).toggleItems(this.held);
         });
-        this.items.hovered(BBIcons.HELD_ITEMS);
+        this.items.hovered(BBIcons.HELD_ITEMS).tooltip(IKey.lang("blockbuster.gui.me.tooltips.held_items"));
+
         this.hitbox = new GuiIconElement(mc, BBIcons.HITBOX, (b) -> this.modelRenderer.aabb = !this.modelRenderer.aabb);
+        this.hitbox.tooltip(IKey.lang("blockbuster.gui.me.tooltips.hitbox"));
+
         this.looking = new GuiIconElement(mc, BBIcons.LOOKING, (b) -> this.modelRenderer.looking = !this.modelRenderer.looking);
+        this.looking.tooltip(IKey.lang("blockbuster.gui.me.tooltips.looking"));
+
         this.skin = new GuiIconElement(mc, Icons.MATERIAL, (b) -> this.pickTexture(this.modelRenderer.texture, (rl) -> this.modelRenderer.texture = rl));
+        this.skin.tooltip(IKey.lang("blockbuster.gui.me.tooltips.skin"));
 
         this.icons = new GuiElement(mc);
         this.icons.flex().relative(this).h(20).row(0).resize().height(20);
