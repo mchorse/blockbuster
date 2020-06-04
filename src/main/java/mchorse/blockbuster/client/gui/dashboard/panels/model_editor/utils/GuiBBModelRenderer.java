@@ -1,26 +1,25 @@
-package mchorse.blockbuster.client.gui.dashboard.panels.model_editor;
+package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils;
 
 import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.api.ModelPose;
-import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ItemRenderer;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.render.RenderCustomModel;
+import mchorse.blockbuster.client.render.layer.LayerHeldItem;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.utils.DummyEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
 
@@ -44,6 +43,20 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     public ModelCustom model;
     public ModelPose pose;
     public ModelLimb limb;
+
+    public static void renderItems(EntityLivingBase entity, ModelCustom model)
+    {
+        ItemStack main = entity.getHeldItemMainhand();
+        ItemStack offhand = entity.getHeldItemOffhand();
+
+        if (!offhand.isEmpty() || !main.isEmpty())
+        {
+            GlStateManager.pushMatrix();
+            LayerHeldItem.renderHeldItem(entity, offhand, model, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, EnumHandSide.LEFT);
+            LayerHeldItem.renderHeldItem(entity, main, model, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, EnumHandSide.RIGHT);
+            GlStateManager.popMatrix();
+        }
+    }
 
     public GuiBBModelRenderer(Minecraft mc)
     {
@@ -147,7 +160,7 @@ public class GuiBBModelRenderer extends GuiModelRenderer
 
         if (this.items)
         {
-            ItemRenderer.renderItems(this.entity, this.model, limbSwing, this.swingAmount, partial, this.timer, context.mouseX, context.mouseY, factor);
+            renderItems(this.entity, this.model);
         }
 
         /* Render highlighting things on top */
