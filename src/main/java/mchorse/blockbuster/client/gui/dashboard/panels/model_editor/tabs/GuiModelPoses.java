@@ -11,6 +11,7 @@ import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiMessageModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
@@ -59,7 +60,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         bottom.flex().relative(this).y(1F).w(1F).anchorY(1F).column(5).vertical().stretch().height(20).padding(10);
 
         this.posesList = new GuiStringListElement(mc, (str) -> this.setPose(str.get(0)));
-        this.posesList.background().flex().relative(this).y(20).w(1F).hTo(bottom.area);
+        this.posesList.flex().relative(this).y(20).w(1F).hTo(bottom.area);
 
         bottom.add(Elements.label(IKey.lang("blockbuster.gui.me.poses.hitbox")), this.hitbox);
         this.add(sidebar, bottom, this.posesList);
@@ -175,5 +176,13 @@ public class GuiModelPoses extends GuiModelEditorTab
     public void fillPoseData()
     {
         this.hitbox.setValues(this.panel.pose.size[0], this.panel.pose.size[1]);
+    }
+
+    @Override
+    public void draw(GuiContext context)
+    {
+        this.area.draw(0xaa000000);
+
+        super.draw(context);
     }
 }

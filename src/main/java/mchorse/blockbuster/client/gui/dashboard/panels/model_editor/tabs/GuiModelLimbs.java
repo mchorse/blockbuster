@@ -160,22 +160,27 @@ public class GuiModelLimbs extends GuiModelEditorTab
 
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size")).background(0x88000000), this.size);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.size_offset")).background(0x88000000), this.sizeOffset);
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), this.texture, this.color, this.mirror);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.texture"), 24).anchor(0, 1).background(0x88000000), this.texture, this.mirror);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.anchor"), 24).anchor(0, 1).background(0x88000000), this.anchor);
         this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.origin")).background(0x88000000), this.origin);
 
-        GuiElement grid = new GuiElement(mc);
+        GuiElement appearance = new GuiElement(mc);
 
-        grid.flex().grid(5).items(2).resizes(true);
-        grid.add(this.lighting, this.shading);
-        grid.add(this.smooth, this.is3D);
-        grid.add(this.looking, this.idle);
-        grid.add(this.swinging, this.invert);
-        grid.add(this.swiping, this.hold);
-        grid.add(this.wheel, this.wing);
+        appearance.flex().grid(5).items(2).resizes(true);
+        appearance.add(this.lighting, this.shading);
+        appearance.add(this.smooth, this.is3D);
+
+        GuiElement animation = new GuiElement(mc);
+
+        animation.flex().grid(5).items(2).resizes(true);
+        animation.add(this.looking, this.idle);
+        animation.add(this.swinging, this.invert);
+        animation.add(this.swiping, this.hold);
+        animation.add(this.wheel, this.wing);
 
         this.scroll.add(Elements.row(mc, 5, this.slot, this.holding));
-        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation"), 24).anchor(0, 1).background(0x88000000), grid);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.appearance"), 24).anchor(0, 1).background(0x88000000), appearance, this.color);
+        this.scroll.add(Elements.label(IKey.lang("blockbuster.gui.me.limbs.animation"), 24).anchor(0, 1).background(0x88000000), animation);
 
         /* Buttons */
         this.addLimb = new GuiIconElement(mc, Icons.ADD, (b) -> this.addLimb());
@@ -309,7 +314,7 @@ public class GuiModelLimbs extends GuiModelEditorTab
         this.texture.setValues(limb.texture[0], limb.texture[1]);
         this.anchor.setValues(limb.anchor[0], limb.anchor[1], limb.anchor[2]);
         this.origin.setValues(limb.origin[0], limb.origin[1], limb.origin[2]);
-        this.color.picker.color.set(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
+        this.color.picker.setColor(limb.color[0], limb.color[1], limb.color[2], limb.opacity);
         this.mirror.toggled(limb.mirror);
         this.lighting.toggled(limb.lighting);
         this.shading.toggled(limb.shading);

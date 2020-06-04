@@ -10,12 +10,17 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelList;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster_pack.client.gui.GuiPosePanel;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -31,9 +36,15 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     /* GUI stuff */
     public GuiBBModelRenderer modelRenderer;
 
+    private GuiElement icons;
+    private GuiIconElement openModels;
+    private GuiIconElement openPoses;
+    private GuiIconElement saveModel;
+
     private GuiPosePanel.GuiPoseTransformations poseEditor;
     private GuiModelLimbs limbs;
     private GuiModelPoses poses;
+    private GuiModelList models;
 
     /* Current data */
     public String modelName;
@@ -60,17 +71,39 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.limbs.flex().relative(this).x(1F).w(200).h(1F).anchorX(1F);
 
         this.poses = new GuiModelPoses(mc, this);
-        this.poses.flex().relative(this).w(140).h(1F);
+        this.poses.flex().relative(this).y(20).w(140).h(1F, -20);
+        this.poses.setVisible(false);
 
-        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs);
+        this.models = new GuiModelList(mc, this);
+        this.models.flex().relative(this).y(20).wTo(this.limbs.area, -10).hTo(this.poseEditor.area).maxH(200);
+        this.models.setVisible(false);
 
+        this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
+        this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses));
+        this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> System.out.println("save..."));
+
+        this.icons = new GuiElement(mc);
+        this.icons.flex().relative(this).h(20).row(0).resize().height(20);
+        this.icons.add(this.openModels, this.openPoses, this.saveModel);
+
+        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.icons, this.models);
         this.setModel("steve");
+    }
+
+    private void toggle(GuiElement element)
+    {
+        boolean visible = element.isVisible();
+
+        this.models.setVisible(false);
+        this.poses.setVisible(false);
+
+        element.setVisible(!visible);
     }
 
     @Override
     public void open()
     {
-
+        this.models.updateModelList();
     }
 
     public void setLimb(String str)
@@ -202,6 +235,9 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         return null;
     }
 
+    /**
+     * Set a model from the repository
+     */
     public void setModel(String name)
     {
         ModelCustom model = ModelCustom.MODELS.get(name);
@@ -226,6 +262,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.limbs.fillData(model);
         this.poses.fillData(model);
+        this.models.fillData(model);
 
         this.setPose("standing");
         this.setLimb(this.model.limbs.keySet().iterator().next());
@@ -259,6 +296,21 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             }
         }
 
-        return rl == null ? RLUtils.create("blockbuster", "textures/entity/actor.png") : null;
+        return rl == null ? RLUtils.create("blockbuster", "textures/entity/actor.png") : rl;
+    }
+
+    @Override
+    public void draw(GuiContext context)
+    {
+        if (this.models.isVisible())
+        {
+            this.openModels.area.draw(0xaa000000);
+        }
+        else if (this.poses.isVisible())
+        {
+            this.openPoses.area.draw(0xaa000000);
+        }
+
+        super.draw(context);
     }
 }
