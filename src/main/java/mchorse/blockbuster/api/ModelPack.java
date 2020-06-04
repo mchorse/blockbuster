@@ -120,6 +120,8 @@ public class ModelPack
             this.reloadModels(folder, "");
         }
 
+        this.removeOld();
+
         try
         {
             /* Load default provided models */
@@ -135,8 +137,6 @@ public class ModelPack
         {
             e.printStackTrace();
         }
-
-        this.removeOld();
     }
 
     /**
@@ -176,6 +176,7 @@ public class ModelPack
             lazy.setLastTime(-1);
 
             this.models.put(id, lazy);
+            this.removed.remove(id);
         }
     }
 
