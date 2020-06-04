@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.loaders.lazy.ModelLazyLoaderJSON;
 import mchorse.blockbuster.api.resource.StreamEntry;
@@ -8,6 +9,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiThr
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExporter;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -20,6 +22,8 @@ import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.client.gui.utils.GuiUtils;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -34,6 +38,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +46,10 @@ import java.util.Map.Entry;
 
 public class GuiModelList extends GuiModelEditorTab
 {
-    private GuiStringSearchListElement modelList;
+    public GuiStringSearchListElement models;
+    private GuiIconElement dupe;
     private GuiIconElement export;
+    private GuiIconElement folder;
 
     /* Main properties */
     private GuiTextElement name;
@@ -60,8 +67,12 @@ public class GuiModelList extends GuiModelEditorTab
 
         this.title = IKey.lang("blockbuster.gui.me.models.title");
 
-        this.modelList = new GuiStringSearchListElement(mc, (str) -> this.panel.setModel(str.get(0)));
-        this.modelList.flex().relative(this.area).y(20).w(140).h(1, -20);
+        this.models = new GuiStringSearchListElement(mc, (str) -> this.panel.setModel(str.get(0)));
+        this.models.flex().relative(this.area).y(20).w(140).h(1, -20);
+
+        this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.saveModel());
+        this.export = new GuiIconElement(mc, Icons.UPLOAD, (b) -> this.exportModel());
+        this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> this.openFolder());
 
         /* Main properties */
         this.name = new GuiTextElement(mc, 120, (str) -> this.panel.model.name = str);
@@ -78,10 +89,22 @@ public class GuiModelList extends GuiModelEditorTab
             this.panel.model.scale[1] = value[1].floatValue();
             this.panel.model.scale[2] = value[2].floatValue();
         });
-        this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.panel.model.scaleGui = value.floatValue());
+        this.scaleGui = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.panel.model.scaleGui = value.floatValue();
+            this.panel.dirty();
+        });
         this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
-        this.defaultTexture = new GuiTextElement(mc, 1000, (str) -> this.panel.model.defaultTexture = str.isEmpty() ? null : RLUtils.create(str));
-        this.skins = new GuiTextElement(mc, 120, (str) -> this.panel.model.skins = str);
+        this.defaultTexture = new GuiTextElement(mc, 1000, (str) ->
+        {
+            this.panel.model.defaultTexture = str.isEmpty() ? null : RLUtils.create(str);
+            this.panel.dirty();
+        });
+        this.skins = new GuiTextElement(mc, 120, (str) ->
+        {
+            this.panel.model.skins = str;
+            this.panel.dirty();
+        });
         this.providesObj = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.provides_obj"), false, (b) ->
         {
             this.panel.model.providesObj = b.isToggled();
@@ -95,7 +118,7 @@ public class GuiModelList extends GuiModelEditorTab
 
         GuiScrollElement element = new GuiScrollElement(mc, ScrollArea.ScrollDirection.HORIZONTAL);
 
-        element.flex().relative(this.modelList).x(1F).y(-20).hTo(this.area, 1F).wTo(this.area, 1F);
+        element.flex().relative(this.models).x(1F).y(-20).hTo(this.area, 1F).wTo(this.area, 1F);
         element.flex().column(5).width(180).scroll().padding(10).height(20);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
@@ -103,20 +126,29 @@ public class GuiModelList extends GuiModelEditorTab
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.default")), this.defaultTexture);
         element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl);
 
-        this.add(this.modelList, element);
+        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.dupe, this.export, this.folder);
+
+        sidebar.flex().relative(this.models).x(1F).y(-20).h(20).anchorX(1F).row(0).resize();
+
+        this.add(this.models, element, sidebar);
     }
 
     public void updateModelList()
     {
-        String current = this.modelList.list.getCurrentFirst();
+        String current = this.models.list.getCurrentFirst();
 
-        this.modelList.list.clear();
-        this.modelList.list.add(ModelCustom.MODELS.keySet());
-        this.modelList.list.sort();
+        this.models.list.clear();
+        this.models.list.add(ModelCustom.MODELS.keySet());
+        this.models.list.sort();
+
+        if (current == null)
+        {
+            current = "steve";
+        }
 
         if (current != null)
         {
-            this.modelList.list.setCurrentScroll(current);
+            this.models.list.setCurrentScroll(current);
         }
     }
 
@@ -144,14 +176,18 @@ public class GuiModelList extends GuiModelEditorTab
 
     private void saveModel(String name)
     {
-        boolean exists = ModelCustom.MODELS.containsKey(this.panel.modelName);
-        boolean save = this.panel.saveModel(name);
+        boolean exists = ModelCustom.MODELS.containsKey(name);
 
-        if (!exists && save)
+        if (!exists)
         {
-            this.modelList.list.add(name);
-            this.modelList.list.sort();
-            this.modelList.list.setCurrent(name);
+            if (!this.panel.saveModel(name))
+            {
+                return;
+            }
+
+            this.models.list.add(name);
+            this.models.list.sort();
+            this.models.list.setCurrent(name);
         }
     }
 
@@ -211,6 +247,11 @@ public class GuiModelList extends GuiModelEditorTab
 
             e.printStackTrace();
         }
+    }
+
+    private void openFolder()
+    {
+        GuiUtils.openWebLink(new File(ClientProxy.configFile, "models/" + this.panel.modelName).toURI());
     }
 
     @Override

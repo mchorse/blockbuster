@@ -2,20 +2,16 @@ package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.api.ModelLimb;
-import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.utils.GuiAnimation;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
-import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
-import mchorse.mclib.client.gui.framework.elements.list.GuiInterpolationList;
-import mchorse.mclib.client.gui.framework.elements.list.GuiListElement;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.utils.keys.IKey;
-import mchorse.mclib.utils.Interpolation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -230,51 +226,5 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
         }
 
         super.draw(context);
-    }
-
-    public static class GuiPoseTransformations extends GuiTransformations
-    {
-        public ModelTransform trans;
-
-        public GuiPoseTransformations(Minecraft mc)
-        {
-            super(mc);
-        }
-
-        public void set(ModelTransform trans)
-        {
-            this.trans = trans;
-
-            if (trans != null)
-            {
-                this.fillT(trans.translate[0], trans.translate[1], trans.translate[2]);
-                this.fillS(trans.scale[0], trans.scale[1], trans.scale[2]);
-                this.fillR(trans.rotate[0], trans.rotate[1], trans.rotate[2]);
-            }
-        }
-
-        @Override
-        public void setT(double x, double y, double z)
-        {
-            this.trans.translate[0] = (float) x;
-            this.trans.translate[1] = (float) y;
-            this.trans.translate[2] = (float) z;
-        }
-
-        @Override
-        public void setS(double x, double y, double z)
-        {
-            this.trans.scale[0] = (float) x;
-            this.trans.scale[1] = (float) y;
-            this.trans.scale[2] = (float) z;
-        }
-
-        @Override
-        public void setR(double x, double y, double z)
-        {
-            this.trans.rotate[0] = (float) x;
-            this.trans.rotate[1] = (float) y;
-            this.trans.rotate[2] = (float) z;
-        }
     }
 }

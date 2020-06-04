@@ -58,6 +58,23 @@ public class ModelPack
         this.setupFolders();
     }
 
+    public IModelLazyLoader create(File file)
+    {
+        IModelLazyLoader lazyLoader = null;
+
+        for (IModelLoader loader : this.loaders)
+        {
+            lazyLoader = loader.load(file);
+
+            if (lazyLoader != null)
+            {
+                break;
+            }
+        }
+
+        return lazyLoader;
+    }
+
     /**
      * Setup folders
      */

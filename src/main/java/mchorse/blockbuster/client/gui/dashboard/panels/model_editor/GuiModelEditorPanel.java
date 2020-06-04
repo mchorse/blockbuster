@@ -16,18 +16,21 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiBBM
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
-import mchorse.blockbuster_pack.client.gui.GuiPosePanel;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Icons;
+import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -42,7 +45,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     private GuiIconElement openPoses;
     private GuiIconElement saveModel;
 
-    private GuiPosePanel.GuiPoseTransformations poseEditor;
+    private GuiPoseTransformations poseEditor;
     private GuiModelLimbs limbs;
     private GuiModelPoses poses;
     private GuiModelList models;
@@ -57,6 +60,8 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     public IModelLazyLoader modelEntry;
     public ModelCustom renderModel;
 
+    private boolean dirty;
+
     public GuiModelEditorPanel(Minecraft mc, GuiDashboard dashboard)
     {
         super(mc, dashboard);
@@ -65,7 +70,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.modelRenderer.picker(this::setLimb);
         this.modelRenderer.flex().relative(this).wh(1F, 1F);
 
-        this.poseEditor = new GuiPosePanel.GuiPoseTransformations(mc);
+        this.poseEditor = new GuiModelPoseTransformations(mc, this);
         this.poseEditor.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
 
         this.limbs = new GuiModelLimbs(mc, this);
@@ -81,13 +86,18 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
         this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses));
-        this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> System.out.println("save..."));
+        this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
 
         this.icons = new GuiElement(mc);
         this.icons.flex().relative(this).h(20).row(0).resize().height(20);
         this.icons.add(this.openModels, this.openPoses, this.saveModel);
 
         this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.icons, this.models);
+
+        this.keys()
+                .register(IKey.lang("blockbuster.gui.me.keys.save"), Keyboard.KEY_S, () -> this.saveModel.clickItself(GuiBase.getCurrent()))
+                .held(Keyboard.KEY_LCONTROL).category(IKey.lang("blockbuster.gui.me.keys.category"));
+
         this.setModel("steve");
     }
 
@@ -99,6 +109,22 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.poses.setVisible(false);
 
         element.setVisible(!visible);
+    }
+
+    public void dirty()
+    {
+        this.dirty(true);
+    }
+
+    public void dirty(boolean dirty)
+    {
+        this.dirty = dirty;
+        this.updateSaveButton();
+    }
+
+    private void updateSaveButton()
+    {
+        this.saveModel.both(this.dirty ? Icons.SAVE : Icons.SAVED);
     }
 
     @Override
@@ -148,6 +174,11 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         }
     }
 
+    public void saveModel()
+    {
+        this.saveModel(this.modelName);
+    }
+
     /**
      * Save model
      *
@@ -170,22 +201,18 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         {
             FileUtils.write(file, output, Charset.defaultCharset());
 
-            Model model = Blockbuster.proxy.models.models.get(name);
-            IModelLazyLoader loader = Blockbuster.proxy.pack.models.get(this.modelName);
-
-            if (model != null)
-            {
-                model.copy(this.model.clone());
-            }
+            IModelLazyLoader previous = Blockbuster.proxy.pack.models.get(this.modelName);
 
             /* Copy OBJ files */
-            if (loader != null)
+            if (previous != null)
             {
-                loader.copyFiles(folder);
+                previous.copyFiles(folder);
             }
 
-            Blockbuster.proxy.models.addModel(name, loader);
             this.modelName = name;
+            Blockbuster.proxy.loadModels(false);
+
+            this.dirty(false);
         }
         catch (Exception e)
         {
@@ -213,6 +240,8 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
             this.renderModel.pose = oldPose;
             this.modelRenderer.pose = oldPose;
         }
+
+        this.dirty();
     }
 
     /**
@@ -251,6 +280,8 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
     public void setModel(String name, Model model, IModelLazyLoader loader)
     {
+        this.dirty(false);
+
         this.modelName = name;
         this.model = model.clone();
         this.modelEntry = loader;
@@ -313,5 +344,38 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         }
 
         super.draw(context);
+    }
+
+    public static class GuiModelPoseTransformations extends GuiPoseTransformations
+    {
+        public GuiModelEditorPanel panel;
+
+        public GuiModelPoseTransformations(Minecraft mc, GuiModelEditorPanel panel)
+        {
+            super(mc);
+
+            this.panel = panel;
+        }
+
+        @Override
+        public void setT(double x, double y, double z)
+        {
+            super.setT(x, y, z);
+            this.panel.dirty();
+        }
+
+        @Override
+        public void setS(double x, double y, double z)
+        {
+            super.setS(x, y, z);
+            this.panel.dirty();
+        }
+
+        @Override
+        public void setR(double x, double y, double z)
+        {
+            super.setR(x, y, z);
+            this.panel.dirty();
+        }
     }
 }

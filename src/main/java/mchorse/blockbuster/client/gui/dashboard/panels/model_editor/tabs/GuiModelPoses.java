@@ -16,13 +16,11 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.JsonToNBT;
 
 public class GuiModelPoses extends GuiModelEditorTab
 {
     private GuiIconElement addPose;
     private GuiIconElement removePose;
-    private GuiIconElement importPose;
     private GuiIconElement copyPose;
 
     private GuiStringListElement posesList;
@@ -40,17 +38,16 @@ public class GuiModelPoses extends GuiModelEditorTab
         {
             this.panel.pose.size[0] = values[0].floatValue();
             this.panel.pose.size[1] = values[1].floatValue();
+            this.panel.dirty();
         });
 
         /* Buttons */
         this.addPose = new GuiIconElement(mc, Icons.ADD, (b) -> this.addPose());
         this.removePose = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removePose());
-        this.importPose = new GuiIconElement(mc, Icons.DOWNLOAD, (b) -> this.importPose());
-        this.importPose.tooltip(IKey.lang("blockbuster.gui.me.poses.import_pose_tooltip"));
         this.copyPose = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyPose());
         this.copyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.copy_pose_tooltip"));
 
-        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.importPose, this.copyPose);
+        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.copyPose);
         GuiElement bottom = new GuiElement(mc);
 
         sidebar.flex().relative(this).x(1F).h(20).anchorX(1F).row(0).resize();
@@ -83,6 +80,7 @@ public class GuiModelPoses extends GuiModelEditorTab
             this.posesList.add(text);
             this.setCurrent(text);
             this.panel.setPose(text);
+            this.panel.dirty();
         }
     }
 
@@ -101,30 +99,8 @@ public class GuiModelPoses extends GuiModelEditorTab
             this.posesList.remove(this.pose);
             this.setPose(newPose);
             this.posesList.setCurrent(newPose);
+            this.panel.dirty();
         }
-    }
-
-    private void importPose()
-    {
-        GuiModal.addFullModal(this, () ->
-        {
-            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.poses.import_pose"), this::importPose);
-
-            modal.text.field.setMaxStringLength(10000);
-
-            return modal;
-        });
-    }
-
-    private void importPose(String nbt)
-    {
-        try
-        {
-            this.panel.pose.fromNBT(JsonToNBT.getTagFromJson(nbt));
-            this.panel.model.fillInMissing();
-        }
-        catch (Exception e)
-        {}
     }
 
     private void copyPose()
@@ -147,6 +123,7 @@ public class GuiModelPoses extends GuiModelEditorTab
         }
 
         this.panel.transform.copy(pose.limbs.get(this.panel.limb.name));
+        this.panel.dirty();
     }
 
     public void setPose(String str)

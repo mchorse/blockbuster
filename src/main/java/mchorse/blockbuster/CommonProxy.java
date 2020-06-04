@@ -201,7 +201,7 @@ public class CommonProxy
      */
     public void loadModels(boolean force)
     {
-        this.models.loadModels(pack, force);
+        this.models.loadModels(this.pack, force);
     }
 
     /**

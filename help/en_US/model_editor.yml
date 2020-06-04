@@ -1,10 +1,14 @@
 blockbuster.gui.me:
     pick: Pick
-    none: "(none)"
     
     hitbox: Hitbox
     looking: Looking
-    
+
+    keys:
+        category: Blockbuster's model editor
+
+        save: Save current model
+
     limbs:
         title: Limbs
         
