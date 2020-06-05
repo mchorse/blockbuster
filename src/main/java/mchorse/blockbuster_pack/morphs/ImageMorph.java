@@ -1,5 +1,6 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.utils.Animation;
 import mchorse.mclib.utils.Color;
@@ -24,6 +25,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4d;
 import javax.vecmath.Vector4f;
 import java.util.Objects;
 
@@ -36,15 +38,14 @@ public class ImageMorph extends AbstractMorph
 {
     public static final Matrix4f matrix = new Matrix4f();
 
+    public static final Vector4d pos = new Vector4d();
+    public static final Vector4d uv = new Vector4d();
+    public static final Vector4d finalUv = new Vector4d();
+
     /**
      * Image morph's texture 
      */
     public ResourceLocation texture;
-
-    /**
-     * Image morph's scale
-     */
-    public float scale = 1;
 
     /**
      * Whether an image morph gets shaded 
@@ -91,6 +92,11 @@ public class ImageMorph extends AbstractMorph
      */
     public float rotation;
 
+    /**
+     * TSR for image morph
+     */
+    public ModelTransform pose = new ModelTransform();
+
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
 
@@ -121,9 +127,9 @@ public class ImageMorph extends AbstractMorph
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y - scale / 2, 0);
-        GL11.glScalef(1.5F, 1.5F, 1.5F);
+        GL11.glScalef(-1.5F, 1.5F, 1.5F);
 
-        this.renderPicture(scale, false);
+        this.renderPicture(scale);
 
         GL11.glPopMatrix();
     }
@@ -141,6 +147,7 @@ public class ImageMorph extends AbstractMorph
 
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+        boolean defaultPose = this.image.pose.isDefault();
 
         GlStateManager.enableRescaleNormal();
 
@@ -156,6 +163,12 @@ public class ImageMorph extends AbstractMorph
 
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
+
+        if (!defaultPose)
+        {
+            this.image.pose.applyTranslate();
+            this.image.pose.applyRotate();
+        }
 
         if (this.billboard)
         {
@@ -181,7 +194,12 @@ public class ImageMorph extends AbstractMorph
             GL11.glRotatef(180.0F - entityPitch, 1.0F, 0.0F, 0.0F);
         }
 
-        this.renderPicture(this.scale, true);
+        if (!defaultPose)
+        {
+            this.image.pose.applyScale();
+        }
+
+        this.renderPicture(1F);
 
         GL11.glPopMatrix();
 
@@ -215,7 +233,7 @@ public class ImageMorph extends AbstractMorph
         }
     }
 
-    private void renderPicture(float scale, boolean flipX)
+    private void renderPicture(float scale)
     {
         GifTexture.bindTexture(this.texture);
 
@@ -224,56 +242,27 @@ public class ImageMorph extends AbstractMorph
         float ow = w;
         float oh = h;
 
-        double x1;
-        double x2;
-        double y1;
-        double y2;
+        /* x = u1, y = u2, z = v1, w = v2 */
+        uv.x = 1.0F - this.image.crop.z / (double) w;
+        uv.y = this.image.crop.x / (double) w;
+        uv.z = 1.0F - this.image.crop.w / (double) h;
+        uv.w = this.image.crop.y / (double) h;
 
-        double u1 = 1.0F - (flipX ? this.image.crop.x : this.image.crop.z) / (double) w;
-        double u2 = (flipX ? this.image.crop.z : this.image.crop.x) / (double) w;
-        double v1 = 1.0F - this.image.crop.w / (double) h;
-        double v2 = this.image.crop.y / (double) h;
-
-        double a1 = this.resizeCrop ? 1F : u1;
-        double a2 = this.resizeCrop ? 0F : u2;
-        double b1 = this.resizeCrop ? 1F : v1;
-        double b2 = this.resizeCrop ? 0F : v2;
+        finalUv.set(uv);
 
         if (this.resizeCrop)
         {
+            finalUv.set(1F, 0F, 1F, 0F);
+
             w = w - this.image.crop.x - this.image.crop.z;
             h = h - this.image.crop.y - this.image.crop.w;
         }
 
-        if (w > h)
-        {
-            double ratio = h / (double) w;
+        double ratioX = w > h ? h / (double) w : 1D;
+        double ratioY = h > w ? w / (double) h : 1D;
 
-            x1 = (a1 - 0.5);
-            x2 = (a2 - 0.5);
-            y1 = (b2 - 0.5) * ratio;
-            y2 = (b1 - 0.5) * ratio;
-        }
-        else
-        {
-            double ratio = w / (double) h;
-
-            x1 = (a1 - 0.5) * ratio;
-            x2 = (a2 - 0.5) * ratio;
-            y1 = (b2 - 0.5);
-            y2 = (b1 - 0.5);
-        }
-
-        if (flipX)
-        {
-            u1 = 1 - u1;
-            u2 = 1 - u2;
-        }
-
-        x1 *= scale;
-        x2 *= scale;
-        y1 *= scale;
-        y2 *= scale;
+        pos.set((finalUv.x - 0.5) * ratioY, (finalUv.y - 0.5) * ratioY, (finalUv.w - 0.5) * ratioX, (finalUv.z - 0.5) * ratioX);
+        pos.scale(scale);
 
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
@@ -301,10 +290,10 @@ public class ImageMorph extends AbstractMorph
 
         Color color = this.image.color;
 
-        buffer.pos(x1, y1, 0).tex(u2, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(x2, y1, 0).tex(u1, v2).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(x2, y2, 0).tex(u1, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
-        buffer.pos(x1, y2, 0).tex(u2, v1).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.z, 0).tex(uv.y, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.z, 0).tex(uv.x, uv.w).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.y, pos.w, 0).tex(uv.x, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
+        buffer.pos(pos.x, pos.w, 0).tex(uv.y, uv.z).color(color.r, color.g, color.b, color.a).normal(0.0F, 0.0F, 1.0F).endVertex();
 
         tessellator.draw();
 
@@ -354,7 +343,6 @@ public class ImageMorph extends AbstractMorph
             ImageMorph morph = (ImageMorph) from;
 
             this.texture = RLUtils.clone(morph.texture);
-            this.scale = morph.scale;
             this.shaded = morph.shaded;
             this.lighting = morph.lighting;
             this.billboard = morph.billboard;
@@ -364,6 +352,7 @@ public class ImageMorph extends AbstractMorph
             this.offsetX = morph.offsetX;
             this.offsetY = morph.offsetY;
             this.rotation = morph.rotation;
+            this.pose.copy(morph.pose);
             this.animation.copy(morph.animation);
             this.animation.reset();
         }
@@ -379,7 +368,6 @@ public class ImageMorph extends AbstractMorph
             ImageMorph image = (ImageMorph) obj;
 
             result = result && Objects.equals(image.texture, this.texture);
-            result = result && image.scale == this.scale;
             result = result && image.shaded == this.shaded;
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
@@ -389,6 +377,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.offsetX == this.offsetX;
             result = result && image.offsetY == this.offsetY;
             result = result && image.rotation == this.rotation;
+            result = result && Objects.equals(image.pose, this.pose);
             result = result && Objects.equals(image.animation, this.animation);
         }
 
@@ -440,7 +429,6 @@ public class ImageMorph extends AbstractMorph
     {
         super.toNBT(tag);
 
-        if (this.scale != 1) tag.setFloat("Scale", this.scale);
         if (this.texture != null) tag.setTag("Texture", RLUtils.writeNbt(this.texture));
         if (this.shaded == false) tag.setBoolean("Shaded", this.shaded);
         if (this.lighting == false) tag.setBoolean("Lighting", this.lighting);
@@ -454,6 +442,7 @@ public class ImageMorph extends AbstractMorph
         if (this.offsetX != 0) tag.setFloat("OffsetX", this.offsetX);
         if (this.offsetY != 0) tag.setFloat("OffsetY", this.offsetY);
         if (this.rotation != 0) tag.setFloat("Rotation", this.rotation);
+        if (!this.pose.isDefault()) tag.setTag("Pose", this.pose.toNBT());
 
         NBTTagCompound animation = this.animation.toNBT();
 
@@ -468,7 +457,6 @@ public class ImageMorph extends AbstractMorph
     {
         super.fromNBT(tag);
 
-        if (tag.hasKey("Scale")) this.scale = tag.getFloat("Scale");
         if (tag.hasKey("Texture")) this.texture = RLUtils.create(tag.getTag("Texture"));
         if (tag.hasKey("Shaded")) this.shaded = tag.getBoolean("Shaded");
         if (tag.hasKey("Lighting")) this.lighting = tag.getBoolean("Lighting");
@@ -483,6 +471,16 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("OffsetY")) this.offsetY = tag.getFloat("OffsetY");
         if (tag.hasKey("Rotation")) this.rotation = tag.getFloat("Rotation");
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
+
+        if (tag.hasKey("Scale"))
+        {
+            float scale = tag.getFloat("Scale");
+
+            this.pose.scale[0] = scale;
+            this.pose.scale[1] = scale;
+            this.pose.scale[2] = scale;
+        }
 
         this.animation.reset();
     }
@@ -509,7 +507,7 @@ public class ImageMorph extends AbstractMorph
             properties.crop.y = (int) this.interp.interpolate(this.last.crop.y, properties.crop.y, factor);
             properties.crop.z = (int) this.interp.interpolate(this.last.crop.z, properties.crop.z, factor);
             properties.crop.w = (int) this.interp.interpolate(this.last.crop.w, properties.crop.w, factor);
-            properties.scale = this.interp.interpolate(this.last.scale, properties.scale, factor);
+            properties.pose.interpolate(this.last.pose, properties.pose, factor, this.interp);
             properties.x = this.interp.interpolate(this.last.x, properties.x, factor);
             properties.y = this.interp.interpolate(this.last.y, properties.y, factor);
             properties.rotation = this.interp.interpolate(this.last.rotation, properties.rotation, factor);
@@ -520,7 +518,7 @@ public class ImageMorph extends AbstractMorph
     {
         public Color color = new Color();
         public Vector4f crop = new Vector4f();
-        public float scale;
+        public ModelTransform pose = new ModelTransform();
         public float x;
         public float y;
         public float rotation;
@@ -529,7 +527,7 @@ public class ImageMorph extends AbstractMorph
         {
             this.color.set(morph.color, true);
             this.crop.set(morph.crop);
-            this.scale = morph.scale;
+            this.pose.copy(morph.pose);
             this.x = morph.offsetX;
             this.y = morph.offsetY;
             this.rotation = morph.rotation;

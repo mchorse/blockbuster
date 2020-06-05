@@ -113,10 +113,28 @@ public class ModelTransform
     @SideOnly(Side.CLIENT)
     public void transform()
     {
+        this.applyTranslate();
+        this.applyRotate();
+        this.applyScale();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void applyTranslate()
+    {
         GL11.glTranslatef(this.translate[0], this.translate[1], this.translate[2]);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void applyRotate()
+    {
         GL11.glRotatef(this.rotate[2], 0, 0, 1);
         GL11.glRotatef(this.rotate[1], 0, 1, 0);
         GL11.glRotatef(this.rotate[0], 1, 0, 0);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void applyScale()
+    {
         GL11.glScalef(this.scale[0], this.scale[1], this.scale[2]);
     }
 

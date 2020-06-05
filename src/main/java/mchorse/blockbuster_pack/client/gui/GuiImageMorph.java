@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.client.gui;
 
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.utils.GuiAnimation;
@@ -52,7 +53,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             protected void drawUserModel(GuiContext context)
             {
                 if (this.morph != null) {
-                    MorphUtils.render(this.morph, this.entity, 0.0D, 0.0D, 0.0D, -180, context.partialTicks);
+                    MorphUtils.render(this.morph, this.entity, 0.0D, 0.0D, 0.0D, 0, context.partialTicks);
                 }
             }
         };
@@ -76,6 +77,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
     public static class GuiImageMorphPanel extends GuiMorphPanel<ImageMorph, GuiImageMorph>
     {
+        public GuiPoseTransformations pose;
+
         public GuiTexturePicker picker;
         public GuiButtonElement texture;
         public GuiTrackpadElement scale;
@@ -100,6 +103,8 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         {
             super(mc, editor);
 
+            this.pose = new GuiPoseTransformations(mc);
+            this.pose.flex().relative(this.area).set(0, 0, 190, 70).x(0.5F, -95).y(1, -75);
             this.texture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.builder.pick_texture"), (b) ->
             {
                 this.picker.refresh();
@@ -108,12 +113,6 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
                 this.add(this.picker);
                 this.picker.resize();
             });
-
-            this.scale = new GuiTrackpadElement(mc, (value) ->
-            {
-                this.morph.scale = value.floatValue();
-            });
-            this.scale.tooltip(IKey.lang("blockbuster.gui.model_block.scale"));
 
             this.shaded = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) -> this.morph.shaded = b.isToggled());
             this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.morph.lighting = b.isToggled());
@@ -154,7 +153,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.animation = new GuiAnimation(mc);
             this.animation.flex().relative(this).x(1F, -130).w(130);
 
-            this.add(column, this.animation, this.animation.interpolations);
+            this.add(this.pose, column, this.animation, this.animation.interpolations);
         }
 
         @Override
@@ -164,7 +163,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             this.picker.removeFromParent();
 
-            this.scale.setValue(morph.scale);
+            this.pose.set(morph.pose);
             this.shaded.toggled(morph.shaded);
             this.lighting.toggled(morph.lighting);
             this.billboard.toggled(morph.billboard);
