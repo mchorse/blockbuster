@@ -269,6 +269,7 @@ blockbuster.gui:
         right: Right
         top: Top
         bottom: Bottom
+        resize_crop: Resize crop
         dimensions: "Size (%spx, %spx)"
         offset_x: X coordinate shift
         offset_y: Y coordinate shift

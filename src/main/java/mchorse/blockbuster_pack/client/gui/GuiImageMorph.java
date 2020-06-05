@@ -4,6 +4,7 @@ import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.utils.GuiAnimation;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -15,7 +16,9 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -38,6 +41,21 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
         this.defaultPanel = this.general = new GuiImageMorphPanel(mc, this);
         this.registerPanel(this.general, IKey.lang("blockbuster.morph.image"), Icons.GEAR);
+    }
+
+    @Override
+    protected GuiModelRenderer createMorphRenderer(Minecraft mc)
+    {
+        return new GuiMorphRenderer(mc)
+        {
+            @Override
+            protected void drawUserModel(GuiContext context)
+            {
+                if (this.morph != null) {
+                    MorphUtils.render(this.morph, this.entity, 0.0D, 0.0D, 0.0D, -180, context.partialTicks);
+                }
+            }
+        };
     }
 
     @Override
@@ -69,6 +87,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         public GuiTrackpadElement right;
         public GuiTrackpadElement top;
         public GuiTrackpadElement bottom;
+        public GuiToggleElement resizeCrop;
         public GuiColorElement color;
 
         public GuiTrackpadElement offsetX;
@@ -96,25 +115,10 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             });
             this.scale.tooltip(IKey.lang("blockbuster.gui.model_block.scale"));
 
-            this.shaded = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) ->
-            {
-                this.morph.shaded = this.shaded.isToggled();
-            });
-
-            this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) ->
-            {
-                this.morph.lighting = this.lighting.isToggled();
-            });
-
-            this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) ->
-            {
-                this.morph.billboard = this.billboard.isToggled();
-            });
-
-            this.picker = new GuiTexturePicker(mc, (rl) ->
-            {
-                this.morph.texture = rl;
-            });
+            this.shaded = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.shading"), false, (b) -> this.morph.shaded = b.isToggled());
+            this.lighting = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.limbs.lighting"), false, (b) -> this.morph.lighting = b.isToggled());
+            this.billboard = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.billboard"), false, (b) -> this.morph.billboard = b.isToggled());
+            this.picker = new GuiTexturePicker(mc, (rl) -> this.morph.texture = rl);
 
             this.left = new GuiTrackpadElement(mc, (value) -> this.morph.crop.x = value.intValue());
             this.left.tooltip(IKey.lang("blockbuster.gui.image.left"));
@@ -128,6 +132,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom = new GuiTrackpadElement(mc, (value) -> this.morph.crop.w = value.intValue());
             this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
+            this.resizeCrop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.resize_crop"), false, (b) -> this.morph.resizeCrop = b.isToggled());
             this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
             this.color.picker.editAlpha();
 
@@ -144,7 +149,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             column.scroll.opposite = true;
             column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
-            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.color, this.offsetX, this.offsetY, this.rotation);
+            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.resizeCrop, this.color, this.offsetX, this.offsetY, this.rotation);
 
             this.animation = new GuiAnimation(mc);
             this.animation.flex().relative(this).x(1F, -130).w(130);
@@ -168,6 +173,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.right.setValue(morph.crop.z);
             this.top.setValue(morph.crop.y);
             this.bottom.setValue(morph.crop.w);
+            this.resizeCrop.toggled(morph.resizeCrop);
 
             this.color.picker.setColor(morph.color);
             this.offsetX.setValue(morph.offsetX);

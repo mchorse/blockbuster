@@ -67,6 +67,11 @@ public class ImageMorph extends AbstractMorph
     public Vector4f crop = new Vector4f();
 
     /**
+     * Whether this image morph resizes cropped area
+     */
+    public boolean resizeCrop;
+
+    /**
      * Color filter for the image morph
      */
     public int color = 0xffffffff;
@@ -214,36 +219,49 @@ public class ImageMorph extends AbstractMorph
     {
         GifTexture.bindTexture(this.texture);
 
-        int w = this.getWidth();
-        int h = this.getHeight();
+        float w = this.getWidth();
+        float h = this.getHeight();
+        float ow = w;
+        float oh = h;
 
         double x1;
         double x2;
         double y1;
         double y2;
 
-        double u1 = 1.0F - (flipX ? this.image.crop.x : this.image.crop.w) / (double) w;
+        double u1 = 1.0F - (flipX ? this.image.crop.x : this.image.crop.z) / (double) w;
         double u2 = (flipX ? this.image.crop.z : this.image.crop.x) / (double) w;
         double v1 = 1.0F - this.image.crop.w / (double) h;
         double v2 = this.image.crop.y / (double) h;
+
+        double a1 = this.resizeCrop ? 1F : u1;
+        double a2 = this.resizeCrop ? 0F : u2;
+        double b1 = this.resizeCrop ? 1F : v1;
+        double b2 = this.resizeCrop ? 0F : v2;
+
+        if (this.resizeCrop)
+        {
+            w = w - this.image.crop.x - this.image.crop.z;
+            h = h - this.image.crop.y - this.image.crop.w;
+        }
 
         if (w > h)
         {
             double ratio = h / (double) w;
 
-            x1 = (u2 - 0.5);
-            x2 = (u1 - 0.5);
-            y1 = (v2 - 0.5) * ratio;
-            y2 = (v1 - 0.5) * ratio;
+            x1 = (a1 - 0.5);
+            x2 = (a2 - 0.5);
+            y1 = (b2 - 0.5) * ratio;
+            y2 = (b1 - 0.5) * ratio;
         }
         else
         {
             double ratio = w / (double) h;
 
-            x1 = (u2 - 0.5) * ratio;
-            x2 = (u1 - 0.5) * ratio;
-            y1 = (v2 - 0.5);
-            y2 = (v1 - 0.5);
+            x1 = (a1 - 0.5) * ratio;
+            x2 = (a2 - 0.5) * ratio;
+            y1 = (b2 - 0.5);
+            y2 = (b1 - 0.5);
         }
 
         if (flipX)
@@ -273,7 +291,7 @@ public class ImageMorph extends AbstractMorph
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.loadIdentity();
             GlStateManager.translate(0.5F, 0.5F, 0);
-            GlStateManager.translate(this.image.x / (float) w, this.image.y / (float) h, 0);
+            GlStateManager.translate(this.image.x / ow, this.image.y / oh, 0);
             GlStateManager.rotate(this.image.rotation, 0, 0, 1);
             GlStateManager.translate(-0.5F, -0.5F, 0);
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
@@ -341,6 +359,7 @@ public class ImageMorph extends AbstractMorph
             this.lighting = morph.lighting;
             this.billboard = morph.billboard;
             this.crop.set(morph.crop);
+            this.resizeCrop = morph.resizeCrop;
             this.color = morph.color;
             this.offsetX = morph.offsetX;
             this.offsetY = morph.offsetY;
@@ -365,6 +384,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.lighting == this.lighting;
             result = result && image.billboard == this.billboard;
             result = result && image.crop.equals(this.crop);
+            result = result && image.resizeCrop == this.resizeCrop;
             result = result && image.color == this.color;
             result = result && image.offsetX == this.offsetX;
             result = result && image.offsetY == this.offsetY;
@@ -429,6 +449,7 @@ public class ImageMorph extends AbstractMorph
         if (this.crop.z != 0) tag.setInteger("Right", (int) this.crop.z);
         if (this.crop.y != 0) tag.setInteger("Top", (int) this.crop.y);
         if (this.crop.w != 0) tag.setInteger("Bottom", (int) this.crop.w);
+        if (this.resizeCrop) tag.setBoolean("ResizeCrop", this.resizeCrop);
         if (this.color != 0xffffffff) tag.setInteger("Color", this.color);
         if (this.offsetX != 0) tag.setFloat("OffsetX", this.offsetX);
         if (this.offsetY != 0) tag.setFloat("OffsetY", this.offsetY);
@@ -456,6 +477,7 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Right")) this.crop.z = tag.getInteger("Right");
         if (tag.hasKey("Top")) this.crop.y = tag.getInteger("Top");
         if (tag.hasKey("Bottom")) this.crop.w = tag.getInteger("Bottom");
+        if (tag.hasKey("ResizeCrop")) this.resizeCrop = tag.getBoolean("ResizeCrop");
         if (tag.hasKey("Color")) this.color = tag.getInteger("Color");
         if (tag.hasKey("OffsetX")) this.offsetX = tag.getFloat("OffsetX");
         if (tag.hasKey("OffsetY")) this.offsetY = tag.getFloat("OffsetY");
