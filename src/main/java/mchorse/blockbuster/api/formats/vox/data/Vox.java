@@ -19,11 +19,16 @@ public class Vox
         return x >= 0 && y >= 0 && z >= 0 && x < this.x && y < this.y && z < this.z && this.voxels[this.toIndex(x, y, z)] != 0;
     }
 
-    public void set(byte x, byte y, byte z, byte block)
+    public void set(int x, int y, int z, int block)
     {
         int index = this.toIndex(x, y, z);
 
-        byte last = (byte) this.voxels[index];
+        if (index < 0 || index >= this.x * this.y * this.z)
+        {
+            return;
+        }
+
+        int last = this.voxels[index];
 
         this.voxels[index] = block;
 

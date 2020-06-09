@@ -85,7 +85,12 @@ public class VoxReader
                 {
                     stream.read(this.buf);
 
-                    vox.set(this.buf[0], this.buf[2], this.buf[1], this.buf[3]);
+                    int x = this.buf[0];
+                    int y = this.buf[2];
+                    int z = this.buf[1];
+                    int block = this.buf[3];
+
+                    vox.set(x >= 0 ? x : 256 + x, y >= 0 ? y : 256 + y, z >= 0 ? z : 256 + z, block >= 0 ? block : 256 + block);
                     voxels--;
                 }
 
