@@ -431,7 +431,7 @@ public class CameraHandler
                 panel.editor.removeFromParent();
                 panel.editor.flex().relative(editor.viewport);
                 panel.records.removeFromParent();
-                panel.records.flex().relative(editor.viewport).h(1F);
+                panel.records.flex().relative(editor.viewport).h(1F, editorElement.isVisible() ? -80 : 0);
                 panel.records.setVisible(false);
 
                 cameraEditorElements.prepend(panel.records);
