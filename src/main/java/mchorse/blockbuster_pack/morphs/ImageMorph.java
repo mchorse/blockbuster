@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
@@ -96,6 +97,11 @@ public class ImageMorph extends AbstractMorph
      * TSR for image morph
      */
     public ModelTransform pose = new ModelTransform();
+
+    /**
+     * Whether this image morph should cut out background color
+     */
+    public boolean keying;
 
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
@@ -268,7 +274,16 @@ public class ImageMorph extends AbstractMorph
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        if (this.keying)
+        {
+            GlStateManager.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+            GlStateManager.blendFunc(GL11.GL_ZERO, GL11.GL_ZERO);
+        }
+        else
+        {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -303,6 +318,12 @@ public class ImageMorph extends AbstractMorph
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.loadIdentity();
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        }
+
+        if (this.keying)
+        {
+            GlStateManager.glBlendEquation(GL14.GL_FUNC_ADD);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
         GlStateManager.disableBlend();
@@ -355,6 +376,7 @@ public class ImageMorph extends AbstractMorph
             this.offsetY = morph.offsetY;
             this.rotation = morph.rotation;
             this.pose.copy(morph.pose);
+            this.keying = morph.keying;
             this.animation.copy(morph.animation);
             this.animation.reset();
         }
@@ -380,6 +402,7 @@ public class ImageMorph extends AbstractMorph
             result = result && image.offsetY == this.offsetY;
             result = result && image.rotation == this.rotation;
             result = result && Objects.equals(image.pose, this.pose);
+            result = result && image.keying == this.keying;
             result = result && Objects.equals(image.animation, this.animation);
         }
 
@@ -445,6 +468,7 @@ public class ImageMorph extends AbstractMorph
         if (this.offsetY != 0) tag.setFloat("OffsetY", this.offsetY);
         if (this.rotation != 0) tag.setFloat("Rotation", this.rotation);
         if (!this.pose.isDefault()) tag.setTag("Pose", this.pose.toNBT());
+        if (this.keying) tag.setBoolean("Keying", this.keying);
 
         NBTTagCompound animation = this.animation.toNBT();
 
@@ -474,6 +498,7 @@ public class ImageMorph extends AbstractMorph
         if (tag.hasKey("Rotation")) this.rotation = tag.getFloat("Rotation");
         if (tag.hasKey("Animation")) this.animation.fromNBT(tag.getCompoundTag("Animation"));
         if (tag.hasKey("Pose")) this.pose.fromNBT(tag.getCompoundTag("Pose"));
+        if (tag.hasKey("Keying")) this.keying = tag.getBoolean("Keying");
 
         if (tag.hasKey("Scale"))
         {

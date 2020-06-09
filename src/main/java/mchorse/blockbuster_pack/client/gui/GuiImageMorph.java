@@ -96,6 +96,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
         public GuiTrackpadElement offsetX;
         public GuiTrackpadElement offsetY;
         public GuiTrackpadElement rotation;
+        public GuiToggleElement keying;
 
         public GuiAnimation animation;
 
@@ -141,6 +142,9 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.offsetY.tooltip(IKey.lang("blockbuster.gui.image.offset_y"));
             this.rotation = new GuiTrackpadElement(mc, (value) -> this.morph.rotation = value.floatValue());
             this.rotation.tooltip(IKey.lang("blockbuster.gui.image.rotation"));
+            this.rotation = new GuiTrackpadElement(mc, (value) -> this.morph.rotation = value.floatValue());
+            this.keying = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.keying"), false, (b) -> this.morph.keying = b.isToggled());
+            this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"));
 
             this.picker.flex().relative(this.area).wh(1F, 1F);
 
@@ -148,7 +152,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
             column.scroll.opposite = true;
             column.flex().relative(this).w(130).h(1F).column(5).vertical().stretch().scroll().height(20).padding(10);
-            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.resizeCrop, this.color, this.offsetX, this.offsetY, this.rotation);
+            column.add(this.texture, this.scale, this.shaded, this.lighting, this.billboard, Elements.label(IKey.lang("blockbuster.gui.image.crop")), this.left, this.right, this.top, this.bottom, this.resizeCrop, this.color, this.offsetX, this.offsetY, this.rotation, this.keying);
 
             this.animation = new GuiAnimation(mc);
             this.animation.flex().relative(this).x(1F, -130).w(130);
@@ -177,6 +181,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.color.picker.setColor(morph.color);
             this.offsetX.setValue(morph.offsetX);
             this.offsetY.setValue(morph.offsetY);
+            this.keying.toggled(morph.keying);
 
             this.animation.fill(morph.animation);
         }

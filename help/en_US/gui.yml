@@ -274,6 +274,8 @@ blockbuster.gui:
         offset_x: X coordinate shift
         offset_y: Y coordinate shift
         rotation: Rotation
+        keying: Erase color
+        keying_tooltip: This option removes color in place where this morph was rendered, which can be used for Minema's 'Use alpha' option to record keyed
 
     sequencer:
         duration: Duration
