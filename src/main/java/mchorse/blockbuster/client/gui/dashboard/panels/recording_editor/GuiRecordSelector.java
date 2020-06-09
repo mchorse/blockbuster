@@ -170,7 +170,7 @@ public class GuiRecordSelector extends GuiElement
         {
             int scale = this.scroll.scrollItemSize;
 
-            this.scroll.scrollItemSize = MathUtils.clamp(this.scroll.scrollItemSize + (int) Math.copySign(2, context.mouseWheel), 10, 50);
+            this.scroll.scrollItemSize = MathUtils.clamp(this.scroll.scrollItemSize + (int) Math.copySign(2, context.mouseWheel), 6, 50);
             this.scroll.setSize(this.panel.record.actions.size());
             this.scroll.clamp();
 
@@ -233,6 +233,11 @@ public class GuiRecordSelector extends GuiElement
         this.vertical.drag(mouseX, mouseY);
         this.scroll.draw(0x88000000);
 
+        Gui.drawRect(this.area.ex(), this.area.y, this.area.ex() + 20, this.area.ey(), 0xff222222);
+        Gui.drawRect(this.area.x - 20, this.area.y, this.area.x, this.area.ey(), 0xff222222);
+        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 8, this.area.y, this.area.ex(), this.area.ey(), 0x00000000, 0x88000000, 0);
+        GuiDraw.drawHorizontalGradientRect(this.area.x, this.area.y, this.area.x + 8, this.area.ey(), 0x88000000, 0x00000000, 0);
+
         int max = this.area.x + this.scroll.scrollItemSize * count;
 
         if (max < this.area.ex())
@@ -289,20 +294,6 @@ public class GuiRecordSelector extends GuiElement
             }
         }
 
-        GuiDraw.unscissor(context);
-
-        if (this.moving)
-        {
-            int x = mouseX - h / 2;
-            int y = mouseY;
-
-            Action action = this.panel.record.getAction(this.tick, this.index);
-            int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
-
-            Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
-            this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
-        }
-
         for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
         {
             if (i % 5 == 0 && i < count)
@@ -320,10 +311,19 @@ public class GuiRecordSelector extends GuiElement
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
 
-        Gui.drawRect(this.area.ex(), this.area.y, this.area.ex() + 20, this.area.ey(), 0xff222222);
-        Gui.drawRect(this.area.x - 20, this.area.y, this.area.x, this.area.ey(), 0xff222222);
-        GuiDraw.drawHorizontalGradientRect(this.area.ex() - 8, this.area.y, this.area.ex(), this.area.ey(), 0x00000000, 0x88000000, 0);
-        GuiDraw.drawHorizontalGradientRect(this.area.x, this.area.y, this.area.x + 8, this.area.ey(), 0x88000000, 0x00000000, 0);
+        GuiDraw.unscissor(context);
+
+        if (this.moving)
+        {
+            int x = mouseX - h / 2;
+            int y = mouseY;
+
+            Action action = this.panel.record.getAction(this.tick, this.index);
+            int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
+
+            Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
+            this.font.drawStringWithShadow(String.valueOf(this.index), x + 6, y + 6, 0xffffff);
+        }
 
         super.draw(context);
     }

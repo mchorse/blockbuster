@@ -319,8 +319,6 @@ public class GuiSnowstorm extends GuiBlockbusterPanel
 	private void drawOverlay(GuiContext context)
 	{
 		/* Draw debug info */
-		this.editor.area.draw(0x88000000);
-
 		BedrockEmitter emitter = this.renderer.emitter;
 		String label = emitter.particles.size() + "P - " + emitter.age + "A";
 
