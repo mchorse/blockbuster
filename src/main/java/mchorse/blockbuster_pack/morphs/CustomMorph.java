@@ -93,6 +93,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     public float scaleGui = 1F;
 
     /**
+     * Whether this image morph should cut out background color
+     */
+    public boolean keying;
+
+    /**
      * Animation details
      */
     public PoseAnimation animation = new PoseAnimation();
@@ -438,6 +443,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             result = result && this.scaleGui == morph.scaleGui;
             result = result && this.materials.equals(morph.materials);
             result = result && this.parts.equals(morph.parts);
+            result = result && this.keying == morph.keying;
             result = result && this.animation.equals(morph.animation);
 
             return result;
@@ -537,6 +543,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.currentPoseOnSneak = morph.currentPoseOnSneak;
             this.scale = morph.scale;
             this.scaleGui = morph.scaleGui;
+            this.keying = morph.keying;
 
             if (morph.customPose != null)
             {
@@ -573,6 +580,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         if (this.currentPoseOnSneak) tag.setBoolean("Sneak", this.currentPoseOnSneak);
         if (this.scale != 1F) tag.setFloat("Scale", this.scale);
         if (this.scaleGui != 1F) tag.setFloat("ScaleGUI", this.scaleGui);
+        if (this.keying) tag.setBoolean("Keying", this.keying);
 
         if (this.customPose != null)
         {
@@ -630,6 +638,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         this.currentPoseOnSneak = tag.getBoolean("Sneak");
         if (tag.hasKey("Scale", NBT.TAG_ANY_NUMERIC)) this.scale = tag.getFloat("Scale");
         if (tag.hasKey("ScaleGUI", NBT.TAG_ANY_NUMERIC)) this.scaleGui = tag.getFloat("ScaleGUI");
+        if (tag.hasKey("Keying")) this.keying = tag.getBoolean("Keying");
 
         if (tag.hasKey("CustomPose", 10))
         {

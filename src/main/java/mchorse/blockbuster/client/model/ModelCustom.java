@@ -7,6 +7,7 @@ import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelLimb.Holding;
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
+import mchorse.blockbuster_pack.morphs.CustomMorph;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,6 +20,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 /**
  * Custom Model class
@@ -44,6 +47,8 @@ public class ModelCustom extends ModelBiped
      * Current pose
      */
     public ModelPose pose;
+
+    public CustomMorph current;
 
     /**
      * Array of all limbs that has been parsed from JSON model
@@ -75,12 +80,29 @@ public class ModelCustom extends ModelBiped
     @Override
     public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
+        boolean keying = this.current != null && this.current.keying;
+
         GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        if (keying)
+        {
+            GlStateManager.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
+            GlStateManager.blendFunc(GL11.GL_ZERO, GL11.GL_ZERO);
+        }
+        else
+        {
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }
 
         for (ModelRenderer limb : this.renderable)
         {
             limb.render(scale);
+        }
+
+        if (keying)
+        {
+            GlStateManager.glBlendEquation(GL14.GL_FUNC_ADD);
+            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         }
 
         GlStateManager.disableBlend();

@@ -78,7 +78,7 @@ public class GuiPosePanel extends GuiMorphPanel<CustomMorph, GuiCustomMorph> imp
             this.morph.currentPoseOnSneak = this.poseOnSneak.isToggled();
             this.editor.updateModelRenderer();
         });
-        this.poseOnSneak.flex().relative(this).x(10).y(1F, -22).w(110);
+        this.poseOnSneak.flex().relative(this).x(10).y(1F, -24).w(110);
 
         this.list = new GuiStringListElement(mc, (str) ->
         {

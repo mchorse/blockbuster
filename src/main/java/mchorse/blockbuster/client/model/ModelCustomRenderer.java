@@ -108,12 +108,6 @@ public class ModelCustomRenderer extends ModelRenderer
     {
         GlStateManager.color(this.limb.color[0], this.limb.color[1], this.limb.color[2], this.limb.opacity);
 
-        if (this.limb.opacity != 1.0F)
-        {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        }
-
         if (!this.limb.lighting)
         {
             lastBrightnessX = OpenGlHelper.lastBrightnessX;

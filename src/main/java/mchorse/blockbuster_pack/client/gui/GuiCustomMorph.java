@@ -9,6 +9,7 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
+import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -207,6 +208,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         public GuiButtonElement texture;
         public GuiStringListElement materials;
         public GuiTexturePicker picker;
+        public GuiToggleElement keying;
 
         public GuiMaterialsPanel(Minecraft mc, GuiCustomMorph editor)
         {
@@ -241,14 +243,17 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
             });
             this.materials = new GuiStringListElement(mc, (str) -> this.materials.setCurrent(str.get(0)));
             this.materials.background();
+            this.keying = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.keying"), false, (b) -> this.morph.keying = b.isToggled());
+            this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"));
             this.picker = new GuiTexturePicker(mc, skin);
 
-            this.skin.flex().relative(this.area).set(10, 10, 110, 20);
+            this.skin.flex().relative(this).set(10, 10, 110, 20);
             this.texture.flex().relative(this.skin).set(0, 25, 110, 20);
-            this.materials.flex().relative(this.texture).set(0, 25, 110, 0).hTo(this.area, 1F, -10);
-            this.picker.flex().relative(this.area).wh(1F, 1F);
+            this.materials.flex().relative(this.texture).set(0, 25, 110, 0).hTo(this.keying.flex(), -5);
+            this.keying.flex().relative(this).x(10).w(110).y(1F, -24);
+            this.picker.flex().relative(this).wh(1F, 1F);
 
-            this.add(this.skin, this.texture, this.materials);
+            this.add(this.skin, this.texture, this.keying, this.materials);
         }
 
         private void setCurrentMaterialRL(ResourceLocation rl)
@@ -294,6 +299,7 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
 
             this.materials.setVisible(!noMaterials);
             this.texture.setVisible(!noMaterials);
+            this.keying.toggled(morph.keying);
         }
 
         @Override
