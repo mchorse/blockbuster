@@ -128,6 +128,11 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     @Override
     protected void drawUserModel(GuiContext context)
     {
+        if (this.model == null)
+        {
+            return;
+        }
+
         float partial = context.partialTicks;
         float headYaw = this.yaw;
         float headPitch = -this.pitch;
@@ -216,7 +221,10 @@ public class GuiBBModelRenderer extends GuiModelRenderer
     @Override
     protected void drawForStencil(GuiContext context)
     {
-        this.model.renderForStencil(this.entity, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
+        if (this.model != null)
+        {
+            this.model.renderForStencil(this.entity, this.swing + context.partialTicks, this.swingAmount, this.timer, this.yaw, this.pitch, 1 / 16F);
+        }
     }
 
     @Override
