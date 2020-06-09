@@ -11,6 +11,7 @@ import mchorse.blockbuster.api.loaders.lazy.IModelLazyLoader;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelLimbs;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelList;
+import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelOptions;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs.GuiModelPoses;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiBBModelRenderer;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.ModelUtils;
@@ -46,6 +47,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
     private GuiElement icons;
     private GuiIconElement openModels;
+    private GuiIconElement openOptions;
     private GuiIconElement openPoses;
     private GuiIconElement saveModel;
     private GuiIconElement swipe;
@@ -59,6 +61,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
     private GuiModelLimbs limbs;
     private GuiModelPoses poses;
     private GuiModelList models;
+    private GuiModelOptions options;
 
     private GuiTexturePicker picker;
 
@@ -98,11 +101,16 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         this.poses.setVisible(false);
 
         this.models = new GuiModelList(mc, this);
-        this.models.flex().relative(this).y(20).wTo(this.limbs.area, -10).hTo(this.poseEditor.area, -20).maxH(230);
+        this.models.flex().relative(this).y(20).w(140).h(1F, -20);
         this.models.setVisible(false);
+
+        this.options = new GuiModelOptions(mc, this);
+        this.options.flex().relative(this).y(20).w(200).h(1F, -20);
+        this.options.setVisible(false);
 
         /* Toolbar buttons */
         this.openModels = new GuiIconElement(mc, Icons.MORE, (b) -> this.toggle(this.models));
+        this.openOptions = new GuiIconElement(mc, Icons.GEAR, (b) -> this.toggle(this.options));
         this.openPoses = new GuiIconElement(mc, Icons.POSE, (b) -> this.toggle(this.poses));
 
         this.saveModel = new GuiIconElement(mc, Icons.SAVED, (b) -> this.saveModel());
@@ -133,13 +141,13 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.icons = new GuiElement(mc);
         this.icons.flex().relative(this).h(20).row(0).resize().height(20);
-        this.icons.add(this.openModels, this.openPoses, this.saveModel);
+        this.icons.add(this.openModels, this.openOptions, this.openPoses, this.saveModel);
 
         GuiElement icons = new GuiElement(mc);
         icons.flex().relative(this.icons).x(1F, 20).h(20).row(0).resize().height(20);
         icons.add(this.swipe, this.running, this.items, this.hitbox, this.looking, this.skin);
 
-        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.models, this.icons, icons);
+        this.add(this.modelRenderer, this.poses, this.poseEditor, this.limbs, this.models, this.options, this.icons, icons);
 
         this.keys()
                 .register(IKey.lang("blockbuster.gui.me.keys.save"), Keyboard.KEY_S, () -> this.saveModel.clickItself(GuiBase.getCurrent()))
@@ -154,6 +162,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.models.setVisible(false);
         this.poses.setVisible(false);
+        this.options.setVisible(false);
 
         element.setVisible(!visible);
     }
@@ -350,7 +359,7 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
 
         this.limbs.fillData(model);
         this.poses.fillData(model);
-        this.models.fillData(model);
+        this.options.fillData(model);
 
         this.setPose("standing");
         this.setLimb(this.model.limbs.keySet().iterator().next());
@@ -397,6 +406,10 @@ public class GuiModelEditorPanel extends GuiBlockbusterPanel
         else if (this.poses.isVisible())
         {
             this.openPoses.area.draw(0xaa000000);
+        }
+        else if (this.options.isVisible())
+        {
+            this.openOptions.area.draw(0xaa000000);
         }
 
         if (this.modelRenderer.swinging)

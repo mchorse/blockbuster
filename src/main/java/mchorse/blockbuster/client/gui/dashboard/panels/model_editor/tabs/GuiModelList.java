@@ -52,16 +52,6 @@ public class GuiModelList extends GuiModelEditorTab
     private GuiIconElement export;
     private GuiIconElement folder;
 
-    /* Main properties */
-    private GuiTextElement name;
-    private GuiTwoElement texture;
-    private GuiThreeElement scale;
-    private GuiTrackpadElement scaleGui;
-    private GuiButtonElement defaultTexture;
-    private GuiTextElement skins;
-    private GuiToggleElement providesObj;
-    private GuiToggleElement providesMtl;
-
     public GuiModelList(Minecraft mc, GuiModelEditorPanel panel)
     {
         super(mc, panel);
@@ -70,70 +60,17 @@ public class GuiModelList extends GuiModelEditorTab
 
         this.models = new GuiStringSearchListElement(mc, (str) -> this.panel.setModel(str.get(0)));
         this.models.flex().relative(this.area).y(20).w(140).h(1, -20);
+        this.models.list.scroll.scrollSpeed = 16;
 
         this.dupe = new GuiIconElement(mc, Icons.DUPE, (b) -> this.saveModel());
         this.export = new GuiIconElement(mc, Icons.UPLOAD, (b) -> this.exportModel());
         this.folder = new GuiIconElement(mc, Icons.FOLDER, (b) -> this.openFolder());
 
-        /* Main properties */
-        this.name = new GuiTextElement(mc, 120, (str) -> this.panel.model.name = str);
-        this.texture = new GuiTwoElement(mc, (value) ->
-        {
-            this.panel.model.texture[0] = value[0].intValue();
-            this.panel.model.texture[1] = value[1].intValue();
-            this.panel.rebuildModel();
-        });
-        this.texture.setLimit(1, 8196, true);
-        this.scale = new GuiThreeElement(mc, (value) ->
-        {
-            this.panel.model.scale[0] = value[0].floatValue();
-            this.panel.model.scale[1] = value[1].floatValue();
-            this.panel.model.scale[2] = value[2].floatValue();
-        });
-        this.scaleGui = new GuiTrackpadElement(mc, (value) ->
-        {
-            this.panel.model.scaleGui = value.floatValue();
-            this.panel.dirty();
-        });
-        this.scaleGui.tooltip(IKey.lang("blockbuster.gui.me.options.scale_gui"));
-        this.defaultTexture = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.me.options.default_texture"), (b) ->
-        {
-            this.panel.pickTexture(this.panel.model.defaultTexture, (rl) ->
-            {
-                this.panel.model.defaultTexture = rl;
-                this.panel.dirty();
-            });
-        });
-        this.skins = new GuiTextElement(mc, 120, (str) ->
-        {
-            this.panel.model.skins = str;
-            this.panel.dirty();
-        });
-        this.providesObj = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.provides_obj"), false, (b) ->
-        {
-            this.panel.model.providesObj = b.isToggled();
-            this.panel.rebuildModel();
-        });
-        this.providesMtl = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.me.options.provides_mtl"), false, (b) ->
-        {
-            this.panel.model.providesMtl = b.isToggled();
-            this.panel.rebuildModel();
-        });
-
-        GuiScrollElement element = new GuiScrollElement(mc, ScrollArea.ScrollDirection.HORIZONTAL);
-
-        element.flex().relative(this.models).x(1F).y(-20).hTo(this.area, 1F).wTo(this.area, 1F);
-        element.flex().column(5).width(180).scroll().padding(10).height(20);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui, this.defaultTexture);
-        element.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl);
-
         GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.dupe, this.export, this.folder);
 
         sidebar.flex().relative(this.models).x(1F).y(-20).h(20).anchorX(1F).row(0).resize();
 
-        this.add(this.models, element, sidebar);
+        this.add(this.models, sidebar);
     }
 
     public void updateModelList()
@@ -153,17 +90,6 @@ public class GuiModelList extends GuiModelEditorTab
         {
             this.models.list.setCurrentScroll(current);
         }
-    }
-
-    public void fillData(Model model)
-    {
-        this.name.setText(model.name);
-        this.texture.setValues(model.texture[0], model.texture[1]);
-        this.scale.setValues(model.scale[0], model.scale[1], model.scale[2]);
-        this.scaleGui.setValue(model.scaleGui);
-        this.skins.setText(model.skins);
-        this.providesObj.toggled(model.providesObj);
-        this.providesMtl.toggled(model.providesMtl);
     }
 
     private void saveModel()

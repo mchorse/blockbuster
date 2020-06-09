@@ -27,6 +27,9 @@ public abstract class GuiModelEditorTab extends GuiElement
 
     protected void drawLabels()
     {
-        this.font.drawStringWithShadow(this.title.get(), this.area.x + 4, this.area.y + 6, 0xeeeeee);
+        if (this.title != null)
+        {
+            this.font.drawStringWithShadow(this.title.get(), this.area.x + 4, this.area.y + 6, 0xeeeeee);
+        }
     }
 }
