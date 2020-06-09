@@ -113,7 +113,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
     {
         super(mc, dashboard);
 
-        this.selector = new GuiRecordSelector(mc, this, (action) -> this.selectAction(action));
+        this.selector = new GuiRecordSelector(mc, this, this::selectAction);
         this.selector.setVisible(false);
         this.selector.keys().register(IKey.lang("blockbuster.gui.aperture.keys.add_morph_action"), Keyboard.KEY_M, () -> this.createAction("morph"))
             .held(Keyboard.KEY_LCONTROL)
@@ -390,6 +390,7 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
 
     public void selectRecord(String str)
     {
+        this.selector.reset();
         this.save();
         Dispatcher.sendToServer(new PacketRequestAction(str, true));
     }

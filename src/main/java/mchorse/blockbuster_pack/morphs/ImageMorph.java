@@ -264,7 +264,7 @@ public class ImageMorph extends AbstractMorph
         pos.set((finalUv.x - 0.5) * ratioY, (finalUv.y - 0.5) * ratioY, (finalUv.w - 0.5) * ratioX, (finalUv.z - 0.5) * ratioX);
         pos.scale(scale);
 
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0 / 255F);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
         GlStateManager.disableCull();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();

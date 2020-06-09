@@ -1,20 +1,20 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
-import java.util.List;
-import java.util.function.Consumer;
-
+import mchorse.blockbuster.recording.actions.Action;
+import mchorse.blockbuster.recording.actions.ActionRegistry;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
-
-import mchorse.blockbuster.recording.actions.ActionRegistry;
-import mchorse.blockbuster.recording.actions.Action;
-import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.ScrollArea.ScrollDirection;
+import mchorse.mclib.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class GuiRecordSelector extends GuiElement
 {
@@ -47,23 +47,30 @@ public class GuiRecordSelector extends GuiElement
         this.callback = callback;
     }
 
+    public void reset()
+    {
+        this.scroll.scrollItemSize = 34;
+    }
+
     @Override
     public void resize()
     {
         super.resize();
 
         this.scroll.copy(this.area);
-
         this.vertical.copy(this.area);
-        this.vertical.w = 4;
     }
 
     public void update()
     {
         if (this.panel.record != null)
         {
-            this.tick = this.index = -1;
-            this.scroll.setSize(this.panel.record.actions.size());
+            int count = this.panel.record.actions.size();
+
+            this.tick = MathUtils.clamp(this.tick, 0, count - 1);
+            this.index = -1;
+
+            this.scroll.setSize(count);
             this.scroll.clamp();
 
             this.recalculateVertical();
@@ -147,7 +154,37 @@ public class GuiRecordSelector extends GuiElement
     @Override
     public boolean mouseScrolled(GuiContext context)
     {
-        return super.mouseScrolled(context) || this.scroll.mouseScroll(context);
+        if (super.mouseScrolled(context))
+        {
+            return true;
+        }
+
+        boolean shift = GuiScreen.isShiftKeyDown();
+        boolean alt = GuiScreen.isAltKeyDown();
+
+        if (shift && !alt)
+        {
+            return this.vertical.mouseScroll(context);
+        }
+        else if (alt && !shift)
+        {
+            int scale = this.scroll.scrollItemSize;
+
+            this.scroll.scrollItemSize = MathUtils.clamp(this.scroll.scrollItemSize + (int) Math.copySign(2, context.mouseWheel), 10, 50);
+            this.scroll.setSize(this.panel.record.actions.size());
+            this.scroll.clamp();
+
+            if (this.scroll.scrollItemSize != scale)
+            {
+                int value = this.scroll.scroll + (context.mouseX - this.area.x);
+
+                this.scroll.scroll = (int) ((value - (value - this.scroll.scroll) * (scale / (float) this.scroll.scrollItemSize)) * (this.scroll.scrollItemSize / (float) scale));
+            }
+
+            return true;
+        }
+
+        return this.scroll.mouseScroll(context);
     }
 
     @Override
@@ -177,6 +214,7 @@ public class GuiRecordSelector extends GuiElement
 
         int mouseX = context.mouseX;
         int mouseY = context.mouseY;
+        int count = this.panel.record.actions.size();
 
         if (this.lastDragging)
         {
@@ -193,10 +231,15 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.drag(mouseX, mouseY);
         this.vertical.drag(mouseX, mouseY);
-
-        GuiScreen screen = this.mc.currentScreen;
-
         this.scroll.draw(0x88000000);
+
+        int max = this.area.x + this.scroll.scrollItemSize * count;
+
+        if (max < this.area.ex())
+        {
+            Gui.drawRect(max, this.area.y, this.area.ex(), this.area.ey(), 0xaa000000);
+        }
+
         GuiDraw.scissor(this.area.x, this.area.y, this.area.w, this.area.h, context);
 
         int h = this.scroll.scrollItemSize;
@@ -206,14 +249,17 @@ public class GuiRecordSelector extends GuiElement
         {
             int x = this.scroll.x - this.scroll.scroll + i * h;
 
-            Gui.drawRect(x, this.scroll.y, x + 1, this.scroll.ey(), 0x22ffffff);
+            if (i < count)
+            {
+                Gui.drawRect(x, this.scroll.y, x + 1, this.scroll.ey(), 0x22ffffff);
+            }
 
             if (i == this.tick)
             {
                 Gui.drawRect(x, this.scroll.y, x + h + 1, this.scroll.ey(), 0x440088ff);
             }
 
-            if (i >= 0 && i < this.panel.record.actions.size())
+            if (i >= 0 && i < count)
             {
                 List<Action> actions = this.panel.record.actions.get(i);
 
@@ -225,9 +271,12 @@ public class GuiRecordSelector extends GuiElement
                     {
                         int y = this.scroll.y + j * 20 - this.vertical.scroll;
                         int color = MathHelper.hsvToRGB((ActionRegistry.getType(action) - 1) / 20F, 1F, 1F);
+                        String label = String.valueOf(j);
+
+                        int offset = this.scroll.scrollItemSize < 18 ? (this.scroll.scrollItemSize - this.font.getStringWidth(label)) / 2 : 6;
 
                         Gui.drawRect(x, y, x + h, y + 20, color + 0x88000000);
-                        this.font.drawStringWithShadow(String.valueOf(j), x + 6, y + 6, 0xffffff);
+                        this.font.drawStringWithShadow(label, x + offset, y + 6, 0xffffff);
 
                         if (i == this.tick && j == this.index)
                         {
@@ -256,7 +305,7 @@ public class GuiRecordSelector extends GuiElement
 
         for (int i = index, c = i + this.area.w / h + 2; i < c; i++)
         {
-            if (i % 5 == 0)
+            if (i % 5 == 0 && i < count)
             {
                 int x = this.scroll.x - this.scroll.scroll + i * h;
                 int y = this.scroll.ey() - 12;
@@ -264,7 +313,7 @@ public class GuiRecordSelector extends GuiElement
                 String str = String.valueOf(i);
 
                 this.drawGradientRect(x + 1, y - 6, x + h, y + 12, 0x00000000, 0x88000000);
-                this.font.drawStringWithShadow(str, x - this.font.getStringWidth(str) / 2 + 17, y, 0xffffff);
+                this.font.drawStringWithShadow(str, x + (this.scroll.scrollItemSize - this.font.getStringWidth(str) + 2) / 2, y, 0xffffff);
             }
         }
 
