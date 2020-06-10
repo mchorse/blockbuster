@@ -421,6 +421,8 @@ public class CameraHandler
 
             if (toOpenCamera)
             {
+                GuiDashboard.get();
+
                 GuiCameraEditor editor = ClientProxy.getCameraEditor();
                 GuiRecordingEditorPanel panel = mchorse.blockbuster.ClientProxy.panels.recordingEditorPanel;
 
