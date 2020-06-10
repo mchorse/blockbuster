@@ -106,6 +106,8 @@ public class ModelCustom extends ModelBiped
         }
 
         GlStateManager.disableBlend();
+
+        this.current = null;
     }
 
     public void renderForStencil(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale)
