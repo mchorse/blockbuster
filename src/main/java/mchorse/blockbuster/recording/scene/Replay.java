@@ -4,8 +4,10 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.vanilla_pack.morphs.PlayerMorph;
 import net.minecraft.entity.EntityLivingBase;
@@ -122,15 +124,7 @@ public class Replay
     {
         ByteBufUtils.writeUTF8String(buf, this.id);
         ByteBufUtils.writeUTF8String(buf, this.name);
-        buf.writeBoolean(this.morph != null);
-
-        if (this.morph != null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-            this.morph.toNBT(tag);
-
-            ByteBufUtils.writeTag(buf, tag);
-        }
+        MorphUtils.morphToBuf(buf, this.morph);
 
         buf.writeBoolean(this.invincible);
         buf.writeBoolean(this.invisible);
@@ -144,11 +138,7 @@ public class Replay
     {
         this.id = ByteBufUtils.readUTF8String(buf);
         this.name = ByteBufUtils.readUTF8String(buf);
-
-        if (buf.readBoolean())
-        {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
-        }
+        this.morph = MorphUtils.morphFromBuf(buf);
 
         this.invincible = buf.readBoolean();
         this.invisible = buf.readBoolean();
@@ -171,13 +161,14 @@ public class Replay
         return super.equals(obj);
     }
 
-    public Replay clone(boolean isRemote)
+    public Replay copy()
     {
         Replay replay = new Replay();
 
         replay.id = this.id;
         replay.name = this.name;
         replay.morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
+
         replay.invincible = this.invincible;
         replay.invisible = this.invisible;
         replay.enabled = this.enabled;

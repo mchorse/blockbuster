@@ -1,6 +1,7 @@
 package mchorse.blockbuster.network.common.guns;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -24,7 +25,7 @@ public class PacketGunInfo implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.tag = ByteBufUtils.readTag(buf);
+        this.tag = NBTUtils.readInfiniteTag(buf);
         this.entity = buf.readInt();
     }
 

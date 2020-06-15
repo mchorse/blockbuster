@@ -469,7 +469,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
         Scene scene = this.location.getScene();
 
-        if (scene.dupe(scene.replays.indexOf(this.replay), true))
+        if (scene.dupe(scene.replays.indexOf(this.replay)))
         {
             this.selector.update();
             this.selector.scroll.scrollTo(this.selector.getIndex() * this.selector.scroll.scrollItemSize);

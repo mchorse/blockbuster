@@ -8,6 +8,7 @@ import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunStuck;
+import mchorse.mclib.utils.NBTUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -430,13 +431,13 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
     {
         if (additionalData.readBoolean())
         {
-            this.props = new GunProps(ByteBufUtils.readTag(additionalData));
+            this.props = new GunProps(NBTUtils.readInfiniteTag(additionalData));
             this.setSize(this.props.hitboxX, this.props.hitboxY);
         }
 
         if (additionalData.readBoolean())
         {
-            this.morph.fromNBT(ByteBufUtils.readTag(additionalData));
+            this.morph.fromNBT(NBTUtils.readInfiniteTag(additionalData));
         }
 
         this.initMX = additionalData.readDouble();

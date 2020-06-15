@@ -2,6 +2,7 @@ package mchorse.blockbuster.network.common;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -28,11 +29,7 @@ public class PacketModifyActor implements IMessage
     {
         this.id = buf.readInt();
         this.invisible = buf.readBoolean();
-
-        if (buf.readBoolean())
-        {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
-        }
+        this.morph = MorphUtils.morphFromBuf(buf);
     }
 
     @Override
@@ -40,14 +37,6 @@ public class PacketModifyActor implements IMessage
     {
         buf.writeInt(this.id);
         buf.writeBoolean(this.invisible);
-        buf.writeBoolean(this.morph != null);
-
-        if (this.morph != null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            this.morph.toNBT(tag);
-            ByteBufUtils.writeTag(buf, tag);
-        }
+        MorphUtils.morphToBuf(buf, this.morph);
     }
 }

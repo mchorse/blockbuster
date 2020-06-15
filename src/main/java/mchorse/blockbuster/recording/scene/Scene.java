@@ -586,14 +586,14 @@ public class Scene
 	/**
 	 * Duplicate
 	 */
-	public boolean dupe(int index, boolean isRemote)
+	public boolean dupe(int index)
 	{
 		if (index < 0 || index >= this.replays.size())
 		{
 			return false;
 		}
 
-		Replay replay = this.replays.get(index).clone(isRemote);
+		Replay replay = this.replays.get(index).copy();
 
 		replay.id = this.getNextSuffix(replay.id);
 		this.replays.add(replay);

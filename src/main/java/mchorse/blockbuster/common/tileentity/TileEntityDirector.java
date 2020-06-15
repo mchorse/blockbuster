@@ -160,7 +160,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
      */
     public void duplicate(int index)
     {
-        this.director.dupe(index, this.world.isRemote);
+        this.director.dupe(index);
         this.markDirty();
     }
 

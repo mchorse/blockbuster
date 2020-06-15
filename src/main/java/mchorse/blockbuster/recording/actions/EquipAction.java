@@ -1,6 +1,7 @@
 package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -72,7 +73,7 @@ public class EquipAction extends Action
     {
         super.fromBuf(buf);
         this.armorSlot = buf.readByte();
-        this.itemData = ByteBufUtils.readTag(buf);
+        this.itemData = NBTUtils.readInfiniteTag(buf);
     }
 
     @Override

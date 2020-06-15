@@ -1,16 +1,17 @@
 package mchorse.blockbuster.recording.actions;
 
-import java.util.Random;
-
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.NBTUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import java.util.Random;
 
 /**
  * Item drop action
@@ -77,7 +78,7 @@ public class DropAction extends Action
     public void fromBuf(ByteBuf buf)
     {
         super.fromBuf(buf);
-        this.itemData = ByteBufUtils.readTag(buf);
+        this.itemData = NBTUtils.readInfiniteTag(buf);
     }
 
     @Override

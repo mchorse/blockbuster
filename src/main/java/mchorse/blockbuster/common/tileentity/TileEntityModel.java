@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -338,14 +339,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             this.slots[i] = buf.readBoolean() ? ByteBufUtils.readItemStack(buf) : null;
         }
 
-        if (buf.readBoolean())
-        {
-            this.morph = MorphManager.INSTANCE.morphFromNBT(ByteBufUtils.readTag(buf));
-        }
-        else
-        {
-            this.morph = null;
-        }
+        this.morph = MorphUtils.morphFromBuf(buf);
     }
 
     public void toBytes(ByteBuf buf)
@@ -383,15 +377,7 @@ public class TileEntityModel extends TileEntity implements ITickable
             }
         }
 
-        buf.writeBoolean(this.morph != null);
-
-        if (this.morph != null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            this.morph.toNBT(tag);
-            ByteBufUtils.writeTag(buf, tag);
-        }
+        MorphUtils.morphToBuf(buf, this.morph);
     }
 
     /**
