@@ -9,6 +9,7 @@ import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.mclib.utils.MatrixUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -29,6 +30,8 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
      */
     public static ResourceLocation lastTexture;
 
+    public static int tick;
+
     /**
      * Currently used morph 
      */
@@ -46,7 +49,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         if (lastTexture != null)
         {
-            GifTexture.bindTexture(lastTexture);
+            GifTexture.bindTexture(lastTexture, tick);
         }
     }
 
@@ -88,7 +91,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     {
         lastTexture = location;
 
-        GifTexture.bindTexture(location);
+        GifTexture.bindTexture(location, tick);
     }
 
     /**
@@ -103,6 +106,8 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
     @Override
     public void doRender(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        tick = entity.ticksExisted;
+
         this.setupModel(entity, partialTicks);
 
         if (this.mainModel != null)
@@ -231,7 +236,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            GifTexture.bindTexture(texture);
+            GifTexture.bindTexture(texture, player.ticksExisted);
         }
 
         this.mainModel.swingProgress = 0.0F;
@@ -261,7 +266,7 @@ public class RenderCustomModel extends RenderLivingBase<EntityLivingBase>
 
         if (texture != null)
         {
-            GifTexture.bindTexture(texture);
+            GifTexture.bindTexture(texture, player.ticksExisted);
         }
 
         this.mainModel.swingProgress = 0.0F;

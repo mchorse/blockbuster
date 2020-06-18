@@ -235,7 +235,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
                     texture = this.materials.get(list.material.name);
                 }
 
-                GifTexture.bindTexture(texture);
+                GifTexture.bindTexture(texture, RenderCustomModel.tick);
             }
 
             GL11.glCallList(list.id);

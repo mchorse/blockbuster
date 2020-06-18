@@ -129,13 +129,15 @@ public class ImageMorph extends AbstractMorph
             return;
         }
 
-        this.updateAnimation(Minecraft.getMinecraft().getRenderPartialTicks());
+        float partial = Minecraft.getMinecraft().getRenderPartialTicks();
+
+        this.updateAnimation(partial);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(x, y - scale / 2, 0);
         GL11.glScalef(-1.5F, 1.5F, 1.5F);
 
-        this.renderPicture(scale);
+        this.renderPicture(scale, player.ticksExisted, partial);
 
         GL11.glPopMatrix();
     }
@@ -205,7 +207,7 @@ public class ImageMorph extends AbstractMorph
             this.image.pose.applyScale();
         }
 
-        this.renderPicture(1F);
+        this.renderPicture(1F, entity.ticksExisted, partialTicks);
 
         GL11.glPopMatrix();
 
@@ -239,9 +241,9 @@ public class ImageMorph extends AbstractMorph
         }
     }
 
-    private void renderPicture(float scale)
+    private void renderPicture(float scale, int ticks, float partialTicks)
     {
-        GifTexture.bindTexture(this.texture);
+        GifTexture.bindTexture(this.texture, ticks, partialTicks);
 
         float w = this.getWidth();
         float h = this.getHeight();

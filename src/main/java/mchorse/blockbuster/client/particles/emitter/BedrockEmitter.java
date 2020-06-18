@@ -360,7 +360,7 @@ public class BedrockEmitter
 
 		if (!this.particles.isEmpty())
 		{
-			GifTexture.bindTexture(this.scheme.texture);
+			GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
 			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 
 			for (BedrockParticle particle : this.particles)

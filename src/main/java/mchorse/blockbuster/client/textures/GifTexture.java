@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import mchorse.mclib.math.functions.limit.Min;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -20,8 +21,6 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
 {
     public ResourceLocation texture;
     public List<GifElement> elements = new ArrayList<GifElement>();
-    public int lastTick;
-    public int timer;
     public int index;
     public int duration;
 
@@ -30,19 +29,44 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
 
     public static void bindTexture(ResourceLocation location)
     {
-        TextureManager textures = Minecraft.getMinecraft().renderEngine;
+        bindTexture(location, -1, 0);
+    }
 
-        textures.bindTexture(location);
+    public static void bindTexture(ResourceLocation location, int ticks)
+    {
+        bindTexture(location, ticks, Minecraft.getMinecraft().getRenderPartialTicks());
+    }
+
+    public static void bindTexture(ResourceLocation location, int ticks, float partialTicks)
+    {
+        TextureManager textures = Minecraft.getMinecraft().renderEngine;
 
         if (location.getResourcePath().endsWith("gif"))
         {
             ITextureObject object = textures.getTexture(location);
 
-            if (object != null)
+            if (object instanceof GifTexture)
             {
+                GifTexture texture = (GifTexture) object;
+                int lastIndex = texture.index;
+
+                if (ticks >= 0)
+                {
+                    texture.calculateIndex(ticks, partialTicks);
+                }
+
                 GlStateManager.bindTexture(object.getGlTextureId());
+
+                if (ticks >= 0)
+                {
+                    texture.index = lastIndex;
+                }
+
+                return;
             }
         }
+
+        textures.bindTexture(location);
     }
 
     public GifTexture(ResourceLocation texture)
@@ -80,26 +104,23 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
             return;
         }
 
-        int ticks = mc.player.ticksExisted;
-        float partial = mc.getRenderPartialTicks();
-        float diff = ticks - this.lastTick + partial;
+        this.calculateIndex(mc.player.ticksExisted, 0);
+    }
 
-        this.timer = (int) (diff * 5);
-
-        if (this.timer >= this.duration)
-        {
-            this.timer = 0;
-            this.lastTick = ticks;
-        }
+    public void calculateIndex(int ticks, float partial)
+    {
+        int tick = (int) ((ticks + partial) * 5 % this.duration);
 
         int duration = 0;
         int index = 0;
+
+        this.index = 0;
 
         for (GifElement element : this.elements)
         {
             duration += element.delay;
 
-            if (this.index != index && this.timer < duration)
+            if (tick < duration)
             {
                 this.index = index == 0 ? 0 : index - 1;
 
@@ -134,7 +155,7 @@ public class GifTexture extends AbstractTexture implements ITickableTextureObjec
     public static class GifElement
     {
         public int delay;
-        public int id = -1;
+        public int id;
 
         public GifElement(int delay, int w, int h, ByteBuffer buffer)
         {
