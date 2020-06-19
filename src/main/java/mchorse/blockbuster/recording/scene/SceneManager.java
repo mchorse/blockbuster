@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class SceneManager
 {
-	public static final Pattern FILENAME = Pattern.compile("^[^<>:;,?\"*|/]+$");
+	public static final Pattern FILENAME = Pattern.compile("^[\\w\\d-_.]*$");
 
 	/**
 	 * Currently loaded scenes

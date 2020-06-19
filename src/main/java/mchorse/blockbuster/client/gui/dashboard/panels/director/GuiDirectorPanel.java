@@ -58,7 +58,6 @@ import java.util.regex.Pattern;
 public class GuiDirectorPanel extends GuiBlockbusterPanel
 {
     public static final List<BlockPos> lastBlocks = new ArrayList<BlockPos>();
-    public static final Pattern RECORDING_ID = Pattern.compile("^[\\w,\\-_]*$");
 
     private GuiElement subChildren;
     private GuiDelegateElement<GuiElement> mainView;
@@ -160,8 +159,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         {
             this.replay.id = str;
             this.updateLabel();
-        });
-        this.id.field.setValidator((str) -> RECORDING_ID.matcher(str).matches());
+        }).filename();
         this.name = new GuiTextElement(mc, 80, (str) -> this.replay.name = str);
         this.invincible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invincible"), false, (b) -> this.replay.invincible = b.isToggled());
         this.invisible = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.invisible"), false, (b) -> this.replay.invisible = b.isToggled());

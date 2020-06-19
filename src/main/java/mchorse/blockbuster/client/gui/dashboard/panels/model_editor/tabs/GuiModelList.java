@@ -94,12 +94,7 @@ public class GuiModelList extends GuiModelEditorTab
 
     private void saveModel()
     {
-        GuiModal.addFullModal(this, () ->
-        {
-            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.models.name"), this::saveModel);
-
-            return modal.setValue(this.panel.modelName);
-        });
+        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.models.name"), this::saveModel).filename().setValue(this.panel.modelName));
     }
 
     private void saveModel(String name)

@@ -43,7 +43,7 @@ public class Utils
 
 			if (file.isFile() && name.endsWith(".dat"))
 			{
-				int index = name.indexOf(".");
+				int index = name.lastIndexOf(".");
 
 				list.add(name.substring(0, index));
 			}

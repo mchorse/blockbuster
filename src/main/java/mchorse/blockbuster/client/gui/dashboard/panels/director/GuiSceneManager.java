@@ -129,7 +129,7 @@ public class GuiSceneManager extends GuiElement
 			this.sceneList.setCurrent(name);
 
 			this.parent.setScene(new SceneLocation(scene));
-		}));
+		}).filename());
 	}
 
 	private void dupeScene()
@@ -158,7 +158,7 @@ public class GuiSceneManager extends GuiElement
 				this.parent.close();
 			});
 
-			return modal.setValue(this.parent.getLocation().getFilename());
+			return modal.filename().setValue(this.parent.getLocation().getFilename());
 		});
 	}
 
@@ -187,7 +187,7 @@ public class GuiSceneManager extends GuiElement
 				Dispatcher.sendToServer(new PacketSceneManage(old, name, PacketSceneManage.RENAME));
 			});
 
-			return modal.setValue(this.parent.getLocation().getFilename());
+			return modal.filename().setValue(this.parent.getLocation().getFilename());
 		});
 	}
 
