@@ -2,6 +2,8 @@ package mchorse.blockbuster.core.transformers;
 
 import java.util.Iterator;
 
+import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
+import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -9,17 +11,12 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mchorse.mclib.utils.coremod.ClassMethodTransformer;
-import mchorse.mclib.utils.coremod.CoreClassTransformer;
-
 public class WorldTransformer extends ClassMethodTransformer
 {
     public WorldTransformer()
     {
-        this.mcp = "setBlockState";
-        this.mcpSign = "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z";
-        this.notch = "a";
-        this.notchSign = "(Let;Lawt;I)Z";
+        this.setMcp("setBlockState", "(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z");
+        this.setNotch("a", "(Let;Lawt;I)Z");
     }
 
     @Override

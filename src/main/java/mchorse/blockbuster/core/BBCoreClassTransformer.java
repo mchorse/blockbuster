@@ -1,8 +1,9 @@
 package mchorse.blockbuster.core;
 
-import java.util.Iterator;
-
 import mchorse.blockbuster.core.transformers.EntityRendererTransformer;
+import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
+import mchorse.blockbuster.core.transformers.WorldTransformer;
+import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -11,14 +12,10 @@ import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
-import mchorse.blockbuster.core.transformers.RenderGlobalTransformer;
-import mchorse.blockbuster.core.transformers.WorldTransformer;
-import mchorse.mclib.utils.coremod.CoreClassTransformer;
+import java.util.Iterator;
 
 public class BBCoreClassTransformer extends CoreClassTransformer
 {
-    public static boolean obfuscated = false;
-
     private WorldTransformer world = new WorldTransformer();
     private RenderGlobalTransformer render = new RenderGlobalTransformer();
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();

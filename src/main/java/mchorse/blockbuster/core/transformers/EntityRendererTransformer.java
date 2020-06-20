@@ -1,7 +1,7 @@
 package mchorse.blockbuster.core.transformers;
 
-import mchorse.mclib.utils.coremod.ClassMethodTransformer;
-import mchorse.mclib.utils.coremod.CoreClassTransformer;
+import mchorse.blockbuster.utils.mclib.coremod.ClassMethodTransformer;
+import mchorse.blockbuster.utils.mclib.coremod.CoreClassTransformer;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -17,10 +17,8 @@ public class EntityRendererTransformer extends ClassMethodTransformer
 	{
 		super();
 
-		this.mcp = "renderWorldPass";
-		this.mcpSign = "(IFJ)V";
-		this.notch = "a";
-		this.notchSign = "(IFJ)V";
+		this.setMcp("renderWorldPass", "(IFJ)V");
+		this.setNotch("a", "(IFJ)V");
 	}
 
 	@Override
