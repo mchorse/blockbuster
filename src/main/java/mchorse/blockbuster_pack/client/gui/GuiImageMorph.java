@@ -133,7 +133,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
             this.resizeCrop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.resize_crop"), false, (b) -> this.morph.resizeCrop = b.isToggled());
-            this.color = new GuiColorElement(mc, (value) -> this.morph.color = value);
+            this.color = new GuiColorElement(mc, (value) -> this.morph.color = value).onTop();
             this.color.picker.editAlpha();
 
             this.offsetX = new GuiTrackpadElement(mc, (value) -> this.morph.offsetX = value.floatValue());
