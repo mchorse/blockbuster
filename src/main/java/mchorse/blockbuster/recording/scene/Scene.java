@@ -369,7 +369,6 @@ public class Scene
 		{
 			Replay replay = entry.getKey();
 			RecordPlayer actor = entry.getValue();
-			boolean notAttached = true;
 
 			if (j == 0 && actor.actor != null)
 			{
@@ -377,7 +376,7 @@ public class Scene
 			}
 
 			actor.playing = false;
-			actor.startPlaying(replay.id, tick, notAttached);
+			actor.startPlaying(replay.id, tick, true);
 			actor.sync = true;
 			actor.pause();
 
@@ -514,9 +513,10 @@ public class Scene
 			}
 			else
 			{
-				EntityActor act = new EntityActor(this.getWorld());
-				act.wasAttached = true;
-				actor = act;
+				EntityActor entity = new EntityActor(this.getWorld());
+
+				entity.wasAttached = true;
+				actor = entity;
 			}
 
 			RecordPlayer player = CommonProxy.manager.play(replay.id, actor, Mode.BOTH, 0, true);
@@ -581,6 +581,15 @@ public class Scene
 
 			entry.getValue().goTo(tick, actions, replay);
 		}
+	}
+
+	/**
+	 * Reload actors
+	 */
+	public void reload(int tick)
+	{
+		this.stopPlayback();
+		this.spawn(tick);
 	}
 
 	/**

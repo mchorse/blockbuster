@@ -5,7 +5,6 @@ import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.client.RenderingHandler;
-import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer.GunEntry;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
@@ -91,7 +90,7 @@ public class ActionHandler
 
     private int timer;
 
-    /** 
+    /**
      * Adds a world event listener  
      */
     @SubscribeEvent

@@ -45,7 +45,7 @@ public class Record
     /**
      * Filename of this record
      */
-    public String filename = "";
+    public String filename;
 
     /**
      * Version of this record

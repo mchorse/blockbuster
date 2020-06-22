@@ -35,8 +35,7 @@ public class ServerHandlerScenePlay extends ServerMessageHandler<PacketScenePlay
         }
         else if (message.isRestart())
         {
-            scene.stopPlayback();
-            scene.spawn(message.tick);
+            scene.reload(message.tick);
         }
     }
 }
