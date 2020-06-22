@@ -17,6 +17,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
@@ -133,7 +134,7 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.bottom.tooltip(IKey.lang("blockbuster.gui.image.bottom"));
             this.bottom.integer();
             this.resizeCrop = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.resize_crop"), false, (b) -> this.morph.resizeCrop = b.isToggled());
-            this.color = new GuiColorElement(mc, (value) -> this.morph.color = value).onTop();
+            this.color = new GuiColorElement(mc, (value) -> this.morph.color = value).direction(Direction.RIGHT);
             this.color.picker.editAlpha();
 
             this.offsetX = new GuiTrackpadElement(mc, (value) -> this.morph.offsetX = value.floatValue());
