@@ -287,6 +287,7 @@ public class ParticleMorph extends AbstractMorph
             result = result && this.vanillaDZ == particle.vanillaDZ;
             result = result && this.speed == particle.speed;
             result = result && this.count == particle.count;
+            result = result && this.localRotation == particle.localRotation;
 
             boolean sameArgs = false;
 
@@ -365,6 +366,7 @@ public class ParticleMorph extends AbstractMorph
             this.vanillaDZ = morph.vanillaDZ;
             this.speed = morph.speed;
             this.count = morph.count;
+            this.localRotation = morph.localRotation;
             this.arguments = morph.arguments;
 
             this.morph = MorphUtils.copy(morph.morph);
