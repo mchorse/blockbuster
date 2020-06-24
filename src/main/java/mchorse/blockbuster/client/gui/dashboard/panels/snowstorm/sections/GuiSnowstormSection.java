@@ -26,7 +26,7 @@ public abstract class GuiSnowstormSection extends GuiElement
 		super(mc);
 
 		this.parent = parent;
-		this.title = Elements.label(IKey.lang(this.getTitle())).background(0x88000000 + McLib.primaryColor.get());
+		this.title = Elements.label(IKey.lang(this.getTitle())).background(() -> 0x88000000 + McLib.primaryColor.get());
 		this.fields = new GuiElement(mc);
 		this.fields.flex().column(5).stretch().vertical().height(20);
 
