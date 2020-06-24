@@ -138,6 +138,11 @@ public class BlockbusterSection extends MorphSection
 	@SideOnly(Side.CLIENT)
 	private ResourceLocation getSkin(String key, Model model)
 	{
+		if (model.defaultTexture != null)
+		{
+			return null;
+		}
+
 		FolderEntry folder = ClientProxy.tree.getByPath(key + "/skins", null);
 
 		if (folder != null)
