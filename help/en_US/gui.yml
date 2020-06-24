@@ -273,7 +273,7 @@ blockbuster.gui:
         dimensions: "Size (%spx, %spx)"
         offset_x: X coordinate shift
         offset_y: Y coordinate shift
-        rotation: Rotation
+        rotation: Coordinate rotation
         keying: Keying
         keying_tooltip: This option clears the color data on the screen (in framebuffer) where this morph was rendered, which can be used for Minema's 'Use alpha' option to record keyed footage without external video editing plugins
 

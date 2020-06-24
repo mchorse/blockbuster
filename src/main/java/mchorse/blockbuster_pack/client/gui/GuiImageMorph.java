@@ -143,7 +143,6 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
             this.offsetY.tooltip(IKey.lang("blockbuster.gui.image.offset_y"));
             this.rotation = new GuiTrackpadElement(mc, (value) -> this.morph.rotation = value.floatValue());
             this.rotation.tooltip(IKey.lang("blockbuster.gui.image.rotation"));
-            this.rotation = new GuiTrackpadElement(mc, (value) -> this.morph.rotation = value.floatValue());
             this.keying = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.image.keying"), false, (b) -> this.morph.keying = b.isToggled());
             this.keying.tooltip(IKey.lang("blockbuster.gui.image.keying_tooltip"));
 
