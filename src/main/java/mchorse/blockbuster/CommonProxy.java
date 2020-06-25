@@ -3,9 +3,6 @@ package mchorse.blockbuster;
 import mchorse.blockbuster.api.ModelHandler;
 import mchorse.blockbuster.api.ModelPack;
 import mchorse.blockbuster.capabilities.CapabilityHandler;
-import mchorse.blockbuster.capabilities.gun.Gun;
-import mchorse.blockbuster.capabilities.gun.GunStorage;
-import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingStorage;
@@ -158,7 +155,6 @@ public class CommonProxy
 
         /* Capabilities */
         CapabilityManager.INSTANCE.register(IRecording.class, new RecordingStorage(), Recording::new);
-        CapabilityManager.INSTANCE.register(IGun.class, new GunStorage(), Gun::new);
 
         /* Models and morphing */
         this.pack = new ModelPack();

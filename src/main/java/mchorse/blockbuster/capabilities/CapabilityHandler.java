@@ -2,12 +2,10 @@ package mchorse.blockbuster.capabilities;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
-import mchorse.blockbuster.capabilities.gun.GunProvider;
 import mchorse.blockbuster.capabilities.recording.IRecording;
 import mchorse.blockbuster.capabilities.recording.Recording;
 import mchorse.blockbuster.capabilities.recording.RecordingProvider;
 import mchorse.blockbuster.common.entity.EntityActor;
-import mchorse.blockbuster.common.item.ItemGun;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.PacketSceneCast;
 import mchorse.blockbuster.network.common.structure.PacketStructureList;
@@ -20,7 +18,6 @@ import mchorse.blockbuster.utils.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
@@ -36,7 +33,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 public class CapabilityHandler
 {
     public static final ResourceLocation RECORDING_CAP = new ResourceLocation(Blockbuster.MOD_ID, "recording_capability");
-    public static final ResourceLocation GUN_CAP = new ResourceLocation(Blockbuster.MOD_ID, "gun");
 
     /**
      * Attach capabilities (well, only one, right now)
@@ -51,18 +47,6 @@ public class CapabilityHandler
         }
 
         event.addCapability(RECORDING_CAP, new RecordingProvider());
-    }
-
-    /**
-     * Attach gun capability
-     */
-    @SubscribeEvent
-    @SuppressWarnings("deprecation")
-    public void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event)
-    {
-        if (!(event.getObject().getItem() instanceof ItemGun)) return;
-
-        event.addCapability(GUN_CAP, new GunProvider());
     }
 
     /**

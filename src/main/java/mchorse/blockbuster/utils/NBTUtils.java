@@ -1,5 +1,8 @@
 package mchorse.blockbuster.utils;
 
+import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.common.item.ItemGun;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 
@@ -10,6 +13,48 @@ import net.minecraft.util.math.BlockPos;
  */
 public class NBTUtils
 {
+    public static boolean saveGunProps(ItemStack stack, NBTTagCompound tag)
+    {
+        if (!(stack.getItem() instanceof ItemGun))
+        {
+            return false;
+        }
+
+        if (!stack.hasTagCompound())
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        if (stack.hasTagCompound())
+        {
+            stack.getTagCompound().setTag("Gun", tag);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static GunProps getGunProps(ItemStack stack)
+    {
+        if (!(stack.getItem() instanceof ItemGun))
+        {
+            return null;
+        }
+
+        if (stack.hasTagCompound())
+        {
+            NBTTagCompound tag = stack.getTagCompound();
+
+            if (tag.hasKey("Gun"))
+            {
+                return new GunProps(tag.getCompoundTag("Gun"));
+            }
+        }
+
+        return new GunProps();
+    }
+
     /* BlockPos */
 
     /**

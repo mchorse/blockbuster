@@ -1,12 +1,12 @@
 package mchorse.blockbuster.network.client.guns;
 
-import mchorse.blockbuster.capabilities.gun.Gun;
-import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
+import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,11 +21,11 @@ public class ClientHandlerGunInfo extends ClientMessageHandler<PacketGunInfo>
         if (entity instanceof EntityLivingBase)
         {
             EntityLivingBase base = (EntityLivingBase) entity;
-            IGun gun = Gun.get(base.getHeldItemMainhand());
+            ItemStack stack = base.getHeldItemMainhand();
 
-            if (gun != null)
+            if (!stack.isEmpty())
             {
-                gun.getProps().fromNBT(message.tag);
+                NBTUtils.saveGunProps(stack, message.tag);
             }
         }
     }

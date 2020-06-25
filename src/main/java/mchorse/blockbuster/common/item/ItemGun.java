@@ -1,13 +1,12 @@
 package mchorse.blockbuster.common.item;
 
 import mchorse.blockbuster.Blockbuster;
-import mchorse.blockbuster.capabilities.gun.Gun;
-import mchorse.blockbuster.capabilities.gun.IGun;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityActor.EntityFakePlayer;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
+import mchorse.blockbuster.utils.NBTUtils;
 import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -53,36 +52,27 @@ public class ItemGun extends Item
 
     public EnumActionResult shootIt(ItemStack stack, EntityPlayer player, World world)
     {
+        GunProps props = NBTUtils.getGunProps(stack);
+
         if (world.isRemote)
         {
-            IGun gun = Gun.get(stack);
-
-            if (gun != null)
+            if (props != null && props.launch)
             {
-                GunProps props = gun.getProps();
-
-                if (props.launch)
-                {
-                    this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
-                }
+                this.setThrowableHeading(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);
             }
 
             return EnumActionResult.PASS;
         }
 
-        return this.shoot(stack, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
+        return this.shoot(stack, props, player, world) ? EnumActionResult.PASS : EnumActionResult.FAIL;
     }
 
-    public boolean shoot(ItemStack stack, EntityPlayer player, World world)
+    public boolean shoot(ItemStack stack, GunProps props, EntityPlayer player, World world)
     {
-        IGun gun = Gun.get(stack);
-
-        if (gun == null)
+        if (props == null)
         {
             return false;
         }
-
-        GunProps props = gun.getProps();
 
         /* Launch the player is enabled */
         if (props.launch)
@@ -112,7 +102,7 @@ public class ItemGun extends Item
 
                 morph = MorphUtils.copy(morph);
 
-                EntityGunProjectile projectile = new EntityGunProjectile(world, gun.getProps(), morph);
+                EntityGunProjectile projectile = new EntityGunProjectile(world, props, morph);
 
                 projectile.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
                 projectile.shoot(player, player.rotationPitch, player.rotationYaw, 0, props.speed, props.scatter);

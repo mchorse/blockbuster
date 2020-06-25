@@ -530,7 +530,7 @@ public class ActionHandler
 
         for (GunEntry model : TileEntityGunItemStackRenderer.models.values())
         {
-            model.gun.getProps().update();
+            model.props.update();
         }
 
         RenderingHandler.updateEmitters();

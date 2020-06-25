@@ -1,18 +1,19 @@
 package mchorse.blockbuster.client.render.tileentity;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import mchorse.blockbuster.capabilities.gun.Gun;
-import mchorse.blockbuster.capabilities.gun.IGun;
+import mchorse.blockbuster.common.GunProps;
+import mchorse.blockbuster.utils.NBTUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Gun items's TEISR
@@ -49,11 +50,11 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
 
         if (model == null)
         {
-            IGun gun = Gun.get(stack);
+            GunProps props = NBTUtils.getGunProps(stack);
 
-            if (gun != null)
+            if (props != null)
             {
-                model = new GunEntry(gun);
+                model = new GunEntry(props);
                 models.put(stack, model);
             }
         }
@@ -61,7 +62,7 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
         if (model != null)
         {
             model.timer = 20;
-            model.gun.getProps().render(partialTicks);
+            model.props.render(partialTicks);
             this.reset();
         }
     }
@@ -79,11 +80,11 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
     public static class GunEntry
     {
         public int timer = 20;
-        public IGun gun;
+        public GunProps props;
 
-        public GunEntry(IGun gun)
+        public GunEntry(GunProps props)
         {
-            this.gun = gun;
+            this.props = props;
         }
     }
 }
