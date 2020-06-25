@@ -176,6 +176,7 @@ public class ModelPack
             lazy.setLastTime(-1);
 
             this.models.put(id, lazy);
+            this.changed.put(id, lazy);
             this.removed.remove(id);
         }
     }

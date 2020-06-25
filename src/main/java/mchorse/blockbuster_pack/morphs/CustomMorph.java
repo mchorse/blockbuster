@@ -213,9 +213,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         return this.key;
     }
 
-    private void updateModel()
+    public void updateModel()
     {
-        if (this.lastUpdate < ModelHandler.lastUpdate)
+        this.updateModel(false);
+    }
+
+    public void updateModel(boolean force)
+    {
+        if (this.lastUpdate < ModelHandler.lastUpdate || force)
         {
             this.lastUpdate = ModelHandler.lastUpdate;
             this.model = Blockbuster.proxy.models.models.get(this.getKey());

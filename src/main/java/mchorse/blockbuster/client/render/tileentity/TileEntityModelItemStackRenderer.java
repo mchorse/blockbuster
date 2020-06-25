@@ -1,9 +1,5 @@
 package mchorse.blockbuster.client.render.tileentity;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
 import net.minecraft.client.Minecraft;
@@ -14,6 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Model block's TEISR
