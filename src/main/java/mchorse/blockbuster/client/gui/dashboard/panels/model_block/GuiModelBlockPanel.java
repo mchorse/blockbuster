@@ -219,6 +219,11 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
             return;
         }
 
+        if (model != null && this.model.getPos().equals(model.getPos()))
+        {
+            return;
+        }
+
         if (ClientProxy.panels.morphs.hasParent())
         {
             ClientProxy.panels.morphs.finish();
