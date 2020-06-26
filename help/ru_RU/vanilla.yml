@@ -12,6 +12,7 @@ blockbuster:
         director_block: Управляет актерами и записями
         model_block: Позволяет использовать морфы как статичные модели
         green_block: "%s хромаблок. Может быть использован для хромакеинга."
+        dim_green_block: "Не светится."
 
     morph:
         image: Изображение 
@@ -28,7 +29,8 @@ tile.blockbuster:
     director.name: Блок режиссёра
     model.name: Блок-модель
     green.name: Хромаблок
-
+    dim_green.name: Тусклый хромаблок
+    
 # Item names
 item:
     blockbuster:

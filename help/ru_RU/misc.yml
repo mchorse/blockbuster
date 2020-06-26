@@ -5,19 +5,18 @@ blockbuster:
         lacks_pose: У обработанной модели "%s" отсутствует поза "%s"!
         lacks_limbs: У обработанной модели "%s" отсутсвуют конечности!
     
-    marker: "{6}{l}|{r} Записать {7}%s{r} {8}({6}x%s{8}){r}, {7}%s{6}t{r} {8}({r}с разницей в {7}%s{6}t{8}){r}."
     recording: Запись в {7}%s{r}
     "yes": "Да"
     "no": "Нет"
-    eggs:
-        yike: "{l}Ладно{r}, {o}ладно{r}, это была шутка от {7}McHorse{r}'а! Логинюсь обратно в {6}YikeFilms{r}."
     morph_error: Модели отсутсвуют
-    start_recording: "Старт записи {7}%s{r} в {7}%s{r}"
+    start_recording: "Начало записи {7}%s{r} в {7}%s{r}"
 
-# Metamorph category
+# Metamorph
+morph.section.blockbuster: Модели Блокбастера
+
 morph.category:
-    blockbuster: Модели блокбастера
-    blockbuster_extra: Дополнительные морфы
+    blockbuster_extra: Дополнительные морфы Блокбастера
+    blockbuster_structures: Структуры Блокбастера
+    blockbuster_models: Модели Блокбастера
 
-metamorph.builder.blockbuster: Конструктор пользовательских моделей
-# This is Russian BB's localization, made by Andruxioid, Cyka Blyat!
+# This is Russian BB localization, made by Andruxioid, Cyka Blyat!

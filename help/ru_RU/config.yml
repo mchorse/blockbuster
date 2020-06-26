@@ -1,7 +1,10 @@
 # Config strings
 blockbuster.config:
+    title: Блокбастер
+
     general:
         title: Общие
+        tooltip: Общие параметры конфигурации Блокбастера
         
         show_first_time_modal: Показывать заставку первого запуска
         disable_teleport_playback_button: Отключить телепорт к блоку режиссёра кнопкой воспроизведения
@@ -11,15 +14,18 @@ blockbuster.config:
         green_screen_sky: Хроманебо
         green_screen_sky_color: Цвет хроманеба
         url_skins_sync_download: Синхронная загрузка ссылок
+        add_utility_blocks: Добавить полезные блоки
     
     model_block:
         title: Блоки-модели
+        tooltip: Параметры конфигурации, относящиеся к блокам-моделям
         
         model_block_disable_rendering: Выключить отображение блоков-моделей
         model_block_disable_item_rendering: Выключить отображение предметов
     
     recording:
         title: Процесс Записи
+        tooltip: Параметры конфигурации, относящиеся к системе записи игрока
 
         recording_countdown: Отсчёт до начала записи
         recording_delay: Пропуск кадров записей
@@ -32,17 +38,20 @@ blockbuster.config:
     
     actor:
         title: Актёры
+        tooltip: Параметры конфигурации существ категории актёр (не применяются к поддельному игроку)
         
         actor_fall_damage: Урон от падения для актёров
         actor_tracking_range: Диапазон отслеживания актёров
-        actor_rendering_range: Диапазон отображения актеров
+        actor_rendering_range: Диапазон отображения актёров
         actor_always_render: Всегда отображать актёров
-        actor_always_render_names: Всегда отображать имена актеров
-        actor_swish_swipe: Вжух взмаха
+        actor_always_render_names: Всегда отображать имена актёров
+        actor_swish_swipe: Вжух при взмахе
         actor_y: Исправить движение по оси Y
+        actor_disable_riding: Отключить катание верхом на морфах
 
     damage_control:
         title: Контроль урона
+        tooltip: Контроль урона это система, которая возвращает на место поставленные или уничтоженные актёром блоки по завершению процесса записи или воспроизведения записи
         
         damage_control: Контроль урона
         damage_control_distance: Дистанция урона

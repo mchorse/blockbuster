@@ -1,9 +1,8 @@
 blockbuster.gui.me:
-    pick: Выбрать
-    none: "(отсутствует)"
-    
-    hitbox: Хитбокс
-    looking: Смотрит
+    keys:
+        category: Редактор моделей Блокбастера
+
+        save: Сохранить текущую модель
     
     limbs:
         title: Конечности
@@ -12,32 +11,34 @@ blockbuster.gui.me:
         size_offset: Независимый масштаб
         texture: Смещение текстуры
         anchor: Якорная точка
-        origin: Точка OBJ
+        origin: Точка OBJ/VOX
         slot: Слот брони
         
         color: Цвет
         opacity: Прозрачность
-        mirror: Отражен
+        mirror: Отражена
         lighting: Светится
-        shading: Затенён
-        smooth: Гладкий
-        hold: Предмет в руке
-        none: Никакой
-        right: Правой
-        left: Левой
+        shading: Затенена
+        smooth: Гладкая
+        hold: Слот предмета в руке
+        none: Отсутствует
+        right: Правый
+        left: Левый
         
-        holding: Взятый
+        appearance: Внешний вид
+
+        animation: Анимации
+        holding: Держит
         swiping: Взмахивает
         looking: Смотрит
         swinging: Качается
-        idle: Колебается
+        idle: Колеблется
         invert: Инвертировать
         wheel: Колесо
         wing: Крыло
         
-        rename: Переназвать
+        rename: Переименовать
         parent: Привязать
-        page: Переключить страницу
         
         new_limb: Впишите название для новой конечности...
         last_limb: Вы не можете удалить последнюю конечность...
@@ -73,6 +74,7 @@ blockbuster.gui.me:
         skins: Папка со скинами
         provides_obj: Предусматривает OBJ
         provides_mtl: Предусматривает MTL
+        default_texture: Выбрать текстуру по умолчанию
     
     poses:
         title: Позы
@@ -85,11 +87,11 @@ blockbuster.gui.me:
         hitbox: Хитбокс
     
     tooltips:
-        models: Модели
-        poses: Позы
-        options: Настройки моделей
-        limbs: Конечности
+        save: Сохранить модель
 
-        swipe: Взмах
-        swing: Включить бег
-        items: Включить предметы
+        swipe: Предпромотр анимации взмаха рукой
+        running: Включить предпросмотр анимации бега
+        held_items: Включить предпросмотр отображения предметов в руке
+        hitbox: Включить предпросмотр хитбокса
+        looking: Включить предпросмотр движений головы
+        skin: Выбрать скин, используемый при предпросмотре
