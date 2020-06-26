@@ -2,6 +2,77 @@
 
 Blockbuster's change log.
 
+## Version 2.0
+
+This huge update adds a couple of awesome major feature, but mostly focuses on GUI improvements and quality of life features. This update also fixes dozens of bugs.
+
+**Compatible** with McLib `2.0`, Metamorph `1.2` and Aperture `1.4`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+<a href="https://youtu.be/JghXifbHi-k"><img src="https://img.youtube.com/vi/JghXifbHi-k/0.jpg"></a> 
+
+* Added `snowstorm` morph which allows to create custom particle effects based on Bedrock particle JSON specification (sponsored feature by Spark Squared)
+	* Added particle effect editor in dashboard GUI
+* Added `/scene <play|toggle|stop|loop> <name> [flag]` command to work with scenes
+* Added new config options:
+	* Added utility blocks option which adds barrier, structure and command blocks to Blockbuster creative tabs when it's enabled
+	* Added disable riding option which disables riding on actors, by default actors are ridable (suggested by Stealth)
+* Added new camera editor to scene (or director block) synchronization by using "Edit camera" button in scene/director block GUI
+* Added `interact_entity` action to player recording system (suggested by Lucatim)
+* Added "Vanish delay" BB gun option
+* Added compatibility with actors opening Little Tiles' (requires version `1.5.0-pre199_34` or above) doors upon right click on block action
+* Added dim chroma blocks which don't emit lighting
+* Added "Local rotation" option to `particle` morph (suggested by Centryfuga)
+* Added `/record fill <filename> <count> [tick]` command which allows to insert placeholder `<count>` frames at given `[tick]`
+* Added keying option to `image` and custom model morphs
+* Changed shadow option to be enabled by default, and global option to be disabled by default in model block
+* Changed BB gun firing to allow to fire BB guns in both hands (suggested by SergiDPlay)
+* Changed **Configure BB gun keybind**'s default key to `End` key
+* Changed layout of items in Blockbuster's creative tab
+* Changed playback of GIF textures based on entity's tick counter (suggested by Jetpack Rescue)
+* Improved GUI screens:
+	* Added previews to `sequencer` morph editor GUI (suggested by Jetpack Rescue)
+	* Added previews of held gun item and projectile transformations in BB gun GUI
+	* Added keybinds to camera editor to toggle visibility of player recording timeline (Ctrl + E) and player recording list (Ctrl + L)
+	* Added copy, paste and cut (suggested by Lucatim) buttons to player recording editor GUI
+	* Added Ctrl + M keybind to player recording editor GUI to add morph action
+	* Added replay sorting to scenes/director block GUI (suggested by Lucatim)
+	* Added alt + mouse wheel to horizontally zoom in/out and shift + mouse wheel to vertically scroll
+	* Changed layout of model block panel GUI
+	* Changed layout of BB gun GUI
+	* Changed layout of `particle` morph GUI
+	* Changed layout of `blockbuster.*` custom model morph GUI
+	* Changed layout of `image` morph GUI
+	* Changed layout of actor configuration item GUI
+	* Changed "Pick morph" buttons everywhere to "Pick | Edit" for faster morph access
+	* Fixed model blocks not being selected in quick access list menu
+* Improved `image` morph:
+	* Added color filtering property (including opacity)
+	* Added animations (similar to animated poses)
+	* Added resize crop option (which enables fitting the cropped region into 1 block space)
+	* Added UV coordinate shift options
+	* Added UV rotation option
+	* Added pose (translate, scale and rotate)
+	* Removed scale option (backward compatible though)
+* Improved drastically model loading and reloading
+* Fixed crash with image morphs on the server side (reported by ItsKylos)
+* Fixed `/director` command working only in overworld dimension (reported by AceGaming)
+* Fixed mob export model feature in the model editor (reported by Mr Wolf)
+* Fixed `/record origin` command requiring only a player to use the command (reported by Joziah2)
+* Fixed BB gun firing from the default head position rather from current poses's hitbox (reported by Reunion Studio)
+* Fixed BB gun's projectile leaning to the left side when firing (reported by Reunion Studio)
+* Fixed crash when trying deleting non loaded OBJ model (reported by ItsKylos)
+* Fixed item placement when Blockbuster models hold items (reported by HumbleDoctor)
+* Fixed crash when attaching a playback button and Aperture is not installed
+* Fixed not being able to pick a limb when specific body parts are present
+* Fixed wheels spinning in the model editor
+* Fixed `image` morph's transparency cutting off at values below `25` (out of 255)
+* Fixed big (128+ voxels in any dimension) voxel chunks not loading (reported by Afegor)
+* Fixed kicking out of server with big structures (requires tweaking of McLib's Max. packet size)
+* Fixed scene names couldn't have `.`s in it (reported by OrokinPlays)
+* Fixed instant crash when McLib isn't present
+* Removed old YikeFilms easter egg and extra wubs config option
+* Removed config options from Mod Options (and moved to McLib's configuration)
+
 ## Version 1.6.6
 
 This is another patch update which fixes lots of bugs. Beside bug fixes, there are also new BB gun options which allows for a better projectile configuration. Andruxioid also introduces Ukranian translation in this update!
@@ -68,7 +139,7 @@ This is a quick hot patch update which fixes a couple of major issues I found af
 
 This update introduces native support for MagicaVoxel (`*.vox`) models, Scenes (remote director blocks which are stored in files and managed in GUI), many new options, a couple of nice tweaks and workflow enhancements and, as always, bug and crash fixes.
 
-<a href="https://youtu.be/4n5p83KAG4k"><img src="https://img.youtube.com/vi/4n5p83KAG4k/0.jpg"></a>
+<a href="https://youtu.be/4n5p83KAG4k"><img src="https://img.youtube.com/vi/4n5p83KAG4k/0.jpg"></a> 
 
 **Compatible** with McLib `1.0.4`, Metamorph `1.1.10` and Aperture `1.3.5`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
 
@@ -185,7 +256,7 @@ This update adds three new types of special Blockbuster exclusive morphs, in add
 * Added multi-skin feature to texture picker which allows constructing a single texture out of multiple textures
 * Added texture manager panel where you can explore textures loaded by Minecraft
 * Added animated GIF support (with reference work from [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java))
-* Added **BB gun** item, which allows to setup a firearm-like weapon which can shoot projectiles with lots of different configuration options
+* Added **BB gun** item, which allows to setup a firearm-like weapon which can shoot projectiles with lots of different configuration options (suggested by STH and Andruxioid)
 * Add hierarchical model loading and sorting in `config/blockbuster/models` (suggested by Jubb)
 * Changed the location of ticks in player recording editor grid
 * Changed the texture picker to capable of browsing folders
@@ -581,7 +652,7 @@ directions
 * Adapted actor and director GUIs to Metamorph's integration
 * Removed `/morph` command and morphing capability from Blockbuster
 * Replaced `Custom Model` and `Skin` fields with morph picker
-* Works with [Metamorph](https://minecraft.curseforge.com/projects/metamorph) `1.1.1`
+* Works with [Metamorph](https://www.curseforge.com/minecraft/mc-mods/metamorph) `1.1.1`
 
 #### Actors
 
