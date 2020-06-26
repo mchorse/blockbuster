@@ -4,9 +4,6 @@ key:
         # Categories
         category: Блокбастер
         
-        dashboard: Панель управления
-        model_editor: Редактор Моделей
-        marker: Маркер тиков
         plause_director: Проиграть/Остановить блок режиссёра
         record_director: Запосать воспроизведение в блок режиссёра
         pause_director: Остановить воспроизведение в блоке режиссёра
