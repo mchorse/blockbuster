@@ -402,7 +402,7 @@ blockbuster.gui:
 
             box_size: Размер куба
 
-            normal: Нормальный
+            normal: Нормаль
             radius: Радиус
 
         motion:
