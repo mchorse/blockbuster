@@ -68,11 +68,11 @@ Here is also a playlist of tutorials directly or indirectly related to Blockbust
 
 This playlist consists out of videos that I've created a bunch of machinimas during Blockbuster mod testings and just when I felt like. Feel free to check out my crazy videos.
 
-<a href="https://youtu.be/0h0KeuHaXM4?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/0h0KeuHaXM4/0.jpg"></a> 
+<a href="https://youtu.be/eig13klr-kw?list=PL6UPd2Tj65nFdhjzY-z6yCJuPaEanB2BF"><img src="https://img.youtube.com/vi/eig13klr-kw/0.jpg"></a> 
 
 Here is also a playlist of 400+ community made videos with Blockbuster mod:
 
-<a href="https://youtu.be/mSvKmB25kPQ?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/mSvKmB25kPQ/0.jpg"></a> 
+<a href="https://youtu.be/9hCMFoNnfxw?list=PL6UPd2Tj65nEE8kLKBxYYZLAjruJkO0r_"><img src="https://img.youtube.com/vi/9hCMFoNnfxw/0.jpg"></a> 
 
 If you're interested in this project, you might as well follow me on any of social media accounts listed below:
 
