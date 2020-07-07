@@ -3,19 +3,20 @@ blockbuster:
     info:
         playback_button: 切換導演方塊
         playback_director: 鏈接到 ({r}%d{7}, {r}%d{7}, {r}%d{7})
-        playback_profile: 回放配置檔案 "{f}{o}%s{r}{7}"
-        playback_play: 回放攝影機
+        playback_profile: 回放配置文件 "{f}{o}%s{r}{7}"
+        playback_play: 回放攝像機
         playback_scene: 已綁定在場景 {f}%s{r}
 
         actor_config: 在演員上使用
         register: 關聯演員到導演方塊
         director_block: 管理回放和演員的方塊
         model_block: 以靜態方式放置偽裝實體
-        green_block: "%s 色度方塊。可以用它來摳像。"
+        green_block: "%s 色度方塊。可以用來摳像。"
+        dim_green_block: "不發光。"
 
     morph:
         image: 圖像
-        sequencer: 序列產生器
+        sequencer: 序列發生器
         record: 回放
         structure: 結構
         particle: 粒子
@@ -28,13 +29,14 @@ tile.blockbuster:
         director.name: 導演方塊
         model.name: 模型方塊
         green.name: 色度方塊
+        dim_green.name: 暗淡色度方塊
 
 # Item names
 item:
     blockbuster:
         playback.name: 播放按鈕
-        register.name: 激活裝置
-        actor_config.name: 演員設定裝置
+        register.name: 激活設備
+        actor_config.name: 演員設置設備
         gun.name: BB 槍
 
 # Entity names

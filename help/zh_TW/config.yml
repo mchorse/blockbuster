@@ -1,48 +1,57 @@
 # Config strings
 blockbuster.config:
-    general:
-        title: 通用
+    title: Blockbuster
 
-        show_first_time_modal: 顯示第一次使用提示
-        disable_teleport_playback_button: 關閉播放後瞬移功能
+
+    general:
+        title: 常規
+        tooltip: Blockbuster mod 的常規選項
+
+        show_first_time_modal: 展示首次使用提示
+        disable_teleport_playback_button: 禁用播放後瞬移功能
         extra_wubs: 附加的雜物
         auto_refresh_models: 刷新模型和皮膚
-        debug_playback_ticks: Debug ticks
+        debug_playback_ticks: 調試 Ticks
         green_screen_sky: 色鍵天空
         green_screen_sky_color: 色鍵天空顏色
         url_skins_sync_download: 同步的 URL 下載
+        add_utility_blocks: 添加實用方塊
         
     model_block:
         title: 模型方塊
+        tooltip: 與模型方塊相關的選項
         
-        model_block_disable_rendering: 關閉模型方塊渲染
-        model_block_disable_item_rendering: 關閉背包內渲染
+        model_block_disable_rendering: 禁用模型方塊渲染
+        model_block_disable_item_rendering: 禁用物品欄渲染
 
     recording:
         title: 錄制
+        tooltip: 所有與玩家回放系統相關的選項
 
         recording_countdown: 錄制倒計時
         recording_delay: 錄制跳過幀
-        record_unload_time: 自動解除安裝錄制的時間
-        record_unload: 自動解除安裝錄制的
-        record_sync_rate: 錄制 tick 的同步率
-        record_attack_on_swipe: 揮動手攻擊
+        record_unload_time: 自動卸載錄制的時間
+        record_unload: 自動卸載錄制
+        record_sync_rate: 錄制 Tick 的同步率
+        record_attack_on_swipe: 揮手攻擊
         record_commands: 錄制命令
-        record_chat_prefix: 聊天動作的前置代號
-
+        record_chat_prefix: 聊天動作前綴
+        
     actor:
         title: 演員
+        tooltip: 演員實體配置選項 (與假玩家無關)
 
-        actor_fall_damage: 演員掉落傷害
+        actor_fall_damage: 演員跌落傷害
         actor_tracking_range: 演員跟蹤範圍
         actor_rendering_range: 演員渲染範圍
-        actor_always_render: 總是渲染演員
-        actor_always_render_names: 總是渲染演員的名稱
+        actor_always_render: 始終渲染演員
+        actor_always_render_names: 始終渲染演員的名稱
         actor_swish_swipe: 手臂劃動刷刷聲
-        actor_y: 修復 Y 軸的運動
+        actor_y: 修復 Y 軸運動
 
     damage_control:
-        title: 傷害控制
+        title: 破壞控制
+        tooltip: 破壞控制是指在演員被錄制或場景完成回放後，恢復方塊的系統
 
-        damage_control: 傷害控制
-        damage_control_distance: 傷害距離
+        damage_control: 破壞控制
+        damage_control_distance: 破壞距離

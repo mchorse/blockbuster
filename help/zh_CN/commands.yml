@@ -6,177 +6,189 @@ blockbuster:
             |
                 {l}{6}/{r}director {8}<play|toggle|stop|loop|disable_state>{r} {7}<x> <y> <z> [flag]{r}
                 
-                {r}开始，停止，或调整导演方块的播放的位置在 {7}<x>{r}，{7}<y>{r}，和 {7}<z>{r}（你可以使用F3确定你的当前位置）。 同时也有 {7}loop{r} 和 {7}disable_state{r} 可以让你使用 {7}[flag]{r} 参数（{7}true{r} 或 {7}false{r}）更改循环和是否发出红石信号的功能。
+                {r}开始, 停止, 或调整位于 {7}<x>{r}, {7}<y>{r}, 和 {7}<z>{r} 的导演方块的回放 (您可以使用 F3 来确定当前位置) 。 此外, 还有 {7}loop{r} 和 {7}disable_state{r} 可以让您使用 {7}[flag]{r} 参数 ({7}true{r} 或 {7}false{r}) 更改循环和是否发出红石信号的功能。
+
+        scene:
+            |
+            {l}{6}/{r}scene {8}<play|toggle|stop|loop>{r} {7}<name> [flag]{r}
+
+            {r}开始, 停止, 或调整场景 {7}<name>{r}. 此外, 还有 {7}loop{r} 可以让您使用 {7}[flag]{r} 参数 ({7}true{r} 或 {7}false{r}) 更改循环的功能.
 
         # Record's commands
         record:
-            help: "{r}{o}录制命令{r}。此命令提供一些次级命令来让玩家熟练录制操作。"
+            help: "{r}{o}录制命令{r}。该命令提供一些次级命令用于处理玩家回放动作。"
             
             add: 
                 |
                     {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
                     
-                    {r}添加一个动作，玩家通过{7}<filename>{r} 在 {7}<tick>{r}时间，和{7}<action_type>{r}的类别，加上在{7}[data_tag]{r}附加的的数据，导入录制。
+                    {r}通过在时间点为 {7}<tick>{r} 时, 向 {7}<filename>{r} 玩家回放添加类别为 {7}<action_type>{r} 的动作, 并在 {7}[data_tag]{r} 中指定其他附加的数据。
             
             clean:
                 |
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
                     
-                    {r}这个命令会清除来自 {7}<filename>{r} 玩家录制中给予的 {7}<property>{r}，从 {7}[from]{r} tick 到 {7}[to]{r}（不包含 {7}[to]{r}）tick 到指定的值，定义在 {7}[value]{r} 参数（接受绝对值），{7}[from]{r} tick 或者第一帧。
+                    {r}该命令会清除 {7}<filename>{r} 玩家回放中, 从 {7}[from]{r} Tick 到 {7}[to]{r} (不包含 {7}[to]{r}) Tick, 直到 [value] 参数中指定的值 (允许使用绝对值) , 或到帧 [from], 或第一帧中, 指定的 {7}<property>{r}。
             
             cut:
                 |
                     {l}{6}/{r}record {8}cut{r} {7}<filename> <before> <after>{r}
 
-                    {r}这个命令会在名为 {7}<filename>{r} 的玩家录制中，只保留 {7}<before>{r} 与 {7}<after>{r} 之间的动作，其他动作都会被删除（{7}<from>{r} 和 {7}<to>{r} 参数，是不包括前置和后置延迟的）。
+                    {r}该命令会删除 {7}<filename>{r} 玩家录制中, {7}<before>{r} 与 {7}<after>{r} 之间的动作 ({7}<from>{r} 和 {7}<to>{r} 参数, 是不包括前置和后置延迟的) 。
             
             dupe:
                 |
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
-                    {r}这个命令会将 {7}<filename>{r} 玩家录制复制一份到名为 {7}<new_filename>{r} 的新玩家录制。
+                    {r}该命令会将 {7}<filename>{r} 玩家回放 (重复) 复制一份到名为 {7}<new_filename>{r} 的新玩家回放。
 
             fade:
                 |
                     {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
 
-                    {r}这个命令会在名为 {7}<filename>{r} 玩家录制使用掉末尾的 {7}<fade_out>{r} 的 tick 时长，以线性插值动画把生物拖到最初的位置。
+                    {r}该命令会使用线性插值, 淡出 {7}<filename>{r} 玩家回放中, 时长为 {7}<fade_out>{r} Tick 到第一帧之间的动画。
             
+            fill:
+                |
+                    {l}{6}/{r}record {8}fill{r} {7}<filename> <count> [tick]{r}
+
+                    {r}该命令会在 {7}<filename>{r} 玩家回放的第 {7}[tick]{r} 处插入 {7}<count>{f} 帧。若未给出 {7}[tick]{r} 参数, 该命令会在玩家回放的最后延长 {7}[tick]{f}。
+
             flip:
                 |
                     {l}{6}/{r}record {8}flip{r} {7}<filename> <axis:X|Z> <coordinate> [center]{r}
 
-                    {r}这个命令会把 {7}<filename>{r} 玩家录制中的帧和动作，以给定的 {7}<axis>{r}（轴）和 {7}<coordinate>{r}（坐标）翻转。如果你在镜像的东西，方块长度是偶数，请设置 {7}[center]{r} 为 {7}false{r}（默认是 {7}true{r}）
+                    {r}该命令会将 {7}<filename>{r} 玩家回放中的帧和动作, 沿给定的 {7}<axis>{r} (轴) 和 {7}<coordinate>{r} (坐标) 翻转。如果您要在方块为偶数厚度的墙面实现镜像效果, 请将 {7}[center]{r} 设为 {7}false{r} (默认是 {7}true{r})。
             
             get:
                 |
                     {l}{6}/{r}record {8}get{r} {7}<filename> <tick>{r}
                     
-                    {r}输出在玩家录制文件 {7}<filename>{r} 中在 {7}<tick>{r} 找到的动作数据。
+                    {r}输出 {7}<filename>{r} 玩家回放文件中, 在 {7}<tick>{r} 处找到的动作数据。
             
             info:
                 |
                     {l}{6}/{r}record {8}info{r} {7}<filename>{r}
                     
-                    {r}以 {7}<filename>{r} 输出玩家录制的数据，例如已保存的录制版本，录制时长…
+                    {r}输出关于文件名为 {7}<filename>{r} 的玩家回放数据, 例如已保存的录制版本, 录制时长等。
             
             remove:
                 |
                     {l}{6}/{r}record {8}remove{r} {7}<filename> <tick> [index]{r}
                     
-                    {r}在玩家录制文件 {7}<filename>{r} 中移除 {7}<tick>{r} 时的所有动作。如果你指定 {7}[index]{r}，此命令只会移除在 {7}[index]{r} {7}<tick>{r} 时的一个动作。
+                    {r}删除 {7}<filename>{r} 玩家回放中, {7}<tick>{r} 上的的所有动作。如果您指定了 {7}[index]{r}, 该命令只会移除在 {7}[index]{r} 处, {7}<tick>{r} 上的一个动作。
 
             restore:
                 |
                     {l}{6}/{r}record {8}restore{r} {7}<filename> <iteration>{r}
 
-                    {r}为名为 {7}<filename>{r} 的玩家录制文件恢复到最近的第 {7}<iteration>{r} 版本。例如，{7}/record restore test 1{r} 会交换 {7}test.dat{r} 与 {7}test.dat~1{r} 之间的内容。
+                    {r}将名为 {7}<filename>{r} 的玩家回放文件恢复到最近的第 {7}<iteration>{r} 版本。例如, {7}/record restore test 1{r} 会交换 {7}test.dat{r} 与 {7}test.dat~1{r} 玩家回放文件的位置。
             
             reverse:
                 |
                     {l}{6}/{r}record {8}reverse{r} {7}<filename>{r}
 
-                    {r}倒转名为 {7}<filename>{r} 的玩家录制中的帧和动作。
+                    {r}倒转名为 {7}<filename>{r} 的玩家回放中的帧和动作。
         
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
                     
-                    {r}搜索在文件名 {7}<filename>{r} 里所找到的动作，可选限制在 {7}[limit]{r}，给予的 {7}<action_type>{r}，输出 tick 时间，可选输出哪些数据标签。
+                    {r}在 {7}<filename>{r} 玩家回放中搜索动作给定的 {7}<action_type>{r} 动作, 可选择用 {7}[limit]{r} 进行限制, 然后输出 Tick 时间, 可选择输出哪些数据标签。
                     
             origin:
                 |
                     {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
                     
-                    {r}这个命令会根据 {7}[x] [y] [z]{r}（如果三个都指定了）来改变玩家录制的源（第一帧）或者玩家现在的位置。你也许可能会用绝对值来围绕 Y 轴旋转玩家录制。
+                    {r}该命令会根据 {7}[x] [y] [z]{r} (如果三个都指定了) 来改变玩家回放的原点 (第一帧), 或者取玩家当前的位置。您也可以将玩家回放的内容相对于第一帧在 Y 轴上进行旋转。
                     
             prolong:
                 |
                     {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
                     
-                    {r}这个命令可以调整名为 {7}<filename>{r} 的玩家录制的前后延迟。
+                    {r}该命令可以调整给定的 {7}<filename>{r} 玩家回放的前后延迟。
                                 
             tp:
                 |
                     {l}{6}/{r}record {8}tp{r} {7}<filename> [tick]{r}
                     
-                    {r}这个命令会传送玩家到名为 {7}<filename>{r} 玩家录制中的第一帧（或者指定的 {7}[tick]{r} 帧，如果有的话）
+                    {r}该命令会传送玩家到名为 {7}<filename>{r} 玩家回放的第一帧或指定的第 {7}[tick]{r} 帧处。
 
         # Model's commands
         model:
-            help: "{r}{o}模型命令{r}。本命令让你管理自定义模型。"
+            help: "{r}{o}模型命令{r}。该命令提供一些次级命令用于管理自定义模型。"
             
             export:
                 |
                     {l}{6}/{r}model {8}export{r} {7}<entity_name>{r}
                     
-                    {r}导出从 {7}<entity_name>{r} 为 JSON 的生物渲染器，能够在演员上使用。模型将会导出在 Blockbuster 的 config 文件夹的 export 文件夹。你可以自愿地提供 {7}[entity_tag]{r} 来从实体中生成含有自定义数据的模型。
+                    {r}以 JSON 格式导出来自 {7}<entity_name>{r} 生物渲染群的模型, 该格式用于演员所使用的自定义模型。模型将会导出在 Blockbuster 的 config 文件夹的 export 文件夹。您可以选择提供 {7}[entity_tag]{r} 来导出具有特定数据的实体生成模型。
                     
-                    {r}{l}注意{r}: 这些自动生成的模型不完美，你需要在 McME 进一步编辑获得最佳效果。
+                    {r}{l}注意{r}: 这些自动生成的模型不完美, 您需要在 McME 进一步编辑获得最佳效果。
 
             export_obj:
                 |
                     {l}{6}/{r}model {8}export_obj{r} {7}<model_name> [pose]{r}
                     
-                    {r}转换名为 {7}<model_name>{r} 的 Blockbuster JSON 模型到 OBJ（包括默认材质，如果存在的话也包括 MTL 文件）。导出的 OBJ 模型在 Blockbuster 的配置文件夹中的 {l}export{r} 文件夹。
+                    {r}将名为 {7}<model_name>{r} 的 Blockbuster JSON 模型转换为 OBJ 模型 (包括默认材质, 以及如果存在的 MTL 文件)。导出的 OBJ 模型可以在 Blockbuster 的配置文件夹中的 {l}export{r} 文件夹内找到。
                     
             clear:
                 |
                     {l}{6}/{r}model {8}clear{r} {7}[path]{r}
                     
-                    {r}清除来自 Blockbuster 已加载的皮肤材质。如果 {7}[path]{r} 指定了，这个命令只会清理来自 {7}[path]{r} 的材质。
+                    {r}清除加载的 Blockbuster 皮肤材质的材质缓存。如果指定了 {7}[path]{r}, 该命令只会清理来自 {7}[path]{r} 的材质。
 
             convert:
                 |
                     {l}{6}/{r}model {8}convert{r} {7}<steve|fred> <skin>{r}
                     
-                    {r}转换一个名为 {7}<skin>{r} 的皮肤（文件名不包括文件的扩展名 {7}<steve|fred>{r} 模型）64x64（{7}fred{r}）到 64x32 或者 64x32（{7}steve{r}）到 64x64 的皮肤。
+                    {r}转换一个名为 {7}<skin>{r} (文件名不包括文件的扩展名 {7}<steve|fred>{r} 模型) 的 64x64 ({7}fred{r}) 皮肤到 64x32, 或从 64x32 ({7}steve{r}) 转换到 64x64 的皮肤。
             
             reload:
                 |
                     {l}{6}/{r}model {8}reload{r} {7}[force]{r}
                     
-                    {r}强制客户端和服务器重载模型（服务器端只用于 OP 用户），自定义使用 {7}[force]{r} 参数，如果是 {7}true{r} 的话就也会重新加载一遍没有改变时间戳的文件。
+                    {r}强制客户端和服务器使用可选的 {7}[force]{r} 参数重载模型 (服务器端仅 OP 用户可用), 若参数为 {7}true{r}, 则会重载所有超过缓存的非修改文件时间戳的模型。
                     
             replace_texture:
                 |
                     {l}{6}/{r}model {8}replace_texture{r} {7}<target> [replace]{r}
                     
-                    {r}使用来自 {7}[replace]{r} 路径位置的材质来替换来自 {7}<target>{r} 路径位置的材质。 如果 {7}[replace]{r} 没有指定，那么目标 {7}<target>{r} 将会恢复原来的材质。
+                    {r}使用来自 {7}[replace]{r} 路径位置的材质来替换来自 {7}<target>{r} 路径位置的材质。 如果 {7}[replace]{r} 没有指定, 那么目标 {7}<target>{r} 将会恢复原来的材质。
 
         # Action's commands
         action:
-            help: "{r}{o}动作命令{r}。本命令提供一些次级命令管理玩家录制内容动作。"
+            help: "{r}{o}动作命令{r}。本命令提供一些次级命令管理玩家回放内容动作。"
             
             clear:
                 |
                     {l}{6}/{r}action {8}clear{r}
                     
-                    {r}移除客户端上所有的录制内容。 (用来强制卸载客户端上的回放)。
+                    {r}移除客户端上所有的回放内容 (用于强制卸载客户端上的回放)。
             play: 
                 |
                     {l}{6}/{r}action {8}play{r} {7}<filename> [name_tag] [model] [skin] [invincibility]{r}
                     
-                    {r}播放文件名 {7}<filename>{r} 里的回放。 这个次级命令也可接受自定义参数 {7}[name]{r}（演员的名字），他的 {7}[model]{r}(模型) and {7}[skin]{r} and {7}[invincibility]{r}(是否隐身) 选项 ({7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 可用)。
+                    {r}播放 {7}<filename>{r} 玩家回放及其的动作。 其中的次级命令还可接收可选的参数 {7}[name]{r} (演员的名字), 他的 {7}[model]{r}(模型) 和 {7}[skin]{r}(皮肤) 以及 {7}[invincibility]{r}(隐身) 标签 (标签可以用 {7}1{r}, {7}0{r}, {7}true{r} 或 {7}false{r} 表示)。
             record: 
                 |
                     {l}{6}/{r}action {8}record{r} {7}<filename> [x] [y] [z]{7}
                     
-                    {r}从当前玩家录制动作到 {7}<filename>{r}。你也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 来指定你想录制到哪个导演方块。提供导演方块的坐标可以帮助同步演员。 
+                    {r}将当前玩家的动作录制到 {7}<filename>{r} 玩家回放中。您也可以使用{7}[x]{f}, {7}[y]{f} 和 {7}[z]{f} 来指定您想录制到哪个导演方块。提供导演方块的坐标, 有助于同步演员。 
             request: 
                 |
                     {l}{6}/{r}action {8}request{r} {7}<filename>{r}
                     
-                    {r}请求要从服务器加载到本地客户端，命名为 {7}<filename>{r} 的动作。
+                    {r}请求将名为 <filename> 的动作从服务器加载到当前客户端。
             stop: 
                 |
                     {l}{6}/{r}action {8}stop{r}
                     
-                    {r}停止录制动作。如果玩家没有录制任何东西，什么都不会发生。
+                    {r}停止录制动作。若玩家没有录制任何动作, 什么都不会发生。
         
-        on_head.help: "{r}{o}在头上的命令{r}。这个命令可以将主要用手拿着的东西直接放入头上的佩戴槽，无需受任何 NBT 标签的困扰。"
+        on_head.help: "{r}{o}戴在头上命令{r}。该命令可以将当前主手拿着的物品直接放入头上的物品槽, 无需受任何 NBT 标签的困扰。"
         spectate.help: 
             |
-                {r}{o}观察者命令{r}。这个命令可以让给定的玩家观察给定的实体。
+                {r}{o}观察者命令{r}。该命令可以让指定玩家附身至指定实体的视角上。
                 
                 {l}{6}/{r}spectate {8}<player>{r} {7}<entity>{r}

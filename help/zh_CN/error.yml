@@ -6,64 +6,70 @@
 blockbuster.error:
     # Actor error strings
     actor:
-        not_attached: "{f}这个激活工具还没有链接到任何一个导演方块！"
+        not_attached: "{f}该激活工具还未链接到导演方块上!"
     
     # General command errors
     commands:
-        load_chunks: 无法加载渲染范围里所有已创建的区块！详情错误记录在日志里。
+        load_chunks: 无法加载渲染范围里所有已创建的区块! 请参阅日志了解详细的错误信息。
         
-        restore_texture: "{f}材质 %s{f} 无法被恢复，因为它没有被这个命令改变过。"
-        replace_texture: "{f}材质 %s{f} 和 %s{f} 没有被加载！"
-        replace_texture_one: "{f}材质 %s{f} 没有被加载！"
+        restore_texture: "{f}材质 %s{f} 无法被恢复, 因为它没有被该命令更改过。"
+        replace_texture: "{f}材质 %s{f} 和 %s{f} 未被加载!"
+        replace_texture_one: "{f}材质 %s{f} 未被加载!"
         
-        no_player: "{f}无法找到玩家 %s{f}！"
-        no_entity: "{f}无法找到使用目标选择器给定的实体 %s{f}！"
+        no_player: "{f}无法找到玩家 %s{f}!"
+        no_entity: "{f}无法找到目标选择器所指定的实体 %s{f}!"
         
-        convert_model: "{f}给定了错误的模型 %s{f}！它必须要是 {7}steve{f} 或者 {7}fred{f}。"
-        convert_skin: "{f}在转换 %s{f}/%s{f} 皮肤过程中，出现了一个错误：%s{f}"
-        convert_skin_size: "{f}皮肤的大小是 %s{f}x%s{f}，然而皮肤是必须要以 1:1 或 2:1 为比例的！"
+        convert_model: "{f}指定了错误的模型 %s{f}! 它必须要是 {7}steve{f} 或是 {7}fred{f}。"
+        convert_skin: "{f}在转换 %s{f}/%s{f} 皮肤过程中,出现了错误：%s{f}"
+        convert_skin_size: "{f}皮肤的大小为 %s{f}x%s{f}, 且/皮肤的比例必须为 1:1 或 2:1!"
     
     # Director block error strings
     director:
-        playing: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块正在播放！"
-        stopped: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块已停止播放！"
+        playing: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块正在播放!"
+        stopped: "{f}在 (%s{f}, %s{f}, %s{f}) 的导演方块已停止播放!"
         
-        missing: "{f}在 (%s{f}, %s{f}, %s{f}) 不存在导演方块！"
+        missing: "{f}在 (%s{f}, %s{f}, %s{f}) 不存在导演方块!"
         no_director: "{f}(%s{f}, %s{f}, %s{f})的导演方块不存在。"
-        empty_filename: "{f}导演方块有一个空白的{7}录制ID{f}。 请填充空白的{7}录制ID{f}."
+        empty_filename: "{f}导演方块存在空白的{7}回放 ID{f}。 请填写空白的{7}回放 ID{f}."
+
+    scene:
+        playing: "{f}场景 %s{f} 正在播放!"
+        stopped: "{f}场景 %s{f} 已停止播放!"
+
+        no_scene: "{f}不存在名为 %s{f} 的场景。"
     
     # Errors for /model export
     model:
         export:
-            error_save: "{f}无法保存导出的模型！"
-            wrong_type: "{f}无法以形式 %s{f} 导出模型（因为它没有渲染器，或者不是活的实体渲染器）。"
-            no_model: "{f}无法将模型 %s{f} 导出为 OBJ，因为无法找到这个模型！"
-            obj: "{f}无法导出模型 %s{f}！"
+            error_save: "{f}无法保存导出的模型!"
+            wrong_type: "{f}无法以 %s{f} 的形式导出模型（因为它没有渲染器, 或为非活动的实体渲染器）。"
+            no_model: "{f}无法将模型 %s{f} 导出为 OBJ, 因为无法找到该模型!"
+            obj: "{f}无法导出模型 %s{f}!"
         
-        reload: 你需要成为 OP 用户才能重载模型！
+        reload: 你需要成为 OP 用户才能重载模型!
     
     # Record command errors
     record:
-        no_action: "{f}文件名为 %s{f} 的玩家录制内容在 %s{f} tick没有动作！"
-        not_exist: "{f}文件名为 %s{f} 的玩家录制内容不存在！"
-        tick_out_range: "{f}在 tick %s{f} 的内容不存在！范围应在 {7}0{r} 和 %s{r} 之间。"
-        index_out_range: "{f}Index %s{f} 超出范围！范围应在 {7}0{r} 和 %s{r} 之间。"
-        already_empty: "{f}在索引号 %s{r}，玩家录制文件 %s{r} 里没有动作！"
-        wrong_action: "{f}动作类别 %s{f} 不存在！"
+        no_action: "{f}文件名为 %s{f} 的玩家回放内容在 %s{f} Tick 时没有动作!"
+        not_exist: "{f}文件名为 %s{f} 的玩家回放内容不存在!"
+        tick_out_range: "{f}在 tick %s{f} 的内容不存在! 范围应在 {7}0{r} 和 %s{r} 之间。"
+        index_out_range: "{f}索引 %s{f} 超出范围! 范围应在 {7}0{r} 和 %s{r} 之间。"
+        already_empty: "{f}玩家回放 %s{r} 中, 索引 %s{r} 处没有动作!"
+        wrong_action: "{f}动作类别 %s{f} 不存在!"
         add: "{f}动作类别 %s{f} 由于以下错误而无法添加：%s"
-        already_exists: "{f}名为 %s{f} 的玩家录制已经存在了！"
-        couldnt_save: "{f}无法以 %s{f} 文件名保存玩家录制！"
-        wrong_clean_property: "{f}给予了错误的清除的属性 %s{f}！"
-        empty_record: "{f}给予的玩家录制 %s{f} 是空的！"
-        not_exist_iteration: "{f}给予的玩家录制 %s{f} 的第 %s{f} 版本不存在！"
-        cant_restore: "{f}无法回退一个版本，因为临时文件现在不应该存在……"
-        wrong_axis: "{f}给定的 \"%s{f}\" 不是合法的轴。它应该是 {7}x{r} 或者 {7}z{r}！"
+        already_exists: "{f}名为 %s{f} 的玩家回放已经存在了!"
+        couldnt_save: "{f}无法以 %s{f} 的文件名保存玩家回放!"
+        wrong_clean_property: "{f}给出清除的属性 %s{f} 错误!"
+        empty_record: "{f}给出的玩家回放 %s{f} 为空!"
+        not_exist_iteration: "{f}给出的玩家回放 %s{f} 的第 %s{f} 版本不存在!"
+        cant_restore: "{f}无法回退一个版本, 因为临时文件现在不应该存在..."
+        wrong_axis: "{f}指定的 \"%s{f}\" 不是合法的轴。轴应该为 {7}x{r} 或者 {7}z{r}!"
 
     # Recording errors
     recording:
-        read: "{f}命名为 %s{f} 的录制文件不适合播放 ({7}老版本{f}, {7}已损坏{f}, 或不是{7}录制文件{f})。"
-        logout: "{f}已停止录制 %s{f}, 因为玩家登出了！"
-        not_found: "{f}无法找到 %s{f} 录制文件！"
-        fill_filename: "{f}请填充{7}录制ID{f}框！"
-        empty_filename: "{f}无法录制玩家录像与一个空白的{7}录制ID{f}."
-        empty_record: "{f}无法回放录像 %s{f}, 因为是空的！"
+        read: "{f}名为 %s{f} 的回放文件不适合播放 ({7}旧版文件{f}, {7}已损坏{f}, 或不是{7}回放文件{f})。"
+        logout: "{f}已停止录制 %s{f}, 因为已玩家登出!"
+        not_found: "{f}无法找到 %s{f} 回放文件!"
+        fill_filename: "{f}请填写{7}回放ID{f}框!"
+        empty_filename: "{f}无法在{7}录制ID{f}为空的情况下录制玩家回放."
+        empty_record: "{f}无法播放回放 %s{f}, 因为是空的!"

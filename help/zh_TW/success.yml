@@ -1,35 +1,40 @@
 blockbuster.success:
     commands:
-        mipmaped_texture: "{f}材質 %s{f} 已成功 mipmap 化！"
-        demipmaped_texture: "{f}材質的 mipmap %s{f} 已刪除！"
+        mipmaped_texture: "{f}材質 %s{f} 已成功 Mipmap 化!"
+        demipmaped_texture: "{f}材質的 Mipmap %s{f} 已刪除!"
         
-        texture_filter_linear: "{f}材質的過濾器已更改為線性！"
-        texture_filter_nearest: "{f}材質的過濾器已更改為最近的附近物！"
+        texture_filter_linear: "{f}材質的過濾器已變更為線性!"
+        texture_filter_nearest: "{f}材質的過濾器已變更為最近的臨近物!"
         
-        convert_skin: "{f}成功轉換 %s{r}/%s{r} 皮膚！"
+        convert_skin: "{f}成功轉換 %s{r}/%s{r} 皮膚!"
         
     director:
-        play: "{f}在(%s{f}, %s{f}, %s{f})的導演方塊已經開始播放了！"
-        stop: "{f}在(%s{f}, %s{f}, %s{f})的導演方塊已經停止播放了！"
+        play: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊已開始播放!"
+        stop: "{f}在 (%s{f}, %s{f}, %s{f}) 的導演方塊已停止播放!"
         
-        was_registered: "{f}這個演員已經鏈接到了導演方塊！"
-        attached_device: "{f}這個激活裝置已經鏈接到了導演方塊！"
-        attached_button: "{f}這個播放按鈕已經鏈接到了導演方塊！"
+        was_registered: "{f}該演員已經鏈接到導演方塊!"
+        attached_device: "{f}該激活設備已經鏈接到導演方塊!"
+        attached_button: "{f}該播放按鈕已經鏈接到導演方塊!"
     
+    scene:
+        play: "{f}場景 %s{f} 已開始播放!"
+        stop: "{f場景 %s{f} 已停止播放!"
+
     model:
         export:
-            saved: "{f}實體模型 %s{f} 已經儲存在 %s{f}。"
-            obj: "{f}成功導出了 %s{f} 模型的 OBJ！"
+            saved: "{f}實體模型 %s{f} 已經保存在 %s{f}。"
+            obj: "{f}已成功導出 %s{f} 模型到 OBJ!"
         
-        reload: "{f}伺服器已經重載了模型！"
+        reload: "{f}服務器已重載模型!"
         
     record:
-        changed_origin: "{f}玩家錄制的來源已經成功從 %s{f} 從 (%s{f}, %s{f}, %s{f}) 更換到 (%s{f}, %s{f}, %s{f})！"
-        duped: "{f}玩家錄制 %s{f} 已成功復制到 %s{f}!"
-        clean: "{f}玩家錄制 %s{f} 的屬性 %s{f} 已經成功從 %s{f} 到 %s{f} 清除！"
-        prolonged: "{f}已在玩家錄製 %s{f} 設定延遲。其回放的前、后延遲分別是：%s{f} 和 %s{f}。"
-        faded: "{f}玩家錄製 %s{f} 的最後 %s{f} 幀會用於拖到起點。"
-        flipped: "{f}已在玩家錄製 %s{f} 以 %s{f} 軸，在 %s{f} 坐標翻轉！"
-        cut: "{f}玩家錄製 %s{f} 已裁剪。留下了 %s{f} 幀和 %s{f} 幀之間的內容。"
-        restored: "{f}已恢復到玩家錄製 %s{f} 的第 %s{f} 版本！"
-        reversed: "{f}已倒轉玩家錄製 %s{f}！"
+        changed_origin: "{f}玩家回放的來源已經成功從 %s{f} 從 (%s{f}, %s{f}, %s{f}) 更換為 (%s{f}, %s{f}, %s{f})!"
+        duped: "{f}玩家回放 %s{f} 已被成功復制到 %s{f}!"
+        clean: "{f}玩家回放 %s{f} 的屬性 %s{f} 已成功從 %s{f} 到 %s{f} 清除!"
+        prolonged: "{f}已在玩家回放 %s{f} 設定延遲。其播放前、後延遲分別是：%s{f} 和 %s{f}。"
+        faded: "{f}玩家回放 %s{f} 的最後 %s{f} 幀會用於拖至起點。"
+        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 軸，在 %s{f} 坐標翻轉!"
+        cut: "{f}玩家回放 %s{f} 已裁剪。留下了 %s{f} 幀 和 %s{f} 幀之間的內容。"
+        restored: "{f}已恢復到玩家回放 %s{f} 的第 %s{f} 版本!"
+        reversed: "{f}已翻轉玩家回放 %s{f}!"
+        fill: "{f}成功填充 %s{f} 幀到 %s{f} Tick 處的 %s{f} 玩家回放 (最終長度為 %s{f} Tick)!"
