@@ -1,37 +1,39 @@
 blockbuster.config.comments:
     general:
-        show_first_time_modal: 是否顯示第一次使用的提示
-        disable_teleport_playback_button: 當你潛行使用播放按鈕的時候，传送功能是否開啟？
-        extra_wubs: 這個選項可能沒有作用，或者有點用？
-        auto_refresh_models: 當進入 Metamorph 或 Blockbuster 的 GUI 時，自動刷新模型和皮膚？
-        debug_playback_ticks: 當導演方塊錄制時，將 tick 時間寫入日誌檔案
-        green_screen_sky: 將天空完全變色，用來鍵控摳像
-        green_screen_sky_color: 指定天空顏色，用於色鍵天空功能
-        url_skins_sync_download: 同步的下載來自 URL 的皮膚。它可能會在下載 3D 外部表層的時期讓遊戲沒有反應。
+        show_first_time_modal: 是否展示首次使用提示
+        disable_teleport_playback_button: 當妳蹲著使用播放按鈕的時候, 是否禁用傳送功能?
+        extra_wubs: 這個選項可能沒有作用。也許有點兒用吧...?
+        auto_refresh_models: 進入 Metamorph 或 Blockbuster 的 GUI 時, 是否自動刷新模型和皮膚?
+        debug_playback_ticks: 當導演方塊錄制時, 將 Tick 時間寫入日誌文件
+        green_screen_sky: 將天空變為純色, 實現用於色鍵的目的
+        green_screen_sky_color: 指定天空顏色, 用於色鍵天空功能
+        url_skins_sync_download: 同步下載來自 URL 的皮膚。這能讓 URL 皮膚也能夠實現 3D 外層功能, 代價是凍結遊戲進程 (假死) 進行下載。
+        add_utility_blocks: 在 Blockbuster 的創造模式選項卡中添加命令和結構塊等方塊, 以簡化獲取這些物品的過程
 
     model_block:
-        model_block_disable_rendering: 是否要渲染模型方塊
-        model_block_disable_item_rendering: 是否要關閉模型方塊的背包內渲染（有人想要關掉嗎？）
+        model_block_disable_rendering: 是否渲染模型方塊
+        model_block_disable_item_rendering: 是否關閉模型方塊的物品渲染 (有人想要關掉嗎?)
         
     recording:
-        recording_countdown: 錄制倒計時（秒）
+        recording_countdown: 錄制倒計時 (秒)
         recording_delay: 錄制的幀延遲
-        record_unload_time: 解除安裝一個錄制需要多久？（tick）
-        record_unload: 開啟自動解除安裝錄制？
-        record_sync_rate: 與伺服器同步一個回放的頻率是？
-        record_attack_on_swipe: 是否錄制揮手時，生物受到的傷害？
-        record_commands: 是否錄制玩家鍵入的命令？
-        record_chat_prefix: 將會在確切要執行的命令之前預先用的前置代號（%NAME% 通配符可用于指向演員的名稱）
+        record_unload_time: 卸載壹個錄制需要多久（Tick）
+        record_unload: 啟用自動卸載錄制?
+        record_sync_rate: 與服務器同步壹個回放的頻率是?
+        record_attack_on_swipe: 是否錄制揮手時對實體造成到的傷害?
+        record_commands: 是否錄制玩家輸入命令的動作?
+        record_chat_prefix: 將會在確切要執行的命令之前預先用的前綴（%NAME% 通配符可用於指向演員的名稱）
 
     actor:
-        actor_fall_damage: 演員是否會掉落傷害？
-        actor_tracking_range: 演員跟蹤會多遠？需要重啟遊戲。
-        actor_rendering_range: 演員多遠可見？
-        actor_always_render: 讓演員始終渲染，無關它的位置和碰撞箱大小
-        actor_always_render_names: 開啟無條件渲染演員名稱
-        actor_swish_swipe: 當演員揮手時是否產生刷刷聲？
-        actor_y: 讓演員使用正確的 Y 坐標值（可修復飛行和跳躍時的問題，但會引起 Y 軸上的運動不平滑）
+        actor_fall_damage: 演員是否會受到跌落傷害?
+        actor_tracking_range: 演員跟蹤會多遠? 需要重啟遊戲。
+        actor_rendering_range: 演員多遠可見?
+        actor_always_render: 讓演員始終被渲染, 不論演員在哪裏、碰撞箱有多大
+        actor_always_render_names: 啟用無條件渲染演員名稱
+        actor_swish_swipe: 當演員揮手時是否產生刷刷聲?
+        actor_y: 讓演員使用正確的 Y 坐標值 (可修復飛行時和跳躍時的問題, 但會導致在 Y 軸上的運動不平滑)
+        actor_disable_riding: 禁用右鍵演員時騎乘演員的選項
 
     damage_control:
-        damage_control: 傷害控制是否開啟
+        damage_control: 傷害控制是否啟用
         damage_control_distance: 傷害控制效果的半徑範圍

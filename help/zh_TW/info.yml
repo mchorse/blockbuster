@@ -1,45 +1,49 @@
 blockbuster.info:
     actor:
-        playing: "{f}這個演員已經在播放了！"
+        playing: "{f}該演員正在播放!"
 
     director:
-        already_registered: "{f}這個演員已經鏈接到了這個導演方塊上了！"
-        looped: "{f}給予的導演方塊現在已開啟重復播放！"
-        unlooped: "{f}給予的導演方塊現在已關閉重復播放！"
+        already_registered: "{f}該演員已經被鏈接到了這個導演方塊上!"
+        looped: "{f}指定的導演方塊現已啟用循環播放!"
+        unlooped: "{f}指定的導演方塊現已禁用循環播放!"
         
-        enabled_state: "{f}給定的導演方塊現在改變了狀態！"
-        disabled_state: "{f}給定的導演方塊現在沒有改變狀態！"
-        
-        not_loaded: "{f}材質 %s{f} 沒有載入。"
+        enabled_state: "{f}指定的導演方塊現在已經可以改變其狀態!"
+        disabled_state: "{f}指定的導演方塊現在無法改變其狀態!"
+
+    scene:
+        looped: "{f}指定的場景現已啟用循環播放!"
+        unlooped: "{f}指定的場景現已禁用循環播放!"
 
     # General command infos
     commands:
-        load_chunks: "{f}已載入在渲染範圍裡的已創建區塊。"
+        load_chunks: "{f}已加載在渲染範圍裏的已創建區塊。"
 
-        replace_texture: "{f}材質 %s{f} 已被材質 %s{f} 替換。"
-        restore_texture: "{f}材質 %s{f} 已經還原為初始狀態。"
+        replace_texture: "{f}材質 %s{f} 已被替換為材質 %s{f}。"
+        restore_texture: "{f}材質 %s{f} 已還原為初始狀態。"
+        
+        not_loaded: "{f}材質 %s{f} 沒有加載。"
 
-    models.loaded: "{f}已從伺服器收到 %s{f} 個自定義模型和 %s{f} 個皮膚。"
+    models.loaded: "{f}已從服務器收到 %s{f} 個自定義模型和 %s{f} 個皮膚。"
 
     record:
-        action: "{f}在 %s{f} tick 的動作是 %s{f} 在索引號 %s{f} 並帶有資料：%s"
+        action: "{f}在 %s{f} Tick 的動作是 %s{f} , 且在索引 %s{f} 處, 數據為：%s"
 
         info:
             |
-                {f}關於 %s{f} 的信息：
+                {f}關於名為 %s{f} 的玩家回放的信息 (時間單位均為 Tick)：
 
-                {7}*{f} 錄制版本：%s
-                {7}*{f} 錄制的時長（ticks 單位）：%s
+                {7}*{f} 回放版本：%s
+                {7}*{f} 回放的時長：%s
                 {7}*{f} 延時幀：%s
-                {7}*{f} 解除安裝前的 tick 時長：%s
+                {7}*{f} 卸載前的時長：%s
 
-        search_type: "{f}以類型 %s{f} 搜尋動作："
-        search_action: "{f}在%s{f} tick 找到動作，在索引號 %s{f}。"
-        search_action_data: "{f}在%s{f} tick 找到動作，在索引號 %s{f} 並帶有資料：%s"
+        search_type: "{f}以類型 %s{f} 搜索動作："
+        search_action: "{f}在 %s{f} Tick 找到動作, 位於索引 %s{f} 處。"
+        search_action_data: "{f}在 %s{f} Tick 找到動作, 位於索引 %s{f} 處, 數據為：%s"
 
     # Recording strings
     recording:
-        recording: "%s{f} 已經在錄制了。"
-        dead: "{f}已停止錄制 %s{f}，因為玩家死了。"
-        message: "{f}如要開始錄制 %s{f}, %s{f}!"
-        clickhere: 點按這裡
+        recording: "%s{f} 已處於被錄制狀態。"
+        dead: "{f}已終止錄制 %s{f}, 因為玩家已死亡。"
+        message: "{f}若要開始錄制 %s{f}, %s{f}!"
+        clickhere: 點擊這裏

@@ -4,9 +4,6 @@ key:
         # Categories
         category: Blockbuster
 
-        dashboard: 仪表盘
-        model_editor: 模型编辑器
-        marker: tick 时间标记
         plause_director: 播放/停止回放
         record_director: 录制回放
         pause_director: 暂停回放

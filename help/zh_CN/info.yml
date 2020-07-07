@@ -1,45 +1,49 @@
 blockbuster.info:
     actor:
-        playing: "{f}这个演员已经在播放了！"
+        playing: "{f}该演员正在播放!"
 
     director:
-        already_registered: "{f}这个演员已经链接到了这个导演方块上了！"
-        looped: "{f}给予的导演方块现在已开启重复播放！"
-        unlooped: "{f}给予的导演方块现在已关闭重复播放！"
+        already_registered: "{f}该演员已经被链接到了这个导演方块上!"
+        looped: "{f}指定的导演方块现已启用循环播放!"
+        unlooped: "{f}指定的导演方块现已禁用循环播放!"
         
-        enabled_state: "{f}给定的导演方块现在改变了状态！"
-        disabled_state: "{f}给定的导演方块现在没有改变状态！"
+        enabled_state: "{f}指定的导演方块现在已经可以改变其状态!"
+        disabled_state: "{f}指定的导演方块现在无法改变其状态!"
+
+    scene:
+        looped: "{f}指定的场景现已启用循环播放!"
+        unlooped: "{f}指定的场景现已禁用循环播放!"
 
     # General command infos
     commands:
         load_chunks: "{f}已加载在渲染范围里的已创建区块。"
 
-        replace_texture: "{f}材质 %s{f} 已被材质 %s{f} 替换。"
-        restore_texture: "{f}材质 %s{f} 已经还原为初始状态。"
+        replace_texture: "{f}材质 %s{f} 已被替换为材质 %s{f}。"
+        restore_texture: "{f}材质 %s{f} 已还原为初始状态。"
         
         not_loaded: "{f}材质 %s{f} 没有加载。"
 
     models.loaded: "{f}已从服务器收到 %s{f} 个自定义模型和 %s{f} 个皮肤。"
 
     record:
-        action: "{f}在 %s{f} tick 的动作是 %s{f} 在索引号 %s{f} 并带有数据：%s"
+        action: "{f}在 %s{f} Tick 的动作是 %s{f} , 且在索引 %s{f} 处, 数据为：%s"
 
         info:
             |
-                {f}关于 %s{f} 的信息：
+                {f}关于名为 %s{f} 的玩家回放的信息 (时间单位均为 Tick)：
 
-                {7}*{f} 录制版本：%s
-                {7}*{f} 录制的时长（ticks 单位）：%s
+                {7}*{f} 回放版本：%s
+                {7}*{f} 回放的时长：%s
                 {7}*{f} 延时帧：%s
-                {7}*{f} 卸载前的 tick 时长：%s
+                {7}*{f} 卸载前的时长：%s
 
         search_type: "{f}以类型 %s{f} 搜索动作："
-        search_action: "{f}在%s{f} tick 找到动作，在索引号 %s{f}。"
-        search_action_data: "{f}在%s{f} tick 找到动作，在索引号 %s{f} 并带有数据：%s"
+        search_action: "{f}在 %s{f} Tick 找到动作, 位于索引 %s{f} 处。"
+        search_action_data: "{f}在 %s{f} Tick 找到动作, 位于索引 %s{f} 处, 数据为：%s"
 
     # Recording strings
     recording:
-        recording: "%s{f} 已经在录制了。"
-        dead: "{f}已停止录制 %s{f}，因为玩家死了。"
-        message: "{f}如要开始录制 %s{f}, %s{f}!"
+        recording: "%s{f} 已处于被录制状态。"
+        dead: "{f}已终止录制 %s{f}, 因为玩家已死亡。"
+        message: "{f}若要开始录制 %s{f}, %s{f}!"
         clickhere: 点击这里

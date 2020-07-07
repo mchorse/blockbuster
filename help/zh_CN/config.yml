@@ -1,48 +1,57 @@
 # Config strings
 blockbuster.config:
-    general:
-        title: 通用
+    title: Blockbuster
 
-        show_first_time_modal: 展示第一次使用提示
-        disable_teleport_playback_button: 关闭播放后瞬移功能
+
+    general:
+        title: 常规
+        tooltip: Blockbuster mod 的常规选项
+
+        show_first_time_modal: 展示首次使用提示
+        disable_teleport_playback_button: 禁用播放后瞬移功能
         extra_wubs: 附加的杂物
         auto_refresh_models: 刷新模型和皮肤
-        debug_playback_ticks: Debug ticks
+        debug_playback_ticks: 调试 Ticks
         green_screen_sky: 色键天空
         green_screen_sky_color: 色键天空颜色
         url_skins_sync_download: 同步的 URL 下载
+        add_utility_blocks: 添加实用方块
         
     model_block:
         title: 模型方块
+        tooltip: 与模型方块相关的选项
         
-        model_block_disable_rendering: 关闭模型方块渲染
-        model_block_disable_item_rendering: 关闭物品栏渲染
+        model_block_disable_rendering: 禁用模型方块渲染
+        model_block_disable_item_rendering: 禁用物品栏渲染
 
     recording:
         title: 录制
+        tooltip: 所有与玩家回放系统相关的选项
 
         recording_countdown: 录制倒计时
         recording_delay: 录制跳过帧
         record_unload_time: 自动卸载录制的时间
-        record_unload: 自动卸载录制的
-        record_sync_rate: 录制 tick 的同步率
-        record_attack_on_swipe: 挥动手攻击
+        record_unload: 自动卸载录制
+        record_sync_rate: 录制 Tick 的同步率
+        record_attack_on_swipe: 挥手攻击
         record_commands: 录制命令
-        record_chat_prefix: 聊天动作的前缀
+        record_chat_prefix: 聊天动作前缀
         
     actor:
         title: 演员
+        tooltip: 演员实体配置选项 (与假玩家无关)
 
-        actor_fall_damage: 演员掉落伤害
+        actor_fall_damage: 演员跌落伤害
         actor_tracking_range: 演员跟踪范围
         actor_rendering_range: 演员渲染范围
-        actor_always_render: 总是渲染演员
-        actor_always_render_names: 总是渲染演员的名称
+        actor_always_render: 始终渲染演员
+        actor_always_render_names: 始终渲染演员的名称
         actor_swish_swipe: 手臂划动刷刷声
         actor_y: 修复 Y 轴运动
 
     damage_control:
-        title: 伤害控制
+        title: 破坏控制
+        tooltip: 破坏控制是指在演员被录制或场景完成回放后，恢复方块的系统
 
-        damage_control: 伤害控制
-        damage_control_distance: 伤害距离
+        damage_control: 破坏控制
+        damage_control_distance: 破坏距离

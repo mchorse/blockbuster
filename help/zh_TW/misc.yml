@@ -1,22 +1,20 @@
-# Recording
+  # Recording
 blockbuster:
     # Parsing
     parsing:
-        lacks_pose: 解析的 "%s" 模型沒有名為 "%s" 的姿勢！
-        lacks_limbs: 解析的 "%s" 模型沒有任何肢體！
+        lacks_pose: 解析的 "%s" 模型沒有名為 "%s" 的姿勢!
+        lacks_limbs: 解析的 "%s" 模型沒有任何肢體!
 
-    marker: "{6}{l}|{r} 錄制 {7}%s{r} {8}({6}x%s{8}){r},目前已進行 {7}%s{6}t{r} {8}({r} 與上次標記間隔 {7}%s{6}t{8}){r}。"
     recording: 錄制到 {7}%s{r}
     "yes": "是"
     "no": "否"
-    eggs:
-        yike: "{l}好吧{r}，{o}好吧{r}，那是 {7}McHorse{r} 的笑話！現在切換回 {6}YikeFilms{r}。"
-    morph_error: 没有找到模型
-    start_recording: "現在開始錄製 {7}%s{r}，在 {7}%s{r}"
+    morph_error: 未找到模型
+    start_recording: "現在開始錄制 {7}%s{r}, 在 {7}%s{r}"
 
-# Metamorph category
+# Metamorph
+morph.section.blockbuster: Blockbuster 模型
+
 morph.category:
-    blockbuster: Blockbuster 模型
     blockbuster_extra: Blockbuster 附加
-    
-metamorph.builder.blockbuster: 自定義模型制作器
+    blockbuster_structures: Blockbuster 結構
+    blockbuster_models: Blockbuster 模型

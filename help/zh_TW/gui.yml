@@ -3,20 +3,20 @@
 blockbuster.gui:
     # General strings
     done: 完成
-    next: 下一個
-    previous: 上一個
-    restore: 恢復預設
+    next: 下壹個
+    previous: 上壹個
+    restore: 恢復默認
     reset: 初始化
-    add: 加入
+    add: 添加
     edit: 編輯
     remove: 移除
     record: 錄制
-    pick: 選取模型
-    duplicate: 拷貝
-    search: 搜尋
+    pick: 選擇偽裝
+    duplicate: 重復
+    search: 搜索
     cancel: 取消
     break: 破壞
-    select: 選取
+    select: 選擇
     ok: 好
     billboard: 看向玩家
 
@@ -27,38 +27,40 @@ blockbuster.gui:
 
     # First time module
     first_time:
-        title: "第一次使用？"
-        welcome: "歡迎使用 Blockbuster mod！\n\n如果你是第一次使用這個 mod，可以去看看 {c}YouTube{r} 上的 {a}Blockbuster 學院影片教程{r}。"
-        social: "如果你遇到了任何問題，可前往 {6}Discord{r} 伺服器取得幫助。還有，你可以跟隨我的 {b}Twitter{r}，我會在那發佈更新。"
+        title: "首次使用?"
+        welcome: "歡迎使用 Blockbuster mod!\n\n如果您是第壹次使用這個 mod, 可以去看看 {c}嗶哩嗶哩{r} 上的 {a}Blockbuster 學院視頻教程{r}。"
+        social: "如果您遇到了任何問題, 可前往 {6}Discord{r} 服務器獲得幫助。還有, 您可以關註我的 {b}Twitter{r}, 我會在那兒發布更新。"
         channel: 嗶哩嗶哩
 
     # Morphs popup strings
     morphs:
-        acquire: "獲得偽裝"
+        acquire: "獲取偽裝"
         pose: 姿勢
-        sneak: 在潛行時應用
-        reset: 重設姿勢
+        sneak: 在蹲下時應用
+        reset: 重置姿勢
+        create: 創建姿勢
 
     confirm:
         title: 確認破壞導演方塊
-        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊總共含 {7}%s{f} 個回放。你真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
+        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的導演方塊共包含 {7}%s{f} 個回放。您真的要破壞掉這個方塊嗎？回放會被{l}永久{r}{c}移除{r}。
 
     dashboard:
         main: 儀表盤
         director: 導演方塊
         model: 模型方塊
         model_editor: 模型編輯器
-        player_recording: 玩家錄制編輯器
+        player_recording: 玩家回放編輯器
         texture: 材質管理器
+        particle: 粒子編輯器
 
     # Main page of dashboard
     main:
         resources: 資源
         wiki: 百科
         discord: Discord
-        tutorial: 影片教程
-        models: 打開模型……
-        video_platform: BiliBili
+        tutorial: 視頻教程
+        models: 打開模型...
+        video_platform: 嗶哩嗶哩
 
         options: 選項
 
@@ -68,8 +70,8 @@ blockbuster.gui:
         config: 導演方塊選項
         convert: 轉換導演方塊為場景
         convert_modal: "命名場景："
-        not_selected: 選取一個導演方塊…
-        no_replays: 創建一個回放…
+        not_selected: 選擇壹個導演方塊…
+        no_replays: 創建壹個回放…
 
         display_title: 顯示標題
         start_command: 開始時執行命令
@@ -78,42 +80,44 @@ blockbuster.gui:
         disable_states: 停用狀態
         hide: 在回放時隱藏
 
-        id: 錄制 ID
+        id: 回放 ID
         name: 名稱標簽
         invincible: 無敵
         invisible: 隱身
         enabled: 啟用
         fake_player: 假玩家
         tp_back: 傳送回來
-        tp_back_tooltip: 將你傳送回開始的位置
-        health: 健康值
+        tp_back_tooltip: 將您傳送回開始位置
+        health: 生命值
         edit_record: 編輯錄制
-        update_data: 更新資料
-        updata_data_tooltip: 更新在錄製檔案中的玩家資料
-        rename_prefix: 重新命名前置代號
-        rename_prefix_tooltip: 使用新的前置代號來重命名錄製 ID
-        rename_prefix_popup: "鍵入一個新的前置代號："
-        
+        update_data: 更新數據
+        updata_data_tooltip: 更新在回放文件中的玩家數據
+        rename_prefix: 重命名前綴
+        rename_prefix_tooltip: 使用新前綴來重命名回放的錄制 ID
+        rename_prefix_popup: "輸入壹個新的前綴："
+
         attach: 鏈接
-        attach_tooltip: 鏈接這個導演方塊/場景到播放按鈕
+        attach_tooltip: 將這個導演方塊/場景鏈接到播放按鈕
+
+        camera: 編輯相機
 
     scenes:
         title: 場景
 
         add_modal: "命名新場景："
-        dupe_modal: "命名拷貝場景："
-        rename_modal: "重新命名當前場景："
-        remove_modal: "你真的要移除這個場景嗎？"
+        dupe_modal: "命名副本場景："
+        rename_modal: "重命名當前場景："
+        remove_modal: "您確定要移除該場景嗎?"
 
     # Actor configuration GUI strings
     actor:
         title: 演員設定
 
-        default: 預設
+        default: 默認
         name: 名稱
-        filename: 錄制 ID
-        invincible: 可死亡嗎？
-        invisible: 可見嗎？
+        filename: 回放 ID
+        invincible: 能否被擊殺?
+        invisible: 是否可見?
         attached: 演員鏈接
         yaw: 偏航
         pitch: 俯仰
@@ -121,7 +125,7 @@ blockbuster.gui:
     # Model block GUI strings
     model_block:
         title: 模型方塊
-        not_selected: 選取一個模型方塊…
+        not_selected: 選擇壹個模型方塊...
 
         x: X
         "y": "Y"
@@ -133,91 +137,95 @@ blockbuster.gui:
         one_tooltip: 整體縮放
         shadow: 陰影
         global: 全局
-        global_tooltip: 覆蓋掉塊刪除動作
+        global_tooltip: 啟用忽略區塊卸載
         enabled: 啟用
         enabled_tooltip: 啟用模型方塊渲染
-        look: 朝向你
+        look: 轉向您
 
         entity: 實體
         translate: 平移
-        rotate: 翻滾
+        rotate: 旋轉
         scale: 縮放
 
     # Player recording editor GUI strings
     record_editor:
         title: 錄制
-        directors: 導演方塊的錄製
-        not_selected: 選取一個玩家錄制…
+        directors: 導演方塊的錄制
+        not_selected: 選擇壹個玩家回放…
         action: 動作
 
-        drop: 扔下方塊
+        cut: 剪切動作
+        copy: 復制動作
+        paste: 粘貼動作
+
+        drop: 掉落方塊
         damage: 傷害
         progress: 進度
-        mounting: 乘坐
+        mounting: 騎乘
         meta: 元值
         arrow_charge: 拉弓力度
-        no_fields: 這個動作沒有可用的編輯欄…
+        no_fields: 該動作沒有可用的編輯欄...
 
         actions:
             chat:
                 title: 聊天
-                desc: 本動作傳送一條消息
+                desc: 本動作會發送壹條消息
             swipe:
                 title: 揮手
-                desc: 本動作讓演員揮動主要手臂
+                desc: 本動作會讓演員揮動主手臂
             drop:
                 title: 丟東西
-                desc: 丟下一個物品（就像按了 Q）
+                desc: 丟下壹個物品 (類似於按了 Q)
             equip:
                 title: 穿戴物品
-                desc: 任何一只手拿著東西或者穿戴了盔甲
+                desc: 任何壹只手拿著東西或者穿戴了盔甲
 
                 none: 無
-                main_hand: 主要手
+                main_hand: 主手
                 feet: 腳
                 legs: 腿
                 chest: 胸
                 head: 頭
-                off_hand: 次要手
+                off_hand: 副手
             shoot_arrow:
                 title: 射箭
-                desc: 以給定的力量射出一根普通箭
+                desc: 以指定的力量射出壹根普的通箭
             place_block:
                 title: 放置方塊
-                desc: 在給定的位置上放一個指定的方塊
+                desc: 在指定的位置上放壹個指定的方塊
             mounting:
-                title: 乘坐
-                desc: 乘坐或不乘坐前面的實體
+                title: 騎乘
+                desc: 騎乘或取消騎乘面前的實體
             interact_block:
-                title: 方塊互動
-                desc: 讓演員與一個方塊互動
+                title: 方塊交互
+                desc: 讓演員與壹個方塊交互
             break_block:
                 title: 破壞方塊
-                desc: 在給定的位置上破壞方塊
+                desc: 在指定的位置上破壞方塊
             morph:
                 title: 偽裝
-                desc: 將演員偽裝成給定的偽裝
+                desc: 將演員變為成指定的偽裝
             attack:
                 title: 攻擊
-                desc: 對演員前方的生物造成傷害（如果你要對玩家使用，確保遊戲設定中，不是和平難度）
+                desc: 對演員前方的生物造成傷害 (如果您要對玩家使用的話, 需要將遊戲難度改為除和平以外的難度）
             damage:
                 title: 傷害
                 desc: 對演員實體造成傷害
             morph_action:
                 title: 偽裝動作
-                desc: 使用偽裝的動作，如果演員已在偽裝中
+                desc: 如果演員已進行偽裝, 則使用偽裝動作
             command:
                 title: 命令
-                desc: 使用演員執行一條命令
+                desc: 用演員執行壹條命令
             break_animation:
                 title: 破壞方塊動畫
-                desc: 在給定的方塊位置上進行裂痕動畫
+                desc: 在指定的方塊位置上執行破壞動畫 (方塊裂痕)
             use_item:
                 title: 使用物品
-                desc: 使用正拿在手上的物品
+                desc: 使用當前拿在手上的物品
             use_item_block:
                 title: 在方塊上使用物品
-                desc: 在演員正對著的方塊使用手上拿著的物品
+                desc: 對演員正對著的方塊使用手上拿著的物品
 
                 down: 下
                 up: 上
@@ -225,12 +233,15 @@ blockbuster.gui:
                 south: 南
                 west: 西
                 east: 東
+            interact_entity:
+                title: 與實體交互
+                desc: 與當前演員所看向的實體進行交互 (使用如命名牌、物品展示框或模型實體進行交互)
 
     # Playback GUI
     playback:
         title: 播放設定
-        camera_mode: 攝影機模式
-        profile: 檔案檔案名稱
+        camera_mode: 相機模式
+        profile: 相機配置文件名稱
 
         nothing: 什麽都不做
         play: 僅播放
@@ -239,44 +250,52 @@ blockbuster.gui:
     builder:
         pose_editor: 姿勢編輯器
         body_part: 身體部分
-        materials: 材料
+        materials: 材質
         nbt: NBT
 
-        pick_model: 選取模型
-        pick_skin: 選取皮膚
-        pose_sneak: 潛行的姿勢
+        pick_model: 選擇模型
+        pick_skin: 選擇皮膚
+        pose_sneak: 潛行姿勢
         pose: 姿勢
 
-        obj_materials: OBJ 材料
-        pick_texture: 選取材質
+        obj_materials: OBJ 材質
+        pick_texture: 選擇材質貼圖
 
         limbs: 肢體
         body_parts: 身體部分
         use_target: 使用目標
 
         animates: 動畫
-        ignored: 略過
+        ignored: 跳過
         animation_duration: 持續長度
-        pick_interpolation: 選取插值
-        
+        pick_interpolation: 選擇插值
+
     image:
         crop: 裁剪
         left: 左
         right: 右
         top: 上
         bottom: 下
+        resize_crop: 重置剪裁
         dimensions: "大小 (%spx, %spx)"
+        offset_x: X 軸坐標偏移
+        offset_y: Y 軸坐標偏移
+        rotation: 坐標旋轉
+        keying: 鍵控
+        keying_tooltip: 該選項會清除屏幕中, 由這個偽裝 (在幀緩沖器中) 渲染的顏色數據, 最終可以用於 Minema 的“使用 Alpha 通道”選項輸出已鍵控 (摳像) 的畫面, 而不需要外部視頻編輯軟件
         
     sequencer:
         duration: 持續長度
         random: 隨機
         reverse: 反轉
-        no_morph: （無偽裝）
+        no_morph: (沒有偽裝)
         morphs: 偽裝
         random_order: 隨機順序
-        
+        ticks: Ticks
+
     particle:
-        tooltip: 通用屬性
+        tooltip: 常規屬性
+        emission: 發射屬性
         morph: 偽裝屬性
         vanilla: 原版屬性
         common: 全局屬性
@@ -286,14 +305,16 @@ blockbuster.gui:
             vanilla: 原版
             morph: 偽裝
 
-        pick_type: 選取類型
-        pick_type_tooltip: 選取偽裝動作類型
+        pick_type: 選擇類型
+        pick_type_tooltip: 選擇偽裝運動類型
 
-        particle: 選取粒子
+        particle: 選擇粒子
         frequency: 頻率
-        dx: 偏移 X
-        dy: 偏移 Y
-        dz: 偏移 Z
+        dx: X 偏移
+        dy: Y 偏移
+        dz: Z 偏移
+        local_rotation: 局部旋轉
+        local_rotation_tooltip: 當綁定於身體部分時, 原版粒子會相對於身體部分的旋轉來發射, 否則它們會相對於世界發射
         speed: 速度
         count: 數量
         args: 附加參數
@@ -303,27 +324,188 @@ blockbuster.gui:
         cap: 容量
 
     snowstorm:
-        tooltip: 暴風雪粒子偽裝
-        local: 本地空間渲染
+        title: 粒子
+        mode: 模式
+        add_modal: "為新的空白粒子效果輸入名稱："
+        dupe_modal: "為當前粒子效果的副本輸入新名稱："
+        remove_modal: "妳確定要永久刪除該粒子效果嗎?"
+
+        open_tooltip: 粒子效果管理器
+        save_tooltip: 保存當前的粒子效果
+        add_tooltip: 創建新的粒子效果
+        dupe_tooltip: 重復當的前粒子效果
+        remove_tooltip: 移除當前的粒子效果
+        remove_factory_tooltip: 您無法移除預設效果...
+        folder_tooltip: 打開粒子效果所在文件夾
+
+        keys:
+            category: 粒子編輯器
+            save: 保存當前的粒子效果
+
+        general:
+            title: 常規
+            pick: 選擇材質
+
+            identifier: 該粒子效果的標識, 可以作為顯示名稱, 但在基巖版中, 它是粒子效果的 ID
+
+            particles_opaque: 不透明度
+            particles_alpha: Alpha
+            particles_blend: 混合
+
+        space:
+            title: 粒子空間屬性
+
+            position: 相對位置
+            rotation: 相對旋轉
+
+        initialization:
+            title: 初始化表達式
+
+            create: 起始表達式, 會在發射器啟動時運行
+            update: 更新表達式, 會在每壹 Tick 中運行
+
+        rate:
+            title: 生成頻率
+
+            instant: 瞬間
+            steady: 穩定
+
+            spawn_rate: 生成頻率表達式決定了壹秒內會有多少粒子被發射出來
+            max_particles: 能夠同時存在多少個粒子
+            particles: 壹次能夠釋放出多少個粒子
+
+        lifetime:
+            title: 發射器壽命
+
+            expression: 表達式
+            looping: 循環
+            once: 僅壹次
+
+            active_expression: 負責重啟發射器的表達式, 若計算結果為非零數，則重啟發射器
+            active_looping: 用於確定在休眠階段之前, 單個周期的活動時間的表達式
+            active_once: 表達式，決定了單個周期的時間長短
+
+            expiration_expression: 負責停止發射器的表達式, 若計算結果為非零數，則停止發射器
+            sleep_time: 決定發射器在下壹個周期之前將休眠多長時間的表達式
+
+        shape:
+            title: 發射器形狀
+
+            shape: 形狀
+            point: 點
+            box: 長方體
+            sphere: 球體
+            disc: 圓盤
+            aabb: 實體的碰撞箱
+
+            offset: 偏移
+            direction: 方向
+            direction_outwards: 向外
+            direction_inwards: 向內
+            direction_vector: 矢量
+
+            surface: 表面
+            surface_tooltip: 在形狀的表面周圍生成粒子
+
+            box_size: 長方體大小
+
+            normal: 平面法線
+            radius: 半徑
+
+        motion:
+            title: 運動
+
+            dynamic: 動態
+            parametric: 參數
+
+            position: 位置
+            position_speed: 初速度
+            position_drag: 運動阻力
+
+            rotation: 旋轉
+            rotation_angle: 初始旋轉
+            rotation_speed: 初始旋轉速度
+            rotation_acceleration: 旋轉加速度
+            rotation_drag: 旋轉阻力
+
+        expiration:
+            title: 粒子壽命
+
+            expression: 表達式
+            expression_tooltip: 該表達式使粒子保持存活, 直到表達式的結果為零為止
+            max: 最大值
+            max_tooltip: 該表達式以秒為單位定義粒子的存活時間
+
+            kill_plane: 消失平面
+            kill_plane_tooltip: 您可以用 Ax + By + Cz + D = 0 來指定壹個平面, 如果粒子穿過了這個平面, 那麽它就失效了
+
+            in_blocks: 在方塊中失效
+            not_in_blocks: 不在方塊中失效
+
+        appearance:
+            title: 材質
+
+            regular: 普通
+            animated: 動畫
+
+            size: 告示板尺寸
+            width: 寬度
+            height: 高度
+
+            mapping: UV 映射
+            uv_x: 材質的 X 坐標表達式
+            uv_y: 材質的 Y 坐標表達式
+            uv_w: 材質四邊形寬度
+            uv_h: 材質四邊形高度
+            step_x: 每幀 X 坐標步長
+            step_y: 每幀 Y 坐標步長
+            fps: 每秒動畫幀數
+            max: 動畫最大幀數
+            stretch: 延續
+            stretch_tooltip: 將材質動畫延續到粒子的生命周期
+            loop: 循環
+            loop_tooltip: 當動畫到達最後 (最大) 幀時, 將動畫後退以開始播放
+
+        lighting:
+            title: 顏色與發光
+
+            lighting: 發光
+
+            solid: 純色
+            expression: 表達式
+
+            red: R
+            green: G
+            blue: B
+            alpha: Alpha
+
+        collision:
+            title: 碰撞
+
+            enabled: 啟用
+            drag: 在粒子與世界中的方塊碰撞後, 碰撞阻力所增加的阻力 (減速) 大小
+            bounciness: 碰撞後粒子的加速度乘以彈性
+            radius: 粒子命中箱半徑
+            expire: 接觸時失效
 
     record_morph:
         random_skip: 隨機跳過
 
     texture:
         title: 材質管理器
-        subtitle: 此頁面可用于檢視和管理已在 Minecraft 運行時中載入的材質。
+        subtitle: 該界面可用於查看和管理已在 Minecraft 運行時中載入的材質
         linear: 線性
-        linear_tooltip: 開啟后，材質會看起來平滑
+        linear_tooltip: 啟用後, 材質看起來會更平滑
         mipmap: Mipmap
-        mipmap_tooltip: 開啟后，在遠方看的噪點會變少
+        mipmap_tooltip: 啟用後, 從遠處看不會有那麽多噪點
         replace: 替換
-        replace_modal: "請鍵入一個指向 {l}已載入的{r} 材質資源的位置，用作替換："
-
+        replace_modal: "輸入您想要替換的 {l}已加載的{r} 材質資源的位置："
+        
     gun:
-        title: 槍的配置
-        fire_props: 發射的屬性
-        projectile_props: 炮彈的屬性
-        impact_props: 撞擊的屬性
+        title: 槍配置
+        fire_props: 發射屬性
+        projectile_props: 炮彈屬性
+        impact_props: 撞擊屬性
         transforms: 變換
         
         default_morph: 默認偽裝
@@ -335,34 +517,34 @@ blockbuster.gui:
         launch: 發射自己
         
         projectile_morph: 作為炮彈的偽裝
-        tick_command: 在 Tick 中的頻率上執行以下命令：
-        ticking: Tick 中的頻率
-        life_span: 存活時間
+        tick_command: 在 Tick 頻率上執行的命令
+        ticking: Tick 頻率
+        life_span: 壽命
         yaw: 偏航
         pitch: 俯仰
         sequencer: 序列
         random: 隨機
-        hitbox_x: 碰撞箱 X
-        hitbox_y: 碰撞箱 Y
+        hitbox_x: X 碰撞箱
+        hitbox_y: Y 碰撞箱
         speed: 速度
         friction: 摩擦力
         gravity: 引力
-        
         fade_in: 緩入
         fade_out: 緩出
         
-        impact_morph: 撞擊后的偽裝
-        impact_delay: 撞擊的延遲
-        impact_command: 撞擊時刻執行以下命令
+        impact_morph: 撞擊後的偽裝
+        impact_delay: 撞擊延遲
+        impact_command: 撞擊時執行的命令
         vanish: 消失 # or Spanish
-        sticks: 粘黏
+        sticks: 附著
         bounce: 反彈
         hits: 反彈次數
         damage: 傷害
-        bounce_factor: 因素
+        bounce_factor: 系數
+        vanish_delay: 消失延遲
         
-        gun_transforms: 槍的變換
-        projectile_transforms: 炮彈的變換
+        gun_transforms: 槍變換
+        projectile_transforms: 炮彈變換
 
     interpolations:
         linear: 線性
@@ -375,11 +557,19 @@ blockbuster.gui:
         exp_in: 指數緩入
         exp_out: 指數緩出
         exp_inout: 指數緩入/緩出
-        
+
     aperture:
         config:
             title: 演員
 
+            detach: 解綁場景
             reload: 重載演員
             actions: 預覽動作
             reload_scene: 重載場景
+
+        keys:
+            category: 玩家回放編輯器
+            toggle_list: 開關玩家回放列表
+            toggle_editor: 開關玩家回放編輯器
+
+            add_morph_action: 添加偽裝動作
