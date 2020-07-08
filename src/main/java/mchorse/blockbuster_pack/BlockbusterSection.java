@@ -19,6 +19,8 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.vanilla_pack.morphs.ItemMorph;
+import mchorse.vanilla_pack.morphs.LabelMorph;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,6 +63,10 @@ public class BlockbusterSection extends MorphSection
 		this.extra.add(this.sequencer = sequencer);
 		this.extra.add(new RecordMorph());
 		this.extra.add(snow);
+
+		/* By popular demand */
+		this.extra.add(new ItemMorph());
+		this.extra.add(new LabelMorph());
 	}
 
 	public void addStructure(String name, boolean sort)
@@ -136,6 +142,7 @@ public class BlockbusterSection extends MorphSection
 		category.add(morph);
 		category.sort();
 
+		/* Really terrible hack to add sequences */
 		this.alex = this.alex || key.equals("alex");
 		this.steve = this.steve || key.equals("fred");
 
