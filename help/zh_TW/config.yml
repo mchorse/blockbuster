@@ -51,7 +51,7 @@ blockbuster.config:
 
     damage_control:
         title: 破壞控制
-        tooltip: 破壞控制是指在演員被錄制或場景完成回放後，恢復方塊的系統
+        tooltip: 破壞控制是指在演員被錄制或場景完成回放後, 恢復方塊的系統
 
         damage_control: 破壞控制
         damage_control_distance: 破壞距離

@@ -12,7 +12,7 @@ blockbuster.gui:
     remove: 移除
     record: 录制
     pick: 选择伪装
-    duplicate: 重复
+    duplicate: 复制
     search: 搜索
     cancel: 取消
     break: 破坏
@@ -42,7 +42,7 @@ blockbuster.gui:
 
     confirm:
         title: 确认破坏导演方块
-        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的导演方块共包含 {7}%s{f} 个回放。您真的要破坏掉这个方块吗？回放会被{l}永久{r}{c}移除{r}。
+        description: 在 ({7}%s{f}, {7}%s{f}, {7}%s{f}) 的导演方块共包含 {7}%s{f} 个回放。您真的要破坏掉这个方块吗? 回放会被{l}永久{r}{c}移除{r}。
 
     dashboard:
         main: 仪表盘
@@ -70,8 +70,8 @@ blockbuster.gui:
         config: 导演方块选项
         convert: 转换导演方块为场景
         convert_modal: "命名场景："
-        not_selected: 选择一个导演方块…
-        no_replays: 创建一个回放…
+        not_selected: 选择一个导演方块...
+        no_replays: 创建一个回放...
 
         display_title: 显示标题
         start_command: 开始时执行命令
@@ -151,11 +151,11 @@ blockbuster.gui:
     record_editor:
         title: 录制
         directors: 导演方块的录制
-        not_selected: 选择一个玩家回放…
+        not_selected: 选择一个玩家回放...
         action: 动作
 
         cut: 剪切动作
-        copy: 复制动作
+        copy: 拷贝动作
         paste: 粘贴动作
 
         drop: 掉落方块
@@ -207,7 +207,7 @@ blockbuster.gui:
                 desc: 将演员变为成指定的伪装
             attack:
                 title: 攻击
-                desc: 对演员前方的生物造成伤害 (如果您要对玩家使用的话, 需要将游戏难度改为除和平以外的难度）
+                desc: 对演员前方的生物造成伤害 (如果您要对玩家使用的话, 需要将游戏难度改为除和平以外的难度)
             damage:
                 title: 伤害
                 desc: 对演员实体造成伤害
@@ -328,12 +328,12 @@ blockbuster.gui:
         mode: 模式
         add_modal: "为新的空白粒子效果输入名称："
         dupe_modal: "为当前粒子效果的副本输入新名称："
-        remove_modal: "你确定要永久删除该粒子效果吗?"
+        remove_modal: "您确定要永久删除该粒子效果吗?"
 
         open_tooltip: 粒子效果管理器
         save_tooltip: 保存当前的粒子效果
         add_tooltip: 创建新的粒子效果
-        dupe_tooltip: 重复当的前粒子效果
+        dupe_tooltip: 复制当的前粒子效果
         remove_tooltip: 移除当前的粒子效果
         remove_factory_tooltip: 您无法移除预设效果...
         folder_tooltip: 打开粒子效果所在文件夹
@@ -381,11 +381,11 @@ blockbuster.gui:
             looping: 循环
             once: 仅一次
 
-            active_expression: 负责重启发射器的表达式, 若计算结果为非零数，则重启发射器
+            active_expression: 负责重启发射器的表达式, 若计算结果为非零数, 则重启发射器
             active_looping: 用于确定在休眠阶段之前, 单个周期的活动时间的表达式
-            active_once: 表达式，决定了单个周期的时间长短
+            active_once: 表达式, 决定了单个周期的时间长短
 
-            expiration_expression: 负责停止发射器的表达式, 若计算结果为非零数，则停止发射器
+            expiration_expression: 负责停止发射器的表达式, 若计算结果为非零数, 则停止发射器
             sleep_time: 决定发射器在下一个周期之前将休眠多长时间的表达式
 
         shape:

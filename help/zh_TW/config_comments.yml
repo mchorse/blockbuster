@@ -1,7 +1,7 @@
 blockbuster.config.comments:
     general:
         show_first_time_modal: 是否展示首次使用提示
-        disable_teleport_playback_button: 當妳蹲著使用播放按鈕的時候, 是否禁用傳送功能?
+        disable_teleport_playback_button: 當您蹲著使用播放按鈕的時候, 是否禁用傳送功能?
         extra_wubs: 這個選項可能沒有作用。也許有點兒用吧...?
         auto_refresh_models: 進入 Metamorph 或 Blockbuster 的 GUI 時, 是否自動刷新模型和皮膚?
         debug_playback_ticks: 當導演方塊錄制時, 將 Tick 時間寫入日誌文件
@@ -17,12 +17,12 @@ blockbuster.config.comments:
     recording:
         recording_countdown: 錄制倒計時 (秒)
         recording_delay: 錄制的幀延遲
-        record_unload_time: 卸載壹個錄制需要多久（Tick）
+        record_unload_time: 卸載壹個錄制需要多久 (Tick)
         record_unload: 啟用自動卸載錄制?
         record_sync_rate: 與服務器同步壹個回放的頻率是?
         record_attack_on_swipe: 是否錄制揮手時對實體造成到的傷害?
         record_commands: 是否錄制玩家輸入命令的動作?
-        record_chat_prefix: 將會在確切要執行的命令之前預先用的前綴（%NAME% 通配符可用於指向演員的名稱）
+        record_chat_prefix: 將會在確切要執行的命令之前預先用的前綴 (%NAME% 通配符可用於指向演員的名稱)
 
     actor:
         actor_fall_damage: 演員是否會受到跌落傷害?
