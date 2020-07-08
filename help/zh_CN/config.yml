@@ -2,7 +2,6 @@
 blockbuster.config:
     title: Blockbuster
 
-
     general:
         title: 常规
         tooltip: Blockbuster mod 的常规选项
@@ -48,6 +47,7 @@ blockbuster.config:
         actor_always_render_names: 始终渲染演员的名称
         actor_swish_swipe: 手臂划动刷刷声
         actor_y: 修复 Y 轴运动
+        actor_disable_riding: 禁用骑乘
 
     damage_control:
         title: 破坏控制

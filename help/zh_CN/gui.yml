@@ -91,7 +91,7 @@ blockbuster.gui:
         health: 生命值
         edit_record: 编辑录制
         update_data: 更新数据
-        updata_data_tooltip: 更新在回放文件中的玩家数据
+        update_data_tooltip: 更新在回放文件中的玩家数据
         rename_prefix: 重命名前缀
         rename_prefix_tooltip: 使用新前缀来重命名回放的录制 ID
         rename_prefix_popup: "输入一个新的前缀："
