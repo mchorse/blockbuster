@@ -27,6 +27,7 @@ import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.ScrollArea;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Patterns;
 import mchorse.mclib.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
@@ -44,9 +45,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 public class GuiModelList extends GuiModelEditorTab
 {
+    public static final Pattern FILENAME_SLASHES = Pattern.compile(Patterns.FILENAME.pattern().replace("]*$","/]*$"));
+
     public GuiStringSearchListElement models;
     private GuiIconElement dupe;
     private GuiIconElement export;
@@ -86,15 +90,19 @@ public class GuiModelList extends GuiModelEditorTab
             current = "steve";
         }
 
-        if (current != null)
-        {
-            this.models.list.setCurrentScroll(current);
-        }
+        this.models.list.setCurrentScroll(current);
     }
 
     private void saveModel()
     {
-        GuiModal.addFullModal(this, () -> new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.models.name"), this::saveModel).filename().setValue(this.panel.modelName));
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiPromptModal modal = new GuiPromptModal(mc, IKey.lang("blockbuster.gui.me.models.name"), this::saveModel).setValue(this.panel.modelName);
+
+            modal.text.validator((string) -> FILENAME_SLASHES.matcher(string).find());
+
+            return modal;
+        });
     }
 
     private void saveModel(String name)
