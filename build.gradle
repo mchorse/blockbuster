@@ -231,3 +231,81 @@ task buildLangFiles {
 }
 
 tasks.processResources.dependsOn('buildLangFiles')
+
+/* Comparing keys */
+task compareLangFiles {
+    doLast {
+        def help = file("src/main/resources/assets/${project.archivesBaseName}/lang/")
+        def parse = { File file ->
+            def map = new HashMap()
+            def splits = file.text.split("\n");
+
+            for (split in splits) {
+                def index = split.indexOf("=")
+
+                if (index == -1) {
+                    continue
+                }
+
+                map.put(split.substring(0, index), true)
+            }
+
+            return map
+        }
+
+        if (!help.exists()) {
+            return
+        }
+
+        def en = file("${help.getAbsolutePath()}/en_US.lang")
+        def en_map = parse(en)
+
+        for (lang_file in help.listFiles()) {
+            if (!lang_file.name.endsWith(".lang") || lang_file.name.startsWith("en_US")) {
+                continue
+            }
+
+            def lang_map = parse(lang_file)
+            def missing = new ArrayList()
+            def extra = new ArrayList()
+
+            for (key in en_map.keySet()) {
+                if (!lang_map.containsKey(key)) {
+                    missing.add(key)
+                }
+            }
+
+            for (key in lang_map.keySet()) {
+                if (!en_map.containsKey(key)) {
+                    extra.add(key)
+                }
+            }
+
+            missing.sort()
+            extra.sort()
+
+            print("\n")
+
+            if (!missing.isEmpty() || !extra.isEmpty()) {
+                if (!missing.isEmpty()) {
+                    print("Language file ${lang_file.getName()} misses following keys:\n")
+
+                    for (key in missing) {
+                        print("- ${key}\n")
+                    }
+                }
+
+                if (!extra.isEmpty()) {
+                    print("Language file ${lang_file.getName()} has additional keys:\n")
+
+                    for (key in extra) {
+                        print("- ${key}\n")
+                    }
+                }
+            }
+            else {
+                print("Language file ${lang_file.getName()} fully matches ${en.getName()}!\n")
+            }
+        }
+    }
+}
