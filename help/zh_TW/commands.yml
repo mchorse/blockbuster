@@ -40,7 +40,7 @@ blockbuster:
                 |
                     {l}{6}/{r}record {8}dupe{r} {7}<filename> <new_filename>{r}
                     
-                    {r}該命令會將 {7}<filename>{r} 玩家回放 (重復) 復制壹份到名為 {7}<new_filename>{r} 的新玩家回放。
+                    {r}該命令會將 {7}<filename>{r} 玩家回放復制壹份到名為 {7}<new_filename>{r} 的新玩家回放。
 
             fade:
                 |

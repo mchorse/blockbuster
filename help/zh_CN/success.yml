@@ -33,7 +33,7 @@ blockbuster.success:
         clean: "{f}玩家回放 %s{f} 的属性 %s{f} 已成功从 %s{f} 到 %s{f} 清除!"
         prolonged: "{f}已在玩家回放 %s{f} 设定延迟。其播放前、后延迟分别是：%s{f} 和 %s{f}。"
         faded: "{f}玩家回放 %s{f} 的最后 %s{f} 帧会用于拖至起点。"
-        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 轴，在 %s{f} 坐标翻转!"
+        flipped: "{f}已在玩家回放 %s{f} 以 %s{f} 轴, 在 %s{f} 坐标翻转!"
         cut: "{f}玩家回放 %s{f} 已裁剪。留下了 %s{f} 帧 和 %s{f} 帧之间的内容。"
         restored: "{f}已恢复到玩家回放 %s{f} 的第 %s{f} 版本!"
         reversed: "{f}已翻转玩家回放 %s{f}!"

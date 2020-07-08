@@ -42,11 +42,11 @@ blockbuster.error:
     model:
         export:
             error_save: "{f}无法保存导出的模型!"
-            wrong_type: "{f}无法以 %s{f} 的形式导出模型（因为它没有渲染器, 或为非活动的实体渲染器）。"
+            wrong_type: "{f}无法以 %s{f} 的形式导出模型 (因为它没有渲染器, 或为非活动的实体渲染器)。"
             no_model: "{f}无法将模型 %s{f} 导出为 OBJ, 因为无法找到该模型!"
             obj: "{f}无法导出模型 %s{f}!"
         
-        reload: 你需要成为 OP 用户才能重载模型!
+        reload: 您需要成为 OP 用户才能重载模型!
     
     # Record command errors
     record:

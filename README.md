@@ -50,7 +50,7 @@ Blockbuster mod provides you with lots of features to create outstanding machini
 * **Animated GIF support** – now you can put reaction and meme GIFs onto Blockbuster models and just as images. Credit goes to [MrCrayfish's furniture mod](https://github.com/MrCrayfish/MrCrayfishFurnitureMod) and [DhyanB](https://github.com/DhyanB/Open-Imaging/blob/master/src/main/java/at/dhyan/open_imaging/GifDecoder.java).
 * **Animations** — with animated poses and image morph animations, you can add animation to your actors and sets.
 * **[Minema](https://github.com/daipenger/minema/releases) compatability** – thanks to frame-based player recording and cameras, you can convert your in-game machinimas to videos with a press of a button.
-* **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ) and [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww), respectively.
+* **Speaks multiple languages** – besides English, Blockbuster is also translated into Russian and Chinese thanks to [Andruxioid](https://www.youtube.com/channel/UCnHOceBjwMyqCR5oYOoNqhQ), [ycwei982](https://www.youtube.com/channel/UCfUDMSGlXUblXimkvNl_7Ww) and [Chunk7](https://twitter.com/RuaC7w) respectively.
 
 ## Videos
 

@@ -62,7 +62,7 @@ blockbuster.gui.me:
         save: 保存模型
         export: 从生物中新建模型
         name: "为模型命名："
-        pick: "选择你想从中导出肢体的生物："
+        pick: "选择您想从中导出肢体的生物："
         error: "糟糕, 由于一个错误, 导致无法新建模型：%s"
     
     options:
@@ -81,9 +81,9 @@ blockbuster.gui.me:
         new_pose: "为新姿势命名："
         import_pose: "在此输入姿势的 NBT 数据来导入它到当前的姿势："
         import_pose_tooltip: "使用 NBT 标签来导入姿势的属性"
-        copy_pose: "选择要从中复制当前肢体属性的姿势。"
+        copy_pose: "选择要从中当前拷贝肢体属性的姿势。"
         copy_pose_tooltip: "从另一个姿势复制姿势属性"
-        standard: "你无法移除必须的姿势..."
+        standard: "您无法移除必须的姿势..."
         hitbox: 碰撞箱尺寸
     
     tooltips:
