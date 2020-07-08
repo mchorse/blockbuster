@@ -20,8 +20,7 @@ public class GuiEquipActionPanel extends GuiActionPanel<EquipAction>
     {
         super(mc, panel);
 
-        this.armor = new GuiCirculateElement(mc, (b) -> this.action.armorSlot = (byte) (this.armor.getValue() - 1));
-        this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.none"));
+        this.armor = new GuiCirculateElement(mc, (b) -> this.action.armorSlot = (byte) this.armor.getValue());
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.main_hand"));
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.feet"));
         this.armor.addLabel(IKey.lang("blockbuster.gui.record_editor.actions.equip.legs"));
