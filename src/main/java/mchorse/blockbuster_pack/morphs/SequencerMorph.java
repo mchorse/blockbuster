@@ -428,7 +428,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     public static class SequenceEntry
     {
         public AbstractMorph morph;
-        public float duration = 5;
+        public float duration = 10;
         public float random = 0;
 
         public SequenceEntry(AbstractMorph morph)

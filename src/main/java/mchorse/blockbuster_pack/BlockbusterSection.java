@@ -37,6 +37,10 @@ public class BlockbusterSection extends MorphSection
 	public MorphCategory structures;
 	public Map<String, MorphCategory> models = new HashMap<String, MorphCategory>();
 
+	private boolean alex;
+	private boolean steve;
+	private SequencerMorph sequencer;
+
 	public BlockbusterSection(String title)
 	{
 		super(title);
@@ -47,13 +51,14 @@ public class BlockbusterSection extends MorphSection
 		/* Adding some default morphs which don't need to get reloaded */
 		ImageMorph image = new ImageMorph();
 		SnowstormMorph snow = new SnowstormMorph();
+		SequencerMorph sequencer = new SequencerMorph();
 
 		image.texture = RLUtils.create("blockbuster", "textures/gui/icon.png");
 		snow.setScheme("default_rain");
 
 		this.extra.add(image);
 		this.extra.add(new ParticleMorph());
-		this.extra.add(new SequencerMorph());
+		this.extra.add(this.sequencer = sequencer);
 		this.extra.add(new RecordMorph());
 		this.extra.add(snow);
 	}
@@ -130,6 +135,23 @@ public class BlockbusterSection extends MorphSection
 
 		category.add(morph);
 		category.sort();
+
+		this.alex = this.alex || key.equals("alex");
+		this.steve = this.steve || key.equals("fred");
+
+		if (this.steve && this.alex && this.sequencer.morphs.isEmpty())
+		{
+			CustomMorph alex = new CustomMorph();
+			CustomMorph fred = new CustomMorph();
+
+			alex.name = "blockbuster.alex";
+			alex.updateModel(true);
+			fred.name = "blockbuster.fred";
+			fred.updateModel(true);
+
+			this.sequencer.morphs.add(new SequencerMorph.SequenceEntry(alex));
+			this.sequencer.morphs.add(new SequencerMorph.SequenceEntry(fred));
+		}
 	}
 
 	/**
