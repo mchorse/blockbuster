@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiBBM
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.morphs.CustomMorph;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -30,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +112,16 @@ public class GuiCustomMorph extends GuiAbstractMorph<CustomMorph>
         this.registerPanel(this.materials, IKey.lang("blockbuster.gui.builder.materials"), Icons.MATERIAL);
         this.registerPanel(this.bodyPart, IKey.lang("blockbuster.gui.builder.body_part"), Icons.LIMB);
         this.registerPanel(this.poseEditor, IKey.lang("blockbuster.gui.builder.pose_editor"), Icons.POSE);
+
+        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_skin"), Keyboard.KEY_P, () ->
+        {
+            this.setPanel(this.materials);
+
+            if (!this.materials.picker.hasParent())
+            {
+                this.materials.skin.clickItself(GuiBase.getCurrent());
+            }
+        }).held(Keyboard.KEY_LSHIFT);
     }
 
     @Override

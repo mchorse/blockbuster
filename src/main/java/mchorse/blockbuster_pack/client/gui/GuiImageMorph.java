@@ -5,6 +5,7 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPos
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.blockbuster_pack.utils.GuiAnimation;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.GuiScrollElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -28,6 +29,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,14 @@ public class GuiImageMorph extends GuiAbstractMorph<ImageMorph>
 
         this.defaultPanel = this.general = new GuiImageMorphPanel(mc, this);
         this.registerPanel(this.general, IKey.lang("blockbuster.morph.image"), Icons.GEAR);
+
+        this.keys().register(IKey.lang("blockbuster.gui.builder.pick_texture"), Keyboard.KEY_P, () ->
+        {
+            if (!this.general.picker.hasParent())
+            {
+                this.general.texture.clickItself(GuiBase.getCurrent());
+            }
+        }).held(Keyboard.KEY_LSHIFT);
     }
 
     @Override
