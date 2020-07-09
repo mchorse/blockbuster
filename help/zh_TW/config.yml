@@ -24,7 +24,7 @@ blockbuster.config:
         model_block_disable_item_rendering: 禁用物品欄渲染
 
     recording:
-        title: 錄制
+        title: 錄制與回放
         tooltip: 所有與玩家回放系統相關的選項
 
         recording_countdown: 錄制倒計時
@@ -48,7 +48,7 @@ blockbuster.config:
         actor_swish_swipe: 手臂劃動刷刷聲
         actor_y: 修復 Y 軸運動
         actor_disable_riding: 禁用騎乘
-        
+
     damage_control:
         title: 破壞控制
         tooltip: 破壞控制是指在演員被錄制或場景完成回放後, 恢復方塊的系統

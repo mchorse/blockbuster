@@ -17,8 +17,8 @@ blockbuster.config.comments:
     recording:
         recording_countdown: 錄制倒計時 (秒)
         recording_delay: 錄制的幀延遲
-        record_unload_time: 卸載壹個錄制需要多久 (Tick)
-        record_unload: 啟用自動卸載錄制?
+        record_unload_time: 卸載壹個回放需要多久 (Tick)
+        record_unload: 啟用自動卸載回放?
         record_sync_rate: 與服務器同步壹個回放的頻率是?
         record_attack_on_swipe: 是否錄制揮手時對實體造成到的傷害?
         record_commands: 是否錄制玩家輸入命令的動作?

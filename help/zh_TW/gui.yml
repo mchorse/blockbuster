@@ -89,11 +89,11 @@ blockbuster.gui:
         tp_back: 傳送回來
         tp_back_tooltip: 將您傳送回開始位置
         health: 生命值
-        edit_record: 編輯錄制
+        edit_record: 編輯回放
         update_data: 更新數據
         update_data_tooltip: 更新在回放文件中的玩家數據
         rename_prefix: 重命名前綴
-        rename_prefix_tooltip: 使用新前綴來重命名回放的錄制 ID
+        rename_prefix_tooltip: 使用新前綴來重命名回放的回放 ID
         rename_prefix_popup: "輸入壹個新的前綴："
 
         attach: 鏈接
@@ -149,8 +149,8 @@ blockbuster.gui:
 
     # Player recording editor GUI strings
     record_editor:
-        title: 錄制
-        directors: 導演方塊的錄制
+        title: 回放
+        directors: 導演方塊的回放
         not_selected: 選擇壹個玩家回放...
         action: 動作
 
