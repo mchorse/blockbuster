@@ -153,6 +153,7 @@ public class Blockbuster
 
     public static ValueBoolean modelBlockDisableRendering;
     public static ValueBoolean modelBlockDisableItemRendering;
+    public static ValueBoolean modelBlockRestore;
 
     public static ValueFloat recordingCountdown;
     public static ValueInt recordingDelay;
@@ -211,6 +212,7 @@ public class Blockbuster
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
         modelBlockDisableItemRendering = builder.getBoolean("model_block_disable_item_rendering", false);
+        modelBlockRestore = builder.getBoolean("restore", false);
 
         /* Recording */
         recordingCountdown = builder.category("recording").getFloat("recording_countdown", 1.5F, 0, 10);

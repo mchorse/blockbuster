@@ -13,6 +13,7 @@ blockbuster.config.comments:
     model_block:
         model_block_disable_rendering: Whether model blocks should be rendered
         model_block_disable_item_rendering: Whether model block item rendering should be disabled (who would want that?)
+        restore: This option allows to bring back old bug that allows to restore broken by accident model blocks.
 
     recording:
         recording_countdown: Recording countdown (in seconds)
