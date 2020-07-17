@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
@@ -97,7 +98,16 @@ public class GuiGun extends GuiBase
 
     public GuiGun(ItemStack stack)
     {
-        this.props = NBTUtils.getGunProps(stack);
+        TileEntityGunItemStackRenderer.GunEntry entry = TileEntityGunItemStackRenderer.models.get(stack);
+
+        if (entry == null)
+        {
+            this.props = NBTUtils.getGunProps(stack);
+        }
+        else
+        {
+            this.props = entry.props;
+        }
 
         Minecraft mc = Minecraft.getMinecraft();
 
