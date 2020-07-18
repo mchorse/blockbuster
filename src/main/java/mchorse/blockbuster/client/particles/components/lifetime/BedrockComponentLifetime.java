@@ -25,9 +25,9 @@ public abstract class BedrockComponentLifetime extends BedrockComponentBase impl
 
 		JsonObject element = elem.getAsJsonObject();
 
-		if (element.has("active_time"))
+		if (element.has(this.getPropertyName()))
 		{
-			this.activeTime = parser.parseJson(element.get("active_time"));
+			this.activeTime = parser.parseJson(element.get(this.getPropertyName()));
 		}
 
 		return super.fromJson(element, parser);
@@ -40,7 +40,7 @@ public abstract class BedrockComponentLifetime extends BedrockComponentBase impl
 
 		if (!MolangExpression.isConstant(this.activeTime, 10))
 		{
-			object.add("active_time", this.activeTime.toJson());
+			object.add(this.getPropertyName(), this.activeTime.toJson());
 		}
 
 		return object;

@@ -7,7 +7,9 @@ public class BedrockComponentLifetimeOnce extends BedrockComponentLifetime
 	@Override
 	public void update(BedrockEmitter emitter)
 	{
-		if (emitter.getAge() >= this.activeTime.get())
+		emitter.lifetime = (int) (this.activeTime.get() * 20);
+
+		if (emitter.getAge() >= emitter.lifetime)
 		{
 			emitter.stop();
 		}
