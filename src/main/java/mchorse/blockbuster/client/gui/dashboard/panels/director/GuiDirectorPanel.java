@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.common.scene.PacketScenePause;
 import mchorse.blockbuster.network.common.scene.PacketScenePlayback;
 import mchorse.blockbuster.network.common.scene.PacketSceneRecord;
 import mchorse.blockbuster.network.common.scene.PacketSceneRequestCast;
+import mchorse.blockbuster.network.common.scene.PacketSceneTeleport;
 import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
@@ -55,7 +56,7 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.function.Supplier;
 
 public class GuiDirectorPanel extends GuiBlockbusterPanel
 {
@@ -85,10 +86,12 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiToggleElement fake;
     public GuiToggleElement teleportBack;
     public GuiTrackpadElement health;
+
     public GuiButtonElement record;
     public GuiButtonElement rename;
     public GuiButtonElement attach;
     public GuiButtonElement camera;
+    public GuiButtonElement teleport;
 
     public GuiLabel recordingId;
     public GuiNestedEdit pickMorph;
@@ -209,18 +212,24 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.replays.add(add, dupe, remove);
 
         /* Additional utility buttons */
+        IKey category = IKey.lang("blockbuster.gui.director.keys.category");
+        Supplier<Boolean> active = () -> this.replay != null;
+
         this.pickMorph = new GuiNestedEdit(mc, (editing) -> ClientProxy.panels.addMorphs(this, editing, this.replay.morph));
         this.record = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.record"), (b) -> this.sendRecordMessage());
         GuiButtonElement edit = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.edit_record"), (b) -> this.openRecordEditor());
         GuiButtonElement update = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.update_data"), (b) -> this.updatePlayerData());
         this.rename = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.rename_prefix"), (b) -> this.renamePrefix());
         this.attach = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.attach"), (b) -> this.attach());
+        this.teleport = new GuiButtonElement(mc, IKey.lang("blockbuster.gui.director.tp"), (b) -> this.teleport());
+        this.teleport.keys().register(this.teleport.label, Keyboard.KEY_T, () -> this.teleport.clickItself(GuiBase.getCurrent())).category(category).active(active);
 
         this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).w(100).anchor(0.5F, 1F);
 
-        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"), Direction.LEFT);
-        this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.LEFT);
         update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.LEFT);
+        this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.LEFT);
+        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"), Direction.LEFT);
+        this.teleport.tooltip(IKey.lang("blockbuster.gui.director.tp_tooltip"), Direction.LEFT);
 
         right.add(this.attach, this.record, update, this.rename, edit);
 
@@ -231,17 +240,20 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
                 CameraHandler.location = this.location;
                 CameraHandler.openCameraEditor();
             });
-            this.camera.keys().register(this.camera.label, Keyboard.KEY_C, () -> this.camera.clickItself(GuiBase.getCurrent()));
+            this.camera.keys().register(this.camera.label, Keyboard.KEY_C, () -> this.camera.clickItself(GuiBase.getCurrent())).category(category).active(active);
 
             right.add(this.camera);
         }
 
+        right.add(this.teleport);
         this.replayEditor.add(this.pickMorph);
 
         /* Scene manager */
         this.add(this.scenes = new GuiSceneManager(mc, this));
         this.scenes.flex().relative(toggleScenes).xy(1F, 1F).w(160).hTo(this.selector.flex()).anchorX(1F);
         this.scenes.setVisible(false);
+
+        this.keys().register(IKey.lang("blockbuster.gui.director.keys.toggle_list"), Keyboard.KEY_N, () -> toggleScenes.clickItself(GuiBase.getCurrent())).category(category);
     }
 
     public SceneLocation getLocation()
@@ -595,6 +607,17 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     private void updatePlayerData()
     {
         Dispatcher.sendToServer(new PacketUpdatePlayerData(this.replay.id));
+    }
+
+    private void teleport()
+    {
+        if (this.replay == null)
+        {
+            return;
+        }
+
+        this.mc.displayGuiScreen(null);
+        Dispatcher.sendToServer(new PacketSceneTeleport(this.replay.id));
     }
 
     private void renamePrefix()

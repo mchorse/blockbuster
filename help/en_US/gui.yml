@@ -93,6 +93,13 @@ blockbuster.gui:
         attach_tooltip: Attach this director block/scene to playback button
 
         camera: Edit camera
+        tp: Teleport
+        tp_tooltip: Teleport yourself to the replay's starting position
+
+        keys:
+            category: Scenes
+
+            toggle_list: Toggle scenes list
 
     scenes:
         title: Scenes
