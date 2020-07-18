@@ -13,7 +13,7 @@ import javax.vecmath.Vector3f;
 
 public class BedrockComponentShapeSphere extends BedrockComponentShapeBase
 {
-	public MolangExpression radius = MolangParser.ONE;
+	public MolangExpression radius = MolangParser.ZERO;
 
 	@Override
 	public BedrockComponentBase fromJson(JsonElement elem, MolangParser parser) throws MolangException
@@ -32,7 +32,7 @@ public class BedrockComponentShapeSphere extends BedrockComponentShapeBase
 	{
 		JsonObject object = (JsonObject) super.toJson();
 
-		if (!MolangExpression.isOne(this.radius)) object.add("radius", this.radius.toJson());
+		if (!MolangExpression.isZero(this.radius)) object.add("radius", this.radius.toJson());
 
 		return object;
 	}
