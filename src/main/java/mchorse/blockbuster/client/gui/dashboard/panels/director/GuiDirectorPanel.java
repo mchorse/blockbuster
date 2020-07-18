@@ -17,6 +17,7 @@ import mchorse.blockbuster.recording.scene.Replay;
 import mchorse.blockbuster.recording.scene.Scene;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.blockbuster.utils.L10n;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiDelegateElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
@@ -50,6 +51,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,11 +218,11 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
         this.pickMorph.flex().relative(this.selector).x(0.5F).y(-10).w(100).anchor(0.5F, 1F);
 
-        update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.RIGHT);
-        this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.RIGHT);
-        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"));
+        this.attach.tooltip(IKey.lang("blockbuster.gui.director.attach_tooltip"), Direction.LEFT);
+        this.rename.tooltip(IKey.lang("blockbuster.gui.director.rename_prefix_tooltip"), Direction.LEFT);
+        update.tooltip(IKey.lang("blockbuster.gui.director.update_data_tooltip"), Direction.LEFT);
 
-        right.add(this.record, edit, update, this.rename, this.attach);
+        right.add(this.attach, this.record, update, this.rename, edit);
 
         if (CameraHandler.isApertureLoaded())
         {
@@ -229,6 +231,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
                 CameraHandler.location = this.location;
                 CameraHandler.openCameraEditor();
             });
+            this.camera.keys().register(this.camera.label, Keyboard.KEY_C, () -> this.camera.clickItself(GuiBase.getCurrent()));
 
             right.add(this.camera);
         }
