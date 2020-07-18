@@ -8,6 +8,7 @@ import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.mclib.math.Variable;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MathUtils;
 
 public class BedrockCurve
 {
@@ -30,17 +31,19 @@ public class BedrockCurve
 		{
 			return 0;
 		}
-		else if (length == 1 || factor < 0)
+		else if (length <= 2)
 		{
 			return this.nodes[0].get();
 		}
-		else if (factor > 1)
+
+		if (factor < 0)
 		{
-			return this.nodes[length - 1].get();
+			factor = -(1 + factor);
 		}
 
-		factor *= length;
-		int index = (int) factor;
+		factor = MathUtils.clamp(factor, 0, 1);
+		factor *= (length - 3);
+		int index = (int) factor + 1;
 
 		if (this.type == BedrockCurveType.HERMITE)
 		{
