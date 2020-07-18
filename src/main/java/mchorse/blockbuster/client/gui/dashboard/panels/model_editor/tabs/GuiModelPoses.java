@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.model_editor.tabs;
 
 import mchorse.blockbuster.api.Model;
 import mchorse.blockbuster.api.ModelPose;
+import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiTwoElement;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -17,11 +18,14 @@ import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 
+import java.util.List;
+
 public class GuiModelPoses extends GuiModelEditorTab
 {
     private GuiIconElement addPose;
     private GuiIconElement removePose;
     private GuiIconElement copyPose;
+    private GuiIconElement applyPose;
 
     private GuiStringListElement posesList;
     private GuiTwoElement hitbox;
@@ -46,8 +50,10 @@ public class GuiModelPoses extends GuiModelEditorTab
         this.removePose = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removePose());
         this.copyPose = new GuiIconElement(mc, Icons.COPY, (b) -> this.copyPose());
         this.copyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.copy_pose_tooltip"));
+        this.applyPose = new GuiIconElement(mc, Icons.PASTE, (b) -> this.applyPose());
+        this.applyPose.tooltip(IKey.lang("blockbuster.gui.me.poses.apply_pose_tooltip"));
 
-        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.copyPose);
+        GuiElement sidebar = Elements.row(mc, 0, 0, 20, this.addPose, this.removePose, this.copyPose, this.applyPose);
         GuiElement bottom = new GuiElement(mc);
 
         sidebar.flex().relative(this).x(1F).h(20).anchorX(1F).row(0).resize();
@@ -123,6 +129,57 @@ public class GuiModelPoses extends GuiModelEditorTab
         }
 
         this.panel.transform.copy(pose.limbs.get(this.panel.limb.name));
+        this.panel.dirty();
+    }
+
+    private void applyPose()
+    {
+        GuiModal.addFullModal(this, () ->
+        {
+            GuiListModal modal = new GuiListModal(this.mc, IKey.lang("blockbuster.gui.me.poses.apply_pose"), null).callback(this::copyPose);
+
+            modal.list.getList().remove(0);
+            modal.list.multi();
+
+            modal.addValues(this.panel.model.poses.keySet());
+            modal.list.selectAll();
+            modal.list.toggleIndex(modal.list.getList().indexOf(this.pose));
+
+            return modal;
+        });
+    }
+
+    private void copyPose(List<String> poses)
+    {
+        ModelPose pose = this.panel.model.poses.get(this.pose);
+
+        if (pose == null)
+        {
+            return;
+        }
+
+        ModelTransform current = pose.limbs.get(this.panel.limb.name);
+
+        if (current == null || poses.isEmpty())
+        {
+            return;
+        }
+
+        for (String name : poses)
+        {
+            ModelPose target = this.panel.model.poses.get(name);
+
+            if (target != null)
+            {
+                ModelTransform transform = target.limbs.get(this.panel.limb.name);
+
+                if (transform != null)
+                {
+                    transform.copy(current);
+                }
+            }
+        }
+
         this.panel.dirty();
     }
 
