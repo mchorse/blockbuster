@@ -416,6 +416,15 @@ public class GuiRecordingEditorPanel extends GuiBlockbusterPanel
         this.list.setVisible(false);
     }
 
+    public void reselectRecord(Record record)
+    {
+        if (this.record != null && this.record.filename.equals(record.filename))
+        {
+            this.record.preDelay = record.preDelay;
+            this.record.postDelay = record.postDelay;
+        }
+    }
+
     public void moveTo(int tick)
     {
         if (tick < 0 || tick >= this.record.actions.size())
