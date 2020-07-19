@@ -64,6 +64,7 @@ public class GunProps
     public float damage;
     public float bounceFactor;
     public int vanishDelay;
+    public float penetration;
 
     /* Transforms */
     public ModelTransform gunTransform = new ModelTransform();
@@ -235,6 +236,7 @@ public class GunProps
         this.damage = 0F;
         this.bounceFactor = 1F;
         this.vanishDelay = 0;
+        this.penetration = 0;
 
         /* Transforms */
         this.gunTransform = new ModelTransform();
@@ -282,6 +284,7 @@ public class GunProps
         if (tag.hasKey("Damage")) this.damage = tag.getFloat("Damage");
         if (tag.hasKey("BFactor")) this.bounceFactor = tag.getFloat("BFactor");
         if (tag.hasKey("VDelay")) this.vanishDelay = tag.getInteger("VDelay");
+        if (tag.hasKey("Penetration")) this.penetration = tag.getFloat("Penetration");
 
         /* Transforms */
         if (tag.hasKey("Gun")) this.gunTransform.fromNBT(tag.getCompoundTag("Gun"));
@@ -344,6 +347,7 @@ public class GunProps
         if (this.damage != 0) tag.setFloat("Damage", this.damage);
         if (this.bounceFactor != 1F) tag.setFloat("BFactor", this.bounceFactor);
         if (this.vanishDelay != 0) tag.setInteger("VDelay", this.vanishDelay);
+        if (this.penetration != 0) tag.setFloat("Penetration", this.penetration);
 
         /* Transforms */
         if (!this.gunTransform.isDefault()) tag.setTag("Gun", this.gunTransform.toNBT());

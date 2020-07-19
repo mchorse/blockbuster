@@ -542,6 +542,7 @@ blockbuster.gui:
         damage: Damage
         bounce_factor: Factor
         vanish_delay: Vanish delay
+        penetration: Penetration factor - how much into the block the projectile will penetrate into (this option works only when Sticks enabled)
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations

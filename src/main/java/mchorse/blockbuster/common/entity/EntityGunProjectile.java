@@ -340,6 +340,10 @@ public class EntityGunProjectile extends EntityThrowable implements IEntityAddit
 
 		            if (!this.world.isRemote)
 		            {
+						if (result.sideHit == EnumFacing.WEST || result.sideHit == EnumFacing.EAST) this.posX += this.props.penetration * result.sideHit.getFrontOffsetX();
+			            else if (result.sideHit == EnumFacing.UP || result.sideHit == EnumFacing.DOWN) this.posY += this.props.penetration * result.sideHit.getFrontOffsetY();
+			            else if (result.sideHit == EnumFacing.NORTH || result.sideHit == EnumFacing.SOUTH) this.posZ += this.props.penetration * result.sideHit.getFrontOffsetZ();
+
 			            Dispatcher.sendToTracked(this, new PacketGunStuck(this.getEntityId(), (float) this.posX, (float) this.posY, (float) this.posZ));
 		            }
 	            }
