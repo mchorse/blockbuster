@@ -326,11 +326,15 @@ public class CameraHandler
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
         IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
+        IKey detachScene = IKey.lang("blockbuster.gui.aperture.keys.detach_scene");
+
+        GuiDirectorConfigOptions directorOptions = editor.config.getChildren(GuiDirectorConfigOptions.class).get(0);
 
         open.tooltip(IKey.lang("blockbuster.gui.dashboard.player_recording"), Direction.TOP);
         open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
         toggle.tooltip(toggleEditor, Direction.TOP);
         toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
+        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(directorOptions.detachScene::isEnabled);
 
         editorElement.setVisible(false);
 
