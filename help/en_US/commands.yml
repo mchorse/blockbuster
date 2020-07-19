@@ -108,6 +108,19 @@ blockbuster:
                     
                     {r}This command changes the origin (the first frame) of the player recording according to {7}[x] [y] [z]{r} (if all three were specified) or player's current position. You might also rotate the player recording across Y axis relative to its first frame.   
                     
+            process:
+                |
+                    {l}{6}/{r}record {8}process{r} {7}<filename> <property> <from> <to> <math>{r}
+
+                    {r}This command processes given {7}<property>{r} in {7}<filename>{r} player recording from {7}<from>{r} tick to {7}<to>{r} and applies given {7}<math>{r} expression. Following variables are available:
+
+                    {7}initial{r} - initial value of given property
+                    {7}value{r} - current value of given property
+                    {7}tick{r} - currently processing frame's tick
+                    {7}from{r} - {7}<from>{r} argument
+                    {7}to{r} - {7}<to>{r} argument
+                    {7}factor{r} - how far into the processing the expression between {7}from{r} and {7}to{r} is (0..1), the formula for it is basically {7}(tick - from) / (to - from){r}
+
             prolong:
                 |
                     {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}
