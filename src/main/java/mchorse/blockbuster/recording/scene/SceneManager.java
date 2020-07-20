@@ -69,31 +69,16 @@ public class SceneManager
 	 */
 	public boolean play(String filename, World world)
 	{
-		Scene scene = this.scenes.get(filename);
+		Scene scene = this.get(filename,world);
 
-		if (scene != null)
+		if (scene == null)
 		{
 			return false;
 		}
 
-		try
-		{
-			scene = this.load(filename);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		scene.startPlayback(0);
 
-		if (scene != null)
-		{
-			scene.setWorld(world);
-			scene.startPlayback(0);
-
-			this.scenes.put(filename, scene);
-		}
-
-		return scene != null;
+		return true;
 	}
 
 	/**
