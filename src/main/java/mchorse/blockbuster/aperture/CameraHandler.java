@@ -297,6 +297,14 @@ public class CameraHandler
                     area.draw(0x66000000);
                 }
 
+                if (editor.getRunner().isRunning())
+                {
+                    ScrollArea scroll = panels.recordingEditorPanel.selector.scroll;
+
+                    scroll.scroll = scroll.scrollItemSize * (int) (editor.getRunner().ticks - panels.recordingEditorPanel.record.preDelay);
+                    scroll.clamp();
+                }
+
                 super.draw(context);
             }
         };
