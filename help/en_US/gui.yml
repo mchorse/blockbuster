@@ -573,5 +573,6 @@ blockbuster.gui:
             toggle_list: Toggle player recording list
             toggle_editor: Toggle player recording editor
             detach_scene: Detach current scene
+            reload_scene: Reload current scene
 
             add_morph_action: Add morph action

@@ -51,6 +51,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Camera handler
@@ -327,6 +328,7 @@ public class CameraHandler
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
         IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
         IKey detachScene = IKey.lang("blockbuster.gui.aperture.keys.detach_scene");
+        IKey reloadScene = IKey.lang("blockbuster.gui.aperture.keys.reload_scene");
 
         GuiDirectorConfigOptions directorOptions = editor.config.getChildren(GuiDirectorConfigOptions.class).get(0);
 
@@ -334,7 +336,8 @@ public class CameraHandler
         open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
         toggle.tooltip(toggleEditor, Direction.TOP);
         toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
-        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(directorOptions.detachScene::isEnabled);
+        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.enabled && directorOptions.detachScene.isEnabled());
+        toggle.keys().register(reloadScene, Keyboard.KEY_R, () -> directorOptions.reloadScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.enabled);
 
         editorElement.setVisible(false);
 
