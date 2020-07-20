@@ -29,6 +29,8 @@ public class MolangParser extends MathBuilder
 	public static final MolangExpression ONE = new MolangValue(null, new Constant(1));
 	public static final String RETURN = "return ";
 
+	public boolean registerVariables = true;
+
 	public MolangParser()
 	{
 		super();
@@ -76,13 +78,24 @@ public class MolangParser extends MathBuilder
 		}
 	}
 
+	public IValue parseNoRegister(String expression) throws Exception
+	{
+		IValue value;
+
+		this.registerVariables = false;
+		value = super.parse(expression);
+		this.registerVariables = true;
+
+		return value;
+	}
+
 	/**
 	 * Interactively return a new variable
 	 */
 	@Override
 	protected Variable getVariable(String name)
 	{
-		if (!this.variables.containsKey(name))
+		if (!this.variables.containsKey(name) && this.registerVariables)
 		{
 			this.register(new Variable(name, 0));
 		}

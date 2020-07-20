@@ -6,6 +6,7 @@ import mchorse.blockbuster.client.particles.BedrockLibrary;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.math.IValue;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -19,8 +20,10 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SnowstormMorph extends AbstractMorph
@@ -32,6 +35,7 @@ public class SnowstormMorph extends AbstractMorph
 	private static Vector4f vector;
 
 	public String scheme = "";
+	public Map<String, String> variables = new HashMap<String, String>();
 
 	private BedrockEmitter emitter;
 	public List<BedrockEmitter> lastEmitters;
@@ -81,11 +85,16 @@ public class SnowstormMorph extends AbstractMorph
 		this.name = "snowstorm";
 	}
 
+	public void replaceVariable(String name, String expression)
+	{
+		this.variables.put(name, expression);
+		this.emitter.parseVariable(name, expression);
+	}
+
 	public BedrockEmitter getEmitter()
 	{
 		if (this.emitter == null)
 		{
-			this.emitter = new BedrockEmitter();
 			this.setClientScheme(this.scheme);
 		}
 
@@ -114,11 +123,15 @@ public class SnowstormMorph extends AbstractMorph
 
 	private void setClientScheme(String key)
 	{
-		this.getEmitter().running = false;
-		this.getLastEmitters().add(this.getEmitter());
+		if (this.emitter != null)
+		{
+			this.getEmitter().running = false;
+			this.getLastEmitters().add(this.getEmitter());
+		}
 
 		this.emitter = new BedrockEmitter();
 		this.emitter.setScheme(this.getScheme(key));
+		this.emitter.parseVariables(this.variables);
 	}
 
 	private BedrockScheme getScheme(String key)
@@ -271,6 +284,7 @@ public class SnowstormMorph extends AbstractMorph
 			SnowstormMorph morph = (SnowstormMorph) from;
 
 			this.setScheme(morph.scheme);
+			this.variables.putAll(morph.variables);
 		}
 	}
 
@@ -296,6 +310,7 @@ public class SnowstormMorph extends AbstractMorph
 			SnowstormMorph morph = (SnowstormMorph) obj;
 
 			result = result && Objects.equals(this.scheme, morph.scheme);
+			result = result && Objects.equals(this.variables, morph.variables);
 		}
 
 		return result;
@@ -325,6 +340,7 @@ public class SnowstormMorph extends AbstractMorph
 		super.reset();
 
 		this.scheme = "";
+		this.variables.clear();
 	}
 
 	@Override
@@ -336,6 +352,16 @@ public class SnowstormMorph extends AbstractMorph
 		{
 			this.setScheme(tag.getString("Scheme"));
 		}
+
+		if (tag.hasKey("Vars"))
+		{
+			NBTTagCompound vars = tag.getCompoundTag("Vars");
+
+			for (String key : vars.getKeySet())
+			{
+				this.variables.put(key, vars.getString(key));
+			}
+		}
 	}
 
 	@Override
@@ -344,5 +370,17 @@ public class SnowstormMorph extends AbstractMorph
 		super.toNBT(tag);
 
 		tag.setString("Scheme", this.scheme);
+
+		if (!this.variables.isEmpty())
+		{
+			NBTTagCompound vars = new NBTTagCompound();
+
+			for (Map.Entry<String, String> entry : this.variables.entrySet())
+			{
+				vars.setString(entry.getKey(), entry.getValue());
+			}
+
+			tag.setTag("Vars", vars);
+		}
 	}
 }

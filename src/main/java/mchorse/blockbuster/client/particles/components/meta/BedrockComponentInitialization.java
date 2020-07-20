@@ -9,6 +9,9 @@ import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.particles.molang.MolangException;
 import mchorse.blockbuster.client.particles.molang.MolangParser;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
+import mchorse.mclib.math.IValue;
+
+import java.util.Map;
 
 public class BedrockComponentInitialization extends BedrockComponentBase implements IComponentEmitterInitialize, IComponentEmitterUpdate
 {
@@ -42,11 +45,13 @@ public class BedrockComponentInitialization extends BedrockComponentBase impleme
 	public void apply(BedrockEmitter emitter)
 	{
 		this.creation.get();
+		emitter.replaceVariables();
 	}
 
 	@Override
 	public void update(BedrockEmitter emitter)
 	{
 		this.update.get();
+		emitter.replaceVariables();
 	}
 }

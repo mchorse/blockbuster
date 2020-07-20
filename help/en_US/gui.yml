@@ -324,6 +324,9 @@ blockbuster.gui:
         cap: Capacity
 
     snowstorm:
+        variables: Variables
+        expression: Mathematical expression
+
         title: Particles
         mode: Mode
         add_modal: "Enter a name for a new blank particle effect:"
