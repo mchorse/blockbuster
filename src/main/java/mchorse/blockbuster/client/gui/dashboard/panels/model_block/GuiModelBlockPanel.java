@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard.panels.model_block;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanel;
 import mchorse.blockbuster.common.tileentity.TileEntityModel;
@@ -29,7 +30,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GuiModelBlockPanel extends GuiBlockbusterPanel
 {
@@ -54,6 +57,8 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     private GuiInventoryElement inventory;
     private GuiSlotElement[] slots = new GuiSlotElement[6];
+
+    private Map<BlockPos, TileEntityModel> old = new HashMap<BlockPos, TileEntityModel>();
 
     /**
      * Try adding a block position, if it doesn't exist in list already 
@@ -214,14 +219,22 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
 
     public void save(TileEntityModel model)
     {
-        if (this.model == null || this.model == model)
-        {
-            return;
-        }
+        this.save(model, false);
+    }
 
-        if (model != null && this.model.getPos().equals(model.getPos()))
+    public void save(TileEntityModel model, boolean force)
+    {
+        if (!force)
         {
-            return;
+            if (this.model == null || this.model == model)
+            {
+                return;
+            }
+
+            if (model != null && this.model.getPos().equals(model.getPos()))
+            {
+                return;
+            }
         }
 
         if (ClientProxy.panels.morphs.hasParent())
@@ -231,10 +244,22 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         }
 
         Dispatcher.sendToServer(new PacketModifyModelBlock(this.model.getPos(), this.model));
+
+        if (Blockbuster.modelBlockRestore.get())
+        {
+            this.old.put(this.model.getPos(), this.model);
+        }
     }
 
     public GuiModelBlockPanel openModelBlock(TileEntityModel model)
     {
+        if (model != null && Blockbuster.modelBlockRestore.get() && this.old.containsKey(model.getPos()))
+        {
+            TileEntityModel old = this.old.get(model.getPos());
+
+            model.copyData(old);
+        }
+
         tryAddingBlock(model.getPos());
 
         this.updateList();

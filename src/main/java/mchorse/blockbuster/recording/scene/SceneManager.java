@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.scene;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.recording.Utils;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.mclib.utils.Patterns;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,8 +26,6 @@ import java.util.regex.Pattern;
  */
 public class SceneManager
 {
-	public static final Pattern FILENAME = Pattern.compile("^[\\w\\d-_.]*$");
-
 	/**
 	 * Currently loaded scenes
 	 */
@@ -34,7 +33,7 @@ public class SceneManager
 
 	public static boolean isValidFilename(String filename)
 	{
-		return !filename.isEmpty() && FILENAME.matcher(filename).matches();
+		return !filename.isEmpty() && Patterns.FILENAME.matcher(filename).matches();
 	}
 
 	/**
@@ -70,31 +69,16 @@ public class SceneManager
 	 */
 	public boolean play(String filename, World world)
 	{
-		Scene scene = this.scenes.get(filename);
+		Scene scene = this.get(filename,world);
 
-		if (scene != null)
+		if (scene == null)
 		{
 			return false;
 		}
 
-		try
-		{
-			scene = this.load(filename);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		scene.startPlayback(0);
 
-		if (scene != null)
-		{
-			scene.setWorld(world);
-			scene.startPlayback(0);
-
-			this.scenes.put(filename, scene);
-		}
-
-		return scene != null;
+		return true;
 	}
 
 	/**

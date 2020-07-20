@@ -26,5 +26,10 @@ public class ClientHandlerFrames extends ClientMessageHandler<PacketFramesLoad>
         record.postDelay = message.postDelay;
 
         ClientProxy.manager.records.put(message.filename, record);
+
+        if (ClientProxy.panels != null)
+        {
+            ClientProxy.panels.recordingEditorPanel.reselectRecord(record);
+        }
     }
 }

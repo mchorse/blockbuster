@@ -93,6 +93,13 @@ blockbuster.gui:
         attach_tooltip: Attach this director block/scene to playback button
 
         camera: Edit camera
+        tp: Teleport
+        tp_tooltip: Teleport yourself to the replay's starting position
+
+        keys:
+            category: Scenes
+
+            toggle_list: Toggle scenes list
 
     scenes:
         title: Scenes
@@ -317,6 +324,9 @@ blockbuster.gui:
         cap: Capacity
 
     snowstorm:
+        variables: Variables
+        expression: Mathematical expression
+
         title: Particles
         mode: Mode
         add_modal: "Enter a name for a new blank particle effect:"
@@ -535,6 +545,7 @@ blockbuster.gui:
         damage: Damage
         bounce_factor: Factor
         vanish_delay: Vanish delay
+        penetration: Penetration factor - how much into the block the projectile will penetrate into (this option works only when Sticks enabled)
         
         gun_transforms: Gun transformations
         projectile_transforms: Projectile transformations
@@ -564,5 +575,7 @@ blockbuster.gui:
             category: Player recording editor
             toggle_list: Toggle player recording list
             toggle_editor: Toggle player recording editor
+            detach_scene: Detach current scene
+            reload_scene: Reload current scene
 
             add_morph_action: Add morph action

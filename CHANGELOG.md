@@ -2,6 +2,20 @@
 
 Blockbuster's change log.
 
+## Version 2.0.1
+
+This is a quick patch that fixes a couple of GUI issues and adds pick texture and skin keybinds.
+
+**Compatible** with McLib `2.0.1`, Metamorph `1.2` and Aperture `1.4`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added back Steve/Alex sequencer morph
+* Added player recording's filename label in player recording editor
+* Added keybinds to pick texture in image and custom model morph pickers (Shift + P)
+* Added copies of `item` and `label` morphs (suggested by Andruxioid)
+* Fixed duplication modal of model editor not working correctly with nested model names
+* Fixed equip action panel's slot field not being filled correctly
+* Updated Chinese strings for 2.0 (thanks to Chunk7, KuenYo_ and H2SO4GepaoAX)
+
 ## Version 2.0
 
 This huge update adds a couple of awesome major feature, but mostly focuses on GUI improvements and quality of life features. This update also fixes dozens of bugs.

@@ -18,7 +18,7 @@ blockbuster.config.comments:
         record_sync_rate: À quelle fréquence un enregistrement va-t-il se synchroniser avec le serveur ?
         record_attack_on_swipe: Does attack action get recorded with swipe action?
         record_commands: Does command action get recorded during recording?
-        record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%NAME% wild card supported for current actor's name)
+        record_chat_prefix: Prefix which will get prepended to the actual message in the chat action (%%NAME%% wild card supported for current actor's name)
 
     actor:
         actor_fall_damage: Les acteurs peuvent-ils subir des dommages ?

@@ -12,7 +12,7 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 
 public class BedrockComponentInitialSpeed extends BedrockComponentBase implements IComponentParticleInitialize
 {
-	public MolangExpression speed = MolangParser.ZERO;
+	public MolangExpression speed = MolangParser.ONE;
 	public MolangExpression[] direction;
 
 	@Override
@@ -51,6 +51,12 @@ public class BedrockComponentInitialSpeed extends BedrockComponentBase implement
 		}
 
 		return this.speed.toJson();
+	}
+
+	@Override
+	public boolean canBeEmpty()
+	{
+		return true;
 	}
 
 	@Override

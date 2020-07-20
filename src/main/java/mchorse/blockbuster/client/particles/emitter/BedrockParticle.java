@@ -84,7 +84,14 @@ public class BedrockParticle
 
 		if (this.relativePosition)
 		{
-			this.matrix.set(emitter.rotation);
+			if (this.relativeRotation)
+			{
+				this.matrix.setIdentity();
+			}
+			else
+			{
+				this.matrix.set(emitter.rotation);
+			}
 		}
 
 		if (!this.manual)
@@ -106,7 +113,7 @@ public class BedrockParticle
 			vec.y *= this.accelerationFactor.y;
 			vec.z *= this.accelerationFactor.z;
 
-			if (!this.relativeRotation)
+			if (this.relativePosition || this.relativeRotation)
 			{
 				this.matrix.transform(vec);
 			}

@@ -2,6 +2,7 @@ package mchorse.blockbuster.client.gui.dashboard.panels.recording_editor;
 
 import mchorse.blockbuster.recording.actions.Action;
 import mchorse.blockbuster.recording.actions.ActionRegistry;
+import mchorse.mclib.McLib;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
@@ -310,6 +311,10 @@ public class GuiRecordSelector extends GuiElement
 
         this.scroll.drawScrollbar();
         this.vertical.drawScrollbar();
+
+        String label = this.panel.record.filename;
+
+        GuiDraw.drawTextBackground(this.font, label, this.area.ex() - this.font.getStringWidth(label) - 5, this.area.ey() - 13, 0xffffff, 0xaa000000 + McLib.primaryColor.get());
 
         GuiDraw.unscissor(context);
 

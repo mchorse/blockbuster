@@ -3,6 +3,7 @@ package mchorse.blockbuster.client.particles.components.appearance;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.JsonAdapter;
 import mchorse.blockbuster.client.particles.BedrockSchemeJsonAdapter;
 import mchorse.blockbuster.client.particles.emitter.BedrockParticle;
@@ -12,6 +13,8 @@ import mchorse.blockbuster.client.particles.molang.expressions.MolangExpression;
 import mchorse.blockbuster.client.particles.molang.expressions.MolangValue;
 import mchorse.mclib.math.Constant;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MathUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,12 +174,33 @@ public abstract class Tint
 			return array;
 		}
 
+		public JsonElement toHexJson()
+		{
+			int r = (int) (this.r.get() * 255) & 0xff;
+			int g = (int) (this.g.get() * 255) & 0xff;
+			int b = (int) (this.b.get() * 255) & 0xff;
+			int a = (int) (this.a.get() * 255) & 0xff;
+
+			String hex = "#";
+
+			if (a < 255)
+			{
+				hex += StringUtils.leftPad(Integer.toHexString(a), 2, "0").toUpperCase();
+			}
+
+			hex += StringUtils.leftPad(Integer.toHexString(r), 2, "0").toUpperCase();
+			hex += StringUtils.leftPad(Integer.toHexString(g), 2, "0").toUpperCase();
+			hex += StringUtils.leftPad(Integer.toHexString(b), 2, "0").toUpperCase();
+
+			return new JsonPrimitive(hex);
+		}
+
 		public void lerp(BedrockParticle particle, float factor)
 		{
 			particle.r = Interpolations.lerp(particle.r, (float) this.r.get(), factor);
-			particle.g = Interpolations.lerp(particle.r, (float) this.g.get(), factor);
-			particle.b = Interpolations.lerp(particle.r, (float) this.b.get(), factor);
-			particle.a = Interpolations.lerp(particle.r, (float) this.a.get(), factor);
+			particle.g = Interpolations.lerp(particle.g, (float) this.g.get(), factor);
+			particle.b = Interpolations.lerp(particle.b, (float) this.b.get(), factor);
+			particle.a = Interpolations.lerp(particle.a, (float) this.a.get(), factor);
 		}
 	}
 
@@ -217,24 +241,33 @@ public abstract class Tint
 
 			double factor = this.interpolant.get();
 
-			for (int i = 0; i < length; i ++)
+			factor = MathUtils.clamp(factor, 0, 1);
+
+			ColorStop prev = this.stops.get(0);
+
+			if (factor < prev.stop)
+			{
+				prev.color.compute(particle);
+
+				return;
+			}
+
+			for (int i = 1; i < length; i ++)
 			{
 				ColorStop stop = this.stops.get(i);
 
-				if (stop.stop < factor)
+				if (stop.stop > factor)
 				{
-					stop.color.compute(particle);
+					prev.color.compute(particle);
+					stop.color.lerp(particle, (float) (factor - prev.stop) / (stop.stop - prev.stop));
 
-					if (i < length - 1)
-					{
-						ColorStop next = this.stops.get(i + 1);
-
-						next.color.lerp(particle, (float) (factor - stop.stop) / (next.stop - stop.stop));
-
-						return;
-					}
+					return;
 				}
+
+				prev = stop;
 			}
+
+			prev.color.compute(particle);
 		}
 
 		@Override
@@ -249,7 +282,7 @@ public abstract class Tint
 
 				for (ColorStop stop : this.stops)
 				{
-					gradient.add(stop.color.toJson());
+					gradient.add(stop.color.toHexJson());
 				}
 
 				color = gradient;
@@ -260,7 +293,7 @@ public abstract class Tint
 
 				for (ColorStop stop : this.stops)
 				{
-					gradient.add(String.valueOf(stop.stop), stop.color.toJson());
+					gradient.add(String.valueOf(stop.stop), stop.color.toHexJson());
 				}
 
 				color = gradient;

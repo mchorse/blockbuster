@@ -7,6 +7,7 @@ import mchorse.blockbuster.client.particles.components.IComponentParticleInitial
 import mchorse.blockbuster.client.particles.components.IComponentParticleRender;
 import mchorse.blockbuster.client.particles.components.IComponentParticleUpdate;
 import mchorse.blockbuster.client.textures.GifTexture;
+import mchorse.mclib.math.IValue;
 import mchorse.mclib.math.Variable;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
@@ -23,13 +24,16 @@ import org.lwjgl.opengl.GL11;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class BedrockEmitter
 {
 	public BedrockScheme scheme;
 	public List<BedrockParticle> particles = new ArrayList<BedrockParticle>();
+	public Map<String, IValue> variables;
 
 	public EntityLivingBase target;
 	public World world;
@@ -164,6 +168,44 @@ public class BedrockEmitter
 		if (this.varEmitterRandom4 != null) this.varEmitterRandom4.set(this.random4);
 
 		this.scheme.updateCurves();
+	}
+
+	public void parseVariables(Map<String, String> variables)
+	{
+		this.variables = new HashMap<String, IValue>();
+
+		for (Map.Entry<String, String> entry : variables.entrySet())
+		{
+			this.parseVariable(entry.getKey(), entry.getValue());
+		}
+	}
+
+	public void parseVariable(String name, String expression)
+	{
+		try
+		{
+			this.variables.put(name, this.scheme.parser.parseNoRegister(expression));
+		}
+		catch (Exception e)
+		{}
+	}
+
+	public void replaceVariables()
+	{
+		if (this.variables == null)
+		{
+			return;
+		}
+
+		for (Map.Entry<String, IValue> entry : this.variables.entrySet())
+		{
+			Variable var = this.scheme.parser.variables.get(entry.getKey());
+
+			if (var != null)
+			{
+				var.set(entry.getValue().get());
+			}
+		}
 	}
 
 	public void start()

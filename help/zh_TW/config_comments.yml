@@ -13,7 +13,8 @@ blockbuster.config.comments:
     model_block:
         model_block_disable_rendering: 是否渲染模型方塊
         model_block_disable_item_rendering: 是否關閉模型方塊的物品渲染 (有人想要關掉嗎?)
-        
+        restore: This option allows to bring back old bug that allows to restore broken by accident model blocks.
+
     recording:
         recording_countdown: 錄制倒計時 (秒)
         recording_delay: 錄制的幀延遲
@@ -22,7 +23,7 @@ blockbuster.config.comments:
         record_sync_rate: 與服務器同步壹個回放的頻率是?
         record_attack_on_swipe: 是否錄制揮手時對實體造成到的傷害?
         record_commands: 是否錄制玩家輸入命令的動作?
-        record_chat_prefix: 將會在確切要執行的命令之前預先用的前綴 (%NAME% 通配符可用於指向演員的名稱)
+        record_chat_prefix: 將會在確切要執行的命令之前預先用的前綴 (%%NAME%% 通配符可用於指向演員的名稱)
 
     actor:
         actor_fall_damage: 演員是否會受到跌落傷害?

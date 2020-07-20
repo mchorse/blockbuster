@@ -1,6 +1,7 @@
 package mchorse.blockbuster.client.gui;
 
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.utils.GuiPoseTransformations;
+import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.common.GunProps;
 import mchorse.blockbuster.common.entity.EntityGunProjectile;
 import mchorse.blockbuster.network.Dispatcher;
@@ -87,6 +88,7 @@ public class GuiGun extends GuiBase
     public GuiTrackpadElement damage;
     public GuiTrackpadElement bounceFactor;
     public GuiTrackpadElement vanishDelay;
+    public GuiTrackpadElement penetration;
 
     /* Transforms */
     public GuiElement transformOptions;
@@ -97,7 +99,16 @@ public class GuiGun extends GuiBase
 
     public GuiGun(ItemStack stack)
     {
-        this.props = NBTUtils.getGunProps(stack);
+        TileEntityGunItemStackRenderer.GunEntry entry = TileEntityGunItemStackRenderer.models.get(stack);
+
+        if (entry == null)
+        {
+            this.props = NBTUtils.getGunProps(stack);
+        }
+        else
+        {
+            this.props = entry.props;
+        }
 
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -211,6 +222,8 @@ public class GuiGun extends GuiBase
         this.bounceFactor.tooltip(IKey.lang("blockbuster.gui.gun.bounce_factor"));
         this.vanishDelay = new GuiTrackpadElement(mc, (value) -> this.props.vanishDelay = value.intValue());
         this.vanishDelay.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.gun.vanish_delay"));
+        this.penetration = new GuiTrackpadElement(mc, (value) -> this.props.penetration = value.floatValue());
+        this.penetration.block().tooltip(IKey.lang("blockbuster.gui.gun.penetration"));
 
         this.pickImpact.flex().relative(area).w(100).x(0.75F, -50).y(1, -60);
         this.impactCommand.flex().relative(area).set(10, 0, 0, 20).w(1, -20).y(1, -30);
@@ -219,7 +232,7 @@ public class GuiGun extends GuiBase
 
         impactFields.flex().relative(area).w(1F).h(1F, -40).column(5).width(100).height(20).padding(10);
         impactFields.add(this.impactDelay, this.vanish, this.bounce, this.sticks);
-        impactFields.add(this.damage, this.hits, this.bounceFactor, this.vanishDelay);
+        impactFields.add(this.damage, this.hits, this.bounceFactor, this.vanishDelay, this.penetration);
 
         this.impactOptions.add(this.pickImpact, this.impactCommand, impactFields);
 
@@ -298,6 +311,7 @@ public class GuiGun extends GuiBase
         this.damage.setValue(this.props.damage);
         this.bounceFactor.setValue(this.props.bounceFactor);
         this.vanishDelay.setValue(this.props.vanishDelay);
+        this.penetration.setValue(this.props.penetration);
 
         /* Gun transforms */
         this.gun.set(this.props.gunTransform);

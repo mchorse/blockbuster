@@ -32,8 +32,16 @@ public abstract class ShapeDirection
 			Vector3d vector = new Vector3d(particle.position);
 
 			vector.sub(new Vector3d(x, y, z));
-			vector.normalize();
-			vector.scale(this.factor);
+
+			if (vector.length() <= 0)
+			{
+				vector.set(0, 0, 0);
+			}
+			else
+			{
+				vector.normalize();
+				vector.scale(this.factor);
+			}
 
 			particle.speed.set(vector);
 		}
@@ -62,7 +70,15 @@ public abstract class ShapeDirection
 		public void applyDirection(BedrockParticle particle, double x, double y, double z)
 		{
 			particle.speed.set((float) this.x.get(), (float) this.y.get(), (float) this.z.get());
-			particle.speed.normalize();
+
+			if (particle.speed.length() <= 0)
+			{
+				particle.speed.set(0, 0, 0);
+			}
+			else
+			{
+				particle.speed.normalize();
+			}
 		}
 
 		@Override
