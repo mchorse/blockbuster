@@ -214,7 +214,7 @@ public class CameraHandler
         {
             ScrollArea scroll = dashboard.recordingEditorPanel.selector.scroll;
 
-            scroll.scroll = scroll.scrollItemSize * (event.position + dashboard.recordingEditorPanel.record.preDelay);
+            scroll.scroll = scroll.scrollItemSize * (event.position - dashboard.recordingEditorPanel.record.preDelay);
             scroll.clamp();
         }
     }
