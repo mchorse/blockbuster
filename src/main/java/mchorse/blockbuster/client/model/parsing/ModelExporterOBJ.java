@@ -132,7 +132,7 @@ public class ModelExporterOBJ
             float oy = limb.anchor[1];
             float oz = limb.anchor[2];
 
-            ModelBox box = new ModelBox(new ModelRenderer(base), limb.texture[0], limb.texture[1], -w * ox, -h * oy, -d * oz, w, h, d, 0F, limb.mirror);
+            ModelBox box = new ModelBox(new ModelRenderer(base), limb.texture[0], limb.texture[1], -w * ox, -h * oy, -d * oz, w, h, d, limb.sizeOffset, limb.mirror);
 
             meshes.put(limb, new Mesh(box, mat, rot));
         }
