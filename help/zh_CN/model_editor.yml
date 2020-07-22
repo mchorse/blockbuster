@@ -81,8 +81,10 @@ blockbuster.gui.me:
         new_pose: "为新姿势命名："
         import_pose: "在此输入姿势的 NBT 数据来导入它到当前的姿势："
         import_pose_tooltip: "使用 NBT 标签来导入姿势的属性"
-        copy_pose: "选择要从中当前拷贝肢体属性的姿势。"
+        copy_pose: "选择要复制的当前肢体属性的姿势。"
         copy_pose_tooltip: "从另一个姿势复制姿势属性"
+        apply_pose: "选择您想要应用至当前肢体的姿势。"
+        apply_pose_tooltip: "将当前肢体的姿势应用至其他姿势上"
         standard: "您无法移除必须的姿势..."
         hitbox: 碰撞箱尺寸
     

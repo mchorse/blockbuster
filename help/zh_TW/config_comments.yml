@@ -6,14 +6,15 @@ blockbuster.config.comments:
         auto_refresh_models: 進入 Metamorph 或 Blockbuster 的 GUI 時, 是否自動刷新模型和皮膚?
         debug_playback_ticks: 當導演方塊錄制時, 將 Tick 時間寫入日誌文件
         green_screen_sky: 將天空變為純色, 實現用於色鍵的目的
-        green_screen_sky_color: 指定天空顏色, 用於色鍵天空功能
+        green_screen_sky_color: 指定天空顏色, 用於色度天空功能
         url_skins_sync_download: 同步下載來自 URL 的皮膚。這能讓 URL 皮膚也能夠實現 3D 外層功能, 代價是凍結遊戲進程 (假死) 進行下載。
         add_utility_blocks: 在 Blockbuster 的創造模式選項卡中添加命令和結構塊等方塊, 以簡化獲取這些物品的過程
 
     model_block:
         model_block_disable_rendering: 是否渲染模型方塊
         model_block_disable_item_rendering: 是否關閉模型方塊的物品渲染 (有人想要關掉嗎?)
-        
+        restore: 該選項可恢復舊版的壹個 BUG, 從而能夠恢復不小心被拆掉的模型方塊。
+
     recording:
         recording_countdown: 錄制倒計時 (秒)
         recording_delay: 錄制的幀延遲
@@ -35,5 +36,5 @@ blockbuster.config.comments:
         actor_disable_riding: 禁用右鍵演員時騎乘演員的選項
 
     damage_control:
-        damage_control: 傷害控制是否啟用
-        damage_control_distance: 傷害控制效果的半徑範圍
+        damage_control: 破壞控制是否啟用
+        damage_control_distance: 破壞控制效果的半徑範圍

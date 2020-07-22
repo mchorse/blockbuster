@@ -11,8 +11,8 @@ blockbuster.config:
         extra_wubs: 附加的雜物
         auto_refresh_models: 刷新模型和皮膚
         debug_playback_ticks: 調試 Ticks
-        green_screen_sky: 色鍵天空
-        green_screen_sky_color: 色鍵天空顏色
+        green_screen_sky: 色度天空
+        green_screen_sky_color: 色度天空顏色
         url_skins_sync_download: 同步的 URL 下載
         add_utility_blocks: 添加實用方塊
         
@@ -22,6 +22,7 @@ blockbuster.config:
         
         model_block_disable_rendering: 禁用模型方塊渲染
         model_block_disable_item_rendering: 禁用物品欄渲染
+        restore: 恢復模型方塊
 
     recording:
         title: 錄制與回放

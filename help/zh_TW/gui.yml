@@ -100,6 +100,13 @@ blockbuster.gui:
         attach_tooltip: 將這個導演方塊/場景鏈接到播放按鈕
 
         camera: 編輯相機
+        tp: 傳送
+        tp_tooltip: 將自己傳送至回放開始的位置
+
+        keys:
+            category: 場景
+
+            toggle_list: 開關場景列表
 
     scenes:
         title: 場景
@@ -168,16 +175,16 @@ blockbuster.gui:
 
         actions:
             chat:
-                title: 聊天
+                title: 聊天 Chat
                 desc: 本動作會發送壹條消息
             swipe:
-                title: 揮手
+                title: 揮手 Swipe
                 desc: 本動作會讓演員揮動主手臂
             drop:
-                title: 丟東西
+                title: 丟東西 Item drop
                 desc: 丟下壹個物品 (類似於按了 Q)
             equip:
-                title: 穿戴物品
+                title: 穿戴物品 Equip an item
                 desc: 任何壹只手拿著東西或者穿戴了盔甲
 
                 none: 無
@@ -188,43 +195,43 @@ blockbuster.gui:
                 head: 頭
                 off_hand: 副手
             shoot_arrow:
-                title: 射箭
+                title: 射箭 Shoot arrow
                 desc: 以指定的力量射出壹根普的通箭
             place_block:
-                title: 放置方塊
+                title: 放置方塊 Place block
                 desc: 在指定的位置上放壹個指定的方塊
             mounting:
-                title: 騎乘
+                title: 騎乘 Mounting
                 desc: 騎乘或取消騎乘面前的實體
             interact_block:
-                title: 方塊交互
+                title: 方塊交互 Interact block
                 desc: 讓演員與壹個方塊交互
             break_block:
-                title: 破壞方塊
+                title: 破壞方塊 Break block
                 desc: 在指定的位置上破壞方塊
             morph:
-                title: 偽裝
+                title: 偽裝 Morph
                 desc: 將演員變為成指定的偽裝
             attack:
-                title: 攻擊
+                title: 攻擊 Attack
                 desc: 對演員前方的生物造成傷害 (如果您要對玩家使用的話, 需要將遊戲難度改為除和平以外的難度)
             damage:
-                title: 傷害
+                title: 傷害 Damage
                 desc: 對演員實體造成傷害
             morph_action:
-                title: 偽裝動作
+                title: 偽裝動作 Morph action
                 desc: 如果演員已進行偽裝, 則使用偽裝動作
             command:
-                title: 命令
+                title: 命令 Command
                 desc: 用演員執行壹條命令
             break_animation:
-                title: 破壞方塊動畫
+                title: 破壞方塊動畫 Break block Animation
                 desc: 在指定的方塊位置上執行破壞動畫 (方塊裂痕)
             use_item:
-                title: 使用物品
+                title: 使用物品 Item use
                 desc: 使用當前拿在手上的物品
             use_item_block:
-                title: 在方塊上使用物品
+                title: 在方塊上使用物品 Item block use
                 desc: 對演員正對著的方塊使用手上拿著的物品
 
                 down: 下
@@ -234,7 +241,7 @@ blockbuster.gui:
                 west: 西
                 east: 東
             interact_entity:
-                title: 與實體交互
+                title: 與實體交互 Interact with entity
                 desc: 與當前演員所看向的實體進行交互 (使用如命名牌、物品展示框或模型實體進行交互)
 
     # Playback GUI
@@ -276,7 +283,7 @@ blockbuster.gui:
         right: 右
         top: 上
         bottom: 下
-        resize_crop: 重置剪裁
+        resize_crop: 調整尺寸
         dimensions: "大小 (%spx, %spx)"
         offset_x: X 軸坐標偏移
         offset_y: Y 軸坐標偏移
@@ -324,6 +331,9 @@ blockbuster.gui:
         cap: 容量
 
     snowstorm:
+        variables: 變量
+        expression: 數學表達式
+
         title: 粒子
         mode: 模式
         add_modal: "為新的空白粒子效果輸入名稱："
@@ -571,5 +581,7 @@ blockbuster.gui:
             category: 玩家回放編輯器
             toggle_list: 開關玩家回放列表
             toggle_editor: 開關玩家回放編輯器
+            detach_scene: 解綁當前場景
+            reload_scene: 重載當前場景
 
             add_morph_action: 添加偽裝動作
