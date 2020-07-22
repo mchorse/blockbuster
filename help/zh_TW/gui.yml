@@ -552,6 +552,7 @@ blockbuster.gui:
         damage: 傷害
         bounce_factor: 系數
         vanish_delay: 消失延遲
+        penetration: 穿透系數 - 炮彈會穿透多厚的方塊 (該選項僅在啟用“附著”時才有效)
         
         gun_transforms: 槍變換
         projectile_transforms: 炮彈變換
