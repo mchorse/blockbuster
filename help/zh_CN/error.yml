@@ -63,7 +63,8 @@ blockbuster.error:
         empty_record: "{f}给出的玩家回放 %s{f} 为空!"
         not_exist_iteration: "{f}给出的玩家回放 %s{f} 的第 %s{f} 版本不存在!"
         cant_restore: "{f}无法回退一个版本, 因为临时文件现在不应该存在..."
-        wrong_axis: "{f}指定的 \"%s{f}\" 不是合法的轴。轴应该为 {7}x{r} 或者 {7}z{r}!"
+        wrong_axis: "{f}给定的 \"%s{f}\" 不是合法的轴。轴应该为 {7}x{r} 或者 {7}z{r}!"
+        invalid_math_expression: "给定的数学表达式 \"%s{r}\" 不是有效的数学表达式!"
 
     # Recording errors
     recording:

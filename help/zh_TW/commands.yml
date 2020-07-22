@@ -42,6 +42,12 @@ blockbuster:
                     
                     {r}該命令會將 {7}<filename>{r} 玩家回放復制壹份到名為 {7}<new_filename>{r} 的新玩家回放。
 
+            erase:
+                |
+                    {l}{6}/{r}record {8}erase{r} {7}<filename> <count> <from>{r}
+
+                    {r}該命令會刪除 {7}<filename>{r} 玩家回放中從 {7}<from>{r} Tick 起的 {7}<count>{r} 動作。
+
             fade:
                 |
                     {l}{6}/{r}record {8}fade{r} {7}<filename> <fade_out>{r}
@@ -101,7 +107,20 @@ blockbuster:
                     {l}{6}/{r}record {8}origin{r} {7}<filename> [rotation] [x] [y] [z]{r}
                     
                     {r}該命令會根據 {7}[x] [y] [z]{r} (如果三個都指定了) 來改變玩家回放的原點 (第壹幀), 或者取玩家當前的位置。您也可以將玩家回放的內容相對於第壹幀在 Y 軸上進行旋轉。
-                    
+
+            process:
+                |
+                    {l}{6}/{r}record {8}process{r} {7}<filename> <property> <from> <to> <math>{r}
+
+                    {r}該命令會處理 {7}<filename>{r} 玩家回放從 {7}<from>{r} Tick 到 {7}<to>{r} 中給定的 {7}<property>{r}, 並應用給定的 {7}<math>{r} 表達式。以下是可用的變量:
+
+                    {7}initial{r} - 給定屬性的初始值
+                    {7}value{r} - 給定屬性的當前值
+                    {7}tick{r} - 當前在處理的幀的 Tick
+                    {7}from{r} - {7}<from>{r} 參數
+                    {7}to{r} - {7}<to>{r} 參數
+                    {7}factor{r} - {7}from{r} 和 {7}to{r} 之間的表達式進行處理的距離是 (0..1), 它的公式基本上是 {7}(tick - from) / (to - from){r}
+
             prolong:
                 |
                     {l}{6}/{r}record {8}prolong{r} {7}<filename> [post_delay] [pre_delay]{r}

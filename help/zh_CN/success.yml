@@ -38,3 +38,5 @@ blockbuster.success:
         restored: "{f}已恢复到玩家回放 %s{f} 的第 %s{f} 版本!"
         reversed: "{f}已翻转玩家回放 %s{f}!"
         fill: "{f}成功填充 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放 (最终长度为 %s{f} Tick)!"
+        erase: "{f}成功抹去 %s{f} 帧到 %s{f} Tick 处的 %s{f} 玩家回放 (最终长度为 %s{f} Tick)!"
+        process: "{f}玩家回放 %s{f} 的 %s{f} 属性中的 %s{f} 至 %s{f} 部分已处理成功!" 
