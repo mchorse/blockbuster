@@ -31,7 +31,7 @@ public class BedrockCurve
 		{
 			return 0;
 		}
-		else if (length <= 2)
+		else if (length == 1)
 		{
 			return this.nodes[0].get();
 		}
@@ -42,11 +42,17 @@ public class BedrockCurve
 		}
 
 		factor = MathUtils.clamp(factor, 0, 1);
-		factor *= (length - 3);
-		int index = (int) factor + 1;
 
 		if (this.type == BedrockCurveType.HERMITE)
 		{
+			if (length <= 3)
+			{
+				return this.nodes[length - 2].get();
+			}
+
+			factor *= (length - 3);
+			int index = (int) factor + 1;
+
 			MolangExpression beforeFirst = this.getNode(index - 1);
 			MolangExpression first = this.getNode(index);
 			MolangExpression next = this.getNode(index + 1);
@@ -54,6 +60,9 @@ public class BedrockCurve
 
 			return Interpolations.cubicHermite(beforeFirst.get(), first.get(), next.get(), afterNext.get(), factor % 1);
 		}
+
+		factor *= length - 1;
+		int index = (int) factor;
 
 		MolangExpression first = this.getNode(index);
 		MolangExpression next = this.getNode(index + 1);
