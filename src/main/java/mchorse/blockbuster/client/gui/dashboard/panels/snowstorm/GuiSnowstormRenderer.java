@@ -59,6 +59,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 		this.emitter.cX = this.temp.x;
 		this.emitter.cY = this.temp.y;
 		this.emitter.cZ = this.temp.z;
+		this.emitter.perspective = 100;
 		this.emitter.rotation.setIdentity();
 
 		GlStateManager.disableLighting();

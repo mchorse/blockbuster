@@ -62,6 +62,7 @@ public class BedrockEmitter
 	private BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
 
 	/* Camera properties */
+	public int perspective;
 	public float cYaw;
 	public float cPitch;
 
@@ -385,6 +386,7 @@ public class BedrockEmitter
 		{
 			Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
 
+			this.perspective = Minecraft.getMinecraft().gameSettings.thirdPersonView;
 			this.cYaw = 180 - Interpolations.lerp(camera.prevRotationYaw, camera.rotationYaw, partialTicks);
 			this.cPitch = 180 - Interpolations.lerp(camera.prevRotationPitch, camera.rotationPitch, partialTicks);
 			this.cX = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);

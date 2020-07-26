@@ -259,6 +259,18 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	{
 		this.calculateUVs(particle, partialTicks);
 
+		/* Flip width when frontal perspective mode */
+		if (emitter.perspective == 2)
+		{
+			this.w = -this.w;
+		}
+		/* In GUI renderer */
+		else if (emitter.perspective == 100)
+		{
+			this.w = -this.w;
+			this.h = -this.h;
+		}
+
 		/* Render the particle */
 		double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
 		double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
