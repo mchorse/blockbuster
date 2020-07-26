@@ -277,18 +277,14 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		double pz = Interpolations.lerp(particle.prevPosition.z, particle.position.z, partialTicks);
 		float angle = Interpolations.lerp(particle.prevRotation, particle.rotation, partialTicks);
 
-		if (particle.relativePosition)
+		if (particle.relativePosition && particle.relativeRotation)
 		{
-			if (particle.relativeRotation)
-			{
-				this.vector.set((float) px, (float) py, (float) pz);
+			this.vector.set((float) px, (float) py, (float) pz);
+			emitter.rotation.transform(this.vector);
 
-				emitter.rotation.transform(this.vector);
-
-				px = this.vector.x;
-				py = this.vector.y;
-				pz = this.vector.z;
-			}
+			px = this.vector.x;
+			py = this.vector.y;
+			pz = this.vector.z;
 
 			px += emitter.lastGlobal.x;
 			py += emitter.lastGlobal.y;

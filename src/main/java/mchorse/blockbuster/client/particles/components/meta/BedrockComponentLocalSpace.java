@@ -42,5 +42,13 @@ public class BedrockComponentLocalSpace extends BedrockComponentBase implements 
 	{
 		particle.relativePosition = this.position;
 		particle.relativeRotation = this.rotation;
+
+		particle.setupMatrix(emitter);
+	}
+
+	@Override
+	public int getSortingIndex()
+	{
+		return 1000;
 	}
 }

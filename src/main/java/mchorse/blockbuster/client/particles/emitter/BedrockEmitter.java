@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -312,14 +313,24 @@ public class BedrockEmitter
 		BedrockParticle particle = new BedrockParticle();
 
 		this.setParticleVariables(particle, 0);
-		particle.matrix.set(this.rotation);
+		particle.setupMatrix(this);
 
 		for (IComponentParticleInitialize component : this.scheme.particleInitializes)
 		{
 			component.apply(this, particle);
 		}
 
-		if (!particle.relativePosition && !forceRelative)
+		if (particle.relativePosition && !particle.relativeRotation)
+		{
+			Vector3f vec = new Vector3f(particle.position);
+
+			particle.matrix.transform(vec);
+			particle.position.x = vec.x;
+			particle.position.y = vec.y;
+			particle.position.z = vec.z;
+		}
+
+		if (!(particle.relativePosition && particle.relativeRotation))
 		{
 			particle.position.add(this.lastGlobal);
 			particle.initialPosition.add(this.lastGlobal);

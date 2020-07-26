@@ -34,6 +34,7 @@ public class BedrockParticle
 	public Vector3d initialPosition = new Vector3d();
 	public Vector3d prevPosition = new Vector3d();
 	public Matrix3f matrix = new Matrix3f();
+	private boolean matrixSet;
 
 	public Vector3f speed = new Vector3f();
 	public Vector3f acceleration = new Vector3f();
@@ -53,6 +54,7 @@ public class BedrockParticle
 	{
 		this.speed.set((float) Math.random() - 0.5F, (float) Math.random() - 0.5F, (float) Math.random() - 0.5F);
 		this.speed.normalize();
+		this.matrix.setIdentity();
 	}
 
 	public double getAge(float partialTick)
@@ -82,17 +84,7 @@ public class BedrockParticle
 		this.prevRotation = this.rotation;
 		this.prevPosition.set(this.position);
 
-		if (this.relativePosition)
-		{
-			if (this.relativeRotation)
-			{
-				this.matrix.setIdentity();
-			}
-			else
-			{
-				this.matrix.set(emitter.rotation);
-			}
-		}
+		this.setupMatrix(emitter);
 
 		if (!this.manual)
 		{
@@ -129,5 +121,25 @@ public class BedrockParticle
 		}
 
 		this.age ++;
+	}
+
+	public void setupMatrix(BedrockEmitter emitter)
+	{
+		if (this.relativePosition)
+		{
+			if (this.relativeRotation)
+			{
+				this.matrix.setIdentity();
+			}
+			else if (!this.matrixSet)
+			{
+				this.matrix.set(emitter.rotation);
+				this.matrixSet = true;
+			}
+		}
+		else if (this.relativeRotation)
+		{
+			this.matrix.set(emitter.rotation);
+		}
 	}
 }
