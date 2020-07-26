@@ -18,9 +18,9 @@ public class BedrockComponentShapeEntityAABB extends BedrockComponentShapeBase
 
 		if (emitter.target != null)
 		{
-			w = emitter.target.width / 2;
-			h = emitter.target.height / 2;
-			d = emitter.target.width / 2;
+			w = emitter.target.width;
+			h = emitter.target.height;
+			d = emitter.target.width;
 		}
 
 		particle.position.x = centerX + ((float) Math.random() - 0.5F) * w;
