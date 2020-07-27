@@ -36,6 +36,9 @@ public class TileEntityModelItemStackRenderer extends TileEntityItemStackRendere
     @Override
     public void renderByItem(ItemStack stack, float partialTicks)
     {
+        /* Thank you Mojang, very cool! */
+        partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+
         if (this.def == null)
         {
             this.def = new TileEntityModel();

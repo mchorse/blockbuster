@@ -31,6 +31,9 @@ public class TileEntityGunItemStackRenderer extends TileEntityItemStackRenderer
     @Override
     public void renderByItem(ItemStack stack, float partialTicks)
     {
+        /* Thank you Mojang, very cool! */
+        partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+
         /* Removing from the cache unused models */
         Iterator<GunEntry> it = models.values().iterator();
 
