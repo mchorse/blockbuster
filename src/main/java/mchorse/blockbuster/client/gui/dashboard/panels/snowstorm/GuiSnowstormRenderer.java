@@ -5,7 +5,6 @@ import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.expiration.BedrockComponentKillPlane;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.mclib.client.Draw;
-import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import net.minecraft.client.Minecraft;
@@ -54,7 +53,7 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 			return;
 		}
 
-		this.emitter.cYaw = 180 - this.yaw;
+		this.emitter.cYaw = this.yaw;
 		this.emitter.cPitch = this.pitch;
 		this.emitter.cX = this.temp.x;
 		this.emitter.cY = this.temp.y;
@@ -64,14 +63,22 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 
 		GlStateManager.disableLighting();
 
+		GlStateManager.disableDepth();
+		GlStateManager.glLineWidth(3);
+		GlStateManager.disableTexture2D();
+		Draw.axis(1F);
+		GlStateManager.enableTexture2D();
+		GlStateManager.glLineWidth(1);
+		GlStateManager.enableDepth();
+
+		this.emitter.render(context.partialTicks);
+
 		BedrockComponentKillPlane plane = this.emitter.scheme.get(BedrockComponentKillPlane.class);
 
 		if (plane.a != 0 || plane.b != 0 || plane.c != 0)
 		{
 			this.drawKillPlane(plane.a, plane.b, plane.c, plane.d);
 		}
-
-		this.emitter.render(context.partialTicks);
 
 		GlStateManager.enableLighting();
 	}
@@ -83,7 +90,6 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 
 		// GL11.glLineWidth(2F);
 		GL11.glPointSize(4F);
-		GlStateManager.disableDepth();
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
@@ -103,7 +109,6 @@ public class GuiSnowstormRenderer extends GuiModelRenderer
 		tessellator.draw();
 
 		GlStateManager.enableTexture2D();
-		GlStateManager.enableDepth();
 	}
 
 	private void calculate(float i, float j, float a, float b, float c, float d)

@@ -82,7 +82,6 @@ public class TileEntityModelRenderer extends TileEntitySpecialRenderer<TileEntit
 
             boolean wasSet = MatrixUtils.captureMatrix();
 
-
             if (te.order == RotationOrder.ZYX)
             {
                 GlStateManager.rotate(te.rx, 1, 0, 0);

@@ -259,18 +259,6 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 	{
 		this.calculateUVs(particle, partialTicks);
 
-		/* Flip width when frontal perspective mode */
-		if (emitter.perspective == 2)
-		{
-			this.w = -this.w;
-		}
-		/* In GUI renderer */
-		else if (emitter.perspective == 100)
-		{
-			this.w = -this.w;
-			this.h = -this.h;
-		}
-
 		/* Render the particle */
 		double px = Interpolations.lerp(particle.prevPosition.x, particle.position.x, partialTicks);
 		double py = Interpolations.lerp(particle.prevPosition.y, particle.position.y, partialTicks);
@@ -294,13 +282,30 @@ public class BedrockComponentAppearanceBillboard extends BedrockComponentBase im
 		/* Calculate yaw and pitch based on the facing mode */
 		float entityYaw = emitter.cYaw;
 		float entityPitch = emitter.cPitch;
+		double entityX = emitter.cX;
+		double entityY = emitter.cY;
+		double entityZ = emitter.cZ;
 		boolean lookAt = this.facing == CameraFacing.LOOKAT_XYZ || this.facing == CameraFacing.LOOKAT_Y;
+
+		/* Flip width when frontal perspective mode */
+		if (emitter.perspective == 2)
+		{
+			this.w = -this.w;
+		}
+		/* In GUI renderer */
+		else if (emitter.perspective == 100 && !lookAt)
+		{
+			entityYaw = 180 - entityYaw;
+
+			this.w = -this.w;
+			this.h = -this.h;
+		}
 
 		if (lookAt)
 		{
-			double dX = emitter.cX - px;
-			double dY = emitter.cY - py;
-			double dZ = emitter.cZ - pz;
+			double dX = entityX - px;
+			double dY = entityY - py;
+			double dZ = entityZ - pz;
 			double horizontalDistance = MathHelper.sqrt(dX * dX + dZ * dZ);
 
 			entityYaw = 180 - (float) (MathHelper.atan2(dZ, dX) * (180D / Math.PI)) - 90.0F;
