@@ -19,6 +19,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.vanilla_pack.morphs.BlockMorph;
 import mchorse.vanilla_pack.morphs.ItemMorph;
 import mchorse.vanilla_pack.morphs.LabelMorph;
 import net.minecraft.util.ResourceLocation;
@@ -67,6 +68,7 @@ public class BlockbusterSection extends MorphSection
 		/* By popular demand */
 		this.extra.add(new ItemMorph());
 		this.extra.add(new LabelMorph());
+		this.extra.add(new BlockMorph());
 	}
 
 	public void addStructure(String name, boolean sort)
