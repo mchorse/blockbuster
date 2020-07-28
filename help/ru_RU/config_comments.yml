@@ -13,6 +13,7 @@ blockbuster.config.comments:
     model_block:
         model_block_disable_rendering: Включено ли отображение блоков-моделей
         model_block_disable_item_rendering: Необходимо ли выключить отобржание предметов в руках у блоков-моделей (да кому это надо вообще?)
+        restore: Включение этой опции позволяет вернуть старый баг, при котором блоки-модели восстанавливались если их поставить рядом.
 
     recording:
         recording_countdown: Отсчёт до записи (в секундах)
