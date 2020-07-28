@@ -22,6 +22,7 @@ blockbuster.config:
         
         model_block_disable_rendering: Выключить отображение блоков-моделей
         model_block_disable_item_rendering: Выключить отображение предметов
+        restore: Восстановление блоков-моделей
     
     recording:
         title: Процесс Записи
