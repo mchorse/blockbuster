@@ -93,6 +93,13 @@ blockbuster.gui:
         attach_tooltip: Прикрепить этот блок режиссёра/сцену к кнопке воспроизведения
 
         camera: Редактировать камеру
+        tp: Телепоритроваться
+        tp_tooltip: Телепортирует вас к начальной позиции воспроизведения
+
+        keys:
+            category: Сцены
+
+            toggle_list: Показать/Скрыть список сцен
 
     scenes:
         title: Сцены
@@ -317,6 +324,9 @@ blockbuster.gui:
         cap: Ёмкость
         
     snowstorm:
+        variables: Переменные
+        expression: Математическое выражение
+
         title: Частицы
         mode: Режим
         add_modal: "Введите имя для новой схемы частиц:"
@@ -535,6 +545,7 @@ blockbuster.gui:
         damage: Урон
         bounce_factor: Фактор отскока
         vanish_delay: Задержка исчезновения
+        penetration: Фактор проникновения - насколько снаряд будет проникать в блок (эта опция работает только если включён параметр "Прилипает")
         
         gun_transforms: Трансформация оружия
         projectile_transforms: Трансформация снаряда
@@ -564,5 +575,7 @@ blockbuster.gui:
             category: Редактор записей игрока
             toggle_list: Показать список записей игрока
             toggle_editor: Показать редактор записей игрока
+            detach_scene: Открепить текущую сцену
+            reload_scene: Перезагрузить текущую сцену
 
             add_morph_action: Добавить действие морфа
