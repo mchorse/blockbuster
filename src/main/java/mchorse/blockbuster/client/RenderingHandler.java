@@ -129,6 +129,8 @@ public class RenderingHandler
             GlStateManager.disableCull();
             GlStateManager.enableTexture2D();
 
+            emitters.sort((a, b) -> a.getDistanceSq() < b.getDistanceSq() ? 1 : -1);
+
             for (BedrockEmitter emitter : emitters)
             {
                 emitter.render(partialTicks);

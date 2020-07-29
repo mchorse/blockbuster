@@ -1,5 +1,7 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import mchorse.mclib.utils.Interpolations;
+
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -57,6 +59,17 @@ public class BedrockParticle
 		this.matrix.setIdentity();
 	}
 
+	public double getDistanceSq(BedrockEmitter emitter)
+	{
+		Vector3d pos = this.getGlobalPosition(emitter);
+
+		double dx = emitter.cX - pos.x;
+		double dy = emitter.cY - pos.y;
+		double dz = emitter.cZ - pos.z;
+
+		return dx * dx + dy * dy + dz * dz;
+	}
+
 	public double getAge(float partialTick)
 	{
 		return (this.age + partialTick) / 20.0;
@@ -69,12 +82,25 @@ public class BedrockParticle
 
 	public Vector3d getGlobalPosition(BedrockEmitter emitter, Vector3d vector)
 	{
-		this.global.set(vector);
+		double px = vector.x;
+		double py = vector.y;
+		double pz = vector.z;
 
-		if (this.relativePosition)
+		if (this.relativePosition && this.relativeRotation)
 		{
-			this.global.add(emitter.lastGlobal);
+			Vector3f v = new Vector3f((float) px, (float) py, (float) pz);
+			emitter.rotation.transform(v);
+
+			px = v.x;
+			py = v.y;
+			pz = v.z;
+
+			px += emitter.lastGlobal.x;
+			py += emitter.lastGlobal.y;
+			pz += emitter.lastGlobal.z;
 		}
+
+		this.global.set(px, py, pz);
 
 		return this.global;
 	}

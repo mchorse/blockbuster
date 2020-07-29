@@ -91,6 +91,17 @@ public class BedrockEmitter
 		return !this.running && this.particles.isEmpty();
 	}
 
+	public double getDistanceSq()
+	{
+		this.setupCameraProperties(0F);
+
+		double dx = this.cX -  this.lastGlobal.x;
+		double dy = this.cY -  this.lastGlobal.y;
+		double dz = this.cZ -  this.lastGlobal.z;
+
+		return dx * dx + dy * dy + dz * dz;
+	}
+
 	public double getAge()
 	{
 		return this.getAge(0);
@@ -393,17 +404,7 @@ public class BedrockEmitter
 			return;
 		}
 
-		if (this.world != null)
-		{
-			Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-
-			this.perspective = Minecraft.getMinecraft().gameSettings.thirdPersonView;
-			this.cYaw = 180 - Interpolations.lerp(camera.prevRotationYaw, camera.rotationYaw, partialTicks);
-			this.cPitch = 180 - Interpolations.lerp(camera.prevRotationPitch, camera.rotationPitch, partialTicks);
-			this.cX = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
-			this.cY = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
-			this.cZ = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
-		}
+		this.setupCameraProperties(partialTicks);
 
 		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 		List<IComponentParticleRender> renders = this.scheme.particleRender;
@@ -415,6 +416,8 @@ public class BedrockEmitter
 
 		if (!this.particles.isEmpty())
 		{
+			this.particles.sort((a, b) -> a.getDistanceSq(this) < b.getDistanceSq(this) ? 1 : -1);
+
 			GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
 			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);
 
@@ -435,6 +438,21 @@ public class BedrockEmitter
 		for (IComponentParticleRender component : renders)
 		{
 			component.postRender(this, partialTicks);
+		}
+	}
+
+	public void setupCameraProperties(float partialTicks)
+	{
+		if (this.world != null)
+		{
+			Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
+
+			this.perspective = Minecraft.getMinecraft().gameSettings.thirdPersonView;
+			this.cYaw = 180 - Interpolations.lerp(camera.prevRotationYaw, camera.rotationYaw, partialTicks);
+			this.cPitch = 180 - Interpolations.lerp(camera.prevRotationPitch, camera.rotationPitch, partialTicks);
+			this.cX = Interpolations.lerp(camera.prevPosX, camera.posX, partialTicks);
+			this.cY = Interpolations.lerp(camera.prevPosY, camera.posY, partialTicks) + camera.getEyeHeight();
+			this.cZ = Interpolations.lerp(camera.prevPosZ, camera.posZ, partialTicks);
 		}
 	}
 
