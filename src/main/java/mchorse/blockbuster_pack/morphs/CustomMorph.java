@@ -493,6 +493,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
                 this.customPose = custom.customPose == null ? null : custom.customPose.clone();
                 this.animation.merge(custom.animation);
             }
+            else
+            {
+                this.animation.ignored = custom.animation.ignored;
+            }
 
             this.key = null;
             this.name = custom.name;
