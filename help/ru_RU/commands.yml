@@ -90,12 +90,12 @@ blockbuster:
 
                     {r}Восстанавливает предыдущую версию (итерацию) {7}<iteration>{r} записи игрока с названием {7}<filename>{r}. К примеру, {7}/record restore test 1{r} поменяет местами файлы записи {7}test.dat{r} и {7}test.dat~1{r} .
 
-            restore:
+            reverse:
                 |
                     {l}{6}/{r}record {8}reverse{r} {7}<filename>{r}
 
                     {r}Обращает вспять порядок кадров и действий записи игрока с именем {7}<filename>{r}.
-
+                    
             search:
                 |
                     {l}{6}/{r}record {8}search{r} {7}<filename> <action_type> [limit] [output_tags]{r}
