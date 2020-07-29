@@ -82,6 +82,11 @@ public class BedrockLibrary
 	 */
 	public BedrockScheme loadScheme(File file)
 	{
+		if (!file.exists())
+		{
+			return null;
+		}
+
 		try
 		{
 			return BedrockScheme.parse(FileUtils.readFileToString(file, Charset.defaultCharset()));
