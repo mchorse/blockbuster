@@ -2,6 +2,39 @@
 
 Blockbuster's change log.
 
+## Version 2.0.2
+
+This is a patch update that features a lot of fixes made to Snowstorm particle system, and to other parts of the mod. A couple of GUI keybinds were added, and a couple of useful /record sub-commands were added.
+
+**Compatible** with McLib `2.0.2`, Metamorph `1.2` and Aperture `1.4`. It doesn't mean that future versions of Metamorph and Aperture would be incompatible, but older versions are most likely incompatible.
+
+* Added restore model blocks option which allows to restore a previous edited model block in the session if you accidentally broke it (disabled by default, suggested by Chunk7)
+* Added Edit camera keybind (`C` key) to scenes menu
+* Added Toggle scene list keybind (`N` key) to scenes menu
+* Added Teleport button and keybind (`T` key) to scenes menu
+* Added Detach scene keybind (`Shift + D` combo) to camera editor
+* Added Reload scene keybind (`Shift + R` combo) to camera editor
+* Added Apply pose icon button in model editor's poses modal, which allows to apply current limb's pose on other poses
+* Added BB gun penetration factor option
+* Added `/record erase <filename> <count> <from>` which removes `<count>` frames after (and including) `<from>` tick
+* Added `/record process <filename> <property> <from> <to> <math>` which allows processing frame data in player recording using math expressions
+* Added variable editor panel in Snowstorm's morph editor
+* Added a copy of Metamorph's `block` morph to Blockbuster Extra category
+* Changed how local position and local rotation properties work with Snowstorm particle system
+* Fixed BB gun held item preview not working (reported by Terry)
+* Fixed Snowstorm 0 radius/size of any shape mode causing particles to disappear 
+* Fixed Snowstorm default values for spehere radius and initial speed component
+* Fixed Snowstorm emitter lifetime components not setting `variable.emitter_lifetime`
+* Fixed Snowstorm curves not working as intended (thanks to Jannis)
+* Fixed Snowstorm gradient tint component not loading correctly
+* Fixed player recording's with non-zero pre-delay not correctly syncing within player recording editor (reported by Lucatim)
+* Fixed start and stop command not working when launching scene's playback
+* Fixed size offset property of a limb not exporting correctly with `/model export_obj`
+* Fixed AABB shape component not being implemented
+* Fixed jittery animation with BB gun and model block rendering in the hand
+* Fixed Snowstorm's half-dimensions size of box component were actually being quarter size
+* Fixed "Ignored" option of animated poses not working correctly with player recording editor (reported by Tossler)
+
 ## Version 2.0.1
 
 This is a quick patch that fixes a couple of GUI issues and adds pick texture and skin keybinds.

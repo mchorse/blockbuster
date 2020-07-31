@@ -1,6 +1,7 @@
 {
     "homepage": "https://curseforge.com/minecraft/mc-mods/blockbuster/",
     "1.12.2": {
+        "2.0.2": "This is a patch update that features a lot of fixes made to Snowstorm particle system, and to other parts of the mod. A couple of GUI keybinds were added, and a couple of useful /record sub-commands were added.",
         "2.0.1": "This is a quick patch that fixes a couple of GUI issues and adds pick texture and skin keybinds.",
         "2.0": "This huge update adds a couple of awesome major feature, but mostly focuses on GUI improvements and quality of life features. This update also fixes dozens of bugs.",
         "1.6.6": "This is another patch update which fixes lots of bugs. Beside bug fixes, there are also new BB gun options which allows for a better projectile configuration. Andruxioid also introduces Ukranian translation in this update!",
@@ -45,8 +46,8 @@
         "1.4.10": "Patch 1.4.10 adds few nice misc. features (model block and OBJ loading without JSON model) which generally should improve UX a bit and simplify decorating set with Blockbuster models/Metamorph morphs, and lay down a foundation for future new features (which involves removing old useless code)."
     },
     "promos": {
-        "1.12.2-latest": "2.0.1",
-        "1.12.2-recommended": "2.0.1",
+        "1.12.2-latest": "2.0.2",
+        "1.12.2-recommended": "2.0.2",
         "1.11.2-latest": "1.6.6",
         "1.11.2-recommended": "1.6.6",
         "1.10.2-latest": "1.6.6",
