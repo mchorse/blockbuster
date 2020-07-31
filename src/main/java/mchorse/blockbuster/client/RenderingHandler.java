@@ -129,7 +129,25 @@ public class RenderingHandler
             GlStateManager.disableCull();
             GlStateManager.enableTexture2D();
 
-            emitters.sort((a, b) -> a.getDistanceSq() < b.getDistanceSq() ? 1 : -1);
+            if (Blockbuster.particleSorting.get())
+            {
+                emitters.sort((a, b) ->
+                {
+                    double ad = a.getDistanceSq();
+                    double bd = b.getDistanceSq();
+
+                    if (ad < bd)
+                    {
+                        return 1;
+                    }
+                    else if (ad > bd)
+                    {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+            }
 
             for (BedrockEmitter emitter : emitters)
             {

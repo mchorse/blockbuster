@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.particles.emitter;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.client.particles.BedrockScheme;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterInitialize;
 import mchorse.blockbuster.client.particles.components.IComponentEmitterUpdate;
@@ -416,7 +417,25 @@ public class BedrockEmitter
 
 		if (!this.particles.isEmpty())
 		{
-			this.particles.sort((a, b) -> a.getDistanceSq(this) < b.getDistanceSq(this) ? 1 : -1);
+			if (Blockbuster.particleSorting.get())
+			{
+				this.particles.sort((a, b) ->
+				{
+					double ad = a.getDistanceSq(this);
+					double bd = b.getDistanceSq(this);
+
+					if (ad < bd)
+					{
+						return 1;
+					}
+					else if (ad > bd)
+					{
+						return -1;
+					}
+
+					return 0;
+				});
+			}
 
 			GifTexture.bindTexture(this.scheme.texture, this.age, partialTicks);
 			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_LMAP_COLOR);

@@ -20,7 +20,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -150,6 +149,7 @@ public class Blockbuster
     public static ValueInt chromaSkyColor;
     public static ValueBoolean syncedURLTextureDownload;
     public static ValueBoolean addUtilityBlocks;
+    public static ValueBoolean particleSorting;
 
     public static ValueBoolean modelBlockDisableRendering;
     public static ValueBoolean modelBlockDisableItemRendering;
@@ -208,6 +208,8 @@ public class Blockbuster
         chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
+        particleSorting = builder.getBoolean("particle_sorting", false);
+        particleSorting.invisible();
 
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
