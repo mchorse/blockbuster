@@ -38,3 +38,6 @@ blockbuster.config.comments:
     damage_control:
         damage_control: Whether damage control is enabled
         damage_control_distance: Radius of effect for damage control
+
+    model_folders:
+        path: Absolut path to additional model Folder (on windows add the drive letter)
