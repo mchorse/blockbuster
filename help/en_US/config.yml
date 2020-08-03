@@ -56,3 +56,9 @@ blockbuster.config:
         
         damage_control: Damage control
         damage_control_distance: Damage distance
+
+    model_folders:
+        title: Model Folders
+        tooltip: Add additional model folders
+
+        path: Additional Folder

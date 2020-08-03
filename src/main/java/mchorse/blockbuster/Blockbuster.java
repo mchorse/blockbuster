@@ -33,6 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+
 /**
  * <p>Blockbuster's main entry</p>
  *
@@ -176,6 +178,8 @@ public class Blockbuster
     public static ValueBoolean damageControl;
     public static ValueInt damageControlDistance;
 
+    public static ValueString modelFolderPath;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
@@ -239,6 +243,9 @@ public class Blockbuster
         /* Damage control */
         damageControl = builder.category("damage_control").getBoolean("damage_control", true);
         damageControlDistance = builder.getInt("damage_control_distance", 64, 1, 1024);
+
+        /* Model Folder */
+        modelFolderPath = builder.category("model_folders").getString("path", "");
 
         event.modules.add(builder.build());
     }

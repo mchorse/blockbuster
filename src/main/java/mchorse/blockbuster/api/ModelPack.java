@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
 import mchorse.blockbuster.api.loaders.IModelLoader;
 import mchorse.blockbuster.api.loaders.ModelLoaderJSON;
@@ -82,6 +83,11 @@ public class ModelPack
     {
         this.folders.clear();
         this.addFolder(new File(CommonProxy.configFile, "models"));
+
+        if (Blockbuster.modelFolderPath != null && !Blockbuster.modelFolderPath.get().equalsIgnoreCase(""))
+        {
+            this.addFolder(new File(Blockbuster.modelFolderPath.get()));
+        }
 
         File server = DimensionManager.getCurrentSaveRootDirectory();
 
