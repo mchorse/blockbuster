@@ -14,6 +14,7 @@ import mchorse.blockbuster.client.render.tileentity.TileEntityDirectorRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelItemStackRenderer;
 import mchorse.blockbuster.client.render.tileentity.TileEntityModelRenderer;
+import mchorse.blockbuster.commands.CommandItemNBT;
 import mchorse.blockbuster.commands.CommandModel;
 import mchorse.blockbuster.common.block.BlockGreen.ChromaColor;
 import mchorse.blockbuster.common.entity.EntityActor;
@@ -200,6 +201,7 @@ public class ClientProxy extends CommonProxy
 
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
+        ClientCommandHandler.instance.registerCommand(new CommandItemNBT());
     }
 
     protected void registerItemModel(Block block, String path)

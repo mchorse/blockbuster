@@ -8,6 +8,8 @@ blockbuster.success:
         
         convert_skin: "{f}Successfully converted %s{r}/%s{r} skin!"
 
+        item_nbt: "The NBT data of the held item was copied to the clipboard!"
+
     director:
         play: "{f}Director block at (%s{f}, %s{f}, %s{f}) has started playing!"
         stop: "{f}Director block at (%s{f}, %s{f}, %s{f}) has stopped!"

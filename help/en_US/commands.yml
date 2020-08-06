@@ -206,6 +206,11 @@ blockbuster:
                     {r}Stops the recording of action. If the player didn't record anything, nothing will happen.
         
         on_head.help: "{r}{o}On head command{r}. This command allows putting currently held item in the main slot directly in the head slot, without any hassle of coming up with NBT data tag."
+        item_nbt.help:
+            |
+                {l}{6}/{r}item_nbt {7}<give_command>{r}{r}
+
+                {r}Item NBT command allows to copy current held item's NBT tag to the clipboard. If you provide {7}<give_command>{r} as {7}true{r} or {7}1{r} it will copy to clipboard a proper {7}/give{r} command to give that item. You'll most likely need a command block for that...
         spectate.help: 
             |
                 {r}{o}Spectate command{r}. This command allows making given player to spectate given entity.
