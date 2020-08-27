@@ -367,6 +367,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
             render.current = this;
             render.doRender(entity, x, y, z, entityYaw, partialTicks);
+
+            if (this.animation.isInProgress() && entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).eyeHeight = this.animation.pose.size[1] * 0.9F;
+            }
         }
         else
         {
