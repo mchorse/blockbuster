@@ -6,9 +6,9 @@ import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.api.formats.IMeshes;
 import mchorse.blockbuster.api.formats.Mesh;
 import mchorse.blockbuster.api.formats.vox.data.Vox;
+import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
 import mchorse.blockbuster.client.model.ModelVoxRenderer;
-import net.minecraft.client.model.ModelBase;
 
 import javax.vecmath.Matrix3f;
 
@@ -27,7 +27,7 @@ public class MeshesVOX implements IMeshes
 	}
 
 	@Override
-	public ModelCustomRenderer createRenderer(Model data, ModelBase model, ModelLimb limb, ModelTransform transform)
+	public ModelCustomRenderer createRenderer(Model data, ModelCustom model, ModelLimb limb, ModelTransform transform)
 	{
 		if (this.mesh == null)
 		{

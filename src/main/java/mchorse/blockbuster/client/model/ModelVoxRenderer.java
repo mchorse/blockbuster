@@ -7,7 +7,6 @@ import mchorse.blockbuster.api.formats.obj.OBJParser;
 import mchorse.blockbuster.api.formats.vox.MeshesVOX;
 import mchorse.blockbuster.api.formats.vox.data.VoxTexture;
 import mchorse.blockbuster.client.render.RenderCustomModel;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,7 +32,7 @@ public class ModelVoxRenderer extends ModelCustomRenderer
      */
     public VoxTexture texture;
 
-    public ModelVoxRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, MeshesVOX mesh)
+    public ModelVoxRenderer(ModelCustom model, ModelLimb limb, ModelTransform transform, MeshesVOX mesh)
     {
         super(model, limb, transform);
 

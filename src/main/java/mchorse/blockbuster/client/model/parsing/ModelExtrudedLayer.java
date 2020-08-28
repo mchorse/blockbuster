@@ -1,17 +1,8 @@
 package mchorse.blockbuster.client.model.parsing;
 
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import org.lwjgl.opengl.GL11;
-
-import mchorse.blockbuster.api.ModelLimb;
 import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.model.ModelCustomRenderer;
+import mchorse.mclib.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
@@ -19,16 +10,21 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Model extruded layer class
  * 
  * This baby is responsible for making wonders. Basically, it allows 
  * to render extruded layers based on the texture. 
- * 
- * TODO: Add mirror support 
- * TODO: Clean up and make sure the code isn't confusing (axes and 
- * coordinates)
+ *
+ * TODO: Clean up and make sure the code isn't confusing (axes and coordinates)
  */
 public class ModelExtrudedLayer
 {
@@ -81,9 +77,11 @@ public class ModelExtrudedLayer
 
         if (id != -1)
         {
+            // GlStateManager.disableTexture2D();
             // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             GL11.glCallList(id);
             // GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            // GlStateManager.enableTexture2D();
         }
 
         /* Clean up cache */
@@ -124,10 +122,7 @@ public class ModelExtrudedLayer
                 images.put(texture, image);
             }
 
-            ModelLimb limb = renderer.limb;
-            Chunk chunk = new Chunk(limb.size[0], limb.size[1], limb.size[2]);
-
-            fillChunk(chunk, image.image, renderer);
+            Chunk chunk = fillChunk(image.image, renderer);
 
             if (chunk.stats > 0)
             {
@@ -152,122 +147,158 @@ public class ModelExtrudedLayer
      * 
      * There is a lot of copy-paste code since I'm not sure 
      */
-    private static void fillChunk(Chunk chunk, BufferedImage image, ModelCustomRenderer renderer)
+    private static Chunk fillChunk(BufferedImage image, ModelCustomRenderer renderer)
     {
         final int threshold = 0x80;
 
+        /* Extrude factor */
+        int ef = renderer.model.model.extrudeMaxFactor;
         int stepX = (int) (image.getWidth() / renderer.textureWidth);
         int stepY = (int) (image.getHeight() / renderer.textureHeight);
+        int oStepX = stepX;
+        int oStepY = stepY;
 
+        if (ef > 1)
+        {
+            ef = Math.min(ef, Math.min(stepX, stepY));
+
+            if (stepX > 1) stepX = (int) (image.getWidth() / (renderer.textureWidth * ef));
+            if (stepY > 1) stepY = (int) (image.getHeight() / (renderer.textureHeight * ef));
+        }
+
+        /* Extrude Factor Inwards */
+        int efi = MathUtils.clamp(renderer.model.model.extrudeInwards, 1, ef);
         int w = renderer.limb.size[0];
         int h = renderer.limb.size[1];
         int d = renderer.limb.size[2];
+
+        Chunk chunk = new Chunk(w, h, d, ef);
+
         int offsetX = renderer.limb.texture[0];
         int offsetY = renderer.limb.texture[1];
 
         /* Top & bottom */
-        int x = (offsetX + d) * stepX;
-        int y = offsetY * stepY;
+        int x = (offsetX + d) * oStepX;
+        int y = offsetY * oStepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < chunk.w; i++)
         {
-            for (int j = 0; j < d; j++)
+            for (int j = 0; j < chunk.d; j++)
             {
                 int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(i, h - 1, j, TOP_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(i, chunk.h - 1 - k, j, TOP_BIT);
+                    }
                 }
             }
         }
 
-        x = (offsetX + d + w) * stepX;
-        y = offsetY * stepY;
+        x = (offsetX + d + w) * oStepX;
+        y = offsetY * oStepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < chunk.w; i++)
         {
-            for (int j = 0; j < d; j++)
+            for (int j = 0; j < chunk.h; j++)
             {
                 int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(i, 0, j, BOTTOM_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(i, k, j, BOTTOM_BIT);
+                    }
                 }
             }
         }
 
         /* Front & back */
-        x = (offsetX + d) * stepX;
-        y = (offsetY + d) * stepY;
+        x = (offsetX + d) * oStepX;
+        y = (offsetY + d) * oStepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < chunk.w; i++)
         {
-            for (int j = 0; j < h; j++)
+            for (int j = 0; j < chunk.h; j++)
             {
                 int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(i, h - j - 1, d - 1, FRONT_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(i, chunk.h - j - 1, chunk.d - 1 - k, FRONT_BIT);
+                    }
                 }
             }
         }
 
-        x = (offsetX + d * 2 + w) * stepX;
-        y = (offsetY + d) * stepY;
+        x = (offsetX + d * 2 + w) * oStepX;
+        y = (offsetY + d) * oStepY;
 
-        for (int i = 0; i < w; i++)
+        for (int i = 0; i < chunk.w; i++)
         {
-            for (int j = 0; j < h; j++)
+            for (int j = 0; j < chunk.h; j++)
             {
                 int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(w - i - 1, h - j - 1, 0, BACK_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(chunk.w - i - 1, chunk.h - j - 1, k, BACK_BIT);
+                    }
                 }
             }
         }
 
         /* Left & right */
-        x = offsetX * stepX;
-        y = (offsetY + d) * stepY;
+        x = offsetX * oStepX;
+        y = (offsetY + d) * oStepY;
 
-        for (int i = 0; i < d; i++)
+        for (int i = 0; i < chunk.d; i++)
         {
-            for (int j = 0; j < h; j++)
+            for (int j = 0; j < chunk.h; j++)
             {
                 int alpha = image.getRGB(x + i * stepX, y + j * stepY) >> 24 & 0xff;
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(0, h - j - 1, i, LEFT_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(k, chunk.h - j - 1, i, LEFT_BIT);
+                    }
                 }
             }
         }
 
-        x = (offsetX + d + w) * stepX;
-        y = (offsetY + d) * stepY;
+        x = (offsetX + d + w) * oStepX;
+        y = (offsetY + d) * oStepY;
 
-        for (int i = 0; i < d; i++)
+        for (int i = 0; i < chunk.d; i++)
         {
-            for (int j = 0; j < h; j++)
+            for (int j = 0; j < chunk.h; j++)
             {
                 int xx = x + i * stepX;
                 int yy = y + j * stepY;
 
                 int color = image.getRGB(xx, yy);
                 int alpha = color >> 24 & 0xff;
-                String c = Integer.toHexString(color);
 
                 if (alpha >= threshold)
                 {
-                    chunk.setBlockBit(w - 1, h - j - 1, d - i - 1, RIGHT_BIT);
+                    for (int k = 0; k < efi; k ++)
+                    {
+                        chunk.setBlockBit(chunk.w - 1 - k, chunk.h - j - 1, chunk.d - i - 1, RIGHT_BIT);
+                    }
                 }
             }
         }
+
+        return chunk;
     }
 
     /**
@@ -287,26 +318,24 @@ public class ModelExtrudedLayer
      * Generate geometry based on given chunk. This method is basically 
      * using stupid (instead of greedy) voxel meshing in order to 
      * compile the geometry.
-     * 
-     * TODO: Add support for byte flag voxels, i.e. multiside
-     * TODO: Fix UV mapping on non primary sides to match the edges (for
-     * high-res textures, primarily)
+     *
+     * TODO: Fix UV mapping on non primary sides to match the edges (for high-res textures, primarily)
      */
     private static void generateGeometry(Chunk chunk, ModelCustomRenderer renderer)
     {
-        final float f = 1F / 16F;
-
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-        float sizeOffset = renderer.limb.sizeOffset;
-        int w = renderer.limb.size[0];
-        int h = renderer.limb.size[1];
-        int d = renderer.limb.size[2];
+        int ef = chunk.ef;
+        int w = renderer.limb.size[0] * ef;
+        int h = renderer.limb.size[1] * ef;
+        int d = renderer.limb.size[2] * ef;
+        float f = 1F / 16F / ef;
+        float so = renderer.limb.sizeOffset * ef;
 
-        float tw = renderer.textureWidth;
-        float th = renderer.textureHeight;
-        int offsetX = renderer.limb.texture[0];
-        int offsetY = renderer.limb.texture[1];
+        float tw = renderer.textureWidth * ef;
+        float th = renderer.textureHeight * ef;
+        int offsetX = renderer.limb.texture[0] * ef;
+        int offsetY = renderer.limb.texture[1] * ef;
         boolean mirror = renderer.limb.mirror;
         Offset off = new Offset(0, 0);
         Offset offmax = new Offset(0, 0);
@@ -327,7 +356,6 @@ public class ModelExtrudedLayer
                         continue;
                     }
 
-                    float so = renderer.limb.sizeOffset;
                     float sw = w + so * 2;
                     float sh = h + so * 2;
                     float sd = d + so * 2;
@@ -582,15 +610,21 @@ public class ModelExtrudedLayer
         public final int d;
 
         public int stats;
+        public int ef;
 
         /**
          * Initialize empty chunk data 
          */
-        public Chunk(int w, int h, int d)
+        public Chunk(int w, int h, int d, int ef)
         {
+            w *= ef;
+            h *= ef;
+            d *= ef;
+
             this.w = w;
             this.h = h;
             this.d = d;
+            this.ef = ef;
 
             this.data = new byte[w * h * d];
         }
@@ -658,7 +692,8 @@ public class ModelExtrudedLayer
         }
     }
 
-    public static class Offset {
+    public static class Offset
+    {
         public float x;
         public float y;
 

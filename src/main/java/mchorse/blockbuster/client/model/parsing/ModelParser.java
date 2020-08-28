@@ -172,7 +172,7 @@ public class ModelParser
     /**
      * Create limb renderer for the model
      */
-    protected ModelCustomRenderer createRenderer(ModelBase model, Model data, ModelLimb limb, ModelTransform transform)
+    protected ModelCustomRenderer createRenderer(ModelCustom model, Model data, ModelLimb limb, ModelTransform transform)
     {
         ModelCustomRenderer renderer = null;
 

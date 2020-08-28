@@ -31,6 +31,7 @@ public class ModelCustomRenderer extends ModelRenderer
     public ModelLimb limb;
     public ModelTransform trasnform;
     public ModelCustomRenderer parent;
+    public ModelCustom model;
 
     public float scaleX = 1;
     public float scaleY = 1;
@@ -44,15 +45,17 @@ public class ModelCustomRenderer extends ModelRenderer
     public int stencilIndex = -1;
     public boolean stencilRendering = false;
 
-    public ModelCustomRenderer(ModelBase model, int texOffX, int texOffY)
+    public ModelCustomRenderer(ModelCustom model, int texOffX, int texOffY)
     {
         super(model, texOffX, texOffY);
+
+        this.model = model;
     }
 
     /**
      * Initiate with limb and transform instances
      */
-    public ModelCustomRenderer(ModelBase model, ModelLimb limb, ModelTransform transform)
+    public ModelCustomRenderer(ModelCustom model, ModelLimb limb, ModelTransform transform)
     {
         this(model, limb.texture[0], limb.texture[1]);
 

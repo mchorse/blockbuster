@@ -53,6 +53,16 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
             model.defaultTexture = RLUtils.create(object.get("default"));
         }
 
+        if (model.extrudeMaxFactor <= 0)
+        {
+            model.extrudeMaxFactor = 1;
+        }
+
+        if (model.extrudeInwards <= 0)
+        {
+            model.extrudeInwards = 1;
+        }
+
         return model;
     }
 
@@ -78,6 +88,8 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         map.remove("providesObj");
         map.remove("providesMtl");
         map.remove("materials");
+        map.remove("extrudeMaxFactor");
+        map.remove("extrudeInwards");
 
         if (!src.model.isEmpty())
         {
@@ -123,6 +135,16 @@ public class ModelAdapter implements JsonDeserializer<Model>, JsonSerializer<Mod
         if (!src.skins.isEmpty())
         {
             map.addProperty("skins", src.skins);
+        }
+
+        if (src.extrudeMaxFactor > 1)
+        {
+            map.addProperty("extrudeMaxFactor", src.extrudeMaxFactor);
+        }
+
+        if (src.extrudeInwards > 1)
+        {
+            map.addProperty("extrudeInwards", src.extrudeInwards);
         }
 
         map.add("limbs", context.serialize(src.limbs));

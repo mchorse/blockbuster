@@ -51,7 +51,7 @@ public class ModelOBJRenderer extends ModelCustomRenderer
      */
     protected int solidColorTex = -1;
 
-    public ModelOBJRenderer(ModelBase model, ModelLimb limb, ModelTransform transform, MeshesOBJ mesh)
+    public ModelOBJRenderer(ModelCustom model, ModelLimb limb, ModelTransform transform, MeshesOBJ mesh)
     {
         super(model, limb, transform);
 

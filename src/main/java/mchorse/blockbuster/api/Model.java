@@ -59,6 +59,18 @@ public class Model
     public int[] texture = new int[] {64, 32};
 
     /**
+     * Extrude max factor (allows to limit how many extruded sub levels you can have)
+     */
+    @Expose
+    public int extrudeMaxFactor = 1;
+
+    /**
+     * Extrude inwards factor (allows to extrude inwards more bits)
+     */
+    @Expose
+    public int extrudeInwards = 1;
+
+    /**
      * Scale of the model 
      */
     @Expose

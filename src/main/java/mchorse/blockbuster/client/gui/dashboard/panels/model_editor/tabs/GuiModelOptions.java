@@ -19,6 +19,8 @@ public class GuiModelOptions extends GuiModelEditorTab
     /* Main properties */
     private GuiTextElement name;
     private GuiTwoElement texture;
+    private GuiTrackpadElement extrudeMaxFactor;
+    private GuiTrackpadElement extrudeInwards;
     private GuiThreeElement scale;
     private GuiTrackpadElement scaleGui;
     private GuiButtonElement defaultTexture;
@@ -39,6 +41,20 @@ public class GuiModelOptions extends GuiModelEditorTab
             this.panel.rebuildModel();
         });
         this.texture.setLimit(1, 8196, true);
+        this.extrudeMaxFactor = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.panel.model.extrudeMaxFactor = value.intValue();
+            this.panel.rebuildModel();
+        });
+        this.extrudeMaxFactor.tooltip(IKey.lang("blockbuster.gui.me.options.extrude_max_factor"));
+        this.extrudeMaxFactor.integer().limit(1);
+        this.extrudeInwards = new GuiTrackpadElement(mc, (value) ->
+        {
+            this.panel.model.extrudeInwards = value.intValue();
+            this.panel.rebuildModel();
+        });
+        this.extrudeInwards.tooltip(IKey.lang("blockbuster.gui.me.options.extrude_inwards"));
+        this.extrudeInwards.integer().limit(1);
         this.scale = new GuiThreeElement(mc, (value) ->
         {
             this.panel.model.scale[0] = value[0].floatValue();
@@ -78,6 +94,7 @@ public class GuiModelOptions extends GuiModelEditorTab
         this.flex().column(5).vertical().stretch().scroll().padding(10).height(20);
         this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.name")), this.name);
         this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.texture")), this.texture);
+        this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.extrusion")), this.extrudeMaxFactor, this.extrudeInwards);
         this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.scale")), this.scale, this.scaleGui, this.defaultTexture);
         this.add(Elements.label(IKey.lang("blockbuster.gui.me.options.skins")), this.skins, this.providesObj, this.providesMtl);
     }
@@ -86,6 +103,8 @@ public class GuiModelOptions extends GuiModelEditorTab
     {
         this.name.setText(model.name);
         this.texture.setValues(model.texture[0], model.texture[1]);
+        this.extrudeMaxFactor.setValue(model.extrudeMaxFactor);
+        this.extrudeInwards.setValue(model.extrudeInwards);
         this.scale.setValues(model.scale[0], model.scale[1], model.scale[2]);
         this.scaleGui.setValue(model.scaleGui);
         this.skins.setText(model.skins);
