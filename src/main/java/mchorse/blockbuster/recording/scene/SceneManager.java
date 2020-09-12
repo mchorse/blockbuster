@@ -105,7 +105,7 @@ public class SceneManager
 					}
 					else
 					{
-						scene.stopPlayback();
+						scene.stopPlayback(true);
 					}
 
 					replay.apply(player);
@@ -123,7 +123,7 @@ public class SceneManager
 
 		if (scene != null)
 		{
-			scene.stopPlayback();
+			scene.stopPlayback(true);
 
 			return false;
 		}

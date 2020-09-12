@@ -3,6 +3,7 @@ package mchorse.blockbuster;
 import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.api.ModelClientHandler;
 import mchorse.blockbuster.api.ModelHandler;
+import mchorse.blockbuster.audio.AudioLibrary;
 import mchorse.blockbuster.client.ActorsPack;
 import mchorse.blockbuster.client.KeyboardHandler;
 import mchorse.blockbuster.client.RenderingHandler;
@@ -77,6 +78,7 @@ public class ClientProxy extends CommonProxy
     public static TileEntityModelRenderer modelRenderer;
     public static KeyboardHandler keys;
     public static BlockbusterTree tree;
+    public static AudioLibrary audio;
 
     /**
      * Register mod items, blocks, tile entites and entities, load item,
@@ -120,6 +122,8 @@ public class ClientProxy extends CommonProxy
 
         /* Structure morph */
         StructureMorph.STRUCTURES = new HashMap<String, StructureRenderer>();
+
+        audio = new AudioLibrary(new File(CommonProxy.configFile, "audio"));
     }
 
     /**
@@ -218,6 +222,14 @@ public class ClientProxy extends CommonProxy
     protected void registerEntityRender(Class eclass, IRenderFactory factory)
     {
         RenderingRegistry.registerEntityRenderingHandler(eclass, factory);
+    }
+
+    @Override
+    public void loadModels(boolean force)
+    {
+        audio.reload();
+
+        super.loadModels(force);
     }
 
     @Override

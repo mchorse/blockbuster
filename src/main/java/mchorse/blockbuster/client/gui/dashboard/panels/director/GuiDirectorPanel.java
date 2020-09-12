@@ -26,6 +26,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTextElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
+import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiModal;
 import mchorse.mclib.client.gui.framework.elements.modals.GuiPromptModal;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
@@ -76,6 +77,9 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
     public GuiToggleElement loops;
     public GuiToggleElement disableStates;
     public GuiToggleElement hide;
+
+    public GuiStringListElement audio;
+    public GuiTrackpadElement audioShift;
 
     /* Replay fields */
     public GuiTextElement id;
@@ -150,6 +154,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.disableStates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.disable_states"), false, (b) -> this.location.getDirector().disableStates = b.isToggled());
         this.hide = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.isToggled());
 
+        this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0));
+        this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.intValue());
+        this.audioShift.limit(0).integer();
+
         this.title.flex().set(10, 50, 0, 20).relative(this.area).w(1, -20);
         this.startCommand.flex().set(10, 90, 0, 20).relative(this.area).w(1, -20);
         this.stopCommand.flex().set(10, 130, 0, 20).relative(this.area).w(1, -20);
@@ -157,7 +165,10 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.disableStates.flex().set(0, 16, 60, 11).relative(this.loops.resizer());
         this.hide.flex().set(0, 16, 60, 11).relative(this.disableStates.resizer());
 
-        this.configOptions.add(this.title, this.startCommand, this.stopCommand, this.loops, this.disableStates, this.hide);
+        this.audio.flex().relative(this.hide).y(40).wh(80, 100);
+        this.audioShift.flex().relative(this.audio).y(25).w(1F);
+
+        this.configOptions.add(this.title, this.startCommand, this.stopCommand, this.loops, this.disableStates, this.hide, this.audio, this.audioShift);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) ->
@@ -418,11 +429,17 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.loops.toggled(this.location.getScene().loops);
         this.attach.setEnabled(false);
 
+        this.audio.clear();
+        this.audio.add(ClientProxy.audio.files.keySet());
+        this.audio.sort();
+        this.audio.setCurrent(this.location.getScene().audio);
+        this.audioShift.setValue(this.location.getScene().audioShift);
+
         if (this.mc != null && this.mc.player != null)
         {
             ItemStack stack = this.mc.player.getHeldItemMainhand();
 
-            this.attach.setEnabled(!this.location.isEmpty() && stack != null && stack.getItem() instanceof ItemPlayback);
+            this.attach.setEnabled(!this.location.isEmpty() && stack.getItem() instanceof ItemPlayback);
         }
 
         if (this.location.isDirector())

@@ -5,8 +5,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.CommonProxy;
+import mchorse.blockbuster.audio.AudioState;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.network.Dispatcher;
+import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.network.common.recording.PacketPlayback;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.RecordUtils;
@@ -26,9 +28,11 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketClientSettings;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.io.IOException;
@@ -87,6 +91,16 @@ public class Scene
 	 */
 	public boolean loops;
 
+	/**
+	 * Audio voice line that should be used for this scene for syncing
+	 */
+	public String audio = "";
+
+	/**
+	 * Audio shift
+	 */
+	public int audioShift;
+
 	/* Runtime properties */
 
 	/**
@@ -114,6 +128,11 @@ public class Scene
 	 * This tick used for checking if actors still playing
 	 */
 	private int tick = 0;
+
+	/**
+	 * Whether this scene gets recorded
+	 */
+	private boolean wasRecording;
 
 	/**
 	 * World instance
@@ -218,7 +237,7 @@ public class Scene
 	/**
 	 * Check whether collected actors are still playing
 	 */
-	public boolean areActorsPlay()
+	public boolean areActorsFinished()
 	{
 		int count = 0;
 
@@ -254,9 +273,9 @@ public class Scene
 	 */
 	public void checkActors()
 	{
-		if (this.areActorsPlay() && !this.loops)
+		if (this.areActorsFinished() && !this.loops)
 		{
-			this.stopPlayback();
+			this.stopPlayback(false);
 		}
 	}
 
@@ -305,6 +324,9 @@ public class Scene
 		{
 			CommonProxy.damage.addDamageControl(this, firstActor);
 		}
+
+		this.sendAudio(AudioState.REWIND);
+		this.wasRecording = false;
 	}
 
 	/**
@@ -332,6 +354,8 @@ public class Scene
 
 		this.setPlaying(true);
 		this.sendCommand(this.startCommand);
+		this.sendAudio(AudioState.REWIND);
+		this.wasRecording = true;
 	}
 
 	/**
@@ -347,7 +371,7 @@ public class Scene
 
 		if (!this.actors.isEmpty())
 		{
-			this.stopPlayback();
+			this.stopPlayback(true);
 		}
 
 		for (Replay replay : this.replays)
@@ -392,10 +416,18 @@ public class Scene
 	}
 
 	/**
-	 * Force stop playback (except one actor)
+	 * Force stop playback
+	 *
+	 * @param triggered - true if it was caused by something, and false if it just ended playing
 	 */
-	public void stopPlayback()
+	public void stopPlayback(boolean triggered)
 	{
+		if (!triggered && !this.wasRecording || triggered)
+		{
+			this.sendAudio(AudioState.STOP);
+			this.wasRecording = false;
+		}
+
 		if (this.getWorld().isRemote || !this.playing)
 		{
 			return;
@@ -423,7 +455,7 @@ public class Scene
 	{
 		if (this.playing)
 		{
-			this.stopPlayback();
+			this.stopPlayback(true);
 		}
 		else
 		{
@@ -552,6 +584,8 @@ public class Scene
 		{
 			actor.pause();
 		}
+
+		this.sendAudio(AudioState.PAUSE);
 	}
 
 	/**
@@ -563,6 +597,8 @@ public class Scene
 		{
 			entry.getValue().resume(tick, entry.getKey());
 		}
+
+		this.sendAudio(AudioState.RESUME_SET, tick);
 	}
 
 	/**
@@ -581,6 +617,8 @@ public class Scene
 
 			entry.getValue().goTo(tick, actions, replay);
 		}
+
+		this.sendAudio(AudioState.SET, tick);
 	}
 
 	/**
@@ -588,7 +626,7 @@ public class Scene
 	 */
 	public void reload(int tick)
 	{
-		this.stopPlayback();
+		this.stopPlayback(true);
 		this.spawn(tick);
 	}
 
@@ -719,6 +757,32 @@ public class Scene
 		}
 	}
 
+	public void sendAudio(AudioState state)
+	{
+		this.sendAudio(state, 0);
+	}
+
+	public void sendAudio(AudioState state, int shift)
+	{
+		if (this.audio == null || this.audio.isEmpty())
+		{
+			return;
+		}
+
+		PacketAudio packet = new PacketAudio(this.audio, state, shift);
+		PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+
+		for (String username : players.getOnlinePlayerNames())
+		{
+			EntityPlayerMP player = players.getPlayerByUsername(username);
+
+			if (player != null)
+			{
+				Dispatcher.sendTo(packet, player);
+			}
+		}
+	}
+
 	public void copy(Scene scene)
 	{
 		this.replays.clear();
@@ -728,6 +792,9 @@ public class Scene
 		this.title = scene.title;
 		this.startCommand = scene.startCommand;
 		this.stopCommand = scene.stopCommand;
+
+		this.audio = scene.audio;
+		this.audioShift = scene.audioShift;
 	}
 
 	/* NBT methods */
@@ -750,6 +817,9 @@ public class Scene
 		this.title = compound.getString("Title");
 		this.startCommand = compound.getString("StartCommand");
 		this.stopCommand = compound.getString("StopCommand");
+
+		this.audio = compound.getString("Audio");
+		this.audioShift = compound.getInteger("AudioShift");
 	}
 
 	public void toNBT(NBTTagCompound compound)
@@ -769,6 +839,9 @@ public class Scene
 		compound.setString("Title", this.title);
 		compound.setString("StartCommand", this.startCommand);
 		compound.setString("StopCommand", this.stopCommand);
+
+		compound.setString("Audio", this.audio);
+		compound.setInteger("AudioShift", this.audioShift);
 	}
 
 	/* ByteBuf methods */
@@ -790,6 +863,9 @@ public class Scene
 		this.title = ByteBufUtils.readUTF8String(buffer);
 		this.startCommand = ByteBufUtils.readUTF8String(buffer);
 		this.stopCommand = ByteBufUtils.readUTF8String(buffer);
+
+		this.audio = ByteBufUtils.readUTF8String(buffer);
+		this.audioShift = buffer.readInt();
 	}
 
 	public void toBuf(ByteBuf buffer)
@@ -806,5 +882,8 @@ public class Scene
 		ByteBufUtils.writeUTF8String(buffer, this.title);
 		ByteBufUtils.writeUTF8String(buffer, this.startCommand);
 		ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
+
+		ByteBufUtils.writeUTF8String(buffer, this.audio);
+		buffer.writeInt(this.audioShift);
 	}
 }

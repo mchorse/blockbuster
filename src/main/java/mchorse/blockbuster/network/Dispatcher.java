@@ -8,6 +8,7 @@ import mchorse.blockbuster.network.client.ClientHandlerModifyActor;
 import mchorse.blockbuster.network.client.ClientHandlerModifyModelBlock;
 import mchorse.blockbuster.network.client.ClientHandlerStructure;
 import mchorse.blockbuster.network.client.ClientHandlerStructureList;
+import mchorse.blockbuster.network.client.audio.ClientHandlerAudio;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunInfo;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunProjectile;
 import mchorse.blockbuster.network.client.guns.ClientHandlerGunShot;
@@ -32,6 +33,7 @@ import mchorse.blockbuster.network.common.PacketModifyActor;
 import mchorse.blockbuster.network.common.PacketModifyModelBlock;
 import mchorse.blockbuster.network.common.PacketPlaybackButton;
 import mchorse.blockbuster.network.common.PacketReloadModels;
+import mchorse.blockbuster.network.common.audio.PacketAudio;
 import mchorse.blockbuster.network.common.guns.PacketGunInfo;
 import mchorse.blockbuster.network.common.guns.PacketGunProjectile;
 import mchorse.blockbuster.network.common.guns.PacketGunShot;
@@ -181,6 +183,9 @@ public class Dispatcher
 
             /* Playback button */
             register(PacketPlaybackButton.class, ServerHandlerPlaybackButton.class, Side.SERVER);
+
+            /* Audio */
+            register(PacketAudio.class, ClientHandlerAudio.class, Side.CLIENT);
 
             CameraHandler.registerMessages();
         }

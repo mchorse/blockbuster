@@ -81,7 +81,7 @@ public class CommandDirector extends CommandBase
                 return;
             }
 
-            tile.director.stopPlayback();
+            tile.director.stopPlayback(true);
             L10n.success(sender, stop, args[1], args[2], args[3]);
         }
         else if (action.equals("loop") && args.length >= 5)

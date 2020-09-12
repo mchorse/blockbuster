@@ -79,7 +79,7 @@ public class CommandScene extends CommandBase
                 return;
             }
 
-            scene.stopPlayback();
+            scene.stopPlayback(true);
             L10n.success(sender, stop, name);
         }
         else if (action.equals("loop") && args.length >= 2)

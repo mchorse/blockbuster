@@ -23,7 +23,7 @@ public class ServerHandlerScenePlay extends ServerMessageHandler<PacketScenePlay
         }
         else if (message.isStop())
         {
-            scene.stopPlayback();
+            scene.stopPlayback(true);
         }
         else if (message.isPause())
         {

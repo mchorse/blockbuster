@@ -200,7 +200,7 @@ public class TileEntityDirector extends TileEntityFlowerPot implements ITickable
                 }
                 else
                 {
-                    TileEntityDirector.this.director.stopPlayback();
+                    TileEntityDirector.this.director.stopPlayback(true);
                 }
 
                 replay.apply(player);
