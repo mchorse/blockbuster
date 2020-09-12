@@ -62,7 +62,7 @@ public class AudioLibrary
 				Waveform waveform = new Waveform();
 				waveform.populate(wave, 20, 40);
 
-				this.files.put(name, new AudioFile(player, waveform, lastModified));
+				this.files.put(name, new AudioFile(name + ".wav", player, waveform, lastModified));
 			}
 			catch (Exception e)
 			{

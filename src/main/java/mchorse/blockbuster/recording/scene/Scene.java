@@ -769,7 +769,7 @@ public class Scene
 			return;
 		}
 
-		PacketAudio packet = new PacketAudio(this.audio, state, shift);
+		PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
 		PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
 		for (String username : players.getOnlinePlayerNames())

@@ -336,7 +336,7 @@ public class CameraHandler
 
         GuiDrawable drawable = new GuiDrawable((context) ->
         {
-            AudioRenderer.renderAll(editor.root.area.x(0.25F), editor.timeline.area.y - 34, editor.root.area.w / 2, 24, context.screen.width, context.screen.height, true);
+            AudioRenderer.renderAll(editor.root.area.x(0.25F), editor.timeline.area.y - 39, editor.root.area.w / 2, 24, context.screen.width, context.screen.height, true);
         });
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
