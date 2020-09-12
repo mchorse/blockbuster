@@ -60,7 +60,7 @@ public class AudioLibrary
 
 				WavePlayer player = new WavePlayer().initialize(wave);
 				Waveform waveform = new Waveform();
-				waveform.populate(wave, 10, 40);
+				waveform.populate(wave, 20, 40);
 
 				this.files.put(name, new AudioFile(player, waveform, lastModified));
 			}

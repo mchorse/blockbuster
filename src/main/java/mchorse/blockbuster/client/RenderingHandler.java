@@ -2,6 +2,8 @@ package mchorse.blockbuster.client;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.audio.AudioFile;
+import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
 import mchorse.blockbuster.client.render.tileentity.TileEntityGunItemStackRenderer;
@@ -220,7 +222,15 @@ public class RenderingHandler
 
         if (event.getType() == RenderGameOverlayEvent.ElementType.ALL)
         {
-            this.overlay.draw(resolution.getScaledWidth(), resolution.getScaledHeight());
+            int w = resolution.getScaledWidth();
+            int h = resolution.getScaledHeight();
+
+            this.overlay.draw(w, h);
+
+            if (Minecraft.getMinecraft().currentScreen == null)
+            {
+                AudioRenderer.renderAll(w / 4, h / 2 + h / 4, w / 2, 24, w, h, false);
+            }
         }
     }
 

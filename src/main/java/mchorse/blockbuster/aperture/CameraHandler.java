@@ -15,6 +15,7 @@ import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
+import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.dashboard.GuiBlockbusterPanels;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.common.item.ItemPlayback;
@@ -27,6 +28,7 @@ import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiIconElement;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
+import mchorse.mclib.client.gui.framework.elements.utils.GuiDrawable;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Area;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -51,7 +53,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Camera handler
@@ -333,6 +334,11 @@ public class CameraHandler
             refresh.accept(b);
         });
 
+        GuiDrawable drawable = new GuiDrawable((context) ->
+        {
+            AudioRenderer.renderAll(editor.root.area.x(0.25F), editor.timeline.area.y - 34, editor.root.area.w / 2, 24, context.screen.width, context.screen.height, true);
+        });
+
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
         IKey toggleEditor = IKey.lang("blockbuster.gui.aperture.keys.toggle_editor");
         IKey detachScene = IKey.lang("blockbuster.gui.aperture.keys.detach_scene");
@@ -355,7 +361,7 @@ public class CameraHandler
 
         editor.top.remove(editor.timeline);
         cameraEditorElements = new GuiElement(mc);
-        cameraEditorElements.add(editor.timeline, toggle, open, editorElement);
+        cameraEditorElements.add(drawable, editor.timeline, toggle, open, editorElement);
 
         editor.top.add(cameraEditorElements);
         refresh.accept(toggle);
