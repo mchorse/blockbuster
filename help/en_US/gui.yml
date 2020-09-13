@@ -76,6 +76,7 @@ blockbuster.gui:
         audio: Audio track
         audio_tooltip: Pick an audio track which will be used for syncing of the audio with this scene
         audio_shift: How much audio should be shifted, i.e. shortened, in seconds.
+        open_audio_folder: Open folder with audio tracks
         
         id: Recording ID
         name: Name tag
@@ -104,6 +105,7 @@ blockbuster.gui:
             category: Scenes
 
             toggle_list: Toggle scenes list
+            toggle_options: Toggle general options
 
     scenes:
         title: Scenes

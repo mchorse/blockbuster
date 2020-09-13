@@ -34,6 +34,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiLabel;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
 import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
@@ -80,6 +81,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
     public GuiStringListElement audio;
     public GuiTrackpadElement audioShift;
+    public GuiIconElement openAudioFolder;
 
     /* Replay fields */
     public GuiTextElement id;
@@ -158,6 +160,8 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
         this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.floatValue());
         this.audioShift.limit(0).tooltip(IKey.lang("blockbuster.gui.director.audio_shift"));
+        this.openAudioFolder = new GuiIconElement(mc, Icons.FOLDER, (b) -> GuiUtils.openWebLink(ClientProxy.audio.folder.toURI()));
+        this.openAudioFolder.tooltip(IKey.lang("blockbuster.gui.director.open_audio_folder"));
 
         this.title.flex().set(120, 50, 0, 20).relative(this.area).w(1, -130);
         this.startCommand.flex().set(120, 90, 0, 20).relative(this.area).w(1, -130);
@@ -165,6 +169,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
 
         this.audio.flex().relative(this).xy(10, 50).w(100).hTo(this.stopCommand.area, 1F);
         this.audioShift.flex().relative(this.audio).y(1F, 5).w(1F);
+        this.openAudioFolder.flex().relative(this.audio).x(1F, -16).y(-16).wh(16, 16);
 
         GuiElement row = Elements.row(mc, 5, 0, 20, this.loops, this.disableStates, this.hide);
 
@@ -173,7 +178,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.disableStates.flex().h(20);
         this.hide.flex().h(20);
 
-        this.configOptions.add(this.title, this.startCommand, this.stopCommand, row, this.audio, this.audioShift);
+        this.configOptions.add(this.title, this.startCommand, this.stopCommand, row, this.audio, this.audioShift, this.openAudioFolder);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) ->
@@ -270,6 +275,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.scenes.setVisible(false);
 
         this.keys().register(IKey.lang("blockbuster.gui.director.keys.toggle_list"), Keyboard.KEY_N, () -> toggleScenes.clickItself(GuiBase.getCurrent())).category(category);
+        this.keys().register(IKey.lang("blockbuster.gui.director.keys.toggle_options"), Keyboard.KEY_O, () -> toggle.clickItself(GuiBase.getCurrent())).category(category);
     }
 
     public SceneLocation getLocation()
