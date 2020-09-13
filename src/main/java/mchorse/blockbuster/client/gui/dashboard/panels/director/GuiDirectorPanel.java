@@ -154,7 +154,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.disableStates = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.disable_states"), false, (b) -> this.location.getDirector().disableStates = b.isToggled());
         this.hide = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.isToggled());
 
-        this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0));
+        this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0).contains("(") ? "" : value.get(0));
         this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
         this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.floatValue());
         this.audioShift.limit(0).tooltip(IKey.lang("blockbuster.gui.director.audio_shift"));
@@ -435,9 +435,14 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.attach.setEnabled(false);
 
         this.audio.clear();
-        this.audio.add(ClientProxy.audio.files.keySet());
+        this.audio.add("(none)");
+        this.audio.add(ClientProxy.audio.getFileNames());
         this.audio.sort();
-        this.audio.setCurrent(this.location.getScene().audio);
+
+        String audio = this.location.getScene().audio;
+
+        this.audio.setCurrent(audio == null || audio.isEmpty() ? "(none)" : audio);
+
         this.audioShift.setValue(this.location.getScene().audioShift);
 
         if (this.mc != null && this.mc.player != null)

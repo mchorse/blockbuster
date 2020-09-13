@@ -135,6 +135,11 @@ public class Scene
 	private boolean wasRecording;
 
 	/**
+	 * Whether it's paused
+	 */
+	private boolean paused;
+
+	/**
 	 * World instance
 	 */
 	private World world;
@@ -227,7 +232,7 @@ public class Scene
 			}
 		}
 
-		if (this.playing)
+		if (this.playing && !this.paused)
 		{
 			if (this.tick % 4 == 0)
 			{
@@ -331,6 +336,7 @@ public class Scene
 
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = false;
+		this.paused = false;
 		this.tick = 0;
 	}
 
@@ -361,6 +367,7 @@ public class Scene
 		this.sendCommand(this.startCommand);
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = true;
+		this.paused = false;
 		this.tick = 0;
 	}
 
@@ -597,6 +604,7 @@ public class Scene
 		}
 
 		this.sendAudio(AudioState.PAUSE);
+		this.paused = true;
 	}
 
 	/**
@@ -615,6 +623,7 @@ public class Scene
 		}
 
 		this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
+		this.paused = false;
 	}
 
 	/**

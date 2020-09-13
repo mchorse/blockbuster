@@ -2,6 +2,7 @@ package mchorse.blockbuster.client;
 
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
+import mchorse.blockbuster.aperture.CameraHandler;
 import mchorse.blockbuster.audio.AudioFile;
 import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
@@ -227,7 +228,7 @@ public class RenderingHandler
 
             this.overlay.draw(w, h);
 
-            if (Minecraft.getMinecraft().currentScreen == null)
+            if (!CameraHandler.isCameraEditorOpen())
             {
                 AudioRenderer.renderAll(w / 4, h / 2 + h / 4, w / 2, 24, w, h, false);
             }

@@ -1,5 +1,6 @@
 package mchorse.blockbuster.client.gui.dashboard;
 
+import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.client.gui.dashboard.panels.GuiTextureManagerPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlockPanel;
@@ -89,6 +90,7 @@ public class GuiBlockbusterPanels
     {
         GuiModelBlockPanel.lastBlocks.clear();
         GuiDirectorPanel.lastBlocks.clear();
+        ClientProxy.audio.reset();
 
         this.directorPanel = null;
         this.modelPanel = null;

@@ -16,7 +16,7 @@ public class AudioRenderer
 	{
 		for (AudioFile file : ClientProxy.audio.files.values())
 		{
-			if (file.player.isPlaying() || (paused && file.player.isPaused()))
+			if (!file.isEmpty() && !file.player.isStopped())
 			{
 				AudioRenderer.renderWaveform(file, x, y, w, h, sw, sh);
 
@@ -27,6 +27,11 @@ public class AudioRenderer
 
 	public static void renderWaveform(AudioFile file, int x, int y, int w, int h, int sw, int sh)
 	{
+		if (file == null || file.isEmpty())
+		{
+			return;
+		}
+
 		final float brightness = 0.45F;
 
 		/* Draw background */

@@ -7,7 +7,10 @@ import mchorse.mclib.utils.wav.Waveform;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AudioLibrary
@@ -21,14 +24,16 @@ public class AudioLibrary
 		this.folder.mkdirs();
 	}
 
-	public void reload()
+	public List<File> getFiles()
 	{
 		File[] files = this.folder.listFiles();
 
 		if (files == null)
 		{
-			return;
+			return Collections.emptyList();
 		}
+
+		List<File> list = new ArrayList<File>();
 
 		for (File file : files)
 		{
@@ -37,25 +42,34 @@ public class AudioLibrary
 				continue;
 			}
 
-			String name = file.getName();
-			long lastModified = file.lastModified();
-
-			name = name.substring(0, name.length() - 4);
-
-			AudioFile last = this.files.get(name);
-
-			if (last != null && last.update >= lastModified)
-			{
-				continue;
-			}
-
-			this.load(name, file);
+			list.add(file);
 		}
+
+		return list;
 	}
 
-	private void load(String name, File file)
+	public List<String> getFileNames()
 	{
-		long lastModified = file.lastModified();
+		List<String> list = new ArrayList<String>();
+
+		for (File file : this.getFiles())
+		{
+			String name = file.getName();
+
+			list.add(name.substring(0, name.length() - 4));
+		}
+
+		return list;
+	}
+
+	private AudioFile load(String name, File file)
+	{
+		if (!file.isFile())
+		{
+			return null;
+		}
+
+		AudioFile audio;
 
 		try
 		{
@@ -70,19 +84,31 @@ public class AudioLibrary
 			Waveform waveform = new Waveform();
 			waveform.populate(wave, 20, 40);
 
-			this.files.put(name, new AudioFile(name + ".wav", player, waveform, lastModified));
+			audio = new AudioFile(name + ".wav", file, player, waveform, file.lastModified());
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+
+			/* Empty */
+			audio = new AudioFile(name + ".wav", file, null, null, file.lastModified());
 		}
+
+		this.files.put(name, audio);
+
+		return audio;
 	}
 
 	public boolean play(String audio, AudioState state, int shift)
 	{
 		AudioFile file = this.files.get(audio);
 
-		if (file == null)
+		if (file == null || file.canBeUpdated())
+		{
+			file = this.load(audio, new File(this.folder, audio + ".wav"));
+		}
+
+		if (file == null || file.isEmpty())
 		{
 			return false;
 		}
@@ -130,5 +156,15 @@ public class AudioLibrary
 		}
 
 		return true;
+	}
+
+	public void reset()
+	{
+		for (AudioFile file : this.files.values())
+		{
+			file.delete();
+		}
+
+		this.files.clear();
 	}
 }
