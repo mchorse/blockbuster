@@ -72,6 +72,10 @@ blockbuster.gui:
         loops: Loops
         disable_states: Disable states
         hide: Hide during playback
+
+        audio: Audio track
+        audio_tooltip: Pick an audio track which will be used for syncing of the audio with this scene
+        audio_shift: How much audio should be shifted, i.e. shortened, in seconds.
         
         id: Recording ID
         name: Name tag

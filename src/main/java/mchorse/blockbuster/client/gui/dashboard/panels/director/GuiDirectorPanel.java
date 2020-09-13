@@ -155,20 +155,25 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         this.hide = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.director.hide"), false, (b) -> this.location.getDirector().hide = b.isToggled());
 
         this.audio = new GuiStringListElement(mc, (value) -> this.location.getScene().audio = value.get(0));
-        this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.intValue());
-        this.audioShift.limit(0).integer();
+        this.audio.background(0x88000000).tooltip(IKey.lang("blockbuster.gui.director.audio_tooltip"), Direction.RIGHT);
+        this.audioShift = new GuiTrackpadElement(mc, (value) -> this.location.getScene().audioShift = value.floatValue());
+        this.audioShift.limit(0).tooltip(IKey.lang("blockbuster.gui.director.audio_shift"));
 
-        this.title.flex().set(10, 50, 0, 20).relative(this.area).w(1, -20);
-        this.startCommand.flex().set(10, 90, 0, 20).relative(this.area).w(1, -20);
-        this.stopCommand.flex().set(10, 130, 0, 20).relative(this.area).w(1, -20);
-        this.loops.flex().set(0, 30, 60, 11).relative(this.stopCommand.resizer());
-        this.disableStates.flex().set(0, 16, 60, 11).relative(this.loops.resizer());
-        this.hide.flex().set(0, 16, 60, 11).relative(this.disableStates.resizer());
+        this.title.flex().set(120, 50, 0, 20).relative(this.area).w(1, -130);
+        this.startCommand.flex().set(120, 90, 0, 20).relative(this.area).w(1, -130);
+        this.stopCommand.flex().set(120, 130, 0, 20).relative(this.area).w(1, -130);
 
-        this.audio.flex().relative(this.hide).y(40).wh(80, 100);
-        this.audioShift.flex().relative(this.audio).y(25).w(1F);
+        this.audio.flex().relative(this).xy(10, 50).w(100).hTo(this.stopCommand.area, 1F);
+        this.audioShift.flex().relative(this.audio).y(1F, 5).w(1F);
 
-        this.configOptions.add(this.title, this.startCommand, this.stopCommand, this.loops, this.disableStates, this.hide, this.audio, this.audioShift);
+        GuiElement row = Elements.row(mc, 5, 0, 20, this.loops, this.disableStates, this.hide);
+
+        row.flex().relative(this.stopCommand).y(25).w(1F);
+        this.loops.flex().h(20);
+        this.disableStates.flex().h(20);
+        this.hide.flex().h(20);
+
+        this.configOptions.add(this.title, this.startCommand, this.stopCommand, row, this.audio, this.audioShift);
 
         /* Replay options */
         this.id = new GuiTextElement(mc, 120, (str) ->
@@ -696,6 +701,7 @@ public class GuiDirectorPanel extends GuiBlockbusterPanel
         {
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.config"), this.area.x + 10, this.area.y + 10, 0xffffff);
 
+            this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.audio"), this.audio.area.x, this.audio.area.y - 12, 0xcccccc);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.start_command"), this.startCommand.area.x, this.startCommand.area.y - 12, 0xcccccc);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.stop_command"), this.stopCommand.area.x, this.stopCommand.area.y - 12, 0xcccccc);
             this.font.drawStringWithShadow(I18n.format("blockbuster.gui.director.display_title"), this.title.area.x, this.title.area.y - 12, 0xcccccc);

@@ -2,13 +2,12 @@ package mchorse.blockbuster.audio;
 
 import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
+import mchorse.mclib.utils.wav.Waveform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.nio.charset.MalformedInputException;
 
 @SideOnly(Side.CLIENT)
 public class AudioRenderer
@@ -38,13 +37,16 @@ public class AudioRenderer
 
 		GuiDraw.scissor(x + 2, y + 2, w - 4, h - 4, sw, sh);
 
-		if (!file.waveform.isCreated())
+		Waveform wave = file.waveform;
+
+		if (!wave.isCreated())
 		{
-			file.waveform.render();
+			wave.render();
 		}
 
-		int offset = (int) (file.player.getPlaybackPosition() * 20 - 0.25F);
+		int offset = (int) (file.player.getPlaybackPosition() * wave.getPixelsPerSecond() - 0.25F);
 		int half = (w - 2) / 2;
+		int ww = file.waveform.getWidth();
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableTexture2D();
@@ -56,33 +58,33 @@ public class AudioRenderer
 		{
 			if (offset != 0)
 			{
-				GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, file.waveform.getWidth(), 20);
+				GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, ww, h);
 
 				GlStateManager.color(brightness, brightness, brightness);
-				GuiDraw.drawBillboard(x + 1 + half - offset, y + 1, 0, 0, offset, h, file.waveform.getWidth(), 20);
+				GuiDraw.drawBillboard(x + 1 + half - offset, y + 1, 0, 0, offset, h, ww, h);
 				GlStateManager.color(1, 1, 1);
 			}
 			else
 			{
-				GuiDraw.drawBillboard(x + 1 + (half - offset), y + 1, 0, 0, w, h, file.waveform.getWidth(), 20);
+				GuiDraw.drawBillboard(x + 1 + half, y + 1, 0, 0, w, h, ww, h);
 			}
 		}
-		else if (offset > file.waveform.getWidth() - half)
+		else if (offset > ww - half)
 		{
-			int diff = offset - (file.waveform.getWidth() - half);
+			int diff = offset - (ww - half);
 
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - diff - 3, h, file.waveform.getWidth(), 20);
+			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - diff - 3, h, ww, h);
 
 			GlStateManager.color(brightness, brightness, brightness);
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0,  half, h, file.waveform.getWidth(), 20);
+			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0,  half, h, ww, h);
 			GlStateManager.color(1, 1, 1);
 		}
 		else
 		{
-			GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, file.waveform.getWidth(), 20);
+			GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, ww, h);
 
 			GlStateManager.color(brightness, brightness, brightness);
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - half - 1, h, file.waveform.getWidth(), 20);
+			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - half - 1, h, ww, h);
 			GlStateManager.color(1, 1, 1);
 		}
 

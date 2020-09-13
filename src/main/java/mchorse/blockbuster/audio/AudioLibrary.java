@@ -49,25 +49,32 @@ public class AudioLibrary
 				continue;
 			}
 
-			try
+			this.load(name, file);
+		}
+	}
+
+	private void load(String name, File file)
+	{
+		long lastModified = file.lastModified();
+
+		try
+		{
+			Wave wave = new WaveReader().read(new FileInputStream(file));
+
+			if (wave.getBytesPerSample() > 2)
 			{
-				Wave wave = new WaveReader().read(new FileInputStream(file));
-
-				if (wave.getBytesPerSample() > 2)
-				{
-					wave = wave.convertTo16();
-				}
-
-				WavePlayer player = new WavePlayer().initialize(wave);
-				Waveform waveform = new Waveform();
-				waveform.populate(wave, 20, 40);
-
-				this.files.put(name, new AudioFile(name + ".wav", player, waveform, lastModified));
+				wave = wave.convertTo16();
 			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+
+			WavePlayer player = new WavePlayer().initialize(wave);
+			Waveform waveform = new Waveform();
+			waveform.populate(wave, 20, 40);
+
+			this.files.put(name, new AudioFile(name + ".wav", player, waveform, lastModified));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 
@@ -93,6 +100,16 @@ public class AudioLibrary
 		else if (state == AudioState.PAUSE)
 		{
 			player.pause();
+		}
+		else if (state == AudioState.PAUSE_SET)
+		{
+			if (player.isStopped())
+			{
+				player.play();
+			}
+
+			player.pause();
+			player.setPlaybackPosition(seconds);
 		}
 		else if (state == AudioState.RESUME)
 		{

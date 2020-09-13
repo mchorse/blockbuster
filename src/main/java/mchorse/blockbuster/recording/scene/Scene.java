@@ -99,7 +99,7 @@ public class Scene
 	/**
 	 * Audio shift
 	 */
-	public int audioShift;
+	public float audioShift;
 
 	/* Runtime properties */
 
@@ -227,10 +227,14 @@ public class Scene
 			}
 		}
 
-		if (this.tick-- == 0)
+		if (this.playing)
 		{
-			this.checkActors();
-			this.tick = 4;
+			if (this.tick % 4 == 0)
+			{
+				this.checkActors();
+			}
+
+			this.tick++;
 		}
 	}
 
@@ -327,6 +331,7 @@ public class Scene
 
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = false;
+		this.tick = 0;
 	}
 
 	/**
@@ -356,6 +361,7 @@ public class Scene
 		this.sendCommand(this.startCommand);
 		this.sendAudio(AudioState.REWIND);
 		this.wasRecording = true;
+		this.tick = 0;
 	}
 
 	/**
@@ -412,6 +418,9 @@ public class Scene
 			j++;
 		}
 
+		this.sendAudio(AudioState.PAUSE_SET, tick);
+		this.tick = tick;
+
 		return true;
 	}
 
@@ -432,6 +441,8 @@ public class Scene
 		{
 			return;
 		}
+
+		this.tick = 0;
 
 		for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
 		{
@@ -593,12 +604,17 @@ public class Scene
 	 */
 	public void resume(int tick)
 	{
+		if (tick >= 0)
+		{
+			this.tick = tick;
+		}
+
 		for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
 		{
 			entry.getValue().resume(tick, entry.getKey());
 		}
 
-		this.sendAudio(AudioState.RESUME_SET, tick);
+		this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
 	}
 
 	/**
@@ -606,6 +622,8 @@ public class Scene
 	 */
 	public void goTo(int tick, boolean actions)
 	{
+		this.tick = tick;
+
 		for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
 		{
 			Replay replay = entry.getKey();
@@ -618,7 +636,7 @@ public class Scene
 			entry.getValue().goTo(tick, actions, replay);
 		}
 
-		this.sendAudio(AudioState.SET, tick);
+		this.sendAudio(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);
 	}
 
 	/**
@@ -769,7 +787,7 @@ public class Scene
 			return;
 		}
 
-		PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
+		PacketAudio packet = new PacketAudio(this.audio, state, (int) (this.audioShift * 20) + shift);
 		PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
 		for (String username : players.getOnlinePlayerNames())
@@ -819,7 +837,7 @@ public class Scene
 		this.stopCommand = compound.getString("StopCommand");
 
 		this.audio = compound.getString("Audio");
-		this.audioShift = compound.getInteger("AudioShift");
+		this.audioShift = compound.getFloat("AudioShift");
 	}
 
 	public void toNBT(NBTTagCompound compound)
@@ -841,7 +859,7 @@ public class Scene
 		compound.setString("StopCommand", this.stopCommand);
 
 		compound.setString("Audio", this.audio);
-		compound.setInteger("AudioShift", this.audioShift);
+		compound.setFloat("AudioShift", this.audioShift);
 	}
 
 	/* ByteBuf methods */
@@ -865,7 +883,7 @@ public class Scene
 		this.stopCommand = ByteBufUtils.readUTF8String(buffer);
 
 		this.audio = ByteBufUtils.readUTF8String(buffer);
-		this.audioShift = buffer.readInt();
+		this.audioShift = buffer.readFloat();
 	}
 
 	public void toBuf(ByteBuf buffer)
@@ -884,6 +902,6 @@ public class Scene
 		ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
 
 		ByteBufUtils.writeUTF8String(buffer, this.audio);
-		buffer.writeInt(this.audioShift);
+		buffer.writeFloat(this.audioShift);
 	}
 }
