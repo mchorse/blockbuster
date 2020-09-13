@@ -4,11 +4,14 @@ import mchorse.aperture.ClientProxy;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.client.gui.config.GuiAbstractConfigOptions;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.aperture.network.common.PacketAudioShift;
+import mchorse.blockbuster.client.gui.dashboard.panels.director.GuiDirectorPanel;
 import mchorse.blockbuster.network.Dispatcher;
 import mchorse.blockbuster.network.common.scene.sync.PacketScenePlay;
 import mchorse.blockbuster.recording.scene.SceneLocation;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,10 +20,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
 {
+    private static GuiDirectorConfigOptions instance;
+
     public GuiButtonElement detachScene;
     public GuiToggleElement actions;
     public GuiToggleElement reload;
     public GuiButtonElement reloadScene;
+    public GuiTrackpadElement audioShift;
+
+    public static GuiDirectorConfigOptions getInstance()
+    {
+        return instance;
+    }
 
     public GuiDirectorConfigOptions(Minecraft mc, GuiCameraEditor editor)
     {
@@ -57,7 +68,27 @@ public class GuiDirectorConfigOptions extends GuiAbstractConfigOptions
             }
         });
 
-        this.add(this.detachScene, this.reload, this.actions, this.reloadScene);
+        this.audioShift = new GuiTrackpadElement(mc, (value) ->
+        {
+            SceneLocation location = CameraHandler.get();
+
+            if (location != null)
+            {
+                Dispatcher.sendToServer(new PacketAudioShift(location, value.intValue()));
+
+                GuiDirectorPanel panel = mchorse.blockbuster.ClientProxy.panels.directorPanel;
+
+                if (panel.getLocation().equals(location))
+                {
+                    panel.getLocation().getScene().audioShift = value.intValue();
+                }
+            }
+        });
+        this.audioShift.limit(0).integer().tooltip(IKey.lang("blockbuster.gui.director.audio_shift"));
+
+        this.add(this.detachScene, this.reload, this.actions, this.reloadScene, this.audioShift);
+
+        instance = this;
     }
 
     @Override

@@ -10,9 +10,11 @@ import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerSceneLength;
+import mchorse.blockbuster.aperture.network.common.PacketAudioShift;
 import mchorse.blockbuster.aperture.network.common.PacketRequestLength;
 import mchorse.blockbuster.aperture.network.common.PacketRequestProfiles;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
+import mchorse.blockbuster.aperture.network.server.ServerHandlerAudioShift;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestLength;
 import mchorse.blockbuster.aperture.network.server.ServerHandlerRequestProfiles;
 import mchorse.blockbuster.audio.AudioRenderer;
@@ -128,6 +130,8 @@ public class CameraHandler
 
         Dispatcher.DISPATCHER.register(PacketRequestLength.class, ServerHandlerRequestLength.class, Side.SERVER);
         Dispatcher.DISPATCHER.register(PacketSceneLength.class, ClientHandlerSceneLength.class, Side.CLIENT);
+
+        Dispatcher.DISPATCHER.register(PacketAudioShift.class, ServerHandlerAudioShift.class, Side.SERVER);
     }
 
     @SideOnly(Side.CLIENT)

@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import java.util.Objects;
+
 /**
  * Scene location data class
  *
@@ -60,6 +62,11 @@ public class SceneLocation
 		return this.filename;
 	}
 
+	public int getType()
+	{
+		return this.isEmpty() ? 0 : (this.isDirector() ? 1 : 2);
+	}
+
 	public boolean isEmpty()
 	{
 		return this.scene == null;
@@ -75,7 +82,34 @@ public class SceneLocation
 		return this.position != null;
 	}
 
-	public SceneLocation empty()
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof SceneLocation)
+		{
+			SceneLocation location = (SceneLocation) obj;
+
+			if (this.getType() == location.getType())
+			{
+				if (this.isDirector())
+				{
+					return Objects.equals(this.position, location.position);
+				}
+				else if (this.isScene())
+				{
+					return Objects.equals(this.filename, location.filename);
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+
+		return super.equals(obj);
+	}
+
+	public SceneLocation copyEmpty()
 	{
 		if (this.isDirector())
 		{

@@ -3,6 +3,7 @@ package mchorse.blockbuster.aperture.network.client;
 import mchorse.aperture.ClientProxy;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.blockbuster.aperture.CameraHandler;
+import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.network.common.PacketSceneLength;
 import mchorse.mclib.network.ClientMessageHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -20,5 +21,7 @@ public class ClientHandlerSceneLength extends ClientMessageHandler<PacketSceneLe
         editor.maxScrub = message.length;
         editor.timeline.value = CameraHandler.tick;
         editor.updateValues();
+
+        GuiDirectorConfigOptions.getInstance().audioShift.setValue(message.shift);
     }
 }

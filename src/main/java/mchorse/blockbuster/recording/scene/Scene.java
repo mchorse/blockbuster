@@ -21,6 +21,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -99,7 +101,7 @@ public class Scene
 	/**
 	 * Audio shift
 	 */
-	public float audioShift;
+	public int audioShift;
 
 	/* Runtime properties */
 
@@ -164,6 +166,11 @@ public class Scene
 	public World getWorld()
 	{
 		return this.world;
+	}
+
+	public int getTick()
+	{
+		return this.tick;
 	}
 
 	/**
@@ -796,7 +803,7 @@ public class Scene
 			return;
 		}
 
-		PacketAudio packet = new PacketAudio(this.audio, state, (int) (this.audioShift * 20) + shift);
+		PacketAudio packet = new PacketAudio(this.audio, state, this.audioShift + shift);
 		PlayerList players = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 
 		for (String username : players.getOnlinePlayerNames())
@@ -846,7 +853,18 @@ public class Scene
 		this.stopCommand = compound.getString("StopCommand");
 
 		this.audio = compound.getString("Audio");
-		this.audioShift = compound.getFloat("AudioShift");
+
+		if (compound.hasKey("AudioShift"))
+		{
+			if (compound.getTag("AudioShift") instanceof NBTTagFloat)
+			{
+				this.audioShift = (int) (compound.getFloat("AudioShift") * 20);
+			}
+			else
+			{
+				this.audioShift = compound.getInteger("AudioShift");
+			}
+		}
 	}
 
 	public void toNBT(NBTTagCompound compound)
@@ -868,7 +886,7 @@ public class Scene
 		compound.setString("StopCommand", this.stopCommand);
 
 		compound.setString("Audio", this.audio);
-		compound.setFloat("AudioShift", this.audioShift);
+		compound.setInteger("AudioShift", this.audioShift);
 	}
 
 	/* ByteBuf methods */
@@ -892,7 +910,7 @@ public class Scene
 		this.stopCommand = ByteBufUtils.readUTF8String(buffer);
 
 		this.audio = ByteBufUtils.readUTF8String(buffer);
-		this.audioShift = buffer.readFloat();
+		this.audioShift = buffer.readInt();
 	}
 
 	public void toBuf(ByteBuf buffer)
@@ -911,6 +929,6 @@ public class Scene
 		ByteBufUtils.writeUTF8String(buffer, this.stopCommand);
 
 		ByteBufUtils.writeUTF8String(buffer, this.audio);
-		buffer.writeFloat(this.audioShift);
+		buffer.writeInt(this.audioShift);
 	}
 }
