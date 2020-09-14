@@ -33,6 +33,7 @@ public class AudioRenderer
 		}
 
 		final float brightness = 0.45F;
+		int half = w / 2;
 
 		/* Draw background */
 		GuiDraw.drawVerticalGradientRect(x + 2, y + 2, x + w - 2, y + h, 0x00000000, 0x88000000);
@@ -50,8 +51,7 @@ public class AudioRenderer
 		}
 
 		int offset = (int) (file.player.getPlaybackPosition() * wave.getPixelsPerSecond() - 0.25F);
-		int half = (w - 2) / 2;
-		int ww = file.waveform.getWidth();
+		int waveW = file.waveform.getWidth();
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableTexture2D();
@@ -59,37 +59,23 @@ public class AudioRenderer
 		GlStateManager.enableBlend();
 		GlStateManager.bindTexture(file.waveform.getTexture());
 
-		if (offset < half)
-		{
-			if (offset != 0)
-			{
-				GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, ww, h);
+		/* Draw the waveform */
+		int runningOffset = waveW - offset;
 
-				GlStateManager.color(brightness, brightness, brightness);
-				GuiDraw.drawBillboard(x + 1 + half - offset, y + 1, 0, 0, offset, h, ww, h);
-				GlStateManager.color(1, 1, 1);
-			}
-			else
-			{
-				GuiDraw.drawBillboard(x + 1 + half, y + 1, 0, 0, w, h, ww, h);
-			}
+		if (runningOffset > 0)
+		{
+			GuiDraw.drawBillboard(x + half, y, offset, 0, runningOffset, h, waveW, h);
 		}
-		else if (offset > ww - half)
-		{
-			int diff = offset - (ww - half);
 
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - diff - 3, h, ww, h);
+		/* Draw the passed waveform */
+		if (offset > 0)
+		{
+			int xx = offset > half ? x : x + half - offset;
+			int oo = offset > half ? offset - half : 0;
+			int ww = offset > half ? half : offset;
 
 			GlStateManager.color(brightness, brightness, brightness);
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0,  half, h, ww, h);
-			GlStateManager.color(1, 1, 1);
-		}
-		else
-		{
-			GuiDraw.drawBillboard(x + 1 + half, y + 1, offset, 0, w, h, ww, h);
-
-			GlStateManager.color(brightness, brightness, brightness);
-			GuiDraw.drawBillboard(x + 1, y + 1, offset - half, 0, w - half - 1, h, ww, h);
+			GuiDraw.drawBillboard(xx, y, oo, 0, ww, h, waveW, h);
 			GlStateManager.color(1, 1, 1);
 		}
 
