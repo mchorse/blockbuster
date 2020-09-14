@@ -40,4 +40,7 @@ blockbuster.config.comments:
         damage_control_distance: Radius of effect for damage control
 
     model_folders:
-        path: Absolut path to additional model Folder (on windows add the drive letter)
+        path: Absolute path to additional model Folder (on windows add the drive letter)
+
+    audio:
+        waveform_density: How many pixels of audio waveform should be shown per second

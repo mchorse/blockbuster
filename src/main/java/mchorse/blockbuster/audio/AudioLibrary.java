@@ -1,5 +1,6 @@
 package mchorse.blockbuster.audio;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.mclib.utils.wav.Wave;
 import mchorse.mclib.utils.wav.WavePlayer;
 import mchorse.mclib.utils.wav.WaveReader;
@@ -82,7 +83,7 @@ public class AudioLibrary
 
 			WavePlayer player = new WavePlayer().initialize(wave);
 			Waveform waveform = new Waveform();
-			waveform.populate(wave, 20, 40);
+			waveform.populate(wave, Blockbuster.audioWaveformDensity.get(), 40);
 
 			audio = new AudioFile(name + ".wav", file, player, waveform, file.lastModified());
 		}

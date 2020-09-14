@@ -180,6 +180,8 @@ public class Blockbuster
 
     public static ValueString modelFolderPath;
 
+    public static ValueInt audioWaveformDensity;
+
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
      * entities, blocks, etc.
@@ -246,6 +248,9 @@ public class Blockbuster
 
         /* Model Folder */
         modelFolderPath = builder.category("model_folders").getString("path", "");
+
+        /* Audio */
+        audioWaveformDensity = builder.category("audio").getInt("waveform_density", 20, 10, 100);
 
         event.modules.add(builder.build());
     }

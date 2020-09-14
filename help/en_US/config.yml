@@ -62,3 +62,9 @@ blockbuster.config:
         tooltip: Add additional model folders
 
         path: Additional Folder
+
+    audio:
+        title: Audio
+        tooltip: Options for in-game audio sync feature
+
+        waveform_density: Waveform density
