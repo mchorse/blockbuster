@@ -446,6 +446,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
                 if (i == 0)
                 {
+                    this.current = -1;
                     this.duration = entry.getDuration();
                     this.currentMorph.set(MorphUtils.copy(morph));
                 }

@@ -573,6 +573,11 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
                 this.animation.last = pose;
             }
         }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            this.parts.afterMerge(((IBodyPartProvider) morph).getBodyPart());
+        }
     }
 
     @Override
