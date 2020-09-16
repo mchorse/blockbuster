@@ -5,50 +5,36 @@ import mchorse.blockbuster_pack.morphs.ISyncableMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class PausedMorph <T extends AbstractMorph>
+public class PausedMorph
 {
 	public int offset = -1;
-	public T previous;
-	public Class<T> clazz;
+	public AbstractMorph previous;
 
 	public boolean isPaused()
 	{
 		return this.offset >= 0;
 	}
 
-	public void copy(PausedMorph<T> pause)
+	public void copy(PausedMorph pause)
 	{
 		this.offset = pause.offset;
 		this.previous = pause.previous;
-		this.clazz = pause.clazz;
 	}
 
-	public void set(AbstractMorph previous, Class<T> clazz, int offset)
+	public void set(AbstractMorph previous, int offset)
 	{
 		this.offset = offset;
-
-		if (previous != null && previous.getClass() == clazz)
-		{
-			this.previous = clazz.cast(previous);
-			this.clazz = clazz;
-		}
-		else
-		{
-			this.previous = null;
-			this.clazz = null;
-		}
+		this.previous = previous;
 	}
 
 	public void reset()
 	{
 		this.offset = -1;
 		this.previous = null;
-		this.clazz = null;
 	}
 
 	public void toNBT(NBTTagCompound tag)
@@ -64,7 +50,7 @@ public class PausedMorph <T extends AbstractMorph>
 		}
 	}
 
-	public void fromNBT(NBTTagCompound tag, Class<T> clazz)
+	public void fromNBT(NBTTagCompound tag)
 	{
 		this.reset();
 
@@ -74,12 +60,7 @@ public class PausedMorph <T extends AbstractMorph>
 
 			if (tag.hasKey("PausePrevious"))
 			{
-				AbstractMorph morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("PausePrevious"));
-
-				if (morph != null && morph.getClass() == clazz)
-				{
-					this.previous = clazz.cast(morph);
-				}
+				this.previous = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("PausePrevious"));
 			}
 		}
 	}

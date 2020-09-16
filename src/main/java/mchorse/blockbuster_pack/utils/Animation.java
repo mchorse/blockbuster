@@ -1,6 +1,7 @@
 package mchorse.blockbuster_pack.utils;
 
 import mchorse.mclib.utils.Interpolation;
+import mchorse.mclib.utils.MathUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class Animation
@@ -20,7 +21,7 @@ public class Animation
 
 	public float getFactor(float partialTicks)
 	{
-		return (this.progress + (this.paused ? 0 : partialTicks)) / (float) this.duration;
+		return MathUtils.clamp((this.progress + (this.paused ? 0 : partialTicks)) / (float) this.duration, 0, 1);
 	}
 
 	public void reset()

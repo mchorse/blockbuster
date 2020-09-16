@@ -1,11 +1,8 @@
 package mchorse.blockbuster_pack.morphs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.utils.mclib.BBIcons;
+import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -22,13 +19,17 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * Sequencer morph
  * 
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph implements IMorphProvider
+public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -65,11 +66,25 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      */
     public boolean random;
 
+    private PausedMorph pause = new PausedMorph();
+
     public SequencerMorph()
     {
         super();
 
         this.name = "sequencer";
+    }
+
+    @Override
+    public void pauseMorph(AbstractMorph previous, int offset)
+    {
+        this.pause.set(previous, offset);
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.pause.isPaused();
     }
 
     @Override
@@ -89,7 +104,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @SideOnly(Side.CLIENT)
     public void renderOnScreen(EntityPlayer player, int x, int y, float scale, float alpha)
     {
-        this.updateCycle(true);
+        this.updateCycle();
 
         if (this.morphs.isEmpty())
         {
@@ -109,7 +124,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        this.updateMorph(this.timer + partialTicks, true);
+        if (!this.isPaused())
+        {
+            this.updateMorph(this.timer + partialTicks);
+        }
 
         AbstractMorph morph = this.currentMorph.get();
 
@@ -136,7 +154,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @Override
     public void update(EntityLivingBase target)
     {
-        this.updateCycle(target.world.isRemote);
+        this.updateCycle();
 
         AbstractMorph morph = this.currentMorph.get();
 
@@ -149,9 +167,14 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     /**
      * Update the cycle timer 
      */
-    protected void updateCycle(boolean isRemote)
+    protected void updateCycle()
     {
-        this.updateMorph(this.timer, isRemote);
+        if (this.isPaused())
+        {
+            return;
+        }
+
+        this.updateMorph(this.timer);
         this.timer++;
     }
 
@@ -159,7 +182,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
      * Update the current morph, make sure that we have currently the 
      * correct morph.
      */
-    protected void updateMorph(float timer, boolean isRemote)
+    protected void updateMorph(float timer)
     {
         if (timer >= this.duration)
         {
@@ -178,14 +201,22 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
                 if (this.current >= size)
                 {
                     this.current = 0;
-                    this.timer = 0;
-                    this.duration = 0;
+
+                    if (!this.isPaused())
+                    {
+                        this.timer = 0;
+                        this.duration = 0;
+                    }
                 }
                 else if (this.current < 0)
                 {
                     this.current = size - 1;
-                    this.timer = 0;
-                    this.duration = 0;
+
+                    if (!this.isPaused())
+                    {
+                        this.timer = 0;
+                        this.duration = 0;
+                    }
                 }
             }
 
@@ -194,7 +225,28 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
                 SequenceEntry entry = this.morphs.get(this.current);
                 AbstractMorph morph = MorphUtils.copy(entry.morph);
 
-                this.currentMorph.set(morph);
+                if (this.isPaused())
+                {
+                    if (morph instanceof ISyncableMorph)
+                    {
+                        AbstractMorph previous = MorphUtils.copy(this.currentMorph.get());
+                        int offset = (int) (timer - this.duration);
+
+                        if (previous == null)
+                        {
+                            previous = this.pause.previous;
+                        }
+
+                        ((ISyncableMorph) morph).pauseMorph(previous, offset);
+                    }
+
+                    this.currentMorph.setDirect(morph);
+                }
+                else
+                {
+                    this.currentMorph.set(morph);
+                }
+
                 this.duration += entry.getDuration();
             }
 
@@ -204,7 +256,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
                 if (this.timer >= this.duration && !durationZero)
                 {
-                    this.updateMorph(this.timer, isRemote);
+                    this.updateMorph(this.timer);
                 }
             }
         }
@@ -238,6 +290,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
             this.timer = morph.timer;
             this.current = morph.current;
             this.duration = morph.duration;
+
+            this.pause.copy(morph.pause);
         }
     }
 
@@ -277,30 +331,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
     @Override
     public boolean canMerge(AbstractMorph morph)
     {
-        if (morph instanceof CustomMorph)
-        {
-            AbstractMorph current = this.currentMorph.get();
-
-            if (current instanceof CustomMorph)
-            {
-                CustomMorph customMorph = (CustomMorph) current;
-                CustomMorph custom = (CustomMorph) morph;
-
-                ModelPose pose = customMorph.getCurrentPose();
-
-                if (customMorph.animation.isInProgress() && pose != null)
-                {
-                    custom.animation.last = customMorph.animation.calculatePose(pose, 1).clone();
-                }
-                else
-                {
-                    custom.animation.last = pose;
-                }
-
-                return false;
-            }
-        }
-
         if (morph instanceof SequencerMorph)
         {
             SequencerMorph sequencer = (SequencerMorph) morph;
@@ -327,6 +357,13 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
         }
 
         return super.canMerge(morph);
+    }
+
+    @Override
+    public void afterMerge(AbstractMorph morph)
+    {
+        super.afterMerge(morph);
+        this.currentMorph.setDirect(morph);
     }
 
     @Override
@@ -372,6 +409,8 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
         if (this.reverse) tag.setBoolean("Reverse", this.reverse);
         if (this.random) tag.setBoolean("Random", this.random);
+
+        this.pause.toNBT(tag);
     }
 
     @Override
@@ -417,6 +456,18 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider
 
         if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
         if (tag.hasKey("Random")) this.random = tag.getBoolean("Random");
+
+        this.pause.fromNBT(tag);
+
+        if (this.isPaused())
+        {
+            this.current = -1;
+            this.currentMorph.setDirect(null);
+            this.duration = 0;
+            this.timer = this.pause.offset;
+
+            this.updateMorph(this.timer);
+        }
     }
 
     /**

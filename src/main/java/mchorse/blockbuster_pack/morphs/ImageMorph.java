@@ -7,6 +7,7 @@ import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -107,7 +108,7 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
 
-    private PausedMorph<ImageMorph> pause = new PausedMorph<ImageMorph>();
+    private PausedMorph pause = new PausedMorph();
 
     public ImageMorph()
     {
@@ -119,7 +120,13 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
     @Override
     public void pauseMorph(AbstractMorph previous, int offset)
     {
-        this.pause.set(previous, ImageMorph.class, offset);
+        if (previous instanceof IMorphProvider)
+        {
+            previous = ((IMorphProvider) previous).getMorph();
+        }
+
+        this.pause.set(previous, offset);
+        this.pause.applyAnimation(this.animation);
     }
 
     @Override
@@ -532,7 +539,7 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
         }
 
         this.animation.reset();
-        this.pause.fromNBT(tag, ImageMorph.class);
+        this.pause.fromNBT(tag);
         this.pause.applyAnimation(this.animation);
     }
 

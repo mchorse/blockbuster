@@ -15,8 +15,7 @@ import mchorse.blockbuster_pack.utils.Animation;
 import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
-import mchorse.metamorph.api.MorphManager;
-import mchorse.metamorph.api.MorphUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
@@ -118,7 +117,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
 
     private long lastUpdate;
 
-    private PausedMorph<CustomMorph> pause = new PausedMorph<CustomMorph>();
+    private PausedMorph pause = new PausedMorph();
 
     /**
      * Make hands true!
@@ -134,8 +133,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public void pauseMorph(AbstractMorph previous, int offset)
     {
-        this.pause.set(previous, CustomMorph.class, offset);
+        if (previous instanceof IMorphProvider)
+        {
+            previous = ((IMorphProvider) previous).getMorph();
+        }
+
+        this.pause.set(previous, offset);
         this.pause.recursivePausing(this);
+        this.pause.applyAnimation(this.animation);
     }
 
     @Override
@@ -484,15 +489,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public boolean canMerge(AbstractMorph morph)
     {
-        if (morph instanceof SequencerMorph)
-        {
-            SequencerMorph sequencer = (SequencerMorph) morph;
-
-            sequencer.currentMorph.setDirect(this);
-
-            return false;
-        }
-
         if (morph instanceof CustomMorph)
         {
             CustomMorph custom = (CustomMorph) morph;
@@ -521,7 +517,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             }
             else
             {
-                this.animation.ignored = custom.animation.ignored;
+                this.animation.ignored = true;
             }
 
             this.key = null;
@@ -544,6 +540,39 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         }
 
         return super.canMerge(morph);
+    }
+
+    @Override
+    public void afterMerge(AbstractMorph morph)
+    {
+        super.afterMerge(morph);
+
+        if (!(morph instanceof IMorphProvider))
+        {
+            return;
+        }
+
+        AbstractMorph destination = ((IMorphProvider) morph).getMorph();
+
+        if (destination instanceof CustomMorph)
+        {
+            CustomMorph dest = (CustomMorph) destination;
+
+            /* If the last pose is null, it might case a first cycle freeze.
+             * this should fix it. */
+            ModelPose pose = dest.getCurrentPose();
+
+            this.animation.progress = 0;
+
+            if (dest.animation.isInProgress() && pose != null)
+            {
+                this.animation.last = dest.animation.calculatePose(pose, 1).clone();
+            }
+            else
+            {
+                this.animation.last = pose;
+            }
+        }
     }
 
     @Override
@@ -706,7 +735,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
         }
 
-        this.pause.fromNBT(tag, CustomMorph.class);
+        this.pause.fromNBT(tag);
         this.pause.applyAnimation(this.animation);
     }
 
