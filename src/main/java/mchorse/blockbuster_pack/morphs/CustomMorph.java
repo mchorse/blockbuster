@@ -12,11 +12,13 @@ import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.utils.Animation;
+import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -115,8 +117,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     private String key;
 
     private long lastUpdate;
-    private int pause = -1;
-    private CustomMorph pausePrevious;
+
+    private PausedMorph<CustomMorph> pause = new PausedMorph<CustomMorph>();
 
     /**
      * Make hands true!
@@ -132,18 +134,14 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public void pauseMorph(AbstractMorph previous, int offset)
     {
-        if (previous instanceof CustomMorph)
-        {
-            this.pausePrevious = (CustomMorph) previous;
-        }
-
-        this.pause = offset;
+        this.pause.set(previous, CustomMorph.class, offset);
+        this.pause.recursivePausing(this);
     }
 
     @Override
     public boolean isPaused()
     {
-        return this.pause >= 0;
+        return this.pause.isPaused();
     }
 
     @Override
@@ -499,6 +497,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         {
             CustomMorph custom = (CustomMorph) morph;
 
+            this.pause.reset();
+
             /* Don't suddenly end the animation in progress, interpolate */
             if (!custom.animation.ignored)
             {
@@ -555,8 +555,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         this.parts.reset();
         this.animation.reset();
         this.scale = this.scaleGui = 1F;
-        this.pause = -1;
-        this.pausePrevious = null;
     }
 
     @Override
@@ -600,8 +598,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             this.model = morph.model;
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
-            this.pause = morph.pause;
-            this.pausePrevious = (CustomMorph) MorphUtils.copy(morph.pausePrevious);
+            this.pause.copy(morph.pause);
         }
     }
 
@@ -652,15 +649,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             tag.setTag("Animation", animation);
         }
 
-        if (this.pause >= 0)
-        {
-            tag.setInteger("Pause", this.pause);
-
-            if (this.pausePrevious != null)
-            {
-                tag.setTag("PausePrevious", this.pausePrevious.toNBT());
-            }
-        }
+        this.pause.toNBT(tag);
     }
 
     @Override
@@ -717,23 +706,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
         }
 
-        if (tag.hasKey("Pause"))
-        {
-            this.pause = tag.getInteger("Pause");
-            this.animation.pause();
-            this.animation.progress = this.pause;
-
-            if (tag.hasKey("PausePrevious"))
-            {
-                AbstractMorph morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("PausePrevious"));
-
-                if (morph instanceof CustomMorph)
-                {
-                    this.pausePrevious = (CustomMorph) morph;
-                    this.animation.last = this.pausePrevious.getCurrentPose();
-                }
-            }
-        }
+        this.pause.fromNBT(tag, CustomMorph.class);
+        this.pause.applyAnimation(this.animation);
     }
 
     /**

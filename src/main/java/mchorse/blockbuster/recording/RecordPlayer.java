@@ -189,6 +189,8 @@ public class RecordPlayer
 
         if (this.actor.isServerWorld())
         {
+            this.record.applyPreviousMorph(this.actor, replay, tick, false);
+
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), false, this.tick));
         }
     }
@@ -230,7 +232,7 @@ public class RecordPlayer
 
             if (tick != 0 && replay != null)
             {
-                this.record.applyPreviousMorph(this.actor, tick, replay);
+                this.record.applyPreviousMorph(this.actor, replay, tick, true);
             }
         }
 

@@ -3,6 +3,7 @@ package mchorse.blockbuster_pack.morphs;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.blockbuster_pack.utils.Animation;
+import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -35,7 +36,7 @@ import java.util.Objects;
  * 
  * This bad boy is basically replacement for Imaginary
  */
-public class ImageMorph extends AbstractMorph
+public class ImageMorph extends AbstractMorph implements ISyncableMorph
 {
     public static final Matrix4f matrix = new Matrix4f();
 
@@ -106,11 +107,25 @@ public class ImageMorph extends AbstractMorph
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
 
+    private PausedMorph<ImageMorph> pause = new PausedMorph<ImageMorph>();
+
     public ImageMorph()
     {
         super();
 
         this.name = "blockbuster.image";
+    }
+
+    @Override
+    public void pauseMorph(AbstractMorph previous, int offset)
+    {
+        this.pause.set(previous, ImageMorph.class, offset);
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.pause.isPaused();
     }
 
     @Override
@@ -381,6 +396,7 @@ public class ImageMorph extends AbstractMorph
             this.keying = morph.keying;
             this.animation.copy(morph.animation);
             this.animation.reset();
+            this.pause.copy(morph.pause);
         }
     }
 
@@ -417,6 +433,8 @@ public class ImageMorph extends AbstractMorph
         if (morph instanceof ImageMorph)
         {
             ImageMorph image = (ImageMorph) morph;
+
+            this.pause.reset();
 
             if (!image.animation.ignored)
             {
@@ -478,6 +496,8 @@ public class ImageMorph extends AbstractMorph
         {
             tag.setTag("Animation", animation);
         }
+
+        this.pause.toNBT(tag);
     }
 
     @Override
@@ -512,6 +532,8 @@ public class ImageMorph extends AbstractMorph
         }
 
         this.animation.reset();
+        this.pause.fromNBT(tag, ImageMorph.class);
+        this.pause.applyAnimation(this.animation);
     }
 
     public static class ImageAnimation extends Animation

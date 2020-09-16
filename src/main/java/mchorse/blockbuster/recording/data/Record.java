@@ -286,7 +286,7 @@ public class Record
     /**
      * Apply previous morph
      */
-    public void applyPreviousMorph(EntityLivingBase actor, int tick, Replay replay)
+    public void applyPreviousMorph(EntityLivingBase actor, Replay replay, int tick, boolean pause)
     {
         if (tick >= this.actions.size())
         {
@@ -300,11 +300,21 @@ public class Record
             MorphAction action = found.action;
             int diff = tick - found.tick;
 
-            found = this.seekMorphAction(found.tick - 1);
+            if (pause)
+            {
+                found = this.seekMorphAction(found.tick - 1);
+            }
 
             try
             {
-                action.applyWithOffset(actor, found == null ? replay.morph : found.action.morph, diff);
+                if (pause)
+                {
+                    action.applyWithOffset(actor, found == null ? replay.morph : found.action.morph, diff);
+                }
+                else
+                {
+                    action.apply(actor);
+                }
             }
             catch (Exception e)
             {
