@@ -36,6 +36,8 @@ import java.util.Map;
  */
 public class Record
 {
+    public static final FoundAction ACTION = new FoundAction();
+
     /**
      * Signature of the recording. If the first short of the record file isn't
      * this file, then the
@@ -249,13 +251,8 @@ public class Record
     /**
      * Seek the nearest morph action
      */
-    public void seekMorphAction(EntityLivingBase actor, int tick, Replay replay)
+    public FoundAction seekMorphAction(int tick)
     {
-        if (tick >= this.actions.size())
-        {
-            return;
-        }
-
         /* I hope it won't cause a lag...  */
         int threshold = 0;
 
@@ -274,23 +271,50 @@ public class Record
             {
                 if (action instanceof MorphAction)
                 {
-                    try
-                    {
-                        action.apply(actor);
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    ACTION.set(tick, (MorphAction) action);
 
-                    return;
+                    return ACTION;
                 }
             }
 
             tick--;
         }
 
-        replay.apply(actor);
+        return null;
+    }
+
+    /**
+     * Apply previous morph
+     */
+    public void applyPreviousMorph(EntityLivingBase actor, int tick, Replay replay)
+    {
+        if (tick >= this.actions.size())
+        {
+            return;
+        }
+
+        FoundAction found = this.seekMorphAction(tick);
+
+        if (found != null)
+        {
+            MorphAction action = found.action;
+            int diff = tick - found.tick;
+
+            found = this.seekMorphAction(found.tick - 1);
+
+            try
+            {
+                action.applyWithOffset(actor, found == null ? replay.morph : found.action.morph, diff);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            replay.apply(actor);
+        }
     }
 
     /**
@@ -761,5 +785,17 @@ public class Record
     {
         Collections.reverse(this.frames);
         Collections.reverse(this.actions);
+    }
+
+    public static class FoundAction
+    {
+        public int tick;
+        public MorphAction action;
+
+        public void set(int tick, MorphAction action)
+        {
+            this.tick = tick;
+            this.action = action;
+        }
     }
 }

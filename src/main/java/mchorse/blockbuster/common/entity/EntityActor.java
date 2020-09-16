@@ -13,6 +13,7 @@ import mchorse.blockbuster.network.common.recording.PacketSyncTick;
 import mchorse.blockbuster.recording.RecordPlayer;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.recording.data.Mode;
+import mchorse.blockbuster_pack.morphs.ISyncableMorph;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -420,7 +421,15 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        this.morph.set(morph);
+        if (morph instanceof ISyncableMorph && ((ISyncableMorph) morph).isPaused())
+        {
+            this.morph.setDirect(morph);
+        }
+        else
+        {
+            this.morph.set(morph);
+        }
+
         this.invisible = invisible;
 
         if (!this.world.isRemote && notify)

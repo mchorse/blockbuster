@@ -11,10 +11,16 @@ public class Animation
 	public Interpolation interp = Interpolation.LINEAR;
 
 	public int progress;
+	public boolean paused;
+
+	public void pause()
+	{
+		this.paused = true;
+	}
 
 	public float getFactor(float partialTicks)
 	{
-		return (this.progress + partialTicks) / (float) this.duration;
+		return (this.progress + (this.paused ? 0 : partialTicks)) / (float) this.duration;
 	}
 
 	public void reset()
@@ -34,6 +40,7 @@ public class Animation
 		this.duration = animation.duration;
 		this.interp = animation.interp;
 		this.ignored = animation.ignored;
+		this.paused = animation.paused;
 	}
 
 	@Override
@@ -54,7 +61,7 @@ public class Animation
 
 	public void update()
 	{
-		if (this.animates)
+		if (this.animates && !this.paused)
 		{
 			this.progress++;
 		}
@@ -62,7 +69,7 @@ public class Animation
 
 	public boolean isInProgress()
 	{
-		return this.animates && this.progress < this.duration;
+		return this.paused || (this.animates && this.progress < this.duration);
 	}
 
 	public NBTTagCompound toNBT()

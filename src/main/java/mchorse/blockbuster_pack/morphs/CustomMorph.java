@@ -14,6 +14,8 @@ import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
 import mchorse.blockbuster_pack.utils.Animation;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
+import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -45,7 +47,7 @@ import java.util.Map;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph implements IBodyPartProvider
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph
 {
     /**
      * Morph's model
@@ -113,6 +115,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
     private String key;
 
     private long lastUpdate;
+    private int pause = -1;
+    private CustomMorph pausePrevious;
 
     /**
      * Make hands true!
@@ -123,6 +127,23 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
 
         this.settings = this.settings.copy();
         this.settings.hands = true;
+    }
+
+    @Override
+    public void pauseMorph(AbstractMorph previous, int offset)
+    {
+        if (previous instanceof CustomMorph)
+        {
+            this.pausePrevious = (CustomMorph) previous;
+        }
+
+        this.pause = offset;
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.pause >= 0;
     }
 
     @Override
@@ -534,6 +555,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         this.parts.reset();
         this.animation.reset();
         this.scale = this.scaleGui = 1F;
+        this.pause = -1;
+        this.pausePrevious = null;
     }
 
     @Override
@@ -577,6 +600,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
             this.model = morph.model;
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
+            this.pause = morph.pause;
+            this.pausePrevious = (CustomMorph) MorphUtils.copy(morph.pausePrevious);
         }
     }
 
@@ -625,6 +650,16 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         if (!animation.hasNoTags())
         {
             tag.setTag("Animation", animation);
+        }
+
+        if (this.pause >= 0)
+        {
+            tag.setInteger("Pause", this.pause);
+
+            if (this.pausePrevious != null)
+            {
+                tag.setTag("PausePrevious", this.pausePrevious.toNBT());
+            }
         }
     }
 
@@ -680,6 +715,24 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider
         if (tag.hasKey("Animation"))
         {
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
+        }
+
+        if (tag.hasKey("Pause"))
+        {
+            this.pause = tag.getInteger("Pause");
+            this.animation.pause();
+            this.animation.progress = this.pause;
+
+            if (tag.hasKey("PausePrevious"))
+            {
+                AbstractMorph morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("PausePrevious"));
+
+                if (morph instanceof CustomMorph)
+                {
+                    this.pausePrevious = (CustomMorph) morph;
+                    this.animation.last = this.pausePrevious.getCurrentPose();
+                }
+            }
         }
     }
 

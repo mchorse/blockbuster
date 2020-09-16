@@ -230,7 +230,7 @@ public class RecordPlayer
 
             if (tick != 0 && replay != null)
             {
-                this.record.seekMorphAction(this.actor, tick, replay);
+                this.record.applyPreviousMorph(this.actor, tick, replay);
             }
         }
 

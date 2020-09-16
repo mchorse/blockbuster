@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.common.entity.EntityActor;
+import mchorse.blockbuster_pack.morphs.ISyncableMorph;
 import mchorse.metamorph.api.MorphAPI;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -43,6 +44,28 @@ public class MorphAction extends Action
             EntityActor act = (EntityActor) actor;
 
             act.morph.set(morph);
+            act.notifyPlayers();
+        }
+    }
+
+    public void applyWithOffset(EntityLivingBase actor, AbstractMorph previous, int offset)
+    {
+        AbstractMorph morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
+
+        if (morph instanceof ISyncableMorph)
+        {
+            ((ISyncableMorph) morph).pauseMorph(previous, offset);
+        }
+
+        if (actor instanceof EntityPlayer)
+        {
+            MorphAPI.morph((EntityPlayer) actor, morph, true);
+        }
+        else if (actor instanceof EntityActor)
+        {
+            EntityActor act = (EntityActor) actor;
+
+            act.morph.setDirect(morph);
             act.notifyPlayers();
         }
     }
