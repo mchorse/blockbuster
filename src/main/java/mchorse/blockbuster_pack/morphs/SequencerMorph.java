@@ -1,6 +1,5 @@
 package mchorse.blockbuster_pack.morphs;
 
-import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.metamorph.api.Morph;
@@ -126,7 +125,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         if (!this.isPaused())
         {
-            this.updateMorph(this.timer + partialTicks);
+            // this.updateMorph(this.timer + partialTicks);
         }
 
         AbstractMorph morph = this.currentMorph.get();
@@ -191,8 +190,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             if (this.random)
             {
                 this.current = (int) (Math.random() * size);
-                this.timer = 0;
-                this.duration = 0;
             }
             else
             {
@@ -201,22 +198,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 if (this.current >= size)
                 {
                     this.current = 0;
-
-                    if (!this.isPaused())
-                    {
-                        this.timer = 0;
-                        this.duration = 0;
-                    }
                 }
                 else if (this.current < 0)
                 {
                     this.current = size - 1;
-
-                    if (!this.isPaused())
-                    {
-                        this.timer = 0;
-                        this.duration = 0;
-                    }
                 }
             }
 
@@ -364,6 +349,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         super.afterMerge(morph);
         this.currentMorph.setDirect(morph);
+        this.current = 0;
     }
 
     @Override

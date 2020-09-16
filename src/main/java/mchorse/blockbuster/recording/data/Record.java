@@ -7,6 +7,7 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -300,16 +301,15 @@ public class Record
             MorphAction action = found.action;
             int diff = tick - found.tick;
 
-            if (pause)
-            {
-                found = this.seekMorphAction(found.tick - 1);
-            }
-
             try
             {
                 if (pause)
                 {
-                    action.applyWithOffset(actor, found == null ? replay.morph : found.action.morph, diff);
+                    found = this.seekMorphAction(found.tick - 1);
+
+                    AbstractMorph previous = found == null ? replay.morph : found.action.morph;
+
+                    action.applyWithOffset(actor, previous, diff);
                 }
                 else
                 {

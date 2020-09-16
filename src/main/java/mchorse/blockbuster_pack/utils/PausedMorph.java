@@ -4,6 +4,7 @@ import mchorse.blockbuster_pack.morphs.CustomMorph;
 import mchorse.blockbuster_pack.morphs.ISyncableMorph;
 import mchorse.blockbuster_pack.morphs.ImageMorph;
 import mchorse.metamorph.api.MorphManager;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -81,9 +82,16 @@ public class PausedMorph
 			animation.pause();
 			animation.progress = this.offset;
 
-			if (this.previous instanceof CustomMorph)
+			AbstractMorph previous = this.previous;
+
+			if (previous instanceof IMorphProvider)
 			{
-				animation.last = ((CustomMorph) this.previous).getCurrentPose();
+				previous = ((IMorphProvider) previous).getMorph();
+			}
+
+			if (previous instanceof CustomMorph)
+			{
+				animation.last = ((CustomMorph) previous).getCurrentPose();
 			}
 		}
 	}

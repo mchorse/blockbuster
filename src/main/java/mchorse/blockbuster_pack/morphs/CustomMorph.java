@@ -133,11 +133,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public void pauseMorph(AbstractMorph previous, int offset)
     {
-        if (previous instanceof IMorphProvider)
-        {
-            previous = ((IMorphProvider) previous).getMorph();
-        }
-
         this.pause.set(previous, offset);
         this.pause.recursivePausing(this);
         this.pause.applyAnimation(this.animation);
