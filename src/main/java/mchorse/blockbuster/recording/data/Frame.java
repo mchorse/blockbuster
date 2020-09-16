@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.common.entity.EntityActor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,6 +35,9 @@ public class Frame
     public float yaw;
     public float yawHead;
     public float pitch;
+
+    public boolean hasBodyYaw;
+    public float bodyYaw;
 
     /* Mount's data */
     public float mountYaw;
@@ -76,6 +80,9 @@ public class Frame
         this.yaw = player.rotationYaw;
         this.yawHead = player.rotationYawHead;
         this.pitch = player.rotationPitch;
+
+        this.hasBodyYaw = true;
+        this.bodyYaw = player.renderYawOffset;
 
         /* Mount information */
         this.isMounted = mount != player;
@@ -253,6 +260,9 @@ public class Frame
         frame.yawHead = this.yawHead;
         frame.pitch = this.pitch;
 
+        frame.hasBodyYaw = this.hasBodyYaw;
+        frame.bodyYaw = this.bodyYaw;
+
         frame.isMounted = this.isMounted;
 
         if (frame.isMounted)
@@ -294,6 +304,13 @@ public class Frame
         out.writeFloat(this.yawHead);
         out.writeFloat(this.pitch);
 
+        out.writeBoolean(this.hasBodyYaw);
+
+        if (this.hasBodyYaw)
+        {
+            out.writeFloat(this.bodyYaw);
+        }
+
         out.writeBoolean(this.isMounted);
 
         if (this.isMounted)
@@ -330,6 +347,12 @@ public class Frame
         this.yaw = in.readFloat();
         this.yawHead = in.readFloat();
         this.pitch = in.readFloat();
+
+        if (in.readBoolean())
+        {
+            this.hasBodyYaw = true;
+            this.bodyYaw = in.readFloat();
+        }
 
         this.isMounted = in.readBoolean();
 
@@ -375,6 +398,11 @@ public class Frame
         tag.setFloat("RY", this.pitch);
         tag.setFloat("RZ", this.yawHead);
 
+        if (this.hasBodyYaw)
+        {
+            tag.setFloat("RW", this.bodyYaw);
+        }
+
         if (this.isMounted)
         {
             tag.setFloat("MRX", this.mountYaw);
@@ -413,6 +441,12 @@ public class Frame
         this.yaw = tag.getFloat("RX");
         this.pitch = tag.getFloat("RY");
         this.yawHead = tag.getFloat("RZ");
+
+        if (tag.hasKey("RW"))
+        {
+            this.hasBodyYaw = true;
+            this.bodyYaw = tag.getFloat("RW");
+        }
 
         if (tag.hasKey("MRX") && tag.hasKey("MRY"))
         {

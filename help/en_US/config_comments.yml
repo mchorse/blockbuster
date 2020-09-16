@@ -34,6 +34,7 @@ blockbuster.config.comments:
         actor_swish_swipe: Do actors emit swish sound when swiping?
         actor_y: Makes actors use correct Y value (fixes issue with hovering and jumping, but makes Y movement sharp)
         actor_disable_riding: Disable an option to being able to ride the actor by right clicking it
+        actor_playback_body_yaw: Whether separate recorded horizontal body rotation should be played back on the actor (this guarantees consistent body rotation how it was recorded, it works only on new recordings recorded on Blockbuster 2.1+)
 
     damage_control:
         damage_control: Whether damage control is enabled

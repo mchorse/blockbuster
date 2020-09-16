@@ -49,6 +49,7 @@ blockbuster.config:
         actor_swish_swipe: Swipe swish
         actor_y: Fix Y motion
         actor_disable_riding: Disable riding
+        actor_playback_body_yaw: Playback body yaw
 
     damage_control:
         title: Damage control

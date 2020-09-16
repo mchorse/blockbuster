@@ -336,31 +336,50 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     @Override
     protected float updateDistance(float f2, float f3)
     {
-        float f = MathHelper.wrapDegrees(f2 - this.renderYawOffset);
-        this.renderYawOffset += f * 0.3F;
-        float f1 = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
-        boolean flag = f1 < -90.0F || f1 >= 90.0F;
+        boolean shouldAutoAlign = true;
 
-        if (f1 < -75.0F)
+        if (Blockbuster.actorPlaybackBodyYaw.get() && this.playback != null && this.playback.record != null)
         {
-            f1 = -75.0F;
+            Frame previous = this.playback.record.getFrame(this.playback.getTick() - 1);
+            Frame frame = this.playback.getCurrentFrame();
+
+            if (frame != null && frame.hasBodyYaw)
+            {
+                this.renderYawOffset = frame.bodyYaw;
+                this.prevRenderYawOffset = previous == null || !this.playback.playing ? frame.bodyYaw : previous.bodyYaw;
+
+                shouldAutoAlign = false;
+            }
         }
 
-        if (f1 >= 75.0F)
+        if (shouldAutoAlign)
         {
-            f1 = 75.0F;
-        }
+            float f = MathHelper.wrapDegrees(f2 - this.renderYawOffset);
+            this.renderYawOffset += f * 0.3F;
+            float f1 = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
+            boolean flag = f1 < -90.0F || f1 >= 90.0F;
 
-        this.renderYawOffset = this.rotationYaw - f1;
+            if (f1 < -75.0F)
+            {
+                f1 = -75.0F;
+            }
 
-        if (f1 * f1 > 2500.0F)
-        {
-            this.renderYawOffset += f1 * 0.2F;
-        }
+            if (f1 >= 75.0F)
+            {
+                f1 = 75.0F;
+            }
 
-        if (flag)
-        {
-            f3 *= -1.0F;
+            this.renderYawOffset = this.rotationYaw - f1;
+
+            if (f1 * f1 > 2500.0F)
+            {
+                this.renderYawOffset += f1 * 0.2F;
+            }
+
+            if (flag)
+            {
+                f3 *= -1.0F;
+            }
         }
 
         /* Explanation: Why do we update morph here? Because for some reason
