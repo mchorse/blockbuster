@@ -2,6 +2,7 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.blockbuster_pack.utils.PausedMorph;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
@@ -92,6 +93,41 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         return this.currentMorph.get();
     }
 
+    public AbstractMorph getMorphAt(int tick)
+    {
+        if (this.morphs.isEmpty())
+        {
+            return null;
+        }
+
+        int duration = 0;
+        int last = this.morphs.size() - 1;
+
+        for (SequenceEntry entry : this.morphs)
+        {
+            duration += entry.getDuration();
+        }
+
+        if (duration == 0)
+        {
+            return this.morphs.get(last).morph;
+        }
+
+        duration = 0;
+
+        SequenceEntry entry = null;
+        int i = this.reverse ? last : 0;
+
+        while (duration < tick)
+        {
+            entry = this.morphs.get(i);
+            i = MathUtils.cycler(i + (this.reverse ? -1 : 1), 0, last);
+            duration += entry.getDuration();
+        }
+
+        return entry == null ? null : entry.morph;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     protected String getSubclassDisplayName()
@@ -125,7 +161,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     {
         if (!this.isPaused())
         {
-            // this.updateMorph(this.timer + partialTicks);
+            this.updateMorph(this.timer + partialTicks);
         }
 
         AbstractMorph morph = this.currentMorph.get();
@@ -529,5 +565,19 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         }
 
         return this.morphs.get(index).morph;
+    }
+
+    public static class FoundMorph
+    {
+        public AbstractMorph morph;
+        public int totalDuration;
+        public int lastDuration;
+
+        public FoundMorph(AbstractMorph morph, int totalDuration, int lastDuration)
+        {
+            this.morph = morph;
+            this.totalDuration = totalDuration;
+            this.lastDuration = lastDuration;
+        }
     }
 }

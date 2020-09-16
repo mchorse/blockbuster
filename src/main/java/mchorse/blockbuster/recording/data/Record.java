@@ -7,6 +7,8 @@ import mchorse.blockbuster.recording.actions.ActionRegistry;
 import mchorse.blockbuster.recording.actions.MorphAction;
 import mchorse.blockbuster.recording.actions.MountingAction;
 import mchorse.blockbuster.recording.scene.Replay;
+import mchorse.blockbuster_pack.morphs.ISyncableMorph;
+import mchorse.blockbuster_pack.morphs.SequencerMorph;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -299,7 +301,8 @@ public class Record
         if (found != null)
         {
             MorphAction action = found.action;
-            int diff = tick - found.tick;
+            int foundTick = found.tick;
+            int diff = tick - foundTick;
 
             try
             {
@@ -308,6 +311,17 @@ public class Record
                     found = this.seekMorphAction(found.tick - 1);
 
                     AbstractMorph previous = found == null ? replay.morph : found.action.morph;
+
+                    if (previous instanceof SequencerMorph)
+                    {
+                        SequencerMorph sequencer = (SequencerMorph) previous;
+                        AbstractMorph foundMorph = sequencer.getMorphAt(foundTick - (found == null ? 0 : found.tick));
+
+                        if (foundMorph != null)
+                        {
+                            previous = foundMorph.copy();
+                        }
+                    }
 
                     action.applyWithOffset(actor, previous, diff);
                 }
