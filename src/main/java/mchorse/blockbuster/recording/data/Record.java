@@ -336,7 +336,7 @@ public class Record
                 e.printStackTrace();
             }
         }
-        else
+        else if (replay != null)
         {
             replay.apply(actor);
         }

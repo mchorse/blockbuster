@@ -168,10 +168,10 @@ public class RecordPlayer
         this.actor.noClip = true;
         this.actor.setEntityInvulnerable(true);
 
-        this.record.applyPreviousMorph(this.actor, this.replay, this.tick, true);
-
         if (this.actor.isServerWorld())
         {
+            this.record.applyPreviousMorph(this.actor, this.replay, this.tick, true);
+
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), true, this.tick));
         }
     }

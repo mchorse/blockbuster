@@ -21,7 +21,6 @@ import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -145,7 +144,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             this.randomOrder = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.random_order"), false, (b) ->
             {
-                this.morph.random = b.isToggled();
+                this.morph.isRandom = b.isToggled();
             });
 
             this.pick.flex().relative(this.area).set(0, 0, 105, 20).x(1, -115);
@@ -193,7 +192,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             this.select(this.list.getCurrentFirst());
 
             this.reverse.toggled(morph.reverse);
-            this.randomOrder.toggled(morph.random);
+            this.randomOrder.toggled(morph.isRandom);
         }
 
         @Override
