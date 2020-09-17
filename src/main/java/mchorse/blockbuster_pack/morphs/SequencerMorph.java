@@ -1,13 +1,14 @@
 package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.utils.mclib.BBIcons;
-import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.MathUtils;
 import mchorse.metamorph.api.Morph;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;

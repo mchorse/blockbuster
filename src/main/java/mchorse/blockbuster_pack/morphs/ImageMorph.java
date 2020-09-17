@@ -2,13 +2,14 @@ package mchorse.blockbuster_pack.morphs;
 
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
-import mchorse.blockbuster_pack.utils.Animation;
-import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -126,7 +127,22 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
         }
 
         this.pause.set(previous, offset);
-        this.pause.applyAnimation(this.animation);
+        this.applyAnimation(this.animation);
+    }
+
+    public void applyAnimation(ImageMorph.ImageAnimation animation)
+    {
+        if (this.isPaused())
+        {
+            animation.pause();
+            animation.progress = this.pause.offset;
+
+            if (this.pause.previous instanceof ImageMorph)
+            {
+                animation.last = new ImageMorph.ImageProperties();
+                animation.last.from((ImageMorph) this.pause.previous);
+            }
+        }
     }
 
     @Override
@@ -540,7 +556,7 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
 
         this.animation.reset();
         this.pause.fromNBT(tag);
-        this.pause.applyAnimation(this.animation);
+        this.applyAnimation(this.animation);
     }
 
     public static class ImageAnimation extends Animation

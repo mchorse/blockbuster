@@ -11,13 +11,13 @@ import mchorse.blockbuster.client.model.ModelCustom;
 import mchorse.blockbuster.client.render.RenderCustomModel;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster_pack.client.render.layers.LayerBodyPart;
-import mchorse.blockbuster_pack.utils.Animation;
-import mchorse.blockbuster_pack.utils.PausedMorph;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.bodypart.BodyPart;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -135,7 +135,23 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     {
         this.pause.set(previous, offset);
         this.pause.recursivePausing(this);
-        this.pause.applyAnimation(this.animation);
+        this.applyAnimation(this.animation);
+    }
+
+    public void applyAnimation(CustomMorph.PoseAnimation animation)
+    {
+        if (this.isPaused())
+        {
+            animation.pause();
+            animation.progress = this.pause.offset;
+
+            AbstractMorph previous = this.pause.previous;
+
+            if (previous instanceof CustomMorph)
+            {
+                animation.last = ((CustomMorph) previous).getCurrentPose();
+            }
+        }
     }
 
     @Override
@@ -763,7 +779,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         }
 
         this.pause.fromNBT(tag);
-        this.pause.applyAnimation(this.animation);
+        this.applyAnimation(this.animation);
     }
 
     /**
