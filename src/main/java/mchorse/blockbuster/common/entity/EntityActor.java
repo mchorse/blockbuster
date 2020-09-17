@@ -334,7 +334,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * {@link EntityBodyHelper} before making final decision.
     */
     @Override
-    protected float updateDistance(float f2, float f3)
+    protected float updateDistance(float renderYawOffset, float distance)
     {
         boolean shouldAutoAlign = true;
 
@@ -354,31 +354,31 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
 
         if (shouldAutoAlign)
         {
-            float f = MathHelper.wrapDegrees(f2 - this.renderYawOffset);
-            this.renderYawOffset += f * 0.3F;
-            float f1 = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
-            boolean flag = f1 < -90.0F || f1 >= 90.0F;
+            float tempRenderYawOffset = MathHelper.wrapDegrees(renderYawOffset - this.renderYawOffset);
+            this.renderYawOffset += tempRenderYawOffset * 0.3F;
+            tempRenderYawOffset = MathHelper.wrapDegrees(this.rotationYaw - this.renderYawOffset);
+            boolean isBackwards = tempRenderYawOffset < -90.0F || tempRenderYawOffset >= 90.0F;
 
-            if (f1 < -75.0F)
+            if (tempRenderYawOffset < -75.0F)
             {
-                f1 = -75.0F;
+                tempRenderYawOffset = -75.0F;
             }
 
-            if (f1 >= 75.0F)
+            if (tempRenderYawOffset >= 75.0F)
             {
-                f1 = 75.0F;
+                tempRenderYawOffset = 75.0F;
             }
 
-            this.renderYawOffset = this.rotationYaw - f1;
+            this.renderYawOffset = this.rotationYaw - tempRenderYawOffset;
 
-            if (f1 * f1 > 2500.0F)
+            if (tempRenderYawOffset * tempRenderYawOffset > 2500.0F)
             {
-                this.renderYawOffset += f1 * 0.2F;
+                this.renderYawOffset += tempRenderYawOffset * 0.2F;
             }
 
-            if (flag)
+            if (isBackwards)
             {
-                f3 *= -1.0F;
+                distance *= -1.0F;
             }
         }
 
@@ -391,7 +391,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
             morph.update(this);
         }
 
-        return f3;
+        return distance;
     }
 
     /* Processing interaction with player */

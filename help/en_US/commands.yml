@@ -23,7 +23,13 @@ blockbuster:
                     {l}{6}/{r}record {8}add{r} {7}<filename> <tick> <action_type> [data_tag]{r}
                     
                     {r}Adds an action to player recording by {7}<filename>{r} at {7}<tick>{r} of type {7}<action_type>{r} with additional data specified in {7}[data_tag]{r}.
-            
+
+            calculate_body_yaw:
+                |
+                    {l}{6}/{r}record {8}calculate_body_yaw{r}
+
+                    {r}Automatically calculates body yaw for old player recordings{r}.
+
             clean:
                 |
                     {l}{6}/{r}record {8}clean{r} {7}<filename> <property> [value] [from] [to]{r}
