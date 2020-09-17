@@ -18,6 +18,7 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.api.morphs.utils.PausedMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -133,9 +134,63 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public void pauseMorph(AbstractMorph previous, int offset)
     {
+        this.pauseRecursive(this, previous, offset);
+
         this.pause.set(previous, offset);
         this.pause.recursivePausing(this);
         this.applyAnimation(this.animation);
+    }
+
+    private void pauseRecursive(IBodyPartProvider provider, AbstractMorph previous, int offset)
+    {
+        BodyPartManager manager = provider.getBodyPart();
+
+        for (int i = 0; i < manager.parts.size(); i++)
+        {
+            BodyPart part = manager.parts.get(i);
+            AbstractMorph morph = part.morph.get();
+
+            if (morph instanceof SequencerMorph)
+            {
+                SequencerMorph sequencer = (SequencerMorph) morph;
+                SequencerMorph.FoundMorph foundMorph = sequencer.getMorphAt(offset);
+
+                if (foundMorph != null && foundMorph.morph != null)
+                {
+                    AbstractMorph copy = foundMorph.morph.copy();
+                    int localOffset = offset - foundMorph.lastDuration;
+
+                    part.morph.setDirect(copy);
+
+                    if (previous instanceof IBodyPartProvider)
+                    {
+                        BodyPartManager previousManager = ((IBodyPartProvider) previous).getBodyPart();
+                        BodyPart previousPart = i < previousManager.parts.size() ? previousManager.parts.get(i) : null;
+
+                        previous = previousPart == null ? null : previousPart.morph.get();
+                    }
+                    else
+                    {
+                        previous = null;
+                    }
+
+                    if (previous != null)
+                    {
+                        previous.copy();
+                    }
+
+                    if (copy instanceof ISyncableMorph)
+                    {
+                        ((ISyncableMorph) copy).pauseMorph(foundMorph.previous == null ? previous : foundMorph.previous, localOffset);
+                    }
+
+                    if (copy instanceof IBodyPartProvider)
+                    {
+                        this.pauseRecursive((IBodyPartProvider) copy, previous, localOffset);
+                    }
+                }
+            }
+        }
     }
 
     public void applyAnimation(CustomMorph.PoseAnimation animation)
@@ -146,6 +201,8 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             animation.progress = this.pause.offset;
 
             AbstractMorph previous = this.pause.previous;
+
+
 
             if (previous instanceof CustomMorph)
             {

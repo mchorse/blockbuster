@@ -103,7 +103,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         return this.currentMorph.get();
     }
 
-    public AbstractMorph getMorphAt(int tick)
+    public FoundMorph getMorphAt(int tick)
     {
         if (this.morphs.isEmpty())
         {
@@ -120,16 +120,21 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (duration <= 0)
         {
-            return this.morphs.get(size - 1).morph;
+            return new FoundMorph(this.morphs.get(size - 1).morph, size == 1 ? null : this.morphs.get(size - 2).morph, 0, 0);
         }
 
         duration = 0;
 
         SequenceEntry entry = null;
+        SequenceEntry lastEntry = null;
         int i = this.reverse ? size - 1 : 0;
+        float lastDuration = 0;
 
         while (duration < tick)
         {
+            lastDuration = duration;
+            lastEntry = entry;
+
             entry = this.morphs.get(i);
 
             if (this.isRandom)
@@ -141,11 +146,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                 i = MathUtils.cycler(i + (this.reverse ? -1 : 1), 0, size - 1);
             }
 
-            float d = entry.getDuration(this.getRandomSeed(duration));
-            duration += d;
+            duration += entry.getDuration(this.getRandomSeed(duration));
         }
 
-        return entry == null ? null : entry.morph;
+        return entry == null ? null : new FoundMorph(entry.morph, lastEntry == null ? null : lastEntry.morph, duration, lastDuration);
     }
 
     @Override
@@ -246,7 +250,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             if (this.isRandom)
             {
                 this.current = this.getRandomIndex(this.duration);
-                System.out.println(this.current + " " + this.duration);
             }
             else
             {
@@ -586,14 +589,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     public static class FoundMorph
     {
         public AbstractMorph morph;
+        public AbstractMorph previous;
         public int totalDuration;
         public int lastDuration;
 
-        public FoundMorph(AbstractMorph morph, int totalDuration, int lastDuration)
+        public FoundMorph(AbstractMorph morph, AbstractMorph previous, float totalDuration, float lastDuration)
         {
             this.morph = morph;
-            this.totalDuration = totalDuration;
-            this.lastDuration = lastDuration;
+            this.previous = previous;
+            this.totalDuration = (int) totalDuration;
+            this.lastDuration = (int) lastDuration;
         }
     }
 }
