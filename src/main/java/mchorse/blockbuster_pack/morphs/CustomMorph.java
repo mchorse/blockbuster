@@ -17,6 +17,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -548,29 +549,56 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
 
         AbstractMorph destination = ((IMorphProvider) morph).getMorph();
 
-        if (destination instanceof CustomMorph)
+        if (destination instanceof IBodyPartProvider)
         {
-            CustomMorph dest = (CustomMorph) destination;
-
-            /* If the last pose is null, it might case a first cycle freeze.
-             * this should fix it. */
-            ModelPose pose = dest.getCurrentPose();
-
-            this.animation.progress = 0;
-
-            if (dest.animation.isInProgress() && pose != null)
-            {
-                this.animation.last = dest.animation.calculatePose(pose, 1).clone();
-            }
-            else
-            {
-                this.animation.last = pose;
-            }
+            this.recursiveAfterMerge(this, (IBodyPartProvider) destination);
         }
 
-        if (morph instanceof IBodyPartProvider)
+        if (destination instanceof CustomMorph)
         {
-            this.parts.afterMerge(((IBodyPartProvider) morph).getBodyPart());
+            this.copyPoseForAnimation(this, (CustomMorph) destination);
+        }
+    }
+
+    private void recursiveAfterMerge(IBodyPartProvider target, IBodyPartProvider destination)
+    {
+        for (int i = 0, c = target.getBodyPart().parts.size(); i < c; i++)
+        {
+            if (i >= destination.getBodyPart().parts.size())
+            {
+                break;
+            }
+
+            AbstractMorph a = target.getBodyPart().parts.get(i).morph.get();
+            AbstractMorph b = destination.getBodyPart().parts.get(i).morph.get();
+
+            if (a instanceof IBodyPartProvider && b instanceof IBodyPartProvider)
+            {
+                this.recursiveAfterMerge((IBodyPartProvider) a, (IBodyPartProvider) b);
+            }
+
+            if (a instanceof CustomMorph && b instanceof CustomMorph)
+            {
+                this.copyPoseForAnimation((CustomMorph) a, (CustomMorph) b);
+            }
+        }
+    }
+
+    private void copyPoseForAnimation(CustomMorph target, CustomMorph destination)
+    {
+        /* If the last pose is null, it might case a first cycle freeze.
+         * this should fix it. */
+        ModelPose pose = destination.getCurrentPose();
+
+        target.animation.progress = 0;
+
+        if (destination.animation.isInProgress() && pose != null)
+        {
+            target.animation.last = destination.animation.calculatePose(pose, 1).clone();
+        }
+        else
+        {
+            target.animation.last = pose;
         }
     }
 

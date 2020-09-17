@@ -429,6 +429,8 @@ public class Scene
 				actor.record.applyAction(i - actor.record.preDelay, actor.actor);
 			}
 
+			actor.record.applyPreviousMorph(actor.actor, replay, tick, true);
+
 			j++;
 		}
 
@@ -580,6 +582,8 @@ public class Scene
 
 			if (player != null)
 			{
+				player.replay = replay;
+
 				this.actorsCount++;
 				replay.apply(actor);
 				this.actors.put(replay, player);
@@ -624,9 +628,9 @@ public class Scene
 			this.tick = tick;
 		}
 
-		for (Map.Entry<Replay, RecordPlayer> entry : this.actors.entrySet())
+		for (RecordPlayer player : this.actors.values())
 		{
-			entry.getValue().resume(tick, entry.getKey());
+			player.resume(tick);
 		}
 
 		this.sendAudio(AudioState.RESUME_SET, tick < 0 ? this.tick : tick);
@@ -649,7 +653,7 @@ public class Scene
 				replay.apply(entry.getValue().actor);
 			}
 
-			entry.getValue().goTo(tick, actions, replay);
+			entry.getValue().goTo(tick, actions);
 		}
 
 		this.sendAudio(this.isPlaying() ? AudioState.SET : AudioState.PAUSE_SET, tick);

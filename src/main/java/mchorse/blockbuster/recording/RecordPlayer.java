@@ -69,6 +69,11 @@ public class RecordPlayer
      */
     public boolean sync = false;
 
+    /**
+     * It might be null
+     */
+    public Replay replay;
+
     public RecordPlayer(Record record, Mode mode, EntityLivingBase actor)
     {
         this.record = record;
@@ -163,6 +168,8 @@ public class RecordPlayer
         this.actor.noClip = true;
         this.actor.setEntityInvulnerable(true);
 
+        this.record.applyPreviousMorph(this.actor, this.replay, this.tick, true);
+
         if (this.actor.isServerWorld())
         {
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), true, this.tick));
@@ -172,7 +179,7 @@ public class RecordPlayer
     /**
      * Resume the paused actor
      */
-    public void resume(int tick, Replay replay)
+    public void resume(int tick)
     {
         if (tick >= 0)
         {
@@ -182,14 +189,14 @@ public class RecordPlayer
         this.playing = true;
         this.actor.noClip = false;
 
-        if (!this.actor.world.isRemote && replay != null)
+        if (!this.actor.world.isRemote && this.replay != null)
         {
-            this.actor.setEntityInvulnerable(replay.invincible);
+            this.actor.setEntityInvulnerable(this.replay.invincible);
         }
 
         if (this.actor.isServerWorld())
         {
-            this.record.applyPreviousMorph(this.actor, replay, tick, false);
+            this.record.applyPreviousMorph(this.actor, this.replay, tick, false);
 
             Dispatcher.sendToTracked(this.actor, new PacketActorPause(this.actor.getEntityId(), false, this.tick));
         }
@@ -197,9 +204,8 @@ public class RecordPlayer
 
     /**
      * Make an actor go to the given tick
-     * @param replay 
      */
-    public void goTo(int tick, boolean actions, Replay replay)
+    public void goTo(int tick, boolean actions)
     {
         int preDelay = this.record.preDelay;
         int original = tick;
@@ -230,9 +236,9 @@ public class RecordPlayer
         {
             this.record.applyAction(tick, this.actor);
 
-            if (tick != 0 && replay != null)
+            if (this.replay != null)
             {
-                this.record.applyPreviousMorph(this.actor, replay, tick, true);
+                this.record.applyPreviousMorph(this.actor, this.replay, tick, true);
             }
         }
 

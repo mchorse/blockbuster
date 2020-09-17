@@ -296,6 +296,7 @@ public class Record
             return;
         }
 
+        AbstractMorph replayMorph = replay == null ? null : replay.morph;
         FoundAction found = this.seekMorphAction(tick);
 
         if (found != null)
@@ -310,7 +311,7 @@ public class Record
                 {
                     found = this.seekMorphAction(found.tick - 1);
 
-                    AbstractMorph previous = found == null ? replay.morph : found.action.morph;
+                    AbstractMorph previous = found == null ? replayMorph : found.action.morph;
 
                     if (previous instanceof SequencerMorph)
                     {
