@@ -8,6 +8,7 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.Minecraft;
@@ -38,7 +39,7 @@ import java.util.Objects;
  * 
  * This bad boy is basically replacement for Imaginary
  */
-public class ImageMorph extends AbstractMorph implements ISyncableMorph
+public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimationProvider
 {
     public static final Matrix4f matrix = new Matrix4f();
 
@@ -149,6 +150,12 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph
     public boolean isPaused()
     {
         return this.pause.isPaused();
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return this.animation;
     }
 
     @Override

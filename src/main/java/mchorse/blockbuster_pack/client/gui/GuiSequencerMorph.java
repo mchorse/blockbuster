@@ -12,6 +12,7 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
@@ -60,6 +61,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
         private GuiNestedEdit pick;
         private GuiTrackpadElement duration;
         private GuiTrackpadElement random;
+        private GuiToggleElement setDuration;
         private GuiToggleElement reverse;
         private GuiToggleElement randomOrder;
 
@@ -70,6 +72,7 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             super(mc, editor);
 
             this.elements = new GuiElement(mc);
+            this.elements.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
 
             this.list = new GuiSequenceEntryList(mc, (entry) -> this.select(entry.get(0)));
             this.list.sorting().background();
@@ -136,6 +139,8 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
             });
             this.random.tooltip(IKey.lang("blockbuster.gui.sequencer.random"));
             this.random.limit(0, Float.MAX_VALUE);
+            this.setDuration = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.set_duration"), (b) -> this.entry.setDuration = b.isToggled());
+            this.setDuration.tooltip(IKey.lang("blockbuster.gui.sequencer.set_duration_tooltip"), Direction.TOP);
 
             this.reverse = new GuiToggleElement(mc, IKey.lang("blockbuster.gui.sequencer.reverse"), false, (b) ->
             {
@@ -147,18 +152,13 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
                 this.morph.isRandom = b.isToggled();
             });
 
-            this.pick.flex().relative(this.area).set(0, 0, 105, 20).x(1, -115);
             this.addPart.flex().relative(this.area).set(10, 10, 50, 20);
             this.removePart.flex().relative(this.addPart.resizer()).set(55, 0, 50, 20);
             this.list.flex().relative(this.area).set(10, 50, 105, 0).hTo(this.reverse.area, -5);
-            this.duration.flex().relative(this.pick.resizer()).set(0, 25, 105, 20);
-            this.random.flex().relative(this.duration.resizer()).set(0, 25, 105, 20);
             this.randomOrder.flex().relative(this).x(10).y(1F, -24).w(105);
             this.reverse.flex().relative(this.randomOrder).y(-1F, -5).w(1F);
 
-            this.pick.flex().y(1, -(this.random.resizer().getY() + this.random.resizer().getH() + 10));
-
-            this.elements.add(this.pick, this.duration, this.random);
+            this.elements.add(this.pick, this.duration, this.random, this.setDuration);
             this.add(this.addPart, this.removePart, this.randomOrder, this.reverse, this.list, this.elements);
         }
 
@@ -168,9 +168,10 @@ public class GuiSequencerMorph extends GuiAbstractMorph<SequencerMorph>
 
             if (entry != null)
             {
+                this.pick.setMorph(entry.morph);
                 this.duration.setValue(entry.duration);
                 this.random.setValue(entry.random);
-                this.pick.setMorph(entry.morph);
+                this.setDuration.toggled(entry.setDuration);
 
                 ((GuiMorphRenderer) this.editor.renderer).morph = entry.morph;
             }

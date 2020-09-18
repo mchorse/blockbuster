@@ -16,6 +16,7 @@ import mchorse.metamorph.api.EntityUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import mchorse.metamorph.bodypart.BodyPart;
@@ -49,7 +50,7 @@ import java.util.Map;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph, IAnimationProvider
 {
     /**
      * Morph's model
@@ -202,8 +203,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
 
             AbstractMorph previous = this.pause.previous;
 
-
-
             if (previous instanceof CustomMorph)
             {
                 animation.last = ((CustomMorph) previous).getCurrentPose();
@@ -215,6 +214,12 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     public boolean isPaused()
     {
         return this.pause.isPaused();
+    }
+
+    @Override
+    public Animation getAnimation()
+    {
+        return this.animation;
     }
 
     @Override

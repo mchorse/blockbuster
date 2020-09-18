@@ -7,6 +7,7 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.renderer.GlStateManager;
@@ -260,6 +261,12 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             {
                 SequenceEntry entry = this.morphs.get(this.current);
                 AbstractMorph morph = MorphUtils.copy(entry.morph);
+                float duration = entry.getDuration(this.getRandomSeed(this.duration));
+
+                if (entry.setDuration && morph instanceof IAnimationProvider)
+                {
+                    ((IAnimationProvider) morph).getAnimation().duration = (int) duration;
+                }
 
                 if (this.isPaused())
                 {
@@ -283,7 +290,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                     this.currentMorph.set(morph);
                 }
 
-                this.duration += entry.getDuration(this.getRandomSeed(this.duration));
+                this.duration += duration;
             }
 
             if (!this.morphs.isEmpty())
@@ -426,19 +433,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             for (SequenceEntry entry : this.morphs)
             {
-                NBTTagCompound entryTag = new NBTTagCompound();
-
-                if (entry.morph != null)
-                {
-                    NBTTagCompound morphTag = new NBTTagCompound();
-
-                    entry.morph.toNBT(morphTag);
-                    entryTag.setTag("Morph", morphTag);
-                }
-
-                entryTag.setFloat("Duration", entry.duration);
-                entryTag.setFloat("Random", entry.random);
-                list.appendTag(entryTag);
+                list.appendTag(entry.toNBT());
             }
 
             tag.setTag("List", list);
@@ -461,34 +456,16 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
             for (int i = 0, c = list.tagCount(); i < c; i++)
             {
-                NBTTagCompound morphTag = list.getCompoundTagAt(i);
-                AbstractMorph morph = null;
+                SequenceEntry entry = new SequenceEntry();
 
-                if (morphTag.hasKey("Morph", NBT.TAG_COMPOUND))
-                {
-                    morph = MorphManager.INSTANCE.morphFromNBT(morphTag.getCompoundTag("Morph"));
-                }
-
-                SequenceEntry entry = new SequenceEntry(morph);
-
-                if (morphTag.hasKey("Duration", NBT.TAG_ANY_NUMERIC))
-                {
-                    entry.duration = morphTag.getFloat("Duration");
-                }
-
-                if (morphTag.hasKey("Random", NBT.TAG_ANY_NUMERIC))
-                {
-                    entry.random = morphTag.getFloat("Random");
-                }
-
-                if (i == 0)
-                {
-                    this.current = -1;
-                    this.currentMorph.set(MorphUtils.copy(morph));
-                }
-
+                entry.fromNBT(list.getCompoundTagAt(i));
                 this.morphs.add(entry);
             }
+
+            this.current = -1;
+            this.duration = 0;
+            this.timer = 0;
+            this.updateMorph(0);
         }
 
         if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
@@ -518,6 +495,10 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         public AbstractMorph morph;
         public float duration = 10;
         public float random = 0;
+        public boolean setDuration = true;
+
+        public SequenceEntry()
+        {}
 
         public SequenceEntry(AbstractMorph morph)
         {
@@ -531,9 +512,15 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         public SequenceEntry(AbstractMorph morph, float duration, float random)
         {
+            this(morph, duration, random, true);
+        }
+
+        public SequenceEntry(AbstractMorph morph, float duration, float random, boolean setDuration)
+        {
             this.morph = morph;
             this.duration = duration;
             this.random = random;
+            this.setDuration = setDuration;
         }
 
         public float getDuration(Random random)
@@ -544,7 +531,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         @Override
         public SequenceEntry clone()
         {
-            return new SequenceEntry(this.morph, this.duration, this.random);
+            return new SequenceEntry(this.morph, this.duration, this.random, this.setDuration);
         }
 
         @Override
@@ -554,10 +541,49 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             {
                 SequenceEntry entry = (SequenceEntry) obj;
 
-                return this.duration == entry.duration && this.random == entry.random && Objects.equals(this.morph, entry.morph);
+                return Objects.equals(this.morph, entry.morph) &&
+                    this.duration == entry.duration &&
+                    this.random == entry.random &&
+                    this.setDuration == entry.setDuration;
             }
 
             return super.equals(obj);
+        }
+
+        public NBTTagCompound toNBT()
+        {
+            NBTTagCompound entryTag = new NBTTagCompound();
+
+            if (this.morph != null)
+            {
+                entryTag.setTag("Morph", this.morph.toNBT());
+            }
+
+            entryTag.setFloat("Duration", this.duration);
+            entryTag.setFloat("Random", this.random);
+            entryTag.setBoolean("SetDuration", this.setDuration);
+
+            return entryTag;
+        }
+
+        public void fromNBT(NBTTagCompound tag)
+        {
+            if (tag.hasKey("Morph", NBT.TAG_COMPOUND))
+            {
+                this.morph = MorphManager.INSTANCE.morphFromNBT(tag.getCompoundTag("Morph"));
+            }
+
+            if (tag.hasKey("Duration", NBT.TAG_ANY_NUMERIC))
+            {
+                this.duration = tag.getFloat("Duration");
+            }
+
+            if (tag.hasKey("Random", NBT.TAG_ANY_NUMERIC))
+            {
+                this.random = tag.getFloat("Random");
+            }
+
+            this.setDuration = tag.hasKey("SetDuration") && tag.getBoolean("SetDuration");
         }
     }
 
