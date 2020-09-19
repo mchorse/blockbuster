@@ -3,7 +3,6 @@ package mchorse.blockbuster.client;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.blockbuster.aperture.CameraHandler;
-import mchorse.blockbuster.audio.AudioFile;
 import mchorse.blockbuster.audio.AudioRenderer;
 import mchorse.blockbuster.client.gui.GuiRecordingOverlay;
 import mchorse.blockbuster.client.particles.emitter.BedrockEmitter;
@@ -132,7 +131,7 @@ public class RenderingHandler
             GlStateManager.disableCull();
             GlStateManager.enableTexture2D();
 
-            if (Blockbuster.particleSorting.get())
+            if (Blockbuster.snowstormDepthSorting.get())
             {
                 emitters.sort((a, b) ->
                 {

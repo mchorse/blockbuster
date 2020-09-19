@@ -417,7 +417,7 @@ public class BedrockEmitter
 
 		if (!this.particles.isEmpty())
 		{
-			if (Blockbuster.particleSorting.get())
+			if (Blockbuster.snowstormDepthSorting.get())
 			{
 				this.particles.sort((a, b) ->
 				{

@@ -64,6 +64,12 @@ blockbuster.config:
 
         path: Additional Folder
 
+    snowstorm:
+        title: Snowstorm
+        tooltip: Snowstorm is a particle system that allows create pretty sophisticated particles, here you can find global options related to its particle system
+
+        depth_sorting: Particle depth sorting
+
     audio:
         title: Audio
         tooltip: Options for in-game audio sync feature

@@ -33,8 +33,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-
 /**
  * <p>Blockbuster's main entry</p>
  *
@@ -151,7 +149,6 @@ public class Blockbuster
     public static ValueInt chromaSkyColor;
     public static ValueBoolean syncedURLTextureDownload;
     public static ValueBoolean addUtilityBlocks;
-    public static ValueBoolean particleSorting;
 
     public static ValueBoolean modelBlockDisableRendering;
     public static ValueBoolean modelBlockDisableItemRendering;
@@ -180,6 +177,8 @@ public class Blockbuster
     public static ValueInt damageControlDistance;
 
     public static ValueString modelFolderPath;
+
+    public static ValueBoolean snowstormDepthSorting;
 
     public static ValueInt audioWaveformDensity;
     public static ValueFloat audioWaveformWidth;
@@ -218,8 +217,6 @@ public class Blockbuster
         chromaSkyColor = builder.getInt("green_screen_sky_color", 0xff00ff00).colorAlpha();
         syncedURLTextureDownload = builder.getBoolean("url_skins_sync_download", true);
         addUtilityBlocks = builder.getBoolean("add_utility_blocks", false);
-        particleSorting = builder.getBoolean("particle_sorting", false);
-        particleSorting.invisible();
 
         /* Model block */
         modelBlockDisableRendering = builder.category("model_block").getBoolean("model_block_disable_rendering", false);
@@ -253,6 +250,9 @@ public class Blockbuster
 
         /* Model Folder */
         modelFolderPath = builder.category("model_folders").getString("path", "");
+
+        /* Snowstorm */
+        snowstormDepthSorting = builder.category("snowstorm").getBoolean("depth_sorting", false);
 
         /* Audio */
         audioWaveformDensity = builder.category("audio").getInt("waveform_density", 20, 10, 100);
