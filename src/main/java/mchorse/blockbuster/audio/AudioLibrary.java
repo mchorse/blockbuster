@@ -168,4 +168,12 @@ public class AudioLibrary
 
 		this.files.clear();
 	}
+
+	public void pause(boolean pause)
+	{
+		for (AudioFile file : this.files.values())
+		{
+			file.pause(pause);
+		}
+	}
 }

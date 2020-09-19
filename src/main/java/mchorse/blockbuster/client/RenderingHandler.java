@@ -45,6 +45,8 @@ public class RenderingHandler
     private static TileEntityModelItemStackRenderer model = new TileEntityModelItemStackRenderer();
     private static TileEntityGunItemStackRenderer gun = new TileEntityGunItemStackRenderer();
 
+    private boolean wasPaused;
+
     /**
      * GIFs which should be updated 
      */
@@ -263,7 +265,7 @@ public class RenderingHandler
 
     /**
      * On render last world event, this bad boy will tick all of the GIF 
-     * textures which were registered 
+     * textures which were registered, and will keep track of audio
      */
     @SubscribeEvent
     public void onRenderLast(RenderWorldLastEvent event)
@@ -271,6 +273,16 @@ public class RenderingHandler
         for (GifTexture texture : gifs.values())
         {
             texture.tick();
+        }
+
+        Minecraft mc = Minecraft.getMinecraft();
+        boolean isPaused = mc.isGamePaused();
+
+        if (this.wasPaused != isPaused)
+        {
+            ClientProxy.audio.pause(isPaused);
+
+            this.wasPaused = isPaused;
         }
     }
 }

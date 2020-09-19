@@ -2,6 +2,7 @@ package mchorse.blockbuster.audio;
 
 import mchorse.mclib.utils.wav.WavePlayer;
 import mchorse.mclib.utils.wav.Waveform;
+import org.lwjgl.openal.AL10;
 
 import java.io.File;
 
@@ -44,6 +45,20 @@ public class AudioFile
 		{
 			this.waveform.delete();
 			this.waveform = null;
+		}
+	}
+
+	public void pause(boolean pause)
+	{
+		int state = this.player.getSourceState();
+
+		if (pause && state == AL10.AL_PLAYING)
+		{
+			this.player.pause();
+		}
+		else if (!pause && state == AL10.AL_PAUSED)
+		{
+			this.player.play();
 		}
 	}
 }
