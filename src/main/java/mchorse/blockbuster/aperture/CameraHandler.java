@@ -357,8 +357,8 @@ public class CameraHandler
         open.keys().register(IKey.lang("blockbuster.gui.aperture.keys.toggle_list"), Keyboard.KEY_L, () -> open.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
         toggle.tooltip(toggleEditor, Direction.TOP);
         toggle.keys().register(toggleEditor, Keyboard.KEY_E, () -> toggle.clickItself(editor.context)).held(Keyboard.KEY_LCONTROL).category(category);
-        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.enabled && directorOptions.detachScene.isEnabled());
-        toggle.keys().register(reloadScene, Keyboard.KEY_R, () -> directorOptions.reloadScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.enabled);
+        toggle.keys().register(detachScene, Keyboard.KEY_D, () -> directorOptions.detachScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.isFlightEnabled() && directorOptions.detachScene.isEnabled());
+        toggle.keys().register(reloadScene, Keyboard.KEY_R, () -> directorOptions.reloadScene.clickItself(editor.context)).held(Keyboard.KEY_LSHIFT).category(category).active(() -> !editor.flight.isFlightEnabled());
 
         editorElement.setVisible(false);
 
