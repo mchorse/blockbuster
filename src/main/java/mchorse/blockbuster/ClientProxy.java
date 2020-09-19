@@ -32,16 +32,15 @@ import mchorse.mclib.McLib;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -206,6 +205,8 @@ public class ClientProxy extends CommonProxy
         /* Client commands */
         ClientCommandHandler.instance.registerCommand(new CommandModel());
         ClientCommandHandler.instance.registerCommand(new CommandItemNBT());
+
+        ((IReloadableResourceManager) mc.getResourceManager()).registerReloadListener((manager) -> audio.reset());
     }
 
     protected void registerItemModel(Block block, String path)

@@ -54,6 +54,9 @@ blockbuster.gui:
         discord: Discord
         tutorial: Video Tutorial
         models: Open Models...
+
+        reset_audio: Reset Audio Tracks
+        open_audio: Open Audio Tracks...
         
         options: Options
     

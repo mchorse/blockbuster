@@ -1,7 +1,5 @@
 package mchorse.blockbuster.utils.mclib;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
@@ -11,7 +9,7 @@ import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.config.gui.GuiConfig;
-import mchorse.mclib.config.values.Value;
+import mchorse.mclib.config.values.ValueGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,16 +18,12 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class ValueButtons extends Value
+public class ValueMainButtons extends ValueGUI
 {
-	public ValueButtons(String id)
+	public ValueMainButtons(String id)
 	{
 		super(id);
 	}
-
-	@Override
-	public void reset()
-	{}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -46,15 +40,5 @@ public class ValueButtons extends Value
 		GuiElement second = Elements.row(mc, 5, 0, 20, tutorial, wiki, twitter, youtube);
 
 		return Arrays.asList(first, second);
-	}
-
-	@Override
-	public void fromJSON(JsonElement jsonElement)
-	{}
-
-	@Override
-	public JsonElement toJSON()
-	{
-		return JsonNull.INSTANCE;
 	}
 }

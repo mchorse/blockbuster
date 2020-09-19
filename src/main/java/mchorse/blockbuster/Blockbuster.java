@@ -7,7 +7,8 @@ import mchorse.blockbuster.commands.CommandRecord;
 import mchorse.blockbuster.commands.CommandScene;
 import mchorse.blockbuster.commands.CommandSpectate;
 import mchorse.blockbuster.common.tileentity.TileEntityDirector;
-import mchorse.blockbuster.utils.mclib.ValueButtons;
+import mchorse.blockbuster.utils.mclib.ValueAudioButtons;
+import mchorse.blockbuster.utils.mclib.ValueMainButtons;
 import mchorse.blockbuster_pack.morphs.StructureMorph;
 import mchorse.mclib.McLib;
 import mchorse.mclib.config.ConfigBuilder;
@@ -208,7 +209,7 @@ public class Blockbuster
         ConfigBuilder builder = event.createBuilder(MOD_ID);
 
         /* General */
-        builder.category("general").register(new ValueButtons("buttons"));
+        builder.category("general").register(new ValueMainButtons("buttons"));
 
         generalFirstTime = builder.getBoolean("show_first_time_modal", true);
         disableTPPlaybackButton = builder.getBoolean("disable_teleport_playback_button", false);
@@ -255,7 +256,9 @@ public class Blockbuster
         snowstormDepthSorting = builder.category("snowstorm").getBoolean("depth_sorting", false);
 
         /* Audio */
-        audioWaveformDensity = builder.category("audio").getInt("waveform_density", 20, 10, 100);
+        builder.category("audio").register(new ValueAudioButtons("buttons"));
+
+        audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
         audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
         audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
         audioWaveformFilename = builder.getBoolean("waveform_filename", true);
