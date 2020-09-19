@@ -6,6 +6,7 @@ import mchorse.aperture.camera.CameraAPI;
 import mchorse.aperture.client.gui.GuiCameraEditor;
 import mchorse.aperture.events.CameraEditorEvent;
 import mchorse.aperture.network.common.PacketCameraProfileList;
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.aperture.gui.GuiDirectorConfigOptions;
 import mchorse.blockbuster.aperture.gui.GuiPlayback;
 import mchorse.blockbuster.aperture.network.client.ClientHandlerCameraProfileList;
@@ -340,7 +341,9 @@ public class CameraHandler
 
         GuiDrawable drawable = new GuiDrawable((context) ->
         {
-            AudioRenderer.renderAll(editor.root.area.x(0.25F), editor.timeline.area.y - 39, editor.root.area.w / 2, 24, context.screen.width, context.screen.height, true);
+            int w = (int) (editor.root.area.w * Blockbuster.audioWaveformWidth.get());
+
+            AudioRenderer.renderAll(editor.root.area.x + (editor.root.area.w - w) / 2, editor.timeline.area.y - 39, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height, true);
         });
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");

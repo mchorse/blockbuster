@@ -230,7 +230,9 @@ public class RenderingHandler
 
             if (!CameraHandler.isCameraEditorOpen())
             {
-                AudioRenderer.renderAll(w / 4, h / 2 + h / 4, w / 2, 24, w, h, false);
+                int width = (int) (w * Blockbuster.audioWaveformWidth.get());
+
+                AudioRenderer.renderAll((w - width) / 2, h / 2 + h / 4, width, Blockbuster.audioWaveformHeight.get(), w, h, false);
             }
         }
     }

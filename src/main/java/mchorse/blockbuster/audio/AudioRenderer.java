@@ -1,5 +1,6 @@
 package mchorse.blockbuster.audio;
 
+import mchorse.blockbuster.Blockbuster;
 import mchorse.blockbuster.ClientProxy;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiDraw;
 import mchorse.mclib.utils.wav.Waveform;
@@ -81,9 +82,10 @@ public class AudioRenderer
 
 		GuiDraw.unscissor(sw, sh);
 
-		half = w / 2;
-
-		Gui.drawRect(x + half, y + 1, x + half + 1, y + h - 1, 0xff57f52a);
-		GuiDraw.drawTextBackground(Minecraft.getMinecraft().fontRenderer, file.name, x + 8, y + h / 2 - 4, 0xffffff, 0x88000000);
+		if (Blockbuster.audioWaveformFilename.get())
+		{
+			Gui.drawRect(x + half, y + 1, x + half + 1, y + h - 1, 0xff57f52a);
+			GuiDraw.drawTextBackground(Minecraft.getMinecraft().fontRenderer, file.name, x + 8, y + h / 2 - 4, 0xffffff, 0x88000000);
+		}
 	}
 }

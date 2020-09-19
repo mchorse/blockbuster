@@ -69,3 +69,6 @@ blockbuster.config:
         tooltip: Options for in-game audio sync feature
 
         waveform_density: Waveform density
+        waveform_width: Audio bar width
+        waveform_height: Audio bar height
+        waveform_filename: Show audio bar's filename

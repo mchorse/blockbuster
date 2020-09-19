@@ -182,6 +182,9 @@ public class Blockbuster
     public static ValueString modelFolderPath;
 
     public static ValueInt audioWaveformDensity;
+    public static ValueFloat audioWaveformWidth;
+    public static ValueInt audioWaveformHeight;
+    public static ValueBoolean audioWaveformFilename;
 
     /**
      * "Macro" for getting resource location for Blockbuster mod items,
@@ -253,6 +256,9 @@ public class Blockbuster
 
         /* Audio */
         audioWaveformDensity = builder.category("audio").getInt("waveform_density", 20, 10, 100);
+        audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
+        audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);
+        audioWaveformFilename = builder.getBoolean("waveform_filename", true);
 
         event.modules.add(builder.build());
     }
