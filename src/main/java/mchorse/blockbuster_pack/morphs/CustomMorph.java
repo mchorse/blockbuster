@@ -138,7 +138,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         this.pauseRecursive(this, previous, offset);
 
         this.pause.set(previous, offset);
-        this.pause.recursivePausing(this);
+        // this.pause.recursivePausing(this);
         this.applyAnimation(this.animation);
     }
 
