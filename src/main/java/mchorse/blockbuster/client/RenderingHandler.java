@@ -233,7 +233,7 @@ public class RenderingHandler
             {
                 int width = (int) (w * Blockbuster.audioWaveformWidth.get());
 
-                AudioRenderer.renderAll((w - width) / 2, h / 2 + h / 4, width, Blockbuster.audioWaveformHeight.get(), w, h, false);
+                AudioRenderer.renderAll((w - width) / 2, h / 2 + h / 4, width, Blockbuster.audioWaveformHeight.get(), w, h);
             }
         }
     }

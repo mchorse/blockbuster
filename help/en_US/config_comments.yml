@@ -47,6 +47,7 @@ blockbuster.config.comments:
         depth_sorting: When enabled is fixes the particles being seen behind other semi-transparent particles. This option is very performance intensive, consider it using only when rendering video footage
 
     audio:
+        waveform_visible: Whether audio bars should be shown when they're playing back
         waveform_density: How many pixels of audio waveform should be shown per second
         waveform_width: Width of an audio bar in floating point percentage (between 0 and 1)
         waveform_height: Height of an audio bar in pixels

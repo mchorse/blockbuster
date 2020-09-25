@@ -181,6 +181,7 @@ public class Blockbuster
 
     public static ValueBoolean snowstormDepthSorting;
 
+    public static ValueBoolean audioWaveformVisible;
     public static ValueInt audioWaveformDensity;
     public static ValueFloat audioWaveformWidth;
     public static ValueInt audioWaveformHeight;
@@ -258,6 +259,7 @@ public class Blockbuster
         /* Audio */
         builder.category("audio").register(new ValueAudioButtons("buttons"));
 
+        audioWaveformVisible = builder.getBoolean("waveform_visible", true);
         audioWaveformDensity = builder.getInt("waveform_density", 20, 10, 100);
         audioWaveformWidth = builder.getFloat("waveform_width", 0.5F, 0F, 1F);
         audioWaveformHeight = builder.getInt("waveform_height", 24, 10, 40);

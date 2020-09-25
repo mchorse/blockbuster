@@ -13,8 +13,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class AudioRenderer
 {
-	public static void renderAll(int x, int y, int w, int h, int sw, int sh, boolean paused)
+	public static void renderAll(int x, int y, int w, int h, int sw, int sh)
 	{
+		if (!Blockbuster.audioWaveformVisible.get())
+		{
+			return;
+		}
+
 		for (AudioFile file : ClientProxy.audio.files.values())
 		{
 			if (!file.isEmpty() && !file.player.isStopped())
