@@ -20,6 +20,9 @@ public class AudioRenderer
 			return;
 		}
 
+		/* Make the anchor at the bottom */
+		y -= h;
+
 		for (AudioFile file : ClientProxy.audio.files.values())
 		{
 			if (!file.isEmpty() && !file.player.isStopped())
@@ -87,9 +90,10 @@ public class AudioRenderer
 
 		GuiDraw.unscissor(sw, sh);
 
+		Gui.drawRect(x + half, y + 1, x + half + 1, y + h - 1, 0xff57f52a);
+
 		if (Blockbuster.audioWaveformFilename.get())
 		{
-			Gui.drawRect(x + half, y + 1, x + half + 1, y + h - 1, 0xff57f52a);
 			GuiDraw.drawTextBackground(Minecraft.getMinecraft().fontRenderer, file.name, x + 8, y + h / 2 - 4, 0xffffff, 0x88000000);
 		}
 	}

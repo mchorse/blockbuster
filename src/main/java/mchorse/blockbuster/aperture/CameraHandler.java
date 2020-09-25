@@ -343,7 +343,7 @@ public class CameraHandler
         {
             int w = (int) (editor.root.area.w * Blockbuster.audioWaveformWidth.get());
 
-            AudioRenderer.renderAll(editor.root.area.x + (editor.root.area.w - w) / 2, editor.timeline.area.y - 39, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
+            AudioRenderer.renderAll(editor.root.area.x + (editor.root.area.w - w) / 2, editor.timeline.area.y - 15, w, Blockbuster.audioWaveformHeight.get(), context.screen.width, context.screen.height);
         });
 
         IKey category = IKey.lang("blockbuster.gui.aperture.keys.category");
