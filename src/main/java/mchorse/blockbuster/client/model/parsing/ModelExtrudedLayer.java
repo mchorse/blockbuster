@@ -45,6 +45,13 @@ public class ModelExtrudedLayer
      */
     protected static Map<ResourceLocation, CachedImage> images = new HashMap<>();
 
+    public static void forceReload(ResourceLocation location, BufferedImage image)
+    {
+        clearByTexture(location);
+
+        images.put(location, new CachedImage(image));
+    }
+
     /**
      * Render the extruded 3D layer. If extruded layer wasn't generated 
      * before, it will generate it.

@@ -7,10 +7,12 @@ import mchorse.blockbuster.client.gui.dashboard.panels.model_block.GuiModelBlock
 import mchorse.blockbuster.client.gui.dashboard.panels.model_editor.GuiModelEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.recording_editor.GuiRecordingEditorPanel;
 import mchorse.blockbuster.client.gui.dashboard.panels.snowstorm.GuiSnowstorm;
+import mchorse.blockbuster.client.model.parsing.ModelExtrudedLayer;
 import mchorse.blockbuster.utils.mclib.BBIcons;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.events.MultiskinProcessedEvent;
 import mchorse.mclib.events.RegisterDashboardPanels;
 import mchorse.mclib.events.RemoveDashboardPanels;
 import mchorse.metamorph.api.morphs.AbstractMorph;
@@ -97,5 +99,11 @@ public class GuiBlockbusterPanels
         this.recordingEditorPanel = null;
 
         this.morphs = null;
+    }
+
+    @SubscribeEvent
+    public void onMultiskinLoad(MultiskinProcessedEvent event)
+    {
+        ModelExtrudedLayer.forceReload(event.location, event.image);
     }
 }
