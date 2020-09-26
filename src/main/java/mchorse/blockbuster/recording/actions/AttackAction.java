@@ -2,6 +2,7 @@ package mchorse.blockbuster.recording.actions;
 
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.RayTracing;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,7 +41,7 @@ public class AttackAction extends DamageAction
         actor.rotationPitch = frame.pitch;
         actor.rotationYawHead = frame.yawHead;
 
-        Entity target = EntityUtils.getTargetEntity(actor, 5.0);
+        Entity target = RayTracing.getTargetEntity(actor, 5.0);
 
         actor.rotationYaw = yaw;
         actor.rotationPitch = pitch;

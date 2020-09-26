@@ -3,6 +3,7 @@ package mchorse.blockbuster.recording.actions;
 import mchorse.blockbuster.common.entity.EntityActor;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.RayTracing;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public class InteractEntityAction extends ItemUseAction
 		actor.rotationPitch = frame.pitch;
 		actor.rotationYawHead = frame.yawHead;
 
-		Entity target = EntityUtils.getTargetEntity(actor, 5.0);
+		Entity target = RayTracing.getTargetEntity(actor, 5.0);
 
 		actor.rotationYaw = yaw;
 		actor.rotationPitch = pitch;

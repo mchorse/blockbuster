@@ -5,6 +5,7 @@ import java.util.UUID;
 import io.netty.buffer.ByteBuf;
 import mchorse.blockbuster.recording.data.Frame;
 import mchorse.blockbuster.utils.EntityUtils;
+import mchorse.mclib.utils.RayTracing;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,7 +55,7 @@ public class MountingAction extends Action
             actor.rotationPitch = frame.pitch;
             actor.rotationYawHead = frame.yawHead;
 
-            mount = EntityUtils.getTargetEntity(actor, 5.0);
+            mount = RayTracing.getTargetEntity(actor, 5.0);
 
             actor.rotationYaw = yaw;
             actor.rotationPitch = pitch;
