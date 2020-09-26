@@ -191,6 +191,10 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
                     }
                 }
             }
+            else if (morph instanceof ISyncableMorph)
+            {
+                ((ISyncableMorph) morph).pauseMorph(previous, offset);
+            }
         }
     }
 

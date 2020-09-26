@@ -14,6 +14,8 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
+import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RecordMorph extends AbstractMorph
+public class RecordMorph extends AbstractMorph implements ISyncableMorph
 {
     /**
      * Record morph's icon in GUI 
@@ -63,11 +65,56 @@ public class RecordMorph extends AbstractMorph
 
     private boolean initiate;
 
+    private PausedMorph pause = new PausedMorph();
+
     public RecordMorph()
     {
         super();
 
         this.name = "blockbuster.record";
+    }
+
+    public void setRecord(String record)
+    {
+        this.record = record;
+        this.reload = true;
+    }
+
+    @Override
+    public void pauseMorph(AbstractMorph previous, int offset)
+    {
+        this.pause.set(previous, offset);
+    }
+
+    @Override
+    public boolean isPaused()
+    {
+        return this.pause.isPaused();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void previewActor(Record record)
+    {
+        int tick = this.pause.offset % record.getLength();
+        Frame frame = record.getFrame(tick);
+
+        frame.apply(this.actor, true);
+
+        if (frame.hasBodyYaw)
+        {
+            this.actor.renderYawOffset = frame.bodyYaw;
+        }
+
+        this.actor.prevPosX = this.actor.posX;
+        this.actor.prevPosY = this.actor.posY;
+        this.actor.prevPosZ = this.actor.posZ;
+
+        this.actor.prevRotationYaw = this.actor.rotationYaw;
+        this.actor.prevRotationPitch = this.actor.rotationPitch;
+        this.actor.prevRotationYawHead = this.actor.rotationYawHead;
+        this.actor.prevRenderYawOffset = this.actor.renderYawOffset;
+        this.actor.playback.tick = tick;
+        this.actor.playback.playing = false;
     }
 
     @Override
@@ -158,6 +205,10 @@ public class RecordMorph extends AbstractMorph
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }
+            else if (this.isPaused() && record != null)
+            {
+                this.previewActor(record);
+            }
         }
     }
 
@@ -183,6 +234,11 @@ public class RecordMorph extends AbstractMorph
             {
                 player.record = ClientProxy.manager.records.get(this.record);
 
+                if (player.record != null)
+                {
+                    this.previewActor(player.record);
+                }
+
                 if (player.record != null && player.record.actions.isEmpty())
                 {
                     /* Just to prevent it from spamming messages */
@@ -192,14 +248,21 @@ public class RecordMorph extends AbstractMorph
             }
             else
             {
-                this.actor.onUpdate();
+                if (this.isPaused() && this.actor.playback.record != null)
+                {
+                    this.previewActor(this.actor.playback.record);
+                }
+                else
+                {
+                    this.actor.onUpdate();
+                }
 
-                if (this.actor.playback.isFinished() && this.loop)
+                if (!this.isPaused() && this.actor.playback.isFinished() && this.loop)
                 {
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = (int) (this.randomSkip * Math.random());
                     this.actor.playback.record.applyAction(0, this.actor, true);
-                    this.actor.morph.setDirect(this.initial);
+                    this.actor.morph.setDirect(MorphUtils.copy(this.initial));
                 }
             }
         }
@@ -292,6 +355,8 @@ public class RecordMorph extends AbstractMorph
         {
             this.randomSkip = tag.getInteger("RandomDelay");
         }
+
+        this.pause.fromNBT(tag);
     }
 
     @Override
@@ -321,11 +386,7 @@ public class RecordMorph extends AbstractMorph
         {
             tag.setInteger("RandomDelay", this.randomSkip);
         }
-    }
 
-    public void setRecord(String record)
-    {
-        this.record = record;
-        this.reload = true;
+        this.pause.toNBT(tag);
     }
 }
