@@ -17,7 +17,6 @@ import mchorse.mclib.events.RegisterDashboardPanels;
 import mchorse.mclib.events.RemoveDashboardPanels;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiCreativeMorphsMenu;
-import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -80,7 +79,7 @@ public class GuiBlockbusterPanels
         this.morphs = new GuiCreativeMorphsMenu(mc, null);
 
         event.dashboard.panels.registerPanel(this.directorPanel, IKey.lang("blockbuster.gui.dashboard.director"), BBIcons.SCENE);
-        event.dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), MMIcons.BLOCK);
+        event.dashboard.panels.registerPanel(this.modelPanel, IKey.lang("blockbuster.gui.dashboard.model"), Icons.BLOCK);
         event.dashboard.panels.registerPanel(this.modelEditorPanel, IKey.lang("blockbuster.gui.dashboard.model_editor"), Icons.POSE);
         event.dashboard.panels.registerPanel(this.recordingEditorPanel, IKey.lang("blockbuster.gui.dashboard.player_recording"), BBIcons.EDITOR);
         event.dashboard.panels.registerPanel(this.texturePanel, IKey.lang("blockbuster.gui.dashboard.texture"), Icons.MATERIAL);

@@ -18,11 +18,11 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.mclib.client.gui.mclib.GuiDashboard;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.Direction;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.creative.GuiNestedEdit;
-import mchorse.metamorph.util.MMIcons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -134,7 +134,7 @@ public class GuiModelBlockPanel extends GuiBlockbusterPanel
         this.list.flex().relative(this.flex()).set(0, 0, 120, 0).h(1F).x(1F, -120);
         this.add(this.list);
 
-        GuiIconElement toggle = new GuiIconElement(mc, MMIcons.BLOCK, (b) -> this.list.toggleVisible());
+        GuiIconElement toggle = new GuiIconElement(mc, Icons.BLOCK, (b) -> this.list.toggleVisible());
         toggle.flex().set(0, 2, 24, 24).relative(this).x(1F, -28);
 
         this.add(toggle);
