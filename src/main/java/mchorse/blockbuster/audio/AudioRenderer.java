@@ -59,21 +59,20 @@ public class AudioRenderer
 			wave.render();
 		}
 
-		int offset = (int) (file.player.getPlaybackPosition() * wave.getPixelsPerSecond() - 0.25F);
+		int offset = (int) (file.player.getPlaybackPosition() * wave.getPixelsPerSecond());
 		int waveW = file.waveform.getWidth();
 
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
-		GlStateManager.bindTexture(file.waveform.getTexture());
 
 		/* Draw the waveform */
 		int runningOffset = waveW - offset;
 
 		if (runningOffset > 0)
 		{
-			GuiDraw.drawBillboard(x + half, y, offset, 0, runningOffset, h, waveW, h);
+			file.waveform.draw(x + half, y, offset, 0, Math.min(runningOffset, half), h, h);
 		}
 
 		/* Draw the passed waveform */
@@ -84,7 +83,7 @@ public class AudioRenderer
 			int ww = offset > half ? half : offset;
 
 			GlStateManager.color(brightness, brightness, brightness);
-			GuiDraw.drawBillboard(xx, y, oo, 0, ww, h, waveW, h);
+			file.waveform.draw(xx, y, oo, 0, ww, h, h);
 			GlStateManager.color(1, 1, 1);
 		}
 

@@ -98,6 +98,11 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         int tick = this.pause.offset % record.getLength();
         Frame frame = record.getFrame(tick);
 
+        if (frame == null)
+        {
+            return;
+        }
+
         frame.apply(this.actor, true);
 
         if (frame.hasBodyYaw)
