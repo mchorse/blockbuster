@@ -50,7 +50,7 @@ public class GuiActor extends GuiBase
 	@Override
 	protected void closeScreen()
 	{
-		Dispatcher.sendToServer(new PacketModifyActor(this.actor.getEntityId(), this.renderer.morph, false));
+		Dispatcher.sendToServer(new PacketModifyActor(this.actor));
 
 		super.closeScreen();
 	}

@@ -343,17 +343,14 @@ public class GuiScenePanel extends GuiBlockbusterPanel
     @Override
     public void close()
     {
-        if (!this.location.isEmpty())
+        if (this.location.isScene())
         {
             if (ClientProxy.panels.morphs.hasParent())
             {
                 ClientProxy.panels.morphs.finish();
             }
 
-            if (this.location.isScene())
-            {
-                Dispatcher.sendToServer(new PacketSceneCast(this.location));
-            }
+            Dispatcher.sendToServer(new PacketSceneCast(this.location));
         }
     }
 

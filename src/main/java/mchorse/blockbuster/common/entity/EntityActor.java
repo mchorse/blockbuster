@@ -18,6 +18,7 @@ import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.IFlattenableMorph;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -100,6 +101,10 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      * Whether the control of playback should be manual 
      */
     public boolean manual = false;
+
+    public int pauseOffset = -1;
+    public AbstractMorph pausePreviousMorph;
+    public int pausePreviousOffset = -1;
 
     public EntityActor(World worldIn)
     {
@@ -440,20 +445,54 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
      */
     public void modify(AbstractMorph morph, boolean invisible, boolean notify)
     {
-        if (morph instanceof ISyncableMorph && ((ISyncableMorph) morph).isPaused())
-        {
-            this.morph.setDirect(morph);
-        }
-        else
-        {
-            this.morph.set(morph);
-        }
-
+        this.morph.set(morph);
         this.invisible = invisible;
 
         if (!this.world.isRemote && notify)
         {
             this.notifyPlayers();
+        }
+    }
+
+    /**
+     * Morph this actor into given morph (used on the server side)
+     */
+    public void morph(AbstractMorph morph)
+    {
+        this.pauseOffset = -1;
+        this.pausePreviousMorph = null;
+        this.pausePreviousOffset = -1;
+
+        this.morph.set(morph);
+    }
+
+    /**
+     * Stores the data for paused morph
+     */
+    public void morphPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset)
+    {
+        this.pauseOffset = offset;
+        this.pausePreviousMorph = previous;
+        this.pausePreviousOffset = previousOffset;
+
+        this.morph.setDirect(morph);
+    }
+
+    /**
+     * Apply pause on the morph
+     */
+    public void applyPause(AbstractMorph morph, int offset, AbstractMorph previous, int previousOffset)
+    {
+        this.morphPause(morph, offset, previous, previousOffset);
+
+        if (previous instanceof ISyncableMorph)
+        {
+            ((ISyncableMorph) previous).pause(null, previousOffset);
+        }
+
+        if (morph instanceof ISyncableMorph)
+        {
+            ((ISyncableMorph) morph).pause(previous, offset);
         }
     }
 
@@ -464,7 +503,7 @@ public class EntityActor extends EntityCreature implements IEntityAdditionalSpaw
     {
         if (!this.manual)
         {
-            Dispatcher.sendToTracked(this, new PacketModifyActor(this.getEntityId(), this.morph.get(), this.invisible));
+            Dispatcher.sendToTracked(this, new PacketModifyActor(this));
         }
     }
 

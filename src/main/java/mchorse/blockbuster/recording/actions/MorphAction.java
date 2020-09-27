@@ -43,20 +43,16 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morph.set(morph);
+            act.morph(morph);
             act.notifyPlayers();
         }
     }
 
-    public void applyWithOffset(EntityLivingBase actor, AbstractMorph previous, int offset)
+    public void applyWithOffset(EntityLivingBase actor, int offset, AbstractMorph previous, int previousOffset)
     {
         AbstractMorph morph = mchorse.metamorph.api.MorphUtils.copy(this.morph);
 
-        if (morph instanceof ISyncableMorph)
-        {
-            ((ISyncableMorph) morph).pauseMorph(previous, offset);
-        }
-
+        /* Sorry, fake players can't be synced */
         if (actor instanceof EntityPlayer)
         {
             MorphAPI.morph((EntityPlayer) actor, morph, true);
@@ -65,7 +61,7 @@ public class MorphAction extends Action
         {
             EntityActor act = (EntityActor) actor;
 
-            act.morph.setDirect(morph);
+            act.morphPause(morph, offset, previous, previousOffset);
             act.notifyPlayers();
         }
     }

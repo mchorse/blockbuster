@@ -8,8 +8,6 @@ import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
-import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +30,7 @@ import java.util.Random;
  * Next big thing since S&B, allows creating animated morphs with 
  * variable delays between changes
  */
-public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISyncableMorph
+public class SequencerMorph extends AbstractMorph implements IMorphProvider
 {
     /**
      * List of sequence entries (morph and their delay) 
@@ -69,7 +67,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     public boolean isRandom;
 
-    private PausedMorph pause = new PausedMorph();
     private Random random = new Random();
 
     public SequencerMorph()
@@ -84,18 +81,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
         this.random.setSeed((long) (duration * 100000L));
 
         return this.random;
-    }
-
-    @Override
-    public void pauseMorph(AbstractMorph previous, int offset)
-    {
-        this.pause.set(previous, offset);
-    }
-
-    @Override
-    public boolean isPaused()
-    {
-        return this.pause.isPaused();
     }
 
     @Override
@@ -184,10 +169,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
     @SideOnly(Side.CLIENT)
     public void render(EntityLivingBase entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
-        if (!this.isPaused())
-        {
-            this.updateMorph(this.timer + partialTicks);
-        }
+        this.updateMorph(this.timer + partialTicks);
 
         AbstractMorph morph = this.currentMorph.get();
 
@@ -229,11 +211,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
      */
     protected void updateCycle()
     {
-        if (this.isPaused())
-        {
-            return;
-        }
-
         this.updateMorph(this.timer);
         this.timer++;
     }
@@ -268,28 +245,7 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
                     ((IAnimationProvider) morph).getAnimation().duration = (int) duration;
                 }
 
-                if (this.isPaused())
-                {
-                    if (morph instanceof ISyncableMorph)
-                    {
-                        AbstractMorph previous = MorphUtils.copy(this.currentMorph.get());
-                        int offset = (int) (timer - this.duration);
-
-                        if (previous == null)
-                        {
-                            previous = this.pause.previous;
-                        }
-
-                        ((ISyncableMorph) morph).pauseMorph(previous, offset);
-                    }
-
-                    this.currentMorph.setDirect(morph);
-                }
-                else
-                {
-                    this.currentMorph.set(morph);
-                }
-
+                this.currentMorph.set(morph);
                 this.duration += duration;
             }
 
@@ -333,8 +289,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
             this.timer = morph.timer;
             this.current = morph.current;
             this.duration = morph.duration;
-
-            this.pause.copy(morph.pause);
         }
     }
 
@@ -441,8 +395,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (this.reverse) tag.setBoolean("Reverse", this.reverse);
         if (this.isRandom) tag.setBoolean("Random", this.isRandom);
-
-        this.pause.toNBT(tag);
     }
 
     @Override
@@ -470,18 +422,6 @@ public class SequencerMorph extends AbstractMorph implements IMorphProvider, ISy
 
         if (tag.hasKey("Reverse")) this.reverse = tag.getBoolean("Reverse");
         if (tag.hasKey("Random")) this.isRandom = tag.getBoolean("Random");
-
-        this.pause.fromNBT(tag);
-
-        if (this.isPaused())
-        {
-            this.current = -1;
-            this.currentMorph.setDirect(null);
-            this.duration = 0;
-            this.timer = this.pause.offset;
-
-            this.updateMorph(this.timer);
-        }
     }
 
     /**

@@ -1,16 +1,15 @@
 package mchorse.blockbuster_pack.morphs;
 
+import mchorse.blockbuster.api.ModelPose;
 import mchorse.blockbuster.api.ModelTransform;
 import mchorse.blockbuster.client.textures.GifTexture;
 import mchorse.mclib.utils.Color;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
-import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,7 +38,7 @@ import java.util.Objects;
  * 
  * This bad boy is basically replacement for Imaginary
  */
-public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimationProvider
+public class ImageMorph extends AbstractMorph implements IAnimationProvider, ISyncableMorph
 {
     public static final Matrix4f matrix = new Matrix4f();
 
@@ -110,8 +109,6 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
     public ImageAnimation animation = new ImageAnimation();
     public ImageProperties image = new ImageProperties();
 
-    private PausedMorph pause = new PausedMorph();
-
     public ImageMorph()
     {
         super();
@@ -120,36 +117,24 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
     }
 
     @Override
-    public void pauseMorph(AbstractMorph previous, int offset)
+    public void pause(AbstractMorph previous, int offset)
     {
-        if (previous instanceof IMorphProvider)
+        this.animation.pause();
+        this.animation.progress = offset;
+
+        if (previous instanceof ImageMorph)
         {
-            previous = ((IMorphProvider) previous).getMorph();
-        }
+            ImageMorph image = (ImageMorph) previous;
 
-        this.pause.set(previous, offset);
-        this.applyAnimation(this.animation);
-    }
-
-    public void applyAnimation(ImageMorph.ImageAnimation animation)
-    {
-        if (this.isPaused())
-        {
-            animation.pause();
-            animation.progress = this.pause.offset;
-
-            if (this.pause.previous instanceof ImageMorph)
-            {
-                animation.last = new ImageMorph.ImageProperties();
-                animation.last.from((ImageMorph) this.pause.previous);
-            }
+            this.animation.last = new ImageMorph.ImageProperties();
+            this.animation.last.from(image);
         }
     }
 
     @Override
     public boolean isPaused()
     {
-        return this.pause.isPaused();
+        return this.animation.paused;
     }
 
     @Override
@@ -426,7 +411,6 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
             this.keying = morph.keying;
             this.animation.copy(morph.animation);
             this.animation.reset();
-            this.pause.copy(morph.pause);
         }
     }
 
@@ -463,8 +447,6 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
         if (morph instanceof ImageMorph)
         {
             ImageMorph image = (ImageMorph) morph;
-
-            this.pause.reset();
 
             if (!image.animation.ignored)
             {
@@ -526,8 +508,6 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
         {
             tag.setTag("Animation", animation);
         }
-
-        this.pause.toNBT(tag);
     }
 
     @Override
@@ -562,8 +542,6 @@ public class ImageMorph extends AbstractMorph implements ISyncableMorph, IAnimat
         }
 
         this.animation.reset();
-        this.pause.fromNBT(tag);
-        this.applyAnimation(this.animation);
     }
 
     public static class ImageAnimation extends Animation

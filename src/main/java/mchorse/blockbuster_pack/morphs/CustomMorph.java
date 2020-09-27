@@ -18,8 +18,6 @@ import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.api.morphs.utils.PausedMorph;
-import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
@@ -50,7 +48,7 @@ import java.util.Map;
  * This is a morph which allows players to use Blockbuster's custom 
  * models as morphs.
  */
-public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph, IAnimationProvider
+public class CustomMorph extends AbstractMorph implements IBodyPartProvider, IAnimationProvider, ISyncableMorph
 {
     /**
      * Morph's model
@@ -119,8 +117,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
 
     private long lastUpdate;
 
-    private PausedMorph pause = new PausedMorph();
-
     /**
      * Make hands true!
      */
@@ -133,83 +129,23 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     }
 
     @Override
-    public void pauseMorph(AbstractMorph previous, int offset)
+    public void pause(AbstractMorph previous, int offset)
     {
-        this.pauseRecursive(this, previous, offset);
+        this.animation.pause();
+        this.animation.progress = offset;
 
-        this.pause.set(previous, offset);
-        // this.pause.recursivePausing(this);
-        this.applyAnimation(this.animation);
-    }
-
-    private void pauseRecursive(IBodyPartProvider provider, AbstractMorph previous, int offset)
-    {
-        BodyPartManager manager = provider.getBodyPart();
-
-        for (int i = 0; i < manager.parts.size(); i++)
+        if (previous instanceof CustomMorph)
         {
-            BodyPart part = manager.parts.get(i);
-            AbstractMorph morph = part.morph.get();
+            CustomMorph custom = (CustomMorph) previous;
+            ModelPose pose = custom.getCurrentPose();
 
-            if (morph instanceof SequencerMorph)
+            if (this.animation.isInProgress() && pose != null)
             {
-                SequencerMorph sequencer = (SequencerMorph) morph;
-                SequencerMorph.FoundMorph foundMorph = sequencer.getMorphAt(offset);
-
-                if (foundMorph != null && foundMorph.morph != null)
-                {
-                    AbstractMorph copy = foundMorph.morph.copy();
-                    int localOffset = offset - foundMorph.lastDuration;
-
-                    part.morph.setDirect(copy);
-
-                    if (previous instanceof IBodyPartProvider)
-                    {
-                        BodyPartManager previousManager = ((IBodyPartProvider) previous).getBodyPart();
-                        BodyPart previousPart = i < previousManager.parts.size() ? previousManager.parts.get(i) : null;
-
-                        previous = previousPart == null ? null : previousPart.morph.get();
-                    }
-                    else
-                    {
-                        previous = null;
-                    }
-
-                    if (previous != null)
-                    {
-                        previous.copy();
-                    }
-
-                    if (copy instanceof ISyncableMorph)
-                    {
-                        ((ISyncableMorph) copy).pauseMorph(foundMorph.previous == null ? previous : foundMorph.previous, localOffset);
-                    }
-
-                    if (copy instanceof IBodyPartProvider)
-                    {
-                        this.pauseRecursive((IBodyPartProvider) copy, previous, localOffset);
-                    }
-                }
+                this.animation.last = custom.animation.calculatePose(pose, 1).clone();
             }
-            else if (morph instanceof ISyncableMorph)
+            else
             {
-                ((ISyncableMorph) morph).pauseMorph(previous, offset);
-            }
-        }
-    }
-
-    public void applyAnimation(CustomMorph.PoseAnimation animation)
-    {
-        if (this.isPaused())
-        {
-            animation.pause();
-            animation.progress = this.pause.offset;
-
-            AbstractMorph previous = this.pause.previous;
-
-            if (previous instanceof CustomMorph)
-            {
-                animation.last = ((CustomMorph) previous).getCurrentPose();
+                this.animation.last = pose;
             }
         }
     }
@@ -217,7 +153,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
     @Override
     public boolean isPaused()
     {
-        return this.pause.isPaused();
+        return this.animation.paused;
     }
 
     @Override
@@ -570,8 +506,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         {
             CustomMorph custom = (CustomMorph) morph;
 
-            this.pause.reset();
-
             /* Don't suddenly end the animation in progress, interpolate */
             if (!custom.animation.ignored)
             {
@@ -736,7 +670,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             this.model = morph.model;
             this.parts.copy(morph.parts);
             this.animation.copy(morph.animation);
-            this.pause.copy(morph.pause);
         }
     }
 
@@ -786,8 +719,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         {
             tag.setTag("Animation", animation);
         }
-
-        this.pause.toNBT(tag);
     }
 
     @Override
@@ -843,9 +774,6 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
         {
             this.animation.fromNBT(tag.getCompoundTag("Animation"));
         }
-
-        this.pause.fromNBT(tag);
-        this.applyAnimation(this.animation);
     }
 
     /**
@@ -863,6 +791,7 @@ public class CustomMorph extends AbstractMorph implements IBodyPartProvider, ISy
             this.pose.limbs.clear();
         }
 
+        @Override
         public boolean isInProgress()
         {
             return super.isInProgress() && this.last != null;

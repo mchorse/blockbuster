@@ -305,22 +305,18 @@ public class Record
 
         if (found != null)
         {
-            MorphAction action = found.action;
-            int foundTick = found.tick;
-            int diff = tick - foundTick;
-
             try
             {
+                MorphAction action = found.action;
+                int offset = tick - found.tick;
+
                 if (pause)
                 {
-                    found = this.seekMorphAction(found.tick - 1);
+                    FoundAction previousFound = this.seekMorphAction(found.tick - 1);
+                    AbstractMorph previous = previousFound == null ? replayMorph : previousFound.action.morph;
+                    int previousOffset = found.tick - (previousFound == null ? 0 : previousFound.tick);
 
-                    AbstractMorph previous = found == null ? replayMorph : found.action.morph;
-                    int offset = foundTick - (found == null ? 0 : found.tick);
-
-                    previous = this.flattenSequencer(previous, null, offset);
-
-                    action.applyWithOffset(actor, previous, diff);
+                    action.applyWithOffset(actor, offset, previous, previousOffset);
                 }
                 else
                 {
@@ -335,75 +331,6 @@ public class Record
         else if (replay != null)
         {
             replay.apply(actor);
-        }
-    }
-
-    /**
-     * This is the most ugliest code I've written in a while!
-     *
-     * I haven't done a lot of code lately, but this morph system sucks for
-     * previewing stuff.
-     */
-    private AbstractMorph flattenSequencer(AbstractMorph morph, AbstractMorph previous, int offset)
-    {
-        if (morph instanceof SequencerMorph)
-        {
-            SequencerMorph sequencer = (SequencerMorph) morph;
-            SequencerMorph.FoundMorph foundMorph = sequencer.getMorphAt(offset);
-
-            if (foundMorph != null && foundMorph.morph != null)
-            {
-                morph = foundMorph.morph;
-                offset = offset - foundMorph.lastDuration;
-
-                if (foundMorph.previous != null)
-                {
-                    previous = foundMorph.previous;
-                }
-            }
-        }
-
-        morph = MorphUtils.copy(morph);
-        previous = MorphUtils.copy(previous);
-
-        if (morph instanceof ISyncableMorph)
-        {
-            ((ISyncableMorph) morph).pauseMorph(previous, offset);
-        }
-
-        if (morph instanceof IBodyPartProvider)
-        {
-            this.pauseRecursive((IBodyPartProvider) morph, previous, offset);
-        }
-
-        return morph;
-    }
-
-    /**
-     * Total yikes
-     */
-    private void pauseRecursive(IBodyPartProvider provider, AbstractMorph previous, int offset)
-    {
-        BodyPartManager manager = provider.getBodyPart();
-
-        for (int i = 0; i < manager.parts.size(); i++)
-        {
-            BodyPart part = manager.parts.get(i);
-            AbstractMorph morph = part.morph.get();
-
-            if (previous instanceof IBodyPartProvider)
-            {
-                BodyPartManager previousManager = ((IBodyPartProvider) previous).getBodyPart();
-                BodyPart previousPart = i < previousManager.parts.size() ? previousManager.parts.get(i) : null;
-
-                previous = previousPart == null ? null : previousPart.morph.get();
-            }
-            else
-            {
-                previous = null;
-            }
-
-            part.morph.setDirect(this.flattenSequencer(morph, previous, offset));
         }
     }
 

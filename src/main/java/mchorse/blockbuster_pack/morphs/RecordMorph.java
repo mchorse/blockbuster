@@ -14,8 +14,6 @@ import mchorse.mclib.client.gui.framework.elements.utils.GuiInventoryElement;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.MorphUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
-import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
-import mchorse.metamorph.api.morphs.utils.PausedMorph;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RecordMorph extends AbstractMorph implements ISyncableMorph
+public class RecordMorph extends AbstractMorph // implements ISyncableMorph
 {
     /**
      * Record morph's icon in GUI 
@@ -65,7 +63,7 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
 
     private boolean initiate;
 
-    private PausedMorph pause = new PausedMorph();
+    // private PausedMorph pause = new PausedMorph();
 
     public RecordMorph()
     {
@@ -80,22 +78,22 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         this.reload = true;
     }
 
-    @Override
-    public void pauseMorph(AbstractMorph previous, int offset)
-    {
-        this.pause.set(previous, offset);
-    }
-
-    @Override
-    public boolean isPaused()
-    {
-        return this.pause.isPaused();
-    }
+//    @Override
+//    public void pause(AbstractMorph previous, int offset)
+//    {
+//        this.pause.set(previous, offset);
+//    }
+//
+//    @Override
+//    public boolean isPaused()
+//    {
+//        return false; // return this.pause.isPaused();
+//    }
 
     @SideOnly(Side.CLIENT)
     private void previewActor(Record record)
     {
-        int tick = this.pause.offset % record.getLength();
+        int tick = 0; // this.pause.offset % record.getLength();
         Frame frame = record.getFrame(tick);
 
         if (frame == null)
@@ -210,10 +208,10 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             {
                 Dispatcher.sendToServer(new PacketRequestRecording(this.record));
             }
-            else if (this.isPaused() && record != null)
-            {
-                this.previewActor(record);
-            }
+//            else if (this.isPaused() && record != null)
+//            {
+//                this.previewActor(record);
+//            }
         }
     }
 
@@ -253,16 +251,16 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
             }
             else
             {
-                if (this.isPaused() && this.actor.playback.record != null)
-                {
-                    this.previewActor(this.actor.playback.record);
-                }
-                else
+//                if (this.isPaused() && this.actor.playback.record != null)
+//                {
+//                    this.previewActor(this.actor.playback.record);
+//                }
+//                else
                 {
                     this.actor.onUpdate();
                 }
 
-                if (!this.isPaused() && this.actor.playback.isFinished() && this.loop)
+                if (/* !this.isPaused() && */this.actor.playback.isFinished() && this.loop)
                 {
                     this.actor.playback.record.reset(this.actor);
                     this.actor.playback.tick = (int) (this.randomSkip * Math.random());
@@ -360,8 +358,6 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         {
             this.randomSkip = tag.getInteger("RandomDelay");
         }
-
-        this.pause.fromNBT(tag);
     }
 
     @Override
@@ -391,7 +387,5 @@ public class RecordMorph extends AbstractMorph implements ISyncableMorph
         {
             tag.setInteger("RandomDelay", this.randomSkip);
         }
-
-        this.pause.toNBT(tag);
     }
 }
